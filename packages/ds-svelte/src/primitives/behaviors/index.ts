@@ -5,6 +5,8 @@ export type { DismissalOptions } from './createDismissal.svelte.js';
 export { createFocusTrap } from './createFocusTrap.svelte.js';
 export { createScrollLock } from './createScrollLock.svelte.js';
 export { createPortal } from './createPortal.svelte.js';
+export { portal } from './portal.svelte.js';
+export type { PortalActionOptions } from './portal.svelte.js';
 export { createCompoundContext } from './createCompoundContext.svelte.js';
 export type {
   ControllableStateOptions,

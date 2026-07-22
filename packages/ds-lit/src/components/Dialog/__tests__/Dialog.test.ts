@@ -154,5 +154,36 @@ async function renderElement(tagName: string, props: Record<string, string | boo
 // @generated:end
 
 // @custom:start tests
+describe("Dialog — portal (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01)", () => {
+  it("relocates the host element to document.body, escaping an ancestor stacking context", async () => {
+    // A transform/overflow ancestor creates a stacking context that would clip
+    // a merely-fixed dialog. The Lit element moves its own host (keeping its
+    // shadow root and styles) to document.body so the fixed layer escapes it.
+    const ancestor = document.createElement("div");
+    ancestor.style.transform = "translateZ(0)";
+    ancestor.style.overflow = "hidden";
+    document.body.append(ancestor);
+
+    const element = document.createElement("fsds-dialog") as HTMLElement & {
+      open?: boolean;
+      updateComplete?: Promise<unknown>;
+    };
+    element.open = true;
+    ancestor.append(element);
+    await customElements.whenDefined("fsds-dialog");
+    await element.updateComplete;
+
+    // Load-bearing: connectedCallback moved the host out of the transform
+    // ancestor and onto document.body. The shadow root (and its scoped styles)
+    // travels with the host, so styling survives the relocation.
+    expect(element.parentElement).toBe(document.body);
+    expect(ancestor.contains(element)).toBe(false);
+    expect(element.shadowRoot?.querySelector(".dialog")).not.toBeNull();
+
+    element.remove();
+    ancestor.remove();
+  });
+});
+
 
 // @custom:end

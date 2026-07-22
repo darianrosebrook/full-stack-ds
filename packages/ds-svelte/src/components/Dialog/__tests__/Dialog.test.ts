@@ -97,5 +97,32 @@ describe("Dialog — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Dialog — portal (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01)", () => {
+  it("relocates the dialog root to document.body, escaping an ancestor stacking context", () => {
+    // A transform/overflow ancestor creates a stacking context that would clip
+    // a merely-fixed dialog. The `use:portal` action appends the root to
+    // document.body so the fixed layer escapes it; the root's DOM parent must
+    // be document.body, not the render container inside the ancestor.
+    const ancestor = document.createElement("div");
+    ancestor.style.transform = "translateZ(0)";
+    ancestor.style.overflow = "hidden";
+    document.body.append(ancestor);
 
+    const target = ancestor.appendChild(document.createElement("div"));
+    render(Dialog as unknown as Component<Record<string, unknown>>, {
+      props: { open: true },
+      target,
+    });
+
+    const dialogRoot = document.body.querySelector<HTMLElement>(".dialog");
+    expect(dialogRoot).not.toBeNull();
+    // Load-bearing: the portaled root's parent is document.body, not the
+    // target the action moved it out of.
+    expect(dialogRoot?.parentElement).toBe(document.body);
+    expect(target.contains(dialogRoot)).toBe(false);
+
+    dialogRoot?.remove();
+    ancestor.remove();
+  });
+});
 // @custom:end

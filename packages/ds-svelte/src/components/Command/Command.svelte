@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useCommand } from "./useCommand.svelte.js";
+import { portal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -51,7 +52,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpen(false); } }}>
+<div class={classes} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpen(false); } }}>
   {#if behavior.open}
   <div class={'command__overlay'} aria-hidden="true"></div>
   {/if}

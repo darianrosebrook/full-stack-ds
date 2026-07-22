@@ -14,14 +14,18 @@ describe("Command — unit", () => {
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("command");
+    mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("command")).toBe(true);
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command", "class": "custom" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("command");
-    expect(wrapper.classes()).toContain("custom");
+    mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command", "class": "custom" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("command")).toBe(true);
+    expect(root?.classList.contains("custom")).toBe(true);
   });
 
   it("closes on Escape key", async () => {
@@ -33,16 +37,21 @@ describe("Command — unit", () => {
 
   it("closes on overlay click", async () => {
     const onOpenChangeSpy = vi.fn();
-    const wrapper = mount(Command as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "command" }, slots: { default: "content" }, attachTo: document.body });
-    await wrapper.trigger("click");
+    mount(Command as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "command" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    expect(root).not.toBeNull();
+    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await Promise.resolve();
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });
 
 describe("Command — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command", "aria-label": "Test Command" }, slots: { default: "content" } });
-    const results = await axe(wrapper.element);
+    mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command", "aria-label": "Test Command" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",

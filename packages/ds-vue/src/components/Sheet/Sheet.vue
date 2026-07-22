@@ -62,22 +62,24 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="behavior.setOpenness(false)">
-    <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true"></div>
-    <div v-if="behavior.openness.value" :class="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" :data-side="props.side">
-      <div :class="'sheet__header'">
-        <h2 :class="'sheet__title'">
-          <slot name="title" />
-        </h2>
-        <p :class="'sheet__description'">
-          <slot name="description" />
-        </p>
-        <button :class="'sheet__close'" type="button" aria-label="Close sheet" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
+  <Teleport to="body">
+    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="behavior.setOpenness(false)">
+      <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true"></div>
+      <div v-if="behavior.openness.value" :class="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" :data-side="props.side">
+        <div :class="'sheet__header'">
+          <h2 :class="'sheet__title'">
+            <slot name="title" />
+          </h2>
+          <p :class="'sheet__description'">
+            <slot name="description" />
+          </p>
+          <button :class="'sheet__close'" type="button" aria-label="Close sheet" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
+        </div>
+        <div :class="'sheet__body'">
+          <slot />
+        </div>
+        <div :class="'sheet__footer'"></div>
       </div>
-      <div :class="'sheet__body'">
-        <slot />
-      </div>
-      <div :class="'sheet__footer'"></div>
     </div>
-  </div>
+  </Teleport>
 </template>

@@ -2,6 +2,7 @@
 // @generated:start imports
 import { useToast } from "./useToast.svelte.js";
 import { createAutoDismiss } from "../../primitives/index.js";
+import { portal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -66,7 +67,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} aria-label="Notifications" aria-live={politeness} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
+<div class={classes} aria-label="Notifications" aria-live={politeness} use:portal={{ enabled: true }} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
   {#if behavior.open}
   <div class={'toast__item'} role="status">
     <div class={'toast__row'}>

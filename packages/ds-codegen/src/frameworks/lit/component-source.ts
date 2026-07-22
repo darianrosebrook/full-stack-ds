@@ -44,7 +44,7 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
 import { toKebab } from "../../contract.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
@@ -1834,6 +1834,15 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(`  }`);
   }
 
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: full-overlay surfaces relocate
+  // the HOST element itself into document.body. Moving the host (not its
+  // light-DOM content) is the shadow-scope-preserving choice: the shadow root
+  // and its constructable `static styles` travel with the element, so the
+  // fixed overlay keeps every style while escaping any transform/overflow/
+  // filter ancestor's containing block. IR-driven via `portalsRootToBody`.
+  const rootPortal = portalsRootToBody(ir);
+  const needsLifecycle = (hasOverlayClick && booleanChannel) || rootPortal;
+
   if (hasOverlayClick && booleanChannel) {
     const setter = `set${capitalizeLit(booleanChannel.name)}`;
     const enabledProp = overlayClickTrigger?.enabledByProp;
@@ -1847,16 +1856,60 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       lines.push(`    this.behavior.${setter}(false);`);
     }
     lines.push(`  };`);
+  }
+
+  if (rootPortal) {
+    // Reentrancy state. `_moving` is true only during the synchronous
+    // appendChild that relocates the host; it lets the transient
+    // disconnectedCallback that appendChild fires distinguish itself from a
+    // genuine teardown. `_portaled` records that the host now lives in body,
+    // so the re-fired connectedCallback does not move it a second time.
+    lines.push(``);
+    lines.push(`  private _moving = false;`);
+    lines.push(`  private _portaled = false;`);
+    lines.push(`  private _portalOriginParent: Node | null = null;`);
+    lines.push(`  private _portalOriginNext: Node | null = null;`);
+  }
+
+  if (needsLifecycle) {
     lines.push(``);
     lines.push(`  override connectedCallback(): void {`);
     lines.push(`    super.connectedCallback();`);
-    lines.push(`    this.addEventListener('click', this._handleOverlayClick);`);
+    if (hasOverlayClick && booleanChannel) {
+      lines.push(`    this.addEventListener('click', this._handleOverlayClick);`);
+    }
+    if (rootPortal) {
+      lines.push(`    if (!this._portaled && typeof document !== "undefined" && this.parentNode && this.parentNode !== document.body) {`);
+      lines.push(`      this._portalOriginParent = this.parentNode;`);
+      lines.push(`      this._portalOriginNext = this.nextSibling;`);
+      lines.push(`      this._portaled = true;`);
+      lines.push(`      this._moving = true;`);
+      lines.push(`      document.body.appendChild(this);`);
+      lines.push(`      this._moving = false;`);
+      lines.push(`    }`);
+    }
     lines.push(`  }`);
     lines.push(``);
     lines.push(`  override disconnectedCallback(): void {`);
-    lines.push(
-      `    this.removeEventListener('click', this._handleOverlayClick);`,
-    );
+    if (hasOverlayClick && booleanChannel) {
+      lines.push(
+        `    this.removeEventListener('click', this._handleOverlayClick);`,
+      );
+    }
+    if (rootPortal) {
+      // Skip the transient disconnect the relocation move triggers. On a real
+      // teardown, restore the host to its recorded origin (when that origin is
+      // still connected) so Lit's own removal targets the right place, then
+      // clear the portaled flag.
+      lines.push(`    if (!this._moving) {`);
+      lines.push(`      if (this._portalOriginParent && this._portalOriginParent.isConnected) {`);
+      lines.push(`        this._portalOriginParent.insertBefore(this, this._portalOriginNext);`);
+      lines.push(`      }`);
+      lines.push(`      this._portaled = false;`);
+      lines.push(`      this._portalOriginParent = null;`);
+      lines.push(`      this._portalOriginNext = null;`);
+      lines.push(`    }`);
+    }
     lines.push(`    super.disconnectedCallback();`);
     lines.push(`  }`);
   }

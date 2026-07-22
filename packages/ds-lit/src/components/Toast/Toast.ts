@@ -175,6 +175,35 @@ export class ToastElement extends LitElement {
     onDismiss: () => this.behavior.setOpen(false),
   });
 
+  private _moving = false;
+  private _portaled = false;
+  private _portalOriginParent: Node | null = null;
+  private _portalOriginNext: Node | null = null;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (!this._portaled && typeof document !== "undefined" && this.parentNode && this.parentNode !== document.body) {
+      this._portalOriginParent = this.parentNode;
+      this._portalOriginNext = this.nextSibling;
+      this._portaled = true;
+      this._moving = true;
+      document.body.appendChild(this);
+      this._moving = false;
+    }
+  }
+
+  override disconnectedCallback(): void {
+    if (!this._moving) {
+      if (this._portalOriginParent && this._portalOriginParent.isConnected) {
+        this._portalOriginParent.insertBefore(this, this._portalOriginNext);
+      }
+      this._portaled = false;
+      this._portalOriginParent = null;
+      this._portalOriginNext = null;
+    }
+    super.disconnectedCallback();
+  }
+
   private computeClasses(): string {
     return [
       "toast",

@@ -48,7 +48,7 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
 import { toKebab as sharedToKebab } from "../../contract.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
@@ -1375,6 +1375,14 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (ir.dom && treeHasChildrenGuard(ir.dom)) {
     coreNames.push("AfterContentInit", "ElementRef");
   }
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: full-overlay surfaces relocate
+  // their host element into document.body on init and remove it on destroy so
+  // the fixed layer escapes any transform/overflow/filter ancestor. Needs
+  // OnInit/OnDestroy lifecycle and ElementRef for the host node.
+  if (portalsRootToBody(ir)) {
+    coreNames.push("OnInit", "OnDestroy");
+    if (!coreNames.includes("ElementRef")) coreNames.push("ElementRef");
+  }
   // Only import NgIf when the rendered template will actually use
   // `*ngIf`. Declaring it otherwise triggers ngc NG8113 (unused
   // directive in standalone imports) and clutters the public API
@@ -1532,8 +1540,16 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   lines.push(`})`);
   // When the dom tree has a children guard, the class implements AfterContentInit
   // so it can detect content projection and toggle `hasContent` for *ngIf.
-  if (hasChildrenGuard) {
-    lines.push(`export class ${className} implements AfterContentInit {`);
+  // Full-overlay portal surfaces additionally implement OnInit/OnDestroy to
+  // relocate their host into document.body and clean up on teardown.
+  const rootPortal = portalsRootToBody(ir);
+  const lifecycleInterfaces: string[] = [];
+  if (hasChildrenGuard) lifecycleInterfaces.push("AfterContentInit");
+  if (rootPortal) lifecycleInterfaces.push("OnInit", "OnDestroy");
+  if (lifecycleInterfaces.length > 0) {
+    lines.push(
+      `export class ${className} implements ${lifecycleInterfaces.join(", ")} {`,
+    );
   } else {
     lines.push(`export class ${className} {`);
   }
@@ -1827,6 +1843,45 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       `    return resolveIcon(this.${glyph.namePropName}, ` +
         `${pxGetter ? `this.${pxGetter} ?? Number.NaN` : "Number.NaN"});`,
     );
+    lines.push(`  }`);
+  }
+
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: relocate the host element into
+  // document.body so the fixed overlay layer escapes any transform/overflow/
+  // filter ancestor's containing block. Angular has no CDK dependency in this
+  // repo, so this is a plain lifecycle move via ElementRef. `_originParent`
+  // remembers where the host lived so ngOnDestroy restores/removes it without
+  // leaking a detached node. SSR-safe: guarded on `document` presence. The
+  // moved subtree carries the full root markup, so backdrop-self-click
+  // dismissal and every containment check still resolve against the same nodes.
+  if (rootPortal) {
+    // Reuse the ElementRef the children-guard path already injected as `_el`;
+    // otherwise declare the portal's own host reference.
+    if (!hasChildrenGuard) {
+      lines.push(``);
+      lines.push(`  private _el = inject(ElementRef<HTMLElement>);`);
+    }
+    lines.push(`  private _portalOriginParent: Node | null = null;`);
+    lines.push(`  private _portalOriginNext: Node | null = null;`);
+    lines.push(``);
+    lines.push(`  ngOnInit(): void {`);
+    lines.push(`    if (typeof document === "undefined") return;`);
+    lines.push(`    const host = this._el.nativeElement as HTMLElement;`);
+    lines.push(`    this._portalOriginParent = host.parentNode;`);
+    lines.push(`    this._portalOriginNext = host.nextSibling;`);
+    lines.push(`    document.body.appendChild(host);`);
+    lines.push(`  }`);
+    lines.push(``);
+    lines.push(`  ngOnDestroy(): void {`);
+    lines.push(`    const host = this._el.nativeElement as HTMLElement;`);
+    lines.push(`    // Restore to the original position when it still exists so`);
+    lines.push(`    // Angular's own teardown removes it from the right place;`);
+    lines.push(`    // otherwise detach it directly.`);
+    lines.push(`    if (this._portalOriginParent && this._portalOriginParent.isConnected) {`);
+    lines.push(`      this._portalOriginParent.insertBefore(host, this._portalOriginNext);`);
+    lines.push(`    } else {`);
+    lines.push(`      host.parentNode?.removeChild(host);`);
+    lines.push(`    }`);
     lines.push(`  }`);
   }
 

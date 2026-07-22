@@ -90,5 +90,36 @@ function classTokens(component: { classes: () => string }): string[] {
 // @generated:end
 
 // @custom:start tests
+describe("Dialog — portal (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01)", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [DialogComponent] });
+  });
 
+  it("relocates the host element to document.body, escaping an ancestor stacking context", () => {
+    // A transform/overflow ancestor creates a stacking context that would clip
+    // a merely-fixed dialog. ngOnInit moves the host element to document.body
+    // so the fixed layer escapes it. Place the host inside a transform
+    // ancestor first, then run change detection to fire the lifecycle hook.
+    const ancestor = document.createElement("div");
+    ancestor.style.transform = "translateZ(0)";
+    ancestor.style.overflow = "hidden";
+    document.body.append(ancestor);
+
+    const fixture = TestBed.createComponent(DialogComponent);
+    const host = fixture.nativeElement as HTMLElement;
+    ancestor.append(host);
+    expect(ancestor.contains(host)).toBe(true);
+
+    // Runs ngOnInit → the portal move.
+    fixture.detectChanges();
+
+    // Load-bearing: the host's parent is now document.body, not the transform
+    // ancestor that would otherwise trap the fixed overlay.
+    expect(host.parentElement).toBe(document.body);
+    expect(ancestor.contains(host)).toBe(false);
+
+    fixture.destroy();
+    ancestor.remove();
+  });
+});
 // @custom:end

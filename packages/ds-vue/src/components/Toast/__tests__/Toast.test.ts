@@ -14,49 +14,67 @@ describe("Toast — unit", () => {
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast");
+    mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast")).toBe(true);
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast", "class": "custom" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast");
-    expect(wrapper.classes()).toContain("custom");
+    mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast", "class": "custom" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast")).toBe(true);
+    expect(root?.classList.contains("custom")).toBe(true);
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.attributes("role")).toBe("alert");
+    mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.getAttribute("role")).toBe("alert");
   });
 
   it("applies variant=info variant class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true, "variant": "info" }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast--info");
+    mount(Toast as Component, { props: { "open": true, "variant": "info" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast--info")).toBe(true);
   });
 
   it("applies variant=success variant class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true, "variant": "success" }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast--success");
+    mount(Toast as Component, { props: { "open": true, "variant": "success" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast--success")).toBe(true);
   });
 
   it("applies variant=warning variant class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true, "variant": "warning" }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast--warning");
+    mount(Toast as Component, { props: { "open": true, "variant": "warning" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast--warning")).toBe(true);
   });
 
   it("applies variant=error variant class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true, "variant": "error" }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast--error");
+    mount(Toast as Component, { props: { "open": true, "variant": "error" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast--error")).toBe(true);
   });
 
   it("applies politeness=polite variant class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true, "politeness": "polite" }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast--polite");
+    mount(Toast as Component, { props: { "open": true, "politeness": "polite" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast--polite")).toBe(true);
   });
 
   it("applies politeness=assertive variant class", () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true, "politeness": "assertive" }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("toast--assertive");
+    mount(Toast as Component, { props: { "open": true, "politeness": "assertive" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("toast--assertive")).toBe(true);
   });
 
   it("closes on Escape key", async () => {
@@ -69,8 +87,10 @@ describe("Toast — unit", () => {
 
 describe("Toast — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast", "aria-label": "Test Toast" }, slots: { default: "content" } });
-    const results = await axe(wrapper.element);
+    mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast", "aria-label": "Test Toast" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",
