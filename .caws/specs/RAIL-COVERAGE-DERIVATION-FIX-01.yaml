@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: rail-coverage-fix
 created_at: '2026-07-22T00:55:46.562Z'
-updated_at: '2026-07-22T00:55:46.562Z'
+updated_at: '2026-07-22T01:15:42.881Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -18,6 +18,7 @@ scope:
     - 'package.json'
     - '.github/workflows/ci.yml'
     - 'docs/current-implementation-snapshot.md'
+    - scripts/render-binding-audit/audit.mjs
   out: []
 invariants:
   - 'Coverage must be derived, pins must be fixed points, rails must be wired or deleted. The render-binding rail keeps its corpus-derived model (matrix regenerated from the live contracts dir by scripts/render-binding-audit/audit.mjs each run — never a committed frozen classification) and gains CI wiring so it cannot go silently dead again; its 5-case REGRESSION block stays frozen because regression pins are fixed points, not moving targets.'
