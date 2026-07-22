@@ -3,6 +3,7 @@ title: 'Closed channel-update operation vocabulary (OTP set-char-at-index, Selec
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: channel-update-ops
 created_at: '2026-07-22T18:30:38.035Z'
 updated_at: '2026-07-22T18:30:38.035Z'
 blast_radius:
