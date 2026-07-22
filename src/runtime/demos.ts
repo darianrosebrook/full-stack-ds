@@ -49,6 +49,19 @@ function propMembersFromContract(component: ComponentBundle): PropMember[] {
   );
 }
 
+/**
+ * Names of callback-kind props declared on the contract (propType.kind ===
+ * "callback" — e.g. onChange, onOpenChange). Data-driven from the contract so
+ * the preview capture surface (config-entry.ts) never hardcodes a
+ * per-component callback name; any component whose contract declares a
+ * callback prop is automatically covered.
+ */
+export function callbackPropNames(component: ComponentBundle): string[] {
+  return propMembersFromContract(component)
+    .filter((m) => m.propType?.kind === "callback")
+    .map((m) => m.name);
+}
+
 function sampleValueForProp(component: ComponentBundle, member: PropMember): unknown {
   const propType = member.propType as DemoPropType | undefined;
   if (propType) return sampleValueForPropType(component, propType, member.name);

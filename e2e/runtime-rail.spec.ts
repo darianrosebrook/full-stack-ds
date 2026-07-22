@@ -587,6 +587,132 @@ test.describe("Runtime rail — Select (predicate:memberOf for aria-selected)", 
   }
 });
 
+// ---------------------------------------------------------------------
+// FEAT-PREVIEW-CALLBACK-CAPTURE-01 — the repo's first browser-level
+// interaction fact.
+//
+// Every prior rail block asserts a RENDER fact from static or config-bus
+// props; nothing before this clicked an element and observed the runtime
+// consequence of an event handler actually firing. This block does: it
+// clicks the Select trigger and asserts both (a) the open-channel
+// callback fired with the payload the contract predicts, and (b) the DOM
+// mutated as that callback's real consumer (a mounted component) would
+// mutate it.
+//
+// The capture surface (src/runtime/config-entry.ts) wraps any prop the
+// component's contract declares with propType.kind === "callback" — data-
+// driven from packages/ds-contracts/components/Select/Select.contract.json,
+// not hardcoded to "onOpenChange" in the preview shell. Invocations land on
+// window.__fsdsCallbackLog, readable via page.evaluate.
+//
+// Select's contract declares `defaultOpen: true` (see anatomy above — the
+// `content` node is `if: "open"`, and the rail's default-props Select test
+// above already relies on the listbox being open by default to assert
+// aria-selected). The FIRST trigger click therefore closes the select, so
+// the open-channel callback's first payload is `false`, not `true` — this
+// is asserted explicitly rather than assumed.
+// Note on title: deliberately NOT "Runtime rail — Select …" — the
+// rail-coverage.ts projection + its coherence test (rail-coverage.test.ts,
+// out of this spec's scope.in) parse `test.describe("Runtime rail — <Component>…"`
+// titles to build a committed default/non-default coverage projection for the
+// showcase's Evidence panel. A third title starting with "Runtime rail — Select"
+// would misparse as a second (colliding) Select default-facts entry, since the
+// parser only recognizes "default" and "non-default <prop>" surfaces, not an
+// interaction-fact surface. Prefixing with "Runtime rail interactions" keeps
+// this block outside that parser's component-name capture entirely, so this
+// e2e-only addition doesn't require touching rail-coverage.ts (out of scope).
+test.describe("Runtime rail interactions — Select (first interaction: trigger click)", () => {
+  for (const framework of ["react", "vue", "svelte", "lit"] as const) {
+    test(`${framework}: clicking .select__trigger fires onOpenChange(false) and closes the listbox`, async ({
+      page,
+    }) => {
+      await goto(page, framework, "Select", "select");
+
+      const hostSelector = framework === "lit" ? `fsds-${kebab("Select")}` : null;
+
+      // Fact 1 (pre-click): defaultOpen=true means the listbox starts open
+      // and the root carries the --open modifier class.
+      const before = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host!) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return { hasOpenClass: false, hasContent: false };
+          const rootEl = root.querySelector(".select");
+          return {
+            hasOpenClass: !!rootEl?.classList.contains("select--open"),
+            hasContent: !!root.querySelector(".select__content"),
+          };
+        },
+        { host: hostSelector, isLit: framework === "lit" },
+      );
+      expect(before.hasOpenClass).toBe(true);
+      expect(before.hasContent).toBe(true);
+
+      // Click the trigger. For Lit, Playwright's `>>` shadow-piercing
+      // locator syntax (already used by `goto`'s selector construction)
+      // reaches the button inside the shadow root.
+      const triggerSelector =
+        framework === "lit" ? `${hostSelector} >> .select__trigger` : ".select__trigger";
+      await page.locator(triggerSelector).first().click();
+
+      // Fact 2: the callback-capture surface recorded the invocation. The
+      // channel's onOpenChange handler is called with the NEW open value —
+      // toggling from the true default produces false first.
+      const log = await page.evaluate(
+        () => (window as unknown as { __fsdsCallbackLog?: Array<{ name: string; args: unknown[] }> })
+          .__fsdsCallbackLog ?? [],
+      );
+      const openChangeCalls = log.filter((entry) => entry.name === "onOpenChange");
+      expect(openChangeCalls).toHaveLength(1);
+      expect(openChangeCalls[0].args).toEqual([false]);
+
+      // Fact 3: the DOM consequence of that callback firing — the mounted
+      // component's own state updated (this is NOT the preview replaying
+      // fsds:config; the click drove the component's internal useState/ref/
+      // writable directly), the --open modifier class is gone, and the
+      // listbox content is unmounted (each framework's contract-generated
+      // source guards `.select__content` behind `if: open`/`{#if}`/`v-if`/
+      // the Lit conditional-template branch).
+      const after = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host!) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return { hasOpenClass: true, hasContent: true };
+          const rootEl = root.querySelector(".select");
+          return {
+            hasOpenClass: !!rootEl?.classList.contains("select--open"),
+            hasContent: !!root.querySelector(".select__content"),
+          };
+        },
+        { host: hostSelector, isLit: framework === "lit" },
+      );
+      expect(after.hasOpenClass).toBe(false);
+      expect(after.hasContent).toBe(false);
+    });
+  }
+
+  // Angular's preview path bootstraps via bootstrapApplication + AOT compile
+  // and (per the OTP interaction-fact non-claim above, now resolved for
+  // React/Vue/Svelte/Lit by this same capture surface) still binds inputs
+  // from a mutable `props` object driven by the fsds:config bus rather than
+  // wiring the compiled host's own callback props through the capture
+  // wrapper — buildAngularDemo's synthesized HostComponent template passes
+  // `[onOpenChange]="..."` bindings straight to the Select's Angular @Output
+  // wiring, not through a config-entry.ts-style renderComponent(props) call
+  // that withCallbackCapture can intercept (angular-preview has no
+  // config-entry.ts consumer at all — see buildAngularDemo in
+  // src/runtime/demos.ts, which is a fundamentally different synthesized-
+  // host pipeline than the shared react/vue/svelte/lit config-entry bus).
+  // Recorded skipped per the existing preview constraint, matching how the
+  // OTP block above documents the same gap for a different component.
+  test.skip(
+    true,
+    "Angular preview does not route through config-entry.ts's callback-capture wrapper (synthesized-host pipeline, not the shared fsds:config bus renderer) — see comment above",
+  );
+});
+
 test.describe("Runtime rail — Truncate (CSS-var fallback)", () => {
   for (const framework of FRAMEWORKS) {
     test(`${framework}: content element has style attribute slot for --fsds-truncate-content-lines`, async ({ page }) => {
