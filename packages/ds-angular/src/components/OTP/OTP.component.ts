@@ -24,7 +24,7 @@ export type OTPMode = "numeric" | "alphanumeric";
   imports: [NgClass, NgFor],
   template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="label" aria-describedby="otp-error-id">
   <div [ngClass]="'otp__group'">
-    <ng-container *ngFor="let _ of arrayFromCount(length); let index = index">
+    <ng-container *ngFor="let _ of arrayFromCount(length ?? 6); let index = index">
       <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" [disabled]="disabled" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
     </ng-container>
   </div>

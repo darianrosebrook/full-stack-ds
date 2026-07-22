@@ -126,7 +126,7 @@ export class OTPElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="group" aria-label=${ifDefined(this.label)} aria-describedby="otp-error-id">
   <div class=${'otp__group'}>
-    ${Array.from({ length: this.length ?? 0 }, (_, index) => html`
+    ${Array.from({ length: this.length ?? 6 }, (_, index) => html`
     <input class=${'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" ?disabled=${this.disabled ?? false} aria-readonly=${ifDefined(this.readOnly === undefined ? undefined : (this.readOnly ? 'true' : 'false'))} data-otp-index=${index} />
     `)}
   </div>
