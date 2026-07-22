@@ -3,6 +3,7 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { portalsRootToBody } from "../../semantics.js";
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
@@ -10,6 +11,14 @@ import {
 
 export function generateSvelteTest(ir: ComponentIR): string {
   const plan = buildComponentTestPlan(ir);
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: full-overlay surfaces relocate
+  // their root to document.body via the portal action, so `container` no
+  // longer holds the root element. Resolve it from document.body by the
+  // component's base class instead (testing-library auto-cleanup unmounts
+  // between tests and the portal action removes its node on destroy, so the
+  // query always resolves the current mount). IR-driven — no name lore.
+  const portalRoot = portalsRootToBody(ir);
+  const rootDecl = `    const root = document.body.querySelector<HTMLElement>(".${plan.cssPrefix}");\n    expect(root).not.toBeNull();`;
   // Escape tests rely on a document-level keydown listener wired only by the
   // dom-tree behavior hook; stack-only components have no such listener.
   const emitEscape = plan.escapeDismissals.length > 0 && !!ir.dom;
@@ -35,7 +44,7 @@ export function generateSvelteTest(ir: ComponentIR): string {
     emitOverlayClick;
 
   const importParts = [
-    `import { describe, expect, it${needsVi ? ", vi" : ""} } from "vitest";`,
+    `import { describe, expect, it${needsVi ? ", vi" : ""}${portalRoot ? ", afterEach" : ""} } from "vitest";`,
     `import type { Component } from "svelte";`,
     `import { render${needsFireEvent ? ", fireEvent" : ""} } from "@testing-library/svelte";`,
     `import { axe } from "vitest-axe";`,
@@ -45,37 +54,73 @@ export function generateSvelteTest(ir: ComponentIR): string {
 
   const lines: string[] = [];
   lines.push(`describe("${plan.name} — unit", () => {`);
+  if (portalRoot) {
+    // There is no testing-library auto-cleanup in this package, so portaled
+    // roots accumulate in document.body across mounts; reset so the
+    // class-based root query always resolves the current test's mount.
+    // (The portal action's destroy tolerates already-removed nodes.)
+    lines.push(`  afterEach(() => {`);
+    lines.push(`    document.body.innerHTML = "";`);
+    lines.push(`  });`);
+    lines.push(``);
+  }
   lines.push(`  it("renders with default props", () => {`);
-  lines.push(`    const { container } = ${renderExpression(plan.name, plan)};`);
-  lines.push(`    expect(container.firstElementChild).toBeTruthy();`);
+  if (portalRoot) {
+    lines.push(`    ${renderExpression(plan.name, plan)};`);
+    lines.push(rootDecl);
+  } else {
+    lines.push(`    const { container } = ${renderExpression(plan.name, plan)};`);
+    lines.push(`    expect(container.firstElementChild).toBeTruthy();`);
+  }
   lines.push(`  });`);
   lines.push(``);
 
   lines.push(`  it("applies the base CSS class", () => {`);
-  lines.push(`    const { container } = ${renderExpression(plan.name, plan)};`);
-  lines.push(
-    `    expect(container.firstElementChild?.className).toContain("${plan.cssPrefix}");`,
-  );
+  if (portalRoot) {
+    lines.push(`    ${renderExpression(plan.name, plan)};`);
+    lines.push(rootDecl);
+    lines.push(`    expect(root?.className).toContain("${plan.cssPrefix}");`);
+  } else {
+    lines.push(`    const { container } = ${renderExpression(plan.name, plan)};`);
+    lines.push(
+      `    expect(container.firstElementChild?.className).toContain("${plan.cssPrefix}");`,
+    );
+  }
   lines.push(`  });`);
   lines.push(``);
 
   lines.push(`  it("merges custom class", () => {`);
-  lines.push(
-    `    const { container } = ${renderExpression(plan.name, plan, { class: "custom" })};`,
-  );
-  lines.push(
-    `    expect(container.firstElementChild?.className).toContain("${plan.cssPrefix}");`,
-  );
-  lines.push(`    expect(container.firstElementChild?.className).toContain("custom");`);
+  if (portalRoot) {
+    lines.push(
+      `    ${renderExpression(plan.name, plan, { class: "custom" })};`,
+    );
+    lines.push(rootDecl);
+    lines.push(`    expect(root?.className).toContain("${plan.cssPrefix}");`);
+    lines.push(`    expect(root?.className).toContain("custom");`);
+  } else {
+    lines.push(
+      `    const { container } = ${renderExpression(plan.name, plan, { class: "custom" })};`,
+    );
+    lines.push(
+      `    expect(container.firstElementChild?.className).toContain("${plan.cssPrefix}");`,
+    );
+    lines.push(`    expect(container.firstElementChild?.className).toContain("custom");`);
+  }
   lines.push(`  });`);
 
   if (plan.role) {
     lines.push(``);
     lines.push(`  it("has the correct ARIA role", () => {`);
-    lines.push(`    const { container } = ${renderExpression(plan.name, plan)};`);
-    lines.push(
-      `    expect(container.firstElementChild?.getAttribute("role")).toBe("${plan.role.role}");`,
-    );
+    if (portalRoot) {
+      lines.push(`    ${renderExpression(plan.name, plan)};`);
+      lines.push(rootDecl);
+      lines.push(`    expect(root?.getAttribute("role")).toBe("${plan.role.role}");`);
+    } else {
+      lines.push(`    const { container } = ${renderExpression(plan.name, plan)};`);
+      lines.push(
+        `    expect(container.firstElementChild?.getAttribute("role")).toBe("${plan.role.role}");`,
+      );
+    }
     lines.push(`  });`);
   }
 
@@ -84,12 +129,20 @@ export function generateSvelteTest(ir: ComponentIR): string {
     lines.push(
       `  it("applies ${variant.dimension}=${variant.value} variant class", () => {`,
     );
-    lines.push(
-      `    const { container } = ${renderExpression(plan.name, plan, { [variant.dimension]: variant.value })};`,
-    );
-    lines.push(
-      `    expect(container.firstElementChild?.className).toContain("${variant.className}");`,
-    );
+    if (portalRoot) {
+      lines.push(
+        `    ${renderExpression(plan.name, plan, { [variant.dimension]: variant.value })};`,
+      );
+      lines.push(rootDecl);
+      lines.push(`    expect(root?.className).toContain("${variant.className}");`);
+    } else {
+      lines.push(
+        `    const { container } = ${renderExpression(plan.name, plan, { [variant.dimension]: variant.value })};`,
+      );
+      lines.push(
+        `    expect(container.firstElementChild?.className).toContain("${variant.className}");`,
+      );
+    }
     lines.push(`  });`);
   }
 
@@ -194,13 +247,24 @@ export function generateSvelteTest(ir: ComponentIR): string {
       lines.push(``);
       lines.push(`  it("closes on overlay click", async () => {`);
       lines.push(`    const ${testCase.spyName} = vi.fn();`);
-      lines.push(
-        `    const { container } = ${renderExpression(plan.name, plan, {
-          [testCase.channel.valueProp]: true,
-          [testCase.channel.changeHandlerProp]: { code: testCase.spyName },
-        })};`,
-      );
-      lines.push(`    await fireEvent.click(container.firstElementChild!);`);
+      if (portalRoot) {
+        lines.push(
+          `    ${renderExpression(plan.name, plan, {
+            [testCase.channel.valueProp]: true,
+            [testCase.channel.changeHandlerProp]: { code: testCase.spyName },
+          })};`,
+        );
+        lines.push(rootDecl);
+        lines.push(`    await fireEvent.click(root!);`);
+      } else {
+        lines.push(
+          `    const { container } = ${renderExpression(plan.name, plan, {
+            [testCase.channel.valueProp]: true,
+            [testCase.channel.changeHandlerProp]: { code: testCase.spyName },
+          })};`,
+        );
+        lines.push(`    await fireEvent.click(container.firstElementChild!);`);
+      }
       lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
       lines.push(`  });`);
     }
@@ -214,15 +278,23 @@ export function generateSvelteTest(ir: ComponentIR): string {
   const axeAttrs = attrsFromAxeProps(plan.accessibility.axeProps);
   const axeRenderProps: RenderProps = { ...axeAttrs };
   if (plan.renderOpenProp) axeRenderProps[plan.renderOpenProp] = true;
-  lines.push(
-    `    const { container } = render(${plan.name} as unknown as Component<Record<string, unknown>>, { props: ${objectLiteral(axeRenderProps)} });`,
-  );
-  if (plan.accessibility.needsListParent) {
-    lines.push(`    const list = document.createElement("ul");`);
-    lines.push(`    list.append(container.firstElementChild!);`);
-    lines.push(`    const results = await axe(list);`);
+  if (portalRoot) {
+    lines.push(
+      `    render(${plan.name} as unknown as Component<Record<string, unknown>>, { props: ${objectLiteral(axeRenderProps)} });`,
+    );
+    lines.push(rootDecl);
+    lines.push(`    const results = await axe(root as Element);`);
   } else {
-    lines.push(`    const results = await axe(container);`);
+    lines.push(
+      `    const { container } = render(${plan.name} as unknown as Component<Record<string, unknown>>, { props: ${objectLiteral(axeRenderProps)} });`,
+    );
+    if (plan.accessibility.needsListParent) {
+      lines.push(`    const list = document.createElement("ul");`);
+      lines.push(`    list.append(container.firstElementChild!);`);
+      lines.push(`    const results = await axe(list);`);
+    } else {
+      lines.push(`    const results = await axe(container);`);
+    }
   }
   lines.push(`    const knownScaffoldViolationIds = new Set([`);
   // Rules that fire when the test fixture renders the component with no

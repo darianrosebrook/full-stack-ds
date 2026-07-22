@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import type { Component } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
@@ -8,6 +8,10 @@ import Toast from "../Toast.vue";
 
 // @generated:start tests
 describe("Toast — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
     const wrapper = mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" } });
     expect(wrapper.element).toBeTruthy();
@@ -15,14 +19,14 @@ describe("Toast — unit", () => {
 
   it("applies the base CSS class", () => {
     mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast")).toBe(true);
   });
 
   it("merges custom class", () => {
     mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast", "class": "custom" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast")).toBe(true);
     expect(root?.classList.contains("custom")).toBe(true);
@@ -30,49 +34,49 @@ describe("Toast — unit", () => {
 
   it("has the correct ARIA role", () => {
     mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.getAttribute("role")).toBe("alert");
   });
 
   it("applies variant=info variant class", () => {
     mount(Toast as Component, { props: { "open": true, "variant": "info" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast--info")).toBe(true);
   });
 
   it("applies variant=success variant class", () => {
     mount(Toast as Component, { props: { "open": true, "variant": "success" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast--success")).toBe(true);
   });
 
   it("applies variant=warning variant class", () => {
     mount(Toast as Component, { props: { "open": true, "variant": "warning" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast--warning")).toBe(true);
   });
 
   it("applies variant=error variant class", () => {
     mount(Toast as Component, { props: { "open": true, "variant": "error" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast--error")).toBe(true);
   });
 
   it("applies politeness=polite variant class", () => {
     mount(Toast as Component, { props: { "open": true, "politeness": "polite" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast--polite")).toBe(true);
   });
 
   it("applies politeness=assertive variant class", () => {
     mount(Toast as Component, { props: { "open": true, "politeness": "assertive" }, attrs: { "data-testid": "toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("toast--assertive")).toBe(true);
   });
@@ -88,7 +92,7 @@ describe("Toast — unit", () => {
 describe("Toast — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
     mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast", "aria-label": "Test Toast" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="toast"]');
+    const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
     const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([

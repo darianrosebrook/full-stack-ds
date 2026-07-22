@@ -17,8 +17,11 @@ export function generateVueTest(ir: ComponentIR): string {
   // comment). Class/role/axe assertions must resolve the teleported root from
   // document.body instead. IR-driven via `portalsRootToBody` — no name lore.
   const portalRoot = portalsRootToBody(ir);
-  // Resolve the teleported root by its data-testid within document.body.
-  const rootDecl = `    const root = document.body.querySelector<HTMLElement>('[data-testid="${plan.testId}"]');\n    expect(root).not.toBeNull();`;
+  // Resolve the teleported root by its base class within document.body —
+  // fallthrough attrs (data-testid) do not reach a teleported root, so the
+  // component's own class is the only reliable handle. Safe because each
+  // portal-mode test resets document.body in afterEach.
+  const rootDecl = `    const root = document.body.querySelector<HTMLElement>(".${plan.cssPrefix}");\n    expect(root).not.toBeNull();`;
   // Escape dismissals rely on a document-level keydown listener that is only
   // wired by the dom-tree behavior hook. Stack-only components have no such
   // listener, so Escape tests would always fail and are omitted here.
@@ -37,7 +40,7 @@ export function generateVueTest(ir: ComponentIR): string {
   // the generated imports section to provide it.
   const needsVi = plan.channels.length > 0 || plan.escapeDismissals.length > 0 || emitOverlayClick;
   const importsBody = [
-    `import { describe, it, expect${needsVi ? ", vi" : ""} } from "vitest";`,
+    `import { describe, it, expect${needsVi ? ", vi" : ""}${portalRoot ? ", afterEach" : ""} } from "vitest";`,
     `import type { Component } from "vue";`,
     `import { mount } from "@vue/test-utils";`,
     `import { axe } from "vitest-axe";`,
@@ -46,6 +49,14 @@ export function generateVueTest(ir: ComponentIR): string {
 
   const lines: string[] = [];
   lines.push(`describe("${plan.name} — unit", () => {`);
+  if (portalRoot) {
+    // Teleported roots accumulate in document.body across mounts; reset so
+    // the class-based root query always resolves the current test's mount.
+    lines.push(`  afterEach(() => {`);
+    lines.push(`    document.body.innerHTML = "";`);
+    lines.push(`  });`);
+    lines.push(``);
+  }
   lines.push(`  it("renders with default props", () => {`);
   lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
   lines.push(`    expect(wrapper.element).toBeTruthy();`);

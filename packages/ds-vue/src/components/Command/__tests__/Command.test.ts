@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import type { Component } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
@@ -8,6 +8,10 @@ import Command from "../Command.vue";
 
 // @generated:start tests
 describe("Command — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
     const wrapper = mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command" }, slots: { default: "content" } });
     expect(wrapper.element).toBeTruthy();
@@ -15,14 +19,14 @@ describe("Command — unit", () => {
 
   it("applies the base CSS class", () => {
     mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    const root = document.body.querySelector<HTMLElement>(".command");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("command")).toBe(true);
   });
 
   it("merges custom class", () => {
     mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command", "class": "custom" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    const root = document.body.querySelector<HTMLElement>(".command");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("command")).toBe(true);
     expect(root?.classList.contains("custom")).toBe(true);
@@ -38,7 +42,7 @@ describe("Command — unit", () => {
   it("closes on overlay click", async () => {
     const onOpenChangeSpy = vi.fn();
     mount(Command as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "command" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    const root = document.body.querySelector<HTMLElement>(".command");
     expect(root).not.toBeNull();
     root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await Promise.resolve();
@@ -49,7 +53,7 @@ describe("Command — unit", () => {
 describe("Command — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
     mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command", "aria-label": "Test Command" }, slots: { default: "content" }, attachTo: document.body });
-    const root = document.body.querySelector<HTMLElement>('[data-testid="command"]');
+    const root = document.body.querySelector<HTMLElement>(".command");
     expect(root).not.toBeNull();
     const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([

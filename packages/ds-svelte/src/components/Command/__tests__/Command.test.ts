@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import type { Component } from "svelte";
 import { render, fireEvent } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
@@ -8,20 +8,29 @@ import Command from "../Command.svelte";
 
 // @generated:start tests
 describe("Command — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
-    const { container } = render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild).toBeTruthy();
+    render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".command");
+    expect(root).not.toBeNull();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild?.className).toContain("command");
+    render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".command");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("command");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
-    expect(container.firstElementChild?.className).toContain("command");
-    expect(container.firstElementChild?.className).toContain("custom");
+    render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
+    const root = document.body.querySelector<HTMLElement>(".command");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("command");
+    expect(root?.className).toContain("custom");
   });
 
   it("closes on Escape key", async () => {
@@ -33,16 +42,20 @@ describe("Command — unit", () => {
 
   it("closes on overlay click", async () => {
     const onOpenChangeSpy = vi.fn();
-    const { container } = render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
-    await fireEvent.click(container.firstElementChild!);
+    render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
+    const root = document.body.querySelector<HTMLElement>(".command");
+    expect(root).not.toBeNull();
+    await fireEvent.click(root!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });
 
 describe("Command — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Command as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Command", "open": true } });
-    const results = await axe(container);
+    render(Command as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Command", "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".command");
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",

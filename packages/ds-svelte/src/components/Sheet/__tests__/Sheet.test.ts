@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import type { Component } from "svelte";
 import { render, fireEvent } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
@@ -8,40 +8,57 @@ import Sheet from "../Sheet.svelte";
 
 // @generated:start tests
 describe("Sheet — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild).toBeTruthy();
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild?.className).toContain("sheet");
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("sheet");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
-    expect(container.firstElementChild?.className).toContain("sheet");
-    expect(container.firstElementChild?.className).toContain("custom");
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("sheet");
+    expect(root?.className).toContain("custom");
   });
 
   it("applies side=top variant class", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "top" } });
-    expect(container.firstElementChild?.className).toContain("sheet--top");
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "top" } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("sheet--top");
   });
 
   it("applies side=right variant class", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "right" } });
-    expect(container.firstElementChild?.className).toContain("sheet--right");
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "right" } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("sheet--right");
   });
 
   it("applies side=bottom variant class", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "bottom" } });
-    expect(container.firstElementChild?.className).toContain("sheet--bottom");
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "bottom" } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("sheet--bottom");
   });
 
   it("applies side=left variant class", () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "left" } });
-    expect(container.firstElementChild?.className).toContain("sheet--left");
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "side": "left" } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("sheet--left");
   });
 
   it("closes on Escape key", async () => {
@@ -53,16 +70,20 @@ describe("Sheet — unit", () => {
 
   it("closes on overlay click", async () => {
     const onOpenChangeSpy = vi.fn();
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
-    await fireEvent.click(container.firstElementChild!);
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    await fireEvent.click(root!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });
 
 describe("Sheet — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Sheet", "open": true } });
-    const results = await axe(container);
+    render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Sheet", "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".sheet");
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",
