@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useWalkthrough } from "./useWalkthrough.js";
 // @generated:end
 
@@ -63,6 +63,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -70,11 +74,11 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props['data-testid']">
-    <div :class="'walkthrough__content'">
-      <h3 :class="'walkthrough__title'">
+    <div :class="'walkthrough__content'" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
+      <h3 :class="'walkthrough__title'" :id="`${instanceId}-title`">
         <slot name="title" />
       </h3>
-      <p :class="'walkthrough__description'">
+      <p :class="'walkthrough__description'" :id="`${instanceId}-description`">
         <slot name="description" />
       </p>
     </div>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId, useSlots } from "vue";
+import { provideFieldAssociation } from "../../primitives/index.js";
 import { useField } from "./useField.js";
 // @generated:end
 
@@ -60,6 +61,16 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+const slots = useSlots();
+const fieldAssociationValue = computed(() => ({
+  controlId: `${instanceId}-control`,
+  describedBy: [slots.help && props.status !== 'invalid' ? `${instanceId}-help` : null, slots.error && props.status === 'invalid' ? `${instanceId}-error` : null].filter(Boolean).join(' ') || undefined,
+}));
+provideFieldAssociation(fieldAssociationValue);
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -68,7 +79,7 @@ const classNames = computed(() => [
 <template>
   <div :class="classNames" role="group" :data-testid="props['data-testid']">
     <div :class="'field__header'">
-      <label :class="'field__label'">
+      <label :class="'field__label'" :for="`${instanceId}-control`">
         <slot name="label" />
       </label>
     </div>
@@ -76,10 +87,10 @@ const classNames = computed(() => [
       <slot name="control" />
     </div>
     <div :class="'field__meta'">
-      <span :class="'field__help'">
+      <span :class="'field__help'" :id="`${instanceId}-help`">
         <slot name="help" />
       </span>
-      <span :class="'field__error'">
+      <span :class="'field__error'" :id="`${instanceId}-error`">
         <slot name="error" />
       </span>
       <span v-if="props.validating" :class="'field__validatingIndicator'">

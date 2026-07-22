@@ -23,10 +23,12 @@ import type {
   BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
+  IdRefIR,
   IterationIR,
   NormalizedChannelIR,
   PropTypeIR,
 } from "../../ir.js";
+import { componentNeedsInstanceId } from "../../id-relationships.js";
 import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
@@ -1522,7 +1524,33 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   const channelByName = new Map(channels.map((c) => [c.name, c]));
   const hasHook = channels.length > 0;
 
-  const importLines = [`import { computed } from "vue";`];
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated relationship ids need a
+  // per-instance namespace (Vue 3.5 `useId`), the provider side reads slot
+  // presence in script scope (`useSlots`), and provider/consumer wire the
+  // field-association primitive.
+  const needsInstanceId = componentNeedsInstanceId(ir);
+  const assocProvides = ir.fieldAssociation?.provides;
+  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const providerNeedsSlots =
+    assocProvides !== undefined &&
+    assocProvides.describedBy.some((ref) => ref.slotGate !== undefined);
+
+  const vueCoreImports = ["computed"];
+  if (needsInstanceId) vueCoreImports.push("useId");
+  if (providerNeedsSlots) vueCoreImports.push("useSlots");
+  const importLines = [
+    `import { ${vueCoreImports.sort().join(", ")} } from "vue";`,
+  ];
+  if (assocProvides) {
+    importLines.push(
+      `import { provideFieldAssociation } from "../../primitives/index.js";`,
+    );
+  }
+  if (assocConsumes) {
+    importLines.push(
+      `import { useFieldAssociation } from "../../primitives/index.js";`,
+    );
+  }
   if (hasHook) importLines.push(`import { use${ir.name} } from "./use${ir.name}.js";`);
   const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
   const autoDismissChannel =
@@ -1669,6 +1697,26 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   }
   const iconGlyphBody = iconGlyphLines.join("\n");
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 script body: instance-id namespace,
+  // provider value (computed so slot/status changes re-derive), consumer
+  // injection.
+  const fieldAssocLines: string[] = [];
+  if (needsInstanceId) fieldAssocLines.push(`const instanceId = useId();`);
+  if (providerNeedsSlots) fieldAssocLines.push(`const slots = useSlots();`);
+  if (assocProvides) {
+    fieldAssocLines.push(
+      `const fieldAssociationValue = computed(() => ({`,
+      `  controlId: ${vueGeneratedIdExpr(assocProvides.controlSlug)},`,
+      `  describedBy: ${vueIdRefListExpr(assocProvides.describedBy, undefined, "script")},`,
+      `}));`,
+      `provideFieldAssociation(fieldAssociationValue);`,
+    );
+  }
+  if (assocConsumes) {
+    fieldAssocLines.push(`const fieldAssociation = useFieldAssociation();`);
+  }
+  const fieldAssocBody = fieldAssocLines.join("\n");
+
   const overlayClickTrigger = ir.behavior.normalizedDismissalTriggers.find(
     (t) => t.event === "overlayClick",
   );
@@ -1681,6 +1729,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     rootRole: ir.root.effectiveRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
+    fieldAssociationConsumer: assocConsumes,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
@@ -1735,6 +1784,16 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       : []),
     { kind: "generated", id: "classes", body: classesBody },
     blank(),
+    ...(fieldAssocBody
+      ? [
+          {
+            kind: "generated" as const,
+            id: "fieldAssociation",
+            body: fieldAssocBody,
+          },
+          blank(),
+        ]
+      : []),
     ...(iconGlyphBody
       ? [
           { kind: "generated" as const, id: "iconGlyph", body: iconGlyphBody },
@@ -1772,6 +1831,12 @@ interface VueRenderContext {
     defaultTag: string;
   };
   /**
+   * True when the component consumes ambient field association
+   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `:id` /
+   * `:aria-describedby` from the injected `fieldAssociation` ref.
+   */
+  fieldAssociationConsumer?: boolean;
+  /**
    * Identifier names that resolve as iteration aliases (item/index
    * variables introduced by an enclosing `iterate` directive). After
    * BINDING-EXPRESSION-V2-01, binding-side references to these locals
@@ -1797,6 +1862,61 @@ interface VueRenderContext {
    * glyph nodes.
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
+}
+
+/**
+ * FEAT-A11Y-LABEL-ID-ASSOCIATION-01 — Vue lowering of generated
+ * relationship ids. Ids derive from the single `useId()` namespace
+ * (`instanceId` script const) so refs and targets can never drift.
+ * Expressions are emitted in two scopes: "template" (attribute bindings,
+ * `$slots`, single-quoted literals — the attr value is double-quoted) and
+ * "script" (the provider's computed, `slots` from `useSlots()`).
+ */
+function vueGeneratedIdExpr(slug: string): string {
+  return `\`\${instanceId}-${slug}\``;
+}
+
+function vueIdRefGuardExpr(
+  ref: IdRefIR,
+  scope: "script" | "template",
+): string | undefined {
+  const conds: string[] = [];
+  if (ref.slotGate) {
+    conds.push(
+      scope === "script" ? `slots.${ref.slotGate}` : `$slots.${ref.slotGate}`,
+    );
+  }
+  if (ref.when) {
+    const accessor = `props.${propAccess(ref.when.prop)}`;
+    if (ref.when.op === "eq") {
+      conds.push(
+        `${accessor} ${ref.when.negated ? "!==" : "==="} '${ref.when.value}'`,
+      );
+    } else {
+      conds.push(ref.when.negated ? `!${accessor}` : accessor);
+    }
+  }
+  return conds.length > 0 ? conds.join(" && ") : undefined;
+}
+
+function vueIdRefListExpr(
+  refs: IdRefIR[],
+  passthroughProp: string | undefined,
+  scope: "script" | "template",
+): string {
+  if (refs.length === 0 && !passthroughProp) return "undefined";
+  if (refs.length === 1 && !passthroughProp) {
+    const guard = vueIdRefGuardExpr(refs[0], scope);
+    const id = vueGeneratedIdExpr(refs[0].slug);
+    return guard ? `${guard} ? ${id} : undefined` : id;
+  }
+  const parts = refs.map((ref) => {
+    const guard = vueIdRefGuardExpr(ref, scope);
+    const id = vueGeneratedIdExpr(ref.slug);
+    return guard ? `${guard} ? ${id} : null` : id;
+  });
+  if (passthroughProp) parts.push(`props.${propAccess(passthroughProp)}`);
+  return `[${parts.join(", ")}].filter(Boolean).join(' ') || undefined`;
 }
 
 function renderVueDomNode(
@@ -1899,6 +2019,17 @@ function renderVueDomNode(
     attrs.push(rendered);
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
+  // relationship targets, and the lowered idref attributes on sources.
+  if (node.generatedIdSlug !== undefined) {
+    attrs.push(`:id="${vueGeneratedIdExpr(node.generatedIdSlug)}"`);
+  }
+  for (const refAttr of node.idRefAttrs) {
+    attrs.push(
+      `:${refAttr.attribute}="${vueIdRefListExpr(refAttr.refs, refAttr.passthroughProp, "template")}"`,
+    );
+  }
+
   // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to a single Vue
   // `:style="{ '--fsds-foo': expr, ... }"` binding. Vue's template parser
   // accepts string-quoted keys with hyphens in object literal style
@@ -1974,6 +2105,17 @@ function renderVueDomNode(
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`:data-testid="props['data-testid']"`);
+    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
+    // ambient field association on its root. Vue's implicit fallthrough
+    // applies consumer attrs after template bindings, so an explicit
+    // consumer id still wins.
+    // Template scope auto-unwraps the injected ComputedRef (top-level
+    // script-setup binding), so the accessor is `.controlId`, not
+    // `.value.controlId`.
+    if (ctx.fieldAssociationConsumer) {
+      attrs.push(`:id="fieldAssociation?.controlId"`);
+      attrs.push(`:aria-describedby="fieldAssociation?.describedBy"`);
+    }
     if (ctx.autoDismissPause) {
       attrs.push(`v-on="autoDismiss.pauseListeners"`);
     }
