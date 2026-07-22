@@ -124,8 +124,9 @@
                       "tag": "td",
                       "part": "cell",
                       "iterate": {
-                        "source": "prop:daysShown",
-                        "kind": "count"
+                        "source": "prop:days",
+                        "kind": "array",
+                        "itemType": "Date"
                       },
                       "attrs": {
                         "role": "gridcell"
@@ -136,7 +137,10 @@
                       "children": [
                         {
                           "tag": "button",
-                          "part": "day"
+                          "part": "day",
+                          "events": {
+                            "click": "channel:value.onChange(iter:item)"
+                          }
                         }
                       ]
                     }
@@ -231,10 +235,9 @@
           "default": true
         },
         {
-          "name": "daysShown",
-          "propType": { "kind": "number" },
-          "description": "Number of day cells the grid should render. Drives structural count iteration on the cell node; visible date labels and selection state are NOT yet wired (the binding grammar cannot project a Date into a button label inline). A typical month occupies 42 cells (6 weeks x 7 days), which is the recommended default.",
-          "default": 42
+          "name": "days",
+          "propType": { "kind": "array", "items": { "kind": "ref", "to": "Date" } },
+          "description": "The concrete Date values the grid renders, one per day cell. Drives array iteration on the cell node, so each day button carries a real Date: clicking it wires `channel:value.onChange(iter:item)` (FEAT-BINDING-CALL-WITH-ARG-01), updating the value channel with that day's Date. NON-CLAIM: the visible day-number LABEL is still not inlined — projecting a Date to its day-of-month requires a method call (`item.getDate()`) the closed binding grammar deliberately forbids; the consumer supplies the day array and renders labels via a slot/custom region. A typical month occupies 42 entries (6 weeks x 7 days)."
         }
       ]
     }

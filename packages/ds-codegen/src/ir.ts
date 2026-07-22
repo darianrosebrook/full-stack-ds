@@ -243,6 +243,29 @@ export function nativeTableAttrsFor(tag: string | undefined): NativeTableAttr[] 
  * `iterationLocal`), never another `predicate`. Boolean composition
  * (AND / OR / NOT) and arbitrary comparison operators are explicitly held
  * for a future grammar extension.
+ *
+ * `channelCall` is a closed *event-position* form
+ * (FEAT-BINDING-CALL-WITH-ARG-01). It carries a channel name and ONE
+ * argument sub-expression, and lowers to an invocation of that channel's
+ * setter/onChange WITH the argument:
+ *
+ *   channel:selection.onChange(iter:item.value)  →  () => setSelection(item.value)
+ *
+ * This is the one form that closes the "wire an event to a setter WITH a
+ * per-item payload" gap the bare `channel:X.onChange` (no-arg) form could
+ * not express — the non-boolean channel-click synthesis previously emitted
+ * a self-assignment no-op `() => setSelection(selection)`. The grammar stays
+ * *closed*: the argument position admits ONLY value-shaped payload kinds
+ * (`iterationLocal` — with an optional object-field path like
+ * `iter:item.value`, `prop` — with an optional path, or `literal`). It
+ * rejects `channel`, `predicate`, `conditional`, and a nested `channelCall`
+ * — there is no arbitrary-expression escape hatch. `channelCall` is legal
+ * ONLY in `events` positions (it produces a `() => …` handler, not a value);
+ * it is rejected in `bindings`, `properties`, `content`, `iterate.source`,
+ * and `cssVariableBindings`, and may not appear as a predicate/conditional
+ * operand. Composed setters (set-char-at-index, array-toggle for multi-select
+ * `T | T[]` channels) exceed a single-argument call and are explicitly held
+ * for a successor grammar (see FEAT-BINDING-CALL-WITH-ARG-01 non-claims).
  */
 export type BindingExpression =
   | { kind: "prop"; prop: string; path?: string[] }
@@ -260,6 +283,17 @@ export type BindingExpression =
       op: BindingPredicateOp;
       left: BindingExpression;
       right: BindingExpression;
+    }
+  | {
+      kind: "channelCall";
+      channel: string;
+      /**
+       * The setter/onChange invocation argument. Restricted at parse time to
+       * value-shaped payload kinds (`iterationLocal`, `prop`, `literal`) — a
+       * closed argument grammar with no escape hatch. Never `channel`,
+       * `predicate`, `conditional`, or a nested `channelCall`.
+       */
+      arg: BindingExpression;
     };
 
 /**
@@ -1723,6 +1757,10 @@ function validateDomNode(
       knownProps,
       enclosingIteration,
       componentName,
+      // Predicates stay rejected in events (they're boolean-valued). The
+      // channelCall call-with-arg form is admitted ONLY here.
+      false,
+      true,
     );
   }
   if (node.content !== undefined) {
@@ -1832,7 +1870,48 @@ function validateBindingAgainstScope(
    * BINDING-EXPRESSION-V2-PREDICATE-01.
    */
   allowPredicates: boolean = false,
+  /**
+   * Whether `channelCall`-kind bindings are admitted at this callsite.
+   * Defaults to `false`. Only `events` positions pass `true`: a `channelCall`
+   * lowers to a `() => setter(arg)` handler, which is an event-handler value,
+   * not an attribute/content value. FEAT-BINDING-CALL-WITH-ARG-01.
+   */
+  allowChannelCall: boolean = false,
 ): void {
+  if (binding.kind === "channelCall") {
+    if (!allowChannelCall) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses a channel:${binding.channel}` +
+        `.onChange(...) call-with-argument binding, but that form is only ` +
+        `legal in \`events\` positions (it produces a \`() => setter(arg)\` ` +
+        `handler, not a value). Use a plain prop / channel / iter expression ` +
+        `at this site, or move the call into an \`events\` entry.`,
+      );
+    }
+    if (!knownChannels.has(binding.channel)) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} references unknown channel ` +
+        `'${binding.channel}' (known: [${[...knownChannels].join(", ")}])`,
+      );
+    }
+    // The argument inherits the enclosing iteration and prop set; a
+    // channelCall introduces no new scope. `allowChannelCall=false` on the
+    // recursion because a nested channelCall is not a legal payload
+    // (`isChannelCallArg` already rejects it at parse time; this is the
+    // scope-time belt-and-suspenders). `allowPredicates=false` because the
+    // payload is value-shaped, not boolean.
+    validateBindingAgainstScope(
+      binding.arg,
+      `${siteLabel} channel:${binding.channel}.onChange argument`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+      false,
+    );
+    return;
+  }
   if (binding.kind === "channel") {
     if (!knownChannels.has(binding.channel)) {
       throw new Error(
@@ -2683,6 +2762,21 @@ export function parseBindingExpression(expr: string): BindingExpression {
       ...buildPathField(channelValueMatch[2]),
     };
   }
+  // FEAT-BINDING-CALL-WITH-ARG-01: `channel:X.onChange(<argExpr>)`. Matched
+  // BEFORE the bare-callback form so the parenthesized call is not read as a
+  // bare `.onChange` with trailing garbage. The inner argument is parsed
+  // recursively and must be a value-shaped payload kind (`iterationLocal`,
+  // `prop`, `literal`); anything else (channel, predicate, conditional,
+  // nested channelCall) is rejected and the whole form falls through to a
+  // literal so the authoring error appears verbatim in output.
+  const channelCallMatch = expr.match(
+    /^channel:([A-Za-z_$][\w$-]*)\.onChange\((.*)\)$/,
+  );
+  if (channelCallMatch) {
+    const parsed = tryParseChannelCall(channelCallMatch[1], channelCallMatch[2]);
+    if (parsed) return parsed;
+    // Malformed argument — fall through to literal below.
+  }
   const channelCallbackMatch = expr.match(
     /^channel:([A-Za-z_$][\w$-]*)\.(onChange|defaultValue)$/,
   );
@@ -2801,6 +2895,49 @@ function isPredicateOperand(expr: BindingExpression): boolean {
 }
 
 /**
+ * FEAT-BINDING-CALL-WITH-ARG-01.
+ *
+ * Parse the argument of a `channel:X.onChange(<arg>)` form. Returns the
+ * `channelCall`-kind BindingExpression on success, or `null` on any
+ * malformed shape so the caller falls through to literal. Closed grammar:
+ *
+ *   - Exactly one argument (the `(...)` capture; commas are not split — the
+ *     argument grammar contains no commas, so an accidental comma parses to
+ *     an unrecognized string that fails the value-shape check below).
+ *   - The argument must parse to a value-shaped payload kind: `iterationLocal`
+ *     (with optional object-field path, e.g. `iter:item.value`), `prop` (with
+ *     optional path), or `literal`. `channel`, `predicate`, `conditional`,
+ *     and a nested `channelCall` are rejected — no arbitrary-expression
+ *     escape hatch, and no reading another channel's value as a payload.
+ *
+ * Scope legality (the channel exists; the argument's iteration locals sit
+ * inside an enclosing iteration) is decided later in
+ * `validateBindingAgainstScope`, not here — this function is context-free.
+ */
+function tryParseChannelCall(channel: string, argStr: string): BindingExpression | null {
+  const trimmed = argStr.trim();
+  if (trimmed.length === 0) return null;
+  const arg = parseBindingExpression(trimmed);
+  if (!isChannelCallArg(arg)) return null;
+  return { kind: "channelCall", channel, arg };
+}
+
+/**
+ * Closed set of argument kinds legal inside a `channelCall`. Only value-shaped
+ * payloads: `iterationLocal`, `prop`, `literal`. `channel` is rejected (a
+ * setter argument reading another channel's live value is a composed-setter
+ * case held for a successor); `predicate`/`conditional`/`channelCall` are
+ * rejected (no nesting, no boolean/branch payloads).
+ */
+function isChannelCallArg(expr: BindingExpression): boolean {
+  return (
+    expr.kind === "iterationLocal" ||
+    expr.kind === "prop" ||
+    expr.kind === "literal"
+  );
+}
+
+/**
  * Convert a leading-dot path tail like `".foo.bar"` (or `""`) into the
  * spread fragment used to attach a `path` field to a `BindingExpression`.
  * Returns `{}` when the tail is empty so the resulting binding stays
@@ -2857,6 +2994,16 @@ export function promoteIterationLocals(
       whenTrue: promoteIterationLocals(binding.whenTrue, iteration),
       whenFalse: promoteIterationLocals(binding.whenFalse, iteration),
     };
+  }
+  // FEAT-BINDING-CALL-WITH-ARG-01: promote a V1-style `prop:<itemVar>` /
+  // `prop:<indexVar>` reference inside the call argument. In practice the
+  // parser routes `iter:item` straight to `iterationLocal`, so this only
+  // fires on an already-normalized arg (a no-op) — but the recursion keeps
+  // the promotion total over the grammar.
+  if (binding.kind === "channelCall") {
+    const arg = promoteIterationLocals(binding.arg, iteration);
+    if (arg === binding.arg) return binding;
+    return { kind: "channelCall", channel: binding.channel, arg };
   }
   if (binding.kind !== "prop") return binding;
   // Preserve the path field across promotion. V1 contracts never wrote

@@ -80,7 +80,7 @@ const classes = $derived(
     {/if}
     <div class={'select__options'}>
       {#each (options ?? []) as item, index (index)}
-      <div class={'select__option'} role="option" aria-selected={(Array.isArray(behavior.selection) ? behavior.selection.includes(item.value) : item.value === behavior.selection)} data-value={item.value}>
+      <div class={'select__option'} role="option" onclick={() => behavior.setSelection(item.value)} aria-selected={(Array.isArray(behavior.selection) ? behavior.selection.includes(item.value) : item.value === behavior.selection)} data-value={item.value}>
         <span>{item.label}</span>
       </div>
       {/each}

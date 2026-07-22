@@ -18,7 +18,7 @@ export type CalendarMode = "single" | "range";
 // @custom:end
 
 // @generated:start props
-export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "daysShown" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "shouldCloseOnSelect" | "value"> {
+export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "days" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "shouldCloseOnSelect" | "value"> {
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -28,7 +28,7 @@ export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "chi
   maxDate?: Date;
   locale?: string;
   shouldCloseOnSelect?: boolean;
-  daysShown?: number;
+  days?: Date[];
   className?: string;
   "data-testid"?: string;
 }
@@ -68,7 +68,7 @@ export function Calendar({
   maxDate,
   locale = "en-US",
   shouldCloseOnSelect = true,
-  daysShown = 42,
+  days,
   ...rest
 }: CalendarProps) {
   const { value, setValue } = useCalendar({
@@ -97,9 +97,9 @@ export function Calendar({
     <table className="calendar__grid" role="grid" aria-label="Calendar">
       <tbody>
         <tr>
-          {Array.from({ length: daysShown }, (_, index) => (
+          {(days ?? []).map((item, index) => (
             <td className="calendar__cell" role="gridcell" data-calendar-index={index} key={index}>
-              <button className="calendar__day" />
+              <button className="calendar__day" onClick={() => setValue(item)} />
             </td>
           ))}
         </tr>

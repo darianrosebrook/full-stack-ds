@@ -153,7 +153,7 @@ export function Select({
         )}
         <div className="select__options">
           {(options ?? []).map((item, index) => (
-            <div className="select__option" role="option" aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
+            <div className="select__option" role="option" onClick={() => setSelection(item.value)} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
               <span>
                 {item.label}
               </span>

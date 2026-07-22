@@ -2485,6 +2485,21 @@ function renderAngularBinding(
       const eventName = mapJsxEventToAngular(attr);
       return angularChannelEventBinding(eventName, ch, tag);
     }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: invoke the channel's setter WITH the
+      // per-item payload. Emits `(click)="behavior.setSelection(item.value)"`.
+      // The `(event)="..."` value is a "-delimited Angular template; the arg
+      // is rendered via renderAngularBindingValue, which single-quotes string
+      // literals (the aria-checked quote-collision precedent) so an embedded
+      // literal never prematurely closes the attribute.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToAngular(attr);
+      const setter = `set${capitalizeAngular(ch.name)}`;
+      const argExpr = renderAngularBindingValue(expr.arg, ctx);
+      if (argExpr === null) return null;
+      return `(${eventName})="behavior.${setter}(${argExpr})"`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. `lowered` is already a valid
       // Angular template-expression string (comparison operators, prop
@@ -2554,6 +2569,10 @@ function renderAngularBindingValue(
       }
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; produces a
+      // handler, not a value. The IR rejects it in value positions.
+      return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderAngularPredicate(expr, ctx);
@@ -2632,6 +2651,13 @@ function renderAngularEvent(
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       return angularChannelEventBinding(eventName, ch, tag);
+    }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: delegate to the channelCall path in
+      // renderAngularBinding by re-deriving the synthetic JSX-attr name (which
+      // mapJsxEventToAngular maps back to `eventName`).
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderAngularBinding(jsxAttr, expr, ctx, tag);
     }
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at

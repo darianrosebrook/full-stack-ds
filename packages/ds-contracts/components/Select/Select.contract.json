@@ -155,6 +155,9 @@
                     "aria-selected": "predicate:memberOf(iter:item.value, channel:selection.value)",
                     "data-value": "iter:item.value"
                   },
+                  "events": {
+                    "click": "channel:selection.onChange(iter:item.value)"
+                  },
                   "children": [
                     { "tag": "span", "content": "iter:item.label" }
                   ]

@@ -43,8 +43,10 @@
  *               producing `--fsds-show-more-content-max-lines`.
  *   OTP       — `length=6` (default) renders 6 `[data-otp-index]`
  *               nodes with values 0..5.
- *   Calendar  — `daysShown=42` (default) renders 42 `[data-calendar-index]`
- *               nodes with values 0..41.
+ *   Calendar  — `days: Date[]` array iteration (FEAT-BINDING-CALL-WITH-ARG-01,
+ *               replacing the removed `daysShown` count). No default `days`, so
+ *               the default preview renders ZERO cells; injecting an N-element
+ *               `days` array renders N `[data-calendar-index]` nodes 0..N-1.
  *
  * Non-default props ARE now asserted for all five frameworks on ShowMore (maxLines),
  * Progress (value), and Truncate (lines): the preview route loads the default
@@ -86,7 +88,7 @@ async function goto(
   framework: Framework,
   component: string,
   blockClass: string,
-  props?: Record<string, string | number | boolean>,
+  props?: Record<string, string | number | boolean | readonly unknown[]>,
 ) {
   await page.goto(`/preview/${framework}/${component}`, {
     waitUntil: "domcontentloaded",
@@ -209,10 +211,52 @@ test.describe("Runtime rail — OTP (count iteration)", () => {
   }
 });
 
-test.describe("Runtime rail — Calendar (count iteration)", () => {
+test.describe("Runtime rail — Calendar (array iteration over days: Date[])", () => {
+  // FEAT-BINDING-CALL-WITH-ARG-01: the Calendar contract's `cell` iteration was
+  // upgraded from a bare count (`prop:daysShown`, kind="count") to an array over
+  // real Date values (`prop:days`, kind="array") so the `day` button can wire
+  // `channel:value.onChange(iter:item)`. Consequences the rail now pins:
+  //   - `days` has NO default, so the DEFAULT preview renders ZERO cells (the
+  //     consumer supplies the day array). The old "42 cells by default" fact is
+  //     false BY DESIGN and is replaced here — not patched to stay green.
+  //   - Supplying an N-element `days` array renders exactly N `[data-calendar-
+  //     index]` cells, indices 0..N-1 (a real fact about the array contract).
+  // A Date only matters to the click handler; the rendered cell binds
+  // `data-calendar-index: iter:index` and never dereferences the item, so the
+  // injected element type does not affect this DOM fact.
+  const DAYS = [
+    new Date(2026, 6, 1),
+    new Date(2026, 6, 2),
+    new Date(2026, 6, 3),
+    new Date(2026, 6, 4),
+    new Date(2026, 6, 5),
+  ];
+
   for (const framework of FRAMEWORKS) {
-    test(`${framework}: renders daysShown=42 grid cells with data-calendar-index 0..41`, async ({ page }) => {
+    test(`${framework}: unset days renders zero grid cells (new default truth)`, async ({ page }) => {
       await goto(page, framework, "Calendar", "calendar");
+
+      const count = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return -1;
+          return root.querySelectorAll("[data-calendar-index]").length;
+        },
+        { host: `fsds-${kebab("Calendar")}`, isLit: framework === "lit" },
+      );
+
+      // No `days` prop => the `?? []` iteration guard renders no cells. This is
+      // the honest default of the array contract, not a bug: a stale assertion
+      // of 42 (the removed `daysShown` count default) would be false here.
+      expect(count).toBe(0);
+    });
+  }
+
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: days=[5 dates] renders 5 grid cells with data-calendar-index 0..4`, async ({ page }) => {
+      await goto(page, framework, "Calendar", "calendar", { days: DAYS });
 
       const indices = await page.evaluate(
         ({ host, isLit }) => {
@@ -227,29 +271,23 @@ test.describe("Runtime rail — Calendar (count iteration)", () => {
         { host: `fsds-${kebab("Calendar")}`, isLit: framework === "lit" },
       );
 
-      // daysShown defaults to 42 in the contract — 42 cells expected,
-      // 0-based and contiguous.
-      expect(indices).toHaveLength(42);
-      expect(indices[0]).toBe(0);
-      expect(indices[indices.length - 1]).toBe(41);
-      // Contiguity check — any gap or duplication would fail this.
-      const expected = Array.from({ length: 42 }, (_, i) => i);
-      expect(indices).toEqual(expected);
+      // One cell per supplied day, 0-based and contiguous. Any gap, duplication,
+      // or off-by-one in the array-iteration lowering fails this.
+      expect(indices).toEqual([0, 1, 2, 3, 4]);
     });
   }
 
-  // BINDING-EXPRESSION-V2-01: Calendar's contract was migrated from
-  // `prop:index` to `iter:index` in this slice. The runtime DOM fact
-  // must be byte-equivalent — every cell still carries a numeric
-  // string `data-calendar-index` matching its position. If a future
-  // change to the V2 lowering ever regresses this back to literal
-  // `"undefined"` (the previous `String(undefined)` bug in Lit) or
-  // drops the attribute entirely, this assertion fails on the spot.
+  // BINDING-EXPRESSION-V2-01: Calendar's `data-calendar-index` binds `iter:index`.
+  // The runtime DOM fact must carry the numeric string of each cell's zero-based
+  // position. If the V2 lowering ever regresses to literal `"undefined"` (the
+  // former `String(undefined)` Lit bug) or drops the attribute, this fails. The
+  // evidence is now taken over an injected `days` array (the array contract)
+  // rather than the removed 42-count default.
   for (const framework of FRAMEWORKS) {
     test(`${framework}: iter:index lowers to position-accurate data-calendar-index (V2 evidence)`, async ({
       page,
     }) => {
-      await goto(page, framework, "Calendar", "calendar");
+      await goto(page, framework, "Calendar", "calendar", { days: DAYS });
       const facts = await page.evaluate(
         ({ host, isLit }) => {
           const root: Document | ShadowRoot | null = isLit
@@ -259,7 +297,7 @@ test.describe("Runtime rail — Calendar (count iteration)", () => {
           const nodes = Array.from(
             root.querySelectorAll("[data-calendar-index]"),
           );
-          const sampleIndices = [0, 1, 5, 20, 41];
+          const sampleIndices = [0, 1, 2, 3, 4];
           return {
             count: nodes.length,
             samples: sampleIndices.map((pos) => ({
@@ -273,10 +311,10 @@ test.describe("Runtime rail — Calendar (count iteration)", () => {
         { host: `fsds-${kebab("Calendar")}`, isLit: framework === "lit" },
       );
 
-      expect(facts.count).toBe(42);
-      // Each sampled cell carries the exact string of its zero-based
-      // position. The string form matters — a regression to numeric
-      // type or `"undefined"` would fail the strict equality.
+      expect(facts.count).toBe(5);
+      // Each sampled cell carries the exact string of its zero-based position.
+      // The string form matters — a regression to numeric type or `"undefined"`
+      // would fail the strict equality.
       for (const { pos, raw } of facts.samples) {
         expect(raw).toBe(String(pos));
       }

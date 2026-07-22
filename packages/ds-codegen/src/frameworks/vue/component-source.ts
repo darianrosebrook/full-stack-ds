@@ -2170,6 +2170,10 @@ function renderVueTextContent(
       }
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; rejected in
+      // content position by the IR validator. Null keeps the switch exhaustive.
+      return null;
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: defensive. The IR validator
       // rejects predicates in content position; this branch keeps the
@@ -2267,6 +2271,20 @@ function renderVueBinding(
       }
       return `@${eventName}="() => ${setter}(behavior.${ch.name}.value)"`;
     }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: invoke the channel's setter WITH the
+      // per-item payload. Emits `@click="() => behavior.setSelection(item.value)"`.
+      // The argument is rendered as a bare Vue template expression so
+      // `iter:item.value` picks up the v-for alias, matching the iteration
+      // lowering conventions the other cases use.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToVue(attr);
+      const setter = `behavior.set${capitalize(ch.name)}`;
+      const argExpr = renderVueBindingValue(expr.arg, ctx);
+      if (argExpr === null) return null;
+      return `@${eventName}="() => ${setter}(${argExpr})"`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. `lowered` is already a valid
       // Vue template-expression string (comparison operators, prop
@@ -2346,6 +2364,10 @@ function renderVueBindingValue(
       }
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; it produces a
+      // `() => …` handler, not a value. The IR rejects it in value positions.
+      return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: value-position predicate.
       // The IR-build validator rejects predicate-kind expressions in
@@ -2403,6 +2425,13 @@ function renderVueEvent(
       return null;
     }
     case "channel": {
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderVueBinding(jsxAttr, expr, ctx);
+    }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: delegate to renderVueBinding (which
+      // emits the `@event="() => behavior.setX(arg)"` handler), reconstructing
+      // the synthetic JSX-attr name the same way the channel case does.
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderVueBinding(jsxAttr, expr, ctx);
     }

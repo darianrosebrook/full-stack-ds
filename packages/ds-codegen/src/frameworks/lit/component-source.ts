@@ -2612,6 +2612,19 @@ function renderLitBinding(
       const eventName = mapJsxEventToLit(attr);
       return litChannelEventBinding(eventName, ch, tag);
     }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: invoke the channel's setter WITH the
+      // per-item payload. Emits `@click=${() => this.behavior.setSelection(item.value)}`.
+      // The setter lives on `this.behavior`; the argument is a bare Lit
+      // template expression (iteration locals resolve to the `.map()` alias).
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToLit(attr);
+      const setter = `set${capitalizeLit(ch.name)}`;
+      const argExpr = renderLitBindingValue(expr.arg, ctx);
+      if (argExpr === null) return null;
+      return `@${eventName}=\${() => this.behavior.${setter}(${argExpr})}`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. Predicate result is
       // boolean. ARIA boolean attrs need the explicit `"true"`/`"false"`
@@ -2668,6 +2681,10 @@ function renderLitContent(
       if (expr.field === "value") return `\${${appendPath(`this.behavior.${ch.name}`, expr.path)}}`;
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; rejected in
+      // content position by the IR validator. Null keeps the switch exhaustive.
+      return null;
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: defensive (validator
       // rejects predicate in content position). Returns the boolean
@@ -2735,6 +2752,10 @@ function renderLitBindingValue(
       if (expr.field === "value") return appendPath(`this.behavior.${ch.name}`, expr.path);
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; produces a
+      // handler, not a value. The IR rejects it in value positions.
+      return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderLitPredicate(expr, ctx);
@@ -2801,6 +2822,12 @@ function renderLitEvent(
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       return litChannelEventBinding(eventName, ch, tag);
+    }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: delegate to the channelCall path in
+      // renderLitBinding by re-deriving the synthetic JSX-attr name.
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderLitBinding(jsxAttr, expr, ctx, tag);
     }
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at

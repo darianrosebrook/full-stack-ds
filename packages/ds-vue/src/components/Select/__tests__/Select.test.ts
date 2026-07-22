@@ -140,4 +140,37 @@ describe("Select — uncontrolled defaultOpen first-render", () => {
   });
 });
 
+// FEAT-BINDING-CALL-WITH-ARG-01: the option-click wire
+// `channel:selection.onChange(iter:item.value)` lowers in Vue to
+// `@click="() => behavior.setSelection(item.value)"` — clicking option N must
+// call onChange with that option's value (proving the setter runs with the
+// per-item payload, not the pre-fix self-write).
+describe("Select — option selection (FEAT-BINDING-CALL-WITH-ARG-01)", () => {
+  it("clicking option N calls onChange with that option's value", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(Select as Component, {
+      props: { defaultOpen: true, onChange },
+    });
+    const options = wrapper.findAll(".select__option");
+    expect(options).toHaveLength(3);
+
+    await options[2].trigger("click"); // Gamma
+    expect(onChange).toHaveBeenCalledWith("gamma");
+
+    await options[0].trigger("click"); // Alpha
+    expect(onChange).toHaveBeenLastCalledWith("alpha");
+  });
+
+  it("passes the clicked item value, not the standing selection (falsification)", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(Select as Component, {
+      // Controlled selection standing at "beta".
+      props: { open: true, value: "beta", onChange },
+    });
+    await wrapper.findAll(".select__option")[0].trigger("click"); // Alpha
+    expect(onChange).toHaveBeenCalledWith("alpha");
+    expect(onChange).not.toHaveBeenCalledWith("beta");
+  });
+});
+
 // @custom:end
