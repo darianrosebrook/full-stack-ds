@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: stack-primitive-codegen
 created_at: '2026-07-22T19:30:31.711Z'
-updated_at: '2026-07-22T19:30:31.711Z'
+updated_at: '2026-07-22T19:33:08.333Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen (new primitive-emit path)'
@@ -26,6 +26,7 @@ scope:
     - 'packages/ds-lit/src/primitives'
     - 'packages/ds-tokens/src'
     - 'examples/settings'
+    - packages/ds-contracts/primitives
   out: []
 invariants:
   - 'The Stack primitive contract is the single source for the five web-framework Stack primitives; per-framework Stack source is generated, not hand-authored.'
