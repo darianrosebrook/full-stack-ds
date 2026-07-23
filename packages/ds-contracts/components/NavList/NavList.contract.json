@@ -123,16 +123,6 @@
     "role": "navigation",
     "labeling": [
       "aria-label"
-    ],
-    "keyboard": [
-      {
-        "key": "Tab",
-        "action": "Move focus through nav items in DOM order."
-      },
-      {
-        "key": "Enter",
-        "action": "Activate the focused link (follow href)."
-      }
     ]
   },
   "a2ui": {
