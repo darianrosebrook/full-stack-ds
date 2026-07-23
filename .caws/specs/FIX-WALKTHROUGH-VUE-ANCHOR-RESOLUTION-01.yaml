@@ -3,6 +3,7 @@ title: 'Vue selector-anchor resolution: computed caches a pre-mount null querySe
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: vue-anchor-fix
 created_at: '2026-07-23T00:42:14.470Z'
 updated_at: '2026-07-23T00:42:14.470Z'
 blast_radius:
