@@ -131,6 +131,13 @@ export function generateReactComponentSource(
   // The disclosure/compound paths already import useId unconditionally.
   const needsUseIdHook =
     !isCompound && !isDisclosure && /\buseId\(\)/.test(bodyHaystack);
+  // Same scan for the field-association provider's memoized context value.
+  const needsUseMemoHook =
+    !isCompound && !isDisclosure && /\buseMemo\(/.test(bodyHaystack);
+  const bodyScanHooks = [
+    ...(needsUseIdHook ? ["useId"] : []),
+    ...(needsUseMemoHook ? ["useMemo"] : []),
+  ];
 
   const importLines: string[] = [];
   if (isDisclosure) {
@@ -158,11 +165,11 @@ export function generateReactComponentSource(
       ...finalReactTypeImports,
       "useEffect",
       "useRef",
-      ...(needsUseIdHook ? ["useId"] : []),
+      ...bodyScanHooks,
     ].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
-  } else if (needsUseIdHook) {
-    const allReactImports = [...finalReactTypeImports, "useId"].sort();
+  } else if (bodyScanHooks.length > 0) {
+    const allReactImports = [...finalReactTypeImports, ...bodyScanHooks].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
   } else {
     importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
@@ -2019,14 +2026,25 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   }
   if (ir.fieldAssociation?.provides) {
     const provides = ir.fieldAssociation.provides;
-    lines.push(`  const fieldAssociationValue = {`);
+    // Memoized so the context value is referentially stable across
+    // unrelated provider re-renders — the deps are exactly the inputs the
+    // value expressions read (instance namespace, gating slots, when props).
+    const deps = ["instanceId"];
+    for (const ref of provides.describedBy) {
+      if (ref.slotGate) deps.push(`slots?.${ref.slotGate}`);
+      if (ref.when) deps.push(ref.when.prop);
+    }
+    lines.push(`  const fieldAssociationValue = useMemo(`);
+    lines.push(`    () => ({`);
     lines.push(
-      `    controlId: ${reactGeneratedIdExpr(provides.controlSlug)},`,
+      `      controlId: ${reactGeneratedIdExpr(provides.controlSlug)},`,
     );
     lines.push(
-      `    describedBy: ${reactIdRefListExpr(provides.describedBy, undefined)},`,
+      `      describedBy: ${reactIdRefListExpr(provides.describedBy, undefined)},`,
     );
-    lines.push(`  };`);
+    lines.push(`    }),`);
+    lines.push(`    [${[...new Set(deps)].join(", ")}],`);
+    lines.push(`  );`);
     lines.push(``);
   }
 
