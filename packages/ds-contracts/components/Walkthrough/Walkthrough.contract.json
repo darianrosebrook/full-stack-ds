@@ -354,6 +354,34 @@
     "strategy": "none",
     "description": "Walkthrough panels are non-blocking. Focus remains on the anchored element while the panel is visible."
   },
+  "surface": {
+    "kind": "coachmark",
+    "presence": "persistent",
+    "modality": "non-blocking",
+    "anchor": {
+      "selector": {
+        "prop": "steps",
+        "path": "anchor",
+        "indexChannel": "step"
+      }
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click"
+    ]
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "anchored",
+    "layering": "popover",
+    "collision": "flip-shift"
+  },
   "dismissal": {
     "triggers": [
       {

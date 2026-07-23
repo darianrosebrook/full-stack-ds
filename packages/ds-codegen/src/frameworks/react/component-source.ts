@@ -31,7 +31,11 @@ import {
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
+import {
+  resolveSurfaceAutoDismiss,
+  portalsRootToBody,
+  selectorAnchoredRootPortal,
+} from "../../semantics.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   collectIconGlyphNodes,
@@ -131,6 +135,11 @@ export function generateReactComponentSource(
   // The disclosure/compound paths already import useId unconditionally.
   const needsUseIdHook =
     !isCompound && !isDisclosure && /\buseId\(\)/.test(bodyHaystack);
+  // Selector-anchored root panel (coachmark tour): the body emits
+  // useState/useEffect anchor-resolution wiring plus a useAnchoredPosition
+  // call (same body-scan technique as needsCssProperties).
+  const needsAnchoredHooks =
+    !isCompound && /\buseAnchoredPosition\(/.test(bodyHaystack);
 
   const importLines: string[] = [];
   if (isDisclosure) {
@@ -153,19 +162,26 @@ export function generateReactComponentSource(
       : [...finalReactTypeImports, "type KeyboardEvent"];
     const allReactImports = [...compoundTypeImports, ...runtimeHooks].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
-  } else if (needsPropertyBindingHooks) {
-    const allReactImports = [
-      ...finalReactTypeImports,
-      "useEffect",
-      "useRef",
-      ...(needsUseIdHook ? ["useId"] : []),
-    ].sort();
-    importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
-  } else if (needsUseIdHook) {
-    const allReactImports = [...finalReactTypeImports, "useId"].sort();
-    importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
   } else {
-    importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
+    // Collect the runtime hooks the body actually references, then merge
+    // with the type imports. The hook set stays empty for plain components
+    // so their import line stays byte-identical (no re-sort).
+    const runtimeHooks = new Set<string>();
+    if (needsPropertyBindingHooks) {
+      runtimeHooks.add("useEffect");
+      runtimeHooks.add("useRef");
+    }
+    if (needsUseIdHook) runtimeHooks.add("useId");
+    if (needsAnchoredHooks) {
+      runtimeHooks.add("useEffect");
+      runtimeHooks.add("useState");
+    }
+    if (runtimeHooks.size === 0) {
+      importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
+    } else {
+      const allReactImports = [...finalReactTypeImports, ...runtimeHooks].sort();
+      importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
+    }
   }
   // Stack is needed for legacy single-root output, DOM-tree roots that can be
   // polymorphically hosted by Stack, and compound parts (ModalHeader etc.
@@ -203,6 +219,11 @@ export function generateReactComponentSource(
   // Structural — driven by IR `iconGlyph` facts, never per-component lore.
   if (collectIconGlyphNodes(ir.dom).length > 0) {
     importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
+  if (needsAnchoredHooks) {
+    importLines.push(
+      `import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";`,
+    );
   }
   if (isCompound || (ir.dom && ir.behavior.normalizedChannels.length > 0)) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}";`);
@@ -1903,7 +1924,12 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   // stacking contexts. Purely IR-driven via `portalsRootToBody` — no
   // component-name lore. Anchored/inline surfaces (Select, Walkthrough) and
   // portal-less contracts return false and render inline unchanged.
-  const wrapRootInPortal = portalsRootToBody(ir);
+  // Selector-anchored root portal (coachmark / guided tour): the whole
+  // panel mounts at body and is positioned against a page element resolved
+  // from the active step's selector — same renderInPortal consumption, plus
+  // useAnchoredPosition wiring emitted below.
+  const selectorAnchor = selectorAnchoredRootPortal(ir);
+  const wrapRootInPortal = portalsRootToBody(ir) || selectorAnchor !== null;
   if (wrapRootInPortal) {
     hookResultParts.push("renderInPortal");
   }
@@ -1953,6 +1979,41 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(hookOptionsLines.join(",\n") + ",");
     lines.push(`  });`);
     lines.push(``);
+  }
+  // Selector-anchored root panel: resolve the active element from the
+  // indexed selector prop, then position the (portaled) root against it.
+  // The anchor element lives outside the component's tree, so it is
+  // re-queried whenever the index channel or the selector array changes.
+  if (selectorAnchor) {
+    const idxChannel = channels.find(
+      (c) => c.name === selectorAnchor.indexChannel,
+    );
+    if (!idxChannel) {
+      throw new Error(
+        `${name}: surface.anchor.selector.indexChannel "${selectorAnchor.indexChannel}" has no matching channel in the IR.`,
+      );
+    }
+    const propIdent =
+      ir.styledProps.find((p) => p.name === selectorAnchor.prop)?.safeName ??
+      selectorAnchor.prop;
+    const placementProp = ir.surface?.positioning?.placementProp;
+    const collision = ir.surface?.positioning?.collision ?? "flip-shift";
+    lines.push(
+      `  const [anchoredRootEl, setAnchoredRootEl] = useState<HTMLElement | null>(null);`,
+      `  const [anchorTargetEl, setAnchorTargetEl] = useState<HTMLElement | null>(null);`,
+      `  useEffect(() => {`,
+      `    const selector = (${propIdent} ?? [])[${idxChannel.name}]?.${selectorAnchor.path};`,
+      `    setAnchorTargetEl(selector ? document.querySelector<HTMLElement>(selector) : null);`,
+      `  }, [${idxChannel.name}, ${propIdent}]);`,
+      `  const anchoredPosition = useAnchoredPosition({`,
+      `    anchor: anchorTargetEl,`,
+      `    content: anchoredRootEl,`,
+      `    open: true,`,
+      `    placement: ${placementProp ?? `"auto"`},`,
+      `    collision: "${collision}",`,
+      `  });`,
+      ``,
+    );
   }
   // Ephemeral-surface auto-dismiss: the presence budget flows from the
   // *.timing.auto-dismiss token (generation-resolved default) with the
@@ -2094,6 +2155,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     propertyBindingRefs,
     iconGlyphIdents,
     fieldAssociationConsumer: ir.fieldAssociation?.consumes === true,
+    rootSelectorAnchored: selectorAnchor !== null,
   };
 
   for (const { node, refName } of propertyBindingNodes) {
@@ -2215,6 +2277,12 @@ interface ReactRenderContext {
    * `fieldAssociation` body const.
    */
   fieldAssociationConsumer?: boolean;
+  /**
+   * Selector-anchored root panel: the root element gets the anchored
+   * position wiring (ref, fixed-position style, data-placement) emitted by
+   * the body's useAnchoredPosition block. Root-level only.
+   */
+  rootSelectorAnchored?: boolean;
   /**
    * Nearest enclosing iteration directive, or `undefined` at the top
    * level. After BINDING-EXPRESSION-V2-01 the IR carries
@@ -2468,6 +2536,20 @@ function renderReactDomNode(
     if (ctx.fieldAssociationConsumer) {
       attrs.push(`id={fieldAssociation?.controlId}`);
       attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
+    }
+    // Selector-anchored root: fixed-position style computed against the
+    // active step's page anchor, hidden until the first measurement so the
+    // panel never flashes at (0,0).
+    if (ctx.rootSelectorAnchored) {
+      // Stack's ref prop is Ref<Element>; narrow to HTMLElement for the
+      // positioning primitive (a non-HTML root can't be positioned anyway).
+      attrs.push(
+        `ref={(el) => setAnchoredRootEl(el instanceof HTMLElement ? el : null)}`,
+      );
+      attrs.push(`data-placement={anchoredPosition.placement}`);
+      attrs.push(
+        `style={{ position: "fixed", top: \`\${anchoredPosition.top}px\`, left: \`\${anchoredPosition.left}px\`, visibility: anchoredPosition.ready ? "visible" : "hidden" }}`,
+      );
     }
     attrs.push(`{...rest}`);
   } else if (classParts.length > 0) {

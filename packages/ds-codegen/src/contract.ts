@@ -543,10 +543,31 @@ export type ContractSurfaceDismissalMode =
 
 export type ContractSurfaceOpenTrigger = 'hover' | 'focus' | 'click';
 
-export interface ContractSurfaceAnchor {
+export interface ContractSurfacePartAnchor {
   part: string;
   relation: ContractSurfaceAnchorRelation;
 }
+
+/**
+ * Selector-sourced anchor: the anchor element lives outside the component's
+ * own tree and is resolved from the page at runtime via a CSS selector
+ * carried in a prop (guided tours / coachmarks: Walkthrough's
+ * steps[].anchor). `prop` names an array-typed prop, `path` the member of
+ * each element that carries the selector string, `indexChannel` the channel
+ * whose value indexes the active element. Selector-anchored surfaces open
+ * programmatically, so openTriggers stays optional for them.
+ */
+export interface ContractSurfaceSelectorAnchor {
+  selector: {
+    prop: string;
+    path: string;
+    indexChannel: string;
+  };
+}
+
+export type ContractSurfaceAnchor =
+  | ContractSurfacePartAnchor
+  | ContractSurfaceSelectorAnchor;
 
 export interface ContractSurfaceContent {
   part: string;

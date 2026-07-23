@@ -1170,21 +1170,51 @@
           "description": "Whether the surface blocks interaction with content outside itself. Blocking surfaces require focus trap, outside inertness, and overlay scrim (specifics live in the top-level focus and portal blocks)."
         },
         "anchor": {
-          "type": "object",
-          "description": "Relationship to an invoking element. Omit for unanchored surfaces (centered modal dialogs, viewport-edge toasts).",
-          "additionalProperties": false,
-          "required": ["part", "relation"],
-          "properties": {
-            "part": {
-              "type": "string",
-              "description": "Anatomy part name that registers the invoking element. Must reference a part whose details.role === 'trigger'."
+          "description": "Relationship to the element the surface is positioned against. Omit for unanchored surfaces (centered modal dialogs, viewport-edge toasts). Two source forms: a trigger anatomy part (popover/tooltip — the invoking element lives in the component's own tree), or a runtime CSS selector carried in a prop (coachmark/guided tour — the anchor is an arbitrary page element outside the component).",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["part", "relation"],
+              "properties": {
+                "part": {
+                  "type": "string",
+                  "description": "Anatomy part name that registers the invoking element. Must reference a part whose details.role === 'trigger'."
+                },
+                "relation": {
+                  "type": "string",
+                  "enum": ["describedby", "controls-expanded", "labelledby", "activedescendant", "none"],
+                  "description": "Semantic ARIA relation between the trigger element and the surface content."
+                }
+              }
             },
-            "relation": {
-              "type": "string",
-              "enum": ["describedby", "controls-expanded", "labelledby", "activedescendant", "none"],
-              "description": "Semantic ARIA relation between the trigger element and the surface content."
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["selector"],
+              "properties": {
+                "selector": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["prop", "path", "indexChannel"],
+                  "properties": {
+                    "prop": {
+                      "type": "string",
+                      "description": "Name of an array-typed prop whose elements carry the anchor selectors (e.g. 'steps')."
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Member of each array element that holds the CSS selector string (e.g. 'anchor')."
+                    },
+                    "indexChannel": {
+                      "type": "string",
+                      "description": "Channel whose numeric value selects the active array element (e.g. 'step'). Selector-anchored surfaces open programmatically, so surface.openTriggers stays optional."
+                    }
+                  }
+                }
+              }
             }
-          }
+          ]
         },
         "content": {
           "type": "object",

@@ -446,6 +446,46 @@ export function anchoredPortalsContentToBody(ir: RootPortalInput): boolean {
   return ir.surface?.positioning?.strategy === "anchored";
 }
 
+/** Structural mirror of ir.ts SurfaceSelectorAnchorIR (semantics.ts cannot
+ * import ir.ts — ir.ts imports from here). */
+export interface SelectorAnchorFacts {
+  prop: string;
+  path: string;
+  indexChannel: string;
+}
+
+/** Structural slice of ComponentIR for the selector-anchored predicate. */
+export interface SelectorAnchoredInput {
+  behavior: { portal: { enabled?: boolean } | undefined };
+  surface:
+    | {
+        positioning:
+          | { strategy: ContractSurfacePositioningStrategy }
+          | undefined;
+        selectorAnchor: SelectorAnchorFacts | undefined;
+      }
+    | undefined;
+}
+
+/**
+ * Selector-anchored root portal (coachmark / guided tour): the component's
+ * ROOT panel moves to document.body and is positioned against an arbitrary
+ * page element resolved from a CSS selector carried in an array-typed prop,
+ * indexed by a channel (Walkthrough steps[].anchor keyed by the step
+ * channel). Distinct from the compound trigger/content anchored family:
+ * there is no in-tree trigger part to keep the root beside, so the whole
+ * root portals. Returns the selector facts when the fact applies, else
+ * null. This is the single generic fact the five web emitters' generic
+ * component path consumes — no component-name lore.
+ */
+export function selectorAnchoredRootPortal(
+  ir: SelectorAnchoredInput,
+): SelectorAnchorFacts | null {
+  if (ir.behavior.portal?.enabled !== true) return null;
+  if (ir.surface?.positioning?.strategy !== "anchored") return null;
+  return ir.surface.selectorAnchor ?? null;
+}
+
 export function resolveAnchoredSurfacePolicy(
   surface: SurfacePolicyInput,
 ): AnchoredSurfacePolicy {
