@@ -974,6 +974,13 @@ function emitAnchoredSurfaceReturn(
     `${INDENT}${INDENT}${INDENT}${INDENT}${lowering.triggerEvent}={${triggerToggle}}`,
     `${INDENT}${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`,
     `${INDENT}${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`,
+    // A contract aria-expanded relationship FROM the trigger lowers to RN's
+    // accessibilityState.expanded (the native-mobile surface for that state);
+    // driven by the contract fact, not a Popover name check. Gated on the same
+    // open channel the web families bind aria-expanded to.
+    ...(triggerDeclaresAriaExpanded(ir)
+      ? [`${INDENT}${INDENT}${INDENT}${INDENT}accessibilityState={{ expanded: Boolean(${value}) }}`]
+      : []),
     `${INDENT}${INDENT}${INDENT}>`,
     `${INDENT}${INDENT}${INDENT}${INDENT}{typeof children === "string" ? <RNText>{children}</RNText> : children}`,
     `${INDENT}${INDENT}${INDENT}</Pressable>`,
@@ -2438,6 +2445,17 @@ function usesNativeToggle(ir: ComponentIR): boolean {
 
 function isCheckboxRootPattern(ir: ComponentIR): boolean {
   return ir.dom?.tag === "input" && ir.dom.attrs.type === "checkbox";
+}
+
+/**
+ * True when a contract relationship declares aria-expanded from the anchored
+ * surface's `trigger` part — the disclosure-state fact the web families bind
+ * as `aria-expanded` and RN realizes via `accessibilityState.expanded`.
+ */
+function triggerDeclaresAriaExpanded(ir: ComponentIR): boolean {
+  return (ir.behavior.relationships ?? []).some(
+    (rel) => rel.attribute === "aria-expanded" && rel.from === "trigger",
+  );
 }
 
 function findProp(ir: ComponentIR, name: string): ResolvedPropIR | undefined {

@@ -89,6 +89,7 @@ export function Popover({
         onPress={() => { if (open) { setOpenValue(false); } else { openFromAnchor(); } }}
         accessibilityLabel={accessibilityLabel}
         accessibilityLabelledBy={accessibilityLabelledBy}
+        accessibilityState={{ expanded: Boolean(open) }}
       >
         {typeof children === "string" ? <RNText>{children}</RNText> : children}
       </Pressable>

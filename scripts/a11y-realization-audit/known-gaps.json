@@ -1098,13 +1098,6 @@
       "class": "keyboard",
       "key": "ArrowLeft",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Popover",
-      "family": "react-native",
-      "class": "relationship",
-      "key": "aria-expanded",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     }
   ]
 }
