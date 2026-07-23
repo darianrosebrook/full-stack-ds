@@ -175,14 +175,14 @@
       "family": "react",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "react",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -393,14 +393,14 @@
       "family": "vue",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "vue",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -611,14 +611,14 @@
       "family": "svelte",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "svelte",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -837,14 +837,14 @@
       "family": "lit",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "lit",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -1055,14 +1055,14 @@
       "family": "angular",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "angular",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
