@@ -544,20 +544,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Popover",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
-      "component": "Popover",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-expanded",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Select",
       "family": "svelte",
       "class": "keyboard",
@@ -654,13 +640,6 @@
       "class": "keyboard",
       "key": "ArrowUp|ArrowDown",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Tooltip",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     },
     {
       "component": "Walkthrough",
