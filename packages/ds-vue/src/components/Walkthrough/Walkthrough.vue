@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed, shallowRef, type ComponentPublicInstance, useId } from "vue";
+import { computed, shallowRef, type ComponentPublicInstance, useId, watchEffect } from "vue";
 import { useWalkthrough } from "./useWalkthrough.js";
 import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition.js";
 // @generated:end
@@ -61,10 +61,14 @@ const anchoredRootEl = shallowRef<HTMLElement | null>(null);
 function setAnchoredRootEl(el: Element | ComponentPublicInstance | null): void {
   anchoredRootEl.value = el instanceof HTMLElement ? el : null;
 }
-const anchorTargetEl = computed(() => {
-  const selector = (props.steps ?? [])[behavior.step.value]?.anchor;
-  return selector ? document.querySelector<HTMLElement>(selector) : null;
-});
+const anchorTargetEl = shallowRef<HTMLElement | null>(null);
+watchEffect(
+  () => {
+    const selector = (props.steps ?? [])[behavior.step.value]?.anchor;
+    anchorTargetEl.value = selector ? document.querySelector<HTMLElement>(selector) : null;
+  },
+  { flush: "post" },
+);
 const anchoredPosition = useAnchoredPosition({
   anchor: () => anchorTargetEl.value,
   content: () => anchoredRootEl.value,
