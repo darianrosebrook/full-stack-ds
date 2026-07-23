@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: settings-field-findings
 created_at: '2026-07-22T21:20:23.286Z'
-updated_at: '2026-07-23T04:55:21.713Z'
+updated_at: '2026-07-23T04:59:47.177Z'
 blast_radius:
   modules:
     - 'packages/ds-vue/src/components/Input (keystroke input event) + Field (label association)'
@@ -26,6 +26,7 @@ scope:
     - 'examples/settings'
     - packages/ds-codegen/src/frameworks/vue
     - packages/ds-codegen/src/frameworks/vue-change-event-timing.test.ts
+    - packages/ds-react-native/src/components/Field
   out: []
 invariants:
   - 'The Vue generated Input emits its value channel on keystroke (native input event), not on blur (change event), so keystroke-time validation matches the spec — parity with the other frameworks that already do so.'
