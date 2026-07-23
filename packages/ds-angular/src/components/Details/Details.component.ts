@@ -19,12 +19,14 @@ export type DetailsIcon = "left" | "right" | "none";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-details",
   standalone: true,
   imports: [NgClass, NgIf],
   template: `<details [ngClass]="classes()" [open]="behavior.open()">
-  <summary [ngClass]="'details__summary'">
+  <summary [ngClass]="'details__summary'" [attr.aria-controls]="summaryAriaControls">
     <span [ngClass]="'details__summaryContent'">
       <span [ngClass]="'details__icon'"></span>
       <span [ngClass]="'details__summaryText'">
@@ -33,7 +35,7 @@ export type DetailsIcon = "left" | "right" | "none";
     </span>
   </summary>
   <ng-container *ngIf="behavior.open()">
-    <div [ngClass]="'details__content'">
+    <div [ngClass]="'details__content'" [attr.id]="instanceId + '-content'">
       <ng-content />
     </div>
   </ng-container>
@@ -49,6 +51,8 @@ export class DetailsComponent {
   @Input() variant?: DetailsVariant;
   @Input() icon?: DetailsIcon;
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-details-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useDetails({
@@ -68,6 +72,10 @@ export class DetailsComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  get summaryAriaControls(): string | undefined {
+    return [this.open ? `${this.instanceId}-content` : null].filter(Boolean).join(" ") || undefined;
+  }
 }
 
 @Component({

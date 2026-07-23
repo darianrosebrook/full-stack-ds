@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useSelect } from "./useSelect";
 import "./Select.css";
@@ -139,9 +139,11 @@ export function Select({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
   <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
-    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled}>
+    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled} aria-controls={`${instanceId}-options`}>
       <span className="select__text" />
     </button>
     {open && (
@@ -151,7 +153,7 @@ export function Select({
             <input type="text" />
           </div>
         )}
-        <div className="select__options">
+        <div className="select__options" id={`${instanceId}-options`}>
           {(options ?? []).map((item, index) => (
             <div className="select__option" role="option" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
               <span>

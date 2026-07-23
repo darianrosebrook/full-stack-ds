@@ -85,6 +85,46 @@ check(
   classify(rel, "web-dom", "<div>", new Set()).verdict,
   "unrealized",
 );
+// Cross-primitive scan (FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01): a relationship
+// attribute wired in a directly-imported same-package primitive counts as
+// realized (Svelte anchored-surface sets aria-controls/-expanded/-describedby
+// in the primitive, not inline in the component).
+check(
+  "relationship realized via a directly-imported primitive body",
+  classify(
+    { component: "X", class: "relationship", key: "aria-controls" },
+    "web-dom",
+    { own: "<div>", relationship: '<div>ariaProps["aria-controls"] = id' },
+    new Set(),
+  ).verdict,
+  "realized",
+);
+// Falsification: remove the primitive wiring and it reads unrealized again —
+// the scan is not a blanket pass for anything that imports a primitive.
+check(
+  "relationship unrealized when neither own nor primitive carries the token",
+  classify(
+    { component: "X", class: "relationship", key: "aria-controls" },
+    "web-dom",
+    { own: "<div>", relationship: "<div>/* trigger with no idref wiring */" },
+    new Set(),
+  ).verdict,
+  "unrealized",
+);
+// The primitive-extended body must NOT leak into keyboard/focus: a shared
+// roving/trap primitive's keydown tokens are visible ONLY through `own`, never
+// through the relationship-scoped extension — otherwise every importer would
+// falsely realize composite-keyboard obligations.
+check(
+  "keyboard NOT realized by a token present only in the primitive extension",
+  classify(
+    { component: "X", class: "keyboard", key: "ArrowDown" },
+    "web-dom",
+    { own: "<div>", relationship: "<div>onKeyDown={h}" },
+    new Set(),
+  ).verdict,
+  "unrealized",
+);
 check(
   "native-mobile keyboard obligations are excluded, not unrealized",
   classify({ component: "X", class: "keyboard", key: "Enter" }, "native-mobile", "", new Set())

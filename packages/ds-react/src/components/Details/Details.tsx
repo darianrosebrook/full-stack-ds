@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type DetailsHTMLAttributes, type ReactNode } from "react";
+import { type DetailsHTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useDetails } from "./useDetails";
 import "./Details.css";
@@ -86,9 +86,11 @@ export function Details({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
   <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} {...rest}>
-    <summary className="details__summary">
+    <summary className="details__summary" aria-controls={open ? `${instanceId}-content` : undefined}>
       <span className="details__summaryContent">
         <span className="details__icon" />
         <span className="details__summaryText">
@@ -97,7 +99,7 @@ export function Details({
       </span>
     </summary>
     {open && (
-      <div className="details__content">
+      <div className="details__content" id={`${instanceId}-content`}>
         {children}
       </div>
     )}

@@ -53,20 +53,24 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <details class={classes} open={behavior.open} role="group">
-  <summary class={'details__summary'}>
+  <summary class={'details__summary'} aria-controls={open ? `${instanceId}-content` : undefined}>
     <span class={'details__summaryContent'}>
       <span class={'details__icon'}></span>
       <span class={'details__summaryText'}>{summary}</span>
     </span>
   </summary>
   {#if behavior.open}
-  <div class={'details__content'}>
+  <div class={'details__content'} id={`${instanceId}-content`}>
     {@render children?.()}
   </div>
   {/if}

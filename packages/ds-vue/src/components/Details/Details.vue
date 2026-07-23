@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useDetails } from "./useDetails.js";
 // @generated:end
 
@@ -58,6 +58,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -65,7 +69,7 @@ const classNames = computed(() => [
 
 <template>
   <details :class="classNames" :open="behavior.open.value" role="group" :data-testid="props['data-testid']">
-    <summary :class="'details__summary'">
+    <summary :class="'details__summary'" :aria-controls="props.open ? `${instanceId}-content` : undefined">
       <span :class="'details__summaryContent'">
         <span :class="'details__icon'"></span>
         <span :class="'details__summaryText'">
@@ -73,7 +77,7 @@ const classNames = computed(() => [
         </span>
       </span>
     </summary>
-    <div v-if="behavior.open.value" :class="'details__content'">
+    <div v-if="behavior.open.value" :class="'details__content'" :id="`${instanceId}-content`">
       <slot />
     </div>
   </details>

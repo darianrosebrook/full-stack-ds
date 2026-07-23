@@ -283,10 +283,59 @@ export function deriveObligations(contracts) {
 }
 
 // ---- realization checking ---------------------------------------------------
+/**
+ * Relative import specifiers in `src` that resolve INTO this package's
+ * `src/primitives/` tree. A component may realize a relationship attribute in
+ * a shared primitive it imports (Svelte's anchored-surface primitives set
+ * aria-controls/aria-expanded/aria-describedby in
+ * primitives/surfaces/createAnchoredSurface, not inline in the component) —
+ * those must be scanned too, or the rail false-negatives on a genuinely
+ * realized wire. Only imports the component ACTUALLY declares are followed,
+ * so the falsification property holds: drop the import (or the primitive's
+ * wiring) and the attribute token disappears from the scanned set.
+ */
+function resolvePrimitiveImports(src, fromDir, packageSrc) {
+  const primitivesRoot = join(packageSrc, "primitives");
+  const files = new Set();
+  const re = /(?:from|import)\s+["']([^"']+)["']/g;
+  let m;
+  while ((m = re.exec(src)) !== null) {
+    const spec = m[1];
+    if (!spec.startsWith(".")) continue; // only relative, same-package imports
+    const resolvedNoExt = resolve(fromDir, spec).replace(/\.js$/, "");
+    if (!resolvedNoExt.startsWith(primitivesRoot + "/")) continue;
+    // Do NOT follow barrel re-exports (primitives/index, surfaces/index …):
+    // a barrel pulls the WHOLE primitive surface into scope, so an unrelated
+    // primitive's token would count as realization for any component that
+    // imports the barrel — eroding falsification (Field imports the barrel for
+    // provideFieldAssociation; its aria-describedby is delivered cross-COMPONENT
+    // to a slotted control, a genuinely different gap the per-component rail
+    // cannot see, and must NOT be spuriously realized via the barrel). Only a
+    // DIRECT import of a specific primitive module is followed.
+    if (/(^|\/)index$/.test(resolvedNoExt)) continue;
+    // Generated imports use runtime `.js`/`.svelte.js`; map back to source.
+    for (const cand of [
+      `${resolvedNoExt}.ts`,
+      `${resolvedNoExt}.svelte.ts`,
+      resolvedNoExt, // already had an extension (e.g. a bare .svelte)
+    ]) {
+      if (existsSync(cand) && statSync(cand).isFile()) {
+        files.add(cand);
+        break;
+      }
+    }
+  }
+  return files;
+}
+
 function readComponentSource(treeAbs, component, sourceExtensions) {
   const dir = join(treeAbs, component);
   if (!existsSync(dir) || !statSync(dir).isDirectory()) return null;
+  // `treeAbs` is <pkg>/src/components; the package source root is its parent,
+  // where the shared `primitives/` tree lives.
+  const packageSrc = dirname(treeAbs);
   let src = "";
+  const primitiveFiles = new Set();
   const walk = (d) => {
     for (const entry of readdirSync(d).sort()) {
       const p = join(d, entry);
@@ -298,11 +347,38 @@ function readComponentSource(treeAbs, component, sourceExtensions) {
       }
       if (/\.test\.[a-z]+$/.test(entry)) continue;
       if (!sourceExtensions.some((ext) => entry.endsWith(ext))) continue;
-      src += readFileSync(p, "utf-8");
+      const fileSrc = readFileSync(p, "utf-8");
+      src += fileSrc;
+      for (const f of resolvePrimitiveImports(fileSrc, d, packageSrc)) {
+        primitiveFiles.add(f);
+      }
     }
   };
   walk(dir);
-  return src;
+  // Transitively include primitives the imported primitives themselves import
+  // (a controller re-exported through an index), bounded by the same
+  // same-package-primitives constraint. Collected SEPARATELY from `src`: the
+  // primitive-extended body is used ONLY for relationship (idref) checks, never
+  // for keyboard/focus — a shared roving/focus-trap primitive's arrow-key or
+  // keydown tokens must not count as realization for every component that
+  // imports it (that would hide the very composite-keyboard gaps another lane
+  // is chartered to burn). Relationship idref attributes (aria-controls/
+  // -expanded/-describedby set in an anchored-surface primitive) are the only
+  // class legitimately realized in a shared primitive.
+  let primitiveSrc = "";
+  const seen = new Set();
+  const queue = [...primitiveFiles];
+  while (queue.length > 0) {
+    const f = queue.shift();
+    if (seen.has(f)) continue;
+    seen.add(f);
+    const fileSrc = readFileSync(f, "utf-8");
+    primitiveSrc += fileSrc;
+    for (const next of resolvePrimitiveImports(fileSrc, dirname(f), packageSrc)) {
+      if (!seen.has(next)) queue.push(next);
+    }
+  }
+  return { own: src, relationship: src + primitiveSrc };
 }
 
 export function relationshipTokens(kind, attribute) {
@@ -312,8 +388,17 @@ export function relationshipTokens(kind, attribute) {
 }
 
 /** Classify one obligation against one family's committed source.
+ * `srcBundle` is { own, relationship }: `own` is the component's own source;
+ * `relationship` additionally includes same-package primitives the component
+ * imports (used ONLY for idref relationship checks — see readComponentSource).
+ * A bare string is accepted for callers/tests that don't split the two.
  * Returns { verdict: "realized"|"unrealized"|"excluded", via?, reason? }. */
-export function classify(obligation, kind, src, contractTags) {
+export function classify(obligation, kind, srcBundle, contractTags) {
+  const ownSrc = typeof srcBundle === "string" ? srcBundle : srcBundle.own;
+  const relationshipSrc =
+    typeof srcBundle === "string"
+      ? srcBundle
+      : srcBundle.relationship ?? srcBundle.own;
   if (kind === "native-mobile" && obligation.class !== "relationship") {
     return { verdict: "excluded", reason: NATIVE_MOBILE_KEYBOARD_REASON };
   }
@@ -327,22 +412,22 @@ export function classify(obligation, kind, src, contractTags) {
           `no ${kind} surface for ${obligation.key}`,
       };
     }
-    return tokens.some((t) => src.includes(t))
+    return tokens.some((t) => relationshipSrc.includes(t))
       ? { verdict: "realized", via: "attribute" }
       : { verdict: "unrealized" };
   }
   if (obligation.class === "keyboard") {
-    if (EXPLICIT_KEY_RE.test(src)) return { verdict: "realized", via: "explicit" };
+    if (EXPLICIT_KEY_RE.test(ownSrc)) return { verdict: "realized", via: "explicit" };
     const keys = atomicKeys(obligation.key);
     const trapKeys = keys.every((k) => k === "Tab");
     const dismissKeys = keys.every((k) => k === "Escape");
-    if (trapKeys && TRAP_RE.test(src)) return { verdict: "realized", via: "primitive" };
-    if (dismissKeys && DISMISS_RE.test(src)) return { verdict: "realized", via: "primitive" };
-    if ((trapKeys || dismissKeys) && (TRAP_RE.test(src) || DISMISS_RE.test(src)))
+    if (trapKeys && TRAP_RE.test(ownSrc)) return { verdict: "realized", via: "primitive" };
+    if (dismissKeys && DISMISS_RE.test(ownSrc)) return { verdict: "realized", via: "primitive" };
+    if ((trapKeys || dismissKeys) && (TRAP_RE.test(ownSrc) || DISMISS_RE.test(ownSrc)))
       return { verdict: "realized", via: "primitive" };
     const hasNativeTag =
       [...contractTags].some((t) => NATIVE_INTERACTIVE_TAGS.has(t)) ||
-      NATIVE_ELEMENT_IN_SOURCE_RE.test(src);
+      NATIVE_ELEMENT_IN_SOURCE_RE.test(ownSrc);
     const nativeKeys = keys.every(
       (k) =>
         NATIVE_KEYS.has(k) ||
@@ -353,12 +438,12 @@ export function classify(obligation, kind, src, contractTags) {
   }
   // focus
   if (obligation.key === "trap") {
-    return TRAP_RE.test(src)
+    return TRAP_RE.test(ownSrc)
       ? { verdict: "realized", via: "primitive" }
       : { verdict: "unrealized" };
   }
   // roving cannot be native — demands explicit key handling.
-  return EXPLICIT_KEY_RE.test(src)
+  return EXPLICIT_KEY_RE.test(ownSrc)
     ? { verdict: "realized", via: "explicit" }
     : { verdict: "unrealized" };
 }
@@ -381,14 +466,14 @@ export function runAudit({ repoRoot = REPO } = {}) {
     const kind = familyKind(d.id);
     const treeAbs = resolve(repoRoot, d.outputTreeRelPath);
     for (const ob of obligations) {
-      const src = readComponentSource(treeAbs, ob.component, d.sourceExtensions);
-      if (src === null) {
+      const srcBundle = readComponentSource(treeAbs, ob.component, d.sourceExtensions);
+      if (srcBundle === null) {
         // Component not emitted for this family (e.g. not yet admitted there):
         // nothing to check — record for visibility, not as a gap.
         rows.push({ ...ob, family: d.id, verdict: "not-emitted" });
         continue;
       }
-      const res = classify(ob, kind, src, tagsByComponent.get(ob.component) ?? new Set());
+      const res = classify(ob, kind, srcBundle, tagsByComponent.get(ob.component) ?? new Set());
       rows.push({ ...ob, family: d.id, ...res });
     }
   }

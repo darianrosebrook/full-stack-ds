@@ -235,14 +235,6 @@
   "rtl": {
     "flipIcon": false
   },
-  "relationships": [
-    {
-      "from": "input",
-      "to": "indicator",
-      "attribute": "aria-hidden",
-      "description": "The visual indicator div is aria-hidden so screen readers use only the native input's state."
-    }
-  ],
   "a11y": {
     "role": "checkbox",
     "labeling": [

@@ -65,13 +65,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Checkbox",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-hidden",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Command",
       "family": "react",
       "class": "relationship",
@@ -93,35 +86,12 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "react",
       "class": "relationship",
       "key": "aria-describedby",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
-    },
-    {
-      "component": "NavList",
-      "family": "react",
-      "class": "keyboard",
-      "key": "Tab",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
-    },
-    {
-      "component": "NavList",
-      "family": "react",
-      "class": "keyboard",
-      "key": "Enter",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
     },
     {
       "component": "OTP",
@@ -205,14 +175,14 @@
       "family": "react",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "react",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -313,13 +283,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Checkbox",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-hidden",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Command",
       "family": "vue",
       "class": "relationship",
@@ -341,35 +304,12 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "vue",
       "class": "relationship",
       "key": "aria-describedby",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
-    },
-    {
-      "component": "NavList",
-      "family": "vue",
-      "class": "keyboard",
-      "key": "Tab",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
-    },
-    {
-      "component": "NavList",
-      "family": "vue",
-      "class": "keyboard",
-      "key": "Enter",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
     },
     {
       "component": "OTP",
@@ -453,14 +393,14 @@
       "family": "vue",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "vue",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -561,13 +501,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Checkbox",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-hidden",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Command",
       "family": "svelte",
       "class": "relationship",
@@ -589,35 +522,12 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "svelte",
       "class": "relationship",
       "key": "aria-describedby",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
-    },
-    {
-      "component": "NavList",
-      "family": "svelte",
-      "class": "keyboard",
-      "key": "Tab",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
-    },
-    {
-      "component": "NavList",
-      "family": "svelte",
-      "class": "keyboard",
-      "key": "Enter",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
     },
     {
       "component": "OTP",
@@ -632,20 +542,6 @@
       "class": "keyboard",
       "key": "ArrowRight",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Popover",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
-      "component": "Popover",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-expanded",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     },
     {
       "component": "Select",
@@ -715,14 +611,14 @@
       "family": "svelte",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "svelte",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -744,13 +640,6 @@
       "class": "keyboard",
       "key": "ArrowUp|ArrowDown",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Tooltip",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     },
     {
       "component": "Walkthrough",
@@ -830,13 +719,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Checkbox",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-hidden",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Command",
       "family": "lit",
       "class": "relationship",
@@ -856,13 +738,6 @@
       "class": "keyboard",
       "key": "ArrowUp",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Details",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     },
     {
       "component": "Field",
@@ -881,22 +756,6 @@
       "note": "Platform limitation: Lit components render into shadow roots and idrefs cannot cross the shadow boundary, so Field's label→slotted-control association is unrealizable today. Candidate for the ARIA Reference Target proposal when it ships."
     },
     {
-      "component": "NavList",
-      "family": "lit",
-      "class": "keyboard",
-      "key": "Tab",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
-    },
-    {
-      "component": "NavList",
-      "family": "lit",
-      "class": "keyboard",
-      "key": "Enter",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
-    },
-    {
       "component": "OTP",
       "family": "lit",
       "class": "keyboard",
@@ -978,14 +837,14 @@
       "family": "lit",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "lit",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -1086,13 +945,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Checkbox",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-hidden",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Command",
       "family": "angular",
       "class": "relationship",
@@ -1114,35 +966,12 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "angular",
       "class": "relationship",
       "key": "aria-describedby",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
-    },
-    {
-      "component": "NavList",
-      "family": "angular",
-      "class": "keyboard",
-      "key": "Tab",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
-    },
-    {
-      "component": "NavList",
-      "family": "angular",
-      "class": "keyboard",
-      "key": "Enter",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
-      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
     },
     {
       "component": "OTP",
@@ -1226,14 +1055,14 @@
       "family": "angular",
       "class": "relationship",
       "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
       "family": "angular",
       "class": "relationship",
       "key": "aria-sort",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+      "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
       "component": "Table",
@@ -1269,20 +1098,6 @@
       "class": "keyboard",
       "key": "ArrowLeft",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Checkbox",
-      "family": "react-native",
-      "class": "relationship",
-      "key": "aria-hidden",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
-      "component": "Popover",
-      "family": "react-native",
-      "class": "relationship",
-      "key": "aria-expanded",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     }
   ]
 }

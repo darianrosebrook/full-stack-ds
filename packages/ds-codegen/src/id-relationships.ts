@@ -44,6 +44,12 @@ export const LOWERED_RELATIONSHIP_ATTRIBUTES: ReadonlySet<string> = new Set([
   "for",
   "aria-labelledby",
   "aria-describedby",
+  // aria-controls lowers via the SAME owned-pair path as aria-describedby
+  // (id on target, idref on source): Details' summary controls its content
+  // region. Unlike native <details> disclosure (which the user agent owns),
+  // the summary's aria-controls idref is an explicit enhancement AT screen
+  // readers use to announce the controlled region — realizable, not native.
+  "aria-controls",
 ]);
 
 interface PartOccurrence {
