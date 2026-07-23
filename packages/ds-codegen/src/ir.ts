@@ -1202,6 +1202,25 @@ export interface SurfaceAnchorIR {
   relation: ContractSurfaceAnchorRelation;
 }
 
+/**
+ * Selector-sourced anchor (coachmark / guided tour): the anchor element is
+ * an arbitrary page element resolved at runtime via a CSS selector carried
+ * in an array-typed prop, indexed by a channel's value (Walkthrough's
+ * steps[].anchor keyed by the step channel). Kept as a separate SurfaceIR
+ * field rather than widening SurfaceAnchorIR into a union so the compound
+ * trigger/content surface emitters (which read anchor.part / anchor.relation)
+ * stay untouched. buildSurfaceIR validates the prop exists and is
+ * array-typed and the channel exists — emitters consume names only.
+ */
+export interface SurfaceSelectorAnchorIR {
+  /** Name of the array-typed prop carrying the anchor selectors. */
+  prop: string;
+  /** Member of each array element holding the CSS selector string. */
+  path: string;
+  /** Channel whose numeric value indexes the active array element. */
+  indexChannel: string;
+}
+
 export interface SurfaceContentIR {
   /** Resolved PartIR — caller already validated details.role is one of
    * 'content' | 'region' | 'overlay'. */
@@ -1226,6 +1245,9 @@ export interface SurfaceIR {
   presence: ContractSurfacePresence;
   modality: ContractSurfaceModality;
   anchor: SurfaceAnchorIR | undefined;
+  /** Selector-sourced anchor — mutually exclusive with `anchor` (validated
+   * fail-loud in buildSurfaceIR). */
+  selectorAnchor: SurfaceSelectorAnchorIR | undefined;
   content: SurfaceContentIR | undefined;
   positioning: SurfacePositioningIR | undefined;
   /** Semantic dismissal mode list — composes with BehaviorIR's
@@ -3543,7 +3565,32 @@ export function buildSurfaceIR(
   const partByName = new Map(parts.map((p) => [p.name, p]));
 
   let anchor: SurfaceAnchorIR | undefined;
-  if (surface.anchor) {
+  let selectorAnchor: SurfaceSelectorAnchorIR | undefined;
+  if (surface.anchor && "selector" in surface.anchor) {
+    const { prop, path, indexChannel } = surface.anchor.selector;
+    const member = getPropMembers(contract).find((m) => m.name === prop);
+    if (!member) {
+      throw new Error(
+        `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" is not a declared prop.`,
+      );
+    }
+    if (!member.type?.trim().endsWith("[]")) {
+      throw new Error(
+        `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" must be array-typed (got "${member.type ?? "undefined"}").`,
+      );
+    }
+    if (!path) {
+      throw new Error(
+        `Contract "${contract.name}": surface.anchor.selector.path must be a non-empty member name.`,
+      );
+    }
+    if (!contract.channels?.[indexChannel]) {
+      throw new Error(
+        `Contract "${contract.name}": surface.anchor.selector.indexChannel "${indexChannel}" is not a declared channel.`,
+      );
+    }
+    selectorAnchor = { prop, path, indexChannel };
+  } else if (surface.anchor) {
     const part = partByName.get(surface.anchor.part);
     if (!part) {
       throw new Error(
@@ -3592,9 +3639,14 @@ export function buildSurfaceIR(
     : undefined;
 
   const openTriggers = surface.openTriggers ?? [];
+  // Selector-anchored surfaces (coachmarks / guided tours) open
+  // programmatically — there is no in-tree trigger element to attach an
+  // open interaction to, so the openTriggers requirement applies only to
+  // part-anchored surfaces.
   const requiresOpenTriggers =
-    surface.kind === "tooltip" ||
-    surface.positioning?.strategy === "anchored";
+    (surface.kind === "tooltip" ||
+      surface.positioning?.strategy === "anchored") &&
+    selectorAnchor === undefined;
   if (requiresOpenTriggers && openTriggers.length === 0) {
     throw new Error(
       `Contract "${contract.name}": surface.openTriggers must declare at least one of "hover" | "focus" | "click" when surface.kind === "tooltip" or surface.positioning.strategy === "anchored".`,
@@ -3606,6 +3658,7 @@ export function buildSurfaceIR(
     presence: surface.presence,
     modality: surface.modality,
     anchor,
+    selectorAnchor,
     content,
     positioning,
     dismissal: surface.dismissal ?? [],

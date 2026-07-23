@@ -27,7 +27,10 @@ import {
   pickPrimaryDisclosureChannel,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { portalsRootToBody } from "../../semantics.js";
+import {
+  portalsRootToBody,
+  selectorAnchoredRootPortal,
+} from "../../semantics.js";
 import { isSurfaceComponent } from "./surface-emit.js";
 
 // ---------------------------------------------------------------------------
@@ -246,7 +249,13 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // body). Contracts that declare `portal.enabled` without a consumable
   // surface (no surface block, or an anchored/inline surface) no longer emit
   // an orphaned `renderInPortal` the component never reads.
-  const hasPortal = portalsRootToBody({ behavior: { portal }, surface: ir.surface });
+  // Selector-anchored root portals (coachmark tours) also consume
+  // renderInPortal: the whole panel mounts at body and tracks a page
+  // element resolved from the active step's selector.
+  const hasPortal =
+    portalsRootToBody({ behavior: { portal }, surface: ir.surface }) ||
+    selectorAnchoredRootPortal({ behavior: { portal }, surface: ir.surface }) !==
+      null;
   const hasEscapeTrigger = triggers.some((t) => t.event === "escape");
   const hasOutsideClickTrigger = triggers.some(
     (t) => t.event === "outsideClick" || t.event === "overlayClick",

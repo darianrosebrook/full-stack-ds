@@ -1,7 +1,8 @@
 // @generated:start imports
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { WalkthroughBehavior } from './WalkthroughBehavior.js';
+import { AnchoredPositionController } from '../../primitives/surfaces/AnchoredPositionController.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
@@ -188,6 +189,72 @@ export class WalkthroughElement extends LitElement {
     onStepChange: (v) => this.onStepChange?.(v),
     closeOnOutsideClick: this.closeOnOutsideClick,
   });
+
+  private _moving = false;
+  private _portaled = false;
+  private _portalOriginParent: Node | null = null;
+  private _portalOriginNext: Node | null = null;
+
+  private _anchorTargetEl: HTMLElement | null = null;
+  private _position = new AnchoredPositionController(this, {
+    anchor: () => this._anchorTargetEl,
+    content: () => this,
+    open: () => true,
+    placement: () => ((this.placement ?? "auto") as "top" | "bottom" | "left" | "right" | "auto"),
+    collision: () => "flip-shift",
+    onChange: () => this.requestUpdate(),
+  });
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (!this._portaled && typeof document !== "undefined" && this.parentNode && this.parentNode !== document.body) {
+      this._portalOriginParent = this.parentNode;
+      this._portalOriginNext = this.nextSibling;
+      this._portaled = true;
+      this._moving = true;
+      document.body.appendChild(this);
+      this._moving = false;
+    }
+  }
+
+  override disconnectedCallback(): void {
+    if (!this._moving) {
+      if (this._portalOriginParent && this._portalOriginParent.isConnected) {
+        this._portalOriginParent.insertBefore(this, this._portalOriginNext);
+      }
+      this._portaled = false;
+      this._portalOriginParent = null;
+      this._portalOriginNext = null;
+    }
+    super.disconnectedCallback();
+  }
+
+  override willUpdate(_changedProperties: PropertyValues<this>): void {
+    // Re-query on every update pass — the anchor lives outside this
+    // element's tree, so a per-property changed-set check can't see
+    // mutations to the target page (only index/steps changes are
+    // reactive triggers here, but re-resolving is cheap and idempotent).
+    const selector = ((this.steps ?? [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}]))[this.index ?? 0]?.anchor;
+    this._anchorTargetEl = selector && typeof document !== "undefined" ? document.querySelector<HTMLElement>(selector) : null;
+  }
+
+  override updated(changedProperties: PropertyValues<this>): void {
+    super.updated(changedProperties);
+    // A stale scheduled update landing after a genuine disconnect must
+    // be a no-op — it must NOT resurrect inline positioning on an
+    // element that has already torn down.
+    if (!this.isConnected) return;
+    const pos = this._position.state;
+    // The static :host rule is display: contents (no box), which would
+    // make position: fixed a layout no-op. Give the host a real box
+    // before applying fixed positioning.
+    this.style.display = "block";
+    this.style.position = "fixed";
+    this.style.top = `${pos.top}px`;
+    this.style.left = `${pos.left}px`;
+    this.style.visibility = pos.ready ? "visible" : "hidden";
+    this.setAttribute("data-placement", pos.placement);
+  }
 
   private computeClasses(): string {
     return [

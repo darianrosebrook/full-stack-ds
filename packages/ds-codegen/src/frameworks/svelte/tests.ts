@@ -3,7 +3,7 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { portalsRootToBody } from "../../semantics.js";
+import { portalsRootToBody, selectorAnchoredRootPortal } from "../../semantics.js";
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
@@ -17,7 +17,11 @@ export function generateSvelteTest(ir: ComponentIR): string {
   // component's base class instead (testing-library auto-cleanup unmounts
   // between tests and the portal action removes its node on destroy, so the
   // query always resolves the current mount). IR-driven — no name lore.
-  const portalRoot = portalsRootToBody(ir);
+  // Selector-anchored root portals (coachmark tours) also relocate the
+  // whole panel to document.body, so the same portal-aware query strategy
+  // applies — see FEAT-WALKTHROUGH-ANCHOR-CONSUMPTION-01.
+  const portalRoot =
+    portalsRootToBody(ir) || selectorAnchoredRootPortal(ir) !== null;
   const rootDecl = `    const root = document.body.querySelector<HTMLElement>(".${plan.cssPrefix}");\n    expect(root).not.toBeNull();`;
   // Escape tests rely on a document-level keydown listener wired only by the
   // dom-tree behavior hook; stack-only components have no such listener.

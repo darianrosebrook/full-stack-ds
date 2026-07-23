@@ -50,7 +50,11 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
+import {
+  resolveSurfaceAutoDismiss,
+  portalsRootToBody,
+  selectorAnchoredRootPortal,
+} from "../../semantics.js";
 import { toKebab as sharedToKebab } from "../../contract.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
@@ -1381,9 +1385,19 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // their host element into document.body on init and remove it on destroy so
   // the fixed layer escapes any transform/overflow/filter ancestor. Needs
   // OnInit/OnDestroy lifecycle and ElementRef for the host node.
-  if (portalsRootToBody(ir)) {
+  const rootPortal = portalsRootToBody(ir);
+  const selectorAnchor = selectorAnchoredRootPortal(ir);
+  if (rootPortal || selectorAnchor) {
     coreNames.push("OnInit", "OnDestroy");
     if (!coreNames.includes("ElementRef")) coreNames.push("ElementRef");
+  }
+  // Selector-anchored root panel (coachmark tour): the whole panel portals
+  // to body (same OnInit/OnDestroy relocation above) AND tracks a page
+  // element resolved from the active step's selector via `effect()`,
+  // driving `createAnchoredPosition`.
+  if (selectorAnchor) {
+    if (!coreNames.includes("effect")) coreNames.push("effect");
+    coreNames.push("signal");
   }
   // Only import NgIf when the rendered template will actually use
   // `*ngIf`. Declaring it otherwise triggers ngc NG8113 (unused
@@ -1434,6 +1448,14 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // Structural — driven by IR `iconGlyph` facts, never per-component lore.
   if (ir.dom && collectIconGlyphNodes(ir.dom).length > 0) {
     lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
+  if (selectorAnchor) {
+    lines.push(
+      `import {`,
+      `  createAnchoredPosition,`,
+      `  type CreateAnchoredPositionResult,`,
+      `} from "../../primitives/surfaces/createAnchoredPosition.js";`,
+    );
   }
   return lines.join("\n");
 }
@@ -1499,6 +1521,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const autoDismissActive = Boolean(
     resolveSurfaceAutoDismiss(ir) && booleanChannel,
   );
+  // Selector-anchored root panel (coachmark / guided tour): computed once
+  // and threaded through class-body generation, the template render
+  // context (for the fixed-position/data-placement root attrs), and
+  // lifecycle interface selection below.
+  const selectorAnchor = selectorAnchoredRootPortal(ir);
 
   const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
 
@@ -1585,6 +1612,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     iconGlyphIdents,
     fieldAssociationConsumer: assocConsumes,
     idRefGetters,
+    rootSelectorAnchored: selectorAnchor !== null,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
@@ -1646,7 +1674,10 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // so it can detect content projection and toggle `hasContent` for *ngIf.
   // Full-overlay portal surfaces additionally implement OnInit/OnDestroy to
   // relocate their host into document.body and clean up on teardown.
-  const rootPortal = portalsRootToBody(ir);
+  // Selector-anchored root panels (coachmark tours) consume the same
+  // OnInit/OnDestroy body-relocation — the whole panel portals, positioned
+  // against a page element resolved from the active step's selector.
+  const rootPortal = portalsRootToBody(ir) || selectorAnchor !== null;
   const lifecycleInterfaces: string[] = [];
   if (hasChildrenGuard) lifecycleInterfaces.push("AfterContentInit");
   if (rootPortal) lifecycleInterfaces.push("OnInit", "OnDestroy");
@@ -2017,6 +2048,57 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(`  }`);
   }
 
+  // Selector-anchored root panel (coachmark / guided tour): resolve the
+  // active page element from the indexed selector prop, then position the
+  // (portaled) root against it via createAnchoredPosition. The anchor
+  // element lives outside this component's tree, so it is re-resolved
+  // whenever the index channel or the selector array changes — driven by
+  // an effect() (Angular has no dependency-array equivalent to React's
+  // useEffect; effect() auto-tracks the signal reads inside its body).
+  if (selectorAnchor) {
+    const idxChannel = channels.find(
+      (c) => c.name === selectorAnchor.indexChannel,
+    );
+    if (!idxChannel) {
+      throw new Error(
+        `${ir.name}: surface.anchor.selector.indexChannel "${selectorAnchor.indexChannel}" has no matching channel in the IR.`,
+      );
+    }
+    const propIdent =
+      ir.styledProps.find((p) => p.name === selectorAnchor.prop)?.safeName ??
+      selectorAnchor.prop;
+    const placementProp = ir.surface?.positioning?.placementProp;
+    const collision = ir.surface?.positioning?.collision ?? "flip-shift";
+    lines.push(``);
+    lines.push(
+      `  private _anchorTargetEl = signal<HTMLElement | null>(null);`,
+    );
+    lines.push(
+      `  private _anchorResolveEffect = effect(() => {`,
+      `    const steps = this.${propIdent} ?? [];`,
+      `    const selector = steps[this.behavior.${idxChannel.name}()]?.${selectorAnchor.path};`,
+      `    this._anchorTargetEl.set(`,
+      `      typeof document === "undefined" || !selector`,
+      `        ? null`,
+      `        : document.querySelector<HTMLElement>(selector),`,
+      `    );`,
+      `  });`,
+      ``,
+      `  protected _position: CreateAnchoredPositionResult = createAnchoredPosition({`,
+      `    anchor: () => this._anchorTargetEl(),`,
+      `    content: () => this._el.nativeElement,`,
+      `    open: () => true,`,
+      `    placement: () => ${placementProp ? `this.${placementProp} ?? "auto"` : `"auto"`},`,
+      `    collision: () => "${collision}",`,
+      `    destroyRef: this.destroyRef,`,
+      `  });`,
+      `  private _anchorPositionEffect = effect(() => {`,
+      `    this._anchorTargetEl();`,
+      `    this._position.requestUpdate();`,
+      `  });`,
+    );
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -2123,6 +2205,13 @@ interface AngularRenderContext {
    * glyph nodes.
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphGetter: string; pxGetter: string | undefined }>;
+  /**
+   * Selector-anchored root panel (coachmark / guided tour): the root
+   * element gets the fixed-position/data-placement host attrs driven by
+   * the class body's `_position` (createAnchoredPosition). Root-level
+   * only — set once at `generateDomTreeComponent`'s top-level ctx.
+   */
+  rootSelectorAnchored?: boolean;
   /**
    * True when the component consumes ambient field association
    * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `[attr.id]` /
@@ -2282,6 +2371,18 @@ function renderAngularDomNode(
         `(pointerleave)="autoDismiss.pauseListeners.pointerleave()"`,
         `(focusin)="autoDismiss.pauseListeners.focusin()"`,
         `(focusout)="autoDismiss.pauseListeners.focusout()"`,
+      );
+    }
+    // Selector-anchored root: fixed-position style computed against the
+    // active step's page anchor, hidden until the first measurement so the
+    // panel never flashes at (0,0).
+    if (ctx.rootSelectorAnchored) {
+      attrs.push(`[attr.data-placement]="_position.state().placement"`);
+      attrs.push(`[style.position]="'fixed'"`);
+      attrs.push(`[style.top.px]="_position.state().top"`);
+      attrs.push(`[style.left.px]="_position.state().left"`);
+      attrs.push(
+        `[style.visibility]="_position.state().ready ? 'visible' : 'hidden'"`,
       );
     }
   } else if (

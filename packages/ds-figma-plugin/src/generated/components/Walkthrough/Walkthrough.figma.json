@@ -482,9 +482,34 @@
       "strategy": "none",
       "description": "Walkthrough panels are non-blocking. Focus remains on the anchored element while the panel is visible."
     },
-    "portal": null
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "anchored",
+      "layering": "popover",
+      "collision": "flip-shift"
+    }
   },
-  "surface": null,
+  "surface": {
+    "kind": "coachmark",
+    "presence": "persistent",
+    "modality": "non-blocking",
+    "selectorAnchor": {
+      "prop": "steps",
+      "path": "anchor",
+      "indexChannel": "step"
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click"
+    ],
+    "openTriggers": []
+  },
   "figma": {
     "intendedUse": "figma-library-materialization",
     "documentationFrame": "Walkthrough / Documentation",

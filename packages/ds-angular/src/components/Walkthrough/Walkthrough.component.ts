@@ -1,8 +1,12 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, effect, signal } from "@angular/core";
 import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useWalkthrough } from "./useWalkthrough.js";
+import {
+  createAnchoredPosition,
+  type CreateAnchoredPositionResult,
+} from "../../primitives/surfaces/createAnchoredPosition.js";
 // @generated:end
 
 // @custom:start imports
@@ -25,7 +29,7 @@ let nextInstanceId = 0;
   selector: "fsds-walkthrough",
   standalone: true,
   imports: [NgClass, NgFor],
-  template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')">
+  template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')" [attr.data-placement]="_position.state().placement" [style.position]="'fixed'" [style.top.px]="_position.state().top" [style.left.px]="_position.state().left" [style.visibility]="_position.state().ready ? 'visible' : 'hidden'">
   <div [ngClass]="'walkthrough__content'" role="group" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-description'">
     <h3 [ngClass]="'walkthrough__title'" [attr.id]="instanceId + '-title'">
       <ng-content select="[slot=title]" />
@@ -48,7 +52,7 @@ let nextInstanceId = 0;
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WalkthroughComponent {
+export class WalkthroughComponent implements OnInit, OnDestroy {
   @Input() steps?: WalkthroughStepSpec[] = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}];
   @Input() index?: number;
   @Input() defaultIndex?: number = 0;
@@ -80,6 +84,54 @@ export class WalkthroughComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  private _el = inject(ElementRef<HTMLElement>);
+  private _portalOriginParent: Node | null = null;
+  private _portalOriginNext: Node | null = null;
+
+  ngOnInit(): void {
+    if (typeof document === "undefined") return;
+    const host = this._el.nativeElement as HTMLElement;
+    this._portalOriginParent = host.parentNode;
+    this._portalOriginNext = host.nextSibling;
+    document.body.appendChild(host);
+  }
+
+  ngOnDestroy(): void {
+    const host = this._el.nativeElement as HTMLElement;
+    // Restore to the original position when it still exists so
+    // Angular's own teardown removes it from the right place;
+    // otherwise detach it directly.
+    if (this._portalOriginParent && this._portalOriginParent.isConnected) {
+      this._portalOriginParent.insertBefore(host, this._portalOriginNext);
+    } else {
+      host.parentNode?.removeChild(host);
+    }
+  }
+
+  private _anchorTargetEl = signal<HTMLElement | null>(null);
+  private _anchorResolveEffect = effect(() => {
+    const steps = this.steps ?? [];
+    const selector = steps[this.behavior.step()]?.anchor;
+    this._anchorTargetEl.set(
+      typeof document === "undefined" || !selector
+        ? null
+        : document.querySelector<HTMLElement>(selector),
+    );
+  });
+
+  protected _position: CreateAnchoredPositionResult = createAnchoredPosition({
+    anchor: () => this._anchorTargetEl(),
+    content: () => this._el.nativeElement,
+    open: () => true,
+    placement: () => this.placement ?? "auto",
+    collision: () => "flip-shift",
+    destroyRef: this.destroyRef,
+  });
+  private _anchorPositionEffect = effect(() => {
+    this._anchorTargetEl();
+    this._position.requestUpdate();
+  });
 }
 
 @Component({

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed, useId } from "vue";
+import { computed, shallowRef, type ComponentPublicInstance, useId } from "vue";
 import { useWalkthrough } from "./useWalkthrough.js";
+import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition.js";
 // @generated:end
 
 // @custom:start imports
@@ -55,6 +56,24 @@ const behavior = useWalkthrough({
 });
 // @generated:end
 
+// @generated:start anchoredPosition
+const anchoredRootEl = shallowRef<HTMLElement | null>(null);
+function setAnchoredRootEl(el: Element | ComponentPublicInstance | null): void {
+  anchoredRootEl.value = el instanceof HTMLElement ? el : null;
+}
+const anchorTargetEl = computed(() => {
+  const selector = (props.steps ?? [])[behavior.step.value]?.anchor;
+  return selector ? document.querySelector<HTMLElement>(selector) : null;
+});
+const anchoredPosition = useAnchoredPosition({
+  anchor: () => anchorTargetEl.value,
+  content: () => anchoredRootEl.value,
+  open: () => true,
+  placement: () => props.placement,
+  collision: () => "flip-shift",
+});
+// @generated:end
+
 // @generated:start classes
 const classNames = computed(() => [
   "walkthrough",
@@ -73,23 +92,25 @@ const instanceId = useId();
 </script>
 
 <template>
-  <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props['data-testid']">
-    <div :class="'walkthrough__content'" role="group" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
-      <h3 :class="'walkthrough__title'" :id="`${instanceId}-title`">
-        <slot name="title" />
-      </h3>
-      <p :class="'walkthrough__description'" :id="`${instanceId}-description`">
-        <slot name="description" />
-      </p>
-    </div>
-    <div :class="'walkthrough__controls'">
-      <button :class="'walkthrough__skip'" type="button"></button>
-      <button :class="'walkthrough__prev'" type="button"></button>
-      <div :class="'walkthrough__dots'">
-        <button v-for="(item, index) in (props.steps ?? [])" :key="index" :class="'walkthrough__dot'" type="button" :aria-label="item.title" :data-step-index="index"></button>
+  <Teleport to="body">
+    <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props['data-testid']" :ref="setAnchoredRootEl" :data-placement="anchoredPosition.placement" :style="{ position: 'fixed', top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? 'visible' : 'hidden' }">
+      <div :class="'walkthrough__content'" role="group" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
+        <h3 :class="'walkthrough__title'" :id="`${instanceId}-title`">
+          <slot name="title" />
+        </h3>
+        <p :class="'walkthrough__description'" :id="`${instanceId}-description`">
+          <slot name="description" />
+        </p>
       </div>
-      <span :class="'walkthrough__counter'"></span>
-      <button :class="'walkthrough__next'" type="button"></button>
+      <div :class="'walkthrough__controls'">
+        <button :class="'walkthrough__skip'" type="button"></button>
+        <button :class="'walkthrough__prev'" type="button"></button>
+        <div :class="'walkthrough__dots'">
+          <button v-for="(item, index) in (props.steps ?? [])" :key="index" :class="'walkthrough__dot'" type="button" :aria-label="item.title" :data-step-index="index"></button>
+        </div>
+        <span :class="'walkthrough__counter'"></span>
+        <button :class="'walkthrough__next'" type="button"></button>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>

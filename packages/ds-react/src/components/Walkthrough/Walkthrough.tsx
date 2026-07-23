@@ -1,6 +1,7 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode, useId } from "react";
+import { type HTMLAttributes, type ReactNode, useEffect, useId, useState } from "react";
 import { Stack } from "../../primitives";
+import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";
 import { useWalkthrough } from "./useWalkthrough";
 import "./Walkthrough.css";
 // @generated:end
@@ -118,11 +119,25 @@ export function Walkthrough({
   slots,
   ...rest
 }: WalkthroughProps) {
-  const { step, setStep } = useWalkthrough({
+  const { step, setStep, renderInPortal } = useWalkthrough({
     index: controlledIndex,
     defaultIndex,
     onStepChange,
     closeOnOutsideClick,
+  });
+
+  const [anchoredRootEl, setAnchoredRootEl] = useState<HTMLElement | null>(null);
+  const [anchorTargetEl, setAnchorTargetEl] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    const selector = (steps ?? [])[step]?.anchor;
+    setAnchorTargetEl(selector ? document.querySelector<HTMLElement>(selector) : null);
+  }, [step, steps]);
+  const anchoredPosition = useAnchoredPosition({
+    anchor: anchorTargetEl,
+    content: anchoredRootEl,
+    open: true,
+    placement: placement,
+    collision: "flip-shift",
   });
 
   const classNames = [
@@ -136,25 +151,27 @@ export function Walkthrough({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} {...rest}>
-    <div className="walkthrough__content" role="group" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
-      <h3 className="walkthrough__title" id={`${instanceId}-title`}>
-        {slots?.title}
-      </h3>
-      <p className="walkthrough__description" id={`${instanceId}-description`}>
-        {slots?.description}
-      </p>
-    </div>
-    <div className="walkthrough__controls">
-      <button className="walkthrough__skip" type="button" />
-      <button className="walkthrough__prev" type="button" />
-      <div className="walkthrough__dots">
-        {(steps ?? []).map((item, index) => <button className="walkthrough__dot" type="button" aria-label={item.title} data-step-index={index} key={index} />)}
+    renderInPortal(
+    <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} ref={(el) => setAnchoredRootEl(el instanceof HTMLElement ? el : null)} data-placement={anchoredPosition.placement} style={{ position: "fixed", top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? "visible" : "hidden" }} {...rest}>
+      <div className="walkthrough__content" role="group" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
+        <h3 className="walkthrough__title" id={`${instanceId}-title`}>
+          {slots?.title}
+        </h3>
+        <p className="walkthrough__description" id={`${instanceId}-description`}>
+          {slots?.description}
+        </p>
       </div>
-      <span className="walkthrough__counter" />
-      <button className="walkthrough__next" type="button" />
-    </div>
-  </Stack>
+      <div className="walkthrough__controls">
+        <button className="walkthrough__skip" type="button" />
+        <button className="walkthrough__prev" type="button" />
+        <div className="walkthrough__dots">
+          {(steps ?? []).map((item, index) => <button className="walkthrough__dot" type="button" aria-label={item.title} data-step-index={index} key={index} />)}
+        </div>
+        <span className="walkthrough__counter" />
+        <button className="walkthrough__next" type="button" />
+      </div>
+    </Stack>
+    )
   );
 }
 // @generated:end

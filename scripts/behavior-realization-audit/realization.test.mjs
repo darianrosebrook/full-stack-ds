@@ -228,6 +228,37 @@ check("a root-portal surface derives NO anchored obligations (Dialog)", () => {
   assert.equal(checkAnchored(ob).length, 0);
 });
 
+console.log("\nselector-anchored root portal (coachmark tour) — Walkthrough:");
+check("Walkthrough derives selector-anchored root portal, NOT content portal", () => {
+  const ob = derivePortalObligation("Walkthrough", corpus);
+  assert.equal(ob.selectorAnchoredRoot, true);
+  assert.equal(ob.rootPortal, false); // anchored strategy is not a full-overlay root portal
+  assert.equal(ob.anchoredPositioning, true);
+  // the ROOT portals; nothing content-level portals, so the content-portal
+  // obligation must NOT derive (its react token createPortal never appears —
+  // the root path consumes renderInPortal instead)
+  assert.equal(ob.anchoredContentPortal, false);
+});
+check("Walkthrough consumes the root-portal mechanism in ALL five frameworks (no orphan check applies)", () => {
+  const ob = derivePortalObligation("Walkthrough", corpus);
+  const checks = checkPortal(ob);
+  assert.equal(checks.length, 5);
+  for (const c of checks) {
+    assert.equal(c.obligation, "consume-root-portal");
+    assert.ok(c.realized, `${c.framework} must consume its root-portal mechanism`);
+  }
+});
+check("Walkthrough consumes anchored positioning in ALL five frameworks", () => {
+  const ob = derivePortalObligation("Walkthrough", corpus);
+  const checks = checkAnchored(ob);
+  // positioning only — 5 checks, no content-portal rows
+  assert.equal(checks.length, 5);
+  for (const chk of checks) {
+    assert.equal(chk.obligation, "consume-anchored-positioning");
+    assert.ok(chk.realized, `${chk.framework}: anchored positioning not realized`);
+  }
+});
+
 // -- SYNTHETIC FALSIFICATION --------------------------------------------------
 // The load-bearing proof: the matcher MUST fail when the handler is removed
 // from the part's element. We build in-memory generated source with, and

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "./contract.js";
 import { buildComponentIR } from "./ir.js";
+import { selectorAnchoredRootPortal } from "./semantics.js";
 
 /**
  * Phase F-1 boundary tests. These exist to prove that the SurfaceIR builder
@@ -489,5 +490,139 @@ describe("buildSurfaceIR — defaults", () => {
       }),
     );
     expect(ir.surface?.dismissal).toEqual([]);
+  });
+});
+
+describe("buildSurfaceIR — selector-sourced anchor (coachmark tour)", () => {
+  function makeTourContract(
+    surfaceAnchor: unknown = {
+      selector: { prop: "steps", path: "anchor", indexChannel: "step" },
+    },
+    extra: Partial<ComponentContract> = {},
+  ): ComponentContract {
+    return makeContract({
+      name: "TourLike",
+      props: {
+        styled: {
+          members: [
+            { name: "steps", type: "TourStepSpec[]" },
+            { name: "placement", type: "string" },
+          ],
+        },
+      },
+      channels: {
+        step: {
+          value: "index",
+          defaultValue: "defaultIndex",
+          onChange: "onStepChange",
+          valueType: "number",
+        },
+      },
+      anatomy: {
+        parts: ["root", "content"],
+        details: { content: { role: "content" } },
+      },
+      surface: {
+        kind: "coachmark",
+        presence: "persistent",
+        modality: "non-blocking",
+        anchor: surfaceAnchor,
+        positioning: {
+          strategy: "anchored",
+          placementProp: "placement",
+          collision: "flip-shift",
+        },
+      },
+      ...extra,
+    } as Partial<ComponentContract>);
+  }
+
+  it("builds selectorAnchor facts and leaves the part-anchor undefined", () => {
+    const ir = buildComponentIR(makeTourContract());
+    expect(ir.surface?.selectorAnchor).toEqual({
+      prop: "steps",
+      path: "anchor",
+      indexChannel: "step",
+    });
+    expect(ir.surface?.anchor).toBeUndefined();
+  });
+
+  it("does NOT require openTriggers for a selector-anchored anchored strategy (tours open programmatically)", () => {
+    // The part-anchored equivalent throws (pinned above); the selector
+    // form must not, because there is no in-tree trigger to listen on.
+    const ir = buildComponentIR(makeTourContract());
+    expect(ir.surface?.openTriggers).toEqual([]);
+  });
+
+  it("throws when selector.prop is not a declared prop", () => {
+    expect(() =>
+      buildComponentIR(
+        makeTourContract({
+          selector: { prop: "missing", path: "anchor", indexChannel: "step" },
+        }),
+      ),
+    ).toThrow(/surface\.anchor\.selector\.prop "missing" is not a declared prop/);
+  });
+
+  it("throws when selector.prop is not array-typed", () => {
+    expect(() =>
+      buildComponentIR(
+        makeTourContract({
+          selector: { prop: "placement", path: "anchor", indexChannel: "step" },
+        }),
+      ),
+    ).toThrow(/must be array-typed \(got "string"\)/);
+  });
+
+  it("throws when selector.indexChannel is not a declared channel", () => {
+    expect(() =>
+      buildComponentIR(
+        makeTourContract({
+          selector: { prop: "steps", path: "anchor", indexChannel: "page" },
+        }),
+      ),
+    ).toThrow(/surface\.anchor\.selector\.indexChannel "page" is not a declared channel/);
+  });
+
+  it("throws when selector.path is empty", () => {
+    expect(() =>
+      buildComponentIR(
+        makeTourContract({
+          selector: { prop: "steps", path: "", indexChannel: "step" },
+        }),
+      ),
+    ).toThrow(/surface\.anchor\.selector\.path must be a non-empty member name/);
+  });
+});
+
+describe("selectorAnchoredRootPortal — semantics predicate", () => {
+  it("returns the selector facts only when portal.enabled AND strategy anchored AND a selector anchor exists", () => {
+    const facts = { prop: "steps", path: "anchor", indexChannel: "step" };
+    const base = {
+      behavior: { portal: { enabled: true } },
+      surface: {
+        positioning: { strategy: "anchored" as const },
+        selectorAnchor: facts,
+      },
+    };
+    expect(selectorAnchoredRootPortal(base)).toEqual(facts);
+    expect(
+      selectorAnchoredRootPortal({
+        ...base,
+        behavior: { portal: { enabled: false } },
+      }),
+    ).toBeNull();
+    expect(
+      selectorAnchoredRootPortal({
+        ...base,
+        surface: { ...base.surface, positioning: { strategy: "centered" } },
+      }),
+    ).toBeNull();
+    expect(
+      selectorAnchoredRootPortal({
+        ...base,
+        surface: { ...base.surface, selectorAnchor: undefined },
+      }),
+    ).toBeNull();
   });
 });

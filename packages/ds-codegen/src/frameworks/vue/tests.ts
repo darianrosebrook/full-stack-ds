@@ -3,7 +3,7 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { portalsRootToBody } from "../../semantics.js";
+import { portalsRootToBody, selectorAnchoredRootPortal } from "../../semantics.js";
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
@@ -16,7 +16,10 @@ export function generateVueTest(ir: ComponentIR): string {
   // no longer wraps the root element (`wrapper.element` is the teleport anchor
   // comment). Class/role/axe assertions must resolve the teleported root from
   // document.body instead. IR-driven via `portalsRootToBody` — no name lore.
-  const portalRoot = portalsRootToBody(ir);
+  // Selector-anchored root portals (coachmark tours) also teleport the root
+  // and need the same document.body resolution/reset in generated tests.
+  const portalRoot =
+    portalsRootToBody(ir) || selectorAnchoredRootPortal(ir) !== null;
   // Resolve the teleported root by its base class within document.body —
   // fallthrough attrs (data-testid) do not reach a teleported root, so the
   // component's own class is the only reliable handle. Safe because each
