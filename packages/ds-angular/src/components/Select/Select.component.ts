@@ -19,12 +19,14 @@ export type SelectSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-select",
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
-  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled">
+  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled" [attr.aria-controls]="instanceId + '-options'">
     <span [ngClass]="'select__text'"></span>
   </button>
   <ng-container *ngIf="behavior.open()">
@@ -34,7 +36,7 @@ export type SelectSize = "sm" | "md" | "lg";
           <input type="text" />
         </div>
       </ng-container>
-      <div [ngClass]="'select__options'">
+      <div [ngClass]="'select__options'" [attr.id]="instanceId + '-options'">
         <ng-container *ngFor="let item of ((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}])); let index = index">
           <div [ngClass]="'select__option'" role="option" (click)="applyToggleMembershipSelection(item.value, multiple)" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
             <span>
@@ -66,6 +68,8 @@ export class SelectComponent {
   @Input() searchable?: boolean;
   @Input() empty?: boolean;
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-select-${nextInstanceId++}`;
   @Input() position?: string;
 
   private destroyRef = inject(DestroyRef);

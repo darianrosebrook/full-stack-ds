@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useSelect } from "./useSelect.js";
 // @generated:end
 
@@ -74,6 +74,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -81,14 +85,14 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']">
-    <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" :disabled="props.disabled">
+    <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" :disabled="props.disabled" :aria-controls="`${instanceId}-options`">
       <span :class="'select__text'"></span>
     </button>
     <div v-if="behavior.open.value" :class="'select__content'" role="listbox" id="fsds-select-listbox">
       <div v-if="props.searchable" :class="'select__search'">
         <input type="text" />
       </div>
-      <div :class="'select__options'">
+      <div :class="'select__options'" :id="`${instanceId}-options`">
         <div v-for="(item, index) in (props.options ?? [])" :key="index" :class="'select__option'" role="option" @click="() => behavior.setSelection(props.multiple ? ((Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).includes(item.value) ? (Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]), item.value]) : item.value)" :aria-selected="(Array.isArray(behavior.selection.value) ? behavior.selection.value.includes(item.value) : item.value === behavior.selection.value)" :data-value="item.value">
           <span>
             {{ item.label }}

@@ -246,7 +246,7 @@ export class SelectElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))}>
-  <button class=${'select__trigger'} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} ?disabled=${this.disabled ?? false}>
+  <button class=${'select__trigger'} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} ?disabled=${this.disabled ?? false} aria-controls="select-options">
     <span class=${'select__text'}></span>
   </button>
   ${this.behavior.open ? html`
@@ -256,7 +256,7 @@ export class SelectElement extends LitElement {
       <input type="text" />
     </div>
     ` : nothing}
-    <div class=${'select__options'}>
+    <div class=${'select__options'} id="select-options">
       ${((this.options ?? [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}])).map((item, index) => html`
       <div class=${'select__option'} role="option" @click=${() => this.behavior.setSelection(this.multiple ? ((Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]).includes(item.value) ? (Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]).filter((v) => v !== item.value) : [...(Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]), item.value]) : item.value)} aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value}>
         <span>${item.label}</span>

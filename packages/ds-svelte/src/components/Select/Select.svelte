@@ -62,13 +62,17 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={behavior.open} aria-disabled={disabled}>
-  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled}>
+  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled} aria-controls={`${instanceId}-options`}>
     <span class={'select__text'}></span>
   </button>
   {#if behavior.open}
@@ -78,7 +82,7 @@ const classes = $derived(
       <input type="text" />
     </div>
     {/if}
-    <div class={'select__options'}>
+    <div class={'select__options'} id={`${instanceId}-options`}>
       {#each (options ?? []) as item, index (index)}
       <div class={'select__option'} role="option" onclick={() => behavior.setSelection(multiple ? ((Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]).includes(item.value) ? (Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]), item.value]) : item.value)} aria-selected={(Array.isArray(behavior.selection) ? behavior.selection.includes(item.value) : item.value === behavior.selection)} data-value={item.value}>
         <span>{item.label}</span>
