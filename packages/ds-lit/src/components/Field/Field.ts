@@ -174,10 +174,10 @@ export class FieldElement extends LitElement {
   @property({ type: Boolean }) required?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) readOnly?: boolean;
-  @property({ attribute: false }) value?: unknown;
-  @property({ attribute: false }) defaultValue?: unknown;
-  @property({ attribute: false }) onChange?: (value: unknown) => void;
-  @property({ attribute: false }) validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
+  @property({ type: String }) value?: string;
+  @property({ type: String }) defaultValue?: string;
+  @property({ attribute: false }) onChange?: (value: string) => void;
+  @property({ attribute: false }) validate?: ((value: string, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   @property({ type: String }) status?: FieldStatus;
   @property({ type: Boolean }) validating?: boolean;
 

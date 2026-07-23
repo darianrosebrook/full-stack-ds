@@ -9,9 +9,9 @@ import { ControllableStateController } from '../../primitives/index.js';
 
 // @generated:start types
 export interface FieldBehaviorOptions {
-  value?: () => unknown | undefined;
-  defaultValue?: unknown;
-  onChange?: (value: unknown) => void;
+  value?: () => string | undefined;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
 }
 // @generated:end
 
@@ -21,18 +21,18 @@ export interface FieldBehaviorOptions {
 
 // @generated:start hook
 export class FieldBehavior {
-  readonly valueState: ControllableStateController<unknown>;
+  readonly valueState: ControllableStateController<string>;
 
   constructor(host: ReactiveControllerHost, private opts: FieldBehaviorOptions = {}) {
-    this.valueState = new ControllableStateController<unknown>(host, {
+    this.valueState = new ControllableStateController<string>(host, {
       controlled: opts.value,
-      defaultValue: opts.defaultValue ?? undefined as never,
+      defaultValue: opts.defaultValue ?? "",
       onChange: opts.onChange,
     });
   }
 
-  get value(): unknown { return this.valueState.value; }
-  setValue(value: unknown) { this.valueState.set(value); }
+  get value(): string { return this.valueState.value; }
+  setValue(value: string) { this.valueState.set(value); }
 }
 // @generated:end
 

@@ -8,14 +8,14 @@ import { createControllableState } from "../../primitives/index.js";
 
 // @generated:start types
 export interface UseFieldOptions {
-  value?: () => unknown | undefined;
-  defaultValue?: () => unknown | undefined;
-  onChange?: () => ((value: unknown) => void) | undefined;
+  value?: () => string | undefined;
+  defaultValue?: () => string | undefined;
+  onChange?: () => ((value: string) => void) | undefined;
 }
 
 export interface UseFieldResult {
-  readonly value: unknown;
-  setValue(next: unknown): void;
+  readonly value: string;
+  setValue(next: string): void;
 }
 // @generated:end
 
@@ -25,9 +25,9 @@ export interface UseFieldResult {
 
 // @generated:start hook
 export function useField(opts: UseFieldOptions = {}): UseFieldResult {
-  const valueState = createControllableState<unknown>({
+  const valueState = createControllableState<string>({
     controlled: opts.value,
-    defaultValue: opts.defaultValue?.() ?? undefined as never,
+    defaultValue: opts.defaultValue?.() ?? "",
     onChange: (v) => opts.onChange?.()?.(v),
   });
 

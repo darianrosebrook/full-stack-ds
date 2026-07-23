@@ -57,10 +57,10 @@ export class FieldComponent {
   @Input() required?: boolean;
   @Input() disabled?: boolean;
   @Input() readOnly?: boolean;
-  @Input() value?: unknown;
-  @Input() defaultValue?: unknown;
-  @Input() onChange?: (value: unknown) => void;
-  @Input() validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
+  @Input() value?: string;
+  @Input() defaultValue?: string;
+  @Input() onChange?: (value: string) => void;
+  @Input() validate?: ((value: string, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   @Input() status?: FieldStatus;
   @Input() validating?: boolean;
   @Input() class?: string;
