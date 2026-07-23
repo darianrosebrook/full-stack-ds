@@ -300,6 +300,17 @@ export function isEventRealized(fw, ob) {
   let handlerRe = fw.handler[ob.event];
   if (!handlerRe) return { realized: false, reason: "no-handler-vocab" };
 
+  // FIX-SETTINGS-FIELD-VUE-FINDINGS-01 #6: a value channel's `change` wire is
+  // legitimately realized keystroke-timed as the native `input` event — that
+  // is what React's `onChange` already means, and what the Vue/Svelte/Lit/
+  // Angular emitters now lower a string/number value channel's onChange to.
+  // Accept EITHER token for a `change` obligation so a faithful `@input`
+  // realization is not a false negative. Falsification is preserved: both
+  // handlers must be absent for the wire to read unrealized.
+  if (ob.event === "change" && fw.handler.input) {
+    handlerRe = new RegExp(`(?:${handlerRe.source})|(?:${fw.handler.input.source})`);
+  }
+
   // componentRef parts delegate the wire as a PROP to a child component; the
   // element is `<Button …>`, not a DOM tag. react/svelte pass a capital-C
   // `onClick=`/`onChange=` prop; vue/angular/lit keep their native handler
