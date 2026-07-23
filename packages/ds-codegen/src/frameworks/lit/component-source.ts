@@ -45,7 +45,11 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
+import {
+  resolveSurfaceAutoDismiss,
+  portalsRootToBody,
+  selectorAnchoredRootPortal,
+} from "../../semantics.js";
 import { toKebab } from "../../contract.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
@@ -1567,6 +1571,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // DELIVERY-01). Structural — driven by IR `iconGlyph` facts.
   const hasIconGlyph = collectIconGlyphNodes(ir.dom).length > 0;
   if (hasIconGlyph) litImports.push("svg");
+  // Selector-anchored root portal: `updated(changedProperties)` re-queries
+  // the anchor whenever the step index or the steps array changes, so the
+  // override needs the `PropertyValues` type.
+  if (selectorAnchoredRootPortal(ir) !== null) {
+    litImports.push("type PropertyValues");
+  }
   const lines: string[] = [`import { ${litImports.join(", ")} } from 'lit';`];
   // Always include `property`; add `state` when the dom tree has a children
   // guard so the private _hasChildren reactive field can be declared.
@@ -1595,6 +1605,15 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
   if (hasIconGlyph) {
     lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
+  // Selector-anchored root portal (coachmark tour): the whole panel is
+  // positioned against a page element resolved from the active step's
+  // selector. Same primitive the anchored-presence content class uses
+  // (surface-emit.ts), applied to the root host instead of a content part.
+  if (selectorAnchoredRootPortal(ir) !== null) {
+    lines.push(
+      `import { AnchoredPositionController } from '../../primitives/surfaces/AnchoredPositionController.js';`,
+    );
   }
   return lines.join("\n");
 }
@@ -1843,7 +1862,13 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   // and its constructable `static styles` travel with the element, so the
   // fixed overlay keeps every style while escaping any transform/overflow/
   // filter ancestor's containing block. IR-driven via `portalsRootToBody`.
-  const rootPortal = portalsRootToBody(ir);
+  //
+  // Selector-anchored root portal (coachmark / guided tour): the whole
+  // panel also relocates to body via the exact same host-move machinery,
+  // but is additionally positioned against a page element resolved from
+  // the active step's CSS selector — see `selectorAnchor` wiring below.
+  const selectorAnchor = selectorAnchoredRootPortal(ir);
+  const rootPortal = portalsRootToBody(ir) || selectorAnchor !== null;
   const needsLifecycle = (hasOverlayClick && booleanChannel) || rootPortal;
 
   if (hasOverlayClick && booleanChannel) {
@@ -1872,6 +1897,45 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(`  private _portaled = false;`);
     lines.push(`  private _portalOriginParent: Node | null = null;`);
     lines.push(`  private _portalOriginNext: Node | null = null;`);
+  }
+
+  // Selector-anchored root panel: the anchor is an arbitrary page element
+  // resolved at runtime via `document.querySelector`, re-resolved whenever
+  // the index channel or the selector-bearing array prop changes. The
+  // AnchoredPositionController positions the HOST itself (content: () =>
+  // this) — no separate content part, mirroring the compound anchored-
+  // presence content class in surface-emit.ts but applied to the root.
+  let selectorIdxChannel: NormalizedChannelIR | undefined;
+  let selectorPropAcc: string | undefined;
+  if (selectorAnchor) {
+    selectorIdxChannel = channels.find(
+      (c) => c.name === selectorAnchor.indexChannel,
+    );
+    if (!selectorIdxChannel) {
+      throw new Error(
+        `${ir.name}: surface.anchor.selector.indexChannel "${selectorAnchor.indexChannel}" has no matching channel in the IR.`,
+      );
+    }
+    selectorPropAcc = defaultAwareLitPropAccessor(selectorAnchor.prop, styledByName);
+    const placementProp = ir.surface?.positioning?.placementProp;
+    const placementAcc = placementProp
+      ? defaultAwareLitPropAccessor(placementProp, styledByName)
+      : `"auto"`;
+    const collision = ir.surface?.positioning?.collision ?? "flip-shift";
+    lines.push(``);
+    lines.push(`  private _anchorTargetEl: HTMLElement | null = null;`);
+    lines.push(
+      `  private _position = new AnchoredPositionController(this, {`,
+    );
+    lines.push(`    anchor: () => this._anchorTargetEl,`);
+    lines.push(`    content: () => this,`);
+    lines.push(`    open: () => true,`);
+    lines.push(
+      `    placement: () => (${placementAcc} as "top" | "bottom" | "left" | "right" | "auto"),`,
+    );
+    lines.push(`    collision: () => "${collision}",`);
+    lines.push(`    onChange: () => this.requestUpdate(),`);
+    lines.push(`  });`);
   }
 
   if (needsLifecycle) {
@@ -1914,6 +1978,56 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       lines.push(`    }`);
     }
     lines.push(`    super.disconnectedCallback();`);
+    lines.push(`  }`);
+  }
+
+  if (selectorAnchor && selectorIdxChannel && selectorPropAcc) {
+    lines.push(``);
+    lines.push(`  override willUpdate(_changedProperties: PropertyValues<this>): void {`);
+    lines.push(
+      `    // Re-query on every update pass — the anchor lives outside this`,
+    );
+    lines.push(
+      `    // element's tree, so a per-property changed-set check can't see`,
+    );
+    lines.push(
+      `    // mutations to the target page (only ${selectorIdxChannel.valueProp}/${selectorAnchor.prop} changes are`,
+    );
+    lines.push(
+      `    // reactive triggers here, but re-resolving is cheap and idempotent).`,
+    );
+    lines.push(
+      `    const selector = (${selectorPropAcc})[this.${selectorIdxChannel.valueProp} ?? 0]?.${selectorAnchor.path};`,
+    );
+    lines.push(
+      `    this._anchorTargetEl = selector && typeof document !== "undefined" ? document.querySelector<HTMLElement>(selector) : null;`,
+    );
+    lines.push(`  }`);
+    lines.push(``);
+    lines.push(`  override updated(changedProperties: PropertyValues<this>): void {`);
+    lines.push(`    super.updated(changedProperties);`);
+    lines.push(
+      `    // A stale scheduled update landing after a genuine disconnect must`,
+    );
+    lines.push(
+      `    // be a no-op — it must NOT resurrect inline positioning on an`,
+    );
+    lines.push(`    // element that has already torn down.`);
+    lines.push(`    if (!this.isConnected) return;`);
+    lines.push(`    const pos = this._position.state;`);
+    lines.push(
+      `    // The static :host rule is display: contents (no box), which would`,
+    );
+    lines.push(
+      `    // make position: fixed a layout no-op. Give the host a real box`,
+    );
+    lines.push(`    // before applying fixed positioning.`);
+    lines.push(`    this.style.display = "block";`);
+    lines.push(`    this.style.position = "fixed";`);
+    lines.push(`    this.style.top = \`\${pos.top}px\`;`);
+    lines.push(`    this.style.left = \`\${pos.left}px\`;`);
+    lines.push(`    this.style.visibility = pos.ready ? "visible" : "hidden";`);
+    lines.push(`    this.setAttribute("data-placement", pos.placement);`);
     lines.push(`  }`);
   }
 
