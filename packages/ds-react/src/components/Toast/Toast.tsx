@@ -137,7 +137,9 @@ export function Toast({
         <div className="toast__item" role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
           <div className="toast__row">
             {title && (
-              <div className="toast__title" id={`${instanceId}-title`} />
+              <div className="toast__title" id={`${instanceId}-title`}>
+                {title}
+              </div>
             )}
             <div className="toast__description">
               {children}

@@ -78,7 +78,9 @@ export function Toast({
           {title ? (
           <View
             style={styles.title}
-          />
+          >
+            <RNText>{title}</RNText>
+          </View>
           ) : null}
           <View
             style={styles.description}

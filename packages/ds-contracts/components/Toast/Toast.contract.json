@@ -99,7 +99,8 @@
                 {
                   "tag": "div",
                   "part": "title",
-                  "if": "title"
+                  "if": "title",
+                  "content": "prop:title"
                 },
                 {
                   "tag": "div",

@@ -76,7 +76,9 @@ const instanceId = useId();
     <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="alert" :data-testid="props['data-testid']" v-on="autoDismiss.pauseListeners">
       <div v-if="behavior.open.value" :class="'toast__item'" role="status" :aria-labelledby="props.title ? `${instanceId}-title` : undefined">
         <div :class="'toast__row'">
-          <div v-if="props.title" :class="'toast__title'" :id="`${instanceId}-title`"></div>
+          <div v-if="props.title" :class="'toast__title'" :id="`${instanceId}-title`">
+            {{ props.title }}
+          </div>
           <div :class="'toast__description'">
             <slot />
           </div>
