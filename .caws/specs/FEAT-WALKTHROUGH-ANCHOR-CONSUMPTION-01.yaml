@@ -3,6 +3,7 @@ title: 'Walkthrough steps[].anchor consumption: selector-anchored surface across
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: walkthrough-anchor
 created_at: '2026-07-23T00:10:45.545Z'
 updated_at: '2026-07-23T00:10:45.545Z'
 blast_radius:
