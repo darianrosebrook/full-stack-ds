@@ -1544,8 +1544,8 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   // resolved from the active step's CSS selector. Purely IR-driven via
   // `selectorAnchoredRootPortal` — no component-name lore. Mirrors the
   // react reference lowering's fact-consumption shape; the reactive
-  // machinery below is Vue-idiomatic (getters + `ref`/`computed` instead
-  // of `useState`/`useEffect`).
+  // machinery below is Vue-idiomatic (getters + `shallowRef` +
+  // post-flush `watchEffect` instead of `useState`/`useEffect`).
   const selectorAnchor = selectorAnchoredRootPortal(ir);
 
   const vueCoreImports = ["computed"];
@@ -1553,6 +1553,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   if (providerNeedsSlots) vueCoreImports.push("useSlots");
   if (selectorAnchor) {
     vueCoreImports.push("shallowRef");
+    vueCoreImports.push("watchEffect");
     vueCoreImports.push("type ComponentPublicInstance");
   }
   const importLines = [
@@ -1644,11 +1645,16 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
 
   // Selector-anchored root panel: resolve the active element from the
   // indexed selector prop, then position the (teleported) root against it.
-  // The anchor element lives outside the component's tree, so a `computed`
-  // re-derives it whenever the index channel or the selector array
-  // changes — the Vue-idiomatic equivalent of react's useEffect + useState
-  // pair. `useAnchoredPosition` takes getters, so the computed refs are
-  // read through `.value` accessors rather than re-run manually.
+  // The anchor element lives outside the component's tree and must be
+  // queried AFTER the surrounding tree is in the document: a `computed`
+  // here first evaluates while the app tree is still detached (Vue inserts
+  // the root only at the end of mount), caches the null querySelector
+  // result, and never re-runs because its reactive deps (index/steps)
+  // haven't changed — the panel stays hidden forever (caught by the
+  // real-Chromium walkthrough proof; jsdom and unit suites stayed green).
+  // A post-flush watchEffect writing into a shallowRef is the Vue
+  // equivalent of react's useEffect + useState pair: first run lands after
+  // mount, and it still re-runs on index/steps changes.
   let anchoredPositionBody = "";
   if (selectorAnchor) {
     const idxChannel = channels.find(
@@ -1671,10 +1677,14 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       `function setAnchoredRootEl(el: Element | ComponentPublicInstance | null): void {`,
       `  anchoredRootEl.value = el instanceof HTMLElement ? el : null;`,
       `}`,
-      `const anchorTargetEl = computed(() => {`,
-      `  const selector = (${propExpr} ?? [])[${idxExpr}]?.${selectorAnchor.path};`,
-      `  return selector ? document.querySelector<HTMLElement>(selector) : null;`,
-      `});`,
+      `const anchorTargetEl = shallowRef<HTMLElement | null>(null);`,
+      `watchEffect(`,
+      `  () => {`,
+      `    const selector = (${propExpr} ?? [])[${idxExpr}]?.${selectorAnchor.path};`,
+      `    anchorTargetEl.value = selector ? document.querySelector<HTMLElement>(selector) : null;`,
+      `  },`,
+      `  { flush: "post" },`,
+      `);`,
       `const anchoredPosition = useAnchoredPosition({`,
       `  anchor: () => anchorTargetEl.value,`,
       `  content: () => anchoredRootEl.value,`,
