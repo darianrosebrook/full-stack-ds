@@ -55,7 +55,13 @@
  *                  content node to document.body (react createPortal,
  *                  vue <Teleport to="body">, svelte use:portal, angular
  *                  body-append, lit content-host move). Landed by
- *                  FEAT-ANCHORED-SURFACE-XFW-01.
+ *                  FEAT-ANCHORED-SURFACE-XFW-01. Selector-anchored surfaces
+ *                  (coachmark tours: Walkthrough steps[].anchor) portal
+ *                  their ROOT instead — they owe consume-root-portal (the
+ *                  root-portal mechanism tokens) PLUS
+ *                  consume-anchored-positioning, and are exempt from both
+ *                  the orphan invariant and the content-portal obligation
+ *                  (FEAT-WALKTHROUGH-ANCHOR-CONSUMPTION-01).
  *
  * The predicates (isCompoundStateContainer / isDisclosureContainer /
  * getInteractiveItemPart / getRegionPart / portalsRootToBody) and the IR are
@@ -406,12 +412,18 @@ export function derivePortalObligation(component, corpus) {
   const anchoredPositioning =
     built.surface?.positioning?.strategy === "anchored";
   const anchoredContentPortal = sem.anchoredPortalsContentToBody(built);
+  // Selector-anchored root portal (coachmark tours): the ROOT panel moves
+  // to body (root-portal mechanism) while positioning comes from the
+  // anchored primitive — so it owes consume-root-portal +
+  // consume-anchored-positioning, and is exempt from the orphan invariant.
+  const selectorAnchoredRoot = sem.selectorAnchoredRootPortal(built) !== null;
   return {
     component,
     rootPortal,
     portalEnabled,
     anchoredPositioning,
     anchoredContentPortal,
+    selectorAnchoredRoot,
   };
 }
 
@@ -484,7 +496,7 @@ export function checkAnchored(ob) {
  */
 export function checkPortal(ob) {
   const results = [];
-  if (ob.rootPortal) {
+  if (ob.rootPortal || ob.selectorAnchoredRoot) {
     for (const fw of FRAMEWORKS) {
       const text = frameworkText(fw, ob.component);
       const consumed = PORTAL_CONSUMPTION[fw.id].test(text);

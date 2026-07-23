@@ -402,7 +402,14 @@ const ROOT_PORTAL_POSITIONING_STRATEGIES = new Set<ContractSurfacePositioningStr
 export interface RootPortalInput {
   behavior: { portal: { enabled?: boolean } | undefined };
   surface:
-    | { positioning: { strategy: ContractSurfacePositioningStrategy } | undefined }
+    | {
+        positioning:
+          | { strategy: ContractSurfacePositioningStrategy }
+          | undefined;
+        /** Present on SurfaceIR; optional here so structural literals in
+         * tests and older callers stay valid. */
+        selectorAnchor?: SelectorAnchorFacts | undefined;
+      }
     | undefined;
 }
 
@@ -443,6 +450,10 @@ export function portalsRootToBody(ir: RootPortalInput): boolean {
  */
 export function anchoredPortalsContentToBody(ir: RootPortalInput): boolean {
   if (ir.behavior.portal?.enabled !== true) return false;
+  // Selector-anchored surfaces (coachmark tours) portal their ROOT — there
+  // is no in-tree trigger to keep the root beside, so nothing content-level
+  // portals. They take the selectorAnchoredRootPortal path instead.
+  if (ir.surface?.selectorAnchor) return false;
   return ir.surface?.positioning?.strategy === "anchored";
 }
 
