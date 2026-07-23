@@ -33,21 +33,35 @@ export function App() {
         <CardHeader>Profile</CardHeader>
         <CardContent>
           <Stack variant="vertical">
-            <Field name="displayName" label="Display name" required>
-              <Input
-                value={displayName}
-                onChange={setDisplayName}
-                required
-              />
-            </Field>
-            <Field name="email" label="Email" required>
-              <Input
-                type="email"
-                value={email}
-                onChange={setEmail}
-                required
-              />
-            </Field>
+            <Field
+              name="displayName"
+              required
+              slots={{
+                label: "Display name",
+                control: (
+                  <Input
+                    value={displayName}
+                    onChange={setDisplayName}
+                    required
+                  />
+                ),
+              }}
+            />
+            <Field
+              name="email"
+              required
+              slots={{
+                label: "Email",
+                control: (
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={setEmail}
+                    required
+                  />
+                ),
+              }}
+            />
           </Stack>
         </CardContent>
         <CardFooter>
