@@ -2,9 +2,11 @@ id: VISUAL-FIDELITY-INPUT-01
 title: 'Input visual-fidelity tokenization and verification'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: superseded
+closure_notes: 'Outcome delivered by later visual sweeps (FEAT-VISUAL-SWEEP-01/FEAT-TOKEN-WIRING-01 lineage): Input.styles.json carries fully-slotted default/placeholder/hover/focus-visible/invalid/disabled treatment (resolvesTo slots only; structural keywords are the only literals) and generated Input.css realizes them as token vars. Verified on main @ fc8f2d68.'
 created_at: '2026-06-13T04:15:28.985Z'
-updated_at: '2026-06-13T04:15:28.985Z'
+updated_at: '2026-07-23T00:07:34.168Z'
 blast_radius:
   modules:
     - 'Input contract visual sidecars and regenerated Input artifacts across admitted targets. No schema, IR, emitter, or unrelated component changes.'
