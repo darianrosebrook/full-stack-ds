@@ -264,9 +264,24 @@ describe("skip rules (unlowerable relationships stay rail-visible gaps)", () => 
     expect(ir.fieldAssociation).toBeUndefined();
   });
 
-  it("skips non-lowered attributes (aria-controls belongs to another slice)", () => {
+  it("lowers aria-controls as an owned pair (id on target, idref on source)", () => {
     const ir = buildComponentIR(
       contractWith([{ from: "a", to: "b", attribute: "aria-controls" }]),
+    );
+    // Same owned-pair shape as aria-describedby: the target gets a generated
+    // id slug, the source gets the aria-controls idref pointing at it.
+    expect(findPart(ir.dom!, "b").generatedIdSlug).toBe("b");
+    expect(findPart(ir.dom!, "a").idRefAttrs).toEqual([
+      { attribute: "aria-controls", refs: [{ slug: "b", when: undefined, slotGate: undefined }] },
+    ]);
+  });
+
+  it("skips a genuinely non-lowered attribute (stays a rail-visible gap)", () => {
+    // aria-activedescendant has no lowering yet — an unknown idref attribute
+    // must be left untouched so it surfaces on the a11y-realization rail
+    // rather than being silently half-emitted.
+    const ir = buildComponentIR(
+      contractWith([{ from: "a", to: "b", attribute: "aria-activedescendant" }]),
     );
     expect(findPart(ir.dom!, "a").idRefAttrs).toEqual([]);
     expect(findPart(ir.dom!, "b").generatedIdSlug).toBeUndefined();

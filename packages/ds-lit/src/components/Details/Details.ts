@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { DetailsBehavior } from './DetailsBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -187,14 +188,14 @@ export class DetailsElement extends LitElement {
 
   override render() {
     return html`<details class="${this.computeClasses()}" role="group" ?open=${this.behavior.open}>
-  <summary class=${'details__summary'}>
+  <summary class=${'details__summary'} aria-controls=${ifDefined([this.open ? 'details-content' : null].filter(Boolean).join(' ') || undefined)}>
     <span class=${'details__summaryContent'}>
       <span class=${'details__icon'}></span>
       <span class=${'details__summaryText'}>${this.summary}</span>
     </span>
   </summary>
   ${this.behavior.open ? html`
-  <div class=${'details__content'} data-fsds-channel-renders="open">
+  <div class=${'details__content'} id="details-content" data-fsds-channel-renders="open">
     <slot></slot>
   </div>
   ` : nothing}

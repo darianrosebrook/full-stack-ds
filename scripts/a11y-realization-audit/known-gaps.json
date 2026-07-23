@@ -93,13 +93,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "react",
       "class": "relationship",
@@ -341,13 +334,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "vue",
       "class": "relationship",
@@ -587,13 +573,6 @@
       "class": "keyboard",
       "key": "ArrowUp",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Details",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     },
     {
       "component": "Field",
@@ -858,13 +837,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Details",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
       "component": "Field",
       "family": "lit",
       "class": "relationship",
@@ -1112,13 +1084,6 @@
       "class": "keyboard",
       "key": "ArrowUp",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Details",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-controls",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
     },
     {
       "component": "Field",
