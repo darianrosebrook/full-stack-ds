@@ -2,10 +2,11 @@ id: FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01
 title: 'A11y relationship stragglers: Details aria-controls lowering, Popover RN aria-expanded, audit cross-primitive scan, Checkbox/NavList overclaim removal (Table parked separately)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: straggler-relationships
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge straggler-relationships at 3f888b553c64af4372b0248b3fe4cef13916d6f2'
 created_at: '2026-07-23T05:21:46.379Z'
-updated_at: '2026-07-23T05:21:46.379Z'
+updated_at: '2026-07-23T08:11:30.261Z'
 blast_radius:
   modules:
     - 'id-relationships.ts lowering (add aria-controls) + Details regen across 5 web families'
