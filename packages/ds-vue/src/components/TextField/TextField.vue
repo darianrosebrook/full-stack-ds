@@ -71,7 +71,7 @@ const instanceId = useId();
     <label :class="'text-field__label'" :id="`${instanceId}-label`">
       <slot name="label" />
     </label>
-    <input :class="'text-field__field'" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :type="props.type" :value="behavior.value.value" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-labelledby="$slots.label ? `${instanceId}-label` : undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, $slots.error && props.invalid ? `${instanceId}-error` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined" />
+    <input :class="'text-field__field'" @input="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :type="props.type" :value="behavior.value.value" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-labelledby="$slots.label ? `${instanceId}-label` : undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, $slots.error && props.invalid ? `${instanceId}-error` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined" />
     <span :class="'text-field__description'" :id="`${instanceId}-description`">
       <slot name="description" />
     </span>

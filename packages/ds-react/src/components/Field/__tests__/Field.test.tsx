@@ -55,7 +55,7 @@ describe("Field — unit", () => {
 
   it("calls onChange when value changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<Field data-testid="field" name={"placeholder"} value={false} onChange={onChangeSpy} />)).not.toThrow();
+    expect(() => render(<Field data-testid="field" name={"placeholder"} value={""} onChange={onChangeSpy} />)).not.toThrow();
   });
 });
 

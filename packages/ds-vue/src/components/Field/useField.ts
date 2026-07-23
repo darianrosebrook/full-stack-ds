@@ -9,14 +9,14 @@ import { useControllableState } from "../../primitives/index.js";
 
 // @generated:start types
 export interface UseFieldOptions {
-  value?: () => unknown | undefined;
-  defaultValue?: unknown;
-  onChange?: (value: unknown) => void;
+  value?: () => string | undefined;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
 }
 
 export interface UseFieldResult {
-  value: Ref<unknown>;
-  setValue: (next: unknown) => void;
+  value: Ref<string>;
+  setValue: (next: string) => void;
 }
 // @generated:end
 
@@ -26,9 +26,9 @@ export interface UseFieldResult {
 
 // @generated:start hook
 export function useField(options: UseFieldOptions = {}): UseFieldResult {
-  const { value: value, set: setValue } = useControllableState<unknown>({
+  const { value: value, set: setValue } = useControllableState<string>({
     controlled: options.value,
-    defaultValue: options.defaultValue ?? undefined as never,
+    defaultValue: options.defaultValue ?? "",
     onChange: options.onChange,
   });
 

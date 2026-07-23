@@ -122,7 +122,7 @@
     {
       "name": "value",
       "safeName": "value",
-      "type": "unknown",
+      "type": "string",
       "required": false,
       "description": "Controlled value passed through to the control adapter.",
       "defaultExpr": null,
@@ -131,7 +131,7 @@
     {
       "name": "defaultValue",
       "safeName": "defaultValue",
-      "type": "unknown",
+      "type": "string",
       "required": false,
       "description": "Uncontrolled initial value passed through to the control adapter.",
       "defaultExpr": null,
@@ -140,7 +140,7 @@
     {
       "name": "onChange",
       "safeName": "onChange",
-      "type": "(value: unknown) => void",
+      "type": "(value: string) => void",
       "required": false,
       "description": "Change handler called with the new value when the control changes.",
       "defaultExpr": null,
@@ -149,7 +149,7 @@
     {
       "name": "validate",
       "safeName": "validate",
-      "type": "((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>)",
+      "type": "((value: string, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>)",
       "required": false,
       "description": "Async-capable validation function. Return null for valid, or error string(s) for invalid.",
       "defaultExpr": null,
@@ -438,7 +438,7 @@
         "valueProp": "value",
         "defaultValueProp": "defaultValue",
         "changeHandlerProp": "onChange",
-        "valueType": "unknown",
+        "valueType": "string",
         "description": "Controlled value of the field's child control, passed through context.",
         "callbackKind": "value",
         "isDisclosureChannel": false,

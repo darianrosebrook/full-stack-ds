@@ -158,22 +158,22 @@
         },
         {
           "name": "value",
-          "type": "unknown",
+          "type": "string",
           "description": "Controlled value passed through to the control adapter."
         },
         {
           "name": "defaultValue",
-          "type": "unknown",
+          "type": "string",
           "description": "Uncontrolled initial value passed through to the control adapter."
         },
         {
           "name": "onChange",
-          "type": "(value: unknown) => void",
+          "type": "(value: string) => void",
           "description": "Change handler called with the new value when the control changes."
         },
         {
           "name": "validate",
-          "type": "((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>)",
+          "type": "((value: string, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>)",
           "description": "Async-capable validation function. Return null for valid, or error string(s) for invalid."
         },
         {
@@ -305,7 +305,7 @@
       "value": "value",
       "defaultValue": "defaultValue",
       "onChange": "onChange",
-      "valueType": "unknown"
+      "valueType": "string"
     }
   },
   "a11y": {

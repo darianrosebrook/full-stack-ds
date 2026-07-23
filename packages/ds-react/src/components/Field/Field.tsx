@@ -25,10 +25,10 @@ export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "childr
   required?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
-  value?: unknown;
-  defaultValue?: unknown;
-  onChange?: (value: unknown) => void;
-  validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
+  validate?: ((value: string, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   status?: FieldStatus;
   validating?: boolean;
   className?: string;

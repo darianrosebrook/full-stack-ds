@@ -68,5 +68,5 @@ const fieldAssociation = useFieldAssociation();
 </script>
 
 <template>
-  <input :class="classNames" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" :placeholder="props.placeholder" :name="props.name" :required="props.required" role="textbox" :data-testid="props['data-testid']" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
+  <input :class="classNames" @input="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" :placeholder="props.placeholder" :name="props.name" :required="props.required" role="textbox" :data-testid="props['data-testid']" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
 </template>

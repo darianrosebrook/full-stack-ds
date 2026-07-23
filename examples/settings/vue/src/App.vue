@@ -54,20 +54,26 @@ function deleteAccount() {
       <CardHeader>Profile</CardHeader>
       <CardContent>
         <Stack variant="vertical">
-          <Field name="displayName" label="Display name" required>
-            <Input
-              :value="displayName"
-              :onChange="(value) => (displayName = value)"
-              required
-            />
+          <Field name="displayName" required>
+            <template #label>Display name</template>
+            <template #control>
+              <Input
+                :value="displayName"
+                :onChange="(value) => (displayName = value)"
+                required
+              />
+            </template>
           </Field>
-          <Field name="email" label="Email" required>
-            <Input
-              type="email"
-              :value="email"
-              :onChange="(value) => (email = value)"
-              required
-            />
+          <Field name="email" required>
+            <template #label>Email</template>
+            <template #control>
+              <Input
+                type="email"
+                :value="email"
+                :onChange="(value) => (email = value)"
+                required
+              />
+            </template>
           </Field>
         </Stack>
       </CardContent>
