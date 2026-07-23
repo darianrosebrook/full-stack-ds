@@ -2,10 +2,11 @@ id: FEAT-WALKTHROUGH-ANCHOR-CONSUMPTION-01
 title: 'Walkthrough steps[].anchor consumption: selector-anchored surface across five frameworks'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: walkthrough-anchor
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge walkthrough-anchor at 4eee3141ee46b22cd2f91943edca0b711368c80f'
 created_at: '2026-07-23T00:10:45.545Z'
-updated_at: '2026-07-23T00:10:45.545Z'
+updated_at: '2026-07-23T00:39:28.997Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
