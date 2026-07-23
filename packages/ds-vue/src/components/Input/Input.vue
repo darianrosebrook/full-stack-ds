@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import { useFieldAssociation } from "../../primitives/index.js";
 import { useInput } from "./useInput.js";
 // @generated:end
 
@@ -57,11 +58,15 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const fieldAssociation = useFieldAssociation();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <template>
-  <input :class="classNames" @input="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" :placeholder="props.placeholder" :name="props.name" :required="props.required" role="textbox" :data-testid="props['data-testid']" />
+  <input :class="classNames" @input="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" :placeholder="props.placeholder" :name="props.name" :required="props.required" role="textbox" :data-testid="props['data-testid']" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
 </template>

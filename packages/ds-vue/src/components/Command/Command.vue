@@ -81,7 +81,7 @@ const instanceId = useId();
       <div v-if="behavior.open.value" :class="'command__dialog'" role="dialog" aria-modal="true" :aria-label="props.label">
         <div :class="'command__inputWrapper'">
           <span :class="'command__searchIcon'" aria-hidden="true"></span>
-          <input :class="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" @change="(e) => behavior.setSearch((e.target as HTMLInputElement).value)" :aria-expanded="behavior.open.value" :placeholder="props.placeholder" :value="behavior.search.value" :id="`${instanceId}-input`" />
+          <input :class="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" @input="(e) => behavior.setSearch((e.target as HTMLInputElement).value)" :aria-expanded="behavior.open.value" :placeholder="props.placeholder" :value="behavior.search.value" :id="`${instanceId}-input`" />
         </div>
         <div :class="'command__list'" role="listbox" id="fsds-command-listbox" :aria-labelledby="`${instanceId}-input`">
           <div :class="'command__empty'"></div>
