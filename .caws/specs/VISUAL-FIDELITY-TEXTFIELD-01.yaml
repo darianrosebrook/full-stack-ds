@@ -2,9 +2,11 @@ id: VISUAL-FIDELITY-TEXTFIELD-01
 title: 'TextField visual-fidelity tokenization and verification'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: superseded
+closure_notes: 'Outcome delivered by later sweeps incl. the TextField composer reshape (2ab2509a) and token wiring: TextField.styles.json is fully slotted (label/field/description/error + placeholder/hover/focus-visible/invalid/disabled via text-field.* slots) and generated CSS realizes them as token vars. Verified on main @ fc8f2d68.'
 created_at: '2026-06-13T01:09:33.619Z'
-updated_at: '2026-06-13T01:16:55.922Z'
+updated_at: '2026-07-23T00:07:42.781Z'
 blast_radius:
   modules:
     - 'TextField contract visual sidecars and regenerated TextField artifacts across admitted targets. No schema, IR, emitter, or unrelated component changes.'
