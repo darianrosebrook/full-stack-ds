@@ -1,0 +1,36 @@
+id: FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01
+title: 'A11y relationship stragglers: Checkbox/Details/Table/Popover/Tooltip idref wiring + NavList contract adjudication (35 ledgered gaps)'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-23T05:21:46.379Z'
+updated_at: '2026-07-23T05:21:46.379Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-contracts/components'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-react-native/src'
+    - 'scripts/a11y-realization-audit'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'relationship-lowering'
+    type: behavior
+    path: 'packages/ds-codegen/src/relationship-lowering.test.ts'
