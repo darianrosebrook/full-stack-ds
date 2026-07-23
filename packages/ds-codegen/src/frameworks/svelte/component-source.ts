@@ -70,7 +70,11 @@ function svelteTableAttrBinding(attr: NativeTableAttr): string {
 import { translateNonReactType } from "../../non-react-types.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
+import {
+  resolveSurfaceAutoDismiss,
+  portalsRootToBody,
+  selectorAnchoredRootPortal,
+} from "../../semantics.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
 import {
   isCompoundStateContainer,
@@ -1397,9 +1401,19 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   // their root into document.body via the `portal` Svelte action so the fixed
   // layer escapes any transform/overflow/filter ancestor's containing block.
   // IR-driven via `portalsRootToBody` — no component-name lore.
-  const rootUsePortal = portalsRootToBody(ir);
+  // Selector-anchored root portal (coachmark / guided tour): the whole
+  // panel mounts at body and is positioned against a page element resolved
+  // from the active step's selector — same renderInPortal/use:portal
+  // consumption, plus createAnchoredPosition wiring emitted below.
+  const selectorAnchor = selectorAnchoredRootPortal(ir);
+  const rootUsePortal = portalsRootToBody(ir) || selectorAnchor !== null;
   if (rootUsePortal) {
     importLines.push(`import { portal } from "../../primitives/index.js";`);
+  }
+  if (selectorAnchor) {
+    importLines.push(
+      `import { createAnchoredPosition, type AnchoredPlacement } from "../../primitives/surfaces/createAnchoredPosition.svelte.js";`,
+    );
   }
   // componentRef: import each referenced component (CODEGEN-RECURSIVE-
   // COMPOSITION-01). A Svelte component is a default export from its .svelte
@@ -1462,6 +1476,46 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       `});`,
     );
   }
+  // Selector-anchored root panel: resolve the active element from the
+  // indexed selector prop, then position the (portaled) root against it.
+  // The anchor element lives outside the component's tree, so it is
+  // re-queried whenever the index channel or the selector array changes.
+  // `$effect` re-runs on either dependency (Svelte 5 auto-tracks reads
+  // inside the callback); `open` is a constant getter — the root panel is
+  // only rendered while a coachmark tour is active.
+  const anchoredPositionLines: string[] = [];
+  if (selectorAnchor) {
+    const idxChannel = channels.find(
+      (c) => c.name === selectorAnchor.indexChannel,
+    );
+    if (!idxChannel) {
+      throw new Error(
+        `${ir.name}: surface.anchor.selector.indexChannel "${selectorAnchor.indexChannel}" has no matching channel in the IR.`,
+      );
+    }
+    const propAccessor = jsAccessorFor(selectorAnchor.prop);
+    const placementProp = ir.surface?.positioning?.placementProp;
+    const placementAccessor = placementProp
+      ? jsAccessorFor(placementProp)
+      : undefined;
+    const collision = ir.surface?.positioning?.collision ?? "flip-shift";
+    anchoredPositionLines.push(
+      `let anchoredRootEl = $state<HTMLElement | null>(null);`,
+      `let anchorTargetEl = $state<HTMLElement | null>(null);`,
+      `$effect(() => {`,
+      `  const selector = (${propAccessor} ?? [])[${hookVar}.${idxChannel.name}]?.${selectorAnchor.path};`,
+      `  anchorTargetEl = selector ? document.querySelector<HTMLElement>(selector) : null;`,
+      `});`,
+      `const anchoredPosition = createAnchoredPosition({`,
+      `  anchor: () => anchorTargetEl,`,
+      `  content: () => anchoredRootEl,`,
+      `  open: () => true,`,
+      `  placement: () => (${placementAccessor ?? `"auto"`}) as AnchoredPlacement | "auto",`,
+      `  collision: () => "${collision}",`,
+      `});`,
+    );
+  }
+  const anchoredPositionBody = anchoredPositionLines.join("\n");
   const hookBody = hookLines.join("\n");
 
   // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get a size-hints const
@@ -1570,6 +1624,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     isRoot: true,
     fieldAssociationConsumer: assocConsumes,
     rootUsePortal,
+    rootSelectorAnchored: selectorAnchor !== null,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole ?? undefined,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
@@ -1602,6 +1657,16 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     ...(hookBody
       ? [
           { kind: "generated" as const, id: "hook", body: hookBody },
+          blank(),
+        ]
+      : []),
+    ...(anchoredPositionBody
+      ? [
+          {
+            kind: "generated" as const,
+            id: "anchoredPosition",
+            body: anchoredPositionBody,
+          },
           blank(),
         ]
       : []),
@@ -1643,6 +1708,12 @@ interface SvelteRenderContext {
   isRoot: boolean;
   /** When true, attach `use:portal` to the root so it relocates to body. */
   rootUsePortal?: boolean;
+  /**
+   * Selector-anchored root panel (coachmark tour): the root binds the
+   * measured ref, fixed-position style, and `data-placement` emitted by
+   * the script's `createAnchoredPosition` block. Root-level only.
+   */
+  rootSelectorAnchored?: boolean;
   /**
    * True when the component consumes ambient field association
    * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `id` /
@@ -1878,6 +1949,16 @@ function renderSvelteDomNode(
     if (ctx.rootUsePortal) {
       attrs.push(`use:portal={{ enabled: true }}`);
     }
+    // Selector-anchored root: measured ref, fixed-position style computed
+    // against the active step's page anchor, hidden until the first
+    // measurement so the panel never flashes at (0,0).
+    if (ctx.rootSelectorAnchored) {
+      attrs.push(`bind:this={anchoredRootEl}`);
+      attrs.push(`data-placement={anchoredPosition.state.placement}`);
+      attrs.push(
+        `style="position: fixed; top: {anchoredPosition.state.top}px; left: {anchoredPosition.state.left}px; visibility: {anchoredPosition.state.ready ? 'visible' : 'hidden'};"`,
+      );
+    }
     if (ctx.rootPolymorphicTag && !node.componentRef) {
       attrs.unshift(
         `this={${jsAccessorFor(ctx.rootPolymorphicTag.propName)} ?? "${ctx.rootPolymorphicTag.defaultTag}"}`,
@@ -1926,7 +2007,13 @@ function renderSvelteDomNode(
     }
   }
 
-  const childCtx: SvelteRenderContext = { ...ctx, isRoot: false, rootUsePortal: false, rootRole: undefined };
+  const childCtx: SvelteRenderContext = {
+    ...ctx,
+    isRoot: false,
+    rootUsePortal: false,
+    rootSelectorAnchored: false,
+    rootRole: undefined,
+  };
   const renderedChildren = node.children.map((c) =>
     renderSvelteDomNode(c, childCtx, indent + 2),
   );

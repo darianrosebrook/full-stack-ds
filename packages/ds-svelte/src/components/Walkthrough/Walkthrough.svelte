@@ -1,6 +1,8 @@
 <script lang="ts">
 // @generated:start imports
 import { useWalkthrough } from "./useWalkthrough.svelte.js";
+import { portal } from "../../primitives/index.js";
+import { createAnchoredPosition, type AnchoredPlacement } from "../../primitives/surfaces/createAnchoredPosition.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -46,6 +48,22 @@ const behavior = useWalkthrough({
 });
 // @generated:end
 
+// @generated:start anchoredPosition
+let anchoredRootEl = $state<HTMLElement | null>(null);
+let anchorTargetEl = $state<HTMLElement | null>(null);
+$effect(() => {
+  const selector = (steps ?? [])[behavior.step]?.anchor;
+  anchorTargetEl = selector ? document.querySelector<HTMLElement>(selector) : null;
+});
+const anchoredPosition = createAnchoredPosition({
+  anchor: () => anchorTargetEl,
+  content: () => anchoredRootEl,
+  open: () => true,
+  placement: () => (placement) as AnchoredPlacement | "auto",
+  collision: () => "flip-shift",
+});
+// @generated:end
+
 // @generated:start classes
 const classes = $derived(
   [
@@ -65,7 +83,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} role="status" aria-label={label}>
+<div class={classes} role="status" aria-label={label} use:portal={{ enabled: true }} bind:this={anchoredRootEl} data-placement={anchoredPosition.state.placement} style="position: fixed; top: {anchoredPosition.state.top}px; left: {anchoredPosition.state.left}px; visibility: {anchoredPosition.state.ready ? 'visible' : 'hidden'};">
   <div class={'walkthrough__content'} role="group" aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={description ? `${instanceId}-description` : undefined}>
     <h3 class={'walkthrough__title'} id={`${instanceId}-title`}>
       {@render title?.()}

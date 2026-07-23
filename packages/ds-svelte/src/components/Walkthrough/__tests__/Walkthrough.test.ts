@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, afterEach } from "vitest";
 import type { Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
@@ -8,57 +8,80 @@ import Walkthrough from "../Walkthrough.svelte";
 
 // @generated:start tests
 describe("Walkthrough — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
-    expect(container.firstElementChild).toBeTruthy();
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
-    expect(container.firstElementChild?.className).toContain("walkthrough");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
-    expect(container.firstElementChild?.className).toContain("walkthrough");
-    expect(container.firstElementChild?.className).toContain("custom");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough");
+    expect(root?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
-    expect(container.firstElementChild?.getAttribute("role")).toBe("status");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.getAttribute("role")).toBe("status");
   });
 
   it("applies placement=top variant class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "top" } });
-    expect(container.firstElementChild?.className).toContain("walkthrough--top");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "top" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough--top");
   });
 
   it("applies placement=bottom variant class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "bottom" } });
-    expect(container.firstElementChild?.className).toContain("walkthrough--bottom");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "bottom" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough--bottom");
   });
 
   it("applies placement=left variant class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "left" } });
-    expect(container.firstElementChild?.className).toContain("walkthrough--left");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "left" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough--left");
   });
 
   it("applies placement=right variant class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "right" } });
-    expect(container.firstElementChild?.className).toContain("walkthrough--right");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "right" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough--right");
   });
 
   it("applies placement=auto variant class", () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "auto" } });
-    expect(container.firstElementChild?.className).toContain("walkthrough--auto");
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "auto" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("walkthrough--auto");
   });
 });
 
 describe("Walkthrough — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Walkthrough" } });
-    const results = await axe(container);
+    render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Walkthrough" } });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",
