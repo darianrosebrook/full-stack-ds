@@ -268,7 +268,7 @@ export class DialogElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined('dialog-title')} aria-describedby="dialog-body">
+    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null ? 'dialog-title' : null].filter(Boolean).join(' ') || undefined)} aria-describedby="dialog-body">
   ${this.behavior.openness ? html`
   <div class=${'dialog__backdrop'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}

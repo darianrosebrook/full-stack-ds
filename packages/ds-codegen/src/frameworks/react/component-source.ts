@@ -140,6 +140,9 @@ export function generateReactComponentSource(
   // call (same body-scan technique as needsCssProperties).
   const needsAnchoredHooks =
     !isCompound && /\buseAnchoredPosition\(/.test(bodyHaystack);
+  // Same scan for the field-association provider's memoized context value.
+  const needsUseMemoHook =
+    !isCompound && !isDisclosure && /\buseMemo\(/.test(bodyHaystack);
 
   const importLines: string[] = [];
   if (isDisclosure) {
@@ -172,6 +175,7 @@ export function generateReactComponentSource(
       runtimeHooks.add("useRef");
     }
     if (needsUseIdHook) runtimeHooks.add("useId");
+    if (needsUseMemoHook) runtimeHooks.add("useMemo");
     if (needsAnchoredHooks) {
       runtimeHooks.add("useEffect");
       runtimeHooks.add("useState");
@@ -2080,14 +2084,25 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   }
   if (ir.fieldAssociation?.provides) {
     const provides = ir.fieldAssociation.provides;
-    lines.push(`  const fieldAssociationValue = {`);
+    // Memoized so the context value is referentially stable across
+    // unrelated provider re-renders — the deps are exactly the inputs the
+    // value expressions read (instance namespace, gating slots, when props).
+    const deps = ["instanceId"];
+    for (const ref of provides.describedBy) {
+      if (ref.slotGate) deps.push(`slots?.${ref.slotGate}`);
+      if (ref.when) deps.push(ref.when.prop);
+    }
+    lines.push(`  const fieldAssociationValue = useMemo(`);
+    lines.push(`    () => ({`);
     lines.push(
-      `    controlId: ${reactGeneratedIdExpr(provides.controlSlug)},`,
+      `      controlId: ${reactGeneratedIdExpr(provides.controlSlug)},`,
     );
     lines.push(
-      `    describedBy: ${reactIdRefListExpr(provides.describedBy, undefined)},`,
+      `      describedBy: ${reactIdRefListExpr(provides.describedBy, undefined)},`,
     );
-    lines.push(`  };`);
+    lines.push(`    }),`);
+    lines.push(`    [${[...new Set(deps)].join(", ")}],`);
+    lines.push(`  );`);
     lines.push(``);
   }
 

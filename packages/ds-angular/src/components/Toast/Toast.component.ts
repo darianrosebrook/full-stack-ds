@@ -31,7 +31,9 @@ let nextInstanceId = 0;
     <div [ngClass]="'toast__item'" role="status" [attr.aria-labelledby]="itemAriaLabelledby">
       <div [ngClass]="'toast__row'">
         <ng-container *ngIf="title">
-          <div [ngClass]="'toast__title'" [attr.id]="instanceId + '-title'"></div>
+          <div [ngClass]="'toast__title'" [attr.id]="instanceId + '-title'">
+            {{ title }}
+          </div>
         </ng-container>
         <div [ngClass]="'toast__description'">
           <ng-content />

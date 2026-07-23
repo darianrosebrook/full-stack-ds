@@ -2291,7 +2291,13 @@ function litIdRefListExpr(
     return guard ? `${guard} ? ${idFor(ref.slug)} : null` : idFor(ref.slug);
   });
   if (passthroughProp) parts.push(propAccessor(passthroughProp));
-  if (parts.length === 1 && refs.length === 1 && !refs[0].when && !passthroughProp) {
+  if (
+    parts.length === 1 &&
+    refs.length === 1 &&
+    !refs[0].when &&
+    !refs[0].slotGate &&
+    !passthroughProp
+  ) {
     return idFor(refs[0].slug);
   }
   return `[${parts.join(", ")}].filter(Boolean).join(' ') || undefined`;

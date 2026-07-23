@@ -258,7 +258,7 @@ export class SheetElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined('sheet-title')}>
+    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null ? 'sheet-title' : null].filter(Boolean).join(' ') || undefined)}>
   ${this.behavior.openness ? html`
   <div class=${'sheet__overlay'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}

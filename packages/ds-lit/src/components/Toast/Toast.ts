@@ -218,7 +218,7 @@ export class ToastElement extends LitElement {
   <div class=${'toast__item'} role="status" aria-labelledby=${ifDefined([this.title ? 'toast-title' : null].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="open">
     <div class=${'toast__row'}>
       ${this.title ? html`
-      <div class=${'toast__title'} id="toast-title"></div>
+      <div class=${'toast__title'} id="toast-title">${this.title}</div>
       ` : nothing}
       <div class=${'toast__description'}>
         <slot></slot>

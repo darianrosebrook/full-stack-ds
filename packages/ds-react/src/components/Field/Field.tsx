@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode, useId } from "react";
+import { type HTMLAttributes, type ReactNode, useId, useMemo } from "react";
 import { Stack } from "../../primitives";
 import { useField } from "./useField";
 import { FieldAssociationContext } from "../../primitives/hooks";
@@ -99,10 +99,13 @@ export function Field({
 
   const instanceId = useId();
 
-  const fieldAssociationValue = {
-    controlId: `${instanceId}-control`,
-    describedBy: [slots?.help && status !== "invalid" ? `${instanceId}-help` : null, slots?.error && status === "invalid" ? `${instanceId}-error` : null].filter(Boolean).join(" ") || undefined,
-  };
+  const fieldAssociationValue = useMemo(
+    () => ({
+      controlId: `${instanceId}-control`,
+      describedBy: [slots?.help && status !== "invalid" ? `${instanceId}-help` : null, slots?.error && status === "invalid" ? `${instanceId}-error` : null].filter(Boolean).join(" ") || undefined,
+    }),
+    [instanceId, slots?.help, status, slots?.error],
+  );
 
   return (
   <FieldAssociationContext.Provider value={fieldAssociationValue}>

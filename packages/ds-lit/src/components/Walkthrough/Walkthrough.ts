@@ -265,7 +265,7 @@ export class WalkthroughElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}" role="status" aria-label=${ifDefined((this.label ?? "Feature tour"))}>
-  <div class=${'walkthrough__content'} role="group" aria-labelledby=${ifDefined('walkthrough-title')} aria-describedby=${ifDefined('walkthrough-description')}>
+  <div class=${'walkthrough__content'} role="group" aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null ? 'walkthrough-title' : null].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined([this.querySelector('[slot="description"]') !== null ? 'walkthrough-description' : null].filter(Boolean).join(' ') || undefined)}>
     <h3 class=${'walkthrough__title'} id="walkthrough-title">
       <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>
     </h3>

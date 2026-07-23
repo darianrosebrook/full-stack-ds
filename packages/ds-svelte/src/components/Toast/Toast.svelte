@@ -76,7 +76,7 @@ const instanceId = $props.id();
   <div class={'toast__item'} role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
     <div class={'toast__row'}>
       {#if title}
-      <div class={'toast__title'} id={`${instanceId}-title`}></div>
+      <div class={'toast__title'} id={`${instanceId}-title`}>{title}</div>
       {/if}
       <div class={'toast__description'}>
         {@render children?.()}
