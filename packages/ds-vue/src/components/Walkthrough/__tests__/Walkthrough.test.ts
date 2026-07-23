@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import type { Component } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
@@ -8,57 +8,79 @@ import Walkthrough from "../Walkthrough.vue";
 
 // @generated:start tests
 describe("Walkthrough — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
     const wrapper = mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough");
+    mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough")).toBe(true);
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough", "class": "custom" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough");
-    expect(wrapper.classes()).toContain("custom");
+    mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough", "class": "custom" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough")).toBe(true);
+    expect(root?.classList.contains("custom")).toBe(true);
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.attributes("role")).toBe("status");
+    mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.getAttribute("role")).toBe("status");
   });
 
   it("applies placement=top variant class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: { "placement": "top" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough--top");
+    mount(Walkthrough as Component, { props: { "placement": "top" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough--top")).toBe(true);
   });
 
   it("applies placement=bottom variant class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: { "placement": "bottom" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough--bottom");
+    mount(Walkthrough as Component, { props: { "placement": "bottom" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough--bottom")).toBe(true);
   });
 
   it("applies placement=left variant class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: { "placement": "left" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough--left");
+    mount(Walkthrough as Component, { props: { "placement": "left" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough--left")).toBe(true);
   });
 
   it("applies placement=right variant class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: { "placement": "right" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough--right");
+    mount(Walkthrough as Component, { props: { "placement": "right" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough--right")).toBe(true);
   });
 
   it("applies placement=auto variant class", () => {
-    const wrapper = mount(Walkthrough as Component, { props: { "placement": "auto" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("walkthrough--auto");
+    mount(Walkthrough as Component, { props: { "placement": "auto" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    expect(root?.classList.contains("walkthrough--auto")).toBe(true);
   });
 });
 
 describe("Walkthrough — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough", "aria-label": "Test Walkthrough" }, slots: { default: "content" } });
-    const results = await axe(wrapper.element);
+    mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough", "aria-label": "Test Walkthrough" }, slots: { default: "content" }, attachTo: document.body });
+    const root = document.body.querySelector<HTMLElement>(".walkthrough");
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",

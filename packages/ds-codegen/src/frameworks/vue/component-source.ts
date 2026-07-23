@@ -67,7 +67,11 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
+import {
+  resolveSurfaceAutoDismiss,
+  portalsRootToBody,
+  selectorAnchoredRootPortal,
+} from "../../semantics.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   collectIconGlyphNodes,
@@ -1535,9 +1539,22 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     assocProvides !== undefined &&
     assocProvides.describedBy.some((ref) => ref.slotGate !== undefined);
 
+  // Selector-anchored root portal (coachmark / guided tour): the whole
+  // panel mounts at document.body and is positioned against a page element
+  // resolved from the active step's CSS selector. Purely IR-driven via
+  // `selectorAnchoredRootPortal` — no component-name lore. Mirrors the
+  // react reference lowering's fact-consumption shape; the reactive
+  // machinery below is Vue-idiomatic (getters + `ref`/`computed` instead
+  // of `useState`/`useEffect`).
+  const selectorAnchor = selectorAnchoredRootPortal(ir);
+
   const vueCoreImports = ["computed"];
   if (needsInstanceId) vueCoreImports.push("useId");
   if (providerNeedsSlots) vueCoreImports.push("useSlots");
+  if (selectorAnchor) {
+    vueCoreImports.push("shallowRef");
+    vueCoreImports.push("type ComponentPublicInstance");
+  }
   const importLines = [
     `import { ${vueCoreImports.sort().join(", ")} } from "vue";`,
   ];
@@ -1559,6 +1576,11 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       : undefined;
   if (autoDismissPolicy && autoDismissChannel) {
     importLines.push(`import { useAutoDismiss } from "../../primitives/index.js";`);
+  }
+  if (selectorAnchor) {
+    importLines.push(
+      `import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition.js";`,
+    );
   }
   // componentRef: import each referenced component (CODEGEN-RECURSIVE-
   // COMPOSITION-01). `<script setup>` makes the named import available to
@@ -1619,6 +1641,49 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     );
   }
   const hookBody = hookLines.join("\n");
+
+  // Selector-anchored root panel: resolve the active element from the
+  // indexed selector prop, then position the (teleported) root against it.
+  // The anchor element lives outside the component's tree, so a `computed`
+  // re-derives it whenever the index channel or the selector array
+  // changes — the Vue-idiomatic equivalent of react's useEffect + useState
+  // pair. `useAnchoredPosition` takes getters, so the computed refs are
+  // read through `.value` accessors rather than re-run manually.
+  let anchoredPositionBody = "";
+  if (selectorAnchor) {
+    const idxChannel = channels.find(
+      (c) => c.name === selectorAnchor.indexChannel,
+    );
+    if (!idxChannel) {
+      throw new Error(
+        `${ir.name}: surface.anchor.selector.indexChannel "${selectorAnchor.indexChannel}" has no matching channel in the IR.`,
+      );
+    }
+    const idxExpr = `behavior.${idxChannel.name}.value`;
+    const propExpr = `props.${propAccess(selectorAnchor.prop)}`;
+    const placementProp = ir.surface?.positioning?.placementProp;
+    const collision = ir.surface?.positioning?.collision ?? "flip-shift";
+    const placementExpr = placementProp
+      ? `props.${propAccess(placementProp)}`
+      : `"auto"`;
+    anchoredPositionBody = [
+      `const anchoredRootEl = shallowRef<HTMLElement | null>(null);`,
+      `function setAnchoredRootEl(el: Element | ComponentPublicInstance | null): void {`,
+      `  anchoredRootEl.value = el instanceof HTMLElement ? el : null;`,
+      `}`,
+      `const anchorTargetEl = computed(() => {`,
+      `  const selector = (${propExpr} ?? [])[${idxExpr}]?.${selectorAnchor.path};`,
+      `  return selector ? document.querySelector<HTMLElement>(selector) : null;`,
+      `});`,
+      `const anchoredPosition = useAnchoredPosition({`,
+      `  anchor: () => anchorTargetEl.value,`,
+      `  content: () => anchoredRootEl.value,`,
+      `  open: () => true,`,
+      `  placement: () => ${placementExpr},`,
+      `  collision: () => "${collision}",`,
+      `});`,
+    ].join("\n");
+  }
 
   // Compute classNames from BEM recipe. State props that are channel-driven
   // reference the hook-resolved value (as a Ref, so `.value`).
@@ -1730,6 +1795,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     fieldAssociationConsumer: assocConsumes,
+    rootSelectorAnchored: selectorAnchor !== null,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
@@ -1747,7 +1813,11 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   // teleported subtree carries the full root markup, so backdrop-self-click
   // dismissal and every panel-containment check still resolve against the
   // moved nodes (their refs point at the same elements).
-  const wrapRootInPortal = portalsRootToBody(ir);
+  // Selector-anchored root portal (coachmark / guided tour): the whole
+  // panel also portals to body — same renderInPortal-shaped consumption via
+  // Teleport, plus the anchoredPosition wiring above driving fixed-position
+  // styling in the template.
+  const wrapRootInPortal = portalsRootToBody(ir) || selectorAnchor !== null;
   const templateBodyLines = wrapRootInPortal
     ? [
         `<template>`,
@@ -1779,6 +1849,16 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     ...(hookBody
       ? [
           { kind: "generated" as const, id: "hook", body: hookBody },
+          blank(),
+        ]
+      : []),
+    ...(anchoredPositionBody
+      ? [
+          {
+            kind: "generated" as const,
+            id: "anchoredPosition",
+            body: anchoredPositionBody,
+          },
           blank(),
         ]
       : []),
@@ -1836,6 +1916,12 @@ interface VueRenderContext {
    * `:aria-describedby` from the injected `fieldAssociation` ref.
    */
   fieldAssociationConsumer?: boolean;
+  /**
+   * Selector-anchored root panel: the root element gets the anchored
+   * position wiring (`:ref`, fixed-position `:style`, `:data-placement`)
+   * emitted by the script's `anchoredPosition` block. Root-level only.
+   */
+  rootSelectorAnchored?: boolean;
   /**
    * Identifier names that resolve as iteration aliases (item/index
    * variables introduced by an enclosing `iterate` directive). After
@@ -2115,6 +2201,16 @@ function renderVueDomNode(
     if (ctx.fieldAssociationConsumer) {
       attrs.push(`:id="fieldAssociation?.controlId"`);
       attrs.push(`:aria-describedby="fieldAssociation?.describedBy"`);
+    }
+    // Selector-anchored root: fixed-position style computed against the
+    // active step's page anchor, hidden until the first measurement so the
+    // panel never flashes at (0,0).
+    if (ctx.rootSelectorAnchored) {
+      attrs.push(`:ref="setAnchoredRootEl"`);
+      attrs.push(`:data-placement="anchoredPosition.placement"`);
+      attrs.push(
+        `:style="{ position: 'fixed', top: \`\${anchoredPosition.top}px\`, left: \`\${anchoredPosition.left}px\`, visibility: anchoredPosition.ready ? 'visible' : 'hidden' }"`,
+      );
     }
     if (ctx.autoDismissPause) {
       attrs.push(`v-on="autoDismiss.pauseListeners"`);
