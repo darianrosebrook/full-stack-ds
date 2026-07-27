@@ -21,6 +21,15 @@
  *
  *   node build/ledger-components.mjs [--target=react]         -> WRITE scratch ledger, print summary
  *   node build/ledger-components.mjs --check [--target=react] -> GATE recompute vs the scratch ledger
+ *
+ * SCRATCH LEDGER LOCATION: the ledger is written to a STABLE, package-relative
+ * path under generated/ (gitignored), NOT inside the ephemeral mkdtemp sandbox.
+ * Generation still runs in the sandbox so the tracked tree is never mutated,
+ * but the ledger artifact must survive across runs so --check can see what a
+ * prior WRITE produced. (Earlier versions wrote it inside the sandbox, which
+ * made --check structurally unable to find a committed ledger — every check
+ * reported all edges missing. The fix separates the generation sandbox, which
+ * is per-run, from the ledger path, which is stable.)
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -37,7 +46,8 @@ import {
 } from "./ledger.mjs";
 
 const buildDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(buildDir, "..", "..", "..");
+const packageRoot = path.resolve(buildDir, "..");
+const repoRoot = path.resolve(packageRoot, "..", "..");
 const targetArg = (process.argv.find((a) => a.startsWith("--target=")) ?? "--target=react").split("=")[1];
 const checkMode = process.argv.includes("--check");
 
@@ -147,10 +157,20 @@ function main() {
     }
 
     const fresh = assembleLedger(rows);
-    const scratchLedger = path.join(sb, `emission-ledger.${targetArg}.json`);
+    // Stable, package-relative path under generated/ (gitignored). NOT inside the
+    // sandbox: the sandbox is per-run (mkdtemp), so a ledger written there could
+    // never be seen by a later --check. Generation stays sandboxed; only the
+    // ledger artifact lives at a stable path so WRITE and --check agree.
+    const scratchDir = path.join(packageRoot, "generated");
+    fs.mkdirSync(scratchDir, { recursive: true });
+    const scratchLedger = path.join(scratchDir, `emission-ledger.${targetArg}.json`);
 
     if (checkMode) {
       const committed = fs.existsSync(scratchLedger) ? JSON.parse(fs.readFileSync(scratchLedger, "utf8")) : null;
+      if (!committed) {
+        console.error(`No scratch ledger at ${path.relative(repoRoot, scratchLedger)}; run WRITE first (node build/ledger-components.mjs --target=${targetArg}).`);
+        process.exit(1);
+      }
       const v = checkAgainstCommitted(fresh, committed);
       console.log(`Component gate (${targetArg}): ${v.fresh_edge_count} fresh vs ${v.committed_edge_count} committed; missing=${v.missing.length} stale=${v.stale.length}`);
       process.exit(v.ok ? 0 : 1);
@@ -160,11 +180,9 @@ function main() {
     const totalFiles = fresh.rows.reduce((n, r) => n + r.attachments.length, 0);
     console.log(`Component ledger (${targetArg}): ${fresh.row_count} units, ${totalFiles} files -> ${fresh.edge_count} distinct edges.`);
     console.log(`  dedup savings: ${totalFiles - fresh.edge_count} files collapsed into shared edges.`);
-    console.log(`  scratch ledger: ${scratchLedger}`);
+    console.log(`  scratch ledger: ${path.relative(repoRoot, scratchLedger)}`);
     // Emit a small machine-readable proof to stdout for the caller to capture.
     console.log(`PROOF ${JSON.stringify({ target: targetArg, units: fresh.row_count, files: totalFiles, edges: fresh.edge_count })}`);
-    // Leave sandbox for the WRITE run so --check can compare; caller cleans up.
-    console.log(`  (sandbox retained at ${sb})`);
     return;
   } finally {
     if (checkMode) fs.rmSync(sb, { recursive: true, force: true });
