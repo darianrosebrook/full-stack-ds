@@ -1,147 +1,147 @@
 # Dead-slot matrix
 
-`ICONOGRAPHY-TOKEN-DISCIPLINE-02` (Phase 3) — read-only. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).
+`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).
 
 Components: **49** · slots declared: **894** · consumed: **760** · dead: **134**
 
 ## Dead slots — declared slots with no `var()` consumer in the structure CSS
 
-| component | slot | CSS var | source |
-|---|---|---|---|
-| Accordion | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Accordion | `accordion.border.width` | `--fsds-accordion-border-width` | `tokens` |
-| Accordion | `accordion.spacing.paddingX` | `--fsds-accordion-spacing-paddingX` | `tokens` |
-| Alert | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Alert | `alert.icon.size` | `--fsds-alert-icon-size` | `tokens` |
-| Alert | `alert.size.padding.inline` | `--fsds-alert-size-padding-inline` | `tokens` |
-| Alert | `alert.size.padding.page` | `--fsds-alert-size-padding-page` | `tokens` |
-| Alert | `alert.typography.page.fontSize` | `--fsds-alert-typography-page-fontSize` | `tokens` |
-| Alert | `alert.typography.page.title.fontSize` | `--fsds-alert-typography-page-title-fontSize` | `tokens` |
-| Alert | `alert.typography.inline.fontSize` | `--fsds-alert-typography-inline-fontSize` | `tokens` |
-| AlertNotice | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| AlertNotice | `alert-notice.color.background.primary` | `--fsds-alert-notice-color-background-primary` | `tokens` |
-| AlertNotice | `alert-notice.color.foreground.primary` | `--fsds-alert-notice-color-foreground-primary` | `tokens` |
-| AlertNotice | `alert-notice.icon.size` | `--fsds-alert-notice-icon-size` | `tokens` |
-| AlertNotice | `alert-notice.size.padding.inline` | `--fsds-alert-notice-size-padding-inline` | `tokens` |
-| AlertNotice | `alert-notice.size.padding.page` | `--fsds-alert-notice-size-padding-page` | `tokens` |
-| AlertNotice | `alert-notice.typography.page.fontSize` | `--fsds-alert-notice-typography-page-fontSize` | `tokens` |
-| AlertNotice | `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-fontSize` | `tokens` |
-| AlertNotice | `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-fontSize` | `tokens` |
-| Avatar | `avatar.color.background.inverse` | `--fsds-avatar-color-background-inverse` | `tokens` |
-| Blockquote | `blockquote.size.padding.sm` | `--fsds-blockquote-size-padding-sm` | `tokens` |
-| Blockquote | `blockquote.size.padding.lg` | `--fsds-blockquote-size-padding-lg` | `tokens` |
-| Blockquote | `blockquote.size.fontSize.sm` | `--fsds-blockquote-size-fontSize-sm` | `tokens` |
-| Blockquote | `blockquote.size.fontSize.lg` | `--fsds-blockquote-size-fontSize-lg` | `tokens` |
-| Button | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Button | `button.size.padding-block.medium` | `--fsds-button-size-padding-block-medium` | `tokens` |
-| Button | `button.size.padding-inline.medium` | `--fsds-button-size-padding-inline-medium` | `tokens` |
-| Button | `button.size.minHeight.medium` | `--fsds-button-size-minHeight-medium` | `tokens` |
-| Calendar | `calendar.color.border.accent` | `--fsds-calendar-color-border-accent` | `tokens` |
-| Calendar | `calendar.color.day.range.background` | `--fsds-calendar-color-day-range-background` | `tokens` |
-| Calendar | `calendar.typography.weekday.size` | `--fsds-calendar-typography-weekday-size` | `tokens` |
-| Card | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Card | `card.color.badge.success.background` | `--fsds-card-color-badge-success-background` | `tokens` |
-| Card | `card.color.badge.success.foreground` | `--fsds-card-color-badge-success-foreground` | `tokens` |
-| Card | `card.color.badge.warning.background` | `--fsds-card-color-badge-warning-background` | `tokens` |
-| Card | `card.color.badge.warning.foreground` | `--fsds-card-color-badge-warning-foreground` | `tokens` |
-| Card | `card.color.badge.info.background` | `--fsds-card-color-badge-info-background` | `tokens` |
-| Card | `card.color.badge.info.foreground` | `--fsds-card-color-badge-info-foreground` | `tokens` |
-| Card | `card.color.badge.error.background` | `--fsds-card-color-badge-error-background` | `tokens` |
-| Card | `card.color.badge.error.foreground` | `--fsds-card-color-badge-error-foreground` | `tokens` |
-| Card | `card.color.badge.neutral.background` | `--fsds-card-color-badge-neutral-background` | `tokens` |
-| Card | `card.color.badge.neutral.foreground` | `--fsds-card-color-badge-neutral-foreground` | `tokens` |
-| Chip | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Chip | `chip.color.background.active` | `--fsds-chip-color-background-active` | `tokens` |
-| Chip | `chip.focus.ring.width` | `--fsds-chip-focus-ring-width` | `tokens` |
-| Chip | `chip.focus.ring.color` | `--fsds-chip-focus-ring-color` | `tokens` |
-| Chip | `chip.focus.ring.style` | `--fsds-chip-focus-ring-style` | `tokens` |
-| Chip | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | `tokens` |
-| Chip | `chip.color.background.selected` | `--fsds-chip-color-background-selected` | `tokens` |
-| Chip | `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | `tokens` |
-| Chip | `chip.color.border.selected` | `--fsds-chip-color-border-selected` | `tokens` |
-| Chip | `chip.dismiss.size` | `--fsds-chip-dismiss-size` | `tokens` |
-| Chip | `box-model.min-height` | `--fsds-box-model-min-height` | `styles:.chip__action.button` |
-| Command | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | `tokens` |
-| Details | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Details | `details.size.padding.compact` | `--fsds-details-size-padding-compact` | `tokens` |
-| Details | `details.size.padding.page` | `--fsds-details-size-padding-page` | `tokens` |
-| Details | `details.typography.fontSize.body` | `--fsds-details-typography-fontSize-body` | `tokens` |
-| Details | `details.typography.fontSize.compact` | `--fsds-details-typography-fontSize-compact` | `tokens` |
-| Divider | `divider.size.thicknessThick` | `--fsds-divider-size-thicknessThick` | `tokens` |
-| Field | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Field | `field.pad.y` | `--fsds-field-pad-y` | `tokens` |
-| Field | `field.color.borderBold` | `--fsds-field-color-borderBold` | `tokens` |
-| Field | `field.color.validating-border` | `--fsds-field-color-validating-border` | `tokens` |
-| Field | `field.color.validating-text` | `--fsds-field-color-validating-text` | `tokens` |
-| Field | `field.color.valid-text` | `--fsds-field-color-valid-text` | `tokens` |
-| Field | `field.spacing.indicator` | `--fsds-field-spacing-indicator` | `tokens` |
-| Image | `image.size.icon` | `--fsds-image-size-icon` | `tokens` |
-| Image | `image.typography.error.fontSize` | `--fsds-image-typography-error-fontSize` | `tokens` |
-| Input | `box-model.min-height` | `--fsds-box-model-min-height` | `tokens` |
-| Input | `input.space.inline.default` | `--fsds-input-space-inline-default` | `tokens` |
-| Label | `label.typo.weight.default` | `--fsds-label-typo-weight-default` | `tokens` |
-| Links | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Links | `links.size.fontSize.small` | `--fsds-links-size-fontSize-small` | `tokens` |
-| Links | `links.size.fontSize.large` | `--fsds-links-size-fontSize-large` | `tokens` |
-| NavList | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | `tokens` |
-| NavList | `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | `tokens` |
-| NavList | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | `tokens` |
-| NavList | `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | `tokens` |
-| NavList | `nav-list.size.gap.group` | `--fsds-nav-list-size-gap-group` | `tokens` |
-| NavList | `nav-list.size.fontSize.item` | `--fsds-nav-list-size-fontSize-item` | `tokens` |
-| NavList | `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-fontSize-groupLabel` | `tokens` |
-| OTP | `otp.size.padding.default` | `--fsds-otp-size-padding-default` | `tokens` |
-| Popover | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Postcard | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Postcard | `postcard.size.radius.full` | `--fsds-postcard-size-radius-full` | `tokens` |
-| ProfileFlag | `profile-flag.spacing.padding.default` | `--fsds-profile-flag-spacing-padding-default` | `tokens` |
-| Select | `select.color.icon.default` | `--fsds-select-color-icon-default` | `tokens` |
-| Select | `select.color.icon.isOpen` | `--fsds-select-color-icon-isOpen` | `tokens` |
-| Sheet | `sheet.focus.width` | `--fsds-sheet-focus-width` | `tokens` |
-| Sheet | `sheet.focus.color` | `--fsds-sheet-focus-color` | `tokens` |
-| Sheet | `sheet.color.backgroundHover` | `--fsds-sheet-color-backgroundHover` | `tokens` |
-| ShowMore | `show-more.color.border.default` | `--fsds-show-more-color-border-default` | `tokens` |
-| ShowMore | `show-more.color.border.accent` | `--fsds-show-more-color-border-accent` | `tokens` |
-| ShowMore | `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-imageOverlay` | `tokens` |
-| Shuttle | `shuttle.color.border.default` | `--fsds-shuttle-color-border-default` | `tokens` |
-| Skeleton | `skeleton.color.static` | `--fsds-skeleton-color-static` | `tokens` |
-| Skeleton | `skeleton.radius.sm` | `--fsds-skeleton-radius-sm` | `tokens` |
-| Skeleton | `skeleton.radius.lg` | `--fsds-skeleton-radius-lg` | `tokens` |
-| Skeleton | `skeleton.radius.full` | `--fsds-skeleton-radius-full` | `tokens` |
-| Skeleton | `skeleton.gap.compact` | `--fsds-skeleton-gap-compact` | `tokens` |
-| Skeleton | `skeleton.gap.spacious` | `--fsds-skeleton-gap-spacious` | `tokens` |
-| Stat | `stat.color.foreground.label` | `--fsds-stat-color-foreground-label` | `tokens` |
-| Stat | `stat.size.label` | `--fsds-stat-size-label` | `tokens` |
-| Stat | `stat.size.gap` | `--fsds-stat-size-gap` | `tokens` |
-| Stat | `stat.typography.weight.label` | `--fsds-stat-typography-weight-label` | `tokens` |
-| Table | `table.color.textMuted` | `--fsds-table-color-textMuted` | `tokens` |
-| Table | `table.spacing.sortGap` | `--fsds-table-spacing-sortGap` | `tokens` |
-| Table | `table.size.cellHeight` | `--fsds-table-size-cellHeight` | `tokens` |
-| Table | `table.focus.width` | `--fsds-table-focus-width` | `tokens` |
-| Table | `table.focus.color` | `--fsds-table-focus-color` | `tokens` |
-| Table | `table.focus.offset` | `--fsds-table-focus-offset` | `tokens` |
-| Tabs | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Tabs | `tabs.color.focus` | `--fsds-tabs-color-focus` | `tokens` |
-| Tabs | `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-listWidth` | `tokens` |
-| Text | `text.size.xs` | `--fsds-text-size-xs` | `tokens` |
-| Text | `text.size.sm` | `--fsds-text-size-sm` | `tokens` |
-| Text | `text.size.lg` | `--fsds-text-size-lg` | `tokens` |
-| Text | `text.size.xl` | `--fsds-text-size-xl` | `tokens` |
-| Text | `text.size.2xl` | `--fsds-text-size-2xl` | `tokens` |
-| Text | `text.size.3xl` | `--fsds-text-size-3xl` | `tokens` |
-| TextField | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Toast | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Toast | `toast.accent.default` | `--fsds-toast-accent-default` | `tokens` |
-| Toast | `toast.color.intent.bg` | `--fsds-toast-color-intent-bg` | `tokens` |
-| Toast | `toast.color.intent.border` | `--fsds-toast-color-intent-border` | `tokens` |
-| Toast | `toast.motion.enter` | `--fsds-toast-motion-enter` | `tokens` |
-| Toast | `toast.motion.leave` | `--fsds-toast-motion-leave` | `tokens` |
-| Toast | `toast.timing.auto-dismiss` | `--fsds-toast-timing-auto-dismiss` | `tokens` |
-| Tooltip | `tooltip.size.padding.y` | `--fsds-tooltip-size-padding-y` | `tokens` |
-| Truncate | `truncate.color.background.primary` | `--fsds-truncate-color-background-primary` | `tokens` |
-| Truncate | `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-linkHover` | `tokens` |
-| Walkthrough | `box-model.gap` | `--fsds-box-model-gap` | `tokens` |
-| Walkthrough | `walkthrough.dots.active` | `--fsds-walkthrough-dots-active` | `tokens` |
+| component | slot | CSS var | disposition | evidence |
+|---|---|---|---|---|
+| Accordion | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Accordion | `accordion.border.width` | `--fsds-accordion-border-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Accordion | `accordion.spacing.paddingX` | `--fsds-accordion-spacing-paddingX` | `review` | no rule matched: "paddingX" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Alert | `alert.icon.size` | `--fsds-alert-icon-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `alert.size.padding.inline` | `--fsds-alert-size-padding-inline` | `wire` | "inline" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Alert | `alert.size.padding.page` | `--fsds-alert-size-padding-page` | `wire` | "page" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Alert | `alert.typography.page.fontSize` | `--fsds-alert-typography-page-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `alert.typography.page.title.fontSize` | `--fsds-alert-typography-page-title-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `alert.typography.inline.fontSize` | `--fsds-alert-typography-inline-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| AlertNotice | `alert-notice.color.background.primary` | `--fsds-alert-notice-color-background-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.color.foreground.primary` | `--fsds-alert-notice-color-foreground-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.icon.size` | `--fsds-alert-notice-icon-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.size.padding.inline` | `--fsds-alert-notice-size-padding-inline` | `wire` | "inline" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| AlertNotice | `alert-notice.size.padding.page` | `--fsds-alert-notice-size-padding-page` | `wire` | "page" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| AlertNotice | `alert-notice.typography.page.fontSize` | `--fsds-alert-notice-typography-page-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Avatar | `avatar.color.background.inverse` | `--fsds-avatar-color-background-inverse` | `review` | no rule matched: "inverse" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Blockquote | `blockquote.size.padding.sm` | `--fsds-blockquote-size-padding-sm` | `repoint` | styles["--sm"] redefines sibling "blockquote.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Blockquote | `blockquote.size.padding.lg` | `--fsds-blockquote-size-padding-lg` | `repoint` | styles["--lg"] redefines sibling "blockquote.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Blockquote | `blockquote.size.fontSize.sm` | `--fsds-blockquote-size-fontSize-sm` | `repoint` | styles["--sm"] redefines sibling "blockquote.size.fontSize.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Blockquote | `blockquote.size.fontSize.lg` | `--fsds-blockquote-size-fontSize-lg` | `repoint` | styles["--lg"] redefines sibling "blockquote.size.fontSize.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Button | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Button | `button.size.padding-block.medium` | `--fsds-button-size-padding-block-medium` | `wire` | "medium" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Button | `button.size.padding-inline.medium` | `--fsds-button-size-padding-inline-medium` | `wire` | "medium" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Button | `button.size.minHeight.medium` | `--fsds-button-size-minHeight-medium` | `wire` | "medium" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Calendar | `calendar.color.border.accent` | `--fsds-calendar-color-border-accent` | `review` | no rule matched: "accent" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Calendar | `calendar.color.day.range.background` | `--fsds-calendar-color-day-range-background` | `review` | no rule matched: "background" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Calendar | `calendar.typography.weekday.size` | `--fsds-calendar-typography-weekday-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Card | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Card | `card.color.badge.success.background` | `--fsds-card-color-badge-success-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.success.foreground` | `--fsds-card-color-badge-success-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.warning.background` | `--fsds-card-color-badge-warning-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.warning.foreground` | `--fsds-card-color-badge-warning-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.info.background` | `--fsds-card-color-badge-info-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.info.foreground` | `--fsds-card-color-badge-info-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.error.background` | `--fsds-card-color-badge-error-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.error.foreground` | `--fsds-card-color-badge-error-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.neutral.background` | `--fsds-card-color-badge-neutral-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Card | `card.color.badge.neutral.foreground` | `--fsds-card-color-badge-neutral-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
+| Chip | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Chip | `chip.color.background.active` | `--fsds-chip-color-background-active` | `wire` | "active" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Chip | `chip.focus.ring.width` | `--fsds-chip-focus-ring-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Chip | `chip.focus.ring.color` | `--fsds-chip-focus-ring-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Chip | `chip.focus.ring.style` | `--fsds-chip-focus-ring-style` | `review` | no rule matched: "style" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Chip | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Chip | `chip.color.background.selected` | `--fsds-chip-color-background-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.background.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Chip | `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.foreground.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Chip | `chip.color.border.selected` | `--fsds-chip-color-border-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.border.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Chip | `chip.dismiss.size` | `--fsds-chip-dismiss-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Chip | `box-model.min-height` | `--fsds-box-model-min-height` | `shadowed` | styles.root overrides "min-height", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Command | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | `wire` | "disabled" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Details | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Details | `details.size.padding.compact` | `--fsds-details-size-padding-compact` | `repoint` | styles["--compact"] redefines sibling "details.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Details | `details.size.padding.page` | `--fsds-details-size-padding-page` | `review` | no rule matched: "page" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Details | `details.typography.fontSize.body` | `--fsds-details-typography-fontSize-body` | `review` | no rule matched: "body" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Details | `details.typography.fontSize.compact` | `--fsds-details-typography-fontSize-compact` | `wire` | "compact" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Divider | `divider.size.thicknessThick` | `--fsds-divider-size-thicknessThick` | `review` | no rule matched: "thicknessThick" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Field | `field.pad.y` | `--fsds-field-pad-y` | `review` | no rule matched: "y" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `field.color.borderBold` | `--fsds-field-color-borderBold` | `review` | no rule matched: "borderBold" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `field.color.validating-border` | `--fsds-field-color-validating-border` | `review` | no rule matched: "validating-border" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `field.color.validating-text` | `--fsds-field-color-validating-text` | `review` | no rule matched: "validating-text" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `field.color.valid-text` | `--fsds-field-color-valid-text` | `review` | no rule matched: "valid-text" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `field.spacing.indicator` | `--fsds-field-spacing-indicator` | `review` | no rule matched: "indicator" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Image | `image.size.icon` | `--fsds-image-size-icon` | `review` | no rule matched: "icon" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Image | `image.typography.error.fontSize` | `--fsds-image-typography-error-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Input | `box-model.min-height` | `--fsds-box-model-min-height` | `shadowed` | styles.root overrides "min-height", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Input | `input.space.inline.default` | `--fsds-input-space-inline-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Label | `label.typo.weight.default` | `--fsds-label-typo-weight-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Links | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Links | `links.size.fontSize.small` | `--fsds-links-size-fontSize-small` | `repoint` | styles["--small"] redefines sibling "links.size.fontSize.medium" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Links | `links.size.fontSize.large` | `--fsds-links-size-fontSize-large` | `repoint` | styles["--large"] redefines sibling "links.size.fontSize.medium" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| NavList | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| NavList | `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | `wire` | "hover" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| NavList | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | `review` | no rule matched: "current" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| NavList | `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | `wire` | "focus" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| NavList | `nav-list.size.gap.group` | `--fsds-nav-list-size-gap-group` | `review` | no rule matched: "group" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| NavList | `nav-list.size.fontSize.item` | `--fsds-nav-list-size-fontSize-item` | `review` | no rule matched: "item" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| NavList | `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-fontSize-groupLabel` | `review` | no rule matched: "groupLabel" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| OTP | `otp.size.padding.default` | `--fsds-otp-size-padding-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Popover | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Postcard | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Postcard | `postcard.size.radius.full` | `--fsds-postcard-size-radius-full` | `review` | no rule matched: "full" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| ProfileFlag | `profile-flag.spacing.padding.default` | `--fsds-profile-flag-spacing-padding-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Select | `select.color.icon.default` | `--fsds-select-color-icon-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Select | `select.color.icon.isOpen` | `--fsds-select-color-icon-isOpen` | `review` | no rule matched: "isOpen" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Sheet | `sheet.focus.width` | `--fsds-sheet-focus-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Sheet | `sheet.focus.color` | `--fsds-sheet-focus-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Sheet | `sheet.color.backgroundHover` | `--fsds-sheet-color-backgroundHover` | `review` | no rule matched: "backgroundHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| ShowMore | `show-more.color.border.default` | `--fsds-show-more-color-border-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| ShowMore | `show-more.color.border.accent` | `--fsds-show-more-color-border-accent` | `review` | no rule matched: "accent" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| ShowMore | `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-imageOverlay` | `review` | no rule matched: "imageOverlay" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Shuttle | `shuttle.color.border.default` | `--fsds-shuttle-color-border-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Skeleton | `skeleton.color.static` | `--fsds-skeleton-color-static` | `review` | no rule matched: "static" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Skeleton | `skeleton.radius.sm` | `--fsds-skeleton-radius-sm` | `review` | no rule matched: "sm" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Skeleton | `skeleton.radius.lg` | `--fsds-skeleton-radius-lg` | `review` | no rule matched: "lg" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Skeleton | `skeleton.radius.full` | `--fsds-skeleton-radius-full` | `review` | no rule matched: "full" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Skeleton | `skeleton.gap.compact` | `--fsds-skeleton-gap-compact` | `repoint` | styles["--compact"] redefines sibling "skeleton.gap.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Skeleton | `skeleton.gap.spacious` | `--fsds-skeleton-gap-spacious` | `repoint` | styles["--spacious"] redefines sibling "skeleton.gap.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Stat | `stat.color.foreground.label` | `--fsds-stat-color-foreground-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Stat | `stat.size.label` | `--fsds-stat-size-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Stat | `stat.size.gap` | `--fsds-stat-size-gap` | `review` | no rule matched: "gap" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Stat | `stat.typography.weight.label` | `--fsds-stat-typography-weight-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.color.textMuted` | `--fsds-table-color-textMuted` | `review` | no rule matched: "textMuted" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.spacing.sortGap` | `--fsds-table-spacing-sortGap` | `review` | no rule matched: "sortGap" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.size.cellHeight` | `--fsds-table-size-cellHeight` | `review` | no rule matched: "cellHeight" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.focus.width` | `--fsds-table-focus-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.focus.color` | `--fsds-table-focus-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.focus.offset` | `--fsds-table-focus-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Tabs | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Tabs | `tabs.color.focus` | `--fsds-tabs-color-focus` | `wire` | "focus" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Tabs | `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-listWidth` | `review` | no rule matched: "listWidth" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Text | `text.size.xs` | `--fsds-text-size-xs` | `repoint` | styles["--xs"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Text | `text.size.sm` | `--fsds-text-size-sm` | `repoint` | styles["--sm"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Text | `text.size.lg` | `--fsds-text-size-lg` | `repoint` | styles["--lg"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Text | `text.size.xl` | `--fsds-text-size-xl` | `repoint` | styles["--xl"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Text | `text.size.2xl` | `--fsds-text-size-2xl` | `repoint` | styles["--2xl"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| Text | `text.size.3xl` | `--fsds-text-size-3xl` | `repoint` | styles["--3xl"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
+| TextField | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Toast | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Toast | `toast.accent.default` | `--fsds-toast-accent-default` | `wire` | "default" is a declared variant/state value with no styling block; consumption is genuinely missing |
+| Toast | `toast.color.intent.bg` | `--fsds-toast-color-intent-bg` | `review` | no rule matched: "bg" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Toast | `toast.color.intent.border` | `--fsds-toast-color-intent-border` | `review` | no rule matched: "border" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Toast | `toast.motion.enter` | `--fsds-toast-motion-enter` | `review` | no rule matched: "enter" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Toast | `toast.motion.leave` | `--fsds-toast-motion-leave` | `review` | no rule matched: "leave" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Toast | `toast.timing.auto-dismiss` | `--fsds-toast-timing-auto-dismiss` | `review` | no rule matched: "auto-dismiss" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Tooltip | `tooltip.size.padding.y` | `--fsds-tooltip-size-padding-y` | `review` | no rule matched: "y" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Truncate | `truncate.color.background.primary` | `--fsds-truncate-color-background-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Truncate | `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-linkHover` | `review` | no rule matched: "linkHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Walkthrough | `box-model.gap` | `--fsds-box-model-gap` | `shadowed` | styles.root overrides "gap", outranking the primitive consumer emitted by renderBoxModelConsumers() |
+| Walkthrough | `walkthrough.dots.active` | `--fsds-walkthrough-dots-active` | `review` | no rule matched: "active" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 
 ## Full matrix (per component)
 

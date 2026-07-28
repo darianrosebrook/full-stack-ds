@@ -1,0 +1,138 @@
+{
+  "$comment": "Pseudo-state ledger (RAIL-STYLING-REALIZATION-LEDGERS-01). Two-directional ratchet: the audit fails if any gap is missing here (unledgered) or if any entry no longer reproduces (stale). CAUTION: for several entries the audit's own 'expected selector' is unsatisfiable on the component's root element (':disabled' on a <span>/<div>). Authoring CSS to match the prescribed selector would score realized while changing nothing at runtime. Burning an entry requires runtime proof, not selector presence.",
+  "gaps": [
+    {
+      "component": "Breadcrumbs",
+      "dim": "pointer",
+      "value": "hover",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "root is <nav>; the hover target is the link descendant, not the root. Needs the state-anchor fact so the IR derives '.breadcrumbs__link:hover' rather than hand-authoring it."
+    },
+    {
+      "component": "Calendar",
+      "dim": "availability",
+      "value": "disabled",
+      "spec": "FEAT-STYLES-KEY-ELEMENT-AWARENESS-01",
+      "note": "audit prescribes a root-anchored ':disabled', which only matches form controls — this root is <div role=application>, so the selector can NEVER match. Needs the element-aware lowering plus a contract-declared a11y.attribute (aria-disabled); authoring a bare 'disabled' block today would score realized while doing nothing at runtime."
+    },
+    {
+      "component": "Calendar",
+      "dim": "today",
+      "value": "today",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "presentation state belongs on the day cell, not the calendar root; realization is a BEM modifier on the day part and requires the emitter to render that class."
+    },
+    {
+      "component": "Calendar",
+      "dim": "month",
+      "value": "outsideMonth",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "as with 'today': the modifier belongs on the day cell and needs emitter class output."
+    },
+    {
+      "component": "Chip",
+      "dim": "availability",
+      "value": "disabled",
+      "spec": "FEAT-STYLES-KEY-ELEMENT-AWARENESS-01",
+      "note": "audit prescribes a root-anchored ':disabled', which only matches form controls — this root is <span>, so the selector can NEVER match. Needs the element-aware lowering plus a contract-declared a11y.attribute (aria-disabled); authoring a bare 'disabled' block today would score realized while doing nothing at runtime."
+    },
+    {
+      "component": "Command",
+      "dim": "availability",
+      "value": "disabled",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "':has(.command__input:disabled)' IS satisfiable as prescribed — the wrapper form is correct and simply unauthored."
+    },
+    {
+      "component": "Details",
+      "dim": "availability",
+      "value": "disabled",
+      "spec": "FEAT-STYLES-KEY-ELEMENT-AWARENESS-01",
+      "note": "audit prescribes a root-anchored ':disabled', which only matches form controls — this root is <details>, so the selector can NEVER match. Needs the element-aware lowering plus a contract-declared a11y.attribute (aria-disabled); authoring a bare 'disabled' block today would score realized while doing nothing at runtime."
+    },
+    {
+      "component": "Dialog",
+      "dim": "pointer",
+      "value": "active",
+      "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
+      "note": "a <div> dialog surface has no meaningful pressed state and no pointer-active styling intent; likely a declared dimension that was never a real obligation — adjudicate for removal."
+    },
+    {
+      "component": "Dialog",
+      "dim": "focus",
+      "value": "focus",
+      "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
+      "note": "the dialog root is programmatically focused but never ':focus-visible' (that is reserved for keyboard-visible focus); adjudicate for removal."
+    },
+    {
+      "component": "Image",
+      "dim": "validation",
+      "value": "error",
+      "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
+      "note": "root is <img> and the contract declares no validation prop axis to drive it; nothing can ever set this state — adjudicate for removal."
+    },
+    {
+      "component": "Image",
+      "dim": "loading",
+      "value": "loading",
+      "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
+      "note": "no loading prop axis exists to drive the state; adjudicate for removal (or implement the axis deliberately)."
+    },
+    {
+      "component": "Input",
+      "dim": "prompt",
+      "value": "empty-prompt",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "root IS <input>, so '.input:placeholder-shown' is satisfiable and simply unauthored; ':placeholder-shown' is emitted nowhere in the corpus today."
+    },
+    {
+      "component": "NavList",
+      "dim": "focus",
+      "value": "focus",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "root is <nav> and not focusable; the focusable element is the item descendant. Needs the state-anchor fact."
+    },
+    {
+      "component": "Tabs",
+      "dim": "focus",
+      "value": "focus",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "root is a non-focusable <div>; the focusable element is the individual tab. Needs the state-anchor fact."
+    },
+    {
+      "component": "Tabs",
+      "dim": "selection",
+      "value": "selected",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "aria-selected belongs on the individual tab, not the tablist root — the audit's root-anchored '[aria-selected=\"true\"]' targets the wrong element. Needs the state-anchor fact."
+    },
+    {
+      "component": "Text",
+      "dim": "validation",
+      "value": "error",
+      "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
+      "note": "root is <p> with no validation prop axis; adjudicate for removal. NOTE: deleting a declared validation state is a product decision, not a mechanical one."
+    },
+    {
+      "component": "Text",
+      "dim": "validation",
+      "value": "success",
+      "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
+      "note": "as with 'error' — no prop axis drives it; same product decision applies."
+    },
+    {
+      "component": "TextField",
+      "dim": "prompt",
+      "value": "empty-prompt",
+      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
+      "note": "root is <div>, so the root-anchored form cannot match; the ':has(.text-field__input:placeholder-shown)' wrapper form is correct and unauthored."
+    },
+    {
+      "component": "Walkthrough",
+      "dim": "availability",
+      "value": "disabled",
+      "spec": "FEAT-STYLES-KEY-ELEMENT-AWARENESS-01",
+      "note": "audit prescribes a root-anchored ':disabled', which only matches form controls — this root is <div role=status>, so the selector can NEVER match. Needs the element-aware lowering plus a contract-declared a11y.attribute (aria-disabled); authoring a bare 'disabled' block today would score realized while doing nothing at runtime."
+    }
+  ]
+}

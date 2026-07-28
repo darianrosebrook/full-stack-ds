@@ -28,11 +28,20 @@ import { readFileSync, readdirSync, existsSync, statSync, mkdirSync, writeFileSy
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { diffLedger, loadLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
+import { classifyDisposition, renderedPartsOf } from "./disposition.mjs";
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "../..");
 const CONTRACTS = resolve(REPO, "packages/ds-contracts/components");
 const REACT = resolve(REPO, "packages/ds-react/src/components");
 const OUT_DIR = resolve(REPO, "docs/dead-slot-audit");
+const LEDGER_PATH = resolve(HERE, "known-dead.json");
+
+/** Ledger identity for a dead slot. Slot keys are unique per component. */
+export function deadId(row) {
+  return `${row.component} ${row.slot}`;
+}
 
 const readJSON = (p) => (existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null);
 const readText = (p) => (existsSync(p) ? readFileSync(p, "utf8") : "");
@@ -117,12 +126,32 @@ function declaredSlots(component) {
 export function classify(component) {
   const prefix = cssPrefix(component);
   const structureCss = readText(resolve(REACT, component, `${component}.css`));
+  // Disposition inputs. Read once per component, not once per slot.
+  const tokens = readJSON(resolve(CONTRACTS, component, `${component}.tokens.json`));
+  const styles = readJSON(resolve(CONTRACTS, component, `${component}.styles.json`));
+  const contract = readJSON(resolve(CONTRACTS, component, `${component}.contract.json`));
+  const renderedParts = renderedPartsOf(
+    readText(resolve(REACT, component, `${component}.tsx`)),
+    prefix,
+  );
+
   const slots = declaredSlots(component).map((s) => {
     // Boundary-safe: require the cssVar followed by a non-identifier char so
     // --foo-medium doesn't match when searching for --foo-medium-extra.
     const re = new RegExp(`${escapeRe(s.cssVar)}(?![A-Za-z0-9_-])`);
     const status = re.test(structureCss) ? "consumed" : "dead";
-    return { ...s, status };
+    if (status === "consumed") return { ...s, status };
+    // Every dead slot carries its diagnosis and the evidence for it, so the
+    // reviewer audits the rule rather than 134 individual rows — and so the
+    // ledger entry can record WHY the declaration exists.
+    const { disposition, evidence } = classifyDisposition(s.slot, {
+      tokens,
+      styles,
+      contract,
+      prefix,
+      renderedParts,
+    });
+    return { ...s, status, disposition, evidence };
   });
 
   const consumed = slots.filter((s) => s.status === "consumed").length;
@@ -167,7 +196,7 @@ if (RUN_DIRECTLY) {
   md.push("# Dead-slot matrix");
   md.push("");
   md.push(
-    "`ICONOGRAPHY-TOKEN-DISCIPLINE-02` (Phase 3) — read-only. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).",
+    "`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).",
   );
   md.push("");
   md.push(
@@ -177,11 +206,13 @@ if (RUN_DIRECTLY) {
   md.push("## Dead slots — declared slots with no `var()` consumer in the structure CSS");
   md.push("");
   if (failing.length) {
-    md.push("| component | slot | CSS var | source |");
-    md.push("|---|---|---|---|");
+    md.push("| component | slot | CSS var | disposition | evidence |");
+    md.push("|---|---|---|---|---|");
     for (const f of failing) {
       for (const d of f.dead) {
-        md.push(`| ${f.component} | \`${d.slot}\` | \`${d.cssVar}\` | \`${d.source}\` |`);
+        md.push(
+          `| ${f.component} | \`${d.slot}\` | \`${d.cssVar}\` | \`${d.disposition}\` | ${d.evidence} |`,
+        );
       }
     }
   } else md.push("_none_");
@@ -206,11 +237,24 @@ if (RUN_DIRECTLY) {
   writeFileSync(resolve(OUT_DIR, "dead-slot-matrix.md"), md.join("\n") + "\n");
 
   console.log(
-    `\nICONOGRAPHY-TOKEN-DISCIPLINE-02 (Phase 3) — ${components.length} components, ${totalSlots} slots declared, ${consumedCount} consumed, ${deadCount} dead`,
+    `\nRAIL-STYLING-REALIZATION-LEDGERS-01 — ${components.length} components, ${totalSlots} slots declared, ${consumedCount} consumed, ${deadCount} dead`,
   );
-  console.log("\nDead slots by component:");
+  const byDisposition = {};
   for (const f of failing) {
-    console.log(`  - ${f.component}: ${f.dead.map((d) => d.slot).join(", ")}`);
+    for (const d of f.dead) byDisposition[d.disposition] = (byDisposition[d.disposition] ?? 0) + 1;
   }
-  console.log(`\nReport: ${resolve(OUT_DIR, "dead-slot-matrix.md")}`);
+  console.log(
+    `Dispositions: ${Object.entries(byDisposition)
+      .sort((a, b) => b[1] - a[1])
+      .map(([k, v]) => `${k}=${v}`)
+      .join(" ")}`,
+  );
+  console.log(`Report: ${resolve(OUT_DIR, "dead-slot-matrix.md")}\n`);
+
+  // --- ratchet: the ledger may only shrink truthfully ---
+  const current = failing.flatMap((f) => f.dead.map((d) => ({ component: f.component, ...d })));
+  const ledger = loadLedger(LEDGER_PATH, ["component", "slot"]);
+  const { unledgered, stale } = diffLedger({ current, ledger, idOf: deadId });
+  const code = reportRatchet({ label: "dead-slot", current, unledgered, stale, idOf: deadId });
+  if (code !== 0) process.exit(code);
 }

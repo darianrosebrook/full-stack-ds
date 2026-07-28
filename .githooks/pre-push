@@ -151,6 +151,17 @@ if [ "${RUN_ICONOGRAPHY:-false}" = true ]; then
   pnpm run iconography:ledger:check
 else echo "[pre-push] skip iconography ledger"; fi
 
+# Styling-realization ledgers (RAIL-STYLING-REALIZATION-LEDGERS-01). Two-directional
+# ratchets over the dead-slot and pseudo-state matrices: a new finding that nobody
+# ledgered fails, and so does a ledger entry that no longer reproduces. This is the
+# GATE OF RECORD for both audits — CI runs them too, but the author gets the verdict
+# here, before the push.
+if [ "${RUN_STYLING_AUDITS:-false}" = true ]; then
+  echo ""; echo "[pre-push] audit:dead-slots + audit:pseudo-state"
+  pnpm run audit:dead-slots
+  pnpm run audit:pseudo-state
+else echo "[pre-push] skip styling-realization ledgers"; fi
+
 # --- heaviest, last: governed:rail + generated-tree drift diff ---
 if [ "${RUN_RAIL:-false}" = true ]; then
   echo ""; echo "[pre-push] governed:rail + framework-src diff"

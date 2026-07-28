@@ -75,3 +75,37 @@ test("mixed docs + contract: union (rail + generate + docs-claims + tests)", () 
   const r = classify(["docs/x.md", "packages/ds-contracts/components/Card/Card.contract.json"]);
   assert.ok(on(r, "RUN_DOCS_CLAIMS", "RUN_GENERATE_CHECK", "RUN_RAIL", "RUN_TESTS"));
 });
+
+// --- styling-realization ledgers (RAIL-STYLING-REALIZATION-LEDGERS-01) -------
+// The ledgers classify contracts against committed generated React output, so
+// each of those inputs must trigger them; unrelated pushes must not.
+
+test("a contract change runs the styling-realization ledgers", () => {
+  const r = classify(["packages/ds-contracts/components/Chip/Chip.styles.json"]);
+  assert.equal(r.RUN_STYLING_AUDITS, true);
+});
+
+test("a generated ds-react change runs the styling-realization ledgers", () => {
+  // A regenerated <C>.css can move a slot from consumed to dead without any
+  // contract edit — the classified bytes changed, so the verdict can too.
+  const r = classify(["packages/ds-react/src/components/Chip/Chip.css"]);
+  assert.equal(r.RUN_STYLING_AUDITS, true);
+});
+
+test("editing an audit or the shared ratchet runs the styling-realization ledgers", () => {
+  assert.equal(classify(["scripts/dead-slot-audit/disposition.mjs"]).RUN_STYLING_AUDITS, true);
+  assert.equal(classify(["scripts/pseudo-state-audit/audit.mjs"]).RUN_STYLING_AUDITS, true);
+  assert.equal(classify(["scripts/lib/ledger-ratchet.mjs"]).RUN_STYLING_AUDITS, true);
+});
+
+test("a docs-only push does NOT run the styling-realization ledgers", () => {
+  assert.equal(classify(["docs/x.md"]).RUN_STYLING_AUDITS, false);
+});
+
+test("an unrelated package change does NOT run the styling-realization ledgers", () => {
+  // ds-vue is not the reference framework the audits classify against.
+  assert.equal(
+    classify(["packages/ds-vue/src/components/Chip/Chip.vue"]).RUN_STYLING_AUDITS,
+    false,
+  );
+});
