@@ -64,7 +64,7 @@ export function Breadcrumbs({
     .join(" ");
 
   return (
-  <Stack layout="native" as="nav" className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} {...rest}>
+  <Stack layout="native" as="nav" className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} data-fsds-component="breadcrumbs" {...rest}>
     <ol className="breadcrumbs__list">
       {children}
     </ol>

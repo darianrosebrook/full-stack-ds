@@ -169,6 +169,11 @@ export class PostcardElement extends LitElement {
   @property({ attribute: false }) embed?: PostcardEmbed;
   @property() type?: string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "postcard");
+  }
+
   private computeClasses(): string {
     return [
       "postcard",

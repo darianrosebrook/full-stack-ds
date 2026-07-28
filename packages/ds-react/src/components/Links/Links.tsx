@@ -57,7 +57,7 @@ export function Links({
     .join(" ");
 
   return (
-  <Stack layout="native" as="a" className={`${classNames}`} href={href} target={target} rel={rel} data-testid={testId} {...rest}>
+  <Stack layout="native" as="a" className={`${classNames}`} href={href} target={target} rel={rel} data-testid={testId} data-fsds-component="links" {...rest}>
     {children}
   </Stack>
   );

@@ -43,7 +43,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <nav :class="classNames" :aria-label="props.ariaLabel" :data-testid="props['data-testid']">
+  <nav :class="classNames" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="breadcrumbs">
     <ol :class="'breadcrumbs__list'">
       <slot />
     </ol>

@@ -41,7 +41,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <label :class="classNames" :for="props.htmlFor" :form="props.form" :data-testid="props['data-testid']">
+  <label :class="classNames" :for="props.htmlFor" :form="props.form" :data-testid="props['data-testid']" data-fsds-component="label">
     <slot />
   </label>
 </template>

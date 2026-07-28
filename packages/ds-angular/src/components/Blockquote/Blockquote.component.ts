@@ -21,6 +21,7 @@ export type BlockquoteSize = "sm" | "md" | "lg";
   selector: "fsds-blockquote",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "blockquote" },
   template: `<blockquote [ngClass]="classes()">
   <ng-content />
 </blockquote>`,

@@ -20,6 +20,7 @@ export type CodeBlockLanguage = "bash" | "css" | "html" | "javascript" | "json" 
   selector: "fsds-code-block",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "code-block" },
   template: `<pre [ngClass]="classes()" [attr.data-language]="language">
   <code [ngClass]="'code-block__code'" spellcheck="false" [attr.data-language]="language">
     {{ code }}

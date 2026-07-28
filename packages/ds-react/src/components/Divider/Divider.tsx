@@ -50,7 +50,7 @@ export function Divider({
     .join(" ");
 
   return (
-  <Stack layout="native" as="hr" className={`${classNames}`} role="separator" data-testid={testId} {...rest} />
+  <Stack layout="native" as="hr" className={`${classNames}`} role="separator" data-testid={testId} data-fsds-component="divider" {...rest} />
   );
 }
 // @generated:end

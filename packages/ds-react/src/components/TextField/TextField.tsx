@@ -93,7 +93,7 @@ export function TextField({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="text-field" {...rest}>
     <label className="text-field__label" id={`${instanceId}-label`}>
       {slots?.label}
     </label>

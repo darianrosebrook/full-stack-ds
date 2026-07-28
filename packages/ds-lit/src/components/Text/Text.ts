@@ -301,6 +301,11 @@ export class TextElement extends LitElement {
   @property({ type: String }) transform?: TextTransform;
   @property({ type: Boolean }) truncate?: boolean;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "text");
+  }
+
   private computeClasses(): string {
     return [
       "text",

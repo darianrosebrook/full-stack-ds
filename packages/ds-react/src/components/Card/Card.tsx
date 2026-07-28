@@ -132,6 +132,7 @@ export function Card({
       role="group"
       className={classNames}
       data-testid={testId}
+      data-fsds-component="card"
       {...rest}
     >
       {children}

@@ -99,6 +99,11 @@ export class TruncateElement extends LitElement {
     onExpandedChange: (v) => this.onExpandedChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "truncate");
+  }
+
   private computeClasses(): string {
     return [
       "truncate",

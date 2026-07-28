@@ -102,6 +102,11 @@ export class NavListElement extends LitElement {
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "nav-list");
+  }
+
   private computeClasses(): string {
     return [
       "nav-list",

@@ -84,7 +84,7 @@ const instanceId = useId();
 </script>
 
 <template>
-  <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']">
+  <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']" data-fsds-component="select">
     <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" :disabled="props.disabled" :aria-controls="`${instanceId}-options`">
       <span :class="'select__text'"></span>
     </button>

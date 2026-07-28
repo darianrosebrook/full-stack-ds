@@ -46,7 +46,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}>
+<div class={classes} data-fsds-component="truncate">
   <span class={'truncate__content'} style:--fsds-truncate-content-lines={lines}>
     {@render children?.()}
   </span>

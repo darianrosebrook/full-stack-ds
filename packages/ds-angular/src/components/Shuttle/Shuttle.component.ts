@@ -22,6 +22,7 @@ import { useShuttle } from "./useShuttle.js";
   selector: "fsds-shuttle",
   standalone: true,
   imports: [NgClass, NgFor],
+  host: { "data-fsds-component": "shuttle" },
   template: `<ul [ngClass]="classes()" role="listbox" [attr.aria-label]="ariaLabel">
   <ng-container *ngFor="let item of (behavior.selection() ?? []); let index = index">
     <li [ngClass]="'shuttle__item'" role="option" aria-selected="true">

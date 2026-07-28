@@ -76,7 +76,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="behavior.setOpen(false)">
+    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" data-fsds-component="command" @click.self="behavior.setOpen(false)">
       <div v-if="behavior.open.value" :class="'command__overlay'" aria-hidden="true"></div>
       <div v-if="behavior.open.value" :class="'command__dialog'" role="dialog" aria-modal="true" :aria-label="props.label">
         <div :class="'command__inputWrapper'">

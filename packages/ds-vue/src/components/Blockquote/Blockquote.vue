@@ -45,7 +45,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <blockquote :class="classNames" :data-testid="props['data-testid']">
+  <blockquote :class="classNames" :data-testid="props['data-testid']" data-fsds-component="blockquote">
     <slot />
   </blockquote>
 </template>

@@ -21,6 +21,7 @@ export type StatTrend = "up" | "down" | "neutral";
   selector: "fsds-stat",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "stat" },
   template: `<div [ngClass]="classes()">
   <ng-content />
 </div>`,

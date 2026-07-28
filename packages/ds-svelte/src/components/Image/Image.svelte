@@ -55,4 +55,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<img class={classes} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" />
+<img class={classes} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} data-fsds-component="image" role="img" />

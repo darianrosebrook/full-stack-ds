@@ -113,6 +113,11 @@ export class AvatarElement extends LitElement {
   @property({ type: Boolean }) priority?: boolean;
   @property() size?: string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "avatar");
+  }
+
   private computeClasses(): string {
     return [
       "avatar",

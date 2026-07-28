@@ -41,7 +41,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<ul class={classes} role="listbox" aria-label={ariaLabel}>
+<ul class={classes} role="listbox" aria-label={ariaLabel} data-fsds-component="shuttle">
   {#each (behavior.selection ?? []) as item, index (index)}
   <li class={'shuttle__item'} role="option" aria-selected="true">
     <span>{item}</span>

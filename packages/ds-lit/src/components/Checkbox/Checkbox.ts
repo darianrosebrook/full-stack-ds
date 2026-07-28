@@ -129,6 +129,11 @@ export class CheckboxElement extends LitElement {
     this.behavior.setChecked((event.target as HTMLInputElement).checked);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "checkbox");
+  }
+
   private computeClasses(): string {
     return [
       "checkbox",

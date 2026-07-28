@@ -47,7 +47,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<article class={classes}>
+<article class={classes} data-fsds-component="postcard">
   <div class={'postcard__header'}>
     <div class={'postcard__userInfo'}>
       <span class={'postcard__displayName'}></span>

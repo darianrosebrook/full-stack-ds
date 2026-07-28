@@ -89,7 +89,7 @@ export function Details({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} {...rest}>
+  <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} data-fsds-component="details" {...rest}>
     <summary className="details__summary" aria-controls={open ? `${instanceId}-content` : undefined}>
       <span className="details__summaryContent">
         <span className="details__icon" />

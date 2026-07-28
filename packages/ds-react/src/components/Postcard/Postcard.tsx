@@ -115,7 +115,7 @@ export function Postcard({
     .join(" ");
 
   return (
-  <Stack layout="native" as="article" className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="article" className={`${classNames}`} data-testid={testId} data-fsds-component="postcard" {...rest}>
     <div className="postcard__header">
       <div className="postcard__userInfo">
         <span className="postcard__displayName" />

@@ -203,6 +203,11 @@ export class SwitchElement extends LitElement {
     this.behavior.setChecked((event.target as HTMLInputElement).checked);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "switch");
+  }
+
   private computeClasses(): string {
     return [
       "switch",

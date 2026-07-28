@@ -32,6 +32,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<label class={classes} for={htmlFor} form={form}>
+<label class={classes} for={htmlFor} form={form} data-fsds-component="label">
   {@render children?.()}
 </label>

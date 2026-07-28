@@ -51,7 +51,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="status" :data-testid="props['data-testid']">
+  <div :class="classNames" role="status" :data-testid="props['data-testid']" data-fsds-component="spinner">
     <span :class="'spinner__visual'" aria-hidden="true"></span>
   </div>
 </template>

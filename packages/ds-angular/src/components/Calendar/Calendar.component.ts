@@ -22,6 +22,7 @@ export type CalendarMode = "single" | "range";
   selector: "fsds-calendar",
   standalone: true,
   imports: [NgClass, NgFor],
+  host: { "data-fsds-component": "calendar" },
   template: `<div [ngClass]="classes()" role="application">
   <div [ngClass]="'calendar__header'">
     <button [ngClass]="'calendar__nav'" aria-label="Previous month"></button>

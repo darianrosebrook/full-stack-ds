@@ -76,7 +76,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="`${instanceId}-body`" role="dialog" :data-testid="props['data-testid']" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
+    <div :class="classNames" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="`${instanceId}-body`" role="dialog" :data-testid="props['data-testid']" data-fsds-component="dialog" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
       <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true"></div>
       <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
         <div :class="'dialog__header'">

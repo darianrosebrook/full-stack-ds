@@ -491,6 +491,7 @@ export class TabsListElement extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.setAttribute("data-fsds-component", "tabs");
     this.addEventListener("keydown", this._handleKeyDown);
   }
 

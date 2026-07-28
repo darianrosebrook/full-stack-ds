@@ -47,7 +47,7 @@ export function Label({
     .join(" ");
 
   return (
-  <Stack layout="native" as="label" className={`${classNames}`} htmlFor={htmlFor} form={form} data-testid={testId} {...rest}>
+  <Stack layout="native" as="label" className={`${classNames}`} htmlFor={htmlFor} form={form} data-testid={testId} data-fsds-component="label" {...rest}>
     {children}
   </Stack>
   );

@@ -45,7 +45,7 @@ export function CodeBlock({
     .join(" ");
 
   return (
-  <Stack layout="native" as="pre" className={`${classNames}`} data-language={language} data-testid={testId} {...rest}>
+  <Stack layout="native" as="pre" className={`${classNames}`} data-language={language} data-testid={testId} data-fsds-component="code-block" {...rest}>
     <code className="code-block__code" spellCheck="false" data-language={language}>
       {code}
     </code>

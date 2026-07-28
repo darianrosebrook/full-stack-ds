@@ -115,6 +115,11 @@ export class OTPElement extends LitElement {
     onChange: (v) => this.onChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "otp");
+  }
+
   private computeClasses(): string {
     return [
       "otp",

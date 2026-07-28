@@ -83,6 +83,11 @@ export class ShuttleElement extends LitElement {
     onValueChange: (v) => this.onValueChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "shuttle");
+  }
+
   private computeClasses(): string {
     return [
       "shuttle",

@@ -87,6 +87,11 @@ export class CodeSnippetElement extends LitElement {
   @property({ type: String }) text!: string;
   @property({ type: String }) as?: CodeSnippetAs = "code";
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "code-snippet");
+  }
+
   private computeClasses(): string {
     return [
       "code-snippet",

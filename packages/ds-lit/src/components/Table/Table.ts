@@ -135,6 +135,11 @@ export class TableElement extends LitElement {
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "table");
+  }
+
   private computeClasses(): string {
     return [
       "table",

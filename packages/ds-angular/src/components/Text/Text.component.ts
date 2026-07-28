@@ -25,6 +25,7 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
   selector: "fsds-text",
   standalone: true,
   imports: [NgClass, NgSwitch, NgSwitchCase],
+  host: { "data-fsds-component": "text" },
   template: `<ng-container [ngSwitch]="this.as || 'p'">
   <p [ngClass]="classes()" *ngSwitchCase="'p'"></p>
   <span [ngClass]="classes()" *ngSwitchCase="'span'"></span>

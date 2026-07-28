@@ -52,7 +52,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="alert" :data-testid="props['data-testid']">
+  <div :class="classNames" role="alert" :data-testid="props['data-testid']" data-fsds-component="alert">
     <span v-if="props.icon" :class="'alert__icon'" aria-hidden="true">
       {{ props.icon }}
     </span>

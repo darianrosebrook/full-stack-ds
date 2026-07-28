@@ -24,6 +24,7 @@ export type ListSize = "sm" | "md" | "lg";
   selector: "fsds-list",
   standalone: true,
   imports: [NgClass, NgSwitch, NgSwitchCase],
+  host: { "data-fsds-component": "list" },
   template: `<ng-container [ngSwitch]="this.as || 'ul'">
   <ul [ngClass]="classes()" *ngSwitchCase="'ul'">
     <ng-content />

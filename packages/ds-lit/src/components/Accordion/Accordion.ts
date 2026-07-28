@@ -238,6 +238,7 @@ export class AccordionElement extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.setAttribute("data-fsds-component", "accordion");
     this.addEventListener("keydown", this._handleKeyDown);
     this._provideCtx();
   }

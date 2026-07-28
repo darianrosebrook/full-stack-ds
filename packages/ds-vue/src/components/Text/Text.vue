@@ -58,5 +58,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <component :is="props.as ?? 'p'" :class="classNames" :data-testid="props['data-testid']"></component>
+  <component :is="props.as ?? 'p'" :class="classNames" :data-testid="props['data-testid']" data-fsds-component="text"></component>
 </template>

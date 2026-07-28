@@ -1622,6 +1622,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     channelByName,
     hookVar,
     isRoot: true,
+    cssPrefix: ir.cssPrefix,
     fieldAssociationConsumer: assocConsumes,
     rootUsePortal,
     rootSelectorAnchored: selectorAnchor !== null,
@@ -1706,6 +1707,8 @@ interface SvelteRenderContext {
   channelByName: Map<string, NormalizedChannelIR>;
   hookVar: string;
   isRoot: boolean;
+  /** Component cssPrefix for the root's data-fsds-component identification attr. */
+  cssPrefix?: string;
   /** When true, attach `use:portal` to the root so it relocates to body. */
   rootUsePortal?: boolean;
   /**
@@ -1946,6 +1949,9 @@ function renderSvelteDomNode(
 
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
+    if (ctx.cssPrefix) {
+      attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
+    }
     if (ctx.rootUsePortal) {
       attrs.push(`use:portal={{ enabled: true }}`);
     }

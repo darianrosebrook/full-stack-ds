@@ -62,7 +62,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']">
+  <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']" data-fsds-component="button">
     <slot />
   </button>
 </template>

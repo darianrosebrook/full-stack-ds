@@ -55,7 +55,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes}>
+<div class={classes} data-fsds-component="text-field">
   <label class={'text-field__label'} id={`${instanceId}-label`}>
     {@render label?.()}
   </label>

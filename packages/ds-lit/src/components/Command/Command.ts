@@ -268,6 +268,7 @@ export class CommandElement extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.setAttribute("data-fsds-component", "command");
     this.addEventListener('click', this._handleOverlayClick);
     if (!this._portaled && typeof document !== "undefined" && this.parentNode && this.parentNode !== document.body) {
       this._portalOriginParent = this.parentNode;

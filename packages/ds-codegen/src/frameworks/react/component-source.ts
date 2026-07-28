@@ -1604,6 +1604,7 @@ function generateRootComponent(ir: ComponentIR): string {
   if (roleProp) jsxAttrs.push(`      ${roleProp}`);
   jsxAttrs.push(`      className={classNames}`);
   jsxAttrs.push(`      data-testid={testId}`);
+  jsxAttrs.push(`      data-fsds-component="${ir.cssPrefix}"`);
   jsxAttrs.push(`      {...rest}`);
 
   const lines: string[] = [];
@@ -2160,6 +2161,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     classRecipe: classRecipe.base,
     channelByName,
     isRoot: true,
+    cssPrefix: ir.cssPrefix,
     useStackRoot: reactDomRootUsesStack(ir),
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     overlayClickSetter,
@@ -2243,6 +2245,12 @@ interface ReactRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
+  /**
+   * Component cssPrefix (e.g. "button"), carried so the root element can emit
+   * `data-fsds-component="<cssPrefix>"` for audit/devtools discoverability.
+   * Set once at the root call; unused on child nodes.
+   */
+  cssPrefix?: string;
   /** Render the root DOM node through <Stack as="..."> without imposing layout. */
   useStackRoot?: boolean;
   /** When true, spread the auto-dismiss pause props onto the root element. */
@@ -2529,6 +2537,11 @@ function renderReactDomNode(
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`data-testid={testId}`);
+    // Identification attribute for audit/devtools (ICONOGRAPHY-TOKEN-DISCIPLINE-02
+    // Phase 5). NOT a CSS selector hook — does not change cascade behavior.
+    if (ctx.cssPrefix) {
+      attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
+    }
     // Overlay-click dismissal: close when the backdrop is clicked directly.
     // `e.target === e.currentTarget` ensures clicks on descendants (the
     // dialog panel and its children) do NOT trigger dismissal — removes the

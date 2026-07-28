@@ -186,7 +186,7 @@ export function Sheet({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} role="dialog" data-testid={testId} data-fsds-component="sheet" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
       {openness && (
         <div className="sheet__overlay" aria-hidden="true" />
       )}

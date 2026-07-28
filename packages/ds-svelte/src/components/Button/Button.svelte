@@ -53,6 +53,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading}>
+<button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-fsds-component="button">
   {@render children?.()}
 </button>

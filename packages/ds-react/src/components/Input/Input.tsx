@@ -71,7 +71,7 @@ export function Input({
   const fieldAssociation = useFieldAssociation();
 
   return (
-  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} {...rest} />
+  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} data-fsds-component="input" id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} {...rest} />
   );
 }
 // @generated:end

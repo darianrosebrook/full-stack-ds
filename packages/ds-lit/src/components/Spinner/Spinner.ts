@@ -121,6 +121,11 @@ export class SpinnerElement extends LitElement {
   @property({ type: Boolean }) inline?: boolean;
   @property({ type: Number }) showAfterMs?: number;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "spinner");
+  }
+
   private computeClasses(): string {
     return [
       "spinner",

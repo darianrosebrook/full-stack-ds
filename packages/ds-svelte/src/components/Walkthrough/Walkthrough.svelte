@@ -83,7 +83,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} role="status" aria-label={label} use:portal={{ enabled: true }} bind:this={anchoredRootEl} data-placement={anchoredPosition.state.placement} style="position: fixed; top: {anchoredPosition.state.top}px; left: {anchoredPosition.state.left}px; visibility: {anchoredPosition.state.ready ? 'visible' : 'hidden'};">
+<div class={classes} role="status" aria-label={label} data-fsds-component="walkthrough" use:portal={{ enabled: true }} bind:this={anchoredRootEl} data-placement={anchoredPosition.state.placement} style="position: fixed; top: {anchoredPosition.state.top}px; left: {anchoredPosition.state.left}px; visibility: {anchoredPosition.state.ready ? 'visible' : 'hidden'};">
   <div class={'walkthrough__content'} role="group" aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={description ? `${instanceId}-description` : undefined}>
     <h3 class={'walkthrough__title'} id={`${instanceId}-title`}>
       {@render title?.()}

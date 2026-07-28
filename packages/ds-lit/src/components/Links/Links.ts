@@ -130,6 +130,11 @@ export class LinksElement extends LitElement {
   @property({ type: String }) size?: LinkSize;
   @property({ type: Boolean }) disabled?: boolean;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "links");
+  }
+
   private computeClasses(): string {
     return [
       "links",

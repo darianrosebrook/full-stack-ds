@@ -220,6 +220,11 @@ export class SkeletonElement extends LitElement {
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "skeleton");
+  }
+
   private computeClasses(): string {
     return [
       "skeleton",

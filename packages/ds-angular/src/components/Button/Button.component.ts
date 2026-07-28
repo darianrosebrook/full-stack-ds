@@ -22,6 +22,7 @@ export type ButtonType = "button" | "submit" | "reset";
   selector: "fsds-button",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "button" },
   template: `<button [ngClass]="classes()" (click)="onClick && onClick()" [type]="(type ?? 'button')" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
   <ng-content />
 </button>`,

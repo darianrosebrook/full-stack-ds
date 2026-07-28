@@ -73,7 +73,7 @@ provideFieldAssociation(() => fieldAssociationValue);
 // @custom:end
 </script>
 
-<div class={classes} role="group">
+<div class={classes} data-fsds-component="field" role="group">
   <div class={'field__header'}>
     <label class={'field__label'} for={`${instanceId}-control`}>
       {@render label?.()}

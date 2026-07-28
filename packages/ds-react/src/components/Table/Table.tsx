@@ -215,7 +215,7 @@ export function Table({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <div className={`${classNames}`} data-testid={testId} data-fsds-component="table" {...rest}>
     <table className="table__container" aria-label={ariaLabel}>
       {children}
     </table>

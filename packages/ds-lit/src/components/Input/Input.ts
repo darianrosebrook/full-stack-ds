@@ -145,6 +145,11 @@ export class InputElement extends LitElement {
     this.behavior.setValue((event.target as HTMLInputElement).value);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "input");
+  }
+
   private computeClasses(): string {
     return [
       "input",

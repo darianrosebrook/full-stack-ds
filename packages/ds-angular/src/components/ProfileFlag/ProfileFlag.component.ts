@@ -20,6 +20,7 @@ export type ProfileFlagData = { id: string; username: string; full_name: string;
   selector: "fsds-profile-flag",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "profile-flag" },
   template: `<div [ngClass]="classes()">
   <ng-content />
 </div>`,

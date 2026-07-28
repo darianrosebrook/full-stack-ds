@@ -60,6 +60,11 @@ export class LabelElement extends LitElement {
   @property({ type: String }) htmlFor?: string;
   @property({ type: String }) form?: string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "label");
+  }
+
   private computeClasses(): string {
     return [
       "label",

@@ -21,6 +21,7 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
   selector: "fsds-spinner",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "spinner" },
   template: `<div [ngClass]="classes()">
   <span [ngClass]="'spinner__visual'" aria-hidden="true"></span>
 </div>`,

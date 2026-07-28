@@ -23,6 +23,7 @@ export type ChipSize = "small" | "medium" | "large";
   selector: "fsds-chip",
   standalone: true,
   imports: [NgClass, NgIf, ButtonComponent],
+  host: { "data-fsds-component": "chip" },
   template: `<span [ngClass]="classes()">
   <fsds-button [ngClass]="'chip__action'" variant="ghost" (click)="onClick && onClick()" [type]="type" [disabled]="disabled" [ariaLabel]="ariaLabel" [ariaExpanded]="ariaExpanded" [ariaPressed]="ariaPressed">
     <ng-container *ngIf="icon">

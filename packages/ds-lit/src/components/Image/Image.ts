@@ -136,6 +136,11 @@ export class ImageElement extends LitElement {
   @property({ type: String }) fallbackSrc?: string;
   @property() size?: string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "image");
+  }
+
   private computeClasses(): string {
     return [
       "image",

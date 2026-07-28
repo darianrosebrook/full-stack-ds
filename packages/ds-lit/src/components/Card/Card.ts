@@ -228,6 +228,11 @@ export class CardElement extends LitElement {
     }
   `;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "card");
+  }
+
   @property({ type: Boolean })
   interactive?: boolean;
   @property({ type: String })

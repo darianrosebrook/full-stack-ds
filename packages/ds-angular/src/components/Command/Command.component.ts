@@ -24,6 +24,7 @@ let nextInstanceId = 0;
   selector: "fsds-command",
   standalone: true,
   imports: [NgClass, NgIf],
+  host: { "data-fsds-component": "command" },
   template: `<div [ngClass]="classes()">
   <ng-container *ngIf="behavior.open()">
     <div [ngClass]="'command__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpen(false)"></div>

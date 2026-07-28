@@ -234,6 +234,11 @@ export class SelectElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "select");
+  }
+
   private computeClasses(): string {
     return [
       "select",

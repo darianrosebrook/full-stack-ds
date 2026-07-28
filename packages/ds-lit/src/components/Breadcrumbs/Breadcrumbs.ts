@@ -85,6 +85,11 @@ export class BreadcrumbsElement extends LitElement {
   override ariaLabel: string | null = null;
   @property({ type: String }) separator?: string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "breadcrumbs");
+  }
+
   private computeClasses(): string {
     return [
       "breadcrumbs",

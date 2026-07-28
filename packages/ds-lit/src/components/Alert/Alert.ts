@@ -178,6 +178,11 @@ export class AlertElement extends LitElement {
   @property({ type: String }) dismissLabel?: string = "Dismiss";
   @property({ attribute: false }) icon?: unknown;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "alert");
+  }
+
   private computeClasses(): string {
     return [
       "alert",

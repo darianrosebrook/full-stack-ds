@@ -21,6 +21,7 @@ export type LinkSize = "small" | "medium" | "large";
   selector: "fsds-links",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "links" },
   template: `<a [ngClass]="classes()" [href]="href" [target]="target" [rel]="rel">
   <ng-content />
 </a>`,

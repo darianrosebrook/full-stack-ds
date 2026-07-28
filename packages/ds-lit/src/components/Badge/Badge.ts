@@ -166,6 +166,11 @@ export class BadgeElement extends LitElement {
   @property({ attribute: false }) icon?: unknown;
   @property({ type: Boolean }) showStatusIcon?: boolean;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "badge");
+  }
+
   private computeClasses(): string {
     return [
       "badge",

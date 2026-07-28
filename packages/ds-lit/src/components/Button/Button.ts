@@ -227,6 +227,11 @@ export class ButtonElement extends LitElement {
   override ariaPressed: string | null = null;
   @property({ attribute: false }) onClick?: () => void;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "button");
+  }
+
   private computeClasses(): string {
     return [
       "button",

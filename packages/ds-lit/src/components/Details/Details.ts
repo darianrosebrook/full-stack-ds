@@ -176,6 +176,11 @@ export class DetailsElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "details");
+  }
+
   private computeClasses(): string {
     return [
       "details",

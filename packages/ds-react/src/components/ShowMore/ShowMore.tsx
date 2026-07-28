@@ -99,7 +99,7 @@ export function ShowMore({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="show-more" {...rest}>
     <div className="show-more__content" style={{ "--fsds-show-more-content-max-lines": maxLines } as CSSProperties}>
       {children}
     </div>

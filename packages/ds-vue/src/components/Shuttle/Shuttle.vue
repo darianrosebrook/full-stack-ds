@@ -54,7 +54,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <ul :class="classNames" role="listbox" :aria-label="props.ariaLabel" :data-testid="props['data-testid']">
+  <ul :class="classNames" role="listbox" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="shuttle">
     <li v-for="(item, index) in (behavior.selection.value ?? [])" :key="index" :class="'shuttle__item'" role="option" aria-selected="true">
       <span>
         {{ item }}

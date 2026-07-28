@@ -74,6 +74,11 @@ export class ProfileFlagElement extends LitElement {
 
   @property({ attribute: false }) profile?: ProfileFlagData;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "profile-flag");
+  }
+
   private computeClasses(): string {
     return [
       "profile-flag",

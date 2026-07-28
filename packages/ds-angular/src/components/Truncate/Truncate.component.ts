@@ -22,6 +22,7 @@ import { useTruncate } from "./useTruncate.js";
   selector: "fsds-truncate",
   standalone: true,
   imports: [NgClass, NgIf],
+  host: { "data-fsds-component": "truncate" },
   template: `<div [ngClass]="classes()">
   <span [ngClass]="'truncate__content'" [style.--fsds-truncate-content-lines]="lines">
     <ng-content />

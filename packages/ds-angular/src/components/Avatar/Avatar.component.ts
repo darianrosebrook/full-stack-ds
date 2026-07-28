@@ -21,6 +21,7 @@ import { ImageComponent } from "../Image/Image.component.js";
   selector: "fsds-avatar",
   standalone: true,
   imports: [NgClass, NgIf, ImageComponent],
+  host: { "data-fsds-component": "avatar" },
   template: `<div [ngClass]="classes()" [attr.aria-label]="name">
   <ng-container *ngIf="src">
     <fsds-image [ngClass]="'avatar__image'" [src]="src" alt=""></fsds-image>

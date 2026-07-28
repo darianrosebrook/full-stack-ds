@@ -40,4 +40,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<svelte:element this={as ?? "code"} class={classes} spellcheck="false">{text}</svelte:element>
+<svelte:element this={as ?? "code"} class={classes} spellcheck="false" data-fsds-component="code-snippet">{text}</svelte:element>

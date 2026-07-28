@@ -25,6 +25,7 @@ let nextInstanceId = 0;
   selector: "fsds-details",
   standalone: true,
   imports: [NgClass, NgIf],
+  host: { "data-fsds-component": "details" },
   template: `<details [ngClass]="classes()" [open]="behavior.open()">
   <summary [ngClass]="'details__summary'" [attr.aria-controls]="summaryAriaControls">
     <span [ngClass]="'details__summaryContent'">

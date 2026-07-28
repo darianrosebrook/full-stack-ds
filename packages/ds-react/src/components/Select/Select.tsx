@@ -142,7 +142,7 @@ export function Select({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} data-fsds-component="select" {...rest}>
     <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled} aria-controls={`${instanceId}-options`}>
       <span className="select__text" />
     </button>

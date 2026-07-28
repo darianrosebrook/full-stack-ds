@@ -199,6 +199,11 @@ export class CalendarElement extends LitElement {
     shouldCloseOnSelect: this.shouldCloseOnSelect,
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "calendar");
+  }
+
   private computeClasses(): string {
     return [
       "calendar",

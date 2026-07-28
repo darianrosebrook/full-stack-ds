@@ -113,6 +113,11 @@ export class ProgressElement extends LitElement {
   @property({ type: Boolean }) showValue?: boolean;
   @property({ attribute: false }) formatValue?: (value: number, max: number) => string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "progress");
+  }
+
   private computeClasses(): string {
     return [
       "progress",

@@ -39,6 +39,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}>
+<div class={classes} data-fsds-component="profile-flag">
   {@render children?.()}
 </div>

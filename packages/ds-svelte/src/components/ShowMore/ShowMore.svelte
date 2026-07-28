@@ -45,7 +45,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}>
+<div class={classes} data-fsds-component="show-more">
   <div class={'show-more__content'} style:--fsds-show-more-content-max-lines={maxLines}>
     {@render children?.()}
   </div>

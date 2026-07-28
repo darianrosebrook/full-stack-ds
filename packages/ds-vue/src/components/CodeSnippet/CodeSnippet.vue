@@ -44,7 +44,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <component :is="props.as ?? 'code'" :class="classNames" spellcheck="false" :data-testid="props['data-testid']">
+  <component :is="props.as ?? 'code'" :class="classNames" spellcheck="false" :data-testid="props['data-testid']" data-fsds-component="code-snippet">
     {{ props.text }}
   </component>
 </template>

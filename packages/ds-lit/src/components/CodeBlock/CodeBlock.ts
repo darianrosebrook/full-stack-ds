@@ -83,6 +83,11 @@ export class CodeBlockElement extends LitElement {
   @property({ type: String }) code!: string;
   @property({ type: String }) language!: CodeBlockLanguage;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "code-block");
+  }
+
   private computeClasses(): string {
     return [
       "code-block",

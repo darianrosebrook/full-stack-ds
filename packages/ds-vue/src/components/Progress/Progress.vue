@@ -53,7 +53,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="progressbar" :aria-valuenow="props.value" aria-valuemin="0" aria-valuemax="100" :aria-label="props.label" :data-testid="props['data-testid']">
+  <div :class="classNames" role="progressbar" :aria-valuenow="props.value" aria-valuemin="0" aria-valuemax="100" :aria-label="props.label" :data-testid="props['data-testid']" data-fsds-component="progress">
     <span :class="'progress__track'" aria-hidden="true">
       <span :class="'progress__fill'" :style="{ '--fsds-progress-fill-width': props.value }"></span>
     </span>

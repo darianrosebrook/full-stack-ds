@@ -67,7 +67,7 @@ export function Switch({
     .join(" ");
 
   return (
-  <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} data-fsds-component="switch" {...rest}>
     <input className="switch__input" type="checkbox" role="switch" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} />
     <span className="switch__track" aria-hidden="true">
       <span className="switch__thumb" />

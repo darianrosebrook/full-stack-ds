@@ -26,6 +26,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf],
   providers: [FieldAssociationService],
+  host: { "data-fsds-component": "field" },
   template: `<div [ngClass]="classes()">
   <div [ngClass]="'field__header'">
     <label [ngClass]="'field__label'" [attr.for]="instanceId + '-control'">

@@ -135,7 +135,7 @@ export function Command({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} data-fsds-component="command" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
       {open && (
         <div className="command__overlay" aria-hidden="true" />
       )}

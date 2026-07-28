@@ -72,7 +72,7 @@ export function Text({
   const As = as ?? "p";
 
   return (
-  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} {...rest} />
+  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} data-fsds-component="text" {...rest} />
   );
 }
 // @generated:end

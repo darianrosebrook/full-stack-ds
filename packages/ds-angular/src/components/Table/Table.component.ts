@@ -21,6 +21,7 @@ import { StackComponent } from "../../primitives/index.js";
   selector: "fsds-table",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "table" },
   template: `<div [ngClass]="classes()">
   <table [ngClass]="'table__container'" [attr.aria-label]="ariaLabel">
     <ng-content />

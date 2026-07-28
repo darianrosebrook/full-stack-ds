@@ -44,6 +44,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<blockquote class={classes}>
+<blockquote class={classes} data-fsds-component="blockquote">
   {@render children?.()}
 </blockquote>

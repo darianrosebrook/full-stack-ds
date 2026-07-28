@@ -181,6 +181,11 @@ export class TextFieldElement extends LitElement {
     this.behavior.setValue((event.target as HTMLInputElement).value);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "text-field");
+  }
+
   private computeClasses(): string {
     return [
       "text-field",

@@ -21,6 +21,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
   selector: "fsds-checkbox",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "checkbox" },
   template: `<input [ngClass]="classes()" type="checkbox" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" [attr.aria-checked]="(indeterminate ? 'mixed' : behavior.checked())" [indeterminate]="indeterminate" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

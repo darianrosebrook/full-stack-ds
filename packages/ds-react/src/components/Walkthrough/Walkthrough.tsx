@@ -152,7 +152,7 @@ export function Walkthrough({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} ref={(el) => setAnchoredRootEl(el instanceof HTMLElement ? el : null)} data-placement={anchoredPosition.placement} style={{ position: "fixed", top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? "visible" : "hidden" }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} data-fsds-component="walkthrough" ref={(el) => setAnchoredRootEl(el instanceof HTMLElement ? el : null)} data-placement={anchoredPosition.placement} style={{ position: "fixed", top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? "visible" : "hidden" }} {...rest}>
       <div className="walkthrough__content" role="group" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
         <h3 className="walkthrough__title" id={`${instanceId}-title`}>
           {slots?.title}

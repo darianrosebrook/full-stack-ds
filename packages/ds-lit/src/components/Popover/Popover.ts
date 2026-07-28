@@ -151,6 +151,8 @@ export class PopoverElement extends LitElement {
   }
   override connectedCallback(): void {
     super.connectedCallback();
+    // Host attribute for audit/devtools (ICONOGRAPHY-TOKEN-DISCIPLINE-02 Phase 5).
+    this.setAttribute("data-fsds-component", "popover");
     // Seed uncontrolled state from defaultOpen WITHOUT firing
     // onOpenChange — the consumer didn't trigger this, the
     // initial-mount default did.

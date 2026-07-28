@@ -119,6 +119,11 @@ export class StatusElement extends LitElement {
 
   @property({ type: String }) status!: StatusIntent;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "status");
+  }
+
   private computeClasses(): string {
     return [
       "status",

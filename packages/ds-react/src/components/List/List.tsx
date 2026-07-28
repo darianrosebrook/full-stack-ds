@@ -68,7 +68,7 @@ export function List({
   const As = as ?? "ul";
 
   return (
-  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} data-fsds-component="list" {...rest}>
     {children}
   </Stack>
   );

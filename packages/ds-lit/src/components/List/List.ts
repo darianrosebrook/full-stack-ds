@@ -153,6 +153,11 @@ export class ListElement extends LitElement {
   @property({ type: String }) spacing?: ListSpacing;
   @property({ type: String }) size?: ListSize;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "list");
+  }
+
   private computeClasses(): string {
     return [
       "list",

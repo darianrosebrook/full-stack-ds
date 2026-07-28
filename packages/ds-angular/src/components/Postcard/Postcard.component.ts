@@ -23,6 +23,7 @@ export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; as
   selector: "fsds-postcard",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "postcard" },
   template: `<article [ngClass]="classes()">
   <div [ngClass]="'postcard__header'">
     <div [ngClass]="'postcard__userInfo'">

@@ -32,7 +32,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}>
+<div class={classes} data-fsds-component="table">
   <table class={'table__container'} aria-label={ariaLabel}>
     {@render children?.()}
   </table>

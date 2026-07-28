@@ -77,7 +77,7 @@ export function Chip({
     .join(" ");
 
   return (
-  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="chip" {...rest}>
     <Button className="chip__action" variant="ghost" onClick={onClick} type={type} disabled={disabled} ariaLabel={ariaLabel} ariaExpanded={ariaExpanded} ariaPressed={ariaPressed}>
       {icon && (
         <span className="chip__icon" aria-hidden="true" />

@@ -68,7 +68,7 @@ export function Skeleton({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} {...rest} />
+  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} data-fsds-component="skeleton" {...rest} />
   );
 }
 // @generated:end

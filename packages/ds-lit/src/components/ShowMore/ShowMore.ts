@@ -102,6 +102,11 @@ export class ShowMoreElement extends LitElement {
     onExpandedChange: (v) => this.onExpandedChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "show-more");
+  }
+
   private computeClasses(): string {
     return [
       "show-more",

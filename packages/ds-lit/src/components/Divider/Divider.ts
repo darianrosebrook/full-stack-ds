@@ -78,6 +78,11 @@ export class DividerElement extends LitElement {
   @property({ type: Boolean }) decorative?: boolean;
   @property({ type: String }) thickness?: string;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "divider");
+  }
+
   private computeClasses(): string {
     return [
       "divider",

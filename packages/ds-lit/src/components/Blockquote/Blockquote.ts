@@ -135,6 +135,11 @@ export class BlockquoteElement extends LitElement {
   @property({ type: String }) variant?: BlockquoteVariant;
   @property({ type: String }) size?: BlockquoteSize;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "blockquote");
+  }
+
   private computeClasses(): string {
     return [
       "blockquote",

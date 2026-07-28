@@ -64,7 +64,7 @@ export function Progress({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label} data-testid={testId} data-fsds-component="progress" {...rest}>
     <span className="progress__track" aria-hidden="true">
       <span className="progress__fill" style={{ "--fsds-progress-fill-width": value } as CSSProperties} />
     </span>

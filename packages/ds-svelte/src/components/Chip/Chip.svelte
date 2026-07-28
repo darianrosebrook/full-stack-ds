@@ -56,7 +56,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<span class={classes}>
+<span class={classes} data-fsds-component="chip">
   <Button class={'chip__action'} variant="ghost" onClick={onClick} type={type} disabled={disabled} ariaLabel={ariaLabel} ariaExpanded={ariaExpanded} ariaPressed={ariaPressed}>
     {#if icon}
     <span class={'chip__icon'} aria-hidden="true"></span>

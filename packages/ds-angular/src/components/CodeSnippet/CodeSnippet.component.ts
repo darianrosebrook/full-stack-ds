@@ -20,6 +20,7 @@ export type CodeSnippetElement = "code" | "kbd" | "samp";
   selector: "fsds-code-snippet",
   standalone: true,
   imports: [NgClass, NgSwitch, NgSwitchCase],
+  host: { "data-fsds-component": "code-snippet" },
   template: `<ng-container [ngSwitch]="this.as || 'code'">
   <code [ngClass]="classes()" spellcheck="false" *ngSwitchCase="'code'">
     {{ text }}

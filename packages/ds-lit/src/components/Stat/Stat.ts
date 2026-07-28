@@ -94,6 +94,11 @@ export class StatElement extends LitElement {
   @property({ type: String }) size?: StatSize = "md";
   @property({ type: String }) trend?: StatTrend;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "stat");
+  }
+
   private computeClasses(): string {
     return [
       "stat",

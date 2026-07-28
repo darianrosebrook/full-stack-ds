@@ -95,7 +95,7 @@ export function AlertNotice({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="alert" data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="alert" data-testid={testId} data-fsds-component="alert-notice" {...rest}>
     {icon && (
       <span className="alert-notice__icon" aria-hidden="true">
         {icon}

@@ -58,7 +58,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="application">
+<div class={classes} role="application" data-fsds-component="calendar">
   <div class={'calendar__header'}>
     <button class={'calendar__nav'} aria-label="Previous month"></button>
     <span class={'calendar__caption'}></span>

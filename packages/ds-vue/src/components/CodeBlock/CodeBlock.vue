@@ -41,7 +41,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <pre :class="classNames" :data-language="props.language" :data-testid="props['data-testid']">
+  <pre :class="classNames" :data-language="props.language" :data-testid="props['data-testid']" data-fsds-component="code-block">
     <code :class="'code-block__code'" spellcheck="false" :data-language="props.language">
       {{ props.code }}
     </code>

@@ -23,6 +23,7 @@ export type ImageRadius = "none" | "sm" | "md" | "lg" | "full";
   selector: "fsds-image",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "image" },
   template: `<img [ngClass]="classes()" [src]="src" [alt]="alt" [width]="width" [height]="height" [loading]="loading" [sizes]="sizes" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

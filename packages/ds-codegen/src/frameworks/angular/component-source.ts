@@ -277,6 +277,7 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
     `      deps: [],`,
     `    },`,
     `  ],`,
+    `  host: { "data-fsds-component": "${ir.cssPrefix}" },`,
     `  template: \`<div [ngClass]="classes()"><ng-content /></div>\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
@@ -470,6 +471,7 @@ function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
     `      deps: [],`,
     `    },`,
     `  ],`,
+    `  host: { "data-fsds-component": "${ir.cssPrefix}" },`,
     `  template: \`<div [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
@@ -1140,6 +1142,7 @@ function generateComponent(ir: ComponentIR): string {
     `  selector: "fsds-${selector}",`,
     `  standalone: true,`,
     `  imports: [NgClass, StackComponent],`,
+    `  host: { "data-fsds-component": "${ir.cssPrefix}" },`,
     `  template: \`${template}\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
@@ -1667,6 +1670,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     // service instance.
     lines.push(`  providers: [FieldAssociationService],`);
   }
+  lines.push(`  host: { "data-fsds-component": "${ir.cssPrefix}" },`);
   lines.push(`  template: \`${template}\`,`);
   lines.push(`  changeDetection: ChangeDetectionStrategy.OnPush,`);
   lines.push(`})`);

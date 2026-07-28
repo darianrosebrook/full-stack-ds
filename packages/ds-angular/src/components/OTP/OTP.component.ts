@@ -22,6 +22,7 @@ export type OTPMode = "numeric" | "alphanumeric";
   selector: "fsds-otp",
   standalone: true,
   imports: [NgClass, NgFor],
+  host: { "data-fsds-component": "otp" },
   template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="(label ?? 'One-time password')" aria-describedby="otp-error-id">
   <div [ngClass]="'otp__group'">
     <ng-container *ngFor="let _ of arrayFromCount((length ?? 6)); let index = index">

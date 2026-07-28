@@ -653,6 +653,15 @@ function generateClassBody(ir: ComponentIR): string {
   lines.push(`export class ${className} extends LitElement {`);
   lines.push(...litStaticStylesLine(ir));
   lines.push(``);
+  // Host attribute for audit/devtools (ICONOGRAPHY-TOKEN-DISCIPLINE-02 Phase 5).
+  // Set in connectedCallback (NOT the constructor — the custom-elements spec
+  // forbids attribute writes in the constructor) so it's on the host element,
+  // visible from the light DOM outside the shadow root.
+  lines.push(`  override connectedCallback(): void {`);
+  lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
+  lines.push(`  }`);
+  lines.push(``);
 
   const propLines = generatePropertyDeclarations(ir);
   if (propLines.length > 0) {
@@ -913,6 +922,7 @@ function generateTabsListClass(ir: ComponentIR): string {
   lines.push(``);
   lines.push(`  override connectedCallback(): void {`);
   lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
   lines.push(`    this.addEventListener("keydown", this._handleKeyDown);`);
   lines.push(`  }`);
   lines.push(``);
@@ -1216,6 +1226,7 @@ function generateDisclosureRootClass(ir: ComponentIR): string {
   lines.push(``);
   lines.push(`  override connectedCallback(): void {`);
   lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
   lines.push(`    this.addEventListener("keydown", this._handleKeyDown);`);
   lines.push(`    this._provideCtx();`);
   lines.push(`  }`);
@@ -1942,6 +1953,8 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(``);
     lines.push(`  override connectedCallback(): void {`);
     lines.push(`    super.connectedCallback();`);
+    // Host attribute for audit/devtools (ICONOGRAPHY-TOKEN-DISCIPLINE-02 Phase 5).
+    lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
     if (hasOverlayClick && booleanChannel) {
       lines.push(`    this.addEventListener('click', this._handleOverlayClick);`);
     }
@@ -1978,6 +1991,16 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       lines.push(`    }`);
     }
     lines.push(`    super.disconnectedCallback();`);
+    lines.push(`  }`);
+  } else {
+    // No portal/surface lifecycle — emit a minimal connectedCallback solely
+    // for the host identification attribute (ICONOGRAPHY-TOKEN-DISCIPLINE-02
+    // Phase 5). connectedCallback, not the constructor (the custom-elements
+    // spec forbids attribute writes in the constructor).
+    lines.push(``);
+    lines.push(`  override connectedCallback(): void {`);
+    lines.push(`    super.connectedCallback();`);
+    lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
     lines.push(`  }`);
   }
 

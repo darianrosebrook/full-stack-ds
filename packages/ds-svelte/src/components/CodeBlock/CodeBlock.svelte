@@ -39,6 +39,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<pre class={classes} data-language={language}>
+<pre class={classes} data-language={language} data-fsds-component="code-block">
   <code class={'code-block__code'} spellcheck="false" data-language={language}>{code}</code>
 </pre>

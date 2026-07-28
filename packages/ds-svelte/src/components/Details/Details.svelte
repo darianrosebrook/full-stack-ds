@@ -62,7 +62,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<details class={classes} open={behavior.open} role="group">
+<details class={classes} open={behavior.open} data-fsds-component="details" role="group">
   <summary class={'details__summary'} aria-controls={open ? `${instanceId}-content` : undefined}>
     <span class={'details__summaryContent'}>
       <span class={'details__icon'}></span>

@@ -89,6 +89,11 @@ export class IconElement extends LitElement {
   @property({ type: String }) name!: string;
   @property({ attribute: false }) size?: "sm" | "md" | "lg" | "xl" = "md";
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "icon");
+  }
+
   private computeClasses(): string {
     return [
       "icon",

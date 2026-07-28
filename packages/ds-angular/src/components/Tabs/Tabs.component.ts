@@ -48,6 +48,7 @@ export type TabsActivationMode = "automatic" | "manual";
       deps: [],
     },
   ],
+  host: { "data-fsds-component": "tabs" },
   template: `<div [ngClass]="classes()"><ng-content /></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

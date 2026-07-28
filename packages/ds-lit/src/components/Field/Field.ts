@@ -187,6 +187,11 @@ export class FieldElement extends LitElement {
     onChange: (v) => this.onChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "field");
+  }
+
   private computeClasses(): string {
     return [
       "field",

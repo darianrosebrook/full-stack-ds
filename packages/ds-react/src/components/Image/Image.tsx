@@ -75,7 +75,7 @@ export function Image({
     .join(" ");
 
   return (
-  <Stack layout="native" as="img" className={`${classNames}`} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" data-testid={testId} {...rest} />
+  <Stack layout="native" as="img" className={`${classNames}`} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" data-testid={testId} data-fsds-component="image" {...rest} />
   );
 }
 // @generated:end

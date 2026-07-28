@@ -71,7 +71,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} aria-label="Notifications" aria-live={politeness} use:portal={{ enabled: true }} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
+<div class={classes} aria-label="Notifications" aria-live={politeness} data-fsds-component="toast" use:portal={{ enabled: true }} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
   {#if behavior.open}
   <div class={'toast__item'} role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
     <div class={'toast__row'}>

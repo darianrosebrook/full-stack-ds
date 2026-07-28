@@ -196,6 +196,11 @@ export class ChipElement extends LitElement {
   @property({ attribute: false }) onDismiss?: () => void;
   @property({ type: String }) dismissLabel?: string = "Remove";
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "chip");
+  }
+
   private computeClasses(): string {
     return [
       "chip",

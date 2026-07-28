@@ -111,6 +111,11 @@ export class ToggleSwitchElement extends LitElement {
     onChange: (v) => this.onChange?.(v),
   });
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("data-fsds-component", "toggle-switch");
+  }
+
   private computeClasses(): string {
     return [
       "toggle-switch",

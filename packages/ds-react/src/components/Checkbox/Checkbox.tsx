@@ -74,7 +74,7 @@ export function Checkbox({
   }, [indeterminate]);
 
   return (
-  <Stack layout="native" as="input" className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} role="checkbox" data-testid={testId} {...rest} ref={inputRef} />
+  <Stack layout="native" as="input" className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} role="checkbox" data-testid={testId} data-fsds-component="checkbox" {...rest} ref={inputRef} />
   );
 }
 // @generated:end

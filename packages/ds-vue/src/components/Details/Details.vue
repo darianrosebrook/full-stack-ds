@@ -68,7 +68,7 @@ const instanceId = useId();
 </script>
 
 <template>
-  <details :class="classNames" :open="behavior.open.value" role="group" :data-testid="props['data-testid']">
+  <details :class="classNames" :open="behavior.open.value" role="group" :data-testid="props['data-testid']" data-fsds-component="details">
     <summary :class="'details__summary'" :aria-controls="props.open ? `${instanceId}-content` : undefined">
       <span :class="'details__summaryContent'">
         <span :class="'details__icon'"></span>

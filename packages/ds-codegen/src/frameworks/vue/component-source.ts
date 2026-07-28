@@ -1800,6 +1800,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     classRecipe: classRecipe.base,
     channelByName,
     isRoot: true,
+    cssPrefix: ir.cssPrefix,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
@@ -1907,6 +1908,8 @@ interface VueRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
+  /** Component cssPrefix for the root's data-fsds-component identification attr. */
+  cssPrefix?: string;
   /** When true, bind the auto-dismiss pause listeners on the root via v-on. */
   autoDismissPause?: boolean;
   overlayClickSetter?: string;
@@ -2201,6 +2204,9 @@ function renderVueDomNode(
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`:data-testid="props['data-testid']"`);
+    if (ctx.cssPrefix) {
+      attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
+    }
     // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
     // ambient field association on its root. Vue's implicit fallthrough
     // applies consumer attrs after template bindings, so an explicit

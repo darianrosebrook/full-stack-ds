@@ -67,7 +67,7 @@ const instanceId = useId();
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']">
+  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="text-field">
     <label :class="'text-field__label'" :id="`${instanceId}-label`">
       <slot name="label" />
     </label>

@@ -132,7 +132,7 @@ export function Toast({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} data-fsds-component="toast" {...autoDismissPauseProps} {...rest}>
       {open && (
         <div className="toast__item" role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
           <div className="toast__row">

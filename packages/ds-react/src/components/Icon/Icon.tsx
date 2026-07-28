@@ -52,7 +52,7 @@ export function Icon({
   const iconGlyph = resolveIcon(name, iconGlyphPx ?? Number.NaN);
 
   return (
-  <Stack layout="native" as="span" className={`${classNames}`} aria-hidden="true" data-testid={testId} {...rest}>
+  <Stack layout="native" as="span" className={`${classNames}`} aria-hidden="true" data-testid={testId} data-fsds-component="icon" {...rest}>
     {iconGlyph ? (
       <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon={iconGlyph.name} viewBox={iconGlyph.viewBox} width={iconGlyphPx ?? iconGlyph.size} height={iconGlyphPx ?? iconGlyph.size}>
         {iconGlyph.paths.map((glyphPath, glyphIndex) => (

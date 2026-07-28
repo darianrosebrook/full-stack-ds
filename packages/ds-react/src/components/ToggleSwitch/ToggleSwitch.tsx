@@ -65,7 +65,7 @@ export function ToggleSwitch({
     .join(" ");
 
   return (
-  <Stack layout="native" as="button" className={`${classNames}`} type="button" onClick={() => setChecked(!checked)} aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} role="switch" data-testid={testId} {...rest} />
+  <Stack layout="native" as="button" className={`${classNames}`} type="button" onClick={() => setChecked(!checked)} aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} role="switch" data-testid={testId} data-fsds-component="toggle-switch" {...rest} />
   );
 }
 // @generated:end

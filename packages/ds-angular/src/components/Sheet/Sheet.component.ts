@@ -24,6 +24,7 @@ let nextInstanceId = 0;
   selector: "fsds-sheet",
   standalone: true,
   imports: [NgClass, NgIf],
+  host: { "data-fsds-component": "sheet" },
   template: `<div [ngClass]="classes()" [attr.aria-labelledby]="instanceId + '-title'">
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'sheet__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpenness(false)"></div>

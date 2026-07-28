@@ -65,7 +65,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}>
+<div class={classes} aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} data-fsds-component="dialog" use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}>
   {#if behavior.openness}
   <div class={'dialog__backdrop'} aria-hidden="true"></div>
   {/if}

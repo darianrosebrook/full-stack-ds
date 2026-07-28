@@ -20,6 +20,7 @@ import { NgClass } from "@angular/common";
   selector: "fsds-label",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "label" },
   template: `<label [ngClass]="classes()" [htmlFor]="htmlFor" [attr.form]="form">
   <ng-content />
 </label>`,

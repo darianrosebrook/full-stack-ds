@@ -109,7 +109,7 @@ export function Field({
 
   return (
   <FieldAssociationContext.Provider value={fieldAssociationValue}>
-    <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} {...rest}>
+    <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} data-fsds-component="field" {...rest}>
       <div className="field__header">
         <label className="field__label" htmlFor={`${instanceId}-control`}>
           {slots?.label}

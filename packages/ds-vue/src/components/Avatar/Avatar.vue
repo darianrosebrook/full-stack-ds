@@ -47,7 +47,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :aria-label="props.name" role="img" :data-testid="props['data-testid']">
+  <div :class="classNames" :aria-label="props.name" role="img" :data-testid="props['data-testid']" data-fsds-component="avatar">
     <Image v-if="props.src" :class="'avatar__image'" :src="props.src" alt="" />
   </div>
 </template>

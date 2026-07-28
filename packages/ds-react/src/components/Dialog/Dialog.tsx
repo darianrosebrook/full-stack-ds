@@ -158,7 +158,7 @@ export function Dialog({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} role="dialog" data-testid={testId} data-fsds-component="dialog" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
       {openness && (
         <div className="dialog__backdrop" aria-hidden="true" />
       )}

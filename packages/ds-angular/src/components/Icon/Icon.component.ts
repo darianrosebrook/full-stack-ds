@@ -23,6 +23,7 @@ const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg"
   selector: "fsds-icon",
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
+  host: { "data-fsds-component": "icon" },
   template: `<span [ngClass]="classes()" aria-hidden="true">
   <ng-container *ngIf="iconGlyph as glyph">
     <svg fill="none" xmlns="http://www.w3.org/2000/svg" [attr.data-fsds-icon]="glyph.name" [attr.viewBox]="glyph.viewBox" [attr.width]="(this.iconGlyphPx ?? glyph.size)" [attr.height]="(this.iconGlyphPx ?? glyph.size)">

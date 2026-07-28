@@ -22,6 +22,7 @@ import { FieldAssociationService } from "../../primitives/index.js";
   selector: "fsds-input",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "input" },
   template: `<input [ngClass]="classes()" (change)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" [placeholder]="placeholder" [name]="name" [required]="required" [attr.id]="fieldAssociation?.current?.controlId" [attr.aria-describedby]="fieldAssociation?.current?.describedBy" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

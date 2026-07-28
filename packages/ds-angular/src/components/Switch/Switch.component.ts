@@ -21,6 +21,7 @@ export type SwitchSize = "sm" | "md" | "lg";
   selector: "fsds-switch",
   standalone: true,
   imports: [NgClass],
+  host: { "data-fsds-component": "switch" },
   template: `<label [ngClass]="classes()">
   <input [ngClass]="'switch__input'" type="checkbox" role="switch" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" />
   <span [ngClass]="'switch__track'" aria-hidden="true">

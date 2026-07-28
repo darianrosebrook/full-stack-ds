@@ -46,6 +46,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<a class={classes} href={href} target={target} rel={rel}>
+<a class={classes} href={href} target={target} rel={rel} data-fsds-component="links">
   {@render children?.()}
 </a>
