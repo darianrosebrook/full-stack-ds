@@ -42,11 +42,19 @@ import { readFileSync, readdirSync, existsSync, statSync, mkdirSync, writeFileSy
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { diffLedger, loadLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "../..");
 const CONTRACTS = resolve(REPO, "packages/ds-contracts/components");
 const REACT = resolve(REPO, "packages/ds-react/src/components");
 const OUT_DIR = resolve(REPO, "docs/pseudo-state-audit");
+const LEDGER_PATH = resolve(HERE, "known-gaps.json");
+
+/** Ledger identity for a state obligation gap. */
+export function pseudoGapId(row) {
+  return `${row.component} ${row.dim} ${row.value}`;
+}
 
 const readJSON = (p) => (existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null);
 const readText = (p) => (existsSync(p) ? readFileSync(p, "utf8") : "");
@@ -460,7 +468,18 @@ if (RUN_DIRECTLY) {
   console.log(
     `\nPSEUDO-STATE-STYLING-RAIL-01 — ${withStates.length} components with states, ${totalObligations} obligations, ${realizedCount} realized, ${gapCount} gaps`,
   );
-  console.log("\nGaps by component:");
-  for (const f of failing) console.log(`  - ${f.component}: ${f.gaps.map((g) => `${g.dim}=${g.value}`).join(", ")}`);
-  console.log(`\nReport: ${resolve(OUT_DIR, "pseudo-state-matrix.md")}`);
+  console.log(`Report: ${resolve(OUT_DIR, "pseudo-state-matrix.md")}\n`);
+
+  // --- ratchet: the ledger may only shrink truthfully ---
+  const current = failing.flatMap((f) => f.gaps.map((g) => ({ component: f.component, ...g })));
+  const ledger = loadLedger(LEDGER_PATH, ["component", "dim", "value"]);
+  const { unledgered, stale } = diffLedger({ current, ledger, idOf: pseudoGapId });
+  const code = reportRatchet({
+    label: "pseudo-state",
+    current,
+    unledgered,
+    stale,
+    idOf: pseudoGapId,
+  });
+  if (code !== 0) process.exit(code);
 }

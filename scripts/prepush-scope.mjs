@@ -25,6 +25,10 @@ const PATTERNS = {
   // iconography has its own emission ledger gate (ledger-icons.mjs --check),
   // separate from the codegen rail's generated-tree drift diff.
   iconography: /^packages\/ds-iconography\//,
+  // styling-realization ledgers (dead slots + pseudo-state gaps). Their inputs
+  // are the contract corpus, the generated React CSS/TSX they classify against,
+  // and the audits themselves — so a change to any of those can move a verdict.
+  stylingAudits: /^(packages\/ds-(contracts|react)\/|scripts\/(dead-slot|pseudo-state)-audit\/|scripts\/lib\/ledger-ratchet)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -42,6 +46,7 @@ export function classify(files, opts = {}) {
   const codegen = full || has("codegen");
   const generated = full || has("generated");
   const iconography = full || has("iconography");
+  const stylingAudits = full || has("stylingAudits");
   const lintable = full || has("lintable");
   const typed = full || has("typed");
   const testable = full || has("testable");
@@ -65,6 +70,11 @@ export function classify(files, opts = {}) {
     // iconography ledger gate: separate emission model from the codegen rail,
     // so it has its own flag rather than riding genGroup.
     RUN_ICONOGRAPHY: iconography,
+    // styling-realization ledgers: the gate of record for the dead-slot and
+    // pseudo-state ratchets (RAIL-STYLING-REALIZATION-LEDGERS-01). Its own flag
+    // rather than genGroup — it classifies committed generated output, so it is
+    // meaningful even when nothing regenerates.
+    RUN_STYLING_AUDITS: stylingAudits,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)
