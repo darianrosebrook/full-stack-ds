@@ -1,0 +1,36 @@
+id: FALLBACK-STALE-01
+title: 'Derive contract fallback literals from the resolved token graph; [FALLBACK_STALE] gate replaces [FALLBACK_DIVERGENT]'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-07-28T22:23:48.827Z'
+updated_at: '2026-07-28T22:23:48.827Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/validation'
+    - 'packages/ds-codegen/src/cli.ts'
+    - 'packages/ds-contracts/components'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-figma-plugin/src'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a contract fallback that disagrees with the resolved token graph terminal value; when generate:check runs; then [FALLBACK_STALE] reports it with the derived correct literal'
+non_functional: {}
+contracts:
+  - name: 'fallback-stale'
+    type: contract-test
+    path: 'packages/ds-codegen/src/validation/fallback-completeness.test.ts'
