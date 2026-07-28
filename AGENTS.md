@@ -89,6 +89,18 @@ pnpm run e2e                                   # Full Playwright suite
 
 `.githooks/pre-push` runs the same 13-step sequence as `.github/workflows/ci.yml`. Activate per-clone with `git config core.hooksPath .githooks` (the `prepare` script attempts this automatically). If the local hook passes, CI should pass. Do not `--no-verify` to dodge gate failures — fix the underlying issue.
 
+### CAWS slice lifecycle (spec → branch → work → merge → close)
+
+Non-trivial work is governed by a CAWS spec so its provenance is recorded. The full flow, in order:
+
+1. **Create the spec before branching.** `caws specs create <SPEC-ID> --title "…" --mode feature --risk-tier 2 --scope-in <paths…> --acceptance "given…; when…; then…" --contract <name>:<type>[:<path>]`. Fill `invariants:` + `blast_radius:` in the YAML, validate with `caws specs validate <file>`, then commit the spec (`git commit -m "chore(caws): create <SPEC-ID>"`). Tier 1/2 specs require at least one `contract:` entry.
+2. **Branch from `main`.** `git checkout -b <feat/…> main`. Do the work in scoped commits (`feat(…)`, `fix(…)`, `docs(…)`, one per logical phase). When done, run the full gate locally: `pnpm run governed:rail && pnpm test && pnpm run test:frameworks`.
+3. **Merge into local `main` — not to a remote feature branch.** This repo's rule: **`origin` only ever receives `main`.** Do not `git push` a feature branch. Either fast-forward (`git checkout main && git merge --ff-only <branch>`) when `main` hasn't moved, or `--no-ff` with a `merge(worktree): …` message when it has. The pre-push hook fires only on `git push`, so a local merge never skips the gate — the *next* `git push origin main` runs it over the merged range.
+4. **Close the spec after the merge lands on `main`.** `caws specs close <SPEC-ID> --resolution completed --merge-commit $(git rev-parse HEAD) --reason "<one-line summary>"`. Keep `--reason` a **single line** — a multi-line block-scalar trips a known `partial_failure_unrecovered` defect in the close path. `caws specs close` auto-commits the YAML flip as its own `chore(caws): close <SPEC-ID>` commit, so the working tree stays clean.
+5. **Record acceptance-criteria evidence.** For each `A1…An` in the spec, `caws evidence record --type ac --spec <SPEC-ID> --data '{"criterion_id":"A1","status":"pass","evidence_ref":"…","command":"…","exit_code":0}'`. This backfills the audit chain so closure is evidence-backed, not just merge-triggered (the lesson from `ICONOGRAPHY-EMISSION-LEDGER-01`).
+
+**Do not** hand-edit `.caws/specs/*` lifecycle fields, `.caws/events.jsonl`, or `.caws/worktrees.json` — use the CLI. **Do not** `caws specs close` *before* merging and then also run `caws worktree merge` — the double-close is mutually exclusive and fails; pick one path (this repo uses the plain-`git merge` + manual `caws specs close` flow above). If a `caws worktree create` was used (worktree-bound flow), prefer `caws worktree merge <name> --dry-run` first, then the real merge — and never weaken a guard to get past it.
+
 ### CAWS runtime hooks govern every session (`.Codex/hooks/`)
 
 Separate from the git pre-push hook above, this repo installs the **CAWS Codex hook pack** under `.Codex/hooks/`. These fire on `PreToolUse` / `PostToolUse` / `SessionStart` / `Stop` / `PreCompact` (wired in `.Codex/settings.json` → `caws_dispatch/`) and actively gate your work — some **block** tool calls. The ones most likely to stop you:
