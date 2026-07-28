@@ -1,0 +1,36 @@
+id: RAIL-STYLING-REALIZATION-LEDGERS-01
+title: 'Two-directional ledger ratchet for the dead-slot and pseudo-state audits, gated at pre-push'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-28T23:26:23.709Z'
+updated_at: '2026-07-28T23:26:23.709Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/dead-slot-audit'
+    - 'scripts/pseudo-state-audit'
+    - 'scripts/prepush-scope.mjs'
+    - '.githooks'
+    - '.github/workflows/ci.yml'
+    - 'package.json'
+    - 'docs/dead-slot-audit'
+    - 'docs/pseudo-state-audit'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an unledgered finding or a stale ledger entry; when the audit runs; then it exits non-zero'
+non_functional: {}
+contracts:
+  - name: 'styling-ledger-ratchet'
+    type: contract-test
+    path: 'scripts/dead-slot-audit/selfcheck.mjs'
