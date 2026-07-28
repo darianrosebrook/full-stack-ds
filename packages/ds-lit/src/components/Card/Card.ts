@@ -63,7 +63,7 @@ export class CardElement extends LitElement {
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
-      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -297,7 +297,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
-      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -513,7 +513,7 @@ export class CardContentElement extends LitElement {
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
-      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -729,7 +729,7 @@ export class CardFooterElement extends LitElement {
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
-      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -945,7 +945,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
-      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }

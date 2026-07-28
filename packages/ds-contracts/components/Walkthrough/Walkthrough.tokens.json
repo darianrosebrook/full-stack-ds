@@ -81,7 +81,7 @@
   },
   "walkthrough.dots.active": {
     "resolvesTo": "semantic.color.action.background.primary.default",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "walkthrough.dots.idle": {
@@ -91,7 +91,7 @@
   },
   "walkthrough.button.primary.bg": {
     "resolvesTo": "semantic.color.action.background.primary.default",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "walkthrough.button.primary.color": {

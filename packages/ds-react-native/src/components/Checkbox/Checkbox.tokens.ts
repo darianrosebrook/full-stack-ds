@@ -121,7 +121,7 @@ export const checkboxTokenScopes = {
       name: "checkbox.focus.ring.color",
       cssVar: "--fsds-checkbox-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "checkbox.focus.ring.style": {
       name: "checkbox.focus.ring.style",
@@ -149,7 +149,7 @@ export const checkboxTokenScopes = {
       name: "checkbox.color.background.default",
       cssVar: "--fsds-checkbox-color-background-default",
       ref: "semantic.color.action.background.primary.default",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
   },
   "disabled": {

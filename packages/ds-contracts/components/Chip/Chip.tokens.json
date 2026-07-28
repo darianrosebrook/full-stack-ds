@@ -76,7 +76,7 @@
   },
   "chip.focus.ring.color": {
     "resolvesTo": "semantic.focus.ring.color",
-    "fallback": "#0a65fe",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "chip.focus.ring.style": {

@@ -241,7 +241,7 @@ export const textFieldTokenScopes = {
       name: "text-field.focus.ring.color",
       cssVar: "--fsds-text-field-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "text-field.focus.ring.style": {
       name: "text-field.focus.ring.style",

@@ -55,7 +55,7 @@ export class FieldElement extends LitElement {
       --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
       --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -267,7 +267,7 @@ export class FieldHeaderElement extends LitElement {
       --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
       --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }

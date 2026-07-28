@@ -164,7 +164,7 @@ export const chipTokenScopes = {
       name: "chip.focus.ring.color",
       cssVar: "--fsds-chip-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "chip.focus.ring.style": {
       name: "chip.focus.ring.style",

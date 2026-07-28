@@ -205,7 +205,7 @@ export const fieldTokenScopes = {
       name: "field.focus.ring.color",
       cssVar: "--fsds-field-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "field.focus.ring.style": {
       name: "field.focus.ring.style",

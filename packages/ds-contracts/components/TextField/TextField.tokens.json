@@ -161,7 +161,7 @@
   },
   "text-field.focus.ring.color": {
     "resolvesTo": "semantic.focus.ring.color",
-    "fallback": "#0a65fe",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "text-field.focus.ring.style": {

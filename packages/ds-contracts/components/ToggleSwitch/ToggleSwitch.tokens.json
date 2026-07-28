@@ -66,7 +66,7 @@
   },
   "toggle-switch.color.background.checked": {
     "resolvesTo": "semantic.color.action.background.primary.default",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "toggle-switch.color.background.disabled": {
@@ -81,7 +81,7 @@
   },
   "toggle-switch.focus.ring.color": {
     "resolvesTo": "semantic.focus.ring.color",
-    "fallback": "#0a65fe",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "toggle-switch.focus.ring.style": {

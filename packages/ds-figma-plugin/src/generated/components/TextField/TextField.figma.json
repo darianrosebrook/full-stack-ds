@@ -252,7 +252,7 @@
           "--fsds-text-field-typography-supporting-line-height": "var(--fsds-semantic-typography-line-height-normal, 1.5)",
           "--fsds-text-field-opacity-disabled": "var(--fsds-semantic-interaction-disabled-opacity, 0.5)",
           "--fsds-text-field-focus-ring-width": "var(--fsds-semantic-focus-ring-width, 2px)",
-          "--fsds-text-field-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0a65fe)",
+          "--fsds-text-field-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0566fe)",
           "--fsds-text-field-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
           "--fsds-text-field-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
           "--fsds-text-field-motion-duration-fast": "var(--fsds-core-motion-duration-short, 150ms)",

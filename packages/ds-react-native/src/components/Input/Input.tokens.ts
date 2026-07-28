@@ -205,7 +205,7 @@ export const inputTokenScopes = {
       name: "input.focus.ring.color",
       cssVar: "--fsds-input-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "input.focus.ring.style": {
       name: "input.focus.ring.style",

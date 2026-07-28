@@ -36,7 +36,7 @@
   },
   "button.color.background.default": {
     "resolvesTo": "semantic.color.action.background.primary.default",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "button.color.background.hover": {
@@ -51,7 +51,7 @@
   },
   "button.color.background.disabled": {
     "resolvesTo": "semantic.color.action.background.primary.disabled",
-    "fallback": "#cecece",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "button.color.foreground.default": {

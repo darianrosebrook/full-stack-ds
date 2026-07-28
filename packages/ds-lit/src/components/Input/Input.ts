@@ -56,7 +56,7 @@ export class InputElement extends LitElement {
       --fsds-input-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-input-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
       --fsds-input-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-input-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-input-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-input-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-input-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
       --fsds-input-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);

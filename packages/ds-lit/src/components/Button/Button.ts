@@ -37,10 +37,10 @@ export class ButtonElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 36px);
       --fsds-box-model-max-height: none;
-      --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
       --fsds-button-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-button-color-background-active: var(--fsds-semantic-interaction-background-active, #cecece);
-      --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #cecece);
+      --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #b8b8b8);
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);

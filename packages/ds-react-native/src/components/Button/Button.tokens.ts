@@ -86,7 +86,7 @@ export const buttonTokenScopes = {
       name: "button.color.background.default",
       cssVar: "--fsds-button-color-background-default",
       ref: "semantic.color.action.background.primary.default",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "button.color.background.hover": {
       name: "button.color.background.hover",
@@ -104,7 +104,7 @@ export const buttonTokenScopes = {
       name: "button.color.background.disabled",
       cssVar: "--fsds-button-color-background-disabled",
       ref: "semantic.color.action.background.primary.disabled",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
     "button.color.foreground.default": {
       name: "button.color.foreground.default",

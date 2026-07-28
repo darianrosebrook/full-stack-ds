@@ -148,7 +148,7 @@
   ":has(.checkbox__input:checked) .checkbox__indicator": {
     "checkbox.color.background.default": {
       "resolvesTo": "semantic.color.action.background.primary.default",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     }
   },
   ":has(.checkbox__input:disabled) .checkbox__indicator": {

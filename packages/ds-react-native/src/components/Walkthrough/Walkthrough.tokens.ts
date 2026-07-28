@@ -170,7 +170,7 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.dots.active",
       cssVar: "--fsds-walkthrough-dots-active",
       ref: "semantic.color.action.background.primary.default",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "walkthrough.dots.idle": {
       name: "walkthrough.dots.idle",
@@ -182,7 +182,7 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.button.primary.bg",
       cssVar: "--fsds-walkthrough-button-primary-bg",
       ref: "semantic.color.action.background.primary.default",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "walkthrough.button.primary.color": {
       name: "walkthrough.button.primary.color",

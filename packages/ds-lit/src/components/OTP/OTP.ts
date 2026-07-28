@@ -43,7 +43,7 @@ export class OTPElement extends LitElement {
       --fsds-otp-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-otp-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-otp-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-otp-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-otp-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-otp-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -166,7 +166,7 @@ export class OTPGroupElement extends LitElement {
       --fsds-otp-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-otp-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-otp-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-otp-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-otp-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-otp-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }

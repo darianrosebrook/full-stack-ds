@@ -52,7 +52,7 @@ export class SelectElement extends LitElement {
       --fsds-select-font-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -312,7 +312,7 @@ export class SelectTriggerElement extends LitElement {
       --fsds-select-font-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -510,7 +510,7 @@ export class SelectContentElement extends LitElement {
       --fsds-select-font-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
@@ -708,7 +708,7 @@ export class SelectOptionElement extends LitElement {
       --fsds-select-font-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }

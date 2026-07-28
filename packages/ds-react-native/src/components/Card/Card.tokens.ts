@@ -241,7 +241,7 @@ export const cardTokenScopes = {
       name: "card.color.focus.ring",
       cssVar: "--fsds-card-color-focus-ring",
       ref: "semantic.focus.ring.color",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "card.focus.ring.width": {
       name: "card.focus.ring.width",

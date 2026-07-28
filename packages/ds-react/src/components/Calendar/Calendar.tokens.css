@@ -24,7 +24,7 @@
   --fsds-calendar-color-day-selected-foreground: var(--fsds-semantic-color-foreground-inverse, #fafafa);
   --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
   --fsds-calendar-color-today-ring: var(--fsds-semantic-color-border-accent, #d9292b);
-  --fsds-calendar-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+  --fsds-calendar-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
   --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
   --fsds-calendar-size-cell: var(--fsds-core-spacing-size-08, 32px);
   --fsds-calendar-size-nav: var(--fsds-core-spacing-size-07, 24px);

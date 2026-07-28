@@ -128,7 +128,7 @@ export const linksTokenScopes = {
       name: "links.focus.ring.color",
       cssVar: "--fsds-links-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "links.focus.ring.style": {
       name: "links.focus.ring.style",

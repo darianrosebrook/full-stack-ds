@@ -127,7 +127,7 @@ export const otpTokenScopes = {
       name: "otp.focus.ring.color",
       cssVar: "--fsds-otp-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "otp.focus.ring.style": {
       name: "otp.focus.ring.style",

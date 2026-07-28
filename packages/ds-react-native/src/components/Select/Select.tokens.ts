@@ -175,7 +175,7 @@ export const selectTokenScopes = {
       name: "select.focus.ring.color",
       cssVar: "--fsds-select-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "select.focus.ring.style": {
       name: "select.focus.ring.style",

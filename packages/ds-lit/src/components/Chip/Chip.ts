@@ -51,7 +51,7 @@ export class ChipElement extends LitElement {
       --fsds-chip-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-chip-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-chip-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
-      --fsds-chip-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-chip-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-chip-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-chip-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
       --fsds-chip-size-minHeight: var(--fsds-core-dimension-actionMinHeight, 32px);

@@ -140,7 +140,7 @@ export const calendarTokenScopes = {
       name: "calendar.color.focus.ring",
       cssVar: "--fsds-calendar-color-focus-ring",
       ref: "semantic.focus.ring.color",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "calendar.size.padding.default": {
       name: "calendar.size.padding.default",

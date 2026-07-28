@@ -122,7 +122,7 @@ export const toggleSwitchTokenScopes = {
       name: "toggle-switch.color.background.checked",
       cssVar: "--fsds-toggle-switch-color-background-checked",
       ref: "semantic.color.action.background.primary.default",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "toggle-switch.color.background.disabled": {
       name: "toggle-switch.color.background.disabled",
@@ -140,7 +140,7 @@ export const toggleSwitchTokenScopes = {
       name: "toggle-switch.focus.ring.color",
       cssVar: "--fsds-toggle-switch-focus-ring-color",
       ref: "semantic.focus.ring.color",
-      fallback: "#0a65fe",
+      fallback: "#0566fe",
     },
     "toggle-switch.focus.ring.style": {
       name: "toggle-switch.focus.ring.style",

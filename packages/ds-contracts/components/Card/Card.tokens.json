@@ -161,7 +161,7 @@
   },
   "card.color.focus.ring": {
     "resolvesTo": "semantic.focus.ring.color",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "card.focus.ring.width": {
