@@ -31,7 +31,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "toast.spacing.stackGap"
+      "resolvesTo": "toast.spacing.stackGap",
+      "fallback": "8px"
     },
     "z-index": {
       "literal": "1000",
@@ -48,10 +49,12 @@
   },
   "item": {
     "background-color": {
-      "resolvesTo": "toast.surface.bg"
+      "resolvesTo": "toast.surface.bg",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "toast.surface.border"
+      "resolvesTo": "toast.surface.border",
+      "fallback": "#cecece"
     },
     "border-style": {
       "literal": "solid",
@@ -66,16 +69,20 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "toast.surface.radius"
+      "resolvesTo": "toast.surface.radius",
+      "fallback": "8px"
     },
     "box-shadow": {
-      "resolvesTo": "toast.surface.shadow"
+      "resolvesTo": "toast.surface.shadow",
+      "fallback": "0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)"
     },
     "padding": {
-      "resolvesTo": "toast.spacing.padding"
+      "resolvesTo": "toast.spacing.padding",
+      "fallback": "12px"
     },
     "max-width": {
-      "resolvesTo": "toast.size.maxWidth"
+      "resolvesTo": "toast.size.maxWidth",
+      "fallback": "400px"
     },
     "display": {
       "literal": "flex",
@@ -122,7 +129,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "toast.spacing.gap"
+      "resolvesTo": "toast.spacing.gap",
+      "fallback": "8px"
     },
     "flex": {
       "literal": "1 1 auto",
@@ -159,7 +167,8 @@
       ]
     },
     "color": {
-      "resolvesTo": "toast.color.default"
+      "resolvesTo": "toast.color.default",
+      "fallback": "#141414"
     },
     "font-size": {
       "literal": "inherit",
@@ -200,7 +209,8 @@
       ]
     },
     "color": {
-      "resolvesTo": "toast.color.default"
+      "resolvesTo": "toast.color.default",
+      "fallback": "#141414"
     }
   },
   "close": {
@@ -247,7 +257,8 @@
       ]
     },
     "color": {
-      "resolvesTo": "toast.color.default"
+      "resolvesTo": "toast.color.default",
+      "fallback": "#141414"
     },
     "flex-shrink": {
       "literal": "0",

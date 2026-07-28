@@ -1,22 +1,76 @@
 {
   "root": {
-    "display": { "literal": "inline-block", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-block",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "trigger": {
-    "display": { "literal": "inline-flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "content": {
-    "background-color": { "resolvesTo": "tooltip.color.background.default" },
-    "color": { "resolvesTo": "tooltip.color.foreground.default" },
-    "border-color": { "resolvesTo": "tooltip.color.border.default" },
-    "border-radius": { "resolvesTo": "tooltip.size.radius.default" },
-    "padding": { "resolvesTo": "tooltip.size.padding.x" },
-    "max-width": { "resolvesTo": "tooltip.size.maxWidth" },
-    "z-index": { "resolvesTo": "tooltip.layer.content" },
-    "font-size": { "resolvesTo": "tooltip.typography.fontSize" },
-    "display": { "literal": "inline-block", "platforms": ["web"] },
-    "border-style": { "literal": "solid", "platforms": ["web"] },
-    "border-width": { "literal": "1px", "platforms": ["web"] }
+    "background-color": {
+      "resolvesTo": "tooltip.color.background.default",
+      "fallback": "#141414"
+    },
+    "color": {
+      "resolvesTo": "tooltip.color.foreground.default",
+      "fallback": "#fafafa"
+    },
+    "border-color": {
+      "resolvesTo": "tooltip.color.border.default",
+      "fallback": "#cecece"
+    },
+    "border-radius": {
+      "resolvesTo": "tooltip.size.radius.default",
+      "fallback": "4px"
+    },
+    "padding": {
+      "resolvesTo": "tooltip.size.padding.x",
+      "fallback": "8px"
+    },
+    "max-width": {
+      "resolvesTo": "tooltip.size.maxWidth",
+      "fallback": "200px"
+    },
+    "z-index": {
+      "resolvesTo": "tooltip.layer.content",
+      "fallback": "1800"
+    },
+    "font-size": {
+      "resolvesTo": "tooltip.typography.fontSize",
+      "fallback": "14px"
+    },
+    "display": {
+      "literal": "inline-block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-width": {
+      "literal": "1px",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

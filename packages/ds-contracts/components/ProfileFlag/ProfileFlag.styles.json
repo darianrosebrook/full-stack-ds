@@ -1,27 +1,34 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "profile-flag.color.background.default"
+      "resolvesTo": "profile-flag.color.background.default",
+      "fallback": "#ffffff"
     },
     "border-color": {
-      "resolvesTo": "profile-flag.color.border.default"
+      "resolvesTo": "profile-flag.color.border.default",
+      "fallback": "#fceaea"
     },
     "color": {
-      "resolvesTo": "profile-flag.color.foreground.primary"
+      "resolvesTo": "profile-flag.color.foreground.primary",
+      "fallback": "#141414"
     },
     "border-radius": {
-      "resolvesTo": "profile-flag.size.radius.default"
+      "resolvesTo": "profile-flag.size.radius.default",
+      "fallback": "8px"
     },
     "gap": {
-      "resolvesTo": "profile-flag.spacing.gap.default"
+      "resolvesTo": "profile-flag.spacing.gap.default",
+      "fallback": "4px"
     },
     "padding": {
-      "resolvesTo": "profile-flag.spacing.padding.right"
+      "resolvesTo": "profile-flag.spacing.padding.right",
+      "fallback": "16px"
     }
   },
   "hover": {
     "border-color": {
-      "resolvesTo": "profile-flag.color.border.hover"
+      "resolvesTo": "profile-flag.color.border.hover",
+      "fallback": "#8f8f8f"
     }
   }
 }

@@ -2,178 +2,237 @@
   "root": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "text-field.spacing.gap"
+      "resolvesTo": "text-field.spacing.gap",
+      "fallback": "8px"
     }
   },
   "label": {
     "display": {
       "literal": "inline-block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
-      "resolvesTo": "text-field.typography.label.size"
+      "resolvesTo": "text-field.typography.label.size",
+      "fallback": "0.875rem"
     },
     "font-weight": {
-      "resolvesTo": "text-field.typography.label.weight"
+      "resolvesTo": "text-field.typography.label.weight",
+      "fallback": "500"
     },
     "line-height": {
-      "resolvesTo": "text-field.typography.label.line-height"
+      "resolvesTo": "text-field.typography.label.line-height",
+      "fallback": "1.5"
     },
     "color": {
-      "resolvesTo": "text-field.color.input.text"
+      "resolvesTo": "text-field.color.input.text",
+      "fallback": "#141414"
     }
   },
   "field": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "box-sizing": {
       "literal": "border-box",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
-      "resolvesTo": "text-field.color.input.background"
+      "resolvesTo": "text-field.color.input.background",
+      "fallback": "#ffffff"
     },
     "border-color": {
-      "resolvesTo": "text-field.color.input.border"
+      "resolvesTo": "text-field.color.input.border",
+      "fallback": "#aeaeae"
     },
     "border-width": {
-      "resolvesTo": "text-field.border.width"
+      "resolvesTo": "text-field.border.width",
+      "fallback": "1px"
     },
     "border-radius": {
-      "resolvesTo": "text-field.border.radius"
+      "resolvesTo": "text-field.border.radius",
+      "fallback": "8px"
     },
     "color": {
-      "resolvesTo": "text-field.color.input.text"
+      "resolvesTo": "text-field.color.input.text",
+      "fallback": "#141414"
     },
     "font-size": {
-      "resolvesTo": "text-field.typography.field.size"
+      "resolvesTo": "text-field.typography.field.size",
+      "fallback": "1rem"
     },
     "line-height": {
-      "resolvesTo": "text-field.typography.field.line-height"
+      "resolvesTo": "text-field.typography.field.line-height",
+      "fallback": "1.5"
     },
     "min-height": {
-      "resolvesTo": "text-field.field.min-height"
+      "resolvesTo": "text-field.field.min-height",
+      "fallback": "36px"
     },
     "padding-block": {
-      "resolvesTo": "text-field.field.padding-block"
+      "resolvesTo": "text-field.field.padding-block",
+      "fallback": "8px"
     },
     "padding-inline": {
-      "resolvesTo": "text-field.field.padding-inline"
+      "resolvesTo": "text-field.field.padding-inline",
+      "fallback": "12px"
     },
     "transition-property": {
       "literal": "background-color, border-color, color, outline-color",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "transition-duration": {
-      "resolvesTo": "text-field.motion.duration.fast"
+      "resolvesTo": "text-field.motion.duration.fast",
+      "fallback": "150ms"
     },
     "transition-timing-function": {
-      "resolvesTo": "text-field.motion.easing.standard"
+      "resolvesTo": "text-field.motion.easing.standard",
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
     }
   },
   "description": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
-      "resolvesTo": "text-field.typography.supporting.size"
+      "resolvesTo": "text-field.typography.supporting.size",
+      "fallback": "0.875rem"
     },
     "line-height": {
-      "resolvesTo": "text-field.typography.supporting.line-height"
+      "resolvesTo": "text-field.typography.supporting.line-height",
+      "fallback": "1.5"
     },
     "color": {
-      "resolvesTo": "text-field.color.supporting.text"
+      "resolvesTo": "text-field.color.supporting.text",
+      "fallback": "#717171"
     }
   },
   "error": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
-      "resolvesTo": "text-field.typography.supporting.size"
+      "resolvesTo": "text-field.typography.supporting.size",
+      "fallback": "0.875rem"
     },
     "line-height": {
-      "resolvesTo": "text-field.typography.supporting.line-height"
+      "resolvesTo": "text-field.typography.supporting.line-height",
+      "fallback": "1.5"
     },
     "color": {
-      "resolvesTo": "text-field.color.error"
+      "resolvesTo": "text-field.color.error",
+      "fallback": "#d9292b"
     }
   },
   ".text-field__field::placeholder": {
     "color": {
-      "resolvesTo": "text-field.color.input.placeholder"
+      "resolvesTo": "text-field.color.input.placeholder",
+      "fallback": "#717171"
     }
   },
   ".text-field__field:hover:not(:disabled)": {
     "border-color": {
-      "resolvesTo": "text-field.color.input.borderHover"
+      "resolvesTo": "text-field.color.input.borderHover",
+      "fallback": "#8f8f8f"
     }
   },
   ".text-field__field:focus-visible": {
     "border-color": {
-      "resolvesTo": "text-field.focus.ring.color"
+      "resolvesTo": "text-field.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-width": {
-      "resolvesTo": "text-field.focus.ring.width"
+      "resolvesTo": "text-field.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "text-field.focus.ring.color"
+      "resolvesTo": "text-field.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-style": {
-      "resolvesTo": "text-field.focus.ring.style"
+      "resolvesTo": "text-field.focus.ring.style",
+      "fallback": "solid"
     },
     "outline-offset": {
-      "resolvesTo": "text-field.focus.ring.offset"
+      "resolvesTo": "text-field.focus.ring.offset",
+      "fallback": "2px"
     }
   },
   ".text-field--invalid .text-field__field": {
     "border-color": {
-      "resolvesTo": "text-field.color.input.borderError"
+      "resolvesTo": "text-field.color.input.borderError",
+      "fallback": "#d9292b"
     }
   },
   ".text-field--invalid .text-field__field:focus-visible": {
     "border-color": {
-      "resolvesTo": "text-field.color.input.borderError"
+      "resolvesTo": "text-field.color.input.borderError",
+      "fallback": "#d9292b"
     },
     "outline-color": {
-      "resolvesTo": "text-field.color.input.borderError"
+      "resolvesTo": "text-field.color.input.borderError",
+      "fallback": "#d9292b"
     }
   },
   ".text-field__field:disabled": {
     "background-color": {
-      "resolvesTo": "text-field.color.input.backgroundDisabled"
+      "resolvesTo": "text-field.color.input.backgroundDisabled",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "text-field.color.input.borderDisabled"
+      "resolvesTo": "text-field.color.input.borderDisabled",
+      "fallback": "#cecece"
     },
     "color": {
-      "resolvesTo": "text-field.color.input.textDisabled"
+      "resolvesTo": "text-field.color.input.textDisabled",
+      "fallback": "#717171"
     },
     "opacity": {
-      "resolvesTo": "text-field.opacity.disabled"
+      "resolvesTo": "text-field.opacity.disabled",
+      "fallback": "0.5"
     },
     "cursor": {
       "literal": "not-allowed",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

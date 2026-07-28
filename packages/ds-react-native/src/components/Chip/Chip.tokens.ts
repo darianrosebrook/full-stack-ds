@@ -220,6 +220,7 @@ export const chipTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "chip.size.gap",
+      fallback: 2,
     },
   },
   "part_dismiss": {
@@ -227,21 +228,25 @@ export const chipTokenScopes = {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       ref: "chip.dismiss.size",
+      fallback: 16,
     },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "chip.dismiss.size",
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
       cssVar: "--fsds-box-model-width",
       ref: "chip.dismiss.size",
+      fallback: 16,
     },
     "box-model.height": {
       name: "box-model.height",
       cssVar: "--fsds-box-model-height",
       ref: "chip.dismiss.size",
+      fallback: 16,
     },
   },
   "variant_selected": {

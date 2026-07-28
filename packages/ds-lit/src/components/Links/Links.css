@@ -6,57 +6,57 @@
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
   padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-links-spacing-gap-default);
+  gap: var(--fsds-links-spacing-gap-default, 2px);
   width: var(--fsds-box-model-width);
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-links-color-foreground-default);
-  font-size: var(--fsds-links-size-fontSize-medium);
-  text-decoration-color: var(--fsds-links-color-underline-default);
+  color: var(--fsds-links-color-foreground-default, #d9292b);
+  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
+  text-decoration-color: var(--fsds-links-color-underline-default, #fceaea);
   text-decoration-line: underline;
   text-underline-offset: 2px;
   transition-property: color, text-decoration-color;
-  transition-duration: var(--fsds-links-motion-duration-fast);
+  transition-duration: var(--fsds-links-motion-duration-fast, 150ms);
   cursor: pointer;
 
   &:hover {
-    color: var(--fsds-links-color-foreground-hover);
-    text-decoration-color: var(--fsds-links-color-foreground-hover);
+    color: var(--fsds-links-color-foreground-hover, #ae0001);
+    text-decoration-color: var(--fsds-links-color-foreground-hover, #ae0001);
   }
 
   &:visited {
-    color: var(--fsds-links-color-foreground-visited);
+    color: var(--fsds-links-color-foreground-visited, #9b0002);
   }
 
   &:disabled {
-    color: var(--fsds-links-color-foreground-disabled);
+    color: var(--fsds-links-color-foreground-disabled, #aeaeae);
     cursor: not-allowed;
     text-decoration-line: none;
     pointer-events: none;
   }
 
   &:focus-visible {
-    outline-width: var(--fsds-links-focus-ring-width);
-    outline-color: var(--fsds-links-focus-ring-color);
-    outline-style: var(--fsds-links-focus-ring-style);
-    outline-offset: var(--fsds-links-focus-ring-offset);
-    border-radius: var(--fsds-links-focus-ring-radius);
+    outline-width: var(--fsds-links-focus-ring-width, 2px);
+    outline-color: var(--fsds-links-focus-ring-color, #0a65fe);
+    outline-style: var(--fsds-links-focus-ring-style, solid);
+    outline-offset: var(--fsds-links-focus-ring-offset, 2px);
+    border-radius: var(--fsds-links-focus-ring-radius, 2px);
   }
 }
 
 .links--small {
-  font-size: var(--fsds-links-size-fontSize-medium);
+  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
 }
 
 .links--medium {
-  font-size: var(--fsds-links-size-fontSize-medium);
+  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
 }
 
 .links--large {
-  font-size: var(--fsds-links-size-fontSize-medium);
+  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
 }
 /* @generated:end */
 

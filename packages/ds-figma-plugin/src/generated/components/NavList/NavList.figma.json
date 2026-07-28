@@ -158,7 +158,7 @@
         "declarations": {
           "display": "flex",
           "flex-direction": "column",
-          "gap": "var(--fsds-nav-list-size-gap-list)",
+          "gap": "var(--fsds-nav-list-size-gap-list, 2px)",
           "list-style": "none",
           "margin": "0",
           "padding": "0"
@@ -168,10 +168,10 @@
         "selector": ".nav-list__item",
         "declarations": {
           "display": "block",
-          "color": "var(--fsds-nav-list-color-foreground-default)",
-          "padding-block": "var(--fsds-nav-list-size-padding-block)",
-          "padding-inline": "var(--fsds-nav-list-size-padding-inline)",
-          "border-radius": "var(--fsds-nav-list-size-radius-default)",
+          "color": "var(--fsds-nav-list-color-foreground-default, #555555)",
+          "padding-block": "var(--fsds-nav-list-size-padding-block, 4px)",
+          "padding-inline": "var(--fsds-nav-list-size-padding-inline, 8px)",
+          "border-radius": "var(--fsds-nav-list-size-radius-default, 8px)",
           "transition-property": "background-color, color",
           "transition-duration": "120ms"
         }
@@ -180,14 +180,14 @@
         "selector": ".nav-list__item:hover",
         "declarations": {
           "background-color": "color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent)",
-          "color": "var(--fsds-nav-list-color-foreground-hover)"
+          "color": "var(--fsds-nav-list-color-foreground-hover, #141414)"
         }
       },
       {
         "selector": ".nav-list__item[aria-current=\"page\"]",
         "declarations": {
           "background-color": "color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent)",
-          "color": "var(--fsds-nav-list-color-foreground-current)"
+          "color": "var(--fsds-nav-list-color-foreground-current, #141414)"
         }
       }
     ],

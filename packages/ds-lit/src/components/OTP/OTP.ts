@@ -79,18 +79,18 @@ export class OTPElement extends LitElement {
       box-sizing: border-box;
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-otp-size-radius-default);
-      border-color: var(--fsds-otp-color-border-default);
-      background-color: var(--fsds-otp-color-background-default);
-      color: var(--fsds-otp-color-foreground-primary);
+      border-radius: var(--fsds-otp-size-radius-default, 8px);
+      border-color: var(--fsds-otp-color-border-default, #fceaea);
+      background-color: var(--fsds-otp-color-background-default, #efefef);
+      color: var(--fsds-otp-color-foreground-primary, #141414);
     }
 
     .otp__field:focus-visible {
-      border-color: var(--fsds-otp-color-border-accent);
-      outline-width: var(--fsds-otp-focus-ring-width);
-      outline-color: var(--fsds-otp-focus-ring-color);
-      outline-style: var(--fsds-otp-focus-ring-style);
-      outline-offset: var(--fsds-otp-focus-ring-offset);
+      border-color: var(--fsds-otp-color-border-accent, #d9292b);
+      outline-width: var(--fsds-otp-focus-ring-width, 2px);
+      outline-color: var(--fsds-otp-focus-ring-color, #0a65fe);
+      outline-style: var(--fsds-otp-focus-ring-style, solid);
+      outline-offset: var(--fsds-otp-focus-ring-offset, 2px);
     }
 
     .otp__field:disabled {
@@ -197,18 +197,18 @@ export class OTPGroupElement extends LitElement {
       box-sizing: border-box;
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-otp-size-radius-default);
-      border-color: var(--fsds-otp-color-border-default);
-      background-color: var(--fsds-otp-color-background-default);
-      color: var(--fsds-otp-color-foreground-primary);
+      border-radius: var(--fsds-otp-size-radius-default, 8px);
+      border-color: var(--fsds-otp-color-border-default, #fceaea);
+      background-color: var(--fsds-otp-color-background-default, #efefef);
+      color: var(--fsds-otp-color-foreground-primary, #141414);
     }
 
     .otp__field:focus-visible {
-      border-color: var(--fsds-otp-color-border-accent);
-      outline-width: var(--fsds-otp-focus-ring-width);
-      outline-color: var(--fsds-otp-focus-ring-color);
-      outline-style: var(--fsds-otp-focus-ring-style);
-      outline-offset: var(--fsds-otp-focus-ring-offset);
+      border-color: var(--fsds-otp-color-border-accent, #d9292b);
+      outline-width: var(--fsds-otp-focus-ring-width, 2px);
+      outline-color: var(--fsds-otp-focus-ring-color, #0a65fe);
+      outline-style: var(--fsds-otp-focus-ring-style, solid);
+      outline-offset: var(--fsds-otp-focus-ring-offset, 2px);
     }
 
     .otp__field:disabled {

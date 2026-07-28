@@ -13,49 +13,106 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "image.color.background.default"
+      "resolvesTo": "image.color.background.default",
+      "fallback": "#efefef"
     },
     "color": {
-      "resolvesTo": "image.color.foreground.primary"
+      "resolvesTo": "image.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   ".image--size-xs": {
-    "width": { "resolvesTo": "image.size.xs" },
-    "height": { "resolvesTo": "image.size.xs" }
+    "width": {
+      "resolvesTo": "image.size.xs",
+      "fallback": "24px"
+    },
+    "height": {
+      "resolvesTo": "image.size.xs",
+      "fallback": "24px"
+    }
   },
   ".image--size-sm": {
-    "width": { "resolvesTo": "image.size.sm" },
-    "height": { "resolvesTo": "image.size.sm" }
+    "width": {
+      "resolvesTo": "image.size.sm",
+      "fallback": "32px"
+    },
+    "height": {
+      "resolvesTo": "image.size.sm",
+      "fallback": "32px"
+    }
   },
   ".image--size-md": {
-    "width": { "resolvesTo": "image.size.md" },
-    "height": { "resolvesTo": "image.size.md" }
+    "width": {
+      "resolvesTo": "image.size.md",
+      "fallback": "48px"
+    },
+    "height": {
+      "resolvesTo": "image.size.md",
+      "fallback": "48px"
+    }
   },
   ".image--size-lg": {
-    "width": { "resolvesTo": "image.size.lg" },
-    "height": { "resolvesTo": "image.size.lg" }
+    "width": {
+      "resolvesTo": "image.size.lg",
+      "fallback": "64px"
+    },
+    "height": {
+      "resolvesTo": "image.size.lg",
+      "fallback": "64px"
+    }
   },
   ".image--size-xl": {
-    "width": { "resolvesTo": "image.size.xl" },
-    "height": { "resolvesTo": "image.size.xl" }
+    "width": {
+      "resolvesTo": "image.size.xl",
+      "fallback": "96px"
+    },
+    "height": {
+      "resolvesTo": "image.size.xl",
+      "fallback": "96px"
+    }
   },
   ".image--size-full": {
-    "width": { "literal": "100%", "platforms": ["web"] },
-    "height": { "literal": "auto", "platforms": ["web"] }
+    "width": {
+      "literal": "100%",
+      "platforms": [
+        "web"
+      ]
+    },
+    "height": {
+      "literal": "auto",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   ".image--radius-none": {
-    "border-radius": { "resolvesTo": "image.radius.none" }
+    "border-radius": {
+      "resolvesTo": "image.radius.none",
+      "fallback": "0px"
+    }
   },
   ".image--radius-sm": {
-    "border-radius": { "resolvesTo": "image.radius.sm" }
+    "border-radius": {
+      "resolvesTo": "image.radius.sm",
+      "fallback": "4px"
+    }
   },
   ".image--radius-md": {
-    "border-radius": { "resolvesTo": "image.radius.md" }
+    "border-radius": {
+      "resolvesTo": "image.radius.md",
+      "fallback": "8px"
+    }
   },
   ".image--radius-lg": {
-    "border-radius": { "resolvesTo": "image.radius.lg" }
+    "border-radius": {
+      "resolvesTo": "image.radius.lg",
+      "fallback": "16px"
+    }
   },
   ".image--radius-full": {
-    "border-radius": { "resolvesTo": "image.radius.full" }
+    "border-radius": {
+      "resolvesTo": "image.radius.full",
+      "fallback": "9999px"
+    }
   }
 }

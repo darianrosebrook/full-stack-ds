@@ -94,8 +94,8 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "color": "var(--fsds-label-color-text-default)",
-          "line-height": "var(--fsds-label-typo-lineHeight-default)"
+          "color": "var(--fsds-label-color-text-default, #141414)",
+          "line-height": "var(--fsds-label-typo-lineHeight-default, 1.2)"
         }
       }
     ],

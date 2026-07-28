@@ -67,18 +67,18 @@ export class PopoverElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-popover-size-gap-default);
+      gap: var(--fsds-popover-size-gap-default, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      padding: var(--fsds-popover-size-padding-default);
-      border-radius: var(--fsds-popover-size-radius-default);
-      background-color: var(--fsds-popover-color-background-content);
-      border-color: var(--fsds-popover-color-border-accent);
-      box-shadow: var(--fsds-popover-elevation-default);
+      padding: var(--fsds-popover-size-padding-default, 16px);
+      border-radius: var(--fsds-popover-size-radius-default, 8px);
+      background-color: var(--fsds-popover-color-background-content, #efefef);
+      border-color: var(--fsds-popover-color-border-accent, #d9292b);
+      box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
       position: relative;
       display: inline-block;
     }
@@ -90,13 +90,13 @@ export class PopoverElement extends LitElement {
     }
     
     [data-popover-content] {
-      background-color: var(--fsds-popover-color-background-content);
-      border-color: var(--fsds-popover-color-border-accent);
-      border-radius: var(--fsds-popover-size-radius-default);
-      padding: var(--fsds-popover-size-padding-default);
-      gap: var(--fsds-popover-size-gap-default);
-      box-shadow: var(--fsds-popover-elevation-default);
-      z-index: var(--fsds-popover-layer-content);
+      background-color: var(--fsds-popover-color-background-content, #efefef);
+      border-color: var(--fsds-popover-color-border-accent, #d9292b);
+      border-radius: var(--fsds-popover-size-radius-default, 8px);
+      padding: var(--fsds-popover-size-padding-default, 16px);
+      gap: var(--fsds-popover-size-gap-default, 8px);
+      box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
+      z-index: var(--fsds-popover-layer-content, 1000);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
@@ -238,18 +238,18 @@ export class PopoverTriggerElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-popover-size-gap-default);
+      gap: var(--fsds-popover-size-gap-default, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      padding: var(--fsds-popover-size-padding-default);
-      border-radius: var(--fsds-popover-size-radius-default);
-      background-color: var(--fsds-popover-color-background-content);
-      border-color: var(--fsds-popover-color-border-accent);
-      box-shadow: var(--fsds-popover-elevation-default);
+      padding: var(--fsds-popover-size-padding-default, 16px);
+      border-radius: var(--fsds-popover-size-radius-default, 8px);
+      background-color: var(--fsds-popover-color-background-content, #efefef);
+      border-color: var(--fsds-popover-color-border-accent, #d9292b);
+      box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
       position: relative;
       display: inline-block;
     }
@@ -261,13 +261,13 @@ export class PopoverTriggerElement extends LitElement {
     }
     
     [data-popover-content] {
-      background-color: var(--fsds-popover-color-background-content);
-      border-color: var(--fsds-popover-color-border-accent);
-      border-radius: var(--fsds-popover-size-radius-default);
-      padding: var(--fsds-popover-size-padding-default);
-      gap: var(--fsds-popover-size-gap-default);
-      box-shadow: var(--fsds-popover-elevation-default);
-      z-index: var(--fsds-popover-layer-content);
+      background-color: var(--fsds-popover-color-background-content, #efefef);
+      border-color: var(--fsds-popover-color-border-accent, #d9292b);
+      border-radius: var(--fsds-popover-size-radius-default, 8px);
+      padding: var(--fsds-popover-size-padding-default, 16px);
+      gap: var(--fsds-popover-size-gap-default, 8px);
+      box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
+      z-index: var(--fsds-popover-layer-content, 1000);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
@@ -386,18 +386,18 @@ export class PopoverContentElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-popover-size-gap-default);
+      gap: var(--fsds-popover-size-gap-default, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      padding: var(--fsds-popover-size-padding-default);
-      border-radius: var(--fsds-popover-size-radius-default);
-      background-color: var(--fsds-popover-color-background-content);
-      border-color: var(--fsds-popover-color-border-accent);
-      box-shadow: var(--fsds-popover-elevation-default);
+      padding: var(--fsds-popover-size-padding-default, 16px);
+      border-radius: var(--fsds-popover-size-radius-default, 8px);
+      background-color: var(--fsds-popover-color-background-content, #efefef);
+      border-color: var(--fsds-popover-color-border-accent, #d9292b);
+      box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
       position: relative;
       display: inline-block;
     }
@@ -409,13 +409,13 @@ export class PopoverContentElement extends LitElement {
     }
     
     [data-popover-content] {
-      background-color: var(--fsds-popover-color-background-content);
-      border-color: var(--fsds-popover-color-border-accent);
-      border-radius: var(--fsds-popover-size-radius-default);
-      padding: var(--fsds-popover-size-padding-default);
-      gap: var(--fsds-popover-size-gap-default);
-      box-shadow: var(--fsds-popover-elevation-default);
-      z-index: var(--fsds-popover-layer-content);
+      background-color: var(--fsds-popover-color-background-content, #efefef);
+      border-color: var(--fsds-popover-color-border-accent, #d9292b);
+      border-radius: var(--fsds-popover-size-radius-default, 8px);
+      padding: var(--fsds-popover-size-padding-default, 16px);
+      gap: var(--fsds-popover-size-gap-default, 8px);
+      box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
+      z-index: var(--fsds-popover-layer-content, 1000);
       display: inline-block;
       border-style: solid;
       border-width: 1px;

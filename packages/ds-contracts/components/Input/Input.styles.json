@@ -2,109 +2,143 @@
   "root": {
     "box-sizing": {
       "literal": "border-box",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-width": {
-      "resolvesTo": "input.size.border.default"
+      "resolvesTo": "input.size.border.default",
+      "fallback": "1px"
     },
     "background-color": {
-      "resolvesTo": "input.color.bg.default"
+      "resolvesTo": "input.color.bg.default",
+      "fallback": "#ffffff"
     },
     "color": {
-      "resolvesTo": "input.color.text.default"
+      "resolvesTo": "input.color.text.default",
+      "fallback": "#141414"
     },
     "border-color": {
-      "resolvesTo": "input.color.border.default"
+      "resolvesTo": "input.color.border.default",
+      "fallback": "#aeaeae"
     },
     "min-height": {
-      "resolvesTo": "input.size.height.default"
+      "resolvesTo": "input.size.height.default",
+      "fallback": "36px"
     },
     "border-radius": {
-      "resolvesTo": "input.size.radius.default"
+      "resolvesTo": "input.size.radius.default",
+      "fallback": "8px"
     },
     "font-size": {
-      "resolvesTo": "input.typography.size.default"
+      "resolvesTo": "input.typography.size.default",
+      "fallback": "1rem"
     },
     "line-height": {
-      "resolvesTo": "input.typography.line-height.default"
+      "resolvesTo": "input.typography.line-height.default",
+      "fallback": "1.5"
     },
     "padding-block": {
-      "resolvesTo": "input.size.padding-block.default"
+      "resolvesTo": "input.size.padding-block.default",
+      "fallback": "8px"
     },
     "padding-inline": {
-      "resolvesTo": "input.size.padding-inline.default"
+      "resolvesTo": "input.size.padding-inline.default",
+      "fallback": "12px"
     },
     "transition-property": {
       "literal": "background-color, border-color, color, outline-color",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "transition-duration": {
-      "resolvesTo": "input.motion.duration.fast"
+      "resolvesTo": "input.motion.duration.fast",
+      "fallback": "150ms"
     },
     "transition-timing-function": {
-      "resolvesTo": "input.motion.easing.standard"
+      "resolvesTo": "input.motion.easing.standard",
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
     }
   },
   "::placeholder": {
     "color": {
-      "resolvesTo": "input.color.text.placeholder"
+      "resolvesTo": "input.color.text.placeholder",
+      "fallback": "#717171"
     }
   },
   "hover": {
     "border-color": {
-      "resolvesTo": "input.color.border.hover"
+      "resolvesTo": "input.color.border.hover",
+      "fallback": "#8f8f8f"
     }
   },
   "focus": {
     "border-color": {
-      "resolvesTo": "input.color.focus.default"
+      "resolvesTo": "input.color.focus.default",
+      "fallback": "#d9292b"
     },
     "outline-width": {
-      "resolvesTo": "input.focus.ring.width"
+      "resolvesTo": "input.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "input.focus.ring.color"
+      "resolvesTo": "input.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-style": {
-      "resolvesTo": "input.focus.ring.style"
+      "resolvesTo": "input.focus.ring.style",
+      "fallback": "solid"
     },
     "outline-offset": {
-      "resolvesTo": "input.focus.ring.offset"
+      "resolvesTo": "input.focus.ring.offset",
+      "fallback": "2px"
     }
   },
   "--invalid": {
     "border-color": {
-      "resolvesTo": "input.color.invalid.default"
+      "resolvesTo": "input.color.invalid.default",
+      "fallback": "#ae0001"
     }
   },
   ".input--invalid:focus-visible": {
     "border-color": {
-      "resolvesTo": "input.color.invalid.default"
+      "resolvesTo": "input.color.invalid.default",
+      "fallback": "#ae0001"
     },
     "outline-color": {
-      "resolvesTo": "semantic.focus.ring.intent.danger"
+      "resolvesTo": "semantic.focus.ring.intent.danger",
+      "fallback": "#b31b1b"
     }
   },
   "disabled": {
     "background-color": {
-      "resolvesTo": "input.color.bg.disabled"
+      "resolvesTo": "input.color.bg.disabled",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "input.color.border.disabled"
+      "resolvesTo": "input.color.border.disabled",
+      "fallback": "#cecece"
     },
     "color": {
-      "resolvesTo": "input.color.text.disabled"
+      "resolvesTo": "input.color.text.disabled",
+      "fallback": "#717171"
     },
     "opacity": {
-      "resolvesTo": "input.opacity.disabled"
+      "resolvesTo": "input.opacity.disabled",
+      "fallback": "0.5"
     },
     "cursor": {
       "literal": "not-allowed",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

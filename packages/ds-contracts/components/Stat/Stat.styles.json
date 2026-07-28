@@ -7,19 +7,23 @@
       ]
     },
     "color": {
-      "resolvesTo": "stat.color.foreground.value"
+      "resolvesTo": "stat.color.foreground.value",
+      "fallback": "#141414"
     },
     "font-size": {
-      "resolvesTo": "stat.size.value.md"
+      "resolvesTo": "stat.size.value.md",
+      "fallback": "24px"
     },
     "font-weight": {
-      "resolvesTo": "stat.typography.weight.value"
+      "resolvesTo": "stat.typography.weight.value",
+      "fallback": "700"
     },
     "line-height": {
       "resolvesTo": "stat.typography.lineHeight.value",
       "platforms": [
         "web"
-      ]
+      ],
+      "fallback": "1.1"
     },
     "letter-spacing": {
       "literal": "-0.02em",
@@ -30,27 +34,32 @@
   },
   "--up": {
     "color": {
-      "resolvesTo": "stat.color.foreground.trend.up"
+      "resolvesTo": "stat.color.foreground.trend.up",
+      "fallback": "#1f8a4c"
     }
   },
   "--down": {
     "color": {
-      "resolvesTo": "stat.color.foreground.trend.down"
+      "resolvesTo": "stat.color.foreground.trend.down",
+      "fallback": "#d9292b"
     }
   },
   "--neutral": {
     "color": {
-      "resolvesTo": "stat.color.foreground.trend.neutral"
+      "resolvesTo": "stat.color.foreground.trend.neutral",
+      "fallback": "#555555"
     }
   },
   "--sm": {
     "font-size": {
-      "resolvesTo": "stat.size.value.sm"
+      "resolvesTo": "stat.size.value.sm",
+      "fallback": "18px"
     }
   },
   "--lg": {
     "font-size": {
-      "resolvesTo": "stat.size.value.lg"
+      "resolvesTo": "stat.size.value.lg",
+      "fallback": "32px"
     }
   }
 }

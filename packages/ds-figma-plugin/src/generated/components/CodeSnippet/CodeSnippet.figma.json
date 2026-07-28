@@ -122,25 +122,25 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "background-color": "var(--fsds-code-snippet-color-background-default)",
-          "border-color": "var(--fsds-code-snippet-color-border-default)",
+          "background-color": "var(--fsds-code-snippet-color-background-default, #efefef)",
+          "border-color": "var(--fsds-code-snippet-color-border-default, #cecece)",
           "border-style": "solid",
-          "border-width": "var(--fsds-code-snippet-size-border-default)",
-          "border-radius": "var(--fsds-code-snippet-size-radius-default)",
-          "color": "var(--fsds-code-snippet-color-foreground-primary)",
+          "border-width": "var(--fsds-code-snippet-size-border-default, 1px)",
+          "border-radius": "var(--fsds-code-snippet-size-radius-default, 8px)",
+          "color": "var(--fsds-code-snippet-color-foreground-primary, #141414)",
           "font-family": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
-          "font-size": "var(--fsds-code-snippet-size-fontSize-default)",
-          "line-height": "var(--fsds-code-snippet-typography-lineHeight-default)",
+          "font-size": "var(--fsds-code-snippet-size-fontSize-default, 0.875rem)",
+          "line-height": "var(--fsds-code-snippet-typography-lineHeight-default, 1.5)",
           "margin": "0",
-          "padding-block": "var(--fsds-code-snippet-size-padding-block)",
-          "padding-inline": "var(--fsds-code-snippet-size-padding-inline)",
+          "padding-block": "var(--fsds-code-snippet-size-padding-block, 1px)",
+          "padding-inline": "var(--fsds-code-snippet-size-padding-inline, 2px)",
           "white-space": "nowrap"
         }
       },
       {
         "selector": ".code-snippet--kbd",
         "declarations": {
-          "box-shadow": "var(--fsds-code-snippet-elevation-kbd)",
+          "box-shadow": "var(--fsds-code-snippet-elevation-kbd, 0 1px 1px rgba(0,0,0,0.14))",
           "font-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)"
         }
       },

@@ -1,7 +1,8 @@
 {
   "root": {
     "transition-duration": {
-      "resolvesTo": "spinner.anim.duration"
+      "resolvesTo": "spinner.anim.duration",
+      "fallback": "800ms"
     }
   },
   "visual": {
@@ -42,13 +43,16 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "spinner.thickness.regular"
+      "resolvesTo": "spinner.thickness.regular",
+      "fallback": "3px"
     },
     "border-color": {
-      "resolvesTo": "spinner.color.track"
+      "resolvesTo": "spinner.color.track",
+      "fallback": "#cecece"
     },
     "border-top-color": {
-      "resolvesTo": "spinner.color.accent"
+      "resolvesTo": "spinner.color.accent",
+      "fallback": "#d9292b"
     },
     "animation": {
       "literal": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite",
@@ -59,37 +63,44 @@
   },
   "--xs": {
     "font-size": {
-      "resolvesTo": "spinner.size.xs"
+      "resolvesTo": "spinner.size.xs",
+      "fallback": "12px"
     }
   },
   "--sm": {
     "font-size": {
-      "resolvesTo": "spinner.size.sm"
+      "resolvesTo": "spinner.size.sm",
+      "fallback": "16px"
     }
   },
   "--md": {
     "font-size": {
-      "resolvesTo": "spinner.size.md"
+      "resolvesTo": "spinner.size.md",
+      "fallback": "20px"
     }
   },
   "--lg": {
     "font-size": {
-      "resolvesTo": "spinner.size.lg"
+      "resolvesTo": "spinner.size.lg",
+      "fallback": "24px"
     }
   },
   ".spinner--hairline .spinner__visual": {
     "border-width": {
-      "resolvesTo": "spinner.thickness.hairline"
+      "resolvesTo": "spinner.thickness.hairline",
+      "fallback": "2px"
     }
   },
   ".spinner--regular .spinner__visual": {
     "border-width": {
-      "resolvesTo": "spinner.thickness.regular"
+      "resolvesTo": "spinner.thickness.regular",
+      "fallback": "3px"
     }
   },
   ".spinner--bold .spinner__visual": {
     "border-width": {
-      "resolvesTo": "spinner.thickness.bold"
+      "resolvesTo": "spinner.thickness.bold",
+      "fallback": "4px"
     }
   }
 }

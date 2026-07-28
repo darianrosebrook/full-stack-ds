@@ -1,98 +1,158 @@
 {
   "root": {
     "color": {
-      "resolvesTo": "blockquote.color.foreground.primary"
+      "resolvesTo": "blockquote.color.foreground.primary",
+      "fallback": "#555555"
     },
     "background-color": {
-      "resolvesTo": "blockquote.color.background.default"
+      "resolvesTo": "blockquote.color.background.default",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "blockquote.color.border.default"
+      "resolvesTo": "blockquote.color.border.default",
+      "fallback": "#d9292b"
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-width": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-radius": {
-      "resolvesTo": "blockquote.size.radius.default"
+      "resolvesTo": "blockquote.size.radius.default",
+      "fallback": "8px"
     },
     "padding": {
-      "resolvesTo": "blockquote.size.padding.default"
+      "resolvesTo": "blockquote.size.padding.default",
+      "fallback": "12px"
     },
     "font-size": {
-      "resolvesTo": "blockquote.size.fontSize.md"
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "fallback": "1rem"
     },
     "font-style": {
-      "resolvesTo": "blockquote.typography.fontStyle"
+      "resolvesTo": "blockquote.typography.fontStyle",
+      "fallback": "italic"
     },
     "font-weight": {
-      "resolvesTo": "blockquote.typography.fontWeight"
+      "resolvesTo": "blockquote.typography.fontWeight",
+      "fallback": "500"
     },
     "margin": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--default": {
-    "blockquote.color.background.default": { "resolvesTo": "semantic.color.background.secondary", "fallback": "#efefef" },
+    "blockquote.color.background.default": {
+      "resolvesTo": "semantic.color.background.secondary",
+      "fallback": "#efefef"
+    },
     "border-width": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--bordered": {
-    "blockquote.color.background.default": { "resolvesTo": "semantic.color.background.primary", "fallback": "#ffffff" },
-    "blockquote.size.padding.default": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" },
+    "blockquote.color.background.default": {
+      "resolvesTo": "semantic.color.background.primary",
+      "fallback": "#ffffff"
+    },
+    "blockquote.size.padding.default": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
     "border-inline-start-width": {
-      "resolvesTo": "blockquote.size.border.thick"
+      "resolvesTo": "blockquote.size.border.thick",
+      "fallback": "2px"
     },
     "border-inline-start-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-inline-start-color": {
-      "resolvesTo": "blockquote.color.border.default"
+      "resolvesTo": "blockquote.color.border.default",
+      "fallback": "#d9292b"
     },
     "padding-inline-start": {
-      "resolvesTo": "blockquote.size.padding.default"
+      "resolvesTo": "blockquote.size.padding.default",
+      "fallback": "12px"
     }
   },
   "--highlighted": {
-    "blockquote.color.background.default": { "resolvesTo": "semantic.color.background.accentSubtle", "fallback": "#fceaea" },
-    "blockquote.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.primary", "fallback": "#141414" }
+    "blockquote.color.background.default": {
+      "resolvesTo": "semantic.color.background.accentSubtle",
+      "fallback": "#fceaea"
+    },
+    "blockquote.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414"
+    }
   },
   "--sm": {
-    "blockquote.size.padding.default": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
-    "blockquote.size.fontSize.md": { "resolvesTo": "core.typography.ramp.3", "fallback": "0.875rem" },
+    "blockquote.size.padding.default": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "blockquote.size.fontSize.md": {
+      "resolvesTo": "core.typography.ramp.3",
+      "fallback": "0.875rem"
+    },
     "font-size": {
-      "resolvesTo": "blockquote.size.fontSize.md"
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "fallback": "1rem"
     },
     "padding": {
-      "resolvesTo": "blockquote.size.padding.default"
+      "resolvesTo": "blockquote.size.padding.default",
+      "fallback": "12px"
     }
   },
   "--md": {
-    "blockquote.size.padding.default": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" },
-    "blockquote.size.fontSize.md": { "resolvesTo": "core.typography.ramp.4", "fallback": "1rem" },
+    "blockquote.size.padding.default": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "blockquote.size.fontSize.md": {
+      "resolvesTo": "core.typography.ramp.4",
+      "fallback": "1rem"
+    },
     "font-size": {
-      "resolvesTo": "blockquote.size.fontSize.md"
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "fallback": "1rem"
     },
     "padding": {
-      "resolvesTo": "blockquote.size.padding.default"
+      "resolvesTo": "blockquote.size.padding.default",
+      "fallback": "12px"
     }
   },
   "--lg": {
-    "blockquote.size.padding.default": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" },
-    "blockquote.size.fontSize.md": { "resolvesTo": "core.typography.ramp.5", "fallback": "1.125rem" },
+    "blockquote.size.padding.default": {
+      "resolvesTo": "core.spacing.size.07",
+      "fallback": "24px"
+    },
+    "blockquote.size.fontSize.md": {
+      "resolvesTo": "core.typography.ramp.5",
+      "fallback": "1.125rem"
+    },
     "font-size": {
-      "resolvesTo": "blockquote.size.fontSize.md"
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "fallback": "1rem"
     },
     "padding": {
-      "resolvesTo": "blockquote.size.padding.default"
+      "resolvesTo": "blockquote.size.padding.default",
+      "fallback": "12px"
     }
   }
 }

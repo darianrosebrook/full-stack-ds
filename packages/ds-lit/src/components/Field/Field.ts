@@ -84,7 +84,7 @@ export class FieldElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-field-gap-y);
+      gap: var(--fsds-field-gap-y, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -93,21 +93,21 @@ export class FieldElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-radius: var(--fsds-field-radius);
+      border-radius: var(--fsds-field-radius, 8px);
     }
 
     .field__label {
       display: inline-block;
-      font-size: var(--fsds-field-label-fontSize);
+      font-size: var(--fsds-field-label-fontSize, 14px);
       font-weight: 500;
-      color: var(--fsds-field-label-color);
+      color: var(--fsds-field-label-color, #555555);
     }
 
     .field__header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      gap: var(--fsds-field-gap-meta);
+      gap: var(--fsds-field-gap-meta, 4px);
     }
 
     .field__control {
@@ -117,47 +117,47 @@ export class FieldElement extends LitElement {
       box-sizing: border-box;
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-field-radius);
-      border-color: var(--fsds-field-color-border);
-      background-color: var(--fsds-field-color-bg);
-      padding: var(--fsds-field-pad-x);
+      border-radius: var(--fsds-field-radius, 8px);
+      border-color: var(--fsds-field-color-border, #cecece);
+      background-color: var(--fsds-field-color-bg, #ffffff);
+      padding: var(--fsds-field-pad-x, 12px);
     }
 
     .field__help {
       display: block;
       font-size: 0.875em;
-      color: var(--fsds-field-color-fg);
+      color: var(--fsds-field-color-fg, #141414);
     }
 
     .field__error {
       display: block;
       font-size: 0.875em;
-      color: var(--fsds-field-color-invalid-text);
+      color: var(--fsds-field-color-invalid-text, #d9292b);
     }
 
     .field__meta {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-field-gap-meta);
+      gap: var(--fsds-field-gap-meta, 4px);
     }
 
     .field__validatingIndicator {
       display: inline-flex;
       width: 1em;
       height: 1em;
-      color: var(--fsds-field-color-fg);
+      color: var(--fsds-field-color-fg, #141414);
     }
 
     .field__control:focus-within {
-      border-color: var(--fsds-field-color-focus-border);
-      outline-width: var(--fsds-field-focus-ring-width);
-      outline-color: var(--fsds-field-focus-ring-color);
-      outline-style: var(--fsds-field-focus-ring-style);
-      outline-offset: var(--fsds-field-focus-ring-offset);
+      border-color: var(--fsds-field-color-focus-border, #d9292b);
+      outline-width: var(--fsds-field-focus-ring-width, 2px);
+      outline-color: var(--fsds-field-focus-ring-color, #0a65fe);
+      outline-style: var(--fsds-field-focus-ring-style, solid);
+      outline-offset: var(--fsds-field-focus-ring-offset, 2px);
     }
 
     .field--invalid .field__control {
-      border-color: var(--fsds-field-color-invalid-border);
+      border-color: var(--fsds-field-color-invalid-border, #ae0001);
     }
 
     .field--disabled .field__control {
@@ -166,7 +166,7 @@ export class FieldElement extends LitElement {
     }
 
     .field--valid .field__control {
-      border-color: var(--fsds-field-color-valid-border);
+      border-color: var(--fsds-field-color-valid-border, #336006);
     }
   `;
 
@@ -291,7 +291,7 @@ export class FieldHeaderElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-field-gap-y);
+      gap: var(--fsds-field-gap-y, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -300,21 +300,21 @@ export class FieldHeaderElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-radius: var(--fsds-field-radius);
+      border-radius: var(--fsds-field-radius, 8px);
     }
 
     .field__label {
       display: inline-block;
-      font-size: var(--fsds-field-label-fontSize);
+      font-size: var(--fsds-field-label-fontSize, 14px);
       font-weight: 500;
-      color: var(--fsds-field-label-color);
+      color: var(--fsds-field-label-color, #555555);
     }
 
     .field__header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      gap: var(--fsds-field-gap-meta);
+      gap: var(--fsds-field-gap-meta, 4px);
     }
 
     .field__control {
@@ -324,47 +324,47 @@ export class FieldHeaderElement extends LitElement {
       box-sizing: border-box;
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-field-radius);
-      border-color: var(--fsds-field-color-border);
-      background-color: var(--fsds-field-color-bg);
-      padding: var(--fsds-field-pad-x);
+      border-radius: var(--fsds-field-radius, 8px);
+      border-color: var(--fsds-field-color-border, #cecece);
+      background-color: var(--fsds-field-color-bg, #ffffff);
+      padding: var(--fsds-field-pad-x, 12px);
     }
 
     .field__help {
       display: block;
       font-size: 0.875em;
-      color: var(--fsds-field-color-fg);
+      color: var(--fsds-field-color-fg, #141414);
     }
 
     .field__error {
       display: block;
       font-size: 0.875em;
-      color: var(--fsds-field-color-invalid-text);
+      color: var(--fsds-field-color-invalid-text, #d9292b);
     }
 
     .field__meta {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-field-gap-meta);
+      gap: var(--fsds-field-gap-meta, 4px);
     }
 
     .field__validatingIndicator {
       display: inline-flex;
       width: 1em;
       height: 1em;
-      color: var(--fsds-field-color-fg);
+      color: var(--fsds-field-color-fg, #141414);
     }
 
     .field__control:focus-within {
-      border-color: var(--fsds-field-color-focus-border);
-      outline-width: var(--fsds-field-focus-ring-width);
-      outline-color: var(--fsds-field-focus-ring-color);
-      outline-style: var(--fsds-field-focus-ring-style);
-      outline-offset: var(--fsds-field-focus-ring-offset);
+      border-color: var(--fsds-field-color-focus-border, #d9292b);
+      outline-width: var(--fsds-field-focus-ring-width, 2px);
+      outline-color: var(--fsds-field-focus-ring-color, #0a65fe);
+      outline-style: var(--fsds-field-focus-ring-style, solid);
+      outline-offset: var(--fsds-field-focus-ring-offset, 2px);
     }
 
     .field--invalid .field__control {
-      border-color: var(--fsds-field-color-invalid-border);
+      border-color: var(--fsds-field-color-invalid-border, #ae0001);
     }
 
     .field--disabled .field__control {
@@ -373,7 +373,7 @@ export class FieldHeaderElement extends LitElement {
     }
 
     .field--valid .field__control {
-      border-color: var(--fsds-field-color-valid-border);
+      border-color: var(--fsds-field-color-valid-border, #336006);
     }
   `;
 

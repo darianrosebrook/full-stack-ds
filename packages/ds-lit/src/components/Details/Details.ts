@@ -77,27 +77,27 @@ export class DetailsElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-details-spacing-gap-default);
+      gap: var(--fsds-details-spacing-gap-default, 2px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      padding: var(--fsds-details-size-padding-default);
-      border-radius: var(--fsds-details-size-radius-default);
-      background-color: var(--fsds-details-color-background-default);
-      line-height: var(--fsds-details-typography-lineHeight-body);
+      padding: var(--fsds-details-size-padding-default, 16px);
+      border-radius: var(--fsds-details-size-radius-default, 8px);
+      background-color: var(--fsds-details-color-background-default, #ffffff);
+      line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
       display: block;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      border-color: var(--fsds-details-color-border-default);
-      color: var(--fsds-details-color-foreground-primary);
+      border-color: var(--fsds-details-color-border-default, #f29495);
+      color: var(--fsds-details-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-details-color-background-hover);
-        border-color: var(--fsds-details-color-border-hover);
+        background-color: var(--fsds-details-color-background-hover, #cecece);
+        border-color: var(--fsds-details-color-border-hover, #8f8f8f);
       }
 
       &[open] .details__icon {
@@ -109,37 +109,37 @@ export class DetailsElement extends LitElement {
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: var(--fsds-details-spacing-gap-default);
+      gap: var(--fsds-details-spacing-gap-default, 2px);
       list-style: none;
-      padding: var(--fsds-details-size-padding-default);
-      color: var(--fsds-details-color-foreground-primary);
-      font-weight: var(--fsds-details-typography-fontWeight-medium);
+      padding: var(--fsds-details-size-padding-default, 16px);
+      color: var(--fsds-details-color-foreground-primary, #141414);
+      font-weight: var(--fsds-details-typography-fontWeight-medium, 500);
     }
 
     .details__summary:focus-visible {
-      outline-width: var(--fsds-details-focus-ring-width);
-      outline-color: var(--fsds-details-focus-ring-color);
-      outline-offset: var(--fsds-details-focus-ring-offset);
+      outline-width: var(--fsds-details-focus-ring-width, 2px);
+      outline-color: var(--fsds-details-focus-ring-color, #d9292b);
+      outline-offset: var(--fsds-details-focus-ring-offset, 2px);
       outline-style: solid;
     }
 
     .details__summaryContent {
       display: flex;
       align-items: center;
-      gap: var(--fsds-details-spacing-gap-default);
+      gap: var(--fsds-details-spacing-gap-default, 2px);
       flex: 1 1 auto;
     }
 
     .details__summaryText {
       flex: 1 1 auto;
-      color: var(--fsds-details-color-foreground-primary);
+      color: var(--fsds-details-color-foreground-primary, #141414);
     }
 
     .details__icon {
       display: inline-flex;
       flex-shrink: 0;
-      width: var(--fsds-details-size-icon);
-      height: var(--fsds-details-size-icon);
+      width: var(--fsds-details-size-icon, 12px);
+      height: var(--fsds-details-size-icon, 12px);
       transition: transform 200ms ease;
       align-items: center;
       justify-content: center;
@@ -147,9 +147,9 @@ export class DetailsElement extends LitElement {
 
     .details__content {
       display: block;
-      padding: var(--fsds-details-size-padding-default);
-      color: var(--fsds-details-color-foreground-primary);
-      line-height: var(--fsds-details-typography-lineHeight-body);
+      padding: var(--fsds-details-size-padding-default, 16px);
+      color: var(--fsds-details-color-foreground-primary, #141414);
+      line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
     }
 
     .details--icon-none .details__icon {
@@ -263,27 +263,27 @@ export class DetailsContentElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-details-spacing-gap-default);
+      gap: var(--fsds-details-spacing-gap-default, 2px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      padding: var(--fsds-details-size-padding-default);
-      border-radius: var(--fsds-details-size-radius-default);
-      background-color: var(--fsds-details-color-background-default);
-      line-height: var(--fsds-details-typography-lineHeight-body);
+      padding: var(--fsds-details-size-padding-default, 16px);
+      border-radius: var(--fsds-details-size-radius-default, 8px);
+      background-color: var(--fsds-details-color-background-default, #ffffff);
+      line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
       display: block;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      border-color: var(--fsds-details-color-border-default);
-      color: var(--fsds-details-color-foreground-primary);
+      border-color: var(--fsds-details-color-border-default, #f29495);
+      color: var(--fsds-details-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-details-color-background-hover);
-        border-color: var(--fsds-details-color-border-hover);
+        background-color: var(--fsds-details-color-background-hover, #cecece);
+        border-color: var(--fsds-details-color-border-hover, #8f8f8f);
       }
 
       &[open] .details__icon {
@@ -295,37 +295,37 @@ export class DetailsContentElement extends LitElement {
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: var(--fsds-details-spacing-gap-default);
+      gap: var(--fsds-details-spacing-gap-default, 2px);
       list-style: none;
-      padding: var(--fsds-details-size-padding-default);
-      color: var(--fsds-details-color-foreground-primary);
-      font-weight: var(--fsds-details-typography-fontWeight-medium);
+      padding: var(--fsds-details-size-padding-default, 16px);
+      color: var(--fsds-details-color-foreground-primary, #141414);
+      font-weight: var(--fsds-details-typography-fontWeight-medium, 500);
     }
 
     .details__summary:focus-visible {
-      outline-width: var(--fsds-details-focus-ring-width);
-      outline-color: var(--fsds-details-focus-ring-color);
-      outline-offset: var(--fsds-details-focus-ring-offset);
+      outline-width: var(--fsds-details-focus-ring-width, 2px);
+      outline-color: var(--fsds-details-focus-ring-color, #d9292b);
+      outline-offset: var(--fsds-details-focus-ring-offset, 2px);
       outline-style: solid;
     }
 
     .details__summaryContent {
       display: flex;
       align-items: center;
-      gap: var(--fsds-details-spacing-gap-default);
+      gap: var(--fsds-details-spacing-gap-default, 2px);
       flex: 1 1 auto;
     }
 
     .details__summaryText {
       flex: 1 1 auto;
-      color: var(--fsds-details-color-foreground-primary);
+      color: var(--fsds-details-color-foreground-primary, #141414);
     }
 
     .details__icon {
       display: inline-flex;
       flex-shrink: 0;
-      width: var(--fsds-details-size-icon);
-      height: var(--fsds-details-size-icon);
+      width: var(--fsds-details-size-icon, 12px);
+      height: var(--fsds-details-size-icon, 12px);
       transition: transform 200ms ease;
       align-items: center;
       justify-content: center;
@@ -333,9 +333,9 @@ export class DetailsContentElement extends LitElement {
 
     .details__content {
       display: block;
-      padding: var(--fsds-details-size-padding-default);
-      color: var(--fsds-details-color-foreground-primary);
-      line-height: var(--fsds-details-typography-lineHeight-body);
+      padding: var(--fsds-details-size-padding-default, 16px);
+      color: var(--fsds-details-color-foreground-primary, #141414);
+      line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
     }
 
     .details--icon-none .details__icon {

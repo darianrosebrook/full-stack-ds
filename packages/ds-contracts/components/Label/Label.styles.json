@@ -1,10 +1,12 @@
 {
   "root": {
     "color": {
-      "resolvesTo": "label.color.text.default"
+      "resolvesTo": "label.color.text.default",
+      "fallback": "#141414"
     },
     "line-height": {
-      "resolvesTo": "label.typo.lineHeight.default"
+      "resolvesTo": "label.typo.lineHeight.default",
+      "fallback": "1.2"
     }
   }
 }

@@ -294,7 +294,7 @@
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
           "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
-          "gap": "var(--fsds-field-gap-y)",
+          "gap": "var(--fsds-field-gap-y, 8px)",
           "width": "var(--fsds-box-model-width)",
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",
@@ -303,16 +303,16 @@
           "max-height": "var(--fsds-box-model-max-height)",
           "display": "flex",
           "flex-direction": "column",
-          "border-radius": "var(--fsds-field-radius)"
+          "border-radius": "var(--fsds-field-radius, 8px)"
         }
       },
       {
         "selector": ".field__label",
         "declarations": {
           "display": "inline-block",
-          "font-size": "var(--fsds-field-label-fontSize)",
+          "font-size": "var(--fsds-field-label-fontSize, 14px)",
           "font-weight": "500",
-          "color": "var(--fsds-field-label-color)"
+          "color": "var(--fsds-field-label-color, #555555)"
         }
       },
       {
@@ -321,7 +321,7 @@
           "display": "flex",
           "align-items": "baseline",
           "justify-content": "space-between",
-          "gap": "var(--fsds-field-gap-meta)"
+          "gap": "var(--fsds-field-gap-meta, 4px)"
         }
       },
       {
@@ -333,10 +333,10 @@
           "box-sizing": "border-box",
           "border-style": "solid",
           "border-width": "1px",
-          "border-radius": "var(--fsds-field-radius)",
-          "border-color": "var(--fsds-field-color-border)",
-          "background-color": "var(--fsds-field-color-bg)",
-          "padding": "var(--fsds-field-pad-x)"
+          "border-radius": "var(--fsds-field-radius, 8px)",
+          "border-color": "var(--fsds-field-color-border, #cecece)",
+          "background-color": "var(--fsds-field-color-bg, #ffffff)",
+          "padding": "var(--fsds-field-pad-x, 12px)"
         }
       },
       {
@@ -344,7 +344,7 @@
         "declarations": {
           "display": "block",
           "font-size": "0.875em",
-          "color": "var(--fsds-field-color-fg)"
+          "color": "var(--fsds-field-color-fg, #141414)"
         }
       },
       {
@@ -352,7 +352,7 @@
         "declarations": {
           "display": "block",
           "font-size": "0.875em",
-          "color": "var(--fsds-field-color-invalid-text)"
+          "color": "var(--fsds-field-color-invalid-text, #d9292b)"
         }
       },
       {
@@ -360,7 +360,7 @@
         "declarations": {
           "display": "flex",
           "flex-direction": "column",
-          "gap": "var(--fsds-field-gap-meta)"
+          "gap": "var(--fsds-field-gap-meta, 4px)"
         }
       },
       {
@@ -369,23 +369,23 @@
           "display": "inline-flex",
           "width": "1em",
           "height": "1em",
-          "color": "var(--fsds-field-color-fg)"
+          "color": "var(--fsds-field-color-fg, #141414)"
         }
       },
       {
         "selector": ".field__control:focus-within",
         "declarations": {
-          "border-color": "var(--fsds-field-color-focus-border)",
-          "outline-width": "var(--fsds-field-focus-ring-width)",
-          "outline-color": "var(--fsds-field-focus-ring-color)",
-          "outline-style": "var(--fsds-field-focus-ring-style)",
-          "outline-offset": "var(--fsds-field-focus-ring-offset)"
+          "border-color": "var(--fsds-field-color-focus-border, #d9292b)",
+          "outline-width": "var(--fsds-field-focus-ring-width, 2px)",
+          "outline-color": "var(--fsds-field-focus-ring-color, #0a65fe)",
+          "outline-style": "var(--fsds-field-focus-ring-style, solid)",
+          "outline-offset": "var(--fsds-field-focus-ring-offset, 2px)"
         }
       },
       {
         "selector": ".field--invalid .field__control",
         "declarations": {
-          "border-color": "var(--fsds-field-color-invalid-border)"
+          "border-color": "var(--fsds-field-color-invalid-border, #ae0001)"
         }
       },
       {
@@ -398,7 +398,7 @@
       {
         "selector": ".field--valid .field__control",
         "declarations": {
-          "border-color": "var(--fsds-field-color-valid-border)"
+          "border-color": "var(--fsds-field-color-valid-border, #336006)"
         }
       },
       {

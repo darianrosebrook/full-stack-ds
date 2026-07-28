@@ -53,21 +53,21 @@ export class ProfileFlagElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-profile-flag-spacing-gap-default);
+      gap: var(--fsds-profile-flag-spacing-gap-default, 4px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-profile-flag-color-background-default);
-      border-color: var(--fsds-profile-flag-color-border-default);
-      color: var(--fsds-profile-flag-color-foreground-primary);
-      border-radius: var(--fsds-profile-flag-size-radius-default);
-      padding: var(--fsds-profile-flag-spacing-padding-right);
+      background-color: var(--fsds-profile-flag-color-background-default, #ffffff);
+      border-color: var(--fsds-profile-flag-color-border-default, #fceaea);
+      color: var(--fsds-profile-flag-color-foreground-primary, #141414);
+      border-radius: var(--fsds-profile-flag-size-radius-default, 8px);
+      padding: var(--fsds-profile-flag-spacing-padding-right, 16px);
 
       &:hover {
-        border-color: var(--fsds-profile-flag-color-border-hover);
+        border-color: var(--fsds-profile-flag-color-border-hover, #8f8f8f);
       }
     }
   `;

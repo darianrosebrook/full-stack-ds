@@ -57,18 +57,18 @@ export class CodeBlockElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-code-block-color-background-default);
-      border-color: var(--fsds-code-block-color-border-default);
+      background-color: var(--fsds-code-block-color-background-default, #efefef);
+      border-color: var(--fsds-code-block-color-border-default, #cecece);
       border-style: solid;
-      border-width: var(--fsds-code-block-size-border-default);
-      border-radius: var(--fsds-code-block-size-radius-default);
-      color: var(--fsds-code-block-color-foreground-primary);
+      border-width: var(--fsds-code-block-size-border-default, 1px);
+      border-radius: var(--fsds-code-block-size-radius-default, 8px);
+      color: var(--fsds-code-block-color-foreground-primary, #141414);
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-      font-size: var(--fsds-code-block-size-fontSize-default);
-      line-height: var(--fsds-code-block-typography-lineHeight-default);
+      font-size: var(--fsds-code-block-size-fontSize-default, 0.875rem);
+      line-height: var(--fsds-code-block-typography-lineHeight-default, 1.5);
       margin: 0;
       overflow-x: auto;
-      padding: var(--fsds-code-block-size-padding-default);
+      padding: var(--fsds-code-block-size-padding-default, 16px);
       tab-size: 2;
       white-space: pre;
     }

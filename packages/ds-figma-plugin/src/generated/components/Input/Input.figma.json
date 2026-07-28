@@ -232,66 +232,66 @@
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",
           "height": "var(--fsds-box-model-height)",
-          "min-height": "var(--fsds-input-size-height-default)",
+          "min-height": "var(--fsds-input-size-height-default, 36px)",
           "max-height": "var(--fsds-box-model-max-height)",
           "box-sizing": "border-box",
           "border-style": "solid",
-          "border-width": "var(--fsds-input-size-border-default)",
-          "background-color": "var(--fsds-input-color-bg-default)",
-          "color": "var(--fsds-input-color-text-default)",
-          "border-color": "var(--fsds-input-color-border-default)",
-          "border-radius": "var(--fsds-input-size-radius-default)",
-          "font-size": "var(--fsds-input-typography-size-default)",
-          "line-height": "var(--fsds-input-typography-line-height-default)",
-          "padding-block": "var(--fsds-input-size-padding-block-default)",
-          "padding-inline": "var(--fsds-input-size-padding-inline-default)",
+          "border-width": "var(--fsds-input-size-border-default, 1px)",
+          "background-color": "var(--fsds-input-color-bg-default, #ffffff)",
+          "color": "var(--fsds-input-color-text-default, #141414)",
+          "border-color": "var(--fsds-input-color-border-default, #aeaeae)",
+          "border-radius": "var(--fsds-input-size-radius-default, 8px)",
+          "font-size": "var(--fsds-input-typography-size-default, 1rem)",
+          "line-height": "var(--fsds-input-typography-line-height-default, 1.5)",
+          "padding-block": "var(--fsds-input-size-padding-block-default, 8px)",
+          "padding-inline": "var(--fsds-input-size-padding-inline-default, 12px)",
           "transition-property": "background-color, border-color, color, outline-color",
-          "transition-duration": "var(--fsds-input-motion-duration-fast)",
-          "transition-timing-function": "var(--fsds-input-motion-easing-standard)"
+          "transition-duration": "var(--fsds-input-motion-duration-fast, 150ms)",
+          "transition-timing-function": "var(--fsds-input-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))"
         }
       },
       {
         "selector": ".input::placeholder",
         "declarations": {
-          "color": "var(--fsds-input-color-text-placeholder)"
+          "color": "var(--fsds-input-color-text-placeholder, #717171)"
         }
       },
       {
         "selector": ".input:hover",
         "declarations": {
-          "border-color": "var(--fsds-input-color-border-hover)"
+          "border-color": "var(--fsds-input-color-border-hover, #8f8f8f)"
         }
       },
       {
         "selector": ".input:focus-visible",
         "declarations": {
-          "border-color": "var(--fsds-input-color-focus-default)",
-          "outline-width": "var(--fsds-input-focus-ring-width)",
-          "outline-color": "var(--fsds-input-focus-ring-color)",
-          "outline-style": "var(--fsds-input-focus-ring-style)",
-          "outline-offset": "var(--fsds-input-focus-ring-offset)"
+          "border-color": "var(--fsds-input-color-focus-default, #d9292b)",
+          "outline-width": "var(--fsds-input-focus-ring-width, 2px)",
+          "outline-color": "var(--fsds-input-focus-ring-color, #0a65fe)",
+          "outline-style": "var(--fsds-input-focus-ring-style, solid)",
+          "outline-offset": "var(--fsds-input-focus-ring-offset, 2px)"
         }
       },
       {
         "selector": ".input--invalid",
         "declarations": {
-          "border-color": "var(--fsds-input-color-invalid-default)"
+          "border-color": "var(--fsds-input-color-invalid-default, #ae0001)"
         }
       },
       {
         "selector": ".input--invalid:focus-visible",
         "declarations": {
-          "border-color": "var(--fsds-input-color-invalid-default)",
-          "outline-color": "var(--fsds-semantic-focus-ring-intent-danger)"
+          "border-color": "var(--fsds-input-color-invalid-default, #ae0001)",
+          "outline-color": "var(--fsds-semantic-focus-ring-intent-danger, #b31b1b)"
         }
       },
       {
         "selector": ".input:disabled",
         "declarations": {
-          "background-color": "var(--fsds-input-color-bg-disabled)",
-          "border-color": "var(--fsds-input-color-border-disabled)",
-          "color": "var(--fsds-input-color-text-disabled)",
-          "opacity": "var(--fsds-input-opacity-disabled)",
+          "background-color": "var(--fsds-input-color-bg-disabled, #efefef)",
+          "border-color": "var(--fsds-input-color-border-disabled, #cecece)",
+          "color": "var(--fsds-input-color-text-disabled, #717171)",
+          "opacity": "var(--fsds-input-opacity-disabled, 0.5)",
           "cursor": "not-allowed"
         }
       }

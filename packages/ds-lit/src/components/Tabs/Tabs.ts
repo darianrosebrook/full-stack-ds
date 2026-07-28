@@ -83,7 +83,7 @@ export class TabsElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap);
+      gap: var(--fsds-tabs-spacing-panelGap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -92,15 +92,15 @@ export class TabsElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      padding: var(--fsds-tabs-spacing-padding);
-      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
-      gap: var(--fsds-tabs-spacing-gap);
-      border-bottom-color: var(--fsds-tabs-color-indicator);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -109,8 +109,8 @@ export class TabsElement extends LitElement {
     .tabs__tab {
       display: inline-flex;
       align-items: center;
-      padding: var(--fsds-tabs-spacing-padding);
-      color: var(--fsds-tabs-color-fg);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      color: var(--fsds-tabs-color-fg, #141414);
       background: transparent;
       border: none;
       cursor: pointer;
@@ -118,17 +118,17 @@ export class TabsElement extends LitElement {
     }
 
     .tabs__tab:hover {
-      color: var(--fsds-tabs-color-hover-fg);
-      background-color: var(--fsds-tabs-color-hover-bg);
+      color: var(--fsds-tabs-color-hover-fg, #141414);
+      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
     }
 
     .tabs__tab--active {
-      color: var(--fsds-tabs-color-active-fg);
-      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg, #141414);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg);
+      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
       cursor: not-allowed;
     }
 
@@ -138,27 +138,27 @@ export class TabsElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator);
+      background-color: var(--fsds-tabs-color-indicator, #d9292b);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs__panel {
       display: block;
-      padding: var(--fsds-tabs-spacing-padding);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
       border-bottom-style: solid;
-      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
 
     .tabs--underline .tabs__indicator {
-      height: var(--fsds-tabs-size-indicator-thickness);
+      height: var(--fsds-tabs-size-indicator-thickness, 2px);
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active);
+      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
     }
 
     .tabs--vertical .tabs__root {
@@ -168,7 +168,7 @@ export class TabsElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -179,24 +179,24 @@ export class TabsElement extends LitElement {
       bottom: 0;
       right: -1px;
       left: auto;
-      width: var(--fsds-tabs-size-indicator-thickness);
+      width: var(--fsds-tabs-size-indicator-thickness, 2px);
       height: auto;
       transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs--pills .tabs__list {
       border-bottom-width: 0;
-      gap: var(--fsds-tabs-spacing-gap);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius);
-      padding: var(--fsds-tabs-spacing-pillPadding);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg);
-      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
     .tabs--pills .tabs__indicator {
@@ -325,7 +325,7 @@ export class TabsListElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap);
+      gap: var(--fsds-tabs-spacing-panelGap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -334,15 +334,15 @@ export class TabsListElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      padding: var(--fsds-tabs-spacing-padding);
-      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
-      gap: var(--fsds-tabs-spacing-gap);
-      border-bottom-color: var(--fsds-tabs-color-indicator);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -351,8 +351,8 @@ export class TabsListElement extends LitElement {
     .tabs__tab {
       display: inline-flex;
       align-items: center;
-      padding: var(--fsds-tabs-spacing-padding);
-      color: var(--fsds-tabs-color-fg);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      color: var(--fsds-tabs-color-fg, #141414);
       background: transparent;
       border: none;
       cursor: pointer;
@@ -360,17 +360,17 @@ export class TabsListElement extends LitElement {
     }
 
     .tabs__tab:hover {
-      color: var(--fsds-tabs-color-hover-fg);
-      background-color: var(--fsds-tabs-color-hover-bg);
+      color: var(--fsds-tabs-color-hover-fg, #141414);
+      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
     }
 
     .tabs__tab--active {
-      color: var(--fsds-tabs-color-active-fg);
-      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg, #141414);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg);
+      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
       cursor: not-allowed;
     }
 
@@ -380,27 +380,27 @@ export class TabsListElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator);
+      background-color: var(--fsds-tabs-color-indicator, #d9292b);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs__panel {
       display: block;
-      padding: var(--fsds-tabs-spacing-padding);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
       border-bottom-style: solid;
-      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
 
     .tabs--underline .tabs__indicator {
-      height: var(--fsds-tabs-size-indicator-thickness);
+      height: var(--fsds-tabs-size-indicator-thickness, 2px);
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active);
+      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
     }
 
     .tabs--vertical .tabs__root {
@@ -410,7 +410,7 @@ export class TabsListElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -421,24 +421,24 @@ export class TabsListElement extends LitElement {
       bottom: 0;
       right: -1px;
       left: auto;
-      width: var(--fsds-tabs-size-indicator-thickness);
+      width: var(--fsds-tabs-size-indicator-thickness, 2px);
       height: auto;
       transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs--pills .tabs__list {
       border-bottom-width: 0;
-      gap: var(--fsds-tabs-spacing-gap);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius);
-      padding: var(--fsds-tabs-spacing-pillPadding);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg);
-      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
     .tabs--pills .tabs__indicator {
@@ -551,7 +551,7 @@ export class TabsTabElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap);
+      gap: var(--fsds-tabs-spacing-panelGap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -560,15 +560,15 @@ export class TabsTabElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      padding: var(--fsds-tabs-spacing-padding);
-      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
-      gap: var(--fsds-tabs-spacing-gap);
-      border-bottom-color: var(--fsds-tabs-color-indicator);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -577,8 +577,8 @@ export class TabsTabElement extends LitElement {
     .tabs__tab {
       display: inline-flex;
       align-items: center;
-      padding: var(--fsds-tabs-spacing-padding);
-      color: var(--fsds-tabs-color-fg);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      color: var(--fsds-tabs-color-fg, #141414);
       background: transparent;
       border: none;
       cursor: pointer;
@@ -586,17 +586,17 @@ export class TabsTabElement extends LitElement {
     }
 
     .tabs__tab:hover {
-      color: var(--fsds-tabs-color-hover-fg);
-      background-color: var(--fsds-tabs-color-hover-bg);
+      color: var(--fsds-tabs-color-hover-fg, #141414);
+      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
     }
 
     .tabs__tab--active {
-      color: var(--fsds-tabs-color-active-fg);
-      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg, #141414);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg);
+      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
       cursor: not-allowed;
     }
 
@@ -606,27 +606,27 @@ export class TabsTabElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator);
+      background-color: var(--fsds-tabs-color-indicator, #d9292b);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs__panel {
       display: block;
-      padding: var(--fsds-tabs-spacing-padding);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
       border-bottom-style: solid;
-      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
 
     .tabs--underline .tabs__indicator {
-      height: var(--fsds-tabs-size-indicator-thickness);
+      height: var(--fsds-tabs-size-indicator-thickness, 2px);
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active);
+      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
     }
 
     .tabs--vertical .tabs__root {
@@ -636,7 +636,7 @@ export class TabsTabElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -647,24 +647,24 @@ export class TabsTabElement extends LitElement {
       bottom: 0;
       right: -1px;
       left: auto;
-      width: var(--fsds-tabs-size-indicator-thickness);
+      width: var(--fsds-tabs-size-indicator-thickness, 2px);
       height: auto;
       transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs--pills .tabs__list {
       border-bottom-width: 0;
-      gap: var(--fsds-tabs-spacing-gap);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius);
-      padding: var(--fsds-tabs-spacing-pillPadding);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg);
-      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
     .tabs--pills .tabs__indicator {
@@ -767,7 +767,7 @@ export class TabsPanelElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap);
+      gap: var(--fsds-tabs-spacing-panelGap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -776,15 +776,15 @@ export class TabsPanelElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      padding: var(--fsds-tabs-spacing-padding);
-      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
-      gap: var(--fsds-tabs-spacing-gap);
-      border-bottom-color: var(--fsds-tabs-color-indicator);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -793,8 +793,8 @@ export class TabsPanelElement extends LitElement {
     .tabs__tab {
       display: inline-flex;
       align-items: center;
-      padding: var(--fsds-tabs-spacing-padding);
-      color: var(--fsds-tabs-color-fg);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
+      color: var(--fsds-tabs-color-fg, #141414);
       background: transparent;
       border: none;
       cursor: pointer;
@@ -802,17 +802,17 @@ export class TabsPanelElement extends LitElement {
     }
 
     .tabs__tab:hover {
-      color: var(--fsds-tabs-color-hover-fg);
-      background-color: var(--fsds-tabs-color-hover-bg);
+      color: var(--fsds-tabs-color-hover-fg, #141414);
+      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
     }
 
     .tabs__tab--active {
-      color: var(--fsds-tabs-color-active-fg);
-      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg, #141414);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg);
+      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
       cursor: not-allowed;
     }
 
@@ -822,27 +822,27 @@ export class TabsPanelElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator);
+      background-color: var(--fsds-tabs-color-indicator, #d9292b);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs__panel {
       display: block;
-      padding: var(--fsds-tabs-spacing-padding);
+      padding: var(--fsds-tabs-spacing-padding, 8px);
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
       border-bottom-style: solid;
-      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
 
     .tabs--underline .tabs__indicator {
-      height: var(--fsds-tabs-size-indicator-thickness);
+      height: var(--fsds-tabs-size-indicator-thickness, 2px);
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active);
+      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
     }
 
     .tabs--vertical .tabs__root {
@@ -852,7 +852,7 @@ export class TabsPanelElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -863,24 +863,24 @@ export class TabsPanelElement extends LitElement {
       bottom: 0;
       right: -1px;
       left: auto;
-      width: var(--fsds-tabs-size-indicator-thickness);
+      width: var(--fsds-tabs-size-indicator-thickness, 2px);
       height: auto;
       transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
 
     .tabs--pills .tabs__list {
       border-bottom-width: 0;
-      gap: var(--fsds-tabs-spacing-gap);
+      gap: var(--fsds-tabs-spacing-gap, 8px);
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius);
-      padding: var(--fsds-tabs-spacing-pillPadding);
+      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg);
-      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
     .tabs--pills .tabs__indicator {

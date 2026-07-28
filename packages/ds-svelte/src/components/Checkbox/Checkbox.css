@@ -35,20 +35,20 @@
   position: relative;
   width: 16px;
   height: 16px;
-  border-radius: var(--fsds-checkbox-border-radius);
-  border-color: var(--fsds-checkbox-color-border-default);
-  background-color: var(--fsds-checkbox-color-background-default);
+  border-radius: var(--fsds-checkbox-border-radius, 4px);
+  border-color: var(--fsds-checkbox-color-border-default, #aeaeae);
+  background-color: var(--fsds-checkbox-color-background-default, #ffffff);
   border-style: solid;
-  border-width: var(--fsds-checkbox-border-width);
+  border-width: var(--fsds-checkbox-border-width, 1px);
   box-sizing: border-box;
-  transition-duration: var(--fsds-checkbox-transition-duration);
+  transition-duration: var(--fsds-checkbox-transition-duration, 150ms);
 }
 
 :has(.checkbox__input:focus-visible) .checkbox__indicator {
-  outline-width: var(--fsds-checkbox-focus-ring-width);
-  outline-color: var(--fsds-checkbox-focus-ring-color);
-  outline-style: var(--fsds-checkbox-focus-ring-style);
-  outline-offset: var(--fsds-checkbox-focus-ring-offset);
+  outline-width: var(--fsds-checkbox-focus-ring-width, 2px);
+  outline-color: var(--fsds-checkbox-focus-ring-color, #0a65fe);
+  outline-style: var(--fsds-checkbox-focus-ring-style, solid);
+  outline-offset: var(--fsds-checkbox-focus-ring-offset, 2px);
 }
 /* @generated:end */
 

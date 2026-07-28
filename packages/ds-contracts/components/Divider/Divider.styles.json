@@ -13,7 +13,8 @@
       ]
     },
     "border-top-color": {
-      "resolvesTo": "divider.color.default"
+      "resolvesTo": "divider.color.default",
+      "fallback": "#fceaea"
     },
     "border-top-style": {
       "literal": "solid",
@@ -22,13 +23,16 @@
       ]
     },
     "border-top-width": {
-      "resolvesTo": "divider.size.thickness"
+      "resolvesTo": "divider.size.thickness",
+      "fallback": "1px"
     },
     "margin-top": {
-      "resolvesTo": "divider.spacing.margin"
+      "resolvesTo": "divider.spacing.margin",
+      "fallback": "8px"
     },
     "margin-bottom": {
-      "resolvesTo": "divider.spacing.margin"
+      "resolvesTo": "divider.spacing.margin",
+      "fallback": "8px"
     }
   },
   "--vertical": {
@@ -51,7 +55,8 @@
       ]
     },
     "border-left-color": {
-      "resolvesTo": "divider.color.default"
+      "resolvesTo": "divider.color.default",
+      "fallback": "#fceaea"
     },
     "border-left-style": {
       "literal": "solid",
@@ -60,7 +65,8 @@
       ]
     },
     "border-left-width": {
-      "resolvesTo": "divider.size.thickness"
+      "resolvesTo": "divider.size.thickness",
+      "fallback": "1px"
     },
     "margin-top": {
       "literal": "0",
@@ -75,10 +81,12 @@
       ]
     },
     "margin-left": {
-      "resolvesTo": "divider.spacing.margin"
+      "resolvesTo": "divider.spacing.margin",
+      "fallback": "8px"
     },
     "margin-right": {
-      "resolvesTo": "divider.spacing.margin"
+      "resolvesTo": "divider.spacing.margin",
+      "fallback": "8px"
     }
   }
 }

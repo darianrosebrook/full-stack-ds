@@ -225,10 +225,10 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "background-color": "var(--fsds-skeleton-color-base)",
-          "border-radius": "var(--fsds-skeleton-radius-md)",
-          "transition-duration": "var(--fsds-skeleton-anim-duration)",
-          "transition-timing-function": "var(--fsds-skeleton-anim-easing)",
+          "background-color": "var(--fsds-skeleton-color-base, #efefef)",
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)",
+          "transition-duration": "var(--fsds-skeleton-anim-duration, 400ms)",
+          "transition-timing-function": "var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1))",
           "animation": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite"
         }
       },
@@ -236,8 +236,8 @@
         "selector": ".skeleton__shape",
         "declarations": {
           "display": "block",
-          "background-color": "var(--fsds-skeleton-color-base)",
-          "border-radius": "var(--fsds-skeleton-radius-md)"
+          "background-color": "var(--fsds-skeleton-color-base, #efefef)",
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)"
         }
       },
       {
@@ -245,14 +245,14 @@
         "declarations": {
           "display": "flex",
           "flex-direction": "column",
-          "gap": "var(--fsds-skeleton-gap-md)"
+          "gap": "var(--fsds-skeleton-gap-md, 12px)"
         }
       },
       {
         "selector": ".skeleton--block",
         "declarations": {
           "--fsds-skeleton-radius-md": "var(--fsds-semantic-shape-radius-medium, 8px)",
-          "border-radius": "var(--fsds-skeleton-radius-md)"
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)"
         }
       },
       {
@@ -260,15 +260,15 @@
         "declarations": {
           "--fsds-skeleton-radius-md": "var(--fsds-semantic-shape-radius-small, 4px)",
           "--fsds-skeleton-shape-height-text": "var(--fsds-core-typography-ramp-4, 1rem)",
-          "border-radius": "var(--fsds-skeleton-radius-md)",
-          "height": "var(--fsds-skeleton-shape-height-text)"
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)",
+          "height": "var(--fsds-skeleton-shape-height-text, 1rem)"
         }
       },
       {
         "selector": ".skeleton--avatar",
         "declarations": {
           "--fsds-skeleton-radius-md": "var(--fsds-semantic-shape-control-radius-pill, 9999px)",
-          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)",
           "aspect-ratio": "1"
         }
       },
@@ -276,7 +276,7 @@
         "selector": ".skeleton--media",
         "declarations": {
           "--fsds-skeleton-radius-md": "var(--fsds-semantic-shape-radius-medium, 8px)",
-          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)",
           "aspect-ratio": "16 / 9",
           "width": "100%"
         }
@@ -285,7 +285,7 @@
         "selector": ".skeleton--dataviz",
         "declarations": {
           "--fsds-skeleton-radius-md": "var(--fsds-semantic-shape-radius-medium, 8px)",
-          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)",
           "aspect-ratio": "4 / 3",
           "width": "100%"
         }
@@ -294,7 +294,7 @@
         "selector": ".skeleton--actions",
         "declarations": {
           "--fsds-skeleton-radius-md": "var(--fsds-semantic-shape-radius-medium, 8px)",
-          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "border-radius": "var(--fsds-skeleton-radius-md, 8px)",
           "height": "36px",
           "min-width": "80px"
         }

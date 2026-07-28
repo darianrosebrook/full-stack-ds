@@ -1,25 +1,32 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "card.color.background.default"
+      "resolvesTo": "card.color.background.default",
+      "fallback": "#ffffff"
     },
     "border-color": {
-      "resolvesTo": "card.color.border.default"
+      "resolvesTo": "card.color.border.default",
+      "fallback": "#fceaea"
     },
     "color": {
-      "resolvesTo": "card.color.foreground.primary"
+      "resolvesTo": "card.color.foreground.primary",
+      "fallback": "#141414"
     },
     "padding": {
-      "resolvesTo": "card.size.padding.default"
+      "resolvesTo": "card.size.padding.default",
+      "fallback": "16px"
     },
     "border-radius": {
-      "resolvesTo": "card.size.radius.default"
+      "resolvesTo": "card.size.radius.default",
+      "fallback": "8px"
     },
     "gap": {
-      "resolvesTo": "card.size.gap.default"
+      "resolvesTo": "card.size.gap.default",
+      "fallback": "4px"
     },
     "line-height": {
-      "resolvesTo": "card.typography.lineHeight.normal"
+      "resolvesTo": "card.typography.lineHeight.normal",
+      "fallback": "1.5"
     },
     "display": {
       "literal": "flex",
@@ -54,13 +61,16 @@
       ]
     },
     "box-shadow": {
-      "resolvesTo": "card.elevation.resting"
+      "resolvesTo": "card.elevation.resting",
+      "fallback": "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)"
     },
     "border-inline-start-width": {
-      "resolvesTo": "card.size.statusAccent.width"
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
     },
     "border-inline-start-color": {
-      "resolvesTo": "card.color.statusAccent.default"
+      "resolvesTo": "card.color.statusAccent.default",
+      "fallback": "#cecece"
     },
     "transition-property": {
       "literal": "box-shadow, border-color, background-color, transform",
@@ -83,10 +93,12 @@
   },
   ".card--interactive:hover": {
     "background-color": {
-      "resolvesTo": "card.color.background.hover"
+      "resolvesTo": "card.color.background.hover",
+      "fallback": "#efefef"
     },
     "box-shadow": {
-      "resolvesTo": "card.elevation.raised"
+      "resolvesTo": "card.elevation.raised",
+      "fallback": "0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1)"
     },
     "transform": {
       "literal": "translateY(-1px)",
@@ -97,7 +109,8 @@
   },
   ".card--interactive:active": {
     "box-shadow": {
-      "resolvesTo": "card.elevation.resting"
+      "resolvesTo": "card.elevation.resting",
+      "fallback": "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)"
     },
     "transform": {
       "literal": "translateY(0)",
@@ -108,13 +121,16 @@
   },
   "focus": {
     "outline-width": {
-      "resolvesTo": "card.focus.ring.width"
+      "resolvesTo": "card.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "card.color.focus.ring"
+      "resolvesTo": "card.color.focus.ring",
+      "fallback": "#d9292b"
     },
     "outline-offset": {
-      "resolvesTo": "card.focus.ring.offset"
+      "resolvesTo": "card.focus.ring.offset",
+      "fallback": "2px"
     },
     "outline-style": {
       "literal": "solid",
@@ -161,7 +177,8 @@
   },
   "--inset": {
     "padding": {
-      "resolvesTo": "card.size.padding.inset"
+      "resolvesTo": "card.size.padding.inset",
+      "fallback": "8px"
     }
   },
   "header": {
@@ -184,13 +201,16 @@
       ]
     },
     "gap": {
-      "resolvesTo": "card.size.gap.default"
+      "resolvesTo": "card.size.gap.default",
+      "fallback": "4px"
     },
     "line-height": {
-      "resolvesTo": "card.typography.lineHeight.heading"
+      "resolvesTo": "card.typography.lineHeight.heading",
+      "fallback": "1"
     },
     "color": {
-      "resolvesTo": "card.color.foreground.primary"
+      "resolvesTo": "card.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "media": {
@@ -213,7 +233,8 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "card.size.radius.default"
+      "resolvesTo": "card.size.radius.default",
+      "fallback": "8px"
     }
   },
   "content": {
@@ -230,7 +251,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "card.size.gap.default"
+      "resolvesTo": "card.size.gap.default",
+      "fallback": "4px"
     },
     "flex": {
       "literal": "1 1 auto",
@@ -239,7 +261,8 @@
       ]
     },
     "color": {
-      "resolvesTo": "card.color.foreground.primary"
+      "resolvesTo": "card.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "description": {
@@ -274,10 +297,12 @@
       ]
     },
     "gap": {
-      "resolvesTo": "card.size.gap.default"
+      "resolvesTo": "card.size.gap.default",
+      "fallback": "4px"
     },
     "padding-top": {
-      "resolvesTo": "card.size.padding.default"
+      "resolvesTo": "card.size.padding.default",
+      "fallback": "16px"
     },
     "margin-top": {
       "literal": "auto",
@@ -286,7 +311,8 @@
       ]
     },
     "border-top-color": {
-      "resolvesTo": "card.color.border.default"
+      "resolvesTo": "card.color.border.default",
+      "fallback": "#fceaea"
     },
     "border-top-style": {
       "literal": "solid",
@@ -317,7 +343,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "card.size.gap.default"
+      "resolvesTo": "card.size.gap.default",
+      "fallback": "4px"
     }
   },
   "badge": {
@@ -334,10 +361,12 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "card.color.badge.accent.background"
+      "resolvesTo": "card.color.badge.accent.background",
+      "fallback": "#d9292b"
     },
     "color": {
-      "resolvesTo": "card.color.badge.accent.foreground"
+      "resolvesTo": "card.color.badge.accent.foreground",
+      "fallback": "#ffffff"
     },
     "padding": {
       "literal": "2px 8px",
@@ -392,7 +421,8 @@
       ]
     },
     "line-height": {
-      "resolvesTo": "card.typography.lineHeight.normal"
+      "resolvesTo": "card.typography.lineHeight.normal",
+      "fallback": "1.5"
     },
     "card.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",

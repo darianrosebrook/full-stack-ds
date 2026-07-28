@@ -62,22 +62,22 @@ export class AvatarElement extends LitElement {
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
       gap: var(--fsds-box-model-gap);
-      width: var(--fsds-avatar-size-default);
+      width: var(--fsds-avatar-size-default, 16px);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
-      height: var(--fsds-avatar-size-default);
+      height: var(--fsds-avatar-size-default, 16px);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       overflow: hidden;
       position: relative;
-      border-radius: var(--fsds-avatar-size-radius-default);
-      background-color: var(--fsds-avatar-color-background-default);
-      color: var(--fsds-avatar-color-foreground-primary);
-      border-color: var(--fsds-avatar-color-border-default);
+      border-radius: var(--fsds-avatar-size-radius-default, 9999px);
+      background-color: var(--fsds-avatar-color-background-default, #efefef);
+      color: var(--fsds-avatar-color-foreground-primary, #141414);
+      border-color: var(--fsds-avatar-color-border-default, #fceaea);
       border-style: solid;
-      border-width: var(--fsds-avatar-size-border-default);
-      font-weight: var(--fsds-avatar-typography-fontWeight-medium);
-      font-family: var(--fsds-avatar-typography-fontFamily-sans);
+      border-width: var(--fsds-avatar-size-border-default, 1px);
+      font-weight: var(--fsds-avatar-typography-fontWeight-medium, 500);
+      font-family: var(--fsds-avatar-typography-fontFamily-sans, "Inter", sans-serif);
     }
 
     .avatar__image {
@@ -88,23 +88,23 @@ export class AvatarElement extends LitElement {
     }
 
     .avatar--small {
-      width: var(--fsds-avatar-size-small);
-      height: var(--fsds-avatar-size-small);
+      width: var(--fsds-avatar-size-small, 16px);
+      height: var(--fsds-avatar-size-small, 16px);
     }
 
     .avatar--medium {
-      width: var(--fsds-avatar-size-medium);
-      height: var(--fsds-avatar-size-medium);
+      width: var(--fsds-avatar-size-medium, 24px);
+      height: var(--fsds-avatar-size-medium, 24px);
     }
 
     .avatar--large {
-      width: var(--fsds-avatar-size-large);
-      height: var(--fsds-avatar-size-large);
+      width: var(--fsds-avatar-size-large, 32px);
+      height: var(--fsds-avatar-size-large, 32px);
     }
 
     .avatar--extra-large {
-      width: var(--fsds-avatar-size-extra-large);
-      height: var(--fsds-avatar-size-extra-large);
+      width: var(--fsds-avatar-size-extra-large, 48px);
+      height: var(--fsds-avatar-size-extra-large, 48px);
     }
   `;
 

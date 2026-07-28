@@ -109,76 +109,76 @@ export class CardElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-card-color-background-default);
-      border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-primary);
-      padding: var(--fsds-card-size-padding-default);
-      border-radius: var(--fsds-card-size-radius-default);
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #fceaea);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
       display: flex;
       flex-direction: column;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting);
-      border-inline-start-width: var(--fsds-card-size-statusAccent-width);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
-        outline-width: var(--fsds-card-focus-ring-width);
-        outline-color: var(--fsds-card-color-focus-ring);
-        outline-offset: var(--fsds-card-focus-ring-offset);
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover);
-      box-shadow: var(--fsds-card-elevation-raised);
+      background-color: var(--fsds-card-color-background-hover, #efefef);
+      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       transform: translateY(0);
     }
 
     .card--inset {
-      padding: var(--fsds-card-size-padding-inset);
+      padding: var(--fsds-card-size-padding-inset, 8px);
     }
 
     .card__header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: var(--fsds-card-size-gap-default);
-      line-height: var(--fsds-card-typography-lineHeight-heading);
-      color: var(--fsds-card-color-foreground-primary);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-lineHeight-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
-      border-radius: var(--fsds-card-size-radius-default);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
     }
 
     .card__content {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       flex: 1 1 auto;
-      color: var(--fsds-card-color-foreground-primary);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__description {
@@ -189,10 +189,10 @@ export class CardElement extends LitElement {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--fsds-card-size-gap-default);
-      padding-top: var(--fsds-card-size-padding-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default);
+      border-top-color: var(--fsds-card-color-border-default, #fceaea);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -200,14 +200,14 @@ export class CardElement extends LitElement {
     .card__actions {
       display: flex;
       align-items: center;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
     }
 
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background);
-      color: var(--fsds-card-color-badge-accent-foreground);
+      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
       font-size: 0.75em;
@@ -224,7 +224,7 @@ export class CardElement extends LitElement {
 
     .card__note {
       font-size: 0.875em;
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
     }
   `;
 
@@ -338,76 +338,76 @@ export class CardHeaderElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-card-color-background-default);
-      border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-primary);
-      padding: var(--fsds-card-size-padding-default);
-      border-radius: var(--fsds-card-size-radius-default);
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #fceaea);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
       display: flex;
       flex-direction: column;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting);
-      border-inline-start-width: var(--fsds-card-size-statusAccent-width);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
-        outline-width: var(--fsds-card-focus-ring-width);
-        outline-color: var(--fsds-card-color-focus-ring);
-        outline-offset: var(--fsds-card-focus-ring-offset);
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover);
-      box-shadow: var(--fsds-card-elevation-raised);
+      background-color: var(--fsds-card-color-background-hover, #efefef);
+      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       transform: translateY(0);
     }
 
     .card--inset {
-      padding: var(--fsds-card-size-padding-inset);
+      padding: var(--fsds-card-size-padding-inset, 8px);
     }
 
     .card__header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: var(--fsds-card-size-gap-default);
-      line-height: var(--fsds-card-typography-lineHeight-heading);
-      color: var(--fsds-card-color-foreground-primary);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-lineHeight-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
-      border-radius: var(--fsds-card-size-radius-default);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
     }
 
     .card__content {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       flex: 1 1 auto;
-      color: var(--fsds-card-color-foreground-primary);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__description {
@@ -418,10 +418,10 @@ export class CardHeaderElement extends LitElement {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--fsds-card-size-gap-default);
-      padding-top: var(--fsds-card-size-padding-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default);
+      border-top-color: var(--fsds-card-color-border-default, #fceaea);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -429,14 +429,14 @@ export class CardHeaderElement extends LitElement {
     .card__actions {
       display: flex;
       align-items: center;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
     }
 
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background);
-      color: var(--fsds-card-color-badge-accent-foreground);
+      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
       font-size: 0.75em;
@@ -453,7 +453,7 @@ export class CardHeaderElement extends LitElement {
 
     .card__note {
       font-size: 0.875em;
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
     }
   `;
 
@@ -554,76 +554,76 @@ export class CardContentElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-card-color-background-default);
-      border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-primary);
-      padding: var(--fsds-card-size-padding-default);
-      border-radius: var(--fsds-card-size-radius-default);
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #fceaea);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
       display: flex;
       flex-direction: column;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting);
-      border-inline-start-width: var(--fsds-card-size-statusAccent-width);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
-        outline-width: var(--fsds-card-focus-ring-width);
-        outline-color: var(--fsds-card-color-focus-ring);
-        outline-offset: var(--fsds-card-focus-ring-offset);
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover);
-      box-shadow: var(--fsds-card-elevation-raised);
+      background-color: var(--fsds-card-color-background-hover, #efefef);
+      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       transform: translateY(0);
     }
 
     .card--inset {
-      padding: var(--fsds-card-size-padding-inset);
+      padding: var(--fsds-card-size-padding-inset, 8px);
     }
 
     .card__header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: var(--fsds-card-size-gap-default);
-      line-height: var(--fsds-card-typography-lineHeight-heading);
-      color: var(--fsds-card-color-foreground-primary);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-lineHeight-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
-      border-radius: var(--fsds-card-size-radius-default);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
     }
 
     .card__content {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       flex: 1 1 auto;
-      color: var(--fsds-card-color-foreground-primary);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__description {
@@ -634,10 +634,10 @@ export class CardContentElement extends LitElement {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--fsds-card-size-gap-default);
-      padding-top: var(--fsds-card-size-padding-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default);
+      border-top-color: var(--fsds-card-color-border-default, #fceaea);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -645,14 +645,14 @@ export class CardContentElement extends LitElement {
     .card__actions {
       display: flex;
       align-items: center;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
     }
 
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background);
-      color: var(--fsds-card-color-badge-accent-foreground);
+      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
       font-size: 0.75em;
@@ -669,7 +669,7 @@ export class CardContentElement extends LitElement {
 
     .card__note {
       font-size: 0.875em;
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
     }
   `;
 
@@ -770,76 +770,76 @@ export class CardFooterElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-card-color-background-default);
-      border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-primary);
-      padding: var(--fsds-card-size-padding-default);
-      border-radius: var(--fsds-card-size-radius-default);
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #fceaea);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
       display: flex;
       flex-direction: column;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting);
-      border-inline-start-width: var(--fsds-card-size-statusAccent-width);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
-        outline-width: var(--fsds-card-focus-ring-width);
-        outline-color: var(--fsds-card-color-focus-ring);
-        outline-offset: var(--fsds-card-focus-ring-offset);
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover);
-      box-shadow: var(--fsds-card-elevation-raised);
+      background-color: var(--fsds-card-color-background-hover, #efefef);
+      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       transform: translateY(0);
     }
 
     .card--inset {
-      padding: var(--fsds-card-size-padding-inset);
+      padding: var(--fsds-card-size-padding-inset, 8px);
     }
 
     .card__header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: var(--fsds-card-size-gap-default);
-      line-height: var(--fsds-card-typography-lineHeight-heading);
-      color: var(--fsds-card-color-foreground-primary);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-lineHeight-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
-      border-radius: var(--fsds-card-size-radius-default);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
     }
 
     .card__content {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       flex: 1 1 auto;
-      color: var(--fsds-card-color-foreground-primary);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__description {
@@ -850,10 +850,10 @@ export class CardFooterElement extends LitElement {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--fsds-card-size-gap-default);
-      padding-top: var(--fsds-card-size-padding-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default);
+      border-top-color: var(--fsds-card-color-border-default, #fceaea);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -861,14 +861,14 @@ export class CardFooterElement extends LitElement {
     .card__actions {
       display: flex;
       align-items: center;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
     }
 
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background);
-      color: var(--fsds-card-color-badge-accent-foreground);
+      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
       font-size: 0.75em;
@@ -885,7 +885,7 @@ export class CardFooterElement extends LitElement {
 
     .card__note {
       font-size: 0.875em;
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
     }
   `;
 
@@ -986,76 +986,76 @@ export class CardDescriptionElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-card-color-background-default);
-      border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-primary);
-      padding: var(--fsds-card-size-padding-default);
-      border-radius: var(--fsds-card-size-radius-default);
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #fceaea);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
       display: flex;
       flex-direction: column;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting);
-      border-inline-start-width: var(--fsds-card-size-statusAccent-width);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
-        outline-width: var(--fsds-card-focus-ring-width);
-        outline-color: var(--fsds-card-color-focus-ring);
-        outline-offset: var(--fsds-card-focus-ring-offset);
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover);
-      box-shadow: var(--fsds-card-elevation-raised);
+      background-color: var(--fsds-card-color-background-hover, #efefef);
+      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting);
+      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       transform: translateY(0);
     }
 
     .card--inset {
-      padding: var(--fsds-card-size-padding-inset);
+      padding: var(--fsds-card-size-padding-inset, 8px);
     }
 
     .card__header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: var(--fsds-card-size-gap-default);
-      line-height: var(--fsds-card-typography-lineHeight-heading);
-      color: var(--fsds-card-color-foreground-primary);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-lineHeight-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
-      border-radius: var(--fsds-card-size-radius-default);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
     }
 
     .card__content {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
       flex: 1 1 auto;
-      color: var(--fsds-card-color-foreground-primary);
+      color: var(--fsds-card-color-foreground-primary, #141414);
     }
 
     .card__description {
@@ -1066,10 +1066,10 @@ export class CardDescriptionElement extends LitElement {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--fsds-card-size-gap-default);
-      padding-top: var(--fsds-card-size-padding-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default);
+      border-top-color: var(--fsds-card-color-border-default, #fceaea);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -1077,14 +1077,14 @@ export class CardDescriptionElement extends LitElement {
     .card__actions {
       display: flex;
       align-items: center;
-      gap: var(--fsds-card-size-gap-default);
+      gap: var(--fsds-card-size-gap-default, 4px);
     }
 
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background);
-      color: var(--fsds-card-color-badge-accent-foreground);
+      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
       font-size: 0.75em;
@@ -1101,7 +1101,7 @@ export class CardDescriptionElement extends LitElement {
 
     .card__note {
       font-size: 0.875em;
-      line-height: var(--fsds-card-typography-lineHeight-normal);
+      line-height: var(--fsds-card-typography-lineHeight-normal, 1.5);
     }
   `;
 

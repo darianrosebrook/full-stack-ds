@@ -230,7 +230,7 @@ describe("emitTokensCss with box-model defaults", () => {
     const tokensCss = emitTokensCss(ir);
     const css = emitCss(ir);
 
-    expect(css).toContain("font-size: var(--fsds-button-size-fontSize-medium);");
+    expect(css).toContain("font-size: var(--fsds-button-size-fontSize-medium, 1rem);");
     expect(tokensCss).toContain(
       "--fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightSmall, 28px);",
     );

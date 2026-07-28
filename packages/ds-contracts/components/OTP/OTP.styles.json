@@ -83,33 +83,42 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "otp.size.radius.default"
+      "resolvesTo": "otp.size.radius.default",
+      "fallback": "8px"
     },
     "border-color": {
-      "resolvesTo": "otp.color.border.default"
+      "resolvesTo": "otp.color.border.default",
+      "fallback": "#fceaea"
     },
     "background-color": {
-      "resolvesTo": "otp.color.background.default"
+      "resolvesTo": "otp.color.background.default",
+      "fallback": "#efefef"
     },
     "color": {
-      "resolvesTo": "otp.color.foreground.primary"
+      "resolvesTo": "otp.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   ".otp__field:focus-visible": {
     "border-color": {
-      "resolvesTo": "otp.color.border.accent"
+      "resolvesTo": "otp.color.border.accent",
+      "fallback": "#d9292b"
     },
     "outline-width": {
-      "resolvesTo": "otp.focus.ring.width"
+      "resolvesTo": "otp.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "otp.focus.ring.color"
+      "resolvesTo": "otp.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-style": {
-      "resolvesTo": "otp.focus.ring.style"
+      "resolvesTo": "otp.focus.ring.style",
+      "fallback": "solid"
     },
     "outline-offset": {
-      "resolvesTo": "otp.focus.ring.offset"
+      "resolvesTo": "otp.focus.ring.offset",
+      "fallback": "2px"
     }
   },
   ".otp__field:disabled": {

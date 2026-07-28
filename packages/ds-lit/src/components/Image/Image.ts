@@ -67,33 +67,33 @@ export class ImageElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-image-color-background-default);
-      color: var(--fsds-image-color-foreground-primary);
+      background-color: var(--fsds-image-color-background-default, #efefef);
+      color: var(--fsds-image-color-foreground-primary, #141414);
     }
 
     .image--size-xs {
-      width: var(--fsds-image-size-xs);
-      height: var(--fsds-image-size-xs);
+      width: var(--fsds-image-size-xs, 24px);
+      height: var(--fsds-image-size-xs, 24px);
     }
 
     .image--size-sm {
-      width: var(--fsds-image-size-sm);
-      height: var(--fsds-image-size-sm);
+      width: var(--fsds-image-size-sm, 32px);
+      height: var(--fsds-image-size-sm, 32px);
     }
 
     .image--size-md {
-      width: var(--fsds-image-size-md);
-      height: var(--fsds-image-size-md);
+      width: var(--fsds-image-size-md, 48px);
+      height: var(--fsds-image-size-md, 48px);
     }
 
     .image--size-lg {
-      width: var(--fsds-image-size-lg);
-      height: var(--fsds-image-size-lg);
+      width: var(--fsds-image-size-lg, 64px);
+      height: var(--fsds-image-size-lg, 64px);
     }
 
     .image--size-xl {
-      width: var(--fsds-image-size-xl);
-      height: var(--fsds-image-size-xl);
+      width: var(--fsds-image-size-xl, 96px);
+      height: var(--fsds-image-size-xl, 96px);
     }
 
     .image--size-full {
@@ -102,23 +102,23 @@ export class ImageElement extends LitElement {
     }
 
     .image--radius-none {
-      border-radius: var(--fsds-image-radius-none);
+      border-radius: var(--fsds-image-radius-none, 0px);
     }
 
     .image--radius-sm {
-      border-radius: var(--fsds-image-radius-sm);
+      border-radius: var(--fsds-image-radius-sm, 4px);
     }
 
     .image--radius-md {
-      border-radius: var(--fsds-image-radius-md);
+      border-radius: var(--fsds-image-radius-md, 8px);
     }
 
     .image--radius-lg {
-      border-radius: var(--fsds-image-radius-lg);
+      border-radius: var(--fsds-image-radius-lg, 16px);
     }
 
     .image--radius-full {
-      border-radius: var(--fsds-image-radius-full);
+      border-radius: var(--fsds-image-radius-full, 9999px);
     }
   `;
 

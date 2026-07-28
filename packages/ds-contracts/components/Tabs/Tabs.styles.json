@@ -2,266 +2,369 @@
   "root": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "tabs.spacing.panelGap"
+      "resolvesTo": "tabs.spacing.panelGap",
+      "fallback": "16px"
     },
     "padding": {
-      "resolvesTo": "tabs.spacing.padding"
+      "resolvesTo": "tabs.spacing.padding",
+      "fallback": "8px"
     },
     "border-radius": {
-      "resolvesTo": "tabs.shape.radius"
+      "resolvesTo": "tabs.shape.radius",
+      "fallback": "8px"
     }
   },
   "list": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "row",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "tabs.spacing.gap"
+      "resolvesTo": "tabs.spacing.gap",
+      "fallback": "8px"
     },
     "border-bottom-color": {
-      "resolvesTo": "tabs.color.indicator"
+      "resolvesTo": "tabs.color.indicator",
+      "fallback": "#d9292b"
     },
     "border-bottom-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-bottom-width": {
       "literal": "1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "position": {
       "literal": "relative",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "tab": {
     "display": {
       "literal": "inline-flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "align-items": {
       "literal": "center",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "padding": {
-      "resolvesTo": "tabs.spacing.padding"
+      "resolvesTo": "tabs.spacing.padding",
+      "fallback": "8px"
     },
     "color": {
-      "resolvesTo": "tabs.color.fg"
+      "resolvesTo": "tabs.color.fg",
+      "fallback": "#141414"
     },
     "background": {
       "literal": "transparent",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border": {
       "literal": "none",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "cursor": {
       "literal": "pointer",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "position": {
       "literal": "relative",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   ".tabs__tab:hover": {
     "color": {
-      "resolvesTo": "tabs.color.hover.fg"
+      "resolvesTo": "tabs.color.hover.fg",
+      "fallback": "#141414"
     },
     "background-color": {
-      "resolvesTo": "tabs.color.hover.bg"
+      "resolvesTo": "tabs.color.hover.bg",
+      "fallback": "#cecece"
     }
   },
   "tab--active": {
     "color": {
-      "resolvesTo": "tabs.color.active-fg"
+      "resolvesTo": "tabs.color.active-fg",
+      "fallback": "#141414"
     },
     "background-color": {
-      "resolvesTo": "tabs.color.active-bg"
+      "resolvesTo": "tabs.color.active-bg",
+      "fallback": "#efefef"
     }
   },
   ".tabs__tab:disabled": {
     "color": {
-      "resolvesTo": "tabs.color.disabled-fg"
+      "resolvesTo": "tabs.color.disabled-fg",
+      "fallback": "#aeaeae"
     },
     "cursor": {
       "literal": "not-allowed",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "indicator": {
     "position": {
       "literal": "absolute",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "bottom": {
       "literal": "-1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "left": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "right": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "height": {
       "literal": "2px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
-      "resolvesTo": "tabs.color.indicator"
+      "resolvesTo": "tabs.color.indicator",
+      "fallback": "#d9292b"
     },
     "transition": {
       "literal": "transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "panel": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "padding": {
-      "resolvesTo": "tabs.spacing.padding"
+      "resolvesTo": "tabs.spacing.padding",
+      "fallback": "8px"
     }
   },
   "--underline __list": {
     "border-bottom-color": {
-      "resolvesTo": "tabs.color.underline.active"
+      "resolvesTo": "tabs.color.underline.active",
+      "fallback": "#d9292b"
     },
     "border-bottom-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-bottom-width": {
-      "resolvesTo": "tabs.size.indicator.thickness"
+      "resolvesTo": "tabs.size.indicator.thickness",
+      "fallback": "2px"
     }
   },
   "--underline __indicator": {
     "height": {
-      "resolvesTo": "tabs.size.indicator.thickness"
+      "resolvesTo": "tabs.size.indicator.thickness",
+      "fallback": "2px"
     },
     "bottom": {
       "literal": "-1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "left": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "right": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
-      "resolvesTo": "tabs.color.underline.active"
+      "resolvesTo": "tabs.color.underline.active",
+      "fallback": "#d9292b"
     }
   },
   "--vertical __root": {
     "flex-direction": {
       "literal": "row",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--vertical __list": {
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-bottom-width": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-inline-end-color": {
-      "resolvesTo": "tabs.color.indicator"
+      "resolvesTo": "tabs.color.indicator",
+      "fallback": "#d9292b"
     },
     "border-inline-end-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-inline-end-width": {
       "literal": "1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "align-self": {
       "literal": "stretch",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--vertical __indicator": {
     "top": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "bottom": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "right": {
       "literal": "-1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "left": {
       "literal": "auto",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
-      "resolvesTo": "tabs.size.indicator.thickness"
+      "resolvesTo": "tabs.size.indicator.thickness",
+      "fallback": "2px"
     },
     "height": {
       "literal": "auto",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "transition": {
       "literal": "transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--pills __list": {
     "border-bottom-width": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "tabs.spacing.gap"
+      "resolvesTo": "tabs.spacing.gap",
+      "fallback": "8px"
     }
   },
   "--pills __tab": {
     "border-radius": {
-      "resolvesTo": "tabs.shape.radius"
+      "resolvesTo": "tabs.shape.radius",
+      "fallback": "8px"
     },
     "padding": {
-      "resolvesTo": "tabs.spacing.pillPadding"
+      "resolvesTo": "tabs.spacing.pillPadding",
+      "fallback": "4px 10px"
     }
   },
   "--pills __tab--active": {
     "background-color": {
-      "resolvesTo": "tabs.color.active-bg"
+      "resolvesTo": "tabs.color.active-bg",
+      "fallback": "#efefef"
     },
     "color": {
-      "resolvesTo": "tabs.color.active-fg"
+      "resolvesTo": "tabs.color.active-fg",
+      "fallback": "#141414"
     }
   },
   "--pills __indicator": {
     "display": {
       "literal": "none",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

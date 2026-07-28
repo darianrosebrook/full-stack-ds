@@ -1,52 +1,70 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "code-snippet.color.background.default"
+      "resolvesTo": "code-snippet.color.background.default",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "code-snippet.color.border.default"
+      "resolvesTo": "code-snippet.color.border.default",
+      "fallback": "#cecece"
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-width": {
-      "resolvesTo": "code-snippet.size.border.default"
+      "resolvesTo": "code-snippet.size.border.default",
+      "fallback": "1px"
     },
     "border-radius": {
-      "resolvesTo": "code-snippet.size.radius.default"
+      "resolvesTo": "code-snippet.size.radius.default",
+      "fallback": "8px"
     },
     "color": {
-      "resolvesTo": "code-snippet.color.foreground.primary"
+      "resolvesTo": "code-snippet.color.foreground.primary",
+      "fallback": "#141414"
     },
     "font-family": {
       "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
-      "resolvesTo": "code-snippet.size.fontSize.default"
+      "resolvesTo": "code-snippet.size.fontSize.default",
+      "fallback": "0.875rem"
     },
     "line-height": {
-      "resolvesTo": "code-snippet.typography.lineHeight.default"
+      "resolvesTo": "code-snippet.typography.lineHeight.default",
+      "fallback": "1.5"
     },
     "margin": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "padding-block": {
-      "resolvesTo": "code-snippet.size.padding.block"
+      "resolvesTo": "code-snippet.size.padding.block",
+      "fallback": "1px"
     },
     "padding-inline": {
-      "resolvesTo": "code-snippet.size.padding.inline"
+      "resolvesTo": "code-snippet.size.padding.inline",
+      "fallback": "2px"
     },
     "white-space": {
       "literal": "nowrap",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--kbd": {
     "box-shadow": {
-      "resolvesTo": "code-snippet.elevation.kbd"
+      "resolvesTo": "code-snippet.elevation.kbd",
+      "fallback": "0 1px 1px rgba(0,0,0,0.14)"
     },
     "font-weight": {
       "resolvesTo": "semantic.typography.font.weight.medium",
@@ -56,11 +74,15 @@
   "--samp": {
     "background-color": {
       "literal": "transparent",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-color": {
       "literal": "transparent",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

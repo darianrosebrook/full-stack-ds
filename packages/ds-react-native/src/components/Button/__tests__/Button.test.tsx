@@ -57,8 +57,8 @@ describe("Button React Native", () => {
     const styleOf = subject.props.style as (state: { pressed: boolean }) => unknown;
     const flatten = (style: unknown): Record<string, unknown> =>
       Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));
-    expect(flatten(styleOf({ pressed: true })).backgroundColor).toBe("#cecece");
-    expect(flatten(styleOf({ pressed: false })).backgroundColor).toBe("#d9292b");
+    expect(flatten(styleOf({ pressed: true })).backgroundColor).toBe("#013ab0");
+    expect(flatten(styleOf({ pressed: false })).backgroundColor).toBe("#0566fe");
   });
 });
 // @generated:end

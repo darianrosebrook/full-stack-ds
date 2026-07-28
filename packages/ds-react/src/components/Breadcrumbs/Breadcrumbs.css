@@ -13,16 +13,16 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  background-color: var(--fsds-breadcrumbs-color-background-elevated);
-  border-color: var(--fsds-breadcrumbs-color-border-subtle);
-  line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
+  background-color: var(--fsds-breadcrumbs-color-background-elevated, #ffffff);
+  border-color: var(--fsds-breadcrumbs-color-border-subtle, #cecece);
+  line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse, 1);
   display: block;
-  border-radius: var(--fsds-breadcrumbs-shape-radius-medium);
-  padding: var(--fsds-breadcrumbs-spacing-padding-default);
-  color: var(--fsds-breadcrumbs-color-foreground-primary);
+  border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 8px);
+  padding: var(--fsds-breadcrumbs-spacing-padding-default, 8px);
+  color: var(--fsds-breadcrumbs-color-foreground-primary, #141414);
 
   &:focus-visible {
-    outline-color: var(--fsds-breadcrumbs-color-focus);
+    outline-color: var(--fsds-breadcrumbs-color-focus, #d9292b);
   }
 }
 
@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--fsds-breadcrumbs-spacing-gap-default);
+  gap: var(--fsds-breadcrumbs-spacing-gap-default, 8px);
 }
 /* @generated:end */
 

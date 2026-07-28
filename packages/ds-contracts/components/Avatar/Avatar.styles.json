@@ -31,16 +31,20 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "avatar.size.radius.default"
+      "resolvesTo": "avatar.size.radius.default",
+      "fallback": "9999px"
     },
     "background-color": {
-      "resolvesTo": "avatar.color.background.default"
+      "resolvesTo": "avatar.color.background.default",
+      "fallback": "#efefef"
     },
     "color": {
-      "resolvesTo": "avatar.color.foreground.primary"
+      "resolvesTo": "avatar.color.foreground.primary",
+      "fallback": "#141414"
     },
     "border-color": {
-      "resolvesTo": "avatar.color.border.default"
+      "resolvesTo": "avatar.color.border.default",
+      "fallback": "#fceaea"
     },
     "border-style": {
       "literal": "solid",
@@ -49,19 +53,24 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "avatar.size.border.default"
+      "resolvesTo": "avatar.size.border.default",
+      "fallback": "1px"
     },
     "width": {
-      "resolvesTo": "avatar.size.default"
+      "resolvesTo": "avatar.size.default",
+      "fallback": "16px"
     },
     "height": {
-      "resolvesTo": "avatar.size.default"
+      "resolvesTo": "avatar.size.default",
+      "fallback": "16px"
     },
     "font-weight": {
-      "resolvesTo": "avatar.typography.fontWeight.medium"
+      "resolvesTo": "avatar.typography.fontWeight.medium",
+      "fallback": "500"
     },
     "font-family": {
-      "resolvesTo": "avatar.typography.fontFamily.sans"
+      "resolvesTo": "avatar.typography.fontFamily.sans",
+      "fallback": "\"Inter\", sans-serif"
     }
   },
   "image": {
@@ -91,19 +100,43 @@
     }
   },
   "--small": {
-    "width": { "resolvesTo": "avatar.size.small" },
-    "height": { "resolvesTo": "avatar.size.small" }
+    "width": {
+      "resolvesTo": "avatar.size.small",
+      "fallback": "16px"
+    },
+    "height": {
+      "resolvesTo": "avatar.size.small",
+      "fallback": "16px"
+    }
   },
   "--medium": {
-    "width": { "resolvesTo": "avatar.size.medium" },
-    "height": { "resolvesTo": "avatar.size.medium" }
+    "width": {
+      "resolvesTo": "avatar.size.medium",
+      "fallback": "24px"
+    },
+    "height": {
+      "resolvesTo": "avatar.size.medium",
+      "fallback": "24px"
+    }
   },
   "--large": {
-    "width": { "resolvesTo": "avatar.size.large" },
-    "height": { "resolvesTo": "avatar.size.large" }
+    "width": {
+      "resolvesTo": "avatar.size.large",
+      "fallback": "32px"
+    },
+    "height": {
+      "resolvesTo": "avatar.size.large",
+      "fallback": "32px"
+    }
   },
   "--extra-large": {
-    "width": { "resolvesTo": "avatar.size.extra-large" },
-    "height": { "resolvesTo": "avatar.size.extra-large" }
+    "width": {
+      "resolvesTo": "avatar.size.extra-large",
+      "fallback": "48px"
+    },
+    "height": {
+      "resolvesTo": "avatar.size.extra-large",
+      "fallback": "48px"
+    }
   }
 }

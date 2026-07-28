@@ -31,28 +31,36 @@
       ]
     },
     "padding": {
-      "resolvesTo": "alert.size.padding"
+      "resolvesTo": "alert.size.padding",
+      "fallback": "16px"
     },
     "border-radius": {
-      "resolvesTo": "alert.size.radius"
+      "resolvesTo": "alert.size.radius",
+      "fallback": "8px"
     },
     "gap": {
-      "resolvesTo": "alert.spacing.gap"
+      "resolvesTo": "alert.spacing.gap",
+      "fallback": "8px"
     },
     "font-size": {
-      "resolvesTo": "alert.text.size"
+      "resolvesTo": "alert.text.size",
+      "fallback": "14px"
     },
     "font-weight": {
-      "resolvesTo": "alert.text.weight"
+      "resolvesTo": "alert.text.weight",
+      "fallback": "400"
     },
     "background-color": {
-      "resolvesTo": "alert.color.background.primary"
+      "resolvesTo": "alert.color.background.primary",
+      "fallback": "#ffffff"
     },
     "color": {
-      "resolvesTo": "alert.color.foreground.primary"
+      "resolvesTo": "alert.color.foreground.primary",
+      "fallback": "#141414"
     },
     "border-color": {
-      "resolvesTo": "alert.color.border.primary"
+      "resolvesTo": "alert.color.border.primary",
+      "fallback": "#f29495"
     }
   },
   "icon": {
@@ -101,7 +109,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "alert.spacing.gap"
+      "resolvesTo": "alert.spacing.gap",
+      "fallback": "8px"
     }
   },
   "dismiss": {
@@ -208,10 +217,12 @@
       ]
     },
     "font-weight": {
-      "resolvesTo": "alert.typography.title.fontWeight"
+      "resolvesTo": "alert.typography.title.fontWeight",
+      "fallback": "700"
     },
     "font-size": {
-      "resolvesTo": "alert.typography.title.fontSize"
+      "resolvesTo": "alert.typography.title.fontSize",
+      "fallback": "16px"
     }
   },
   ".alert--info": {
@@ -271,22 +282,61 @@
     }
   },
   "--inline": {
-    "alert.size.padding": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
-    "alert.spacing.gap": { "resolvesTo": "core.spacing.size.03", "fallback": "4px" },
-    "alert.text.size": { "resolvesTo": "semantic.typography.body.04", "fallback": "12px" },
-    "alert.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.03", "fallback": "14px" }
+    "alert.size.padding": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "alert.spacing.gap": {
+      "resolvesTo": "core.spacing.size.03",
+      "fallback": "4px"
+    },
+    "alert.text.size": {
+      "resolvesTo": "semantic.typography.body.04",
+      "fallback": "12px"
+    },
+    "alert.typography.title.fontSize": {
+      "resolvesTo": "semantic.typography.body.03",
+      "fallback": "14px"
+    }
   },
   "--section": {
-    "alert.size.padding": { "resolvesTo": "core.spacing.size.06", "fallback": "16px" },
-    "alert.spacing.gap": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
-    "alert.text.size": { "resolvesTo": "semantic.typography.body.03", "fallback": "14px" },
-    "alert.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.02", "fallback": "16px" }
+    "alert.size.padding": {
+      "resolvesTo": "core.spacing.size.06",
+      "fallback": "16px"
+    },
+    "alert.spacing.gap": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "alert.text.size": {
+      "resolvesTo": "semantic.typography.body.03",
+      "fallback": "14px"
+    },
+    "alert.typography.title.fontSize": {
+      "resolvesTo": "semantic.typography.body.02",
+      "fallback": "16px"
+    }
   },
   "--page": {
-    "alert.size.padding": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" },
-    "alert.spacing.gap": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" },
-    "alert.text.size": { "resolvesTo": "semantic.typography.body.02", "fallback": "16px" },
-    "alert.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.01", "fallback": "18px" },
-    "alert.typography.title.fontWeight": { "resolvesTo": "semantic.typography.font.weight.bold", "fallback": "700" }
+    "alert.size.padding": {
+      "resolvesTo": "core.spacing.size.07",
+      "fallback": "24px"
+    },
+    "alert.spacing.gap": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "alert.text.size": {
+      "resolvesTo": "semantic.typography.body.02",
+      "fallback": "16px"
+    },
+    "alert.typography.title.fontSize": {
+      "resolvesTo": "semantic.typography.body.01",
+      "fallback": "18px"
+    },
+    "alert.typography.title.fontWeight": {
+      "resolvesTo": "semantic.typography.font.weight.bold",
+      "fallback": "700"
+    }
   }
 }

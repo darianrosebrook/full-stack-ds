@@ -74,14 +74,14 @@ export class CommandElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: var(--fsds-command-size-topOffset);
+      padding-top: var(--fsds-command-size-topOffset, 10vh);
       pointer-events: none;
     }
 
     .command__overlay {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-command-color-overlay);
+      background-color: var(--fsds-command-color-overlay, rgba(0,0,0,0.64));
       pointer-events: auto;
     }
 
@@ -90,15 +90,15 @@ export class CommandElement extends LitElement {
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: var(--fsds-command-size-maxWidth);
-      max-height: var(--fsds-command-size-maxHeight);
-      background-color: var(--fsds-command-color-background);
-      color: var(--fsds-command-color-text);
-      border-color: var(--fsds-command-color-border);
+      max-width: var(--fsds-command-size-maxWidth, 640px);
+      max-height: var(--fsds-command-size-maxHeight, 400px);
+      background-color: var(--fsds-command-color-background, #ffffff);
+      color: var(--fsds-command-color-text, #141414);
+      border-color: var(--fsds-command-color-border, #fceaea);
       border-style: solid;
-      border-width: var(--fsds-command-border-width);
-      border-radius: var(--fsds-command-border-radius);
-      box-shadow: var(--fsds-command-shadow);
+      border-width: var(--fsds-command-border-width, 1px);
+      border-radius: var(--fsds-command-border-radius, 8px);
+      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -108,8 +108,8 @@ export class CommandElement extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: var(--fsds-command-spacing-dialogPadding);
-      border-bottom-color: var(--fsds-command-color-borderLight);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
+      border-bottom-color: var(--fsds-command-color-borderLight, #cecece);
       border-bottom-style: solid;
       border-bottom-width: 1px;
     }
@@ -119,9 +119,9 @@ export class CommandElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__input {
@@ -130,8 +130,8 @@ export class CommandElement extends LitElement {
       border: 0;
       outline: none;
       padding: 0;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       font-family: inherit;
     }
 
@@ -145,10 +145,10 @@ export class CommandElement extends LitElement {
 
     .command__empty {
       display: block;
-      padding: var(--fsds-command-spacing-dialogPadding);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
       text-align: center;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
     }
 
     .command__group {
@@ -158,8 +158,8 @@ export class CommandElement extends LitElement {
     .command__groupHeading {
       display: block;
       padding: 8px 12px 4px;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -175,18 +175,18 @@ export class CommandElement extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      color: var(--fsds-command-color-text);
+      color: var(--fsds-command-color-text, #141414);
       cursor: pointer;
-      border-radius: var(--fsds-command-border-radius);
+      border-radius: var(--fsds-command-border-radius, 8px);
     }
 
     .command__item:hover {
-      background-color: var(--fsds-command-color-backgroundHover);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-backgroundHover);
-      color: var(--fsds-command-color-text);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
+      color: var(--fsds-command-color-text, #141414);
     }
 
     .command__itemIcon {
@@ -194,9 +194,9 @@ export class CommandElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__itemContent {
@@ -208,8 +208,8 @@ export class CommandElement extends LitElement {
 
     .command__itemLabel {
       display: block;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -217,8 +217,8 @@ export class CommandElement extends LitElement {
 
     .command__itemDescription {
       display: block;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -228,7 +228,7 @@ export class CommandElement extends LitElement {
       display: block;
       height: 1px;
       margin: 4px 8px;
-      background-color: var(--fsds-command-color-borderLight);
+      background-color: var(--fsds-command-color-borderLight, #cecece);
     }
   `;
 
@@ -389,14 +389,14 @@ export class CommandListElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: var(--fsds-command-size-topOffset);
+      padding-top: var(--fsds-command-size-topOffset, 10vh);
       pointer-events: none;
     }
 
     .command__overlay {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-command-color-overlay);
+      background-color: var(--fsds-command-color-overlay, rgba(0,0,0,0.64));
       pointer-events: auto;
     }
 
@@ -405,15 +405,15 @@ export class CommandListElement extends LitElement {
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: var(--fsds-command-size-maxWidth);
-      max-height: var(--fsds-command-size-maxHeight);
-      background-color: var(--fsds-command-color-background);
-      color: var(--fsds-command-color-text);
-      border-color: var(--fsds-command-color-border);
+      max-width: var(--fsds-command-size-maxWidth, 640px);
+      max-height: var(--fsds-command-size-maxHeight, 400px);
+      background-color: var(--fsds-command-color-background, #ffffff);
+      color: var(--fsds-command-color-text, #141414);
+      border-color: var(--fsds-command-color-border, #fceaea);
       border-style: solid;
-      border-width: var(--fsds-command-border-width);
-      border-radius: var(--fsds-command-border-radius);
-      box-shadow: var(--fsds-command-shadow);
+      border-width: var(--fsds-command-border-width, 1px);
+      border-radius: var(--fsds-command-border-radius, 8px);
+      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -423,8 +423,8 @@ export class CommandListElement extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: var(--fsds-command-spacing-dialogPadding);
-      border-bottom-color: var(--fsds-command-color-borderLight);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
+      border-bottom-color: var(--fsds-command-color-borderLight, #cecece);
       border-bottom-style: solid;
       border-bottom-width: 1px;
     }
@@ -434,9 +434,9 @@ export class CommandListElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__input {
@@ -445,8 +445,8 @@ export class CommandListElement extends LitElement {
       border: 0;
       outline: none;
       padding: 0;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       font-family: inherit;
     }
 
@@ -460,10 +460,10 @@ export class CommandListElement extends LitElement {
 
     .command__empty {
       display: block;
-      padding: var(--fsds-command-spacing-dialogPadding);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
       text-align: center;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
     }
 
     .command__group {
@@ -473,8 +473,8 @@ export class CommandListElement extends LitElement {
     .command__groupHeading {
       display: block;
       padding: 8px 12px 4px;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -490,18 +490,18 @@ export class CommandListElement extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      color: var(--fsds-command-color-text);
+      color: var(--fsds-command-color-text, #141414);
       cursor: pointer;
-      border-radius: var(--fsds-command-border-radius);
+      border-radius: var(--fsds-command-border-radius, 8px);
     }
 
     .command__item:hover {
-      background-color: var(--fsds-command-color-backgroundHover);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-backgroundHover);
-      color: var(--fsds-command-color-text);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
+      color: var(--fsds-command-color-text, #141414);
     }
 
     .command__itemIcon {
@@ -509,9 +509,9 @@ export class CommandListElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__itemContent {
@@ -523,8 +523,8 @@ export class CommandListElement extends LitElement {
 
     .command__itemLabel {
       display: block;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -532,8 +532,8 @@ export class CommandListElement extends LitElement {
 
     .command__itemDescription {
       display: block;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -543,7 +543,7 @@ export class CommandListElement extends LitElement {
       display: block;
       height: 1px;
       margin: 4px 8px;
-      background-color: var(--fsds-command-color-borderLight);
+      background-color: var(--fsds-command-color-borderLight, #cecece);
     }
   `;
 
@@ -610,14 +610,14 @@ export class CommandGroupElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: var(--fsds-command-size-topOffset);
+      padding-top: var(--fsds-command-size-topOffset, 10vh);
       pointer-events: none;
     }
 
     .command__overlay {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-command-color-overlay);
+      background-color: var(--fsds-command-color-overlay, rgba(0,0,0,0.64));
       pointer-events: auto;
     }
 
@@ -626,15 +626,15 @@ export class CommandGroupElement extends LitElement {
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: var(--fsds-command-size-maxWidth);
-      max-height: var(--fsds-command-size-maxHeight);
-      background-color: var(--fsds-command-color-background);
-      color: var(--fsds-command-color-text);
-      border-color: var(--fsds-command-color-border);
+      max-width: var(--fsds-command-size-maxWidth, 640px);
+      max-height: var(--fsds-command-size-maxHeight, 400px);
+      background-color: var(--fsds-command-color-background, #ffffff);
+      color: var(--fsds-command-color-text, #141414);
+      border-color: var(--fsds-command-color-border, #fceaea);
       border-style: solid;
-      border-width: var(--fsds-command-border-width);
-      border-radius: var(--fsds-command-border-radius);
-      box-shadow: var(--fsds-command-shadow);
+      border-width: var(--fsds-command-border-width, 1px);
+      border-radius: var(--fsds-command-border-radius, 8px);
+      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -644,8 +644,8 @@ export class CommandGroupElement extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: var(--fsds-command-spacing-dialogPadding);
-      border-bottom-color: var(--fsds-command-color-borderLight);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
+      border-bottom-color: var(--fsds-command-color-borderLight, #cecece);
       border-bottom-style: solid;
       border-bottom-width: 1px;
     }
@@ -655,9 +655,9 @@ export class CommandGroupElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__input {
@@ -666,8 +666,8 @@ export class CommandGroupElement extends LitElement {
       border: 0;
       outline: none;
       padding: 0;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       font-family: inherit;
     }
 
@@ -681,10 +681,10 @@ export class CommandGroupElement extends LitElement {
 
     .command__empty {
       display: block;
-      padding: var(--fsds-command-spacing-dialogPadding);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
       text-align: center;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
     }
 
     .command__group {
@@ -694,8 +694,8 @@ export class CommandGroupElement extends LitElement {
     .command__groupHeading {
       display: block;
       padding: 8px 12px 4px;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -711,18 +711,18 @@ export class CommandGroupElement extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      color: var(--fsds-command-color-text);
+      color: var(--fsds-command-color-text, #141414);
       cursor: pointer;
-      border-radius: var(--fsds-command-border-radius);
+      border-radius: var(--fsds-command-border-radius, 8px);
     }
 
     .command__item:hover {
-      background-color: var(--fsds-command-color-backgroundHover);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-backgroundHover);
-      color: var(--fsds-command-color-text);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
+      color: var(--fsds-command-color-text, #141414);
     }
 
     .command__itemIcon {
@@ -730,9 +730,9 @@ export class CommandGroupElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__itemContent {
@@ -744,8 +744,8 @@ export class CommandGroupElement extends LitElement {
 
     .command__itemLabel {
       display: block;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -753,8 +753,8 @@ export class CommandGroupElement extends LitElement {
 
     .command__itemDescription {
       display: block;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -764,7 +764,7 @@ export class CommandGroupElement extends LitElement {
       display: block;
       height: 1px;
       margin: 4px 8px;
-      background-color: var(--fsds-command-color-borderLight);
+      background-color: var(--fsds-command-color-borderLight, #cecece);
     }
   `;
 
@@ -831,14 +831,14 @@ export class CommandItemElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: var(--fsds-command-size-topOffset);
+      padding-top: var(--fsds-command-size-topOffset, 10vh);
       pointer-events: none;
     }
 
     .command__overlay {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-command-color-overlay);
+      background-color: var(--fsds-command-color-overlay, rgba(0,0,0,0.64));
       pointer-events: auto;
     }
 
@@ -847,15 +847,15 @@ export class CommandItemElement extends LitElement {
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: var(--fsds-command-size-maxWidth);
-      max-height: var(--fsds-command-size-maxHeight);
-      background-color: var(--fsds-command-color-background);
-      color: var(--fsds-command-color-text);
-      border-color: var(--fsds-command-color-border);
+      max-width: var(--fsds-command-size-maxWidth, 640px);
+      max-height: var(--fsds-command-size-maxHeight, 400px);
+      background-color: var(--fsds-command-color-background, #ffffff);
+      color: var(--fsds-command-color-text, #141414);
+      border-color: var(--fsds-command-color-border, #fceaea);
       border-style: solid;
-      border-width: var(--fsds-command-border-width);
-      border-radius: var(--fsds-command-border-radius);
-      box-shadow: var(--fsds-command-shadow);
+      border-width: var(--fsds-command-border-width, 1px);
+      border-radius: var(--fsds-command-border-radius, 8px);
+      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -865,8 +865,8 @@ export class CommandItemElement extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: var(--fsds-command-spacing-dialogPadding);
-      border-bottom-color: var(--fsds-command-color-borderLight);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
+      border-bottom-color: var(--fsds-command-color-borderLight, #cecece);
       border-bottom-style: solid;
       border-bottom-width: 1px;
     }
@@ -876,9 +876,9 @@ export class CommandItemElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__input {
@@ -887,8 +887,8 @@ export class CommandItemElement extends LitElement {
       border: 0;
       outline: none;
       padding: 0;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       font-family: inherit;
     }
 
@@ -902,10 +902,10 @@ export class CommandItemElement extends LitElement {
 
     .command__empty {
       display: block;
-      padding: var(--fsds-command-spacing-dialogPadding);
+      padding: var(--fsds-command-spacing-dialogPadding, 8px);
       text-align: center;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
     }
 
     .command__group {
@@ -915,8 +915,8 @@ export class CommandItemElement extends LitElement {
     .command__groupHeading {
       display: block;
       padding: 8px 12px 4px;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -932,18 +932,18 @@ export class CommandItemElement extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      color: var(--fsds-command-color-text);
+      color: var(--fsds-command-color-text, #141414);
       cursor: pointer;
-      border-radius: var(--fsds-command-border-radius);
+      border-radius: var(--fsds-command-border-radius, 8px);
     }
 
     .command__item:hover {
-      background-color: var(--fsds-command-color-backgroundHover);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-backgroundHover);
-      color: var(--fsds-command-color-text);
+      background-color: var(--fsds-command-color-backgroundHover, #efefef);
+      color: var(--fsds-command-color-text, #141414);
     }
 
     .command__itemIcon {
@@ -951,9 +951,9 @@ export class CommandItemElement extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--fsds-command-size-icon);
-      height: var(--fsds-command-size-icon);
-      color: var(--fsds-command-color-textMuted);
+      width: var(--fsds-command-size-icon, 8px);
+      height: var(--fsds-command-size-icon, 8px);
+      color: var(--fsds-command-color-textMuted, #717171);
     }
 
     .command__itemContent {
@@ -965,8 +965,8 @@ export class CommandItemElement extends LitElement {
 
     .command__itemLabel {
       display: block;
-      color: var(--fsds-command-color-text);
-      font-size: var(--fsds-command-text-size);
+      color: var(--fsds-command-color-text, #141414);
+      font-size: var(--fsds-command-text-size, 16px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -974,8 +974,8 @@ export class CommandItemElement extends LitElement {
 
     .command__itemDescription {
       display: block;
-      color: var(--fsds-command-color-textMuted);
-      font-size: var(--fsds-command-text-sizeSmall);
+      color: var(--fsds-command-color-textMuted, #717171);
+      font-size: var(--fsds-command-text-sizeSmall, 12px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -985,7 +985,7 @@ export class CommandItemElement extends LitElement {
       display: block;
       height: 1px;
       margin: 4px 8px;
-      background-color: var(--fsds-command-color-borderLight);
+      background-color: var(--fsds-command-color-borderLight, #cecece);
     }
   `;
 

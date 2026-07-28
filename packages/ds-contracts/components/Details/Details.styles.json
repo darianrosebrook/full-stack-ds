@@ -1,19 +1,24 @@
 {
   "root": {
     "padding": {
-      "resolvesTo": "details.size.padding.default"
+      "resolvesTo": "details.size.padding.default",
+      "fallback": "16px"
     },
     "border-radius": {
-      "resolvesTo": "details.size.radius.default"
+      "resolvesTo": "details.size.radius.default",
+      "fallback": "8px"
     },
     "background-color": {
-      "resolvesTo": "details.color.background.default"
+      "resolvesTo": "details.color.background.default",
+      "fallback": "#ffffff"
     },
     "gap": {
-      "resolvesTo": "details.spacing.gap.default"
+      "resolvesTo": "details.spacing.gap.default",
+      "fallback": "2px"
     },
     "line-height": {
-      "resolvesTo": "details.typography.lineHeight.body"
+      "resolvesTo": "details.typography.lineHeight.body",
+      "fallback": "1.5"
     },
     "display": {
       "literal": "block",
@@ -42,18 +47,22 @@
       ]
     },
     "border-color": {
-      "resolvesTo": "details.color.border.default"
+      "resolvesTo": "details.color.border.default",
+      "fallback": "#f29495"
     },
     "color": {
-      "resolvesTo": "details.color.foreground.primary"
+      "resolvesTo": "details.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "hover": {
     "background-color": {
-      "resolvesTo": "details.color.background.hover"
+      "resolvesTo": "details.color.background.hover",
+      "fallback": "#cecece"
     },
     "border-color": {
-      "resolvesTo": "details.color.border.hover"
+      "resolvesTo": "details.color.border.hover",
+      "fallback": "#8f8f8f"
     }
   },
   "summary": {
@@ -76,7 +85,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "details.spacing.gap.default"
+      "resolvesTo": "details.spacing.gap.default",
+      "fallback": "2px"
     },
     "list-style": {
       "literal": "none",
@@ -85,13 +95,16 @@
       ]
     },
     "padding": {
-      "resolvesTo": "details.size.padding.default"
+      "resolvesTo": "details.size.padding.default",
+      "fallback": "16px"
     },
     "color": {
-      "resolvesTo": "details.color.foreground.primary"
+      "resolvesTo": "details.color.foreground.primary",
+      "fallback": "#141414"
     },
     "font-weight": {
-      "resolvesTo": "details.typography.fontWeight.medium"
+      "resolvesTo": "details.typography.fontWeight.medium",
+      "fallback": "500"
     }
   },
   ".details__summary:hover": {
@@ -102,13 +115,16 @@
   },
   ".details__summary:focus-visible": {
     "outline-width": {
-      "resolvesTo": "details.focus.ring.width"
+      "resolvesTo": "details.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "details.focus.ring.color"
+      "resolvesTo": "details.focus.ring.color",
+      "fallback": "#d9292b"
     },
     "outline-offset": {
-      "resolvesTo": "details.focus.ring.offset"
+      "resolvesTo": "details.focus.ring.offset",
+      "fallback": "2px"
     },
     "outline-style": {
       "literal": "solid",
@@ -131,7 +147,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "details.spacing.gap.default"
+      "resolvesTo": "details.spacing.gap.default",
+      "fallback": "2px"
     },
     "flex": {
       "literal": "1 1 auto",
@@ -148,7 +165,8 @@
       ]
     },
     "color": {
-      "resolvesTo": "details.color.foreground.primary"
+      "resolvesTo": "details.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "icon": {
@@ -165,10 +183,12 @@
       ]
     },
     "width": {
-      "resolvesTo": "details.size.icon"
+      "resolvesTo": "details.size.icon",
+      "fallback": "12px"
     },
     "height": {
-      "resolvesTo": "details.size.icon"
+      "resolvesTo": "details.size.icon",
+      "fallback": "12px"
     },
     "transition": {
       "literal": "transform 200ms ease",
@@ -205,29 +225,62 @@
       ]
     },
     "padding": {
-      "resolvesTo": "details.size.padding.default"
+      "resolvesTo": "details.size.padding.default",
+      "fallback": "16px"
     },
     "color": {
-      "resolvesTo": "details.color.foreground.primary"
+      "resolvesTo": "details.color.foreground.primary",
+      "fallback": "#141414"
     },
     "line-height": {
-      "resolvesTo": "details.typography.lineHeight.body"
+      "resolvesTo": "details.typography.lineHeight.body",
+      "fallback": "1.5"
     }
   },
   "--compact": {
-    "details.size.padding.default": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
-    "details.typography.lineHeight.body": { "resolvesTo": "core.spacing.size.06", "fallback": "16px" }
+    "details.size.padding.default": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "details.typography.lineHeight.body": {
+      "resolvesTo": "core.spacing.size.06",
+      "fallback": "16px"
+    }
   },
   "--inline": {
-    "details.size.padding.default": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" },
-    "details.color.background.default": { "resolvesTo": "semantic.color.background.secondary", "fallback": "#f5f5f5" },
-    "details.color.border.default": { "resolvesTo": "semantic.color.border.subtle", "fallback": "#e0e0e0" }
+    "details.size.padding.default": {
+      "resolvesTo": "core.spacing.size.07",
+      "fallback": "24px"
+    },
+    "details.color.background.default": {
+      "resolvesTo": "semantic.color.background.secondary",
+      "fallback": "#f5f5f5"
+    },
+    "details.color.border.default": {
+      "resolvesTo": "semantic.color.border.subtle",
+      "fallback": "#e0e0e0"
+    }
   },
   ".details--icon-none .details__icon": {
-    "display": { "literal": "none", "platforms": ["web"] }
+    "display": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   ".details--icon-right .details__icon": {
-    "order": { "literal": "1", "platforms": ["web"] },
-    "margin-inline-start": { "literal": "auto", "platforms": ["web"] }
+    "order": {
+      "literal": "1",
+      "platforms": [
+        "web"
+      ]
+    },
+    "margin-inline-start": {
+      "literal": "auto",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

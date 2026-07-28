@@ -1,13 +1,16 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "breadcrumbs.color.background.elevated"
+      "resolvesTo": "breadcrumbs.color.background.elevated",
+      "fallback": "#ffffff"
     },
     "border-color": {
-      "resolvesTo": "breadcrumbs.color.border.subtle"
+      "resolvesTo": "breadcrumbs.color.border.subtle",
+      "fallback": "#cecece"
     },
     "line-height": {
-      "resolvesTo": "breadcrumbs.typography.lineHeight.collapse"
+      "resolvesTo": "breadcrumbs.typography.lineHeight.collapse",
+      "fallback": "1"
     },
     "display": {
       "literal": "block",
@@ -16,18 +19,22 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "breadcrumbs.shape.radius.medium"
+      "resolvesTo": "breadcrumbs.shape.radius.medium",
+      "fallback": "8px"
     },
     "padding": {
-      "resolvesTo": "breadcrumbs.spacing.padding.default"
+      "resolvesTo": "breadcrumbs.spacing.padding.default",
+      "fallback": "8px"
     },
     "color": {
-      "resolvesTo": "breadcrumbs.color.foreground.primary"
+      "resolvesTo": "breadcrumbs.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "focus": {
     "outline-color": {
-      "resolvesTo": "breadcrumbs.color.focus"
+      "resolvesTo": "breadcrumbs.color.focus",
+      "fallback": "#d9292b"
     }
   },
   "list": {
@@ -68,7 +75,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "breadcrumbs.spacing.gap.default"
+      "resolvesTo": "breadcrumbs.spacing.gap.default",
+      "fallback": "8px"
     }
   }
 }

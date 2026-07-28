@@ -247,11 +247,11 @@
           "max-height": "var(--fsds-box-model-max-height)",
           "display": "inline-flex",
           "align-items": "center",
-          "background-color": "var(--fsds-toggle-switch-color-background-default)",
-          "color": "var(--fsds-toggle-switch-color-foreground-default)",
-          "border-color": "var(--fsds-toggle-switch-color-border-default)",
-          "border-radius": "var(--fsds-toggle-switch-border-radius-default)",
-          "transition-duration": "var(--fsds-toggle-switch-motion-duration-fast)",
+          "background-color": "var(--fsds-toggle-switch-color-background-default, #efefef)",
+          "color": "var(--fsds-toggle-switch-color-foreground-default, #141414)",
+          "border-color": "var(--fsds-toggle-switch-color-border-default, #fceaea)",
+          "border-radius": "var(--fsds-toggle-switch-border-radius-default, 9999px)",
+          "transition-duration": "var(--fsds-toggle-switch-motion-duration-fast, 150ms)",
           "border-style": "solid",
           "border-width": "1px",
           "cursor": "pointer",
@@ -261,29 +261,29 @@
       {
         "selector": ".toggle-switch:hover",
         "declarations": {
-          "background-color": "var(--fsds-toggle-switch-color-background-hover)"
+          "background-color": "var(--fsds-toggle-switch-color-background-hover, #efefef)"
         }
       },
       {
         "selector": ".toggle-switch[aria-checked=\"true\"]",
         "declarations": {
-          "background-color": "var(--fsds-toggle-switch-color-background-checked)"
+          "background-color": "var(--fsds-toggle-switch-color-background-checked, #d9292b)"
         }
       },
       {
         "selector": ".toggle-switch:disabled",
         "declarations": {
-          "background-color": "var(--fsds-toggle-switch-color-background-disabled)",
+          "background-color": "var(--fsds-toggle-switch-color-background-disabled, #cecece)",
           "cursor": "not-allowed"
         }
       },
       {
         "selector": ".toggle-switch:focus-visible",
         "declarations": {
-          "outline-width": "var(--fsds-toggle-switch-focus-ring-width)",
-          "outline-color": "var(--fsds-toggle-switch-focus-ring-color)",
-          "outline-style": "var(--fsds-toggle-switch-focus-ring-style)",
-          "outline-offset": "var(--fsds-toggle-switch-focus-ring-offset)"
+          "outline-width": "var(--fsds-toggle-switch-focus-ring-width, 2px)",
+          "outline-color": "var(--fsds-toggle-switch-focus-ring-color, #0a65fe)",
+          "outline-style": "var(--fsds-toggle-switch-focus-ring-style, solid)",
+          "outline-offset": "var(--fsds-toggle-switch-focus-ring-offset, 2px)"
         }
       }
     ],

@@ -69,7 +69,7 @@ export class ChipElement extends LitElement {
       --fsds-box-model-padding-inline-end: 0;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-min-width: 0;
-      --fsds-box-model-gap: var(--fsds-chip-size-gap);
+      --fsds-box-model-gap: var(--fsds-chip-size-gap, 2px);
     }
 
     .chip__dismiss.button {
@@ -77,10 +77,10 @@ export class ChipElement extends LitElement {
       --fsds-box-model-padding-block-end: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-min-height: var(--fsds-chip-dismiss-size);
-      --fsds-box-model-min-width: var(--fsds-chip-dismiss-size);
-      --fsds-box-model-width: var(--fsds-chip-dismiss-size);
-      --fsds-box-model-height: var(--fsds-chip-dismiss-size);
+      --fsds-box-model-min-height: var(--fsds-chip-dismiss-size, 16px);
+      --fsds-box-model-min-width: var(--fsds-chip-dismiss-size, 16px);
+      --fsds-box-model-width: var(--fsds-chip-dismiss-size, 16px);
+      --fsds-box-model-height: var(--fsds-chip-dismiss-size, 16px);
     }
 
     .chip--selected {
@@ -122,12 +122,12 @@ export class ChipElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-chip-size-gap);
+      gap: var(--fsds-chip-size-gap, 2px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
-      min-height: var(--fsds-chip-size-minHeight);
+      min-height: var(--fsds-chip-size-minHeight, 32px);
       max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
@@ -135,19 +135,19 @@ export class ChipElement extends LitElement {
       border-style: solid;
       white-space: nowrap;
       user-select: none;
-      background-color: var(--fsds-chip-color-background-default);
-      color: var(--fsds-chip-color-foreground-default);
-      border-color: var(--fsds-chip-color-border-default);
-      border-width: var(--fsds-chip-size-border);
-      padding-block: var(--fsds-chip-size-padding-vertical);
-      padding-inline: var(--fsds-chip-size-padding-horizontal);
-      border-radius: var(--fsds-chip-size-radius);
-      font-size: var(--fsds-chip-text-size);
-      font-weight: var(--fsds-chip-text-weight);
-      transition-duration: var(--fsds-chip-motion-duration-fast);
+      background-color: var(--fsds-chip-color-background-default, #fafafa);
+      color: var(--fsds-chip-color-foreground-default, #141414);
+      border-color: var(--fsds-chip-color-border-default, #aeaeae);
+      border-width: var(--fsds-chip-size-border, 1px);
+      padding-block: var(--fsds-chip-size-padding-vertical, 2px);
+      padding-inline: var(--fsds-chip-size-padding-horizontal, 8px);
+      border-radius: var(--fsds-chip-size-radius, 9999px);
+      font-size: var(--fsds-chip-text-size, 12px);
+      font-weight: var(--fsds-chip-text-weight, 500);
+      transition-duration: var(--fsds-chip-motion-duration-fast, 150ms);
 
       &:hover {
-        background-color: var(--fsds-chip-color-background-hover);
+        background-color: var(--fsds-chip-color-background-hover, #efefef);
       }
     }
 
@@ -158,7 +158,7 @@ export class ChipElement extends LitElement {
 
     .chip__dismiss {
       flex: 0 0 auto;
-      margin-inline-start: var(--fsds-chip-dismiss-gap);
+      margin-inline-start: var(--fsds-chip-dismiss-gap, 2px);
     }
 
     .chip__icon {
@@ -175,8 +175,8 @@ export class ChipElement extends LitElement {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      font-size: var(--fsds-chip-text-size);
-      font-weight: var(--fsds-chip-text-weight);
+      font-size: var(--fsds-chip-text-size, 12px);
+      font-weight: var(--fsds-chip-text-weight, 500);
     }
   `;
 

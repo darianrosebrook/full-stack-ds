@@ -49,34 +49,44 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "button.color.background.default"
+      "resolvesTo": "button.color.background.default",
+      "fallback": "#d9292b"
     },
     "color": {
-      "resolvesTo": "button.color.foreground.default"
+      "resolvesTo": "button.color.foreground.default",
+      "fallback": "#fafafa"
     },
     "border-color": {
-      "resolvesTo": "button.color.border.default"
+      "resolvesTo": "button.color.border.default",
+      "fallback": "#fceaea"
     },
     "gap": {
-      "resolvesTo": "button.size.gap.default"
+      "resolvesTo": "button.size.gap.default",
+      "fallback": "8px"
     },
     "border-radius": {
-      "resolvesTo": "button.size.radius"
+      "resolvesTo": "button.size.radius",
+      "fallback": "9999px"
     },
     "border-width": {
-      "resolvesTo": "button.size.border"
+      "resolvesTo": "button.size.border",
+      "fallback": "1px"
     },
     "font-size": {
-      "resolvesTo": "button.size.fontSize.medium"
+      "resolvesTo": "button.size.fontSize.medium",
+      "fallback": "1rem"
     },
     "font-weight": {
-      "resolvesTo": "button.text.weight"
+      "resolvesTo": "button.text.weight",
+      "fallback": "500"
     },
     "transition-duration": {
-      "resolvesTo": "button.motion.duration.fast"
+      "resolvesTo": "button.motion.duration.fast",
+      "fallback": "150ms"
     },
     "transition-timing-function": {
-      "resolvesTo": "button.motion.easing.standard"
+      "resolvesTo": "button.motion.easing.standard",
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
     }
   },
   "--small": {
@@ -195,45 +205,58 @@
   },
   "--primary": {
     "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.primary.default"
+      "resolvesTo": "semantic.color.action.background.primary.default",
+      "fallback": "#0566fe"
     },
     "button.color.background.hover": {
-      "resolvesTo": "semantic.color.action.background.primary.hover"
+      "resolvesTo": "semantic.color.action.background.primary.hover",
+      "fallback": "#034fd6"
     },
     "button.color.background.active": {
-      "resolvesTo": "semantic.color.action.background.primary.active"
+      "resolvesTo": "semantic.color.action.background.primary.active",
+      "fallback": "#013ab0"
     },
     "button.color.background.disabled": {
-      "resolvesTo": "semantic.color.action.background.primary.disabled"
+      "resolvesTo": "semantic.color.action.background.primary.disabled",
+      "fallback": "#b8b8b8"
     },
     "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.inverse"
+      "resolvesTo": "semantic.color.foreground.inverse",
+      "fallback": "#fafafa"
     },
     "button.color.border.default": {
-      "resolvesTo": "semantic.color.action.background.primary.default"
+      "resolvesTo": "semantic.color.action.background.primary.default",
+      "fallback": "#0566fe"
     },
     "button.color.border.hover": {
-      "resolvesTo": "semantic.color.action.background.primary.hover"
+      "resolvesTo": "semantic.color.action.background.primary.hover",
+      "fallback": "#034fd6"
     }
   },
   "--secondary": {
     "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.secondary.default"
+      "resolvesTo": "semantic.color.action.background.secondary.default",
+      "fallback": "#fafafa"
     },
     "button.color.background.hover": {
-      "resolvesTo": "semantic.color.action.background.secondary.hover"
+      "resolvesTo": "semantic.color.action.background.secondary.hover",
+      "fallback": "#d0d0d0"
     },
     "button.color.background.active": {
-      "resolvesTo": "semantic.color.action.background.secondary.active"
+      "resolvesTo": "semantic.color.action.background.secondary.active",
+      "fallback": "#b8b8b8"
     },
     "button.color.background.disabled": {
-      "resolvesTo": "semantic.color.action.background.secondary.disabled"
+      "resolvesTo": "semantic.color.action.background.secondary.disabled",
+      "fallback": "#b8b8b8"
     },
     "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.primary"
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414"
     },
     "button.color.border.default": {
-      "resolvesTo": "semantic.color.border.default"
+      "resolvesTo": "semantic.color.border.default",
+      "fallback": "#a0a0a1"
     }
   },
   "--tertiary": {
@@ -260,28 +283,36 @@
   },
   "--destructive": {
     "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.danger.default"
+      "resolvesTo": "semantic.color.action.background.danger.default",
+      "fallback": "#d92d2e"
     },
     "button.color.background.hover": {
-      "resolvesTo": "semantic.color.action.background.danger.hover"
+      "resolvesTo": "semantic.color.action.background.danger.hover",
+      "fallback": "#b31b1b"
     },
     "button.color.background.active": {
-      "resolvesTo": "semantic.color.action.background.danger.active"
+      "resolvesTo": "semantic.color.action.background.danger.active",
+      "fallback": "#900909"
     },
     "button.color.background.disabled": {
-      "resolvesTo": "semantic.color.action.background.danger.disabled"
+      "resolvesTo": "semantic.color.action.background.danger.disabled",
+      "fallback": "#b8b8b8"
     },
     "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.inverse"
+      "resolvesTo": "semantic.color.foreground.inverse",
+      "fallback": "#fafafa"
     },
     "button.color.border.default": {
-      "resolvesTo": "semantic.color.action.background.danger.default"
+      "resolvesTo": "semantic.color.action.background.danger.default",
+      "fallback": "#d92d2e"
     },
     "button.color.border.hover": {
-      "resolvesTo": "semantic.color.action.background.danger.hover"
+      "resolvesTo": "semantic.color.action.background.danger.hover",
+      "fallback": "#b31b1b"
     },
     "button.color.border.focus": {
-      "resolvesTo": "semantic.focus.ring.intent.danger"
+      "resolvesTo": "semantic.focus.ring.intent.danger",
+      "fallback": "#b31b1b"
     }
   },
   "--ghost": {
@@ -326,28 +357,34 @@
   },
   "hover": {
     "background-color": {
-      "resolvesTo": "button.color.background.hover"
+      "resolvesTo": "button.color.background.hover",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "button.color.border.hover"
+      "resolvesTo": "button.color.border.hover",
+      "fallback": "#8f8f8f"
     }
   },
   "active": {
     "background-color": {
-      "resolvesTo": "button.color.background.active"
+      "resolvesTo": "button.color.background.active",
+      "fallback": "#cecece"
     }
   },
   "focus": {
     "border-color": {
-      "resolvesTo": "button.color.border.focus"
+      "resolvesTo": "button.color.border.focus",
+      "fallback": "#0566fe"
     }
   },
   "disabled": {
     "background-color": {
-      "resolvesTo": "button.color.background.disabled"
+      "resolvesTo": "button.color.background.disabled",
+      "fallback": "#cecece"
     },
     "color": {
-      "resolvesTo": "button.color.foreground.disabled"
+      "resolvesTo": "button.color.foreground.disabled",
+      "fallback": "#aeaeae"
     }
   },
   "spinner": {

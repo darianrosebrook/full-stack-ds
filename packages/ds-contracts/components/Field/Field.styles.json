@@ -2,181 +2,249 @@
   "root": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "field.gap.y"
+      "resolvesTo": "field.gap.y",
+      "fallback": "8px"
     },
     "border-radius": {
-      "resolvesTo": "field.radius"
+      "resolvesTo": "field.radius",
+      "fallback": "8px"
     }
   },
   "label": {
     "display": {
       "literal": "inline-block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
-      "resolvesTo": "field.label.fontSize"
+      "resolvesTo": "field.label.fontSize",
+      "fallback": "14px"
     },
     "font-weight": {
       "literal": "500",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "color": {
-      "resolvesTo": "field.label.color"
+      "resolvesTo": "field.label.color",
+      "fallback": "#555555"
     }
   },
   "header": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "align-items": {
       "literal": "baseline",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "justify-content": {
       "literal": "space-between",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "field.gap.meta"
+      "resolvesTo": "field.gap.meta",
+      "fallback": "4px"
     }
   },
   "control": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "box-sizing": {
       "literal": "border-box",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-width": {
       "literal": "1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-radius": {
-      "resolvesTo": "field.radius"
+      "resolvesTo": "field.radius",
+      "fallback": "8px"
     },
     "border-color": {
-      "resolvesTo": "field.color.border"
+      "resolvesTo": "field.color.border",
+      "fallback": "#cecece"
     },
     "background-color": {
-      "resolvesTo": "field.color.bg"
+      "resolvesTo": "field.color.bg",
+      "fallback": "#ffffff"
     },
     "padding": {
-      "resolvesTo": "field.pad.x"
+      "resolvesTo": "field.pad.x",
+      "fallback": "12px"
     }
   },
   "help": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
       "literal": "0.875em",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "color": {
-      "resolvesTo": "field.color.fg"
+      "resolvesTo": "field.color.fg",
+      "fallback": "#141414"
     }
   },
   "error": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
       "literal": "0.875em",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "color": {
-      "resolvesTo": "field.color.invalid-text"
+      "resolvesTo": "field.color.invalid-text",
+      "fallback": "#d9292b"
     }
   },
   "meta": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "field.gap.meta"
+      "resolvesTo": "field.gap.meta",
+      "fallback": "4px"
     }
   },
   "validatingIndicator": {
     "display": {
       "literal": "inline-flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
       "literal": "1em",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "height": {
       "literal": "1em",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "color": {
-      "resolvesTo": "field.color.fg"
+      "resolvesTo": "field.color.fg",
+      "fallback": "#141414"
     }
   },
   ".field__control:focus-within": {
     "border-color": {
-      "resolvesTo": "field.color.focus-border"
+      "resolvesTo": "field.color.focus-border",
+      "fallback": "#d9292b"
     },
     "outline-width": {
-      "resolvesTo": "field.focus.ring.width"
+      "resolvesTo": "field.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "field.focus.ring.color"
+      "resolvesTo": "field.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-style": {
-      "resolvesTo": "field.focus.ring.style"
+      "resolvesTo": "field.focus.ring.style",
+      "fallback": "solid"
     },
     "outline-offset": {
-      "resolvesTo": "field.focus.ring.offset"
+      "resolvesTo": "field.focus.ring.offset",
+      "fallback": "2px"
     }
   },
   ".field--invalid .field__control": {
     "border-color": {
-      "resolvesTo": "field.color.invalid-border"
+      "resolvesTo": "field.color.invalid-border",
+      "fallback": "#ae0001"
     }
   },
   ".field--disabled .field__control": {
     "opacity": {
       "literal": "0.5",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "cursor": {
       "literal": "not-allowed",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   ".field--valid .field__control": {
     "border-color": {
-      "resolvesTo": "field.color.valid-border"
+      "resolvesTo": "field.color.valid-border",
+      "fallback": "#336006"
     }
   },
   "--idle": {

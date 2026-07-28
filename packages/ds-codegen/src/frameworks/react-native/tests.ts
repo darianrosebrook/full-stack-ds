@@ -208,16 +208,59 @@ function pressedAccessibilityStateTestBody(ir: ComponentIR): string[] {
 }
 
 /**
- * When the root realizes a pressed state with a themeless-resolvable
- * background distinct from the rest background, prove the style-function
- * lowering by invoking it for both states.
+ * When the root (or its default-variant override) realizes a pressed state
+ * with a themeless-resolvable background distinct from the rest background,
+ * prove the style-function lowering by invoking it for both states.
+ *
+ * The rendered subject uses the contract's DEFAULT variant values, so the
+ * pressed background it actually shows is the default variant's override
+ * when one exists (variantEntries), falling back to the root entry. Reading
+ * rootEntries alone would assert the wrong color for any component whose
+ * default variant restyles the pressed state — e.g. Button's default
+ * `variant=primary` overrides pressed to a darker primary blue, distinct
+ * from the root's neutral interaction-active gray.
  */
 function pressedStateTestBody(ir: ComponentIR): string[] {
   const pressedState = stateStyleFacts(ir).find((state) => state.stateKey === "pressed");
-  const pressedBg = pressedState?.rootEntries.find(
-    (entry) => entry.rnProp === "backgroundColor" && entry.rawValue !== undefined,
-  );
-  const restBg = rootBackgroundRawValue(ir);
+  if (!pressedState) return [];
+
+  // Resolve the default variant's keys for each axis that restyles this
+  // state, so we can prefer the override the rendered subject actually uses.
+  // Two keys per fact: styleKey (root_variant_<v>) indexes variantEntries;
+  // scopeKey (variant_<v>) indexes tokenScopes[].scope. Both are needed.
+  const defaultVariantStyleKeys = new Set<string>();
+  const defaultVariantScopeKeys = new Set<string>();
+  for (const fact of variantStyleFacts(ir)) {
+    if (!pressedState.variantEntries.has(fact.styleKey)) continue;
+    // A fact qualifies as "default" for its axis iff its value matches the
+    // axis's declared default expression (e.g. variant="primary"). The
+    // classRecipe modifier carries defaultExpr per axis; compare against it.
+    const modifier = ir.classRecipe.valueModifiers.find((m) => m.propName === fact.axis);
+    if (!modifier?.defaultExpr) continue;
+    if (normalizeVariantLiteral(modifier.defaultExpr) === fact.value) {
+      defaultVariantStyleKeys.add(fact.styleKey);
+      defaultVariantScopeKeys.add(fact.scopeKey);
+    }
+  }
+
+  // Prefer a default-variant override; fall back to root.
+  let pressedBg: JoinedStyleEntry | undefined;
+  for (const styleKey of defaultVariantStyleKeys) {
+    const entry = pressedState.variantEntries
+      .get(styleKey)
+      ?.find((e) => e.rnProp === "backgroundColor" && e.rawValue !== undefined);
+    if (entry) {
+      pressedBg = entry;
+      break;
+    }
+  }
+  if (!pressedBg) {
+    pressedBg = pressedState.rootEntries.find(
+      (entry) => entry.rnProp === "backgroundColor" && entry.rawValue !== undefined,
+    );
+  }
+
+  const restBg = defaultVariantBackgroundRawValue(ir, defaultVariantScopeKeys);
   if (!pressedBg?.rawValue || !restBg || pressedBg.rawValue === restBg) return [];
   return [
     `${INDENT}it("realizes pressed state styles via the style function", () => {`,
@@ -233,16 +276,49 @@ function pressedStateTestBody(ir: ComponentIR): string[] {
   ];
 }
 
-/** Themeless-resolved root background (the token's committed fallback). */
-function rootBackgroundRawValue(ir: ComponentIR): string | undefined {
-  for (const scope of ir.tokenScopes) {
-    if (scope.scope !== "root") continue;
+/**
+ * The classRecipe stores the axis default as a TS expression (e.g.
+ * `"primary"` or `'primary'`). Strip the quotes so it compares equal to the
+ * bare variant value on the VariantStyleFact.
+ */
+function normalizeVariantLiteral(expr: string): string {
+  const trimmed = expr.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+/**
+ * Themeless-resolved rest background the rendered subject actually shows.
+ * Mirrors the pressed-bg precedence: prefer a default-variant scope when one
+ * of the given styleKeys matches (the subject renders with default variant
+ * values), falling back to the root scope. Reads the same name suffixes the
+ * component's style resolver keys on for the background property.
+ */
+function defaultVariantBackgroundRawValue(
+  ir: ComponentIR,
+  defaultVariantStyleKeys: Set<string>,
+): string | undefined {
+  const matches = (scopeId: string) =>
+    defaultVariantStyleKeys.has(scopeId) || scopeId === "root";
+  // Prefer default-variant scopes first; only fall back to root if no variant
+  // scope restyles the background.
+  const order = [
+    ...ir.tokenScopes.filter((s) => defaultVariantStyleKeys.has(s.scope)),
+    ...ir.tokenScopes.filter((s) => s.scope === "root"),
+  ];
+  for (const scope of order) {
+    if (!matches(scope.scope) && scope.scope !== "root") continue;
     const token = scope.values.find((value) =>
       [".color.background.default", ".color.bg.default", ".color.bg"].some((suffix) =>
         value.name.endsWith(suffix),
       ),
     );
-    return token?.rawValue;
+    if (token?.rawValue !== undefined) return token.rawValue;
   }
   return undefined;
 }

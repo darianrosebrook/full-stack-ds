@@ -1,16 +1,20 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "shuttle.color.background.default"
+      "resolvesTo": "shuttle.color.background.default",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "shuttle.color.border.accent"
+      "resolvesTo": "shuttle.color.border.accent",
+      "fallback": "#d9292b"
     },
     "padding": {
-      "resolvesTo": "shuttle.size.padding.default"
+      "resolvesTo": "shuttle.size.padding.default",
+      "fallback": "24px"
     },
     "border-radius": {
-      "resolvesTo": "shuttle.size.radius.default"
+      "resolvesTo": "shuttle.size.radius.default",
+      "fallback": "8px"
     }
   },
   "item": {
@@ -33,7 +37,8 @@
       ]
     },
     "color": {
-      "resolvesTo": "shuttle.color.foreground.primary"
+      "resolvesTo": "shuttle.color.foreground.primary",
+      "fallback": "#141414"
     },
     "cursor": {
       "literal": "pointer",

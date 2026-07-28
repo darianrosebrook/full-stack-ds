@@ -113,13 +113,16 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "checkbox.border.radius"
+      "resolvesTo": "checkbox.border.radius",
+      "fallback": "4px"
     },
     "border-color": {
-      "resolvesTo": "checkbox.color.border.default"
+      "resolvesTo": "checkbox.color.border.default",
+      "fallback": "#aeaeae"
     },
     "background-color": {
-      "resolvesTo": "checkbox.color.background.default"
+      "resolvesTo": "checkbox.color.background.default",
+      "fallback": "#ffffff"
     },
     "border-style": {
       "literal": "solid",
@@ -128,7 +131,8 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "checkbox.border.width"
+      "resolvesTo": "checkbox.border.width",
+      "fallback": "1px"
     },
     "box-sizing": {
       "literal": "border-box",
@@ -137,7 +141,8 @@
       ]
     },
     "transition-duration": {
-      "resolvesTo": "checkbox.transition.duration"
+      "resolvesTo": "checkbox.transition.duration",
+      "fallback": "150ms"
     }
   },
   ":has(.checkbox__input:checked) .checkbox__indicator": {
@@ -154,16 +159,20 @@
   },
   ":has(.checkbox__input:focus-visible) .checkbox__indicator": {
     "outline-width": {
-      "resolvesTo": "checkbox.focus.ring.width"
+      "resolvesTo": "checkbox.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "checkbox.focus.ring.color"
+      "resolvesTo": "checkbox.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-style": {
-      "resolvesTo": "checkbox.focus.ring.style"
+      "resolvesTo": "checkbox.focus.ring.style",
+      "fallback": "solid"
     },
     "outline-offset": {
-      "resolvesTo": "checkbox.focus.ring.offset"
+      "resolvesTo": "checkbox.focus.ring.offset",
+      "fallback": "2px"
     }
   }
 }

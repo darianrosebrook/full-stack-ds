@@ -275,43 +275,43 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "background-color": "var(--fsds-image-color-background-default)",
-          "color": "var(--fsds-image-color-foreground-primary)"
+          "background-color": "var(--fsds-image-color-background-default, #efefef)",
+          "color": "var(--fsds-image-color-foreground-primary, #141414)"
         }
       },
       {
         "selector": ".image--size-xs",
         "declarations": {
-          "width": "var(--fsds-image-size-xs)",
-          "height": "var(--fsds-image-size-xs)"
+          "width": "var(--fsds-image-size-xs, 24px)",
+          "height": "var(--fsds-image-size-xs, 24px)"
         }
       },
       {
         "selector": ".image--size-sm",
         "declarations": {
-          "width": "var(--fsds-image-size-sm)",
-          "height": "var(--fsds-image-size-sm)"
+          "width": "var(--fsds-image-size-sm, 32px)",
+          "height": "var(--fsds-image-size-sm, 32px)"
         }
       },
       {
         "selector": ".image--size-md",
         "declarations": {
-          "width": "var(--fsds-image-size-md)",
-          "height": "var(--fsds-image-size-md)"
+          "width": "var(--fsds-image-size-md, 48px)",
+          "height": "var(--fsds-image-size-md, 48px)"
         }
       },
       {
         "selector": ".image--size-lg",
         "declarations": {
-          "width": "var(--fsds-image-size-lg)",
-          "height": "var(--fsds-image-size-lg)"
+          "width": "var(--fsds-image-size-lg, 64px)",
+          "height": "var(--fsds-image-size-lg, 64px)"
         }
       },
       {
         "selector": ".image--size-xl",
         "declarations": {
-          "width": "var(--fsds-image-size-xl)",
-          "height": "var(--fsds-image-size-xl)"
+          "width": "var(--fsds-image-size-xl, 96px)",
+          "height": "var(--fsds-image-size-xl, 96px)"
         }
       },
       {
@@ -324,31 +324,31 @@
       {
         "selector": ".image--radius-none",
         "declarations": {
-          "border-radius": "var(--fsds-image-radius-none)"
+          "border-radius": "var(--fsds-image-radius-none, 0px)"
         }
       },
       {
         "selector": ".image--radius-sm",
         "declarations": {
-          "border-radius": "var(--fsds-image-radius-sm)"
+          "border-radius": "var(--fsds-image-radius-sm, 4px)"
         }
       },
       {
         "selector": ".image--radius-md",
         "declarations": {
-          "border-radius": "var(--fsds-image-radius-md)"
+          "border-radius": "var(--fsds-image-radius-md, 8px)"
         }
       },
       {
         "selector": ".image--radius-lg",
         "declarations": {
-          "border-radius": "var(--fsds-image-radius-lg)"
+          "border-radius": "var(--fsds-image-radius-lg, 16px)"
         }
       },
       {
         "selector": ".image--radius-full",
         "declarations": {
-          "border-radius": "var(--fsds-image-radius-full)"
+          "border-radius": "var(--fsds-image-radius-full, 9999px)"
         }
       }
     ],

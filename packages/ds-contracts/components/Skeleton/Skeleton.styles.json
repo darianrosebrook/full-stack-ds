@@ -2,184 +2,279 @@
   "root": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
-      "resolvesTo": "skeleton.color.base"
+      "resolvesTo": "skeleton.color.base",
+      "fallback": "#efefef"
     },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     },
     "transition-duration": {
-      "resolvesTo": "skeleton.anim.duration"
+      "resolvesTo": "skeleton.anim.duration",
+      "fallback": "400ms"
     },
     "transition-timing-function": {
-      "resolvesTo": "skeleton.anim.easing"
+      "resolvesTo": "skeleton.anim.easing",
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
     },
     "animation": {
       "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "shape": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
-      "resolvesTo": "skeleton.color.base"
+      "resolvesTo": "skeleton.color.base",
+      "fallback": "#efefef"
     },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     }
   },
   "stack": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "flex-direction": {
       "literal": "column",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "gap": {
-      "resolvesTo": "skeleton.gap.md"
+      "resolvesTo": "skeleton.gap.md",
+      "fallback": "12px"
     }
   },
   "--block": {
-    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
+    "skeleton.radius.md": {
+      "resolvesTo": "semantic.shape.radius.medium",
+      "fallback": "8px"
+    },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     }
   },
   "--text": {
-    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.small", "fallback": "4px" },
-    "skeleton.shape.height.text": { "resolvesTo": "core.typography.ramp.4", "fallback": "1rem" },
+    "skeleton.radius.md": {
+      "resolvesTo": "semantic.shape.radius.small",
+      "fallback": "4px"
+    },
+    "skeleton.shape.height.text": {
+      "resolvesTo": "core.typography.ramp.4",
+      "fallback": "1rem"
+    },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     },
     "height": {
-      "resolvesTo": "skeleton.shape.height.text"
+      "resolvesTo": "skeleton.shape.height.text",
+      "fallback": "1rem"
     }
   },
   "--avatar": {
-    "skeleton.radius.md": { "resolvesTo": "semantic.shape.control.radius.pill", "fallback": "9999px" },
+    "skeleton.radius.md": {
+      "resolvesTo": "semantic.shape.control.radius.pill",
+      "fallback": "9999px"
+    },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     },
     "aspect-ratio": {
       "literal": "1",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--media": {
-    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
+    "skeleton.radius.md": {
+      "resolvesTo": "semantic.shape.radius.medium",
+      "fallback": "8px"
+    },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     },
     "aspect-ratio": {
       "literal": "16 / 9",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--dataviz": {
-    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
+    "skeleton.radius.md": {
+      "resolvesTo": "semantic.shape.radius.medium",
+      "fallback": "8px"
+    },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     },
     "aspect-ratio": {
       "literal": "4 / 3",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--actions": {
-    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
+    "skeleton.radius.md": {
+      "resolvesTo": "semantic.shape.radius.medium",
+      "fallback": "8px"
+    },
     "border-radius": {
-      "resolvesTo": "skeleton.radius.md"
+      "resolvesTo": "skeleton.radius.md",
+      "fallback": "8px"
     },
     "height": {
       "literal": "36px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "min-width": {
       "literal": "80px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--shimmer": {
     "animation": {
       "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--wipe": {
-    "skeleton.color.base": { "resolvesTo": "semantic.color.background.tertiary", "fallback": "#e5e5e5" },
+    "skeleton.color.base": {
+      "resolvesTo": "semantic.color.background.tertiary",
+      "fallback": "#e5e5e5"
+    },
     "overflow": {
       "literal": "hidden",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "position": {
       "literal": "relative",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "animation": {
       "literal": "none",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   ".skeleton--wipe::after": {
     "content": {
       "literal": "\"\"",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "position": {
       "literal": "absolute",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "inset": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background": {
       "literal": "linear-gradient(90deg, transparent, var(--fsds-skeleton-color-highlight, rgba(255,255,255,0.55)), transparent)",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "transform": {
       "literal": "translateX(-100%)",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "animation": {
       "literal": "skeleton-wipe calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--pulse": {
     "animation": {
       "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 3) ease-in-out infinite",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--none": {
     "animation": {
       "literal": "none",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--compact": {
-    "skeleton.gap.md": { "resolvesTo": "core.spacing.size.03", "fallback": "4px" }
+    "skeleton.gap.md": {
+      "resolvesTo": "core.spacing.size.03",
+      "fallback": "4px"
+    }
   },
   "--regular": {
-    "skeleton.gap.md": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" }
+    "skeleton.gap.md": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    }
   },
   "--spacious": {
-    "skeleton.gap.md": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" }
+    "skeleton.gap.md": {
+      "resolvesTo": "core.spacing.size.07",
+      "fallback": "24px"
+    }
   }
 }

@@ -2,107 +2,204 @@
   "root": {
     "display": {
       "literal": "inline-flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "align-items": {
       "literal": "center",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "box-sizing": {
       "literal": "border-box",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "white-space": {
       "literal": "nowrap",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "user-select": {
       "literal": "none",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
-      "resolvesTo": "chip.color.background.default"
+      "resolvesTo": "chip.color.background.default",
+      "fallback": "#fafafa"
     },
     "color": {
-      "resolvesTo": "chip.color.foreground.default"
+      "resolvesTo": "chip.color.foreground.default",
+      "fallback": "#141414"
     },
     "border-color": {
-      "resolvesTo": "chip.color.border.default"
+      "resolvesTo": "chip.color.border.default",
+      "fallback": "#aeaeae"
     },
     "border-width": {
-      "resolvesTo": "chip.size.border"
+      "resolvesTo": "chip.size.border",
+      "fallback": "1px"
     },
     "padding-block": {
-      "resolvesTo": "chip.size.padding.vertical"
+      "resolvesTo": "chip.size.padding.vertical",
+      "fallback": "2px"
     },
     "padding-inline": {
-      "resolvesTo": "chip.size.padding.horizontal"
+      "resolvesTo": "chip.size.padding.horizontal",
+      "fallback": "8px"
     },
     "gap": {
-      "resolvesTo": "chip.size.gap"
+      "resolvesTo": "chip.size.gap",
+      "fallback": "2px"
     },
     "border-radius": {
-      "resolvesTo": "chip.size.radius"
+      "resolvesTo": "chip.size.radius",
+      "fallback": "9999px"
     },
     "min-height": {
-      "resolvesTo": "chip.size.minHeight"
+      "resolvesTo": "chip.size.minHeight",
+      "fallback": "32px"
     },
     "font-size": {
-      "resolvesTo": "chip.text.size"
+      "resolvesTo": "chip.text.size",
+      "fallback": "12px"
     },
     "font-weight": {
-      "resolvesTo": "chip.text.weight"
+      "resolvesTo": "chip.text.weight",
+      "fallback": "500"
     },
     "transition-duration": {
-      "resolvesTo": "chip.motion.duration.fast"
+      "resolvesTo": "chip.motion.duration.fast",
+      "fallback": "150ms"
     }
   },
   "hover": {
     "background-color": {
-      "resolvesTo": "chip.color.background.hover"
+      "resolvesTo": "chip.color.background.hover",
+      "fallback": "#efefef"
     }
   },
   "__action": {
     "flex": {
       "literal": "1 1 auto",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "min-width": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   ".chip__action.button": {
-    "box-model.padding-block-start": { "literal": "0", "platforms": ["web"] },
-    "box-model.padding-block-end": { "literal": "0", "platforms": ["web"] },
-    "box-model.padding-inline-start": { "literal": "0", "platforms": ["web"] },
-    "box-model.padding-inline-end": { "literal": "0", "platforms": ["web"] },
-    "box-model.min-height": { "literal": "0", "platforms": ["web"] },
-    "box-model.min-width": { "literal": "0", "platforms": ["web"] },
-    "box-model.gap": { "resolvesTo": "chip.size.gap" }
+    "box-model.padding-block-start": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.padding-block-end": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.padding-inline-start": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.padding-inline-end": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.min-height": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.min-width": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.gap": {
+      "resolvesTo": "chip.size.gap",
+      "fallback": "2px"
+    }
   },
   "__dismiss": {
     "flex": {
       "literal": "0 0 auto",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "margin-inline-start": {
-      "resolvesTo": "chip.dismiss.gap"
+      "resolvesTo": "chip.dismiss.gap",
+      "fallback": "2px"
     }
   },
   ".chip__dismiss.button": {
-    "box-model.padding-block-start": { "literal": "0", "platforms": ["web"] },
-    "box-model.padding-block-end": { "literal": "0", "platforms": ["web"] },
-    "box-model.padding-inline-start": { "literal": "0", "platforms": ["web"] },
-    "box-model.padding-inline-end": { "literal": "0", "platforms": ["web"] },
-    "box-model.min-height": { "resolvesTo": "chip.dismiss.size" },
-    "box-model.min-width": { "resolvesTo": "chip.dismiss.size" },
-    "box-model.width": { "resolvesTo": "chip.dismiss.size" },
-    "box-model.height": { "resolvesTo": "chip.dismiss.size" }
+    "box-model.padding-block-start": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.padding-block-end": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.padding-inline-start": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.padding-inline-end": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-model.min-height": {
+      "resolvesTo": "chip.dismiss.size",
+      "fallback": "16px"
+    },
+    "box-model.min-width": {
+      "resolvesTo": "chip.dismiss.size",
+      "fallback": "16px"
+    },
+    "box-model.width": {
+      "resolvesTo": "chip.dismiss.size",
+      "fallback": "16px"
+    },
+    "box-model.height": {
+      "resolvesTo": "chip.dismiss.size",
+      "fallback": "16px"
+    }
   },
   "icon": {
     "display": {
@@ -168,39 +265,98 @@
       ]
     },
     "font-size": {
-      "resolvesTo": "chip.text.size"
+      "resolvesTo": "chip.text.size",
+      "fallback": "12px"
     },
     "font-weight": {
-      "resolvesTo": "chip.text.weight"
+      "resolvesTo": "chip.text.weight",
+      "fallback": "500"
     }
   },
   "--selected": {
-    "chip.color.background.default": { "resolvesTo": "semantic.color.background.info.subtle", "fallback": "#d9f3fe" },
-    "chip.color.foreground.default": { "resolvesTo": "semantic.color.foreground.on.info.subtle", "fallback": "#002d99" },
-    "chip.color.border.default": { "resolvesTo": "semantic.color.border.info", "fallback": "#0042dc" }
+    "chip.color.background.default": {
+      "resolvesTo": "semantic.color.background.info.subtle",
+      "fallback": "#d9f3fe"
+    },
+    "chip.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.on.info.subtle",
+      "fallback": "#002d99"
+    },
+    "chip.color.border.default": {
+      "resolvesTo": "semantic.color.border.info",
+      "fallback": "#0042dc"
+    }
   },
   "--dismissible": {
-    "chip.size.padding.horizontal": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" }
+    "chip.size.padding.horizontal": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    }
   },
   "--small": {
-    "chip.size.padding.vertical": { "resolvesTo": "semantic.glyph.badge.size.sm.paddingY", "fallback": "2px" },
-    "chip.size.padding.horizontal": { "resolvesTo": "semantic.glyph.badge.size.sm.paddingX", "fallback": "4px" },
-    "chip.text.size": { "resolvesTo": "semantic.glyph.badge.size.sm.fontSize", "fallback": "10px" },
-    "chip.size.gap": { "resolvesTo": "semantic.glyph.badge.size.sm.gap", "fallback": "2px" },
-    "chip.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.sm.minHeight", "fallback": "24px" }
+    "chip.size.padding.vertical": {
+      "resolvesTo": "semantic.glyph.badge.size.sm.paddingY",
+      "fallback": "2px"
+    },
+    "chip.size.padding.horizontal": {
+      "resolvesTo": "semantic.glyph.badge.size.sm.paddingX",
+      "fallback": "4px"
+    },
+    "chip.text.size": {
+      "resolvesTo": "semantic.glyph.badge.size.sm.fontSize",
+      "fallback": "10px"
+    },
+    "chip.size.gap": {
+      "resolvesTo": "semantic.glyph.badge.size.sm.gap",
+      "fallback": "2px"
+    },
+    "chip.size.minHeight": {
+      "resolvesTo": "semantic.glyph.badge.size.sm.minHeight",
+      "fallback": "24px"
+    }
   },
   "--medium": {
-    "chip.size.padding.vertical": { "resolvesTo": "semantic.glyph.badge.size.md.paddingY", "fallback": "4px" },
-    "chip.size.padding.horizontal": { "resolvesTo": "semantic.glyph.badge.size.md.paddingX", "fallback": "8px" },
-    "chip.text.size": { "resolvesTo": "semantic.glyph.badge.size.md.fontSize", "fallback": "12px" },
-    "chip.size.gap": { "resolvesTo": "semantic.glyph.badge.size.md.gap", "fallback": "4px" },
-    "chip.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.md.minHeight", "fallback": "32px" }
+    "chip.size.padding.vertical": {
+      "resolvesTo": "semantic.glyph.badge.size.md.paddingY",
+      "fallback": "4px"
+    },
+    "chip.size.padding.horizontal": {
+      "resolvesTo": "semantic.glyph.badge.size.md.paddingX",
+      "fallback": "8px"
+    },
+    "chip.text.size": {
+      "resolvesTo": "semantic.glyph.badge.size.md.fontSize",
+      "fallback": "12px"
+    },
+    "chip.size.gap": {
+      "resolvesTo": "semantic.glyph.badge.size.md.gap",
+      "fallback": "4px"
+    },
+    "chip.size.minHeight": {
+      "resolvesTo": "semantic.glyph.badge.size.md.minHeight",
+      "fallback": "32px"
+    }
   },
   "--large": {
-    "chip.size.padding.vertical": { "resolvesTo": "semantic.glyph.badge.size.lg.paddingY", "fallback": "4px" },
-    "chip.size.padding.horizontal": { "resolvesTo": "semantic.glyph.badge.size.lg.paddingX", "fallback": "12px" },
-    "chip.text.size": { "resolvesTo": "semantic.glyph.badge.size.lg.fontSize", "fallback": "14px" },
-    "chip.size.gap": { "resolvesTo": "semantic.glyph.badge.size.lg.gap", "fallback": "4px" },
-    "chip.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.lg.minHeight", "fallback": "40px" }
+    "chip.size.padding.vertical": {
+      "resolvesTo": "semantic.glyph.badge.size.lg.paddingY",
+      "fallback": "4px"
+    },
+    "chip.size.padding.horizontal": {
+      "resolvesTo": "semantic.glyph.badge.size.lg.paddingX",
+      "fallback": "12px"
+    },
+    "chip.text.size": {
+      "resolvesTo": "semantic.glyph.badge.size.lg.fontSize",
+      "fallback": "14px"
+    },
+    "chip.size.gap": {
+      "resolvesTo": "semantic.glyph.badge.size.lg.gap",
+      "fallback": "4px"
+    },
+    "chip.size.minHeight": {
+      "resolvesTo": "semantic.glyph.badge.size.lg.minHeight",
+      "fallback": "40px"
+    }
   }
 }

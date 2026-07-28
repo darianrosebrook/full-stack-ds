@@ -262,7 +262,7 @@
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
           "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
-          "gap": "var(--fsds-button-size-gap-default)",
+          "gap": "var(--fsds-button-size-gap-default, 8px)",
           "width": "var(--fsds-box-model-width)",
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",
@@ -277,15 +277,15 @@
           "border-style": "solid",
           "white-space": "nowrap",
           "user-select": "none",
-          "background-color": "var(--fsds-button-color-background-default)",
-          "color": "var(--fsds-button-color-foreground-default)",
-          "border-color": "var(--fsds-button-color-border-default)",
-          "border-radius": "var(--fsds-button-size-radius)",
-          "border-width": "var(--fsds-button-size-border)",
-          "font-size": "var(--fsds-button-size-fontSize-medium)",
-          "font-weight": "var(--fsds-button-text-weight)",
-          "transition-duration": "var(--fsds-button-motion-duration-fast)",
-          "transition-timing-function": "var(--fsds-button-motion-easing-standard)"
+          "background-color": "var(--fsds-button-color-background-default, #d9292b)",
+          "color": "var(--fsds-button-color-foreground-default, #fafafa)",
+          "border-color": "var(--fsds-button-color-border-default, #fceaea)",
+          "border-radius": "var(--fsds-button-size-radius, 9999px)",
+          "border-width": "var(--fsds-button-size-border, 1px)",
+          "font-size": "var(--fsds-button-size-fontSize-medium, 1rem)",
+          "font-weight": "var(--fsds-button-text-weight, 500)",
+          "transition-duration": "var(--fsds-button-motion-duration-fast, 150ms)",
+          "transition-timing-function": "var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))"
         }
       },
       {
@@ -333,24 +333,24 @@
       {
         "selector": ".button--primary",
         "declarations": {
-          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-primary-default)",
-          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-primary-hover)",
-          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-primary-active)",
-          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-primary-disabled)",
-          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse)",
-          "--fsds-button-color-border-default": "var(--fsds-semantic-color-action-background-primary-default)",
-          "--fsds-button-color-border-hover": "var(--fsds-semantic-color-action-background-primary-hover)"
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-primary-default, #0566fe)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-primary-hover, #034fd6)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-primary-active, #013ab0)",
+          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-primary-disabled, #b8b8b8)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-action-background-primary-default, #0566fe)",
+          "--fsds-button-color-border-hover": "var(--fsds-semantic-color-action-background-primary-hover, #034fd6)"
         }
       },
       {
         "selector": ".button--secondary",
         "declarations": {
-          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-secondary-default)",
-          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-secondary-hover)",
-          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-secondary-active)",
-          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-secondary-disabled)",
-          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-primary)",
-          "--fsds-button-color-border-default": "var(--fsds-semantic-color-border-default)"
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-secondary-default, #fafafa)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-secondary-hover, #d0d0d0)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-secondary-active, #b8b8b8)",
+          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-secondary-disabled, #b8b8b8)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-border-default, #a0a0a1)"
         }
       },
       {
@@ -364,14 +364,14 @@
       {
         "selector": ".button--destructive",
         "declarations": {
-          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-danger-default)",
-          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-danger-hover)",
-          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-danger-active)",
-          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-danger-disabled)",
-          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse)",
-          "--fsds-button-color-border-default": "var(--fsds-semantic-color-action-background-danger-default)",
-          "--fsds-button-color-border-hover": "var(--fsds-semantic-color-action-background-danger-hover)",
-          "--fsds-button-color-border-focus": "var(--fsds-semantic-focus-ring-intent-danger)"
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-danger-default, #d92d2e)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-danger-hover, #b31b1b)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-danger-active, #900909)",
+          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-danger-disabled, #b8b8b8)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-action-background-danger-default, #d92d2e)",
+          "--fsds-button-color-border-hover": "var(--fsds-semantic-color-action-background-danger-hover, #b31b1b)",
+          "--fsds-button-color-border-focus": "var(--fsds-semantic-focus-ring-intent-danger, #b31b1b)"
         }
       },
       {
@@ -393,27 +393,27 @@
       {
         "selector": ".button:hover",
         "declarations": {
-          "background-color": "var(--fsds-button-color-background-hover)",
-          "border-color": "var(--fsds-button-color-border-hover)"
+          "background-color": "var(--fsds-button-color-background-hover, #efefef)",
+          "border-color": "var(--fsds-button-color-border-hover, #8f8f8f)"
         }
       },
       {
         "selector": ".button:active",
         "declarations": {
-          "background-color": "var(--fsds-button-color-background-active)"
+          "background-color": "var(--fsds-button-color-background-active, #cecece)"
         }
       },
       {
         "selector": ".button:focus-visible",
         "declarations": {
-          "border-color": "var(--fsds-button-color-border-focus)"
+          "border-color": "var(--fsds-button-color-border-focus, #0566fe)"
         }
       },
       {
         "selector": ".button:disabled",
         "declarations": {
-          "background-color": "var(--fsds-button-color-background-disabled)",
-          "color": "var(--fsds-button-color-foreground-disabled)"
+          "background-color": "var(--fsds-button-color-background-disabled, #cecece)",
+          "color": "var(--fsds-button-color-foreground-disabled, #aeaeae)"
         }
       },
       {

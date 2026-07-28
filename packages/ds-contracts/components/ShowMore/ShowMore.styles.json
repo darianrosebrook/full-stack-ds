@@ -1,43 +1,114 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "show-more.color.background.default"
+      "resolvesTo": "show-more.color.background.default",
+      "fallback": "#efefef"
     },
     "color": {
-      "resolvesTo": "show-more.color.foreground.secondary"
+      "resolvesTo": "show-more.color.foreground.secondary",
+      "fallback": "#555555"
     },
     "padding": {
-      "resolvesTo": "show-more.size.padding.default"
+      "resolvesTo": "show-more.size.padding.default",
+      "fallback": "24px"
     },
     "border-radius": {
-      "resolvesTo": "show-more.size.radius.default"
+      "resolvesTo": "show-more.size.radius.default",
+      "fallback": "8px"
     }
   },
   "content": {
-    "overflow": { "literal": "hidden", "platforms": ["web"] },
-    "display": { "literal": "-webkit-box", "platforms": ["web"] },
-    "-webkit-box-orient": { "literal": "vertical", "platforms": ["web"] },
+    "overflow": {
+      "literal": "hidden",
+      "platforms": [
+        "web"
+      ]
+    },
+    "display": {
+      "literal": "-webkit-box",
+      "platforms": [
+        "web"
+      ]
+    },
+    "-webkit-box-orient": {
+      "literal": "vertical",
+      "platforms": [
+        "web"
+      ]
+    },
     "-webkit-line-clamp": {
       "literal": "var(--fsds-show-more-content-max-lines, 3)",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "line-clamp": {
       "literal": "var(--fsds-show-more-content-max-lines, 3)",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   ".show-more--expanded .show-more__content": {
-    "display": { "literal": "block", "platforms": ["web"] },
-    "-webkit-line-clamp": { "literal": "unset", "platforms": ["web"] },
-    "line-clamp": { "literal": "unset", "platforms": ["web"] }
+    "display": {
+      "literal": "block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "-webkit-line-clamp": {
+      "literal": "unset",
+      "platforms": [
+        "web"
+      ]
+    },
+    "line-clamp": {
+      "literal": "unset",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "trigger": {
-    "display": { "literal": "inline-flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "color": { "resolvesTo": "show-more.color.foreground.primary" },
-    "background": { "literal": "none", "platforms": ["web"] },
-    "border": { "literal": "none", "platforms": ["web"] },
-    "padding": { "literal": "0", "platforms": ["web"] },
-    "cursor": { "literal": "pointer", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "show-more.color.foreground.primary",
+      "fallback": "#141414"
+    },
+    "background": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "padding": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

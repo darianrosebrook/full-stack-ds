@@ -1,66 +1,92 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "code-block.color.background.default"
+      "resolvesTo": "code-block.color.background.default",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "code-block.color.border.default"
+      "resolvesTo": "code-block.color.border.default",
+      "fallback": "#cecece"
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-width": {
-      "resolvesTo": "code-block.size.border.default"
+      "resolvesTo": "code-block.size.border.default",
+      "fallback": "1px"
     },
     "border-radius": {
-      "resolvesTo": "code-block.size.radius.default"
+      "resolvesTo": "code-block.size.radius.default",
+      "fallback": "8px"
     },
     "color": {
-      "resolvesTo": "code-block.color.foreground.primary"
+      "resolvesTo": "code-block.color.foreground.primary",
+      "fallback": "#141414"
     },
     "font-family": {
       "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
-      "resolvesTo": "code-block.size.fontSize.default"
+      "resolvesTo": "code-block.size.fontSize.default",
+      "fallback": "0.875rem"
     },
     "line-height": {
-      "resolvesTo": "code-block.typography.lineHeight.default"
+      "resolvesTo": "code-block.typography.lineHeight.default",
+      "fallback": "1.5"
     },
     "margin": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "overflow-x": {
       "literal": "auto",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "padding": {
-      "resolvesTo": "code-block.size.padding.default"
+      "resolvesTo": "code-block.size.padding.default",
+      "fallback": "16px"
     },
     "tab-size": {
       "literal": "2",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "white-space": {
       "literal": "pre",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "code": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-family": {
       "literal": "inherit",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "font-size": {
       "literal": "inherit",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

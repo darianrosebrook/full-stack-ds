@@ -1,19 +1,24 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "postcard.color.background.default"
+      "resolvesTo": "postcard.color.background.default",
+      "fallback": "#ffffff"
     },
     "padding": {
-      "resolvesTo": "postcard.size.padding.default"
+      "resolvesTo": "postcard.size.padding.default",
+      "fallback": "16px"
     },
     "border-radius": {
-      "resolvesTo": "postcard.size.radius.default"
+      "resolvesTo": "postcard.size.radius.default",
+      "fallback": "8px"
     },
     "gap": {
-      "resolvesTo": "postcard.size.gap.default"
+      "resolvesTo": "postcard.size.gap.default",
+      "fallback": "12px"
     },
     "line-height": {
-      "resolvesTo": "postcard.typography.content.lineHeight"
+      "resolvesTo": "postcard.typography.content.lineHeight",
+      "fallback": "1.5"
     },
     "display": {
       "literal": "flex",
@@ -34,7 +39,8 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "postcard.size.border.default"
+      "resolvesTo": "postcard.size.border.default",
+      "fallback": "1px"
     },
     "box-sizing": {
       "literal": "border-box",
@@ -43,23 +49,28 @@
       ]
     },
     "border-color": {
-      "resolvesTo": "postcard.color.border.default"
+      "resolvesTo": "postcard.color.border.default",
+      "fallback": "#fceaea"
     },
     "color": {
-      "resolvesTo": "postcard.color.foreground.primary"
+      "resolvesTo": "postcard.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "hover": {
     "background-color": {
-      "resolvesTo": "postcard.color.background.hover"
+      "resolvesTo": "postcard.color.background.hover",
+      "fallback": "#efefef"
     },
     "border-color": {
-      "resolvesTo": "postcard.color.border.hover"
+      "resolvesTo": "postcard.color.border.hover",
+      "fallback": "#8f8f8f"
     }
   },
   "content": {
     "line-height": {
-      "resolvesTo": "postcard.typography.content.lineHeight"
+      "resolvesTo": "postcard.typography.content.lineHeight",
+      "fallback": "1.5"
     },
     "display": {
       "literal": "flex",
@@ -74,13 +85,16 @@
       ]
     },
     "gap": {
-      "resolvesTo": "postcard.size.gap.default"
+      "resolvesTo": "postcard.size.gap.default",
+      "fallback": "12px"
     },
     "color": {
-      "resolvesTo": "postcard.color.foreground.primary"
+      "resolvesTo": "postcard.color.foreground.primary",
+      "fallback": "#141414"
     },
     "font-size": {
-      "resolvesTo": "postcard.typography.content.fontSize"
+      "resolvesTo": "postcard.typography.content.fontSize",
+      "fallback": "16px"
     }
   },
   "header": {
@@ -103,7 +117,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "postcard.size.gap.default"
+      "resolvesTo": "postcard.size.gap.default",
+      "fallback": "12px"
     }
   },
   "userInfo": {
@@ -132,18 +147,22 @@
   },
   "displayName": {
     "font-weight": {
-      "resolvesTo": "postcard.typography.displayName.fontWeight"
+      "resolvesTo": "postcard.typography.displayName.fontWeight",
+      "fallback": "500"
     },
     "font-size": {
-      "resolvesTo": "postcard.typography.displayName.fontSize"
+      "resolvesTo": "postcard.typography.displayName.fontSize",
+      "fallback": "16px"
     },
     "color": {
-      "resolvesTo": "postcard.color.foreground.primary"
+      "resolvesTo": "postcard.color.foreground.primary",
+      "fallback": "#141414"
     }
   },
   "handle": {
     "font-size": {
-      "resolvesTo": "postcard.typography.handle.fontSize"
+      "resolvesTo": "postcard.typography.handle.fontSize",
+      "fallback": "14px"
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
@@ -152,7 +171,8 @@
   },
   "timestamp": {
     "font-size": {
-      "resolvesTo": "postcard.typography.footer.fontSize"
+      "resolvesTo": "postcard.typography.footer.fontSize",
+      "fallback": "14px"
     },
     "flex-shrink": {
       "literal": "0",
@@ -179,13 +199,16 @@
       ]
     },
     "gap": {
-      "resolvesTo": "postcard.size.gap.default"
+      "resolvesTo": "postcard.size.gap.default",
+      "fallback": "12px"
     },
     "padding-top": {
-      "resolvesTo": "postcard.size.padding.default"
+      "resolvesTo": "postcard.size.padding.default",
+      "fallback": "16px"
     },
     "border-top-color": {
-      "resolvesTo": "postcard.color.border.default"
+      "resolvesTo": "postcard.color.border.default",
+      "fallback": "#fceaea"
     },
     "border-top-style": {
       "literal": "solid",
@@ -194,10 +217,12 @@
       ]
     },
     "border-top-width": {
-      "resolvesTo": "postcard.size.border.default"
+      "resolvesTo": "postcard.size.border.default",
+      "fallback": "1px"
     },
     "font-size": {
-      "resolvesTo": "postcard.typography.footer.fontSize"
+      "resolvesTo": "postcard.typography.footer.fontSize",
+      "fallback": "14px"
     }
   },
   "stats": {
@@ -214,7 +239,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "postcard.size.gap.default"
+      "resolvesTo": "postcard.size.gap.default",
+      "fallback": "12px"
     }
   },
   "stat": {
@@ -231,7 +257,8 @@
       ]
     },
     "font-size": {
-      "resolvesTo": "postcard.typography.footer.fontSize"
+      "resolvesTo": "postcard.typography.footer.fontSize",
+      "fallback": "14px"
     },
     "postcard.size.gap.default": {
       "resolvesTo": "core.spacing.size.03",

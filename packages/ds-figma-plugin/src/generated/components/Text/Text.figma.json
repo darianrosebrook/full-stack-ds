@@ -241,9 +241,9 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "color": "var(--fsds-text-color-foreground-primary)",
-          "font-size": "var(--fsds-text-size-md)",
-          "line-height": "var(--fsds-text-typography-lineHeight-body)",
+          "color": "var(--fsds-text-color-foreground-primary, #141414)",
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "line-height": "var(--fsds-text-typography-lineHeight-body, 1.5)",
           "margin": "0"
         }
       },
@@ -252,10 +252,10 @@
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-11, 3.75rem)",
           "--fsds-text-typography-fontWeight-bold": "var(--fsds-semantic-typography-font-weight-bold, 700)",
-          "font-size": "var(--fsds-text-size-md)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-bold)",
-          "line-height": "var(--fsds-text-typography-lineHeight-heading)",
-          "letter-spacing": "var(--fsds-text-typography-letterSpacing-tight)"
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "font-weight": "var(--fsds-text-typography-fontWeight-bold, 700)",
+          "line-height": "var(--fsds-text-typography-lineHeight-heading, 1)",
+          "letter-spacing": "var(--fsds-text-typography-letterSpacing-tight, -0.018rem)"
         }
       },
       {
@@ -263,10 +263,10 @@
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-8, 2rem)",
           "--fsds-text-typography-fontWeight-bold": "var(--fsds-semantic-typography-font-weight-bold, 700)",
-          "font-size": "var(--fsds-text-size-md)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-bold)",
-          "line-height": "var(--fsds-text-typography-lineHeight-heading)",
-          "letter-spacing": "var(--fsds-text-typography-letterSpacing-tight)"
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "font-weight": "var(--fsds-text-typography-fontWeight-bold, 700)",
+          "line-height": "var(--fsds-text-typography-lineHeight-heading, 1)",
+          "letter-spacing": "var(--fsds-text-typography-letterSpacing-tight, -0.018rem)"
         }
       },
       {
@@ -274,9 +274,9 @@
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-6, 1.25rem)",
           "--fsds-text-typography-fontWeight-bold": "var(--fsds-semantic-typography-font-weight-bold, 700)",
-          "font-size": "var(--fsds-text-size-md)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-bold)",
-          "line-height": "var(--fsds-text-typography-lineHeight-heading)"
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "font-weight": "var(--fsds-text-typography-fontWeight-bold, 700)",
+          "line-height": "var(--fsds-text-typography-lineHeight-heading, 1)"
         }
       },
       {
@@ -284,9 +284,9 @@
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-4, 1rem)",
           "--fsds-text-typography-fontWeight-regular": "var(--fsds-semantic-typography-font-weight-regular, 400)",
-          "font-size": "var(--fsds-text-size-md)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-regular)",
-          "line-height": "var(--fsds-text-typography-lineHeight-body)"
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "font-weight": "var(--fsds-text-typography-fontWeight-regular, 400)",
+          "line-height": "var(--fsds-text-typography-lineHeight-body, 1.5)"
         }
       },
       {
@@ -294,9 +294,9 @@
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-2, 0.75rem)",
           "--fsds-text-typography-fontWeight-regular": "var(--fsds-semantic-typography-font-weight-regular, 400)",
-          "font-size": "var(--fsds-text-size-md)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-regular)",
-          "line-height": "var(--fsds-text-typography-lineHeight-tight)"
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "font-weight": "var(--fsds-text-typography-fontWeight-regular, 400)",
+          "line-height": "var(--fsds-text-typography-lineHeight-tight, 1.2)"
         }
       },
       {
@@ -304,104 +304,104 @@
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-2, 0.75rem)",
           "--fsds-text-typography-fontWeight-medium": "var(--fsds-semantic-typography-font-weight-medium, 500)",
-          "font-size": "var(--fsds-text-size-md)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-medium)",
-          "line-height": "var(--fsds-text-typography-lineHeight-tight)",
+          "font-size": "var(--fsds-text-size-md, 1rem)",
+          "font-weight": "var(--fsds-text-typography-fontWeight-medium, 500)",
+          "line-height": "var(--fsds-text-typography-lineHeight-tight, 1.2)",
           "text-transform": "uppercase",
-          "letter-spacing": "var(--fsds-text-typography-letterSpacing-wide)"
+          "letter-spacing": "var(--fsds-text-typography-letterSpacing-wide, 0.018rem)"
         }
       },
       {
         "selector": ".text--code",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-3, 0.875rem)",
-          "font-size": "var(--fsds-text-size-md)",
+          "font-size": "var(--fsds-text-size-md, 1rem)",
           "font-family": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
-          "line-height": "var(--fsds-text-typography-lineHeight-body)"
+          "line-height": "var(--fsds-text-typography-lineHeight-body, 1.5)"
         }
       },
       {
         "selector": ".text--xs",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-2, 0.75rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--sm",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-3, 0.875rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--md",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-4, 1rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--lg",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-5, 1.125rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--xl",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-6, 1.25rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--2xl",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-7, 1.5rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--3xl",
         "declarations": {
           "--fsds-text-size-md": "var(--fsds-core-typography-ramp-8, 2rem)",
-          "font-size": "var(--fsds-text-size-md)"
+          "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--light",
         "declarations": {
           "--fsds-text-typography-fontWeight-light": "var(--fsds-semantic-typography-font-weight-light, 300)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-light)"
+          "font-weight": "var(--fsds-text-typography-fontWeight-light, 300)"
         }
       },
       {
         "selector": ".text--normal",
         "declarations": {
           "--fsds-text-typography-fontWeight-regular": "var(--fsds-semantic-typography-font-weight-regular, 400)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-regular)"
+          "font-weight": "var(--fsds-text-typography-fontWeight-regular, 400)"
         }
       },
       {
         "selector": ".text--medium",
         "declarations": {
           "--fsds-text-typography-fontWeight-medium": "var(--fsds-semantic-typography-font-weight-medium, 500)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-medium)"
+          "font-weight": "var(--fsds-text-typography-fontWeight-medium, 500)"
         }
       },
       {
         "selector": ".text--semibold",
         "declarations": {
           "--fsds-text-typography-fontWeight-medium": "var(--fsds-semantic-typography-font-weight-semibold, 600)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-medium)"
+          "font-weight": "var(--fsds-text-typography-fontWeight-medium, 500)"
         }
       },
       {
         "selector": ".text--bold",
         "declarations": {
           "--fsds-text-typography-fontWeight-bold": "var(--fsds-semantic-typography-font-weight-bold, 700)",
-          "font-weight": "var(--fsds-text-typography-fontWeight-bold)"
+          "font-weight": "var(--fsds-text-typography-fontWeight-bold, 700)"
         }
       },
       {

@@ -35,22 +35,28 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "switch.color.track.background.default"
+      "resolvesTo": "switch.color.track.background.default",
+      "fallback": "#cecece"
     },
     "border-color": {
-      "resolvesTo": "switch.color.track.border.default"
+      "resolvesTo": "switch.color.track.border.default",
+      "fallback": "#aeaeae"
     },
     "width": {
-      "resolvesTo": "switch.size.md.track.width"
+      "resolvesTo": "switch.size.md.track.width",
+      "fallback": "48px"
     },
     "height": {
-      "resolvesTo": "switch.size.md.track.height"
+      "resolvesTo": "switch.size.md.track.height",
+      "fallback": "24px"
     },
     "border-radius": {
-      "resolvesTo": "switch.size.md.track.radius"
+      "resolvesTo": "switch.size.md.track.radius",
+      "fallback": "9999px"
     },
     "padding": {
-      "resolvesTo": "switch.size.md.track.padding"
+      "resolvesTo": "switch.size.md.track.padding",
+      "fallback": "2px"
     },
     "display": {
       "literal": "inline-block",
@@ -97,25 +103,32 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "switch.color.thumb.background.default"
+      "resolvesTo": "switch.color.thumb.background.default",
+      "fallback": "#ffffff"
     },
     "box-shadow": {
-      "resolvesTo": "switch.color.thumb.shadow.default"
+      "resolvesTo": "switch.color.thumb.shadow.default",
+      "fallback": "0 1px 2px rgba(0, 0, 0, 0.1)"
     },
     "width": {
-      "resolvesTo": "switch.size.md.thumb.size"
+      "resolvesTo": "switch.size.md.thumb.size",
+      "fallback": "20px"
     },
     "height": {
-      "resolvesTo": "switch.size.md.thumb.height"
+      "resolvesTo": "switch.size.md.thumb.height",
+      "fallback": "20px"
     },
     "top": {
-      "resolvesTo": "switch.size.md.track.padding"
+      "resolvesTo": "switch.size.md.track.padding",
+      "fallback": "2px"
     },
     "left": {
-      "resolvesTo": "switch.size.md.track.padding"
+      "resolvesTo": "switch.size.md.track.padding",
+      "fallback": "2px"
     },
     "translate": {
-      "resolvesTo": "switch.size.md.thumb.translate.off"
+      "resolvesTo": "switch.size.md.thumb.translate.off",
+      "fallback": "0"
     },
     "display": {
       "literal": "block",
@@ -150,7 +163,8 @@
   },
   "input": {
     "outline-color": {
-      "resolvesTo": "switch.color.input.outline.focus"
+      "resolvesTo": "switch.color.input.outline.focus",
+      "fallback": "#d9292b"
     },
     "position": {
       "literal": "absolute",
@@ -215,7 +229,8 @@
   },
   ".switch:has(.switch__input:checked) .switch__thumb": {
     "translate": {
-      "resolvesTo": "switch.size.md.thumb.translate.on"
+      "resolvesTo": "switch.size.md.thumb.translate.on",
+      "fallback": "24px"
     },
     "switch.color.thumb.background.default": {
       "resolvesTo": "semantic.color.foreground.on.brand",
@@ -230,74 +245,94 @@
   },
   ".switch--sm .switch__track": {
     "width": {
-      "resolvesTo": "switch.size.sm.track.width"
+      "resolvesTo": "switch.size.sm.track.width",
+      "fallback": "32px"
     },
     "height": {
-      "resolvesTo": "switch.size.sm.track.height"
+      "resolvesTo": "switch.size.sm.track.height",
+      "fallback": "16px"
     },
     "border-radius": {
-      "resolvesTo": "switch.size.sm.track.radius"
+      "resolvesTo": "switch.size.sm.track.radius",
+      "fallback": "9999px"
     },
     "padding": {
-      "resolvesTo": "switch.size.sm.track.padding"
+      "resolvesTo": "switch.size.sm.track.padding",
+      "fallback": "2px"
     }
   },
   ".switch--sm .switch__thumb": {
     "width": {
-      "resolvesTo": "switch.size.sm.thumb.size"
+      "resolvesTo": "switch.size.sm.thumb.size",
+      "fallback": "12px"
     },
     "height": {
-      "resolvesTo": "switch.size.sm.thumb.height"
+      "resolvesTo": "switch.size.sm.thumb.height",
+      "fallback": "12px"
     },
     "top": {
-      "resolvesTo": "switch.size.sm.track.padding"
+      "resolvesTo": "switch.size.sm.track.padding",
+      "fallback": "2px"
     },
     "left": {
-      "resolvesTo": "switch.size.sm.track.padding"
+      "resolvesTo": "switch.size.sm.track.padding",
+      "fallback": "2px"
     },
     "translate": {
-      "resolvesTo": "switch.size.sm.thumb.translate.off"
+      "resolvesTo": "switch.size.sm.thumb.translate.off",
+      "fallback": "0"
     }
   },
   ".switch--sm:has(.switch__input:checked) .switch__thumb": {
     "translate": {
-      "resolvesTo": "switch.size.sm.thumb.translate.on"
+      "resolvesTo": "switch.size.sm.thumb.translate.on",
+      "fallback": "16px"
     }
   },
   ".switch--lg .switch__track": {
     "width": {
-      "resolvesTo": "switch.size.lg.track.width"
+      "resolvesTo": "switch.size.lg.track.width",
+      "fallback": "64px"
     },
     "height": {
-      "resolvesTo": "switch.size.lg.track.height"
+      "resolvesTo": "switch.size.lg.track.height",
+      "fallback": "32px"
     },
     "border-radius": {
-      "resolvesTo": "switch.size.lg.track.radius"
+      "resolvesTo": "switch.size.lg.track.radius",
+      "fallback": "9999px"
     },
     "padding": {
-      "resolvesTo": "switch.size.lg.track.padding"
+      "resolvesTo": "switch.size.lg.track.padding",
+      "fallback": "2px"
     }
   },
   ".switch--lg .switch__thumb": {
     "width": {
-      "resolvesTo": "switch.size.lg.thumb.size"
+      "resolvesTo": "switch.size.lg.thumb.size",
+      "fallback": "24px"
     },
     "height": {
-      "resolvesTo": "switch.size.lg.thumb.height"
+      "resolvesTo": "switch.size.lg.thumb.height",
+      "fallback": "24px"
     },
     "top": {
-      "resolvesTo": "switch.size.lg.track.padding"
+      "resolvesTo": "switch.size.lg.track.padding",
+      "fallback": "2px"
     },
     "left": {
-      "resolvesTo": "switch.size.lg.track.padding"
+      "resolvesTo": "switch.size.lg.track.padding",
+      "fallback": "2px"
     },
     "translate": {
-      "resolvesTo": "switch.size.lg.thumb.translate.off"
+      "resolvesTo": "switch.size.lg.thumb.translate.off",
+      "fallback": "0"
     }
   },
   ".switch--lg:has(.switch__input:checked) .switch__thumb": {
     "translate": {
-      "resolvesTo": "switch.size.lg.thumb.translate.on"
+      "resolvesTo": "switch.size.lg.thumb.translate.on",
+      "fallback": "36px"
     }
   }
 }

@@ -75,9 +75,9 @@ export class TruncateElement extends LitElement {
     .truncate__toggle {
       display: inline-flex;
       align-items: center;
-      color: var(--fsds-truncate-color-foreground-link);
-      font-weight: var(--fsds-truncate-typography-fontWeight);
-      margin-top: var(--fsds-truncate-spacing-toggle);
+      color: var(--fsds-truncate-color-foreground-link, #d9292b);
+      font-weight: var(--fsds-truncate-typography-fontWeight, 500);
+      margin-top: var(--fsds-truncate-spacing-toggle, 2px);
       background: none;
       border: none;
       padding: 0;
@@ -177,9 +177,9 @@ export class TruncateContentElement extends LitElement {
     .truncate__toggle {
       display: inline-flex;
       align-items: center;
-      color: var(--fsds-truncate-color-foreground-link);
-      font-weight: var(--fsds-truncate-typography-fontWeight);
-      margin-top: var(--fsds-truncate-spacing-toggle);
+      color: var(--fsds-truncate-color-foreground-link, #d9292b);
+      font-weight: var(--fsds-truncate-typography-fontWeight, 500);
+      margin-top: var(--fsds-truncate-spacing-toggle, 2px);
       background: none;
       border: none;
       padding: 0;

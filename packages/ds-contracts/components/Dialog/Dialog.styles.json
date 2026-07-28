@@ -91,13 +91,16 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "dialog.color.background.default"
+      "resolvesTo": "dialog.color.background.default",
+      "fallback": "#ffffff"
     },
     "color": {
-      "resolvesTo": "dialog.color.foreground.default"
+      "resolvesTo": "dialog.color.foreground.default",
+      "fallback": "#141414"
     },
     "border-color": {
-      "resolvesTo": "dialog.color.border.default"
+      "resolvesTo": "dialog.color.border.default",
+      "fallback": "#cecece"
     },
     "border-style": {
       "literal": "solid",
@@ -114,16 +117,20 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "dialog.size.radius.default"
+      "resolvesTo": "dialog.size.radius.default",
+      "fallback": "16px"
     },
     "box-shadow": {
-      "resolvesTo": "dialog.elevation.default"
+      "resolvesTo": "dialog.elevation.default",
+      "fallback": "0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15)"
     },
     "width": {
-      "resolvesTo": "dialog.size.md.width"
+      "resolvesTo": "dialog.size.md.width",
+      "fallback": "500px"
     },
     "max-width": {
-      "resolvesTo": "dialog.size.md.maxWidth"
+      "resolvesTo": "dialog.size.md.maxWidth",
+      "fallback": "90vw"
     },
     "max-height": {
       "literal": "90vh",
@@ -164,19 +171,24 @@
       ]
     },
     "padding-top": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "padding-right": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "padding-bottom": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "padding-left": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "border-bottom-color": {
-      "resolvesTo": "dialog.color.border.default"
+      "resolvesTo": "dialog.color.border.default",
+      "fallback": "#cecece"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -201,16 +213,20 @@
       ]
     },
     "font-size": {
-      "resolvesTo": "dialog.typography.title.fontSize"
+      "resolvesTo": "dialog.typography.title.fontSize",
+      "fallback": "18px"
     },
     "font-weight": {
-      "resolvesTo": "dialog.typography.title.fontWeight"
+      "resolvesTo": "dialog.typography.title.fontWeight",
+      "fallback": "700"
     },
     "line-height": {
-      "resolvesTo": "dialog.typography.title.lineHeight"
+      "resolvesTo": "dialog.typography.title.lineHeight",
+      "fallback": "1"
     },
     "color": {
-      "resolvesTo": "dialog.color.foreground.default"
+      "resolvesTo": "dialog.color.foreground.default",
+      "fallback": "#141414"
     }
   },
   "body": {
@@ -221,16 +237,20 @@
       ]
     },
     "padding-top": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "padding-right": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "padding-bottom": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "padding-left": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "overflow-y": {
       "literal": "auto",
@@ -263,22 +283,28 @@
       ]
     },
     "gap": {
-      "resolvesTo": "dialog.spacing.footer.gap"
+      "resolvesTo": "dialog.spacing.footer.gap",
+      "fallback": "4px"
     },
     "padding-top": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "padding-right": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "padding-bottom": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "padding-left": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "border-top-color": {
-      "resolvesTo": "dialog.color.border.default"
+      "resolvesTo": "dialog.color.border.default",
+      "fallback": "#cecece"
     },
     "border-top-style": {
       "literal": "solid",
@@ -303,16 +329,20 @@
       ]
     },
     "top": {
-      "resolvesTo": "dialog.spacing.header.paddingTop"
+      "resolvesTo": "dialog.spacing.header.paddingTop",
+      "fallback": "16px"
     },
     "right": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
+      "resolvesTo": "dialog.spacing.body.paddingRight",
+      "fallback": "24px"
     },
     "width": {
-      "resolvesTo": "dialog.size.closeButton.size"
+      "resolvesTo": "dialog.size.closeButton.size",
+      "fallback": "32px"
     },
     "height": {
-      "resolvesTo": "dialog.size.closeButton.size"
+      "resolvesTo": "dialog.size.closeButton.size",
+      "fallback": "32px"
     },
     "display": {
       "literal": "inline-flex",
@@ -369,34 +399,42 @@
   },
   ".dialog--sm .dialog__modal": {
     "width": {
-      "resolvesTo": "dialog.size.sm.width"
+      "resolvesTo": "dialog.size.sm.width",
+      "fallback": "400px"
     },
     "max-width": {
-      "resolvesTo": "dialog.size.sm.maxWidth"
+      "resolvesTo": "dialog.size.sm.maxWidth",
+      "fallback": "90vw"
     }
   },
   ".dialog--lg .dialog__modal": {
     "width": {
-      "resolvesTo": "dialog.size.lg.width"
+      "resolvesTo": "dialog.size.lg.width",
+      "fallback": "700px"
     },
     "max-width": {
-      "resolvesTo": "dialog.size.lg.maxWidth"
+      "resolvesTo": "dialog.size.lg.maxWidth",
+      "fallback": "90vw"
     }
   },
   ".dialog--xl .dialog__modal": {
     "width": {
-      "resolvesTo": "dialog.size.xl.width"
+      "resolvesTo": "dialog.size.xl.width",
+      "fallback": "900px"
     },
     "max-width": {
-      "resolvesTo": "dialog.size.xl.maxWidth"
+      "resolvesTo": "dialog.size.xl.maxWidth",
+      "fallback": "95vw"
     }
   },
   ".dialog--full .dialog__modal": {
     "width": {
-      "resolvesTo": "dialog.size.full.width"
+      "resolvesTo": "dialog.size.full.width",
+      "fallback": "100vw"
     },
     "height": {
-      "resolvesTo": "dialog.size.full.height"
+      "resolvesTo": "dialog.size.full.height",
+      "fallback": "100vh"
     },
     "max-width": {
       "literal": "100vw",

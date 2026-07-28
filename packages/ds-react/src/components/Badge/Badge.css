@@ -9,29 +9,29 @@
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
   padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-badge-spacing-gap);
+  gap: var(--fsds-badge-spacing-gap, 4px);
   width: fit-content;
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
-  min-height: var(--fsds-badge-size-minHeight);
+  min-height: var(--fsds-badge-size-minHeight, 24px);
   max-height: var(--fsds-box-model-max-height);
   justify-content: center;
   white-space: nowrap;
   border-style: solid;
-  background-color: var(--fsds-badge-color-background-default);
-  color: var(--fsds-badge-color-foreground-primary);
-  border-color: var(--fsds-badge-color-border-default);
-  border-width: var(--fsds-badge-size-border);
-  border-radius: var(--fsds-badge-size-radius);
-  padding-block: var(--fsds-badge-size-paddingY);
-  padding-inline: var(--fsds-badge-size-paddingX);
-  font-size: var(--fsds-badge-size-fontSize);
-  font-weight: var(--fsds-badge-text-weight);
+  background-color: var(--fsds-badge-color-background-default, #efefef);
+  color: var(--fsds-badge-color-foreground-primary, #141414);
+  border-color: var(--fsds-badge-color-border-default, #cecece);
+  border-width: var(--fsds-badge-size-border, 1px);
+  border-radius: var(--fsds-badge-size-radius, 9999px);
+  padding-block: var(--fsds-badge-size-paddingY, 2px);
+  padding-inline: var(--fsds-badge-size-paddingX, 8px);
+  font-size: var(--fsds-badge-size-fontSize, 12px);
+  font-weight: var(--fsds-badge-text-weight, 500);
   line-height: 1;
 
   &:hover {
-    background-color: var(--fsds-badge-color-background-hover);
+    background-color: var(--fsds-badge-color-background-hover, #e4e4e4);
   }
 }
 

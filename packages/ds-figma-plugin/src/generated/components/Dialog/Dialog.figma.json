@@ -339,15 +339,15 @@
           "position": "relative",
           "display": "flex",
           "flex-direction": "column",
-          "background-color": "var(--fsds-dialog-color-background-default)",
-          "color": "var(--fsds-dialog-color-foreground-default)",
-          "border-color": "var(--fsds-dialog-color-border-default)",
+          "background-color": "var(--fsds-dialog-color-background-default, #ffffff)",
+          "color": "var(--fsds-dialog-color-foreground-default, #141414)",
+          "border-color": "var(--fsds-dialog-color-border-default, #cecece)",
           "border-style": "solid",
           "border-width": "1px",
-          "border-radius": "var(--fsds-dialog-size-radius-default)",
-          "box-shadow": "var(--fsds-dialog-elevation-default)",
-          "width": "var(--fsds-dialog-size-md-width)",
-          "max-width": "var(--fsds-dialog-size-md-maxWidth)",
+          "border-radius": "var(--fsds-dialog-size-radius-default, 16px)",
+          "box-shadow": "var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15))",
+          "width": "var(--fsds-dialog-size-md-width, 500px)",
+          "max-width": "var(--fsds-dialog-size-md-maxWidth, 90vw)",
           "max-height": "90vh",
           "pointer-events": "auto",
           "box-sizing": "border-box",
@@ -359,11 +359,11 @@
         "declarations": {
           "display": "flex",
           "align-items": "center",
-          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight)",
-          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight)",
-          "border-bottom-color": "var(--fsds-dialog-color-border-default)",
+          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
+          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
+          "border-bottom-color": "var(--fsds-dialog-color-border-default, #cecece)",
           "border-bottom-style": "solid",
           "border-bottom-width": "1px"
         }
@@ -372,20 +372,20 @@
         "selector": ".dialog__title",
         "declarations": {
           "margin": "0",
-          "font-size": "var(--fsds-dialog-typography-title-fontSize)",
-          "font-weight": "var(--fsds-dialog-typography-title-fontWeight)",
-          "line-height": "var(--fsds-dialog-typography-title-lineHeight)",
-          "color": "var(--fsds-dialog-color-foreground-default)"
+          "font-size": "var(--fsds-dialog-typography-title-fontSize, 18px)",
+          "font-weight": "var(--fsds-dialog-typography-title-fontWeight, 700)",
+          "line-height": "var(--fsds-dialog-typography-title-lineHeight, 1)",
+          "color": "var(--fsds-dialog-color-foreground-default, #141414)"
         }
       },
       {
         "selector": ".dialog__body",
         "declarations": {
           "flex": "1 1 auto",
-          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight)",
-          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
+          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
           "overflow-y": "auto",
           "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #555555)"
         }
@@ -396,12 +396,12 @@
           "display": "flex",
           "justify-content": "flex-end",
           "align-items": "center",
-          "gap": "var(--fsds-dialog-spacing-footer-gap)",
-          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight)",
-          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight)",
-          "border-top-color": "var(--fsds-dialog-color-border-default)",
+          "gap": "var(--fsds-dialog-spacing-footer-gap, 4px)",
+          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
+          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
+          "border-top-color": "var(--fsds-dialog-color-border-default, #cecece)",
           "border-top-style": "solid",
           "border-top-width": "1px"
         }
@@ -410,10 +410,10 @@
         "selector": ".dialog__closeButton",
         "declarations": {
           "position": "absolute",
-          "top": "var(--fsds-dialog-spacing-header-paddingTop)",
-          "right": "var(--fsds-dialog-spacing-body-paddingRight)",
-          "width": "var(--fsds-dialog-size-closeButton-size)",
-          "height": "var(--fsds-dialog-size-closeButton-size)",
+          "top": "var(--fsds-dialog-spacing-header-paddingTop, 16px)",
+          "right": "var(--fsds-dialog-spacing-body-paddingRight, 24px)",
+          "width": "var(--fsds-dialog-size-closeButton-size, 32px)",
+          "height": "var(--fsds-dialog-size-closeButton-size, 32px)",
           "display": "inline-flex",
           "align-items": "center",
           "justify-content": "center",
@@ -433,29 +433,29 @@
       {
         "selector": ".dialog--sm .dialog__modal",
         "declarations": {
-          "width": "var(--fsds-dialog-size-sm-width)",
-          "max-width": "var(--fsds-dialog-size-sm-maxWidth)"
+          "width": "var(--fsds-dialog-size-sm-width, 400px)",
+          "max-width": "var(--fsds-dialog-size-sm-maxWidth, 90vw)"
         }
       },
       {
         "selector": ".dialog--lg .dialog__modal",
         "declarations": {
-          "width": "var(--fsds-dialog-size-lg-width)",
-          "max-width": "var(--fsds-dialog-size-lg-maxWidth)"
+          "width": "var(--fsds-dialog-size-lg-width, 700px)",
+          "max-width": "var(--fsds-dialog-size-lg-maxWidth, 90vw)"
         }
       },
       {
         "selector": ".dialog--xl .dialog__modal",
         "declarations": {
-          "width": "var(--fsds-dialog-size-xl-width)",
-          "max-width": "var(--fsds-dialog-size-xl-maxWidth)"
+          "width": "var(--fsds-dialog-size-xl-width, 900px)",
+          "max-width": "var(--fsds-dialog-size-xl-maxWidth, 95vw)"
         }
       },
       {
         "selector": ".dialog--full .dialog__modal",
         "declarations": {
-          "width": "var(--fsds-dialog-size-full-width)",
-          "height": "var(--fsds-dialog-size-full-height)",
+          "width": "var(--fsds-dialog-size-full-width, 100vw)",
+          "height": "var(--fsds-dialog-size-full-height, 100vh)",
           "max-width": "100vw",
           "max-height": "100vh",
           "border-radius": "0"

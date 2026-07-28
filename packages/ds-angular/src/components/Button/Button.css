@@ -6,7 +6,7 @@
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
   padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-button-size-gap-default);
+  gap: var(--fsds-button-size-gap-default, 8px);
   width: var(--fsds-box-model-width);
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
@@ -21,32 +21,32 @@
   border-style: solid;
   white-space: nowrap;
   user-select: none;
-  background-color: var(--fsds-button-color-background-default);
-  color: var(--fsds-button-color-foreground-default);
-  border-color: var(--fsds-button-color-border-default);
-  border-radius: var(--fsds-button-size-radius);
-  border-width: var(--fsds-button-size-border);
-  font-size: var(--fsds-button-size-fontSize-medium);
-  font-weight: var(--fsds-button-text-weight);
-  transition-duration: var(--fsds-button-motion-duration-fast);
-  transition-timing-function: var(--fsds-button-motion-easing-standard);
+  background-color: var(--fsds-button-color-background-default, #d9292b);
+  color: var(--fsds-button-color-foreground-default, #fafafa);
+  border-color: var(--fsds-button-color-border-default, #fceaea);
+  border-radius: var(--fsds-button-size-radius, 9999px);
+  border-width: var(--fsds-button-size-border, 1px);
+  font-size: var(--fsds-button-size-fontSize-medium, 1rem);
+  font-weight: var(--fsds-button-text-weight, 500);
+  transition-duration: var(--fsds-button-motion-duration-fast, 150ms);
+  transition-timing-function: var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 
   &:hover {
-    background-color: var(--fsds-button-color-background-hover);
-    border-color: var(--fsds-button-color-border-hover);
+    background-color: var(--fsds-button-color-background-hover, #efefef);
+    border-color: var(--fsds-button-color-border-hover, #8f8f8f);
   }
 
   &:active {
-    background-color: var(--fsds-button-color-background-active);
+    background-color: var(--fsds-button-color-background-active, #cecece);
   }
 
   &:focus-visible {
-    border-color: var(--fsds-button-color-border-focus);
+    border-color: var(--fsds-button-color-border-focus, #0566fe);
   }
 
   &:disabled {
-    background-color: var(--fsds-button-color-background-disabled);
-    color: var(--fsds-button-color-foreground-disabled);
+    background-color: var(--fsds-button-color-background-disabled, #cecece);
+    color: var(--fsds-button-color-foreground-disabled, #aeaeae);
   }
 }
 

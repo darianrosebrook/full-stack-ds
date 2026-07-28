@@ -56,17 +56,17 @@ export class ShuttleElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-shuttle-color-background-default);
-      border-color: var(--fsds-shuttle-color-border-accent);
-      padding: var(--fsds-shuttle-size-padding-default);
-      border-radius: var(--fsds-shuttle-size-radius-default);
+      background-color: var(--fsds-shuttle-color-background-default, #efefef);
+      border-color: var(--fsds-shuttle-color-border-accent, #d9292b);
+      padding: var(--fsds-shuttle-size-padding-default, 24px);
+      border-radius: var(--fsds-shuttle-size-radius-default, 8px);
     }
 
     .shuttle__item {
       display: flex;
       align-items: center;
       padding: 4px 8px;
-      color: var(--fsds-shuttle-color-foreground-primary);
+      color: var(--fsds-shuttle-color-foreground-primary, #141414);
       cursor: pointer;
     }
   `;
@@ -140,17 +140,17 @@ export class ShuttleItemElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-shuttle-color-background-default);
-      border-color: var(--fsds-shuttle-color-border-accent);
-      padding: var(--fsds-shuttle-size-padding-default);
-      border-radius: var(--fsds-shuttle-size-radius-default);
+      background-color: var(--fsds-shuttle-color-background-default, #efefef);
+      border-color: var(--fsds-shuttle-color-border-accent, #d9292b);
+      padding: var(--fsds-shuttle-size-padding-default, 24px);
+      border-radius: var(--fsds-shuttle-size-radius-default, 8px);
     }
 
     .shuttle__item {
       display: flex;
       align-items: center;
       padding: 4px 8px;
-      color: var(--fsds-shuttle-color-foreground-primary);
+      color: var(--fsds-shuttle-color-foreground-primary, #141414);
       cursor: pointer;
     }
   `;

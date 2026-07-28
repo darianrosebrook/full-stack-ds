@@ -53,24 +53,24 @@ export class DividerElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       display: block;
-      border-top-color: var(--fsds-divider-color-default);
+      border-top-color: var(--fsds-divider-color-default, #fceaea);
       border-top-style: solid;
-      border-top-width: var(--fsds-divider-size-thickness);
-      margin-top: var(--fsds-divider-spacing-margin);
-      margin-bottom: var(--fsds-divider-spacing-margin);
+      border-top-width: var(--fsds-divider-size-thickness, 1px);
+      margin-top: var(--fsds-divider-spacing-margin, 8px);
+      margin-bottom: var(--fsds-divider-spacing-margin, 8px);
     }
 
     .divider--vertical {
       width: 1px;
       height: auto;
       border-top: none;
-      border-left-color: var(--fsds-divider-color-default);
+      border-left-color: var(--fsds-divider-color-default, #fceaea);
       border-left-style: solid;
-      border-left-width: var(--fsds-divider-size-thickness);
+      border-left-width: var(--fsds-divider-size-thickness, 1px);
       margin-top: 0;
       margin-bottom: 0;
-      margin-left: var(--fsds-divider-spacing-margin);
-      margin-right: var(--fsds-divider-spacing-margin);
+      margin-left: var(--fsds-divider-spacing-margin, 8px);
+      margin-right: var(--fsds-divider-spacing-margin, 8px);
     }
   `;
 

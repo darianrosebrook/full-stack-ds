@@ -46,7 +46,7 @@
   --fsds-box-model-padding-inline-end: 0;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-min-width: 0;
-  --fsds-box-model-gap: var(--fsds-chip-size-gap);
+  --fsds-box-model-gap: var(--fsds-chip-size-gap, 2px);
 }
 
 .chip__dismiss.button {
@@ -54,10 +54,10 @@
   --fsds-box-model-padding-block-end: 0;
   --fsds-box-model-padding-inline-start: 0;
   --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-min-height: var(--fsds-chip-dismiss-size);
-  --fsds-box-model-min-width: var(--fsds-chip-dismiss-size);
-  --fsds-box-model-width: var(--fsds-chip-dismiss-size);
-  --fsds-box-model-height: var(--fsds-chip-dismiss-size);
+  --fsds-box-model-min-height: var(--fsds-chip-dismiss-size, 16px);
+  --fsds-box-model-min-width: var(--fsds-chip-dismiss-size, 16px);
+  --fsds-box-model-width: var(--fsds-chip-dismiss-size, 16px);
+  --fsds-box-model-height: var(--fsds-chip-dismiss-size, 16px);
 }
 
 .chip--selected {

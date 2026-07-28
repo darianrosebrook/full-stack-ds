@@ -125,41 +125,41 @@
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
           "display": "block",
-          "color": "var(--fsds-stat-color-foreground-value)",
-          "font-size": "var(--fsds-stat-size-value-md)",
-          "font-weight": "var(--fsds-stat-typography-weight-value)",
-          "line-height": "var(--fsds-stat-typography-lineHeight-value)",
+          "color": "var(--fsds-stat-color-foreground-value, #141414)",
+          "font-size": "var(--fsds-stat-size-value-md, 24px)",
+          "font-weight": "var(--fsds-stat-typography-weight-value, 700)",
+          "line-height": "var(--fsds-stat-typography-lineHeight-value, 1.1)",
           "letter-spacing": "-0.02em"
         }
       },
       {
         "selector": ".stat--up",
         "declarations": {
-          "color": "var(--fsds-stat-color-foreground-trend-up)"
+          "color": "var(--fsds-stat-color-foreground-trend-up, #1f8a4c)"
         }
       },
       {
         "selector": ".stat--down",
         "declarations": {
-          "color": "var(--fsds-stat-color-foreground-trend-down)"
+          "color": "var(--fsds-stat-color-foreground-trend-down, #d9292b)"
         }
       },
       {
         "selector": ".stat--neutral",
         "declarations": {
-          "color": "var(--fsds-stat-color-foreground-trend-neutral)"
+          "color": "var(--fsds-stat-color-foreground-trend-neutral, #555555)"
         }
       },
       {
         "selector": ".stat--sm",
         "declarations": {
-          "font-size": "var(--fsds-stat-size-value-sm)"
+          "font-size": "var(--fsds-stat-size-value-sm, 18px)"
         }
       },
       {
         "selector": ".stat--lg",
         "declarations": {
-          "font-size": "var(--fsds-stat-size-value-lg)"
+          "font-size": "var(--fsds-stat-size-value-lg, 32px)"
         }
       }
     ],

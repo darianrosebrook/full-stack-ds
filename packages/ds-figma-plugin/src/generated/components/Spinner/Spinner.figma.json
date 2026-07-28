@@ -170,7 +170,7 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "transition-duration": "var(--fsds-spinner-anim-duration)"
+          "transition-duration": "var(--fsds-spinner-anim-duration, 800ms)"
         }
       },
       {
@@ -182,52 +182,52 @@
           "box-sizing": "border-box",
           "border-radius": "50%",
           "border-style": "solid",
-          "border-width": "var(--fsds-spinner-thickness-regular)",
-          "border-color": "var(--fsds-spinner-color-track)",
-          "border-top-color": "var(--fsds-spinner-color-accent)",
+          "border-width": "var(--fsds-spinner-thickness-regular, 3px)",
+          "border-color": "var(--fsds-spinner-color-track, #cecece)",
+          "border-top-color": "var(--fsds-spinner-color-accent, #d9292b)",
           "animation": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite"
         }
       },
       {
         "selector": ".spinner--xs",
         "declarations": {
-          "font-size": "var(--fsds-spinner-size-xs)"
+          "font-size": "var(--fsds-spinner-size-xs, 12px)"
         }
       },
       {
         "selector": ".spinner--sm",
         "declarations": {
-          "font-size": "var(--fsds-spinner-size-sm)"
+          "font-size": "var(--fsds-spinner-size-sm, 16px)"
         }
       },
       {
         "selector": ".spinner--md",
         "declarations": {
-          "font-size": "var(--fsds-spinner-size-md)"
+          "font-size": "var(--fsds-spinner-size-md, 20px)"
         }
       },
       {
         "selector": ".spinner--lg",
         "declarations": {
-          "font-size": "var(--fsds-spinner-size-lg)"
+          "font-size": "var(--fsds-spinner-size-lg, 24px)"
         }
       },
       {
         "selector": ".spinner--hairline .spinner__visual",
         "declarations": {
-          "border-width": "var(--fsds-spinner-thickness-hairline)"
+          "border-width": "var(--fsds-spinner-thickness-hairline, 2px)"
         }
       },
       {
         "selector": ".spinner--regular .spinner__visual",
         "declarations": {
-          "border-width": "var(--fsds-spinner-thickness-regular)"
+          "border-width": "var(--fsds-spinner-thickness-regular, 3px)"
         }
       },
       {
         "selector": ".spinner--bold .spinner__visual",
         "declarations": {
-          "border-width": "var(--fsds-spinner-thickness-bold)"
+          "border-width": "var(--fsds-spinner-thickness-bold, 4px)"
         }
       }
     ],

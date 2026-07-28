@@ -1,27 +1,54 @@
 {
   "root": {
     "color": {
-      "resolvesTo": "icon.color.foreground.default"
+      "resolvesTo": "icon.color.foreground.default",
+      "fallback": "#141414"
     },
     "box-sizing": {
       "literal": "border-box",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   },
   "--sm": {
-    "width": { "resolvesTo": "icon.size.sm" },
-    "height": { "resolvesTo": "icon.size.sm" }
+    "width": {
+      "resolvesTo": "icon.size.sm",
+      "fallback": "16px"
+    },
+    "height": {
+      "resolvesTo": "icon.size.sm",
+      "fallback": "16px"
+    }
   },
   "--md": {
-    "width": { "resolvesTo": "icon.size.md" },
-    "height": { "resolvesTo": "icon.size.md" }
+    "width": {
+      "resolvesTo": "icon.size.md",
+      "fallback": "20px"
+    },
+    "height": {
+      "resolvesTo": "icon.size.md",
+      "fallback": "20px"
+    }
   },
   "--lg": {
-    "width": { "resolvesTo": "icon.size.lg" },
-    "height": { "resolvesTo": "icon.size.lg" }
+    "width": {
+      "resolvesTo": "icon.size.lg",
+      "fallback": "24px"
+    },
+    "height": {
+      "resolvesTo": "icon.size.lg",
+      "fallback": "24px"
+    }
   },
   "--xl": {
-    "width": { "resolvesTo": "icon.size.xl" },
-    "height": { "resolvesTo": "icon.size.xl" }
+    "width": {
+      "resolvesTo": "icon.size.xl",
+      "fallback": "32px"
+    },
+    "height": {
+      "resolvesTo": "icon.size.xl",
+      "fallback": "32px"
+    }
   }
 }

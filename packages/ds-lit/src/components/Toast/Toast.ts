@@ -84,7 +84,7 @@ export class ToastElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap);
+      gap: var(--fsds-toast-spacing-stackGap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -101,14 +101,14 @@ export class ToastElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg);
-      border-color: var(--fsds-toast-surface-border);
+      background-color: var(--fsds-toast-surface-bg, #efefef);
+      border-color: var(--fsds-toast-surface-border, #cecece);
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-toast-surface-radius);
-      box-shadow: var(--fsds-toast-surface-shadow);
-      padding: var(--fsds-toast-spacing-padding);
-      max-width: var(--fsds-toast-size-maxWidth);
+      border-radius: var(--fsds-toast-surface-radius, 8px);
+      box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
+      padding: var(--fsds-toast-spacing-padding, 12px);
+      max-width: var(--fsds-toast-size-maxWidth, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -119,7 +119,7 @@ export class ToastElement extends LitElement {
     .toast__row {
       display: flex;
       align-items: flex-start;
-      gap: var(--fsds-toast-spacing-gap);
+      gap: var(--fsds-toast-spacing-gap, 8px);
       flex: 1 1 auto;
     }
 
@@ -131,7 +131,7 @@ export class ToastElement extends LitElement {
 
     .toast__description {
       flex: 1 1 auto;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       font-size: inherit;
     }
 
@@ -141,7 +141,7 @@ export class ToastElement extends LitElement {
       background: transparent;
       border: 0;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
     }
 
     .toast__close {
@@ -152,7 +152,7 @@ export class ToastElement extends LitElement {
       border: 0;
       border-radius: 9999px;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       flex-shrink: 0;
     }
   `;
@@ -300,7 +300,7 @@ export class ToastItemElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap);
+      gap: var(--fsds-toast-spacing-stackGap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -317,14 +317,14 @@ export class ToastItemElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg);
-      border-color: var(--fsds-toast-surface-border);
+      background-color: var(--fsds-toast-surface-bg, #efefef);
+      border-color: var(--fsds-toast-surface-border, #cecece);
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-toast-surface-radius);
-      box-shadow: var(--fsds-toast-surface-shadow);
-      padding: var(--fsds-toast-spacing-padding);
-      max-width: var(--fsds-toast-size-maxWidth);
+      border-radius: var(--fsds-toast-surface-radius, 8px);
+      box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
+      padding: var(--fsds-toast-spacing-padding, 12px);
+      max-width: var(--fsds-toast-size-maxWidth, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -335,7 +335,7 @@ export class ToastItemElement extends LitElement {
     .toast__row {
       display: flex;
       align-items: flex-start;
-      gap: var(--fsds-toast-spacing-gap);
+      gap: var(--fsds-toast-spacing-gap, 8px);
       flex: 1 1 auto;
     }
 
@@ -347,7 +347,7 @@ export class ToastItemElement extends LitElement {
 
     .toast__description {
       flex: 1 1 auto;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       font-size: inherit;
     }
 
@@ -357,7 +357,7 @@ export class ToastItemElement extends LitElement {
       background: transparent;
       border: 0;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
     }
 
     .toast__close {
@@ -368,7 +368,7 @@ export class ToastItemElement extends LitElement {
       border: 0;
       border-radius: 9999px;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       flex-shrink: 0;
     }
   `;
@@ -444,7 +444,7 @@ export class ToastTitleElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap);
+      gap: var(--fsds-toast-spacing-stackGap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -461,14 +461,14 @@ export class ToastTitleElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg);
-      border-color: var(--fsds-toast-surface-border);
+      background-color: var(--fsds-toast-surface-bg, #efefef);
+      border-color: var(--fsds-toast-surface-border, #cecece);
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-toast-surface-radius);
-      box-shadow: var(--fsds-toast-surface-shadow);
-      padding: var(--fsds-toast-spacing-padding);
-      max-width: var(--fsds-toast-size-maxWidth);
+      border-radius: var(--fsds-toast-surface-radius, 8px);
+      box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
+      padding: var(--fsds-toast-spacing-padding, 12px);
+      max-width: var(--fsds-toast-size-maxWidth, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -479,7 +479,7 @@ export class ToastTitleElement extends LitElement {
     .toast__row {
       display: flex;
       align-items: flex-start;
-      gap: var(--fsds-toast-spacing-gap);
+      gap: var(--fsds-toast-spacing-gap, 8px);
       flex: 1 1 auto;
     }
 
@@ -491,7 +491,7 @@ export class ToastTitleElement extends LitElement {
 
     .toast__description {
       flex: 1 1 auto;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       font-size: inherit;
     }
 
@@ -501,7 +501,7 @@ export class ToastTitleElement extends LitElement {
       background: transparent;
       border: 0;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
     }
 
     .toast__close {
@@ -512,7 +512,7 @@ export class ToastTitleElement extends LitElement {
       border: 0;
       border-radius: 9999px;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       flex-shrink: 0;
     }
   `;
@@ -588,7 +588,7 @@ export class ToastDescriptionElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap);
+      gap: var(--fsds-toast-spacing-stackGap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -605,14 +605,14 @@ export class ToastDescriptionElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg);
-      border-color: var(--fsds-toast-surface-border);
+      background-color: var(--fsds-toast-surface-bg, #efefef);
+      border-color: var(--fsds-toast-surface-border, #cecece);
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-toast-surface-radius);
-      box-shadow: var(--fsds-toast-surface-shadow);
-      padding: var(--fsds-toast-spacing-padding);
-      max-width: var(--fsds-toast-size-maxWidth);
+      border-radius: var(--fsds-toast-surface-radius, 8px);
+      box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
+      padding: var(--fsds-toast-spacing-padding, 12px);
+      max-width: var(--fsds-toast-size-maxWidth, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -623,7 +623,7 @@ export class ToastDescriptionElement extends LitElement {
     .toast__row {
       display: flex;
       align-items: flex-start;
-      gap: var(--fsds-toast-spacing-gap);
+      gap: var(--fsds-toast-spacing-gap, 8px);
       flex: 1 1 auto;
     }
 
@@ -635,7 +635,7 @@ export class ToastDescriptionElement extends LitElement {
 
     .toast__description {
       flex: 1 1 auto;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       font-size: inherit;
     }
 
@@ -645,7 +645,7 @@ export class ToastDescriptionElement extends LitElement {
       background: transparent;
       border: 0;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
     }
 
     .toast__close {
@@ -656,7 +656,7 @@ export class ToastDescriptionElement extends LitElement {
       border: 0;
       border-radius: 9999px;
       cursor: pointer;
-      color: var(--fsds-toast-color-default);
+      color: var(--fsds-toast-color-default, #141414);
       flex-shrink: 0;
     }
   `;

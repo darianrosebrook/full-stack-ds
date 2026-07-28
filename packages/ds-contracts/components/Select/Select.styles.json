@@ -77,10 +77,12 @@
       ]
     },
     "gap": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "padding": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "border-style": {
       "literal": "solid",
@@ -89,25 +91,32 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "select.size.border.default"
+      "resolvesTo": "select.size.border.default",
+      "fallback": "1px"
     },
     "border-radius": {
-      "resolvesTo": "select.size.radius.default"
+      "resolvesTo": "select.size.radius.default",
+      "fallback": "8px"
     },
     "border-color": {
-      "resolvesTo": "select.color.border.default"
+      "resolvesTo": "select.color.border.default",
+      "fallback": "#f29495"
     },
     "background-color": {
-      "resolvesTo": "select.color.background.default"
+      "resolvesTo": "select.color.background.default",
+      "fallback": "#ffffff"
     },
     "color": {
-      "resolvesTo": "select.color.foreground.default"
+      "resolvesTo": "select.color.foreground.default",
+      "fallback": "#141414"
     },
     "font-size": {
-      "resolvesTo": "select.font.size.default"
+      "resolvesTo": "select.font.size.default",
+      "fallback": "16px"
     },
     "line-height": {
-      "resolvesTo": "select.font.lineHeight.default"
+      "resolvesTo": "select.font.lineHeight.default",
+      "fallback": "1.5"
     },
     "cursor": {
       "literal": "pointer",
@@ -130,7 +139,8 @@
   },
   "content": {
     "background-color": {
-      "resolvesTo": "select.color.background.default"
+      "resolvesTo": "select.color.background.default",
+      "fallback": "#ffffff"
     },
     "border-style": {
       "literal": "solid",
@@ -139,13 +149,16 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "select.size.border.default"
+      "resolvesTo": "select.size.border.default",
+      "fallback": "1px"
     },
     "border-radius": {
-      "resolvesTo": "select.size.radius.default"
+      "resolvesTo": "select.size.radius.default",
+      "fallback": "8px"
     },
     "border-color": {
-      "resolvesTo": "select.color.border.default"
+      "resolvesTo": "select.color.border.default",
+      "fallback": "#f29495"
     },
     "box-shadow": {
       "literal": "0 4px 16px rgba(0,0,0,0.12)",
@@ -154,7 +167,8 @@
       ]
     },
     "padding": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "max-height": {
       "literal": "320px",
@@ -181,7 +195,8 @@
       ]
     },
     "gap": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     }
   },
   "search": {
@@ -198,7 +213,8 @@
       ]
     },
     "padding": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "border-style": {
       "literal": "solid",
@@ -207,22 +223,28 @@
       ]
     },
     "border-width": {
-      "resolvesTo": "select.size.border.default"
+      "resolvesTo": "select.size.border.default",
+      "fallback": "1px"
     },
     "border-radius": {
-      "resolvesTo": "select.size.radius.default"
+      "resolvesTo": "select.size.radius.default",
+      "fallback": "8px"
     },
     "border-color": {
-      "resolvesTo": "select.color.border.default"
+      "resolvesTo": "select.color.border.default",
+      "fallback": "#f29495"
     },
     "background-color": {
-      "resolvesTo": "select.color.background.default"
+      "resolvesTo": "select.color.background.default",
+      "fallback": "#ffffff"
     },
     "color": {
-      "resolvesTo": "select.color.foreground.default"
+      "resolvesTo": "select.color.foreground.default",
+      "fallback": "#141414"
     },
     "font-size": {
-      "resolvesTo": "select.font.size.default"
+      "resolvesTo": "select.font.size.default",
+      "fallback": "16px"
     }
   },
   "options": {
@@ -277,16 +299,20 @@
       ]
     },
     "gap": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "padding": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "border-radius": {
-      "resolvesTo": "select.size.radius.default"
+      "resolvesTo": "select.size.radius.default",
+      "fallback": "8px"
     },
     "color": {
-      "resolvesTo": "select.color.foreground.default"
+      "resolvesTo": "select.color.foreground.default",
+      "fallback": "#141414"
     },
     "cursor": {
       "literal": "pointer",
@@ -303,24 +329,30 @@
       ]
     },
     "padding": {
-      "resolvesTo": "select.size.padding.default"
+      "resolvesTo": "select.size.padding.default",
+      "fallback": "4px"
     },
     "color": {
-      "resolvesTo": "select.color.placeholder.default"
+      "resolvesTo": "select.color.placeholder.default",
+      "fallback": "#8f8f8f"
     }
   },
   ".select__trigger:focus-visible": {
     "outline-width": {
-      "resolvesTo": "select.focus.ring.width"
+      "resolvesTo": "select.focus.ring.width",
+      "fallback": "2px"
     },
     "outline-color": {
-      "resolvesTo": "select.focus.ring.color"
+      "resolvesTo": "select.focus.ring.color",
+      "fallback": "#0a65fe"
     },
     "outline-style": {
-      "resolvesTo": "select.focus.ring.style"
+      "resolvesTo": "select.focus.ring.style",
+      "fallback": "solid"
     },
     "outline-offset": {
-      "resolvesTo": "select.focus.ring.offset"
+      "resolvesTo": "select.focus.ring.offset",
+      "fallback": "2px"
     },
     "select.color.border.default": {
       "resolvesTo": "semantic.color.border.accent",
@@ -395,17 +427,20 @@
   },
   ".select--sm .select__trigger": {
     "height": {
-      "resolvesTo": "select.size.sm.height"
+      "resolvesTo": "select.size.sm.height",
+      "fallback": "24px"
     }
   },
   ".select--md .select__trigger": {
     "height": {
-      "resolvesTo": "select.size.md.height"
+      "resolvesTo": "select.size.md.height",
+      "fallback": "32px"
     }
   },
   ".select--lg .select__trigger": {
     "height": {
-      "resolvesTo": "select.size.lg.height"
+      "resolvesTo": "select.size.lg.height",
+      "fallback": "48px"
     }
   }
 }
