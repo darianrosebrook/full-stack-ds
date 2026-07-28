@@ -245,19 +245,48 @@ function graphValueAt(graph: ResolvedGraph, path: string): unknown {
 }
 
 /**
+ * Is this graph value a serialized composite rather than a CSS literal?
+ *
+ * DTCG composite types (`$type: shadow` and friends) are stored in
+ * resolved.tokens.json as a JSON *string* holding the structured form —
+ * `[{"offsetX":{"value":0,"unit":"px"},…}]` — not as the CSS `box-shadow`
+ * text. The CSS lowering happens downstream in the tokens.css emitter, so the
+ * graph cannot answer "what literal should the fallback be" for these 13
+ * elevation tokens. Treating the serialization as a literal writes a JSON blob
+ * into a `var(…, fallback)` and breaks the CSS parse outright — a real defect
+ * caught by the Lit template rail on Calendar during this slice.
+ *
+ * We refuse to guess rather than reimplement the emitter's shadow lowering
+ * here: a second lowering would be a second source of truth, and any drift
+ * between the two would silently write wrong fallbacks.
+ */
+function isSerializedComposite(literal: string): boolean {
+  const trimmed = literal.trim();
+  if (trimmed[0] !== "[" && trimmed[0] !== "{") return false;
+  try {
+    const parsed: unknown = JSON.parse(trimmed);
+    return typeof parsed === "object" && parsed !== null;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Project a DTCG value to the literal a fallback should carry. Theme-mode
  * objects collapse to their `light` entry — see the light-mode non-claim in
- * the module header.
+ * the module header. Serialized composites yield undefined (unresolvable).
  */
 function toLightLiteral(value: unknown): string | undefined {
-  if (typeof value === "string") return value;
-  if (typeof value === "number") return String(value);
-  if (value && typeof value === "object" && "light" in (value as object)) {
+  let scalar: string | undefined;
+  if (typeof value === "string") scalar = value;
+  else if (typeof value === "number") scalar = String(value);
+  else if (value && typeof value === "object" && "light" in (value as object)) {
     const light = (value as { light: unknown }).light;
-    if (typeof light === "string") return light;
-    if (typeof light === "number") return String(light);
+    if (typeof light === "string") scalar = light;
+    else if (typeof light === "number") scalar = String(light);
   }
-  return undefined;
+  if (scalar === undefined) return undefined;
+  return isSerializedComposite(scalar) ? undefined : scalar;
 }
 
 /** Depth cap for chain resolution — guards a malformed self-referential slot. */
