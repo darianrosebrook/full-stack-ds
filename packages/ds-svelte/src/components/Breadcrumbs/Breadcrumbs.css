@@ -14,15 +14,15 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-breadcrumbs-color-background-elevated, #ffffff);
-  border-color: var(--fsds-breadcrumbs-color-border-subtle, #cecece);
+  border-color: var(--fsds-breadcrumbs-color-border-subtle, #d0d0d0);
   line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse, 1);
   display: block;
-  border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 8px);
+  border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 6px);
   padding: var(--fsds-breadcrumbs-spacing-padding-default, 8px);
   color: var(--fsds-breadcrumbs-color-foreground-primary, #141414);
 
   &:focus-visible {
-    outline-color: var(--fsds-breadcrumbs-color-focus, #d9292b);
+    outline-color: var(--fsds-breadcrumbs-color-focus, #d92d2e);
   }
 }
 

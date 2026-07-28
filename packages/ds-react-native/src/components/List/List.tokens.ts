@@ -44,7 +44,7 @@ export const listTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -86,7 +86,7 @@ export const listTokenScopes = {
       name: "list.color.border.default",
       cssVar: "--fsds-list-color-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "list.size.padding.default": {
       name: "list.size.padding.default",

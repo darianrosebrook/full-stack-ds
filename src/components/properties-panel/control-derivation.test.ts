@@ -463,10 +463,12 @@ describe("material surface projection", () => {
     expect(byRole["min-height"].resolvesTo).toBe(
       "semantic.action.size.medium.min-height",
     );
-    // Constraint captions unchanged: block axis floored at the authored 36px.
+    // Constraint captions unchanged: the block axis is floored at the authored
+    // slot's fallback, which is the value semantic.action.size.medium.min-height
+    // resolves to in the token graph (32px).
     const constraints = deriveBoxConstraints(resolveBoxModel(rows));
     const block = constraints.find((c) => c.axis === "block");
-    expect(block?.floor?.fallback).toBe("36px");
+    expect(block?.floor?.fallback).toBe("32px");
   });
 
   it("surfaces Badge's inherited slots without authored sidecar entries (A4)", () => {

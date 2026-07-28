@@ -32,7 +32,7 @@
     },
     "border-color": {
       "resolvesTo": "tooltip.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-radius": {
       "resolvesTo": "tooltip.size.radius.default",

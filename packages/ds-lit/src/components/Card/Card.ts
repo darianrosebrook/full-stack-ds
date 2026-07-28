@@ -30,7 +30,7 @@ export class CardElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -38,8 +38,8 @@ export class CardElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
@@ -47,19 +47,19 @@ export class CardElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
@@ -69,39 +69,39 @@ export class CardElement extends LitElement {
     }
 
     .card--completed {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .card--in-progress {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .card--planned {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .card--deprecated {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .card--category {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .card--complexity {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card__link {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card {
@@ -117,7 +117,7 @@ export class CardElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-card-color-background-default, #ffffff);
-      border-color: var(--fsds-card-color-border-default, #fceaea);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
       color: var(--fsds-card-color-foreground-primary, #141414);
       padding: var(--fsds-card-size-padding-default, 16px);
       border-radius: var(--fsds-card-size-radius-default, 8px);
@@ -129,21 +129,21 @@ export class CardElement extends LitElement {
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width, 2px);
-        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
         outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #efefef);
+      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
       box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
@@ -192,7 +192,7 @@ export class CardElement extends LitElement {
       gap: var(--fsds-card-size-gap-default, 4px);
       padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default, #fceaea);
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -206,7 +206,7 @@ export class CardElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
       color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
@@ -264,7 +264,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -272,8 +272,8 @@ export class CardHeaderElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
@@ -281,19 +281,19 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
@@ -303,39 +303,39 @@ export class CardHeaderElement extends LitElement {
     }
 
     .card--completed {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .card--in-progress {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .card--planned {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .card--deprecated {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .card--category {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .card--complexity {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card__link {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card {
@@ -351,7 +351,7 @@ export class CardHeaderElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-card-color-background-default, #ffffff);
-      border-color: var(--fsds-card-color-border-default, #fceaea);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
       color: var(--fsds-card-color-foreground-primary, #141414);
       padding: var(--fsds-card-size-padding-default, 16px);
       border-radius: var(--fsds-card-size-radius-default, 8px);
@@ -363,21 +363,21 @@ export class CardHeaderElement extends LitElement {
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width, 2px);
-        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
         outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #efefef);
+      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
       box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
@@ -426,7 +426,7 @@ export class CardHeaderElement extends LitElement {
       gap: var(--fsds-card-size-gap-default, 4px);
       padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default, #fceaea);
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -440,7 +440,7 @@ export class CardHeaderElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
       color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
@@ -480,7 +480,7 @@ export class CardContentElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -488,8 +488,8 @@ export class CardContentElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
@@ -497,19 +497,19 @@ export class CardContentElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
@@ -519,39 +519,39 @@ export class CardContentElement extends LitElement {
     }
 
     .card--completed {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .card--in-progress {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .card--planned {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .card--deprecated {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .card--category {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .card--complexity {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card__link {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card {
@@ -567,7 +567,7 @@ export class CardContentElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-card-color-background-default, #ffffff);
-      border-color: var(--fsds-card-color-border-default, #fceaea);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
       color: var(--fsds-card-color-foreground-primary, #141414);
       padding: var(--fsds-card-size-padding-default, 16px);
       border-radius: var(--fsds-card-size-radius-default, 8px);
@@ -579,21 +579,21 @@ export class CardContentElement extends LitElement {
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width, 2px);
-        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
         outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #efefef);
+      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
       box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
@@ -642,7 +642,7 @@ export class CardContentElement extends LitElement {
       gap: var(--fsds-card-size-gap-default, 4px);
       padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default, #fceaea);
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -656,7 +656,7 @@ export class CardContentElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
       color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
@@ -696,7 +696,7 @@ export class CardFooterElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -704,8 +704,8 @@ export class CardFooterElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
@@ -713,19 +713,19 @@ export class CardFooterElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
@@ -735,39 +735,39 @@ export class CardFooterElement extends LitElement {
     }
 
     .card--completed {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .card--in-progress {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .card--planned {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .card--deprecated {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .card--category {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .card--complexity {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card__link {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card {
@@ -783,7 +783,7 @@ export class CardFooterElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-card-color-background-default, #ffffff);
-      border-color: var(--fsds-card-color-border-default, #fceaea);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
       color: var(--fsds-card-color-foreground-primary, #141414);
       padding: var(--fsds-card-size-padding-default, 16px);
       border-radius: var(--fsds-card-size-radius-default, 8px);
@@ -795,21 +795,21 @@ export class CardFooterElement extends LitElement {
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width, 2px);
-        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
         outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #efefef);
+      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
       box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
@@ -858,7 +858,7 @@ export class CardFooterElement extends LitElement {
       gap: var(--fsds-card-size-gap-default, 4px);
       padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default, #fceaea);
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -872,7 +872,7 @@ export class CardFooterElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
       color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;
@@ -912,7 +912,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -920,8 +920,8 @@ export class CardDescriptionElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
@@ -929,19 +929,19 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
@@ -951,39 +951,39 @@ export class CardDescriptionElement extends LitElement {
     }
 
     .card--completed {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .card--in-progress {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .card--planned {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .card--deprecated {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .card--category {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .card--complexity {
-      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card__link {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .card {
@@ -999,7 +999,7 @@ export class CardDescriptionElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-card-color-background-default, #ffffff);
-      border-color: var(--fsds-card-color-border-default, #fceaea);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
       color: var(--fsds-card-color-foreground-primary, #141414);
       padding: var(--fsds-card-size-padding-default, 16px);
       border-radius: var(--fsds-card-size-radius-default, 8px);
@@ -1011,21 +1011,21 @@ export class CardDescriptionElement extends LitElement {
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
       border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
+      border-inline-start-color: var(--fsds-card-color-statusAccent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width, 2px);
-        outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
         outline-offset: var(--fsds-card-focus-ring-offset, 2px);
         outline-style: solid;
       }
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #efefef);
+      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
       box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       transform: translateY(-1px);
     }
@@ -1074,7 +1074,7 @@ export class CardDescriptionElement extends LitElement {
       gap: var(--fsds-card-size-gap-default, 4px);
       padding-top: var(--fsds-card-size-padding-default, 16px);
       margin-top: auto;
-      border-top-color: var(--fsds-card-color-border-default, #fceaea);
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
       border-top-style: solid;
       border-top-width: 1px;
     }
@@ -1088,7 +1088,7 @@ export class CardDescriptionElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
       color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
       padding: 2px 8px;
       border-radius: 9999px;

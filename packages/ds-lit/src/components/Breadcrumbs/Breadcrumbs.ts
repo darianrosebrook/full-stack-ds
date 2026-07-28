@@ -28,7 +28,7 @@ export class BreadcrumbsElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -37,12 +37,12 @@ export class BreadcrumbsElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-breadcrumbs-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
-      --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
-      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .breadcrumbs {
@@ -58,15 +58,15 @@ export class BreadcrumbsElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-breadcrumbs-color-background-elevated, #ffffff);
-      border-color: var(--fsds-breadcrumbs-color-border-subtle, #cecece);
+      border-color: var(--fsds-breadcrumbs-color-border-subtle, #d0d0d0);
       line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse, 1);
       display: block;
-      border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 8px);
+      border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 6px);
       padding: var(--fsds-breadcrumbs-spacing-padding-default, 8px);
       color: var(--fsds-breadcrumbs-color-foreground-primary, #141414);
 
       &:focus-visible {
-        outline-color: var(--fsds-breadcrumbs-color-focus, #d9292b);
+        outline-color: var(--fsds-breadcrumbs-color-focus, #d92d2e);
       }
     }
 
@@ -118,7 +118,7 @@ export class BreadcrumbsListElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -127,12 +127,12 @@ export class BreadcrumbsListElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-breadcrumbs-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
-      --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
-      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
     .breadcrumbs {
@@ -148,15 +148,15 @@ export class BreadcrumbsListElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-breadcrumbs-color-background-elevated, #ffffff);
-      border-color: var(--fsds-breadcrumbs-color-border-subtle, #cecece);
+      border-color: var(--fsds-breadcrumbs-color-border-subtle, #d0d0d0);
       line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse, 1);
       display: block;
-      border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 8px);
+      border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 6px);
       padding: var(--fsds-breadcrumbs-spacing-padding-default, 8px);
       color: var(--fsds-breadcrumbs-color-foreground-primary, #141414);
 
       &:focus-visible {
-        outline-color: var(--fsds-breadcrumbs-color-focus, #d9292b);
+        outline-color: var(--fsds-breadcrumbs-color-focus, #d92d2e);
       }
     }
 

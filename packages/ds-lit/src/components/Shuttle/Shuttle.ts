@@ -29,19 +29,19 @@ export class ShuttleElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-shuttle-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-shuttle-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-shuttle-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-shuttle-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-shuttle-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
     }
 
     .shuttle {
@@ -56,10 +56,10 @@ export class ShuttleElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-shuttle-color-background-default, #efefef);
-      border-color: var(--fsds-shuttle-color-border-accent, #d9292b);
+      background-color: var(--fsds-shuttle-color-background-default, #d0d0d0);
+      border-color: var(--fsds-shuttle-color-border-accent, #d92d2e);
       padding: var(--fsds-shuttle-size-padding-default, 24px);
-      border-radius: var(--fsds-shuttle-size-radius-default, 8px);
+      border-radius: var(--fsds-shuttle-size-radius-default, 6px);
     }
 
     .shuttle__item {
@@ -118,19 +118,19 @@ export class ShuttleItemElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-shuttle-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-shuttle-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-shuttle-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-shuttle-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-shuttle-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
     }
 
     .shuttle {
@@ -145,10 +145,10 @@ export class ShuttleItemElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-shuttle-color-background-default, #efefef);
-      border-color: var(--fsds-shuttle-color-border-accent, #d9292b);
+      background-color: var(--fsds-shuttle-color-background-default, #d0d0d0);
+      border-color: var(--fsds-shuttle-color-border-accent, #d92d2e);
       padding: var(--fsds-shuttle-size-padding-default, 24px);
-      border-radius: var(--fsds-shuttle-size-radius-default, 8px);
+      border-radius: var(--fsds-shuttle-size-radius-default, 6px);
     }
 
     .shuttle__item {

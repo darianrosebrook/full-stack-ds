@@ -1,7 +1,7 @@
 {
   "box-model.gap": {
     "resolvesTo": "semantic.structure.size.gap",
-    "fallback": "8px",
+    "fallback": "16px",
     "layer": "semantic"
   },
   "details.size.padding.default": {
@@ -11,7 +11,7 @@
   },
   "details.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "details.size.icon": {
@@ -26,7 +26,7 @@
   },
   "details.color.background.hover": {
     "resolvesTo": "semantic.color.background.hover",
-    "fallback": "#cecece",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "details.color.foreground.primary": {
@@ -36,12 +36,12 @@
   },
   "details.color.border.default": {
     "resolvesTo": "semantic.color.border.primary",
-    "fallback": "#f29495",
+    "fallback": "#a0a0a1",
     "layer": "semantic"
   },
   "details.color.border.hover": {
     "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#8f8f8f",
+    "fallback": "#888889",
     "layer": "semantic"
   },
   "details.focus.ring.width": {
@@ -51,7 +51,7 @@
   },
   "details.focus.ring.color": {
     "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "details.focus.ring.offset": {

@@ -19,9 +19,9 @@
   justify-content: center;
   white-space: nowrap;
   border-style: solid;
-  background-color: var(--fsds-badge-color-background-default, #efefef);
+  background-color: var(--fsds-badge-color-background-default, #d0d0d0);
   color: var(--fsds-badge-color-foreground-primary, #141414);
-  border-color: var(--fsds-badge-color-border-default, #cecece);
+  border-color: var(--fsds-badge-color-border-default, #d0d0d0);
   border-width: var(--fsds-badge-size-border, 1px);
   border-radius: var(--fsds-badge-size-radius, 9999px);
   padding-block: var(--fsds-badge-size-paddingY, 2px);
@@ -31,7 +31,7 @@
   line-height: 1;
 
   &:hover {
-    background-color: var(--fsds-badge-color-background-hover, #e4e4e4);
+    background-color: var(--fsds-badge-color-background-hover, #d0d0d0);
   }
 }
 

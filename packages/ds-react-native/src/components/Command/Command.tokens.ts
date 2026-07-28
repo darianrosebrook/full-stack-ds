@@ -44,7 +44,7 @@ export const commandTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -92,13 +92,13 @@ export const commandTokenScopes = {
       name: "command.color.border",
       cssVar: "--fsds-command-color-border",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "command.color.borderLight": {
       name: "command.color.borderLight",
       cssVar: "--fsds-command-color-borderLight",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "command.color.text": {
       name: "command.color.text",
@@ -110,7 +110,7 @@ export const commandTokenScopes = {
       name: "command.color.textMuted",
       cssVar: "--fsds-command-color-textMuted",
       ref: "semantic.color.foreground.tertiary",
-      fallback: "#717171",
+      fallback: "#727272",
     },
     "command.border.width": {
       name: "command.border.width",
@@ -122,7 +122,7 @@ export const commandTokenScopes = {
       name: "command.border.radius",
       cssVar: "--fsds-command-border-radius",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "command.size.maxWidth": {
       name: "command.size.maxWidth",
@@ -179,7 +179,7 @@ export const commandTokenScopes = {
       name: "command.color.backgroundHover",
       cssVar: "--fsds-command-color-backgroundHover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
   },
 } satisfies ComponentTokenScopes;

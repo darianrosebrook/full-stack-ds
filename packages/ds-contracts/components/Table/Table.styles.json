@@ -34,7 +34,7 @@
     },
     "border-color": {
       "resolvesTo": "table.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-width": {
       "resolvesTo": "table.border.width",
@@ -42,7 +42,7 @@
     },
     "border-radius": {
       "resolvesTo": "table.size.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "width": {
       "literal": "100%",
@@ -70,13 +70,13 @@
   "head": {
     "background-color": {
       "resolvesTo": "table.color.background.footer",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   "footer": {
     "background-color": {
       "resolvesTo": "table.color.background.footer",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "font-weight": {
       "resolvesTo": "table.text.weightFooter",
@@ -114,7 +114,7 @@
     },
     "border-bottom-color": {
       "resolvesTo": "table.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -152,7 +152,7 @@
     },
     "border-bottom-color": {
       "resolvesTo": "table.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -164,13 +164,13 @@
   "hover": {
     "background-color": {
       "resolvesTo": "table.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   "selected": {
     "background-color": {
       "resolvesTo": "table.color.background.selected",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   }
 }

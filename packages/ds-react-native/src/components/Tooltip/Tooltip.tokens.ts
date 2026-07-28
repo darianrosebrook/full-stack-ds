@@ -48,7 +48,7 @@ export const tooltipTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.surface.size.gap",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -97,7 +97,7 @@ export const tooltipTokenScopes = {
       name: "tooltip.color.border.default",
       cssVar: "--fsds-tooltip-color-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "tooltip.size.padding.y": {
       name: "tooltip.size.padding.y",

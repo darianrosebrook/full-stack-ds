@@ -22,7 +22,7 @@
   ".checkbox:hover .checkbox__indicator": {
     "checkbox.color.border.default": {
       "resolvesTo": "semantic.color.border.hover",
-      "fallback": "#f29495"
+      "fallback": "#888889"
     }
   },
   "input": {
@@ -118,7 +118,7 @@
     },
     "border-color": {
       "resolvesTo": "checkbox.color.border.default",
-      "fallback": "#aeaeae"
+      "fallback": "#a0a0a1"
     },
     "background-color": {
       "resolvesTo": "checkbox.color.background.default",
@@ -154,7 +154,7 @@
   ":has(.checkbox__input:disabled) .checkbox__indicator": {
     "checkbox.color.background.default": {
       "resolvesTo": "semantic.color.background.disabled",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     }
   },
   ":has(.checkbox__input:focus-visible) .checkbox__indicator": {
@@ -164,7 +164,7 @@
     },
     "outline-color": {
       "resolvesTo": "checkbox.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "checkbox.focus.ring.style",

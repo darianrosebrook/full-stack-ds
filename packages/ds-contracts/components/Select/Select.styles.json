@@ -96,11 +96,11 @@
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "border-color": {
       "resolvesTo": "select.color.border.default",
-      "fallback": "#f29495"
+      "fallback": "#a0a0a1"
     },
     "background-color": {
       "resolvesTo": "select.color.background.default",
@@ -154,11 +154,11 @@
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "border-color": {
       "resolvesTo": "select.color.border.default",
-      "fallback": "#f29495"
+      "fallback": "#a0a0a1"
     },
     "box-shadow": {
       "literal": "0 4px 16px rgba(0,0,0,0.12)",
@@ -228,11 +228,11 @@
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "border-color": {
       "resolvesTo": "select.color.border.default",
-      "fallback": "#f29495"
+      "fallback": "#a0a0a1"
     },
     "background-color": {
       "resolvesTo": "select.color.background.default",
@@ -308,7 +308,7 @@
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "color": {
       "resolvesTo": "select.color.foreground.default",
@@ -334,7 +334,7 @@
     },
     "color": {
       "resolvesTo": "select.color.placeholder.default",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     }
   },
   ".select__trigger:focus-visible": {
@@ -344,7 +344,7 @@
     },
     "outline-color": {
       "resolvesTo": "select.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "select.focus.ring.style",
@@ -356,27 +356,27 @@
     },
     "select.color.border.default": {
       "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".select__trigger:hover": {
     "select.color.border.default": {
       "resolvesTo": "semantic.color.border.bold",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     },
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     },
     "select.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.hover",
-      "fallback": "#3a3a3a"
+      "fallback": "#474647"
     }
   },
   ".select--open .select__trigger": {
     "select.color.border.default": {
       "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".select--disabled .select__trigger": {
@@ -394,35 +394,35 @@
     },
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.disabled",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "select.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.disabled",
-      "fallback": "#aeaeae"
+      "fallback": "#727272"
     },
     "select.color.border.default": {
       "resolvesTo": "semantic.color.border.disabled",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     }
   },
   ".select__option:hover": {
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     },
     "select.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.hover",
-      "fallback": "#3a3a3a"
+      "fallback": "#474647"
     }
   },
   ".select__option[aria-selected=\"true\"]": {
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.highlight",
-      "fallback": "#f7c1c2"
+      "fallback": "#f5a2a1"
     },
     "select.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".select--sm .select__trigger": {

@@ -24,26 +24,26 @@ export class ToggleSwitchElement extends LitElement {
     .toggle-switch {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-action-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 36px);
+      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 32px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-toggle-switch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-toggle-switch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-toggle-switch-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-toggle-switch-border-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-toggle-switch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
       --fsds-toggle-switch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
-      --fsds-toggle-switch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+      --fsds-toggle-switch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #d0d0d0);
       --fsds-toggle-switch-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-toggle-switch-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-toggle-switch-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
@@ -64,9 +64,9 @@ export class ToggleSwitchElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-toggle-switch-color-background-default, #efefef);
+      background-color: var(--fsds-toggle-switch-color-background-default, #d0d0d0);
       color: var(--fsds-toggle-switch-color-foreground-default, #141414);
-      border-color: var(--fsds-toggle-switch-color-border-default, #fceaea);
+      border-color: var(--fsds-toggle-switch-color-border-default, #b8b8b8);
       border-radius: var(--fsds-toggle-switch-border-radius-default, 9999px);
       transition-duration: var(--fsds-toggle-switch-motion-duration-fast, 150ms);
       border-style: solid;
@@ -75,21 +75,21 @@ export class ToggleSwitchElement extends LitElement {
       box-sizing: border-box;
 
       &:hover {
-        background-color: var(--fsds-toggle-switch-color-background-hover, #efefef);
+        background-color: var(--fsds-toggle-switch-color-background-hover, #d0d0d0);
       }
 
       &[aria-checked="true"] {
-        background-color: var(--fsds-toggle-switch-color-background-checked, #d9292b);
+        background-color: var(--fsds-toggle-switch-color-background-checked, #0566fe);
       }
 
       &:disabled {
-        background-color: var(--fsds-toggle-switch-color-background-disabled, #cecece);
+        background-color: var(--fsds-toggle-switch-color-background-disabled, #d0d0d0);
         cursor: not-allowed;
       }
 
       &:focus-visible {
         outline-width: var(--fsds-toggle-switch-focus-ring-width, 2px);
-        outline-color: var(--fsds-toggle-switch-focus-ring-color, #0a65fe);
+        outline-color: var(--fsds-toggle-switch-focus-ring-color, #0566fe);
         outline-style: var(--fsds-toggle-switch-focus-ring-style, solid);
         outline-offset: var(--fsds-toggle-switch-focus-ring-offset, 2px);
       }

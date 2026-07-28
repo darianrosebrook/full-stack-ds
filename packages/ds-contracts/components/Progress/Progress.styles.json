@@ -2,7 +2,7 @@
   "root": {
     "color": {
       "resolvesTo": "progress.color.text.default",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "gap": {
       "resolvesTo": "progress.spacing.gap",
@@ -16,7 +16,7 @@
   "track": {
     "background-color": {
       "resolvesTo": "progress.color.track.background",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "display": {
       "literal": "block",
@@ -46,7 +46,7 @@
   "fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.info",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "display": {
       "literal": "block",
@@ -76,7 +76,7 @@
     },
     "color": {
       "resolvesTo": "progress.color.text.default",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "font-size": {
       "literal": "0.875em",
@@ -92,25 +92,25 @@
   ".progress--info .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.info",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     }
   },
   ".progress--success .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.success",
-      "fallback": "#487e1e"
+      "fallback": "#497f21"
     }
   },
   ".progress--warning .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.warning",
-      "fallback": "#ac5c00"
+      "fallback": "#ae5d00"
     }
   },
   ".progress--danger .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.danger",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   }
 }

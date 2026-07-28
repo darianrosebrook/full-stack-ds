@@ -14,7 +14,7 @@
     },
     "border-color": {
       "resolvesTo": "accordion.border.color",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-radius": {
       "resolvesTo": "accordion.border.radius",
@@ -42,7 +42,7 @@
     },
     "border-color": {
       "resolvesTo": "accordion.border.color",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-style": {
       "literal": "solid",
@@ -148,11 +148,11 @@
   ".accordion__trigger:hover": {
     "background-color": {
       "resolvesTo": "accordion.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "accordion.color.textHover",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   ".accordion__trigger:focus-visible": {
@@ -162,7 +162,7 @@
     },
     "outline-color": {
       "resolvesTo": "accordion.focus.color",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "outline-offset": {
       "resolvesTo": "accordion.focus.offset",
@@ -216,7 +216,7 @@
     },
     "color": {
       "resolvesTo": "accordion.color.icon",
-      "fallback": "#717171"
+      "fallback": "#727272"
     }
   },
   ".accordion__trigger[aria-expanded=\"true\"] .accordion__chevron": {
@@ -248,7 +248,7 @@
     },
     "color": {
       "resolvesTo": "accordion.color.textSecondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "font-size": {
       "resolvesTo": "accordion.text.sizeContent",

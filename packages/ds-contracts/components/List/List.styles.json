@@ -6,7 +6,7 @@
     },
     "border-color": {
       "resolvesTo": "list.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "padding": {
       "resolvesTo": "list.size.padding.default",
@@ -170,7 +170,7 @@
     },
     "border-block-start-color": {
       "resolvesTo": "list.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     }
   },
   ".list--variant-spaced > *": {

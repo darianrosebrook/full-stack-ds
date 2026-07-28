@@ -15,19 +15,19 @@
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-postcard-color-background-default, #ffffff);
   padding: var(--fsds-postcard-size-padding-default, 16px);
-  border-radius: var(--fsds-postcard-size-radius-default, 8px);
+  border-radius: var(--fsds-postcard-size-radius-default, 6px);
   line-height: var(--fsds-postcard-typography-content-lineHeight, 1.5);
   display: flex;
   flex-direction: column;
   border-style: solid;
   border-width: var(--fsds-postcard-size-border-default, 1px);
   box-sizing: border-box;
-  border-color: var(--fsds-postcard-color-border-default, #fceaea);
+  border-color: var(--fsds-postcard-color-border-default, #b8b8b8);
   color: var(--fsds-postcard-color-foreground-primary, #141414);
 
   &:hover {
-    background-color: var(--fsds-postcard-color-background-hover, #efefef);
-    border-color: var(--fsds-postcard-color-border-hover, #8f8f8f);
+    background-color: var(--fsds-postcard-color-background-hover, #d0d0d0);
+    border-color: var(--fsds-postcard-color-border-hover, #888889);
   }
 }
 
@@ -73,7 +73,7 @@
   align-items: center;
   gap: var(--fsds-postcard-size-gap-default, 12px);
   padding-top: var(--fsds-postcard-size-padding-default, 16px);
-  border-top-color: var(--fsds-postcard-color-border-default, #fceaea);
+  border-top-color: var(--fsds-postcard-color-border-default, #b8b8b8);
   border-top-style: solid;
   border-top-width: var(--fsds-postcard-size-border-default, 1px);
   font-size: var(--fsds-postcard-typography-footer-fontSize, 14px);

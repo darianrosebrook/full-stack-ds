@@ -48,7 +48,7 @@ export const dialogTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.surface.size.gap",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -97,7 +97,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.border.default",
       cssVar: "--fsds-dialog-color-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "dialog.size.radius.default": {
       name: "dialog.size.radius.default",
@@ -209,7 +209,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.background.default",
       cssVar: "--fsds-dialog-color-background-default",
       ref: "semantic.color.overlay.scrim",
-      fallback: "#00000066",
+      fallback: "#000000",
     },
   },
   "part_body": {
@@ -217,7 +217,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.foreground.default",
       cssVar: "--fsds-dialog-color-foreground-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
   },
   "part_closeButton": {
@@ -225,7 +225,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.foreground.default",
       cssVar: "--fsds-dialog-color-foreground-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
   },
   "hover": {
@@ -233,7 +233,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.background.default",
       cssVar: "--fsds-dialog-color-background-default",
       ref: "semantic.color.background.hover",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
   },
 } satisfies ComponentTokenScopes;

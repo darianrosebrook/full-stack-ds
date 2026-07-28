@@ -72,7 +72,7 @@
     },
     "border-color": {
       "resolvesTo": "text-field.color.input.border",
-      "fallback": "#aeaeae"
+      "fallback": "#a0a0a1"
     },
     "border-width": {
       "resolvesTo": "text-field.border.width",
@@ -80,7 +80,7 @@
     },
     "border-radius": {
       "resolvesTo": "text-field.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "color": {
       "resolvesTo": "text-field.color.input.text",
@@ -96,15 +96,15 @@
     },
     "min-height": {
       "resolvesTo": "text-field.field.min-height",
-      "fallback": "36px"
+      "fallback": "32px"
     },
     "padding-block": {
       "resolvesTo": "text-field.field.padding-block",
-      "fallback": "8px"
+      "fallback": "4px"
     },
     "padding-inline": {
       "resolvesTo": "text-field.field.padding-inline",
-      "fallback": "12px"
+      "fallback": "8px"
     },
     "transition-property": {
       "literal": "background-color, border-color, color, outline-color",
@@ -138,7 +138,7 @@
     },
     "color": {
       "resolvesTo": "text-field.color.supporting.text",
-      "fallback": "#717171"
+      "fallback": "#727272"
     }
   },
   "error": {
@@ -158,25 +158,25 @@
     },
     "color": {
       "resolvesTo": "text-field.color.error",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".text-field__field::placeholder": {
     "color": {
       "resolvesTo": "text-field.color.input.placeholder",
-      "fallback": "#717171"
+      "fallback": "#727272"
     }
   },
   ".text-field__field:hover:not(:disabled)": {
     "border-color": {
       "resolvesTo": "text-field.color.input.borderHover",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     }
   },
   ".text-field__field:focus-visible": {
     "border-color": {
       "resolvesTo": "text-field.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-width": {
       "resolvesTo": "text-field.focus.ring.width",
@@ -184,7 +184,7 @@
     },
     "outline-color": {
       "resolvesTo": "text-field.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "text-field.focus.ring.style",
@@ -198,31 +198,31 @@
   ".text-field--invalid .text-field__field": {
     "border-color": {
       "resolvesTo": "text-field.color.input.borderError",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".text-field--invalid .text-field__field:focus-visible": {
     "border-color": {
       "resolvesTo": "text-field.color.input.borderError",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "outline-color": {
       "resolvesTo": "text-field.color.input.borderError",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".text-field__field:disabled": {
     "background-color": {
       "resolvesTo": "text-field.color.input.backgroundDisabled",
-      "fallback": "#efefef"
+      "fallback": "#b8b8b8"
     },
     "border-color": {
       "resolvesTo": "text-field.color.input.borderDisabled",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     },
     "color": {
       "resolvesTo": "text-field.color.input.textDisabled",
-      "fallback": "#717171"
+      "fallback": "#727272"
     },
     "opacity": {
       "resolvesTo": "text-field.opacity.disabled",

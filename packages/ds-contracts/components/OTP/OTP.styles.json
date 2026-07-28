@@ -84,15 +84,15 @@
     },
     "border-radius": {
       "resolvesTo": "otp.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "border-color": {
       "resolvesTo": "otp.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "background-color": {
       "resolvesTo": "otp.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "otp.color.foreground.primary",
@@ -102,7 +102,7 @@
   ".otp__field:focus-visible": {
     "border-color": {
       "resolvesTo": "otp.color.border.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "outline-width": {
       "resolvesTo": "otp.focus.ring.width",
@@ -110,7 +110,7 @@
     },
     "outline-color": {
       "resolvesTo": "otp.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "otp.focus.ring.style",

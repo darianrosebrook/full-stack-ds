@@ -44,7 +44,7 @@ export const shuttleTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -80,7 +80,7 @@ export const shuttleTokenScopes = {
       name: "shuttle.color.background.default",
       cssVar: "--fsds-shuttle-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "shuttle.color.foreground.primary": {
       name: "shuttle.color.foreground.primary",
@@ -92,13 +92,13 @@ export const shuttleTokenScopes = {
       name: "shuttle.color.border.default",
       cssVar: "--fsds-shuttle-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "shuttle.color.border.accent": {
       name: "shuttle.color.border.accent",
       cssVar: "--fsds-shuttle-color-border-accent",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "shuttle.size.padding.default": {
       name: "shuttle.size.padding.default",
@@ -110,7 +110,7 @@ export const shuttleTokenScopes = {
       name: "shuttle.size.radius.default",
       cssVar: "--fsds-shuttle-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
   },
 } satisfies ComponentTokenScopes;

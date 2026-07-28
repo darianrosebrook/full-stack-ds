@@ -11,7 +11,7 @@
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
-  min-height: var(--fsds-chip-size-minHeight, 32px);
+  min-height: var(--fsds-chip-size-minHeight, 36px);
   max-height: var(--fsds-box-model-max-height);
   display: inline-flex;
   align-items: center;
@@ -21,7 +21,7 @@
   user-select: none;
   background-color: var(--fsds-chip-color-background-default, #fafafa);
   color: var(--fsds-chip-color-foreground-default, #141414);
-  border-color: var(--fsds-chip-color-border-default, #aeaeae);
+  border-color: var(--fsds-chip-color-border-default, #a0a0a1);
   border-width: var(--fsds-chip-size-border, 1px);
   padding-block: var(--fsds-chip-size-padding-vertical, 2px);
   padding-inline: var(--fsds-chip-size-padding-horizontal, 8px);
@@ -31,7 +31,7 @@
   transition-duration: var(--fsds-chip-motion-duration-fast, 150ms);
 
   &:hover {
-    background-color: var(--fsds-chip-color-background-hover, #efefef);
+    background-color: var(--fsds-chip-color-background-hover, #d0d0d0);
   }
 }
 

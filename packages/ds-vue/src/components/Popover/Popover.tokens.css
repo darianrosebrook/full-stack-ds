@@ -1,10 +1,10 @@
 /* @generated:start tokens */
 :root {
   --fsds-popover-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
-  --fsds-popover-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-popover-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
   --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
-  --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+  --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+  --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
   --fsds-popover-elevation-default: var(--fsds-semantic-elevation-surface-popover, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
   --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
 }
@@ -17,7 +17,7 @@
   --fsds-box-model-padding-inline: 0;
   --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
   --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
   --fsds-box-model-width: auto;
   --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
   --fsds-box-model-max-width: none;

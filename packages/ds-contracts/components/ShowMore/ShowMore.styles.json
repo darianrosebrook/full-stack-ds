@@ -2,11 +2,11 @@
   "root": {
     "background-color": {
       "resolvesTo": "show-more.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "show-more.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "padding": {
       "resolvesTo": "show-more.size.padding.default",
@@ -14,7 +14,7 @@
     },
     "border-radius": {
       "resolvesTo": "show-more.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   "content": {

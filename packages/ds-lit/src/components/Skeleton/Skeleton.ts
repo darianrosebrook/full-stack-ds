@@ -39,9 +39,9 @@ export class SkeletonElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 1em;
       --fsds-box-model-max-height: none;
-      --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f7c1c2);
-      --fsds-skeleton-color-static: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f5a2a1);
+      --fsds-skeleton-color-static: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-skeleton-radius-sm: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
       --fsds-skeleton-radius-lg: var(--fsds-semantic-shape-radius-large, 16px);
@@ -80,7 +80,7 @@ export class SkeletonElement extends LitElement {
     }
 
     .skeleton--wipe {
-      --fsds-skeleton-color-base: var(--fsds-semantic-color-background-tertiary, #e5e5e5);
+      --fsds-skeleton-color-base: var(--fsds-semantic-color-background-tertiary, #b8b8b8);
     }
 
     .skeleton--compact {
@@ -109,7 +109,7 @@ export class SkeletonElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-skeleton-color-base, #efefef);
+      background-color: var(--fsds-skeleton-color-base, #d0d0d0);
       border-radius: var(--fsds-skeleton-radius-md, 8px);
       transition-duration: var(--fsds-skeleton-anim-duration, 400ms);
       transition-timing-function: var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1));
@@ -118,7 +118,7 @@ export class SkeletonElement extends LitElement {
 
     .skeleton__shape {
       display: block;
-      background-color: var(--fsds-skeleton-color-base, #efefef);
+      background-color: var(--fsds-skeleton-color-base, #d0d0d0);
       border-radius: var(--fsds-skeleton-radius-md, 8px);
     }
 

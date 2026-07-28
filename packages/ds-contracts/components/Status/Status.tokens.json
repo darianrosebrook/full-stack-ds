@@ -26,17 +26,17 @@
   },
   "status.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "status.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   },
   "status.color.border.default": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "status.size.radius.default": {

@@ -80,7 +80,7 @@ export const truncateTokenScopes = {
       name: "truncate.color.foreground.link",
       cssVar: "--fsds-truncate-color-foreground-link",
       ref: "semantic.color.foreground.link",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "truncate.color.background.primary": {
       name: "truncate.color.background.primary",
@@ -104,7 +104,7 @@ export const truncateTokenScopes = {
       name: "truncate.color.foreground.linkHover",
       cssVar: "--fsds-truncate-color-foreground-linkHover",
       ref: "semantic.color.foreground.linkHover",
-      fallback: "#ae0001",
+      fallback: "#b31b1b",
     },
   },
 } satisfies ComponentTokenScopes;

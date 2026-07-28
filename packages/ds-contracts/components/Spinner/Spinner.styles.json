@@ -48,11 +48,11 @@
     },
     "border-color": {
       "resolvesTo": "spinner.color.track",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-top-color": {
       "resolvesTo": "spinner.color.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "animation": {
       "literal": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite",

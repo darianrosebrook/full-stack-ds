@@ -121,7 +121,7 @@
     },
     "border-color": {
       "resolvesTo": "command.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-style": {
       "literal": "solid",
@@ -135,7 +135,7 @@
     },
     "border-radius": {
       "resolvesTo": "command.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "box-shadow": {
       "resolvesTo": "command.shadow",
@@ -185,7 +185,7 @@
     },
     "border-bottom-color": {
       "resolvesTo": "command.color.borderLight",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -237,7 +237,7 @@
     },
     "color": {
       "resolvesTo": "command.color.textMuted",
-      "fallback": "#717171"
+      "fallback": "#727272"
     }
   },
   "input": {
@@ -337,7 +337,7 @@
     },
     "color": {
       "resolvesTo": "command.color.textMuted",
-      "fallback": "#717171"
+      "fallback": "#727272"
     },
     "font-size": {
       "resolvesTo": "command.text.sizeSmall",
@@ -367,7 +367,7 @@
     },
     "color": {
       "resolvesTo": "command.color.textMuted",
-      "fallback": "#717171"
+      "fallback": "#727272"
     },
     "font-size": {
       "resolvesTo": "command.text.sizeSmall",
@@ -443,19 +443,19 @@
     },
     "border-radius": {
       "resolvesTo": "command.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   ".command__item:hover": {
     "background-color": {
       "resolvesTo": "command.color.backgroundHover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   ".command__item[aria-selected=\"true\"]": {
     "background-color": {
       "resolvesTo": "command.color.backgroundHover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "command.color.text",
@@ -497,7 +497,7 @@
     },
     "color": {
       "resolvesTo": "command.color.textMuted",
-      "fallback": "#717171"
+      "fallback": "#727272"
     }
   },
   "itemContent": {
@@ -569,7 +569,7 @@
     },
     "color": {
       "resolvesTo": "command.color.textMuted",
-      "fallback": "#717171"
+      "fallback": "#727272"
     },
     "font-size": {
       "resolvesTo": "command.text.sizeSmall",
@@ -615,7 +615,7 @@
     },
     "background-color": {
       "resolvesTo": "command.color.borderLight",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     }
   }
 }

@@ -14,7 +14,7 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   display: block;
-  border-top-color: var(--fsds-divider-color-default, #fceaea);
+  border-top-color: var(--fsds-divider-color-default, #b8b8b8);
   border-top-style: solid;
   border-top-width: var(--fsds-divider-size-thickness, 1px);
   margin-top: var(--fsds-divider-spacing-margin, 8px);
@@ -25,7 +25,7 @@
   width: 1px;
   height: auto;
   border-top: none;
-  border-left-color: var(--fsds-divider-color-default, #fceaea);
+  border-left-color: var(--fsds-divider-color-default, #b8b8b8);
   border-left-style: solid;
   border-left-width: var(--fsds-divider-size-thickness, 1px);
   margin-top: 0;

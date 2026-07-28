@@ -14,7 +14,7 @@
     },
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "toggle-switch.color.foreground.default",
@@ -22,7 +22,7 @@
     },
     "border-color": {
       "resolvesTo": "toggle-switch.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-radius": {
       "resolvesTo": "toggle-switch.border.radius.default",
@@ -60,19 +60,19 @@
   "hover": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   "[aria-checked=\"true\"]": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.checked",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     }
   },
   "disabled": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.disabled",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "cursor": {
       "literal": "not-allowed",
@@ -88,7 +88,7 @@
     },
     "outline-color": {
       "resolvesTo": "toggle-switch.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "toggle-switch.focus.ring.style",

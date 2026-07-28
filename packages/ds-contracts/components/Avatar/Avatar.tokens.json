@@ -36,7 +36,7 @@
   },
   "avatar.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "avatar.color.background.inverse": {
@@ -51,7 +51,7 @@
   },
   "avatar.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "avatar.typography.fontWeight.medium": {

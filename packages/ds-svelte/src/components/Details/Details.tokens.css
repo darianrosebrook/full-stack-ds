@@ -7,7 +7,7 @@
   --fsds-box-model-padding-inline: 0;
   --fsds-box-model-padding-inline-start: 0;
   --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+  --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
   --fsds-box-model-width: auto;
   --fsds-box-model-min-width: 0;
   --fsds-box-model-max-width: none;
@@ -15,15 +15,15 @@
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
   --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
-  --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
   --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
   --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-  --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+  --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #b8b8b8);
   --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
-  --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
+  --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
+  --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
   --fsds-details-focus-ring-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-  --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
+  --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d92d2e);
   --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
   --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
   --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
@@ -35,7 +35,7 @@
 }
 
 .details__summary:hover {
-  --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
+  --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
 }
 
 .details--compact {
@@ -45,8 +45,8 @@
 
 .details--inline {
   --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-  --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
-  --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
+  --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+  --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
 }
 /* @generated:end */
 

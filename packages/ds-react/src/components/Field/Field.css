@@ -15,14 +15,14 @@
   max-height: var(--fsds-box-model-max-height);
   display: flex;
   flex-direction: column;
-  border-radius: var(--fsds-field-radius, 8px);
+  border-radius: var(--fsds-field-radius, 6px);
 }
 
 .field__label {
   display: inline-block;
   font-size: var(--fsds-field-label-fontSize, 14px);
   font-weight: 500;
-  color: var(--fsds-field-label-color, #555555);
+  color: var(--fsds-field-label-color, #5c5b5c);
 }
 
 .field__header {
@@ -39,8 +39,8 @@
   box-sizing: border-box;
   border-style: solid;
   border-width: 1px;
-  border-radius: var(--fsds-field-radius, 8px);
-  border-color: var(--fsds-field-color-border, #cecece);
+  border-radius: var(--fsds-field-radius, 6px);
+  border-color: var(--fsds-field-color-border, #d0d0d0);
   background-color: var(--fsds-field-color-bg, #ffffff);
   padding: var(--fsds-field-pad-x, 12px);
 }
@@ -54,7 +54,7 @@
 .field__error {
   display: block;
   font-size: 0.875em;
-  color: var(--fsds-field-color-invalid-text, #d9292b);
+  color: var(--fsds-field-color-invalid-text, #d92d2e);
 }
 
 .field__meta {
@@ -71,15 +71,15 @@
 }
 
 .field__control:focus-within {
-  border-color: var(--fsds-field-color-focus-border, #d9292b);
+  border-color: var(--fsds-field-color-focus-border, #0566fe);
   outline-width: var(--fsds-field-focus-ring-width, 2px);
-  outline-color: var(--fsds-field-focus-ring-color, #0a65fe);
+  outline-color: var(--fsds-field-focus-ring-color, #0566fe);
   outline-style: var(--fsds-field-focus-ring-style, solid);
   outline-offset: var(--fsds-field-focus-ring-offset, 2px);
 }
 
 .field--invalid .field__control {
-  border-color: var(--fsds-field-color-invalid-border, #ae0001);
+  border-color: var(--fsds-field-color-invalid-border, #b31b1b);
 }
 
 .field--disabled .field__control {
@@ -88,7 +88,7 @@
 }
 
 .field--valid .field__control {
-  border-color: var(--fsds-field-color-valid-border, #336006);
+  border-color: var(--fsds-field-color-valid-border, #3a6614);
 }
 /* @generated:end */
 

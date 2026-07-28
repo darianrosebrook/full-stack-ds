@@ -44,7 +44,7 @@ export const tabsTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -109,19 +109,19 @@ export const tabsTokenScopes = {
       name: "tabs.color.disabled-fg",
       cssVar: "--fsds-tabs-color-disabled-fg",
       ref: "semantic.color.foreground.disabled",
-      fallback: "#aeaeae",
+      fallback: "#727272",
     },
     "tabs.color.indicator": {
       name: "tabs.color.indicator",
       cssVar: "--fsds-tabs-color-indicator",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "tabs.shape.radius": {
       name: "tabs.shape.radius",
       cssVar: "--fsds-tabs-shape-radius",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "tabs.motion.indicator": {
       name: "tabs.motion.indicator",
@@ -133,7 +133,7 @@ export const tabsTokenScopes = {
       name: "tabs.color.hover.bg",
       cssVar: "--fsds-tabs-color-hover-bg",
       ref: "semantic.color.background.hover",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
     "tabs.color.hover.fg": {
       name: "tabs.color.hover.fg",
@@ -151,19 +151,19 @@ export const tabsTokenScopes = {
       name: "tabs.color.active-bg",
       cssVar: "--fsds-tabs-color-active-bg",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "tabs.color.focus": {
       name: "tabs.color.focus",
       cssVar: "--fsds-tabs-color-focus",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "tabs.color.underline.active": {
       name: "tabs.color.underline.active",
       cssVar: "--fsds-tabs-color-underline-active",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "tabs.size.indicator.thickness": {
       name: "tabs.size.indicator.thickness",

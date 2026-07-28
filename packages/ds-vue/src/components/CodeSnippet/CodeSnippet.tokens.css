@@ -14,12 +14,12 @@
   --fsds-box-model-height: auto;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
-  --fsds-code-snippet-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+  --fsds-code-snippet-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
   --fsds-code-snippet-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-code-snippet-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-code-snippet-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-code-snippet-size-padding-inline: var(--fsds-core-spacing-size-02, 2px);
   --fsds-code-snippet-size-padding-block: var(--fsds-core-spacing-size-01, 1px);
-  --fsds-code-snippet-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-code-snippet-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
   --fsds-code-snippet-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
   --fsds-code-snippet-size-fontSize-default: var(--fsds-core-typography-ramp-3, 0.875rem);
   --fsds-code-snippet-typography-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);

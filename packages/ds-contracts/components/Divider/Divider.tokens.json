@@ -6,7 +6,7 @@
   },
   "divider.color.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "divider.size.thickness": {

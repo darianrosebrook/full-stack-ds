@@ -96,7 +96,7 @@
     },
     "border-color": {
       "resolvesTo": "sheet.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-style": {
       "literal": "solid",
@@ -160,7 +160,7 @@
     },
     "border-bottom-color": {
       "resolvesTo": "sheet.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -214,7 +214,7 @@
     },
     "color": {
       "resolvesTo": "sheet.color.textDescription",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "font-size": {
       "resolvesTo": "sheet.text.size",
@@ -272,7 +272,7 @@
     },
     "border-top-color": {
       "resolvesTo": "sheet.color.border",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-top-style": {
       "literal": "solid",
@@ -348,7 +348,7 @@
     },
     "color": {
       "resolvesTo": "sheet.color.textDescription",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "cursor": {
       "literal": "pointer",
@@ -394,7 +394,7 @@
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   ".sheet--left .sheet__content": {
@@ -434,7 +434,7 @@
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   ".sheet--top .sheet__content": {
@@ -474,7 +474,7 @@
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   ".sheet--bottom .sheet__content": {
@@ -514,7 +514,7 @@
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   }
 }

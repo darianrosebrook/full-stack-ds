@@ -14,7 +14,7 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-card-color-background-default, #ffffff);
-  border-color: var(--fsds-card-color-border-default, #fceaea);
+  border-color: var(--fsds-card-color-border-default, #b8b8b8);
   color: var(--fsds-card-color-foreground-primary, #141414);
   padding: var(--fsds-card-size-padding-default, 16px);
   border-radius: var(--fsds-card-size-radius-default, 8px);
@@ -26,21 +26,21 @@
   box-sizing: border-box;
   box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
   border-inline-start-width: var(--fsds-card-size-statusAccent-width, 2px);
-  border-inline-start-color: var(--fsds-card-color-statusAccent-default, #cecece);
+  border-inline-start-color: var(--fsds-card-color-statusAccent-default, #d0d0d0);
   transition-property: box-shadow, border-color, background-color, transform;
   transition-duration: 150ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   &:focus-visible {
     outline-width: var(--fsds-card-focus-ring-width, 2px);
-    outline-color: var(--fsds-card-color-focus-ring, #d9292b);
+    outline-color: var(--fsds-card-color-focus-ring, #0566fe);
     outline-offset: var(--fsds-card-focus-ring-offset, 2px);
     outline-style: solid;
   }
 }
 
 .card--interactive:hover {
-  background-color: var(--fsds-card-color-background-hover, #efefef);
+  background-color: var(--fsds-card-color-background-hover, #d0d0d0);
   box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
   transform: translateY(-1px);
 }
@@ -89,7 +89,7 @@
   gap: var(--fsds-card-size-gap-default, 4px);
   padding-top: var(--fsds-card-size-padding-default, 16px);
   margin-top: auto;
-  border-top-color: var(--fsds-card-color-border-default, #fceaea);
+  border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
   border-top-style: solid;
   border-top-width: 1px;
 }
@@ -103,7 +103,7 @@
 .card__badge {
   display: inline-flex;
   align-items: center;
-  background-color: var(--fsds-card-color-badge-accent-background, #d9292b);
+  background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
   color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
   padding: 2px 8px;
   border-radius: 9999px;

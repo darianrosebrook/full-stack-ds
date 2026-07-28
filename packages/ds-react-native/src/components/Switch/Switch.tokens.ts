@@ -19,13 +19,13 @@ export const switchTokenScopes = {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
       ref: "semantic.action.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.action.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
@@ -36,13 +36,13 @@ export const switchTokenScopes = {
       name: "box-model.padding-inline-start",
       cssVar: "--fsds-box-model-padding-inline-start",
       ref: "semantic.action.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.padding-inline-end": {
       name: "box-model.padding-inline-end",
       cssVar: "--fsds-box-model-padding-inline-end",
       ref: "semantic.action.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.gap": {
       name: "box-model.gap",
@@ -59,7 +59,7 @@ export const switchTokenScopes = {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.action.size.medium.min-width",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-width": {
       name: "box-model.max-width",
@@ -75,7 +75,7 @@ export const switchTokenScopes = {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       ref: "semantic.action.size.medium.min-height",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-height": {
       name: "box-model.max-height",
@@ -92,19 +92,19 @@ export const switchTokenScopes = {
       name: "switch.motion.easing",
       cssVar: "--fsds-switch-motion-easing",
       ref: "semantic.motion.interaction.press.easing",
-      fallback: "ease-out",
+      fallback: "cubic-bezier(0.4, 0, 0.2, 1)",
     },
     "switch.color.track.background.default": {
       name: "switch.color.track.background.default",
       cssVar: "--fsds-switch-color-track-background-default",
       ref: "semantic.color.background.tertiary",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
     "switch.color.track.border.default": {
       name: "switch.color.track.border.default",
       cssVar: "--fsds-switch-color-track-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#aeaeae",
+      fallback: "#d0d0d0",
     },
     "switch.color.thumb.background.default": {
       name: "switch.color.thumb.background.default",
@@ -122,7 +122,7 @@ export const switchTokenScopes = {
       name: "switch.color.input.outline.focus",
       cssVar: "--fsds-switch-color-input-outline-focus",
       ref: "semantic.color.border.focus",
-      fallback: "#d9292b",
+      fallback: "#0566fe",
     },
     "switch.size.md.track.width": {
       name: "switch.size.md.track.width",
@@ -146,19 +146,19 @@ export const switchTokenScopes = {
       name: "switch.size.md.track.padding",
       cssVar: "--fsds-switch-size-md-track-padding",
       ref: "core.spacing.size.01",
-      fallback: 2,
+      fallback: 1,
     },
     "switch.size.md.thumb.size": {
       name: "switch.size.md.thumb.size",
       cssVar: "--fsds-switch-size-md-thumb-size",
       ref: "core.spacing.size.06",
-      fallback: 20,
+      fallback: 16,
     },
     "switch.size.md.thumb.height": {
       name: "switch.size.md.thumb.height",
       cssVar: "--fsds-switch-size-md-thumb-height",
       ref: "core.spacing.size.06",
-      fallback: 20,
+      fallback: 16,
     },
     "switch.size.sm.track.width": {
       name: "switch.size.sm.track.width",
@@ -182,7 +182,7 @@ export const switchTokenScopes = {
       name: "switch.size.sm.track.padding",
       cssVar: "--fsds-switch-size-sm-track-padding",
       ref: "core.spacing.size.01",
-      fallback: 2,
+      fallback: 1,
     },
     "switch.size.sm.thumb.size": {
       name: "switch.size.sm.thumb.size",
@@ -218,7 +218,7 @@ export const switchTokenScopes = {
       name: "switch.size.lg.track.padding",
       cssVar: "--fsds-switch-size-lg-track-padding",
       ref: "core.spacing.size.01",
-      fallback: 2,
+      fallback: 1,
     },
     "switch.size.lg.thumb.size": {
       name: "switch.size.lg.thumb.size",
@@ -268,7 +268,7 @@ export const switchTokenScopes = {
       name: "switch.color.track.background.default",
       cssVar: "--fsds-switch-color-track-background-default",
       ref: "semantic.color.foreground.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "switch.color.thumb.background.default": {
       name: "switch.color.thumb.background.default",
@@ -282,7 +282,7 @@ export const switchTokenScopes = {
       name: "switch.color.track.background.default",
       cssVar: "--fsds-switch-color-track-background-default",
       ref: "semantic.color.background.disabled",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
   },
 } satisfies ComponentTokenScopes;

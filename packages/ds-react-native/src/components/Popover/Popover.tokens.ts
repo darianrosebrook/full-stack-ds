@@ -48,7 +48,7 @@ export const popoverTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.surface.size.gap",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -91,7 +91,7 @@ export const popoverTokenScopes = {
       name: "popover.size.radius.default",
       cssVar: "--fsds-popover-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "popover.size.gap.default": {
       name: "popover.size.gap.default",
@@ -103,13 +103,13 @@ export const popoverTokenScopes = {
       name: "popover.color.background.content",
       cssVar: "--fsds-popover-color-background-content",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "popover.color.border.accent": {
       name: "popover.color.border.accent",
       cssVar: "--fsds-popover-color-border-accent",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "popover.elevation.default": {
       name: "popover.elevation.default",

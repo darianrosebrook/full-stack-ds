@@ -44,7 +44,7 @@ export const breadcrumbsTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -92,7 +92,7 @@ export const breadcrumbsTokenScopes = {
       name: "breadcrumbs.color.border.subtle",
       cssVar: "--fsds-breadcrumbs-color-border-subtle",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "breadcrumbs.typography.lineHeight.collapse": {
       name: "breadcrumbs.typography.lineHeight.collapse",
@@ -104,7 +104,7 @@ export const breadcrumbsTokenScopes = {
       name: "breadcrumbs.shape.radius.medium",
       cssVar: "--fsds-breadcrumbs-shape-radius-medium",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "breadcrumbs.spacing.gap.default": {
       name: "breadcrumbs.spacing.gap.default",
@@ -122,7 +122,7 @@ export const breadcrumbsTokenScopes = {
       name: "breadcrumbs.color.focus",
       cssVar: "--fsds-breadcrumbs-color-focus",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
   },
 } satisfies ComponentTokenScopes;

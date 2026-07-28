@@ -11,54 +11,54 @@
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
-  min-height: var(--fsds-input-size-height-default, 36px);
+  min-height: var(--fsds-input-size-height-default, 32px);
   max-height: var(--fsds-box-model-max-height);
   box-sizing: border-box;
   border-style: solid;
   border-width: var(--fsds-input-size-border-default, 1px);
   background-color: var(--fsds-input-color-bg-default, #ffffff);
   color: var(--fsds-input-color-text-default, #141414);
-  border-color: var(--fsds-input-color-border-default, #aeaeae);
-  border-radius: var(--fsds-input-size-radius-default, 8px);
+  border-color: var(--fsds-input-color-border-default, #a0a0a1);
+  border-radius: var(--fsds-input-size-radius-default, 6px);
   font-size: var(--fsds-input-typography-size-default, 1rem);
   line-height: var(--fsds-input-typography-line-height-default, 1.5);
-  padding-block: var(--fsds-input-size-padding-block-default, 8px);
-  padding-inline: var(--fsds-input-size-padding-inline-default, 12px);
+  padding-block: var(--fsds-input-size-padding-block-default, 4px);
+  padding-inline: var(--fsds-input-size-padding-inline-default, 8px);
   transition-property: background-color, border-color, color, outline-color;
   transition-duration: var(--fsds-input-motion-duration-fast, 150ms);
   transition-timing-function: var(--fsds-input-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 
   &::placeholder {
-    color: var(--fsds-input-color-text-placeholder, #717171);
+    color: var(--fsds-input-color-text-placeholder, #888889);
   }
 
   &:hover {
-    border-color: var(--fsds-input-color-border-hover, #8f8f8f);
+    border-color: var(--fsds-input-color-border-hover, #888889);
   }
 
   &:focus-visible {
-    border-color: var(--fsds-input-color-focus-default, #d9292b);
+    border-color: var(--fsds-input-color-focus-default, #0566fe);
     outline-width: var(--fsds-input-focus-ring-width, 2px);
-    outline-color: var(--fsds-input-focus-ring-color, #0a65fe);
+    outline-color: var(--fsds-input-focus-ring-color, #0566fe);
     outline-style: var(--fsds-input-focus-ring-style, solid);
     outline-offset: var(--fsds-input-focus-ring-offset, 2px);
   }
 
   &:disabled {
-    background-color: var(--fsds-input-color-bg-disabled, #efefef);
-    border-color: var(--fsds-input-color-border-disabled, #cecece);
-    color: var(--fsds-input-color-text-disabled, #717171);
+    background-color: var(--fsds-input-color-bg-disabled, #b8b8b8);
+    border-color: var(--fsds-input-color-border-disabled, #b8b8b8);
+    color: var(--fsds-input-color-text-disabled, #727272);
     opacity: var(--fsds-input-opacity-disabled, 0.5);
     cursor: not-allowed;
   }
 }
 
 .input--invalid {
-  border-color: var(--fsds-input-color-invalid-default, #ae0001);
+  border-color: var(--fsds-input-color-invalid-default, #b31b1b);
 }
 
 .input--invalid:focus-visible {
-  border-color: var(--fsds-input-color-invalid-default, #ae0001);
+  border-color: var(--fsds-input-color-invalid-default, #b31b1b);
   outline-color: var(--fsds-semantic-focus-ring-intent-danger, #b31b1b);
 }
 /* @generated:end */

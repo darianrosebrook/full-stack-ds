@@ -21,7 +21,7 @@
   },
   "box-model.gap": {
     "resolvesTo": "semantic.surface.size.gap",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.min-width": {
@@ -36,7 +36,7 @@
   },
   "popover.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "popover.size.gap.default": {
@@ -46,12 +46,12 @@
   },
   "popover.color.background.content": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "popover.color.border.accent": {
     "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "popover.elevation.default": {

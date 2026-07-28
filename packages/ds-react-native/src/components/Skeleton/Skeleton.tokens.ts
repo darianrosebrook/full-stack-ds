@@ -79,19 +79,19 @@ export const skeletonTokenScopes = {
       name: "skeleton.color.base",
       cssVar: "--fsds-skeleton-color-base",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "skeleton.color.highlight": {
       name: "skeleton.color.highlight",
       cssVar: "--fsds-skeleton-color-highlight",
       ref: "semantic.color.background.highlight",
-      fallback: "#f7c1c2",
+      fallback: "#f5a2a1",
     },
     "skeleton.color.static": {
       name: "skeleton.color.static",
       cssVar: "--fsds-skeleton-color-static",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "skeleton.radius.sm": {
       name: "skeleton.radius.sm",
@@ -213,7 +213,7 @@ export const skeletonTokenScopes = {
       name: "skeleton.color.base",
       cssVar: "--fsds-skeleton-color-base",
       ref: "semantic.color.background.tertiary",
-      fallback: "#e5e5e5",
+      fallback: "#b8b8b8",
     },
   },
   "variant_compact": {

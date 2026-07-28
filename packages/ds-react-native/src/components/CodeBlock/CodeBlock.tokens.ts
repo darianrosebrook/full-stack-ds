@@ -84,7 +84,7 @@ export const codeBlockTokenScopes = {
       name: "code-block.color.background.default",
       cssVar: "--fsds-code-block-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "code-block.color.foreground.primary": {
       name: "code-block.color.foreground.primary",
@@ -96,7 +96,7 @@ export const codeBlockTokenScopes = {
       name: "code-block.color.border.default",
       cssVar: "--fsds-code-block-color-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "code-block.size.padding.default": {
       name: "code-block.size.padding.default",
@@ -108,7 +108,7 @@ export const codeBlockTokenScopes = {
       name: "code-block.size.radius.default",
       cssVar: "--fsds-code-block-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "code-block.size.border.default": {
       name: "code-block.size.border.default",

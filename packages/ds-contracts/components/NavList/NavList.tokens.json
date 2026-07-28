@@ -1,12 +1,12 @@
 {
   "box-model.gap": {
     "resolvesTo": "semantic.structure.size.gap",
-    "fallback": "8px",
+    "fallback": "16px",
     "layer": "semantic"
   },
   "nav-list.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   },
   "nav-list.color.foreground.hover": {
@@ -26,7 +26,7 @@
   },
   "nav-list.color.background.hover": {
     "resolvesTo": "semantic.color.background.subtle",
-    "fallback": "#f5f5f5",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "nav-list.stateLayer.hover": {
@@ -41,17 +41,17 @@
   },
   "nav-list.color.background.current": {
     "resolvesTo": "semantic.color.background.accentSubtle",
-    "fallback": "#fceaea",
+    "fallback": "#95dafb",
     "layer": "semantic"
   },
   "nav-list.color.outline.focus": {
     "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "nav-list.size.padding.block": {
     "resolvesTo": "core.spacing.size.02",
-    "fallback": "4px",
+    "fallback": "2px",
     "layer": "core"
   },
   "nav-list.size.padding.inline": {
@@ -61,12 +61,12 @@
   },
   "nav-list.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "nav-list.size.gap.list": {
     "resolvesTo": "core.spacing.size.01",
-    "fallback": "2px",
+    "fallback": "1px",
     "layer": "core"
   },
   "nav-list.size.gap.group": {
@@ -81,7 +81,7 @@
   },
   "nav-list.size.fontSize.groupLabel": {
     "resolvesTo": "semantic.typography.caption.03",
-    "fallback": "11px",
+    "fallback": "10px",
     "layer": "semantic"
   }
 }

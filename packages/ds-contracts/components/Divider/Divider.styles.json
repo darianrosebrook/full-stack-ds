@@ -14,7 +14,7 @@
     },
     "border-top-color": {
       "resolvesTo": "divider.color.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-top-style": {
       "literal": "solid",
@@ -56,7 +56,7 @@
     },
     "border-left-color": {
       "resolvesTo": "divider.color.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-left-style": {
       "literal": "solid",

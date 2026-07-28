@@ -1,22 +1,22 @@
 {
   "box-model.padding-block-start": {
     "resolvesTo": "semantic.input.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-block-end": {
     "resolvesTo": "semantic.input.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-inline-start": {
     "resolvesTo": "semantic.input.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.padding-inline-end": {
     "resolvesTo": "semantic.input.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.gap": {
@@ -26,7 +26,7 @@
   },
   "box-model.min-height": {
     "resolvesTo": "semantic.input.size.medium.min-height",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "checkbox.color.background.default": {
@@ -36,7 +36,7 @@
   },
   "checkbox.color.border.default": {
     "resolvesTo": "semantic.color.border.default",
-    "fallback": "#aeaeae",
+    "fallback": "#a0a0a1",
     "layer": "semantic"
   },
   "checkbox.border.width": {

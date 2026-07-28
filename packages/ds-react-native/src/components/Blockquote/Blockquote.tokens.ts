@@ -48,7 +48,7 @@ export const blockquoteTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.surface.size.gap",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -85,19 +85,19 @@ export const blockquoteTokenScopes = {
       name: "blockquote.color.foreground.primary",
       cssVar: "--fsds-blockquote-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "blockquote.color.background.default": {
       name: "blockquote.color.background.default",
       cssVar: "--fsds-blockquote-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "blockquote.color.border.default": {
       name: "blockquote.color.border.default",
       cssVar: "--fsds-blockquote-color-border-default",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "blockquote.typography.fontStyle": {
       name: "blockquote.typography.fontStyle",
@@ -133,7 +133,7 @@ export const blockquoteTokenScopes = {
       name: "blockquote.size.radius.default",
       cssVar: "--fsds-blockquote-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "blockquote.size.border.thick": {
       name: "blockquote.size.border.thick",
@@ -165,7 +165,7 @@ export const blockquoteTokenScopes = {
       name: "blockquote.color.background.default",
       cssVar: "--fsds-blockquote-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
   },
   "variant_bordered": {
@@ -187,7 +187,7 @@ export const blockquoteTokenScopes = {
       name: "blockquote.color.background.default",
       cssVar: "--fsds-blockquote-color-background-default",
       ref: "semantic.color.background.accentSubtle",
-      fallback: "#fceaea",
+      fallback: "#95dafb",
     },
     "blockquote.color.foreground.primary": {
       name: "blockquote.color.foreground.primary",

@@ -1,22 +1,22 @@
 {
   "box-model.padding-block-start": {
     "resolvesTo": "semantic.action.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-block-end": {
     "resolvesTo": "semantic.action.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-inline-start": {
     "resolvesTo": "semantic.action.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.padding-inline-end": {
     "resolvesTo": "semantic.action.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.gap": {
@@ -26,17 +26,17 @@
   },
   "box-model.min-height": {
     "resolvesTo": "semantic.action.size.medium.min-height",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "box-model.min-width": {
     "resolvesTo": "semantic.action.size.medium.min-width",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "toggle-switch.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "toggle-switch.color.foreground.default": {
@@ -46,7 +46,7 @@
   },
   "toggle-switch.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "toggle-switch.border.radius.default": {
@@ -61,7 +61,7 @@
   },
   "toggle-switch.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "toggle-switch.color.background.checked": {
@@ -71,7 +71,7 @@
   },
   "toggle-switch.color.background.disabled": {
     "resolvesTo": "semantic.color.background.disabled",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "toggle-switch.focus.ring.width": {

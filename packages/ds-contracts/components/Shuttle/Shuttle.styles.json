@@ -2,11 +2,11 @@
   "root": {
     "background-color": {
       "resolvesTo": "shuttle.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-color": {
       "resolvesTo": "shuttle.color.border.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "padding": {
       "resolvesTo": "shuttle.size.padding.default",
@@ -14,7 +14,7 @@
     },
     "border-radius": {
       "resolvesTo": "shuttle.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   "item": {

@@ -1,22 +1,22 @@
 {
   "box-model.padding-block-start": {
     "resolvesTo": "semantic.action.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-block-end": {
     "resolvesTo": "semantic.action.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-inline-start": {
     "resolvesTo": "semantic.action.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.padding-inline-end": {
     "resolvesTo": "semantic.action.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.gap": {
@@ -26,12 +26,12 @@
   },
   "box-model.min-height": {
     "resolvesTo": "semantic.action.size.medium.min-height",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "box-model.min-width": {
     "resolvesTo": "semantic.action.size.medium.min-width",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "button.color.background.default": {
@@ -41,12 +41,12 @@
   },
   "button.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "button.color.background.active": {
     "resolvesTo": "semantic.interaction.background.active",
-    "fallback": "#cecece",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "button.color.background.disabled": {
@@ -61,17 +61,17 @@
   },
   "button.color.foreground.disabled": {
     "resolvesTo": "semantic.color.foreground.disabled",
-    "fallback": "#aeaeae",
+    "fallback": "#727272",
     "layer": "semantic"
   },
   "button.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "button.color.border.hover": {
     "resolvesTo": "semantic.interaction.border.hover",
-    "fallback": "#8f8f8f",
+    "fallback": "#888889",
     "layer": "semantic"
   },
   "button.color.border.focus": {

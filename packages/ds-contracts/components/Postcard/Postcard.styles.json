@@ -10,7 +10,7 @@
     },
     "border-radius": {
       "resolvesTo": "postcard.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "gap": {
       "resolvesTo": "postcard.size.gap.default",
@@ -50,7 +50,7 @@
     },
     "border-color": {
       "resolvesTo": "postcard.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "color": {
       "resolvesTo": "postcard.color.foreground.primary",
@@ -60,11 +60,11 @@
   "hover": {
     "background-color": {
       "resolvesTo": "postcard.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-color": {
       "resolvesTo": "postcard.color.border.hover",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     }
   },
   "content": {
@@ -166,7 +166,7 @@
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "timestamp": {
@@ -182,7 +182,7 @@
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "footer": {
@@ -208,7 +208,7 @@
     },
     "border-top-color": {
       "resolvesTo": "postcard.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-top-style": {
       "literal": "solid",
@@ -266,7 +266,7 @@
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   }
 }

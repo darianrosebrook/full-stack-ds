@@ -86,7 +86,7 @@ export const profileFlagTokenScopes = {
       name: "profile-flag.color.border.default",
       cssVar: "--fsds-profile-flag-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "profile-flag.color.foreground.primary": {
       name: "profile-flag.color.foreground.primary",
@@ -98,7 +98,7 @@ export const profileFlagTokenScopes = {
       name: "profile-flag.size.radius.default",
       cssVar: "--fsds-profile-flag-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "profile-flag.spacing.gap.default": {
       name: "profile-flag.spacing.gap.default",
@@ -122,7 +122,7 @@ export const profileFlagTokenScopes = {
       name: "profile-flag.color.border.hover",
       cssVar: "--fsds-profile-flag-color-border-hover",
       ref: "semantic.color.border.bold",
-      fallback: "#8f8f8f",
+      fallback: "#888889",
     },
   },
 } satisfies ComponentTokenScopes;

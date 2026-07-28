@@ -1,17 +1,17 @@
 {
   "skeleton.color.base": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "skeleton.color.highlight": {
     "resolvesTo": "semantic.color.background.highlight",
-    "fallback": "#f7c1c2",
+    "fallback": "#f5a2a1",
     "layer": "semantic"
   },
   "skeleton.color.static": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "skeleton.radius.sm": {

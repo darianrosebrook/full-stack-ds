@@ -19,13 +19,13 @@ export const otpTokenScopes = {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
       ref: "semantic.input.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.input.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
@@ -36,13 +36,13 @@ export const otpTokenScopes = {
       name: "box-model.padding-inline-start",
       cssVar: "--fsds-box-model-padding-inline-start",
       ref: "semantic.input.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.padding-inline-end": {
       name: "box-model.padding-inline-end",
       cssVar: "--fsds-box-model-padding-inline-end",
       ref: "semantic.input.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.gap": {
       name: "box-model.gap",
@@ -74,7 +74,7 @@ export const otpTokenScopes = {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       ref: "semantic.input.size.medium.min-height",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-height": {
       name: "box-model.max-height",
@@ -85,7 +85,7 @@ export const otpTokenScopes = {
       name: "otp.color.background.default",
       cssVar: "--fsds-otp-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "otp.color.foreground.primary": {
       name: "otp.color.foreground.primary",
@@ -97,7 +97,7 @@ export const otpTokenScopes = {
       name: "otp.color.border.default",
       cssVar: "--fsds-otp-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "otp.size.padding.default": {
       name: "otp.size.padding.default",
@@ -109,13 +109,13 @@ export const otpTokenScopes = {
       name: "otp.size.radius.default",
       cssVar: "--fsds-otp-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "otp.color.border.accent": {
       name: "otp.color.border.accent",
       cssVar: "--fsds-otp-color-border-accent",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "otp.focus.ring.width": {
       name: "otp.focus.ring.width",

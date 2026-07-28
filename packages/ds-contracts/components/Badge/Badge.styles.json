@@ -44,7 +44,7 @@
     },
     "background-color": {
       "resolvesTo": "badge.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "badge.color.foreground.primary",
@@ -52,7 +52,7 @@
     },
     "border-color": {
       "resolvesTo": "badge.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-width": {
       "resolvesTo": "badge.size.border",
@@ -142,7 +142,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "badge.color.background.hover",
-      "fallback": "#e4e4e4"
+      "fallback": "#d0d0d0"
     }
   },
   "--sm": {
@@ -214,79 +214,79 @@
   "--info": {
     "badge.color.background.default": {
       "resolvesTo": "semantic.color.background.info.subtle",
-      "fallback": "#d9f3fe"
+      "fallback": "#95dafb"
     },
     "badge.color.background.hover": {
       "resolvesTo": "semantic.color.background.info.subtle",
-      "fallback": "#d9f3fe"
+      "fallback": "#95dafb"
     },
     "badge.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.info.subtle",
-      "fallback": "#002d99"
+      "fallback": "#013ab0"
     },
     "badge.color.border.default": {
       "resolvesTo": "semantic.color.border.info",
-      "fallback": "#0042dc"
+      "fallback": "#034fd6"
     }
   },
   "--success": {
     "badge.color.background.default": {
       "resolvesTo": "semantic.color.background.success.subtle",
-      "fallback": "#e4f2e0"
+      "fallback": "#b3dba7"
     },
     "badge.color.background.hover": {
       "resolvesTo": "semantic.color.background.success.subtle",
-      "fallback": "#e4f2e0"
+      "fallback": "#b3dba7"
     },
     "badge.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.success.subtle",
-      "fallback": "#234104"
+      "fallback": "#2c4f09"
     },
     "badge.color.border.default": {
       "resolvesTo": "semantic.color.border.success",
-      "fallback": "#336006"
+      "fallback": "#3a6614"
     }
   },
   "--warning": {
     "badge.color.background.default": {
       "resolvesTo": "semantic.color.background.warning.subtle",
-      "fallback": "#ffedcc"
+      "fallback": "#fdc67f"
     },
     "badge.color.background.hover": {
       "resolvesTo": "semantic.color.background.warning.subtle",
-      "fallback": "#ffedcc"
+      "fallback": "#fdc67f"
     },
     "badge.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.warning.subtle",
-      "fallback": "#593000"
+      "fallback": "#6c3a00"
     },
     "badge.color.border.default": {
       "resolvesTo": "semantic.color.border.warning",
-      "fallback": "#824500"
+      "fallback": "#8b4b00"
     }
   },
   "--danger": {
     "badge.color.background.default": {
       "resolvesTo": "semantic.color.background.danger.subtle",
-      "fallback": "#fceaea"
+      "fallback": "#fac2c2"
     },
     "badge.color.background.hover": {
       "resolvesTo": "semantic.color.background.danger.subtle",
-      "fallback": "#fceaea"
+      "fallback": "#fac2c2"
     },
     "badge.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.danger.subtle",
-      "fallback": "#7b0000"
+      "fallback": "#900909"
     },
     "badge.color.border.default": {
       "resolvesTo": "semantic.color.border.danger",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   "--counter": {
     "badge.color.background.default": {
       "resolvesTo": "semantic.color.background.danger.strong",
-      "fallback": "#d9292b"
+      "fallback": "#b31b1b"
     },
     "badge.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.inverse",
@@ -294,7 +294,7 @@
     },
     "badge.color.border.default": {
       "resolvesTo": "semantic.color.background.danger.strong",
-      "fallback": "#d9292b"
+      "fallback": "#b31b1b"
     }
   },
   "--tag": {

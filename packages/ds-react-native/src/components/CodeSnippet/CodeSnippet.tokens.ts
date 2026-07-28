@@ -84,7 +84,7 @@ export const codeSnippetTokenScopes = {
       name: "code-snippet.color.background.default",
       cssVar: "--fsds-code-snippet-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "code-snippet.color.foreground.primary": {
       name: "code-snippet.color.foreground.primary",
@@ -96,7 +96,7 @@ export const codeSnippetTokenScopes = {
       name: "code-snippet.color.border.default",
       cssVar: "--fsds-code-snippet-color-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "code-snippet.size.padding.inline": {
       name: "code-snippet.size.padding.inline",
@@ -114,7 +114,7 @@ export const codeSnippetTokenScopes = {
       name: "code-snippet.size.radius.default",
       cssVar: "--fsds-code-snippet-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "code-snippet.size.border.default": {
       name: "code-snippet.size.border.default",

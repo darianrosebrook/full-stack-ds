@@ -44,7 +44,7 @@ export const walkthroughTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -80,13 +80,13 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.surface.bg",
       cssVar: "--fsds-walkthrough-surface-bg",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "walkthrough.surface.border": {
       name: "walkthrough.surface.border",
       cssVar: "--fsds-walkthrough-surface-border",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "walkthrough.surface.radius": {
       name: "walkthrough.surface.radius",
@@ -134,7 +134,7 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.description.color",
       cssVar: "--fsds-walkthrough-description-color",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "walkthrough.description.marginTop": {
       name: "walkthrough.description.marginTop",
@@ -176,7 +176,7 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.dots.idle",
       cssVar: "--fsds-walkthrough-dots-idle",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "walkthrough.button.primary.bg": {
       name: "walkthrough.button.primary.bg",
@@ -194,25 +194,25 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.button.primary.radius",
       cssVar: "--fsds-walkthrough-button-primary-radius",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "walkthrough.button.secondary.bg": {
       name: "walkthrough.button.secondary.bg",
       cssVar: "--fsds-walkthrough-button-secondary-bg",
       ref: "core.color.mode.transparent",
-      fallback: "transparent",
+      fallback: "#000000",
     },
     "walkthrough.button.secondary.color": {
       name: "walkthrough.button.secondary.color",
       cssVar: "--fsds-walkthrough-button-secondary-color",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "walkthrough.button.secondary.border": {
       name: "walkthrough.button.secondary.border",
       cssVar: "--fsds-walkthrough-button-secondary-border",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
   },
 } satisfies ComponentTokenScopes;

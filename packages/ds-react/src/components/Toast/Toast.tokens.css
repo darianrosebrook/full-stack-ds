@@ -1,13 +1,13 @@
 /* @generated:start tokens */
 :root {
-  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
-  --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-  --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+  --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+  --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
   --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
   --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
-  --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #efefef);
-  --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0566fe);
+  --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+  --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
   --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
   --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
@@ -25,7 +25,7 @@
   --fsds-box-model-padding-inline: 0;
   --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
   --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
   --fsds-box-model-width: auto;
   --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
   --fsds-box-model-max-width: none;
@@ -35,27 +35,27 @@
 }
 
 .toast--info {
-  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-  --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
+  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+  --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #034fd6);
 }
 
 .toast--success {
-  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-  --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
+  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+  --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #3a6614);
 }
 
 .toast--warning {
-  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-  --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
+  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+  --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #8b4b00);
 }
 
 .toast--error {
-  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-  --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
+  --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+  --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+  --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #b31b1b);
 }
 /* @generated:end */
 

@@ -74,7 +74,7 @@
     },
     "color": {
       "resolvesTo": "truncate.color.foreground.link",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "font-weight": {
       "resolvesTo": "truncate.typography.fontWeight",

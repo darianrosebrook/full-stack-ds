@@ -21,7 +21,7 @@
   },
   "box-model.gap": {
     "resolvesTo": "semantic.surface.size.gap",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.min-width": {
@@ -31,17 +31,17 @@
   },
   "blockquote.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   },
   "blockquote.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "blockquote.color.border.default": {
     "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "blockquote.typography.fontStyle": {
@@ -71,7 +71,7 @@
   },
   "blockquote.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "blockquote.size.border.thick": {

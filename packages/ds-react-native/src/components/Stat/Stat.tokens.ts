@@ -86,25 +86,25 @@ export const statTokenScopes = {
       name: "stat.color.foreground.label",
       cssVar: "--fsds-stat-color-foreground-label",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "stat.color.foreground.trend.up": {
       name: "stat.color.foreground.trend.up",
       cssVar: "--fsds-stat-color-foreground-trend-up",
       ref: "semantic.color.feedback.foreground.success.default",
-      fallback: "#1f8a4c",
+      fallback: "#497f21",
     },
     "stat.color.foreground.trend.down": {
       name: "stat.color.foreground.trend.down",
       cssVar: "--fsds-stat-color-foreground-trend-down",
       ref: "semantic.color.feedback.foreground.danger.default",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "stat.color.foreground.trend.neutral": {
       name: "stat.color.foreground.trend.neutral",
       cssVar: "--fsds-stat-color-foreground-trend-neutral",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "stat.size.value.sm": {
       name: "stat.size.value.sm",
@@ -134,7 +134,7 @@ export const statTokenScopes = {
       name: "stat.size.gap",
       cssVar: "--fsds-stat-size-gap",
       ref: "core.spacing.size.02",
-      fallback: 4,
+      fallback: 2,
     },
     "stat.typography.lineHeight.value": {
       name: "stat.typography.lineHeight.value",

@@ -24,25 +24,25 @@ export class ShowMoreElement extends LitElement {
     .show-more {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-action-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 36px);
+      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 32px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
 
@@ -58,10 +58,10 @@ export class ShowMoreElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-show-more-color-background-default, #efefef);
-      color: var(--fsds-show-more-color-foreground-secondary, #555555);
+      background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
+      color: var(--fsds-show-more-color-foreground-secondary, #5c5b5c);
       padding: var(--fsds-show-more-size-padding-default, 24px);
-      border-radius: var(--fsds-show-more-size-radius-default, 8px);
+      border-radius: var(--fsds-show-more-size-radius-default, 6px);
     }
 
     .show-more__content {
@@ -132,25 +132,25 @@ export class ShowMoreContentElement extends LitElement {
     .show-more {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-action-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 36px);
+      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 32px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
 
@@ -166,10 +166,10 @@ export class ShowMoreContentElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-show-more-color-background-default, #efefef);
-      color: var(--fsds-show-more-color-foreground-secondary, #555555);
+      background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
+      color: var(--fsds-show-more-color-foreground-secondary, #5c5b5c);
       padding: var(--fsds-show-more-size-padding-default, 24px);
-      border-radius: var(--fsds-show-more-size-radius-default, 8px);
+      border-radius: var(--fsds-show-more-size-radius-default, 6px);
     }
 
     .show-more__content {
@@ -210,25 +210,25 @@ export class ShowMoreTriggerElement extends LitElement {
     .show-more {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-action-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 36px);
+      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 32px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
 
@@ -244,10 +244,10 @@ export class ShowMoreTriggerElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-show-more-color-background-default, #efefef);
-      color: var(--fsds-show-more-color-foreground-secondary, #555555);
+      background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
+      color: var(--fsds-show-more-color-foreground-secondary, #5c5b5c);
       padding: var(--fsds-show-more-size-padding-default, 24px);
-      border-radius: var(--fsds-show-more-size-radius-default, 8px);
+      border-radius: var(--fsds-show-more-size-radius-default, 6px);
     }
 
     .show-more__content {

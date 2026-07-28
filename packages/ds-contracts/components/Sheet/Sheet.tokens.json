@@ -21,7 +21,7 @@
   },
   "box-model.gap": {
     "resolvesTo": "semantic.surface.size.gap",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.min-width": {
@@ -41,7 +41,7 @@
   },
   "sheet.color.border": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "sheet.color.text": {
@@ -56,7 +56,7 @@
   },
   "sheet.color.textDescription": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   },
   "sheet.border.width": {
@@ -66,7 +66,7 @@
   },
   "sheet.border.radius": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "sheet.size.width": {
@@ -117,12 +117,12 @@
   },
   "sheet.focus.color": {
     "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "sheet.color.backgroundHover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   }
 }

@@ -30,7 +30,7 @@ export class DetailsElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -38,15 +38,15 @@ export class DetailsElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
-      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
+      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-details-focus-ring-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-      --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
@@ -58,7 +58,7 @@ export class DetailsElement extends LitElement {
     }
 
     .details__summary:hover {
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
     }
 
     .details--compact {
@@ -68,8 +68,8 @@ export class DetailsElement extends LitElement {
 
     .details--inline {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
-      --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .details {
@@ -85,19 +85,19 @@ export class DetailsElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       padding: var(--fsds-details-size-padding-default, 16px);
-      border-radius: var(--fsds-details-size-radius-default, 8px);
+      border-radius: var(--fsds-details-size-radius-default, 6px);
       background-color: var(--fsds-details-color-background-default, #ffffff);
       line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
       display: block;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      border-color: var(--fsds-details-color-border-default, #f29495);
+      border-color: var(--fsds-details-color-border-default, #a0a0a1);
       color: var(--fsds-details-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-details-color-background-hover, #cecece);
-        border-color: var(--fsds-details-color-border-hover, #8f8f8f);
+        background-color: var(--fsds-details-color-background-hover, #b8b8b8);
+        border-color: var(--fsds-details-color-border-hover, #888889);
       }
 
       &[open] .details__icon {
@@ -118,7 +118,7 @@ export class DetailsElement extends LitElement {
 
     .details__summary:focus-visible {
       outline-width: var(--fsds-details-focus-ring-width, 2px);
-      outline-color: var(--fsds-details-focus-ring-color, #d9292b);
+      outline-color: var(--fsds-details-focus-ring-color, #d92d2e);
       outline-offset: var(--fsds-details-focus-ring-offset, 2px);
       outline-style: solid;
     }
@@ -221,7 +221,7 @@ export class DetailsContentElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -229,15 +229,15 @@ export class DetailsContentElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
-      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
+      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-details-focus-ring-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-      --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
@@ -249,7 +249,7 @@ export class DetailsContentElement extends LitElement {
     }
 
     .details__summary:hover {
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
     }
 
     .details--compact {
@@ -259,8 +259,8 @@ export class DetailsContentElement extends LitElement {
 
     .details--inline {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
-      --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .details {
@@ -276,19 +276,19 @@ export class DetailsContentElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       padding: var(--fsds-details-size-padding-default, 16px);
-      border-radius: var(--fsds-details-size-radius-default, 8px);
+      border-radius: var(--fsds-details-size-radius-default, 6px);
       background-color: var(--fsds-details-color-background-default, #ffffff);
       line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
       display: block;
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      border-color: var(--fsds-details-color-border-default, #f29495);
+      border-color: var(--fsds-details-color-border-default, #a0a0a1);
       color: var(--fsds-details-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-details-color-background-hover, #cecece);
-        border-color: var(--fsds-details-color-border-hover, #8f8f8f);
+        background-color: var(--fsds-details-color-background-hover, #b8b8b8);
+        border-color: var(--fsds-details-color-border-hover, #888889);
       }
 
       &[open] .details__icon {
@@ -309,7 +309,7 @@ export class DetailsContentElement extends LitElement {
 
     .details__summary:focus-visible {
       outline-width: var(--fsds-details-focus-ring-width, 2px);
-      outline-color: var(--fsds-details-focus-ring-color, #d9292b);
+      outline-color: var(--fsds-details-focus-ring-color, #d92d2e);
       outline-offset: var(--fsds-details-focus-ring-offset, 2px);
       outline-style: solid;
     }

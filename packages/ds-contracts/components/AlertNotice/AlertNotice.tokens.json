@@ -21,7 +21,7 @@
   },
   "box-model.gap": {
     "resolvesTo": "semantic.feedback.size.gap",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "alert-notice.color.background.primary": {
@@ -36,62 +36,62 @@
   },
   "alert-notice.color.background.info": {
     "resolvesTo": "semantic.color.background.info.subtle",
-    "fallback": "#d9f3fe",
+    "fallback": "#95dafb",
     "layer": "semantic"
   },
   "alert-notice.color.background.success": {
     "resolvesTo": "semantic.color.background.success.subtle",
-    "fallback": "#e4f2e0",
+    "fallback": "#b3dba7",
     "layer": "semantic"
   },
   "alert-notice.color.background.warning": {
     "resolvesTo": "semantic.color.background.warning.subtle",
-    "fallback": "#ffedcc",
+    "fallback": "#fdc67f",
     "layer": "semantic"
   },
   "alert-notice.color.background.danger": {
     "resolvesTo": "semantic.color.background.danger.subtle",
-    "fallback": "#fceaea",
+    "fallback": "#fac2c2",
     "layer": "semantic"
   },
   "alert-notice.color.foreground.info": {
     "resolvesTo": "semantic.color.foreground.on.info.subtle",
-    "fallback": "#002d99",
+    "fallback": "#013ab0",
     "layer": "semantic"
   },
   "alert-notice.color.foreground.success": {
     "resolvesTo": "semantic.color.foreground.on.success.subtle",
-    "fallback": "#234104",
+    "fallback": "#2c4f09",
     "layer": "semantic"
   },
   "alert-notice.color.foreground.warning": {
     "resolvesTo": "semantic.color.foreground.on.warning.subtle",
-    "fallback": "#593000",
+    "fallback": "#6c3a00",
     "layer": "semantic"
   },
   "alert-notice.color.foreground.danger": {
     "resolvesTo": "semantic.color.foreground.on.danger.subtle",
-    "fallback": "#7b0000",
+    "fallback": "#900909",
     "layer": "semantic"
   },
   "alert-notice.color.border.info": {
     "resolvesTo": "semantic.color.border.info",
-    "fallback": "#0042dc",
+    "fallback": "#034fd6",
     "layer": "semantic"
   },
   "alert-notice.color.border.success": {
     "resolvesTo": "semantic.color.border.success",
-    "fallback": "#336006",
+    "fallback": "#3a6614",
     "layer": "semantic"
   },
   "alert-notice.color.border.warning": {
     "resolvesTo": "semantic.color.border.warning",
-    "fallback": "#824500",
+    "fallback": "#8b4b00",
     "layer": "semantic"
   },
   "alert-notice.color.border.danger": {
     "resolvesTo": "semantic.color.border.danger",
-    "fallback": "#ae0001",
+    "fallback": "#b31b1b",
     "layer": "semantic"
   },
   "alert-notice.size.padding": {
@@ -101,7 +101,7 @@
   },
   "alert-notice.size.radius": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "alert-notice.spacing.gap": {

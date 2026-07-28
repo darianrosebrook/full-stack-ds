@@ -80,7 +80,7 @@ export const dividerTokenScopes = {
       name: "divider.color.default",
       cssVar: "--fsds-divider-color-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "divider.size.thickness": {
       name: "divider.size.thickness",

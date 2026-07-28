@@ -24,20 +24,20 @@ export class CheckboxElement extends LitElement {
     .checkbox {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-input-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
       --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-default, #aeaeae);
+      --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-default, #a0a0a1);
       --fsds-checkbox-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
       --fsds-checkbox-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-checkbox-transition-duration: var(--fsds-core-motion-duration-short, 150ms);
@@ -47,7 +47,7 @@ export class CheckboxElement extends LitElement {
       --fsds-checkbox-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
 
       &:hover .checkbox__indicator {
-        --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-hover, #f29495);
+        --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-hover, #888889);
       }
     }
 
@@ -56,7 +56,7 @@ export class CheckboxElement extends LitElement {
     }
 
     :has(.checkbox__input:disabled) .checkbox__indicator {
-      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #cecece);
+      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #d0d0d0);
     }
 
     .checkbox {
@@ -94,7 +94,7 @@ export class CheckboxElement extends LitElement {
       width: 16px;
       height: 16px;
       border-radius: var(--fsds-checkbox-border-radius, 4px);
-      border-color: var(--fsds-checkbox-color-border-default, #aeaeae);
+      border-color: var(--fsds-checkbox-color-border-default, #a0a0a1);
       background-color: var(--fsds-checkbox-color-background-default, #ffffff);
       border-style: solid;
       border-width: var(--fsds-checkbox-border-width, 1px);
@@ -104,7 +104,7 @@ export class CheckboxElement extends LitElement {
 
     :has(.checkbox__input:focus-visible) .checkbox__indicator {
       outline-width: var(--fsds-checkbox-focus-ring-width, 2px);
-      outline-color: var(--fsds-checkbox-focus-ring-color, #0a65fe);
+      outline-color: var(--fsds-checkbox-focus-ring-color, #0566fe);
       outline-style: var(--fsds-checkbox-focus-ring-style, solid);
       outline-offset: var(--fsds-checkbox-focus-ring-offset, 2px);
     }

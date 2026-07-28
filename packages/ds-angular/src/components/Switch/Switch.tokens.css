@@ -2,41 +2,41 @@
 .switch {
   --fsds-box-model-padding: 0;
   --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 8px);
-  --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 8px);
+  --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 4px);
+  --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 4px);
   --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
-  --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 12px);
+  --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
+  --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
   --fsds-box-model-gap: var(--fsds-semantic-action-size-medium-gap, 8px);
   --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 36px);
+  --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 32px);
   --fsds-box-model-max-width: none;
   --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 36px);
+  --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
   --fsds-box-model-max-height: none;
   --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
-  --fsds-switch-motion-easing: var(--fsds-semantic-motion-interaction-press-easing, ease-out);
-  --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
-  --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #aeaeae);
+  --fsds-switch-motion-easing: var(--fsds-semantic-motion-interaction-press-easing, cubic-bezier(0.4, 0, 0.2, 1));
+  --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #b8b8b8);
+  --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0, 0, 0, 0.1));
-  --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #d9292b);
+  --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #0566fe);
   --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
   --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
   --fsds-switch-size-md-track-radius: var(--fsds-semantic-shape-control-radius-pill, 9999px);
-  --fsds-switch-size-md-track-padding: var(--fsds-core-spacing-size-01, 2px);
-  --fsds-switch-size-md-thumb-size: var(--fsds-core-spacing-size-06, 20px);
-  --fsds-switch-size-md-thumb-height: var(--fsds-core-spacing-size-06, 20px);
+  --fsds-switch-size-md-track-padding: var(--fsds-core-spacing-size-01, 1px);
+  --fsds-switch-size-md-thumb-size: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-switch-size-md-thumb-height: var(--fsds-core-spacing-size-06, 16px);
   --fsds-switch-size-sm-track-width: var(--fsds-core-spacing-size-08, 32px);
   --fsds-switch-size-sm-track-height: var(--fsds-core-spacing-size-06, 16px);
   --fsds-switch-size-sm-track-radius: var(--fsds-semantic-shape-control-radius-pill, 9999px);
-  --fsds-switch-size-sm-track-padding: var(--fsds-core-spacing-size-01, 2px);
+  --fsds-switch-size-sm-track-padding: var(--fsds-core-spacing-size-01, 1px);
   --fsds-switch-size-sm-thumb-size: var(--fsds-core-spacing-size-05, 12px);
   --fsds-switch-size-sm-thumb-height: var(--fsds-core-spacing-size-05, 12px);
   --fsds-switch-size-lg-track-width: var(--fsds-core-spacing-size-10, 64px);
   --fsds-switch-size-lg-track-height: var(--fsds-core-spacing-size-08, 32px);
   --fsds-switch-size-lg-track-radius: var(--fsds-semantic-shape-control-radius-pill, 9999px);
-  --fsds-switch-size-lg-track-padding: var(--fsds-core-spacing-size-01, 2px);
+  --fsds-switch-size-lg-track-padding: var(--fsds-core-spacing-size-01, 1px);
   --fsds-switch-size-lg-thumb-size: var(--fsds-core-spacing-size-07, 24px);
   --fsds-switch-size-lg-thumb-height: var(--fsds-core-spacing-size-07, 24px);
   --fsds-switch-size-sm-thumb-translate-off: 0;
@@ -47,7 +47,7 @@
   --fsds-switch-size-lg-thumb-translate-on: 36px;
 
   &:has(.switch__input:checked) .switch__track {
-    --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d9292b);
+    --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d92d2e);
   }
 
   &:has(.switch__input:checked) .switch__thumb {
@@ -55,7 +55,7 @@
   }
 
   &:has(.switch__input:disabled) .switch__track {
-    --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #efefef);
+    --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #d0d0d0);
   }
 }
 /* @generated:end */

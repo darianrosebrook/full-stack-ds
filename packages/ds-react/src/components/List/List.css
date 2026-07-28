@@ -14,7 +14,7 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-list-color-foreground-primary, #141414);
-  border-color: var(--fsds-list-color-border-default, #cecece);
+  border-color: var(--fsds-list-color-border-default, #d0d0d0);
   padding: var(--fsds-list-size-padding-default, 16px);
 }
 
@@ -90,7 +90,7 @@
 .list--variant-divided > * + * {
   border-block-start-width: 1px;
   border-block-start-style: solid;
-  border-block-start-color: var(--fsds-list-color-border-default, #cecece);
+  border-block-start-color: var(--fsds-list-color-border-default, #d0d0d0);
 }
 
 .list--variant-spaced > * {

@@ -36,15 +36,15 @@ export class StatElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-stat-color-foreground-value: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-stat-color-foreground-label: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-stat-color-foreground-trend-up: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
-      --fsds-stat-color-foreground-trend-down: var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b);
-      --fsds-stat-color-foreground-trend-neutral: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-stat-color-foreground-label: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-stat-color-foreground-trend-up: var(--fsds-semantic-color-feedback-foreground-success-default, #497f21);
+      --fsds-stat-color-foreground-trend-down: var(--fsds-semantic-color-feedback-foreground-danger-default, #d92d2e);
+      --fsds-stat-color-foreground-trend-neutral: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
       --fsds-stat-size-value-sm: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-stat-size-value-md: var(--fsds-semantic-typography-heading-02, 24px);
       --fsds-stat-size-value-lg: var(--fsds-semantic-typography-heading-01, 32px);
       --fsds-stat-size-label: var(--fsds-semantic-typography-caption-02, 12px);
-      --fsds-stat-size-gap: var(--fsds-core-spacing-size-02, 4px);
+      --fsds-stat-size-gap: var(--fsds-core-spacing-size-02, 2px);
       --fsds-stat-typography-lineHeight-value: 1.1;
       --fsds-stat-typography-weight-value: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-stat-typography-weight-label: var(--fsds-semantic-typography-font-weight-medium, 500);
@@ -71,15 +71,15 @@ export class StatElement extends LitElement {
     }
 
     .stat--up {
-      color: var(--fsds-stat-color-foreground-trend-up, #1f8a4c);
+      color: var(--fsds-stat-color-foreground-trend-up, #497f21);
     }
 
     .stat--down {
-      color: var(--fsds-stat-color-foreground-trend-down, #d9292b);
+      color: var(--fsds-stat-color-foreground-trend-down, #d92d2e);
     }
 
     .stat--neutral {
-      color: var(--fsds-stat-color-foreground-trend-neutral, #555555);
+      color: var(--fsds-stat-color-foreground-trend-neutral, #5c5b5c);
     }
 
     .stat--sm {

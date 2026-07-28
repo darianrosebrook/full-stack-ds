@@ -19,13 +19,13 @@ export const showMoreTokenScopes = {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
       ref: "semantic.action.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.action.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
@@ -36,13 +36,13 @@ export const showMoreTokenScopes = {
       name: "box-model.padding-inline-start",
       cssVar: "--fsds-box-model-padding-inline-start",
       ref: "semantic.action.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.padding-inline-end": {
       name: "box-model.padding-inline-end",
       cssVar: "--fsds-box-model-padding-inline-end",
       ref: "semantic.action.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.gap": {
       name: "box-model.gap",
@@ -59,7 +59,7 @@ export const showMoreTokenScopes = {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.action.size.medium.min-width",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-width": {
       name: "box-model.max-width",
@@ -75,7 +75,7 @@ export const showMoreTokenScopes = {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       ref: "semantic.action.size.medium.min-height",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-height": {
       name: "box-model.max-height",
@@ -86,7 +86,7 @@ export const showMoreTokenScopes = {
       name: "show-more.color.background.default",
       cssVar: "--fsds-show-more-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "show-more.color.foreground.primary": {
       name: "show-more.color.foreground.primary",
@@ -98,19 +98,19 @@ export const showMoreTokenScopes = {
       name: "show-more.color.foreground.secondary",
       cssVar: "--fsds-show-more-color-foreground-secondary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "show-more.color.border.default": {
       name: "show-more.color.border.default",
       cssVar: "--fsds-show-more-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "show-more.color.border.accent": {
       name: "show-more.color.border.accent",
       cssVar: "--fsds-show-more-color-border-accent",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "show-more.size.padding.default": {
       name: "show-more.size.padding.default",
@@ -122,7 +122,7 @@ export const showMoreTokenScopes = {
       name: "show-more.size.radius.default",
       cssVar: "--fsds-show-more-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "show-more.overlay.imageOverlay": {
       name: "show-more.overlay.imageOverlay",

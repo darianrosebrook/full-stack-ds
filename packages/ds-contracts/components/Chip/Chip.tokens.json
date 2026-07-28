@@ -11,12 +11,12 @@
   },
   "chip.color.background.hover": {
     "resolvesTo": "semantic.color.action.background.secondary.hover",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "chip.color.background.active": {
     "resolvesTo": "semantic.color.action.background.secondary.active",
-    "fallback": "#cecece",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "chip.color.foreground.default": {
@@ -26,7 +26,7 @@
   },
   "chip.color.border.default": {
     "resolvesTo": "semantic.color.action.border.secondary.default",
-    "fallback": "#aeaeae",
+    "fallback": "#a0a0a1",
     "layer": "semantic"
   },
   "chip.size.padding.horizontal": {
@@ -91,27 +91,27 @@
   },
   "chip.size.minHeight": {
     "resolvesTo": "core.dimension.actionMinHeight",
-    "fallback": "32px",
+    "fallback": "36px",
     "layer": "core"
   },
   "chip.color.background.selected": {
     "resolvesTo": "semantic.color.background.info.subtle",
-    "fallback": "#d9f3fe",
+    "fallback": "#95dafb",
     "layer": "semantic"
   },
   "chip.color.foreground.selected": {
     "resolvesTo": "semantic.color.foreground.on.info.subtle",
-    "fallback": "#002d99",
+    "fallback": "#013ab0",
     "layer": "semantic"
   },
   "chip.color.border.selected": {
     "resolvesTo": "semantic.color.border.info",
-    "fallback": "#0042dc",
+    "fallback": "#034fd6",
     "layer": "semantic"
   },
   "chip.dismiss.size": {
     "resolvesTo": "core.spacing.size.05",
-    "fallback": "16px",
+    "fallback": "12px",
     "layer": "core"
   },
   "chip.dismiss.gap": {

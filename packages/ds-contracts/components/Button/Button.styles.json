@@ -50,7 +50,7 @@
     },
     "background-color": {
       "resolvesTo": "button.color.background.default",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     },
     "color": {
       "resolvesTo": "button.color.foreground.default",
@@ -58,7 +58,7 @@
     },
     "border-color": {
       "resolvesTo": "button.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "gap": {
       "resolvesTo": "button.size.gap.default",
@@ -352,23 +352,23 @@
     },
     "button.color.border.default": {
       "resolvesTo": "semantic.color.border.default",
-      "fallback": "#8f8f8f"
+      "fallback": "#a0a0a1"
     }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "button.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-color": {
       "resolvesTo": "button.color.border.hover",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     }
   },
   "active": {
     "background-color": {
       "resolvesTo": "button.color.background.active",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     }
   },
   "focus": {
@@ -380,11 +380,11 @@
   "disabled": {
     "background-color": {
       "resolvesTo": "button.color.background.disabled",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     },
     "color": {
       "resolvesTo": "button.color.foreground.disabled",
-      "fallback": "#aeaeae"
+      "fallback": "#727272"
     }
   },
   "spinner": {

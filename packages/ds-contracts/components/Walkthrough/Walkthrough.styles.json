@@ -20,11 +20,11 @@
     },
     "background-color": {
       "resolvesTo": "walkthrough.surface.bg",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-color": {
       "resolvesTo": "walkthrough.surface.border",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-style": {
       "literal": "solid",
@@ -106,7 +106,7 @@
     },
     "color": {
       "resolvesTo": "walkthrough.description.color",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "line-height": {
       "literal": "1.5",
@@ -144,7 +144,7 @@
     },
     "border-top-color": {
       "resolvesTo": "walkthrough.surface.border",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-top-style": {
       "literal": "solid",
@@ -178,7 +178,7 @@
     },
     "color": {
       "resolvesTo": "walkthrough.button.secondary.color",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "cursor": {
       "literal": "pointer",
@@ -202,11 +202,11 @@
   "prev": {
     "background-color": {
       "resolvesTo": "walkthrough.button.secondary.bg",
-      "fallback": "transparent"
+      "fallback": "#000000"
     },
     "border-color": {
       "resolvesTo": "walkthrough.button.secondary.border",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-style": {
       "literal": "solid",
@@ -222,11 +222,11 @@
     },
     "border-radius": {
       "resolvesTo": "walkthrough.button.primary.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "color": {
       "resolvesTo": "walkthrough.button.secondary.color",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "cursor": {
       "literal": "pointer",
@@ -238,7 +238,7 @@
   "next": {
     "background-color": {
       "resolvesTo": "walkthrough.button.primary.bg",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     },
     "border": {
       "literal": "none",
@@ -248,7 +248,7 @@
     },
     "border-radius": {
       "resolvesTo": "walkthrough.button.primary.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "color": {
       "resolvesTo": "walkthrough.button.primary.color",
@@ -314,7 +314,7 @@
     },
     "background-color": {
       "resolvesTo": "walkthrough.dots.idle",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border": {
       "literal": "none",
@@ -338,7 +338,7 @@
   "counter": {
     "color": {
       "resolvesTo": "walkthrough.description.color",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "font-size": {
       "resolvesTo": "walkthrough.description.fontSize",

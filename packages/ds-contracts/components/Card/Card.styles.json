@@ -6,7 +6,7 @@
     },
     "border-color": {
       "resolvesTo": "card.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "color": {
       "resolvesTo": "card.color.foreground.primary",
@@ -70,7 +70,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "transition-property": {
       "literal": "box-shadow, border-color, background-color, transform",
@@ -94,7 +94,7 @@
   ".card--interactive:hover": {
     "background-color": {
       "resolvesTo": "card.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "box-shadow": {
       "resolvesTo": "card.elevation.raised",
@@ -126,7 +126,7 @@
     },
     "outline-color": {
       "resolvesTo": "card.color.focus.ring",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     },
     "outline-offset": {
       "resolvesTo": "card.focus.ring.offset",
@@ -142,37 +142,37 @@
   "--completed": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.success",
-      "fallback": "#336006"
+      "fallback": "#3a6614"
     }
   },
   "--in-progress": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.info",
-      "fallback": "#0042dc"
+      "fallback": "#034fd6"
     }
   },
   "--planned": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.subtle",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     }
   },
   "--deprecated": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.danger",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   "--category": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   "--complexity": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.warning",
-      "fallback": "#824500"
+      "fallback": "#8b4b00"
     }
   },
   "--inset": {
@@ -274,7 +274,7 @@
     },
     "card.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "footer": {
@@ -312,7 +312,7 @@
     },
     "border-top-color": {
       "resolvesTo": "card.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-top-style": {
       "literal": "solid",
@@ -362,7 +362,7 @@
     },
     "background-color": {
       "resolvesTo": "card.color.badge.accent.background",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "color": {
       "resolvesTo": "card.color.badge.accent.foreground",
@@ -402,7 +402,7 @@
     },
     "card.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.link",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   ".card__link:hover": {
@@ -426,7 +426,7 @@
     },
     "card.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   }
 }

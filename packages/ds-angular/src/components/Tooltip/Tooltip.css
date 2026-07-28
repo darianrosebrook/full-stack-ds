@@ -24,7 +24,7 @@
 .tooltip__content {
   background-color: var(--fsds-tooltip-color-background-default, #141414);
   color: var(--fsds-tooltip-color-foreground-default, #fafafa);
-  border-color: var(--fsds-tooltip-color-border-default, #cecece);
+  border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
   border-radius: var(--fsds-tooltip-size-radius-default, 4px);
   padding: var(--fsds-tooltip-size-padding-x, 8px);
   max-width: var(--fsds-tooltip-size-maxWidth, 200px);

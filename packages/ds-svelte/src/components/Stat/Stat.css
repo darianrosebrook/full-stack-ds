@@ -22,15 +22,15 @@
 }
 
 .stat--up {
-  color: var(--fsds-stat-color-foreground-trend-up, #1f8a4c);
+  color: var(--fsds-stat-color-foreground-trend-up, #497f21);
 }
 
 .stat--down {
-  color: var(--fsds-stat-color-foreground-trend-down, #d9292b);
+  color: var(--fsds-stat-color-foreground-trend-down, #d92d2e);
 }
 
 .stat--neutral {
-  color: var(--fsds-stat-color-foreground-trend-neutral, #555555);
+  color: var(--fsds-stat-color-foreground-trend-neutral, #5c5b5c);
 }
 
 .stat--sm {
