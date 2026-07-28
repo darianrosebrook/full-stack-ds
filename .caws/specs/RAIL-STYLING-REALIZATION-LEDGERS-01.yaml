@@ -2,10 +2,11 @@ id: RAIL-STYLING-REALIZATION-LEDGERS-01
 title: 'Two-directional ledger ratchet for the dead-slot and pseudo-state audits, gated at pre-push'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: s1-ledgers
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s1-ledgers at 274edb4a18b9c8efa22e3b3189820fddba4fd628'
 created_at: '2026-07-28T23:26:23.709Z'
-updated_at: '2026-07-28T23:38:35.262Z'
+updated_at: '2026-07-28T23:43:05.830Z'
 blast_radius:
   modules:
     - 'scripts/dead-slot-audit (ratchet, selfcheck, disposition classifier, ledger)'
