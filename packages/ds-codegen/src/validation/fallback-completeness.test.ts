@@ -13,7 +13,10 @@
 
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../contract.js";
-import { validateContractFallbackCompleteness } from "./fallback-completeness.js";
+import {
+  validateContractFallbackCompleteness,
+  collectFallbackDivergenceAdvisories,
+} from "./fallback-completeness.js";
 
 function base(extra: Partial<ComponentContract>): ComponentContract {
   return {
@@ -167,5 +170,126 @@ describe("validateContractFallbackCompleteness — detects missing fallback", ()
       },
     });
     expect(validateContractFallbackCompleteness(contract)).toEqual([]);
+  });
+});
+
+describe("collectFallbackDivergenceAdvisories — corpus-wide divergence", () => {
+  /** Build a corpus map from named contracts for the divergence pass. */
+  function corpus(...named: [string, ComponentContract][]): Map<string, ComponentContract> {
+    return new Map(named);
+  }
+
+  it("returns no advisories when all contracts agree on a token's fallback", () => {
+    const a = base({
+      name: "Alpha",
+      tokens: { "alpha.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
+    });
+    const b = base({
+      name: "Beta",
+      tokens: { "beta.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
+    });
+    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+  });
+
+  it("emits an advisory when two contracts give the same token different fallbacks", () => {
+    const a = base({
+      name: "Alpha",
+      tokens: { "alpha.bg": { resolvesTo: "semantic.color.action.bg", fallback: "#0566fe" } },
+    });
+    const b = base({
+      name: "Beta",
+      tokens: { "beta.bg": { resolvesTo: "semantic.color.action.bg", fallback: "#d9292b" } },
+    });
+    const advisories = collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]));
+    expect(advisories).toHaveLength(1);
+    expect(advisories[0]).toContain("[FALLBACK_DIVERGENT]");
+    expect(advisories[0]).toContain("semantic.color.action.bg");
+    expect(advisories[0]).toContain("#0566fe");
+    expect(advisories[0]).toContain("#d9292b");
+    expect(advisories[0]).toContain("Alpha");
+    expect(advisories[0]).toContain("Beta");
+  });
+
+  it("emits an advisory for intra-contract divergence (Button base vs --primary)", () => {
+    // The reviewer's case: one contract, base block + --primary variant,
+    // same token, two fallbacks.
+    const button = base({
+      name: "Button",
+      tokens: {
+        "button.color.background.default": {
+          resolvesTo: "semantic.color.action.background.primary.default",
+          fallback: "#d9292b",
+        },
+      },
+      styles: {
+        "--primary": {
+          "button.color.background.default": {
+            resolvesTo: "semantic.color.action.background.primary.default",
+            fallback: "#0566fe",
+          },
+        },
+      },
+    });
+    const advisories = collectFallbackDivergenceAdvisories(corpus(["Button", button]));
+    expect(advisories).toHaveLength(1);
+    expect(advisories[0]).toContain("[FALLBACK_DIVERGENT]");
+    expect(advisories[0]).toContain("#d9292b");
+    expect(advisories[0]).toContain("#0566fe");
+    expect(advisories[0]).toContain("<root>"); // the base block site
+    expect(advisories[0]).toContain("--primary"); // the variant block site
+  });
+
+  it("canonicalizes unit-equivalent fallbacks (16px == 1rem) and does NOT fire", () => {
+    const a = base({
+      name: "Alpha",
+      tokens: { "alpha.size": { resolvesTo: "semantic.typography.body", fallback: "16px" } },
+    });
+    const b = base({
+      name: "Beta",
+      tokens: { "beta.size": { resolvesTo: "semantic.typography.body", fallback: "1rem" } },
+    });
+    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+  });
+
+  it("canonicalizes unit-equivalent fallbacks (14px == 0.875rem) and does NOT fire", () => {
+    const a = base({
+      name: "Alpha",
+      tokens: { "alpha.size": { resolvesTo: "semantic.typography.caption", fallback: "14px" } },
+    });
+    const b = base({
+      name: "Beta",
+      tokens: { "beta.size": { resolvesTo: "semantic.typography.caption", fallback: "0.875rem" } },
+    });
+    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+  });
+
+  it("lowercases hex before comparing so case drift does not false-fire", () => {
+    const a = base({
+      name: "Alpha",
+      tokens: { "alpha.bg": { resolvesTo: "semantic.color.bg", fallback: "#D9292B" } },
+    });
+    const b = base({
+      name: "Beta",
+      tokens: { "beta.bg": { resolvesTo: "semantic.color.bg", fallback: "#d9292b" } },
+    });
+    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+  });
+
+  it("returns no advisories when allContracts is absent", () => {
+    expect(collectFallbackDivergenceAdvisories(undefined)).toEqual([]);
+    expect(collectFallbackDivergenceAdvisories(new Map())).toEqual([]);
+  });
+
+  it("ignores slots without fallbacks (the [FALLBACK_MISSING] gate owns those)", () => {
+    const a = base({
+      name: "Alpha",
+      tokens: { "alpha.bg": { resolvesTo: "semantic.color.bg", fallback: "#fff" } },
+    });
+    const b = base({
+      name: "Beta",
+      tokens: { "beta.bg": { resolvesTo: "semantic.color.bg" } }, // no fallback
+    });
+    // Only one fallback-bearing reading for semantic.color.bg → no divergence.
+    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
   });
 });

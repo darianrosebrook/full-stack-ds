@@ -79,7 +79,7 @@ import { buildFigmaStackPrimitiveDescriptor } from "./frameworks/figma/factory.j
 import { readPrimitiveIR } from "./primitive-contract.js";
 import { validateContractIconRefs } from "./validation/icon-refs.js";
 import { validateContractTokens } from "./validation/tokens.js";
-import { validateContractFallbackCompleteness } from "./validation/fallback-completeness.js";
+import { validateContractFallbackCompleteness, collectFallbackDivergenceAdvisories } from "./validation/fallback-completeness.js";
 import {
   validateContractStyles,
   validateStylesSelectorCollisions,
@@ -582,6 +582,26 @@ function main(): void {
   console.log(
     `\nValidation: ${validContracts.length}/${filtered.length} component contract(s) passed.`,
   );
+
+  // Corpus-wide fallback-divergence advisory (FALLBACK-DIVERGENCE-01). Printed
+  // as a WARNING (console.warn), NOT a ValidationIssue — this pass must not
+  // fail the build. The Class-2 stale-palette cases are repaired; the ~25
+  // Class-3 semantic-inconsistency cases are surfaced for per-token adjudication.
+  // Reads from `validContracts` (sidecar-merged), NOT `allContractsByName`
+  // (which stores raw contracts without merged .tokens/.styles sidecars).
+  if (args.checkSemantics) {
+    const mergedCorpus = new Map<string, ComponentContract>();
+    for (const vc of validContracts) mergedCorpus.set(vc.contract.name, vc.contract);
+    const divergenceAdvisories = collectFallbackDivergenceAdvisories(mergedCorpus);
+    if (divergenceAdvisories.length > 0) {
+      console.warn(
+        `\n[FALLBACK_DIVERGENT] ${divergenceAdvisories.length} token(s) resolve to distinct ` +
+          `fallback literals across the corpus (advisory — build is NOT failed). ` +
+          `Adjudicate each: intentional per-component safe-default, or stale-palette residue?\n`,
+      );
+      for (const a of divergenceAdvisories) console.warn(a + "\n");
+    }
+  }
 
   if (args.checkUsage) {
     const usageHadErrors = runUsageValidation(filtered, validContracts, validator);
