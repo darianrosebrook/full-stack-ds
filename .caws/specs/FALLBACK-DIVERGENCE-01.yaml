@@ -2,9 +2,11 @@ id: FALLBACK-DIVERGENCE-01
 title: 'Fallback-divergence advisory gate + stale-palette repair'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Advisory divergence gate (canonicalized) + 17 stale-palette repairs. 28->25 divergent tokens; the 3 repaired color tokens no longer appear. A1-A3 evidence recorded (seq 1516-1518). governed:rail pass, root 1965/1965, framework 70/70.'
 created_at: '2026-07-28T19:27:56.215Z'
-updated_at: '2026-07-28T19:27:56.215Z'
+updated_at: '2026-07-28T19:38:03.122Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation/fallback-completeness.ts: new [FALLBACK_DIVERGENT] advisory check (canonicalized) alongside the existing [FALLBACK_MISSING] hard error.'
