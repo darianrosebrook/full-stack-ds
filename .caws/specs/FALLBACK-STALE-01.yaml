@@ -3,6 +3,7 @@ title: 'Derive contract fallback literals from the resolved token graph; [FALLBA
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: fallback-stale
 created_at: '2026-07-28T22:23:48.827Z'
 updated_at: '2026-07-28T22:23:48.827Z'
 blast_radius:
