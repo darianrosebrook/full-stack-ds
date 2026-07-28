@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: s1-ledgers
 created_at: '2026-07-28T23:26:23.709Z'
-updated_at: '2026-07-28T23:28:23.500Z'
+updated_at: '2026-07-28T23:38:35.262Z'
 blast_radius:
   modules:
     - 'scripts/dead-slot-audit (ratchet, selfcheck, disposition classifier, ledger)'
@@ -27,6 +27,7 @@ scope:
     - 'docs/pseudo-state-audit'
     - 'docs/current-implementation-snapshot.md'
     - scripts/lib
+    - scripts/prepush-scope.test.mjs
   out: []
 invariants:
   - 'The ledger only shrinks truthfully: the audit fails if any current finding is absent from the ledger (unledgered) OR any ledger entry no longer reproduces (stale). Neither direction may be waived.'
