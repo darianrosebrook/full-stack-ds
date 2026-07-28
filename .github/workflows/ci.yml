@@ -165,6 +165,16 @@ jobs:
             packages/ds-lit/src \
             packages/ds-react-native/src
 
+      # Iconography emission ledger: proves the committed content-addressed edge
+      # set (packages/ds-iconography/emission-ledger.json) matches a fresh
+      # regeneration. Same defect class as the generated-tree drift diff above
+      # (committed generated output diverged from source), but proved via edge
+      # set membership rather than byte equality. The ledger covers icon
+      # projections that don't flow through the ds-codegen rail. Wired in by
+      # ICONOGRAPHY-TOKEN-DISCIPLINE-02 (Phase 4); previously a never-built gap.
+      - name: Iconography emission ledger is up-to-date
+        run: pnpm run iconography:ledger:check
+
       # Behavior-realization rail: derives interactivity obligations (event
       # wires, compound/disclosure wiring, portal consumption) from the LIVE
       # contract corpus on every run — never a committed frozen classification

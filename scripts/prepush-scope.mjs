@@ -18,7 +18,13 @@ import { fileURLToPath } from "node:url";
 const PATTERNS = {
   tokens: /^packages\/ds-tokens\//,
   codegen: /^packages\/ds-(contracts|codegen)\//,
-  generated: /^packages\/ds-(react|vue|svelte|angular|lit)\//,
+  // generated framework src trees — matches CI's six-tree drift diff exactly
+  // (react-native was added to CI by 289058a4 but missing here; this closes
+  // that latent gap the hook's own lockstep comment warns about).
+  generated: /^packages\/ds-(react|vue|svelte|angular|lit|react-native)\//,
+  // iconography has its own emission ledger gate (ledger-icons.mjs --check),
+  // separate from the codegen rail's generated-tree drift diff.
+  iconography: /^packages\/ds-iconography\//,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -35,6 +41,7 @@ export function classify(files, opts = {}) {
   const tokens = full || has("tokens");
   const codegen = full || has("codegen");
   const generated = full || has("generated");
+  const iconography = full || has("iconography");
   const lintable = full || has("lintable");
   const typed = full || has("typed");
   const testable = full || has("testable");
@@ -55,6 +62,9 @@ export function classify(files, opts = {}) {
     // a contract/codegen JSON change (no .ts) still exercises codegen tests
     RUN_TESTS: testable || codegen || generated,
     RUN_RAIL: genGroup,
+    // iconography ledger gate: separate emission model from the codegen rail,
+    // so it has its own flag rather than riding genGroup.
+    RUN_ICONOGRAPHY: iconography,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)

@@ -142,6 +142,15 @@ if [ "${RUN_TESTS:-false}" = true ]; then
   echo ""; echo "[pre-push] test (root) + test:vue"; pnpm test; pnpm run test:vue
 else echo "[pre-push] skip tests"; fi
 
+# --- iconography emission ledger: only when ds-iconography changed ---
+# Separate emission model from the codegen rail — the ledger gate proves the
+# committed content-addressed edge set matches a fresh regeneration. Wired in
+# by ICONOGRAPHY-TOKEN-DISCIPLINE-02 (Phase 4).
+if [ "${RUN_ICONOGRAPHY:-false}" = true ]; then
+  echo ""; echo "[pre-push] iconography:ledger:check"
+  pnpm run iconography:ledger:check
+else echo "[pre-push] skip iconography ledger"; fi
+
 # --- heaviest, last: governed:rail + generated-tree drift diff ---
 if [ "${RUN_RAIL:-false}" = true ]; then
   echo ""; echo "[pre-push] governed:rail + framework-src diff"
