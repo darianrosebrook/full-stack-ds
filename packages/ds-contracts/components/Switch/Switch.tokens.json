@@ -1,22 +1,22 @@
 {
   "box-model.padding-block-start": {
     "resolvesTo": "semantic.action.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-block-end": {
     "resolvesTo": "semantic.action.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-inline-start": {
     "resolvesTo": "semantic.action.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.padding-inline-end": {
     "resolvesTo": "semantic.action.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.gap": {
@@ -26,12 +26,12 @@
   },
   "box-model.min-height": {
     "resolvesTo": "semantic.action.size.medium.min-height",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "box-model.min-width": {
     "resolvesTo": "semantic.action.size.medium.min-width",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "switch.motion.duration": {
@@ -41,17 +41,17 @@
   },
   "switch.motion.easing": {
     "resolvesTo": "semantic.motion.interaction.press.easing",
-    "fallback": "ease-out",
+    "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
     "layer": "semantic"
   },
   "switch.color.track.background.default": {
     "resolvesTo": "semantic.color.background.tertiary",
-    "fallback": "#cecece",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "switch.color.track.border.default": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#aeaeae",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "switch.color.thumb.background.default": {
@@ -66,7 +66,7 @@
   },
   "switch.color.input.outline.focus": {
     "resolvesTo": "semantic.color.border.focus",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "switch.size.md.track.width": {
@@ -86,17 +86,17 @@
   },
   "switch.size.md.track.padding": {
     "resolvesTo": "core.spacing.size.01",
-    "fallback": "2px",
+    "fallback": "1px",
     "layer": "core"
   },
   "switch.size.md.thumb.size": {
     "resolvesTo": "core.spacing.size.06",
-    "fallback": "20px",
+    "fallback": "16px",
     "layer": "core"
   },
   "switch.size.md.thumb.height": {
     "resolvesTo": "core.spacing.size.06",
-    "fallback": "20px",
+    "fallback": "16px",
     "layer": "core"
   },
   "switch.size.sm.track.width": {
@@ -116,7 +116,7 @@
   },
   "switch.size.sm.track.padding": {
     "resolvesTo": "core.spacing.size.01",
-    "fallback": "2px",
+    "fallback": "1px",
     "layer": "core"
   },
   "switch.size.sm.thumb.size": {
@@ -146,7 +146,7 @@
   },
   "switch.size.lg.track.padding": {
     "resolvesTo": "core.spacing.size.01",
-    "fallback": "2px",
+    "fallback": "1px",
     "layer": "core"
   },
   "switch.size.lg.thumb.size": {

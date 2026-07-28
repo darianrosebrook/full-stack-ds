@@ -19,7 +19,7 @@
 .nav-list__list {
   display: flex;
   flex-direction: column;
-  gap: var(--fsds-nav-list-size-gap-list, 2px);
+  gap: var(--fsds-nav-list-size-gap-list, 1px);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -27,10 +27,10 @@
 
 .nav-list__item {
   display: block;
-  color: var(--fsds-nav-list-color-foreground-default, #555555);
-  padding-block: var(--fsds-nav-list-size-padding-block, 4px);
+  color: var(--fsds-nav-list-color-foreground-default, #5c5b5c);
+  padding-block: var(--fsds-nav-list-size-padding-block, 2px);
   padding-inline: var(--fsds-nav-list-size-padding-inline, 8px);
-  border-radius: var(--fsds-nav-list-size-radius-default, 8px);
+  border-radius: var(--fsds-nav-list-size-radius-default, 6px);
   transition-property: background-color, color;
   transition-duration: 120ms;
 }

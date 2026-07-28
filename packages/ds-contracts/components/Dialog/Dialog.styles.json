@@ -66,7 +66,7 @@
     },
     "dialog.color.background.default": {
       "resolvesTo": "semantic.color.overlay.scrim",
-      "fallback": "#00000066"
+      "fallback": "#000000"
     }
   },
   "modal": {
@@ -100,7 +100,7 @@
     },
     "border-color": {
       "resolvesTo": "dialog.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-style": {
       "literal": "solid",
@@ -188,7 +188,7 @@
     },
     "border-bottom-color": {
       "resolvesTo": "dialog.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -260,7 +260,7 @@
     },
     "dialog.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "footer": {
@@ -304,7 +304,7 @@
     },
     "border-top-color": {
       "resolvesTo": "dialog.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-top-style": {
       "literal": "solid",
@@ -388,13 +388,13 @@
     },
     "dialog.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   ".dialog__closeButton:hover": {
     "dialog.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     }
   },
   ".dialog--sm .dialog__modal": {

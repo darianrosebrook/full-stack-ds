@@ -44,7 +44,7 @@ export const tableTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -86,19 +86,19 @@ export const tableTokenScopes = {
       name: "table.color.textMuted",
       cssVar: "--fsds-table-color-textMuted",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "table.color.border": {
       name: "table.color.border",
       cssVar: "--fsds-table-color-border",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "table.color.background.footer": {
       name: "table.color.background.footer",
       cssVar: "--fsds-table-color-background-footer",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "table.border.width": {
       name: "table.border.width",
@@ -140,7 +140,7 @@ export const tableTokenScopes = {
       name: "table.size.radius",
       cssVar: "--fsds-table-size-radius",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "table.text.size": {
       name: "table.text.size",
@@ -176,13 +176,13 @@ export const tableTokenScopes = {
       name: "table.color.background.hover",
       cssVar: "--fsds-table-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "table.color.background.selected": {
       name: "table.color.background.selected",
       cssVar: "--fsds-table-color-background-selected",
       ref: "semantic.color.background.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "table.focus.width": {
       name: "table.focus.width",
@@ -194,7 +194,7 @@ export const tableTokenScopes = {
       name: "table.focus.color",
       cssVar: "--fsds-table-focus-color",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "table.focus.offset": {
       name: "table.focus.offset",

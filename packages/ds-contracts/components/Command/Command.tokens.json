@@ -1,7 +1,7 @@
 {
   "box-model.gap": {
     "resolvesTo": "semantic.structure.size.gap",
-    "fallback": "8px",
+    "fallback": "16px",
     "layer": "semantic"
   },
   "command.color.overlay": {
@@ -16,12 +16,12 @@
   },
   "command.color.border": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "command.color.borderLight": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "command.color.text": {
@@ -31,7 +31,7 @@
   },
   "command.color.textMuted": {
     "resolvesTo": "semantic.color.foreground.tertiary",
-    "fallback": "#717171",
+    "fallback": "#727272",
     "layer": "semantic"
   },
   "command.border.width": {
@@ -41,7 +41,7 @@
   },
   "command.border.radius": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "command.size.maxWidth": {
@@ -85,7 +85,7 @@
   },
   "command.color.backgroundHover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   }
 }

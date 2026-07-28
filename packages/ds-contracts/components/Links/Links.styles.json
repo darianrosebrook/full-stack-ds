@@ -2,7 +2,7 @@
   "root": {
     "color": {
       "resolvesTo": "links.color.foreground.default",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "font-size": {
       "resolvesTo": "links.size.fontSize.medium",
@@ -10,7 +10,7 @@
     },
     "text-decoration-color": {
       "resolvesTo": "links.color.underline.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "text-decoration-line": {
       "literal": "underline",
@@ -78,23 +78,23 @@
   "hover": {
     "color": {
       "resolvesTo": "links.color.foreground.hover",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     },
     "text-decoration-color": {
       "resolvesTo": "links.color.foreground.hover",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   "visited": {
     "color": {
       "resolvesTo": "links.color.foreground.visited",
-      "fallback": "#9b0002"
+      "fallback": "#e55b5a"
     }
   },
   "disabled": {
     "color": {
       "resolvesTo": "links.color.foreground.disabled",
-      "fallback": "#aeaeae"
+      "fallback": "#727272"
     },
     "cursor": {
       "literal": "not-allowed",
@@ -122,7 +122,7 @@
     },
     "outline-color": {
       "resolvesTo": "links.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "links.focus.ring.style",
@@ -134,7 +134,7 @@
     },
     "border-radius": {
       "resolvesTo": "links.focus.ring.radius",
-      "fallback": "2px"
+      "fallback": "4px"
     }
   }
 }

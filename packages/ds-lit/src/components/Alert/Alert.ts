@@ -29,7 +29,7 @@ export class AlertElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -38,9 +38,9 @@ export class AlertElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
@@ -55,27 +55,27 @@ export class AlertElement extends LitElement {
     }
 
     .alert--info {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .alert--success {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .alert--warning {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .alert--danger {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .alert--inline {
@@ -118,12 +118,12 @@ export class AlertElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       padding: var(--fsds-alert-size-padding, 16px);
-      border-radius: var(--fsds-alert-size-radius, 8px);
+      border-radius: var(--fsds-alert-size-radius, 6px);
       font-size: var(--fsds-alert-text-size, 14px);
       font-weight: var(--fsds-alert-text-weight, 400);
       background-color: var(--fsds-alert-color-background-primary, #ffffff);
       color: var(--fsds-alert-color-foreground-primary, #141414);
-      border-color: var(--fsds-alert-color-border-primary, #f29495);
+      border-color: var(--fsds-alert-color-border-primary, #a0a0a1);
     }
 
     .alert__icon {
@@ -217,7 +217,7 @@ export class AlertBodyElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -226,9 +226,9 @@ export class AlertBodyElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
@@ -243,27 +243,27 @@ export class AlertBodyElement extends LitElement {
     }
 
     .alert--info {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .alert--success {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .alert--warning {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .alert--danger {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .alert--inline {
@@ -306,12 +306,12 @@ export class AlertBodyElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       padding: var(--fsds-alert-size-padding, 16px);
-      border-radius: var(--fsds-alert-size-radius, 8px);
+      border-radius: var(--fsds-alert-size-radius, 6px);
       font-size: var(--fsds-alert-text-size, 14px);
       font-weight: var(--fsds-alert-text-weight, 400);
       background-color: var(--fsds-alert-color-background-primary, #ffffff);
       color: var(--fsds-alert-color-foreground-primary, #141414);
-      border-color: var(--fsds-alert-color-border-primary, #f29495);
+      border-color: var(--fsds-alert-color-border-primary, #a0a0a1);
     }
 
     .alert__icon {
@@ -377,7 +377,7 @@ export class AlertTitleElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -386,9 +386,9 @@ export class AlertTitleElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
@@ -403,27 +403,27 @@ export class AlertTitleElement extends LitElement {
     }
 
     .alert--info {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .alert--success {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #336006);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #2c4f09);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #3a6614);
     }
 
     .alert--warning {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #824500);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #6c3a00);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .alert--danger {
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #b31b1b);
     }
 
     .alert--inline {
@@ -466,12 +466,12 @@ export class AlertTitleElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       padding: var(--fsds-alert-size-padding, 16px);
-      border-radius: var(--fsds-alert-size-radius, 8px);
+      border-radius: var(--fsds-alert-size-radius, 6px);
       font-size: var(--fsds-alert-text-size, 14px);
       font-weight: var(--fsds-alert-text-weight, 400);
       background-color: var(--fsds-alert-color-background-primary, #ffffff);
       color: var(--fsds-alert-color-foreground-primary, #141414);
-      border-color: var(--fsds-alert-color-border-primary, #f29495);
+      border-color: var(--fsds-alert-color-border-primary, #a0a0a1);
     }
 
     .alert__icon {

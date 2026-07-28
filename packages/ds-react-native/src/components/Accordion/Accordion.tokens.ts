@@ -44,7 +44,7 @@ export const accordionTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -80,7 +80,7 @@ export const accordionTokenScopes = {
       name: "accordion.color.background.hover",
       cssVar: "--fsds-accordion-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "accordion.color.text": {
       name: "accordion.color.text",
@@ -92,13 +92,13 @@ export const accordionTokenScopes = {
       name: "accordion.color.textSecondary",
       cssVar: "--fsds-accordion-color-textSecondary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "accordion.color.icon": {
       name: "accordion.color.icon",
       cssVar: "--fsds-accordion-color-icon",
       ref: "semantic.color.foreground.tertiary",
-      fallback: "#717171",
+      fallback: "#727272",
     },
     "accordion.border.width": {
       name: "accordion.border.width",
@@ -110,7 +110,7 @@ export const accordionTokenScopes = {
       name: "accordion.border.color",
       cssVar: "--fsds-accordion-border-color",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "accordion.border.radius": {
       name: "accordion.border.radius",
@@ -182,7 +182,7 @@ export const accordionTokenScopes = {
       name: "accordion.focus.color",
       cssVar: "--fsds-accordion-focus-color",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "accordion.focus.offset": {
       name: "accordion.focus.offset",
@@ -200,7 +200,7 @@ export const accordionTokenScopes = {
       name: "accordion.color.textHover",
       cssVar: "--fsds-accordion-color-textHover",
       ref: "semantic.interaction.text.hover",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
   },
 } satisfies ComponentTokenScopes;

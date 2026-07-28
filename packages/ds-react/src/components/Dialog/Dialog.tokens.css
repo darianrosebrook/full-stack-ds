@@ -2,7 +2,7 @@
 :root {
   --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
   --fsds-dialog-size-sm-width: 400px;
   --fsds-dialog-size-sm-maxWidth: 90vw;
@@ -32,7 +32,7 @@
   --fsds-box-model-padding-inline: 0;
   --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
   --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
   --fsds-box-model-width: auto;
   --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
   --fsds-box-model-max-width: none;
@@ -42,19 +42,19 @@
 }
 
 .dialog__backdrop {
-  --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+  --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #000000);
 }
 
 .dialog__body {
-  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
 }
 
 .dialog__closeButton {
-  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
 }
 
 .dialog__closeButton:hover {
-  --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
+  --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
 }
 /* @generated:end */
 

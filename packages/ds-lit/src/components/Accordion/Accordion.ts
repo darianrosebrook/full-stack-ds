@@ -47,19 +47,19 @@ export class AccordionElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-accordion-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-accordion-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-accordion-spacing-gap: var(--fsds-core-spacing-size-07, 24px);
       --fsds-accordion-spacing-paddingX: var(--fsds-core-spacing-size-00, 0px);
@@ -71,10 +71,10 @@ export class AccordionElement extends LitElement {
       --fsds-accordion-text-lineHeightContent: var(--fsds-semantic-typography-line-height-loose, 1.8);
       --fsds-accordion-icon-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-accordion-focus-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-accordion-focus-offset: var(--fsds-core-spacing-size-01, 1px);
       --fsds-accordion-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #555555);
+      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #5c5b5c);
     }
 
     .accordion {
@@ -91,7 +91,7 @@ export class AccordionElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-radius: var(--fsds-accordion-border-radius, 4px);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
@@ -99,7 +99,7 @@ export class AccordionElement extends LitElement {
 
     .accordion__item {
       background-color: transparent;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-accordion-border-radius, 4px);
@@ -127,13 +127,13 @@ export class AccordionElement extends LitElement {
     }
 
     .accordion__trigger:hover {
-      background-color: var(--fsds-accordion-color-background-hover, #efefef);
-      color: var(--fsds-accordion-color-textHover, #555555);
+      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
     .accordion__trigger:focus-visible {
       outline-width: var(--fsds-accordion-focus-width, 2px);
-      outline-color: var(--fsds-accordion-focus-color, #d9292b);
+      outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
       outline-style: solid;
     }
@@ -146,7 +146,7 @@ export class AccordionElement extends LitElement {
       align-items: center;
       justify-content: center;
       transition: transform 200ms ease;
-      color: var(--fsds-accordion-color-icon, #717171);
+      color: var(--fsds-accordion-color-icon, #727272);
     }
 
     .accordion__trigger[aria-expanded="true"] .accordion__chevron {
@@ -160,7 +160,7 @@ export class AccordionElement extends LitElement {
 
     .accordion__contentInner {
       padding: var(--fsds-accordion-spacing-paddingY, 8px);
-      color: var(--fsds-accordion-color-textSecondary, #555555);
+      color: var(--fsds-accordion-color-textSecondary, #5c5b5c);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
     }
@@ -288,19 +288,19 @@ export class AccordionItemElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-accordion-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-accordion-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-accordion-spacing-gap: var(--fsds-core-spacing-size-07, 24px);
       --fsds-accordion-spacing-paddingX: var(--fsds-core-spacing-size-00, 0px);
@@ -312,10 +312,10 @@ export class AccordionItemElement extends LitElement {
       --fsds-accordion-text-lineHeightContent: var(--fsds-semantic-typography-line-height-loose, 1.8);
       --fsds-accordion-icon-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-accordion-focus-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-accordion-focus-offset: var(--fsds-core-spacing-size-01, 1px);
       --fsds-accordion-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #555555);
+      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #5c5b5c);
     }
 
     .accordion {
@@ -332,7 +332,7 @@ export class AccordionItemElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-radius: var(--fsds-accordion-border-radius, 4px);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
@@ -340,7 +340,7 @@ export class AccordionItemElement extends LitElement {
 
     .accordion__item {
       background-color: transparent;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-accordion-border-radius, 4px);
@@ -368,13 +368,13 @@ export class AccordionItemElement extends LitElement {
     }
 
     .accordion__trigger:hover {
-      background-color: var(--fsds-accordion-color-background-hover, #efefef);
-      color: var(--fsds-accordion-color-textHover, #555555);
+      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
     .accordion__trigger:focus-visible {
       outline-width: var(--fsds-accordion-focus-width, 2px);
-      outline-color: var(--fsds-accordion-focus-color, #d9292b);
+      outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
       outline-style: solid;
     }
@@ -387,7 +387,7 @@ export class AccordionItemElement extends LitElement {
       align-items: center;
       justify-content: center;
       transition: transform 200ms ease;
-      color: var(--fsds-accordion-color-icon, #717171);
+      color: var(--fsds-accordion-color-icon, #727272);
     }
 
     .accordion__trigger[aria-expanded="true"] .accordion__chevron {
@@ -401,7 +401,7 @@ export class AccordionItemElement extends LitElement {
 
     .accordion__contentInner {
       padding: var(--fsds-accordion-spacing-paddingY, 8px);
-      color: var(--fsds-accordion-color-textSecondary, #555555);
+      color: var(--fsds-accordion-color-textSecondary, #5c5b5c);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
     }
@@ -431,19 +431,19 @@ export class AccordionTriggerElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-accordion-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-accordion-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-accordion-spacing-gap: var(--fsds-core-spacing-size-07, 24px);
       --fsds-accordion-spacing-paddingX: var(--fsds-core-spacing-size-00, 0px);
@@ -455,10 +455,10 @@ export class AccordionTriggerElement extends LitElement {
       --fsds-accordion-text-lineHeightContent: var(--fsds-semantic-typography-line-height-loose, 1.8);
       --fsds-accordion-icon-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-accordion-focus-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-accordion-focus-offset: var(--fsds-core-spacing-size-01, 1px);
       --fsds-accordion-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #555555);
+      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #5c5b5c);
     }
 
     .accordion {
@@ -475,7 +475,7 @@ export class AccordionTriggerElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-radius: var(--fsds-accordion-border-radius, 4px);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
@@ -483,7 +483,7 @@ export class AccordionTriggerElement extends LitElement {
 
     .accordion__item {
       background-color: transparent;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-accordion-border-radius, 4px);
@@ -511,13 +511,13 @@ export class AccordionTriggerElement extends LitElement {
     }
 
     .accordion__trigger:hover {
-      background-color: var(--fsds-accordion-color-background-hover, #efefef);
-      color: var(--fsds-accordion-color-textHover, #555555);
+      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
     .accordion__trigger:focus-visible {
       outline-width: var(--fsds-accordion-focus-width, 2px);
-      outline-color: var(--fsds-accordion-focus-color, #d9292b);
+      outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
       outline-style: solid;
     }
@@ -530,7 +530,7 @@ export class AccordionTriggerElement extends LitElement {
       align-items: center;
       justify-content: center;
       transition: transform 200ms ease;
-      color: var(--fsds-accordion-color-icon, #717171);
+      color: var(--fsds-accordion-color-icon, #727272);
     }
 
     .accordion__trigger[aria-expanded="true"] .accordion__chevron {
@@ -544,7 +544,7 @@ export class AccordionTriggerElement extends LitElement {
 
     .accordion__contentInner {
       padding: var(--fsds-accordion-spacing-paddingY, 8px);
-      color: var(--fsds-accordion-color-textSecondary, #555555);
+      color: var(--fsds-accordion-color-textSecondary, #5c5b5c);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
     }
@@ -619,19 +619,19 @@ export class AccordionContentElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-accordion-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-accordion-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-accordion-spacing-gap: var(--fsds-core-spacing-size-07, 24px);
       --fsds-accordion-spacing-paddingX: var(--fsds-core-spacing-size-00, 0px);
@@ -643,10 +643,10 @@ export class AccordionContentElement extends LitElement {
       --fsds-accordion-text-lineHeightContent: var(--fsds-semantic-typography-line-height-loose, 1.8);
       --fsds-accordion-icon-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-accordion-focus-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
-      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-accordion-focus-offset: var(--fsds-core-spacing-size-01, 1px);
       --fsds-accordion-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #555555);
+      --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #5c5b5c);
     }
 
     .accordion {
@@ -663,7 +663,7 @@ export class AccordionContentElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-radius: var(--fsds-accordion-border-radius, 4px);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
@@ -671,7 +671,7 @@ export class AccordionContentElement extends LitElement {
 
     .accordion__item {
       background-color: transparent;
-      border-color: var(--fsds-accordion-border-color, #fceaea);
+      border-color: var(--fsds-accordion-border-color, #b8b8b8);
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-accordion-border-radius, 4px);
@@ -699,13 +699,13 @@ export class AccordionContentElement extends LitElement {
     }
 
     .accordion__trigger:hover {
-      background-color: var(--fsds-accordion-color-background-hover, #efefef);
-      color: var(--fsds-accordion-color-textHover, #555555);
+      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
     .accordion__trigger:focus-visible {
       outline-width: var(--fsds-accordion-focus-width, 2px);
-      outline-color: var(--fsds-accordion-focus-color, #d9292b);
+      outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
       outline-style: solid;
     }
@@ -718,7 +718,7 @@ export class AccordionContentElement extends LitElement {
       align-items: center;
       justify-content: center;
       transition: transform 200ms ease;
-      color: var(--fsds-accordion-color-icon, #717171);
+      color: var(--fsds-accordion-color-icon, #727272);
     }
 
     .accordion__trigger[aria-expanded="true"] .accordion__chevron {
@@ -732,7 +732,7 @@ export class AccordionContentElement extends LitElement {
 
     .accordion__contentInner {
       padding: var(--fsds-accordion-spacing-paddingY, 8px);
-      color: var(--fsds-accordion-color-textSecondary, #555555);
+      color: var(--fsds-accordion-color-textSecondary, #5c5b5c);
       font-size: var(--fsds-accordion-text-sizeContent, 14px);
       line-height: var(--fsds-accordion-text-lineHeightContent, 1.8);
     }

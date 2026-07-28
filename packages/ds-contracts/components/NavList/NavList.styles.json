@@ -22,7 +22,7 @@
     },
     "gap": {
       "resolvesTo": "nav-list.size.gap.list",
-      "fallback": "2px"
+      "fallback": "1px"
     },
     "list-style": {
       "literal": "none",
@@ -52,11 +52,11 @@
     },
     "color": {
       "resolvesTo": "nav-list.color.foreground.default",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "padding-block": {
       "resolvesTo": "nav-list.size.padding.block",
-      "fallback": "4px"
+      "fallback": "2px"
     },
     "padding-inline": {
       "resolvesTo": "nav-list.size.padding.inline",
@@ -64,7 +64,7 @@
     },
     "border-radius": {
       "resolvesTo": "nav-list.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "transition-property": {
       "literal": "background-color, color",

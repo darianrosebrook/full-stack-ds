@@ -285,11 +285,11 @@ export class TextElement extends LitElement {
     }
 
     .text__error {
-      color: var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b);
+      color: var(--fsds-semantic-color-feedback-foreground-danger-default, #d92d2e);
     }
 
     .text__success {
-      color: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
+      color: var(--fsds-semantic-color-feedback-foreground-success-default, #497f21);
     }
   `;
 

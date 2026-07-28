@@ -32,15 +32,15 @@
     },
     "background-color": {
       "resolvesTo": "alert-notice.color.background.danger",
-      "fallback": "#fceaea"
+      "fallback": "#fac2c2"
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.danger",
-      "fallback": "#7b0000"
+      "fallback": "#900909"
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.danger",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     },
     "padding": {
       "resolvesTo": "alert-notice.size.padding",
@@ -48,7 +48,7 @@
     },
     "border-radius": {
       "resolvesTo": "alert-notice.size.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "gap": {
       "resolvesTo": "alert-notice.spacing.gap",
@@ -228,57 +228,57 @@
   ".alert-notice--info": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.info",
-      "fallback": "#d9f3fe"
+      "fallback": "#95dafb"
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.info",
-      "fallback": "#002d99"
+      "fallback": "#013ab0"
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.info",
-      "fallback": "#0042dc"
+      "fallback": "#034fd6"
     }
   },
   ".alert-notice--success": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.success",
-      "fallback": "#e4f2e0"
+      "fallback": "#b3dba7"
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.success",
-      "fallback": "#234104"
+      "fallback": "#2c4f09"
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.success",
-      "fallback": "#336006"
+      "fallback": "#3a6614"
     }
   },
   ".alert-notice--warning": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.warning",
-      "fallback": "#ffedcc"
+      "fallback": "#fdc67f"
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.warning",
-      "fallback": "#593000"
+      "fallback": "#6c3a00"
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.warning",
-      "fallback": "#824500"
+      "fallback": "#8b4b00"
     }
   },
   ".alert-notice--error": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.danger",
-      "fallback": "#fceaea"
+      "fallback": "#fac2c2"
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.danger",
-      "fallback": "#7b0000"
+      "fallback": "#900909"
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.danger",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   "--inline": {
@@ -340,19 +340,19 @@
     },
     "alert-notice.color.background.info": {
       "resolvesTo": "semantic.color.background.info.softer",
-      "fallback": "#eef7ff"
+      "fallback": "#cfeefe"
     },
     "alert-notice.color.background.success": {
       "resolvesTo": "semantic.color.background.success.softer",
-      "fallback": "#eef7ea"
+      "fallback": "#ddefd8"
     },
     "alert-notice.color.background.warning": {
       "resolvesTo": "semantic.color.background.warning.softer",
-      "fallback": "#fff4e0"
+      "fallback": "#ffe6c8"
     },
     "alert-notice.color.background.danger": {
       "resolvesTo": "semantic.color.background.danger.softer",
-      "fallback": "#fdf0f0"
+      "fallback": "#fee4e4"
     }
   }
 }

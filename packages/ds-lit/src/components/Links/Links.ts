@@ -36,18 +36,18 @@ export class LinksElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-link, #d9292b);
-      --fsds-links-color-foreground-hover: var(--fsds-semantic-color-foreground-linkHover, #ae0001);
-      --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-linkVisited, #9b0002);
-      --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-      --fsds-links-color-underline-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-link, #d92d2e);
+      --fsds-links-color-foreground-hover: var(--fsds-semantic-color-foreground-linkHover, #b31b1b);
+      --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-linkVisited, #e55b5a);
+      --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-links-color-underline-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-links-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-links-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-links-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-links-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-links-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-links-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-      --fsds-links-focus-ring-radius: var(--fsds-semantic-shape-radius-small, 2px);
+      --fsds-links-focus-ring-radius: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-links-size-fontSize-small: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
       --fsds-links-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);
@@ -77,9 +77,9 @@ export class LinksElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      color: var(--fsds-links-color-foreground-default, #d9292b);
+      color: var(--fsds-links-color-foreground-default, #d92d2e);
       font-size: var(--fsds-links-size-fontSize-medium, 1rem);
-      text-decoration-color: var(--fsds-links-color-underline-default, #fceaea);
+      text-decoration-color: var(--fsds-links-color-underline-default, #b8b8b8);
       text-decoration-line: underline;
       text-underline-offset: 2px;
       transition-property: color, text-decoration-color;
@@ -87,16 +87,16 @@ export class LinksElement extends LitElement {
       cursor: pointer;
 
       &:hover {
-        color: var(--fsds-links-color-foreground-hover, #ae0001);
-        text-decoration-color: var(--fsds-links-color-foreground-hover, #ae0001);
+        color: var(--fsds-links-color-foreground-hover, #b31b1b);
+        text-decoration-color: var(--fsds-links-color-foreground-hover, #b31b1b);
       }
 
       &:visited {
-        color: var(--fsds-links-color-foreground-visited, #9b0002);
+        color: var(--fsds-links-color-foreground-visited, #e55b5a);
       }
 
       &:disabled {
-        color: var(--fsds-links-color-foreground-disabled, #aeaeae);
+        color: var(--fsds-links-color-foreground-disabled, #727272);
         cursor: not-allowed;
         text-decoration-line: none;
         pointer-events: none;
@@ -104,10 +104,10 @@ export class LinksElement extends LitElement {
 
       &:focus-visible {
         outline-width: var(--fsds-links-focus-ring-width, 2px);
-        outline-color: var(--fsds-links-focus-ring-color, #0a65fe);
+        outline-color: var(--fsds-links-focus-ring-color, #0566fe);
         outline-style: var(--fsds-links-focus-ring-style, solid);
         outline-offset: var(--fsds-links-focus-ring-offset, 2px);
-        border-radius: var(--fsds-links-focus-ring-radius, 2px);
+        border-radius: var(--fsds-links-focus-ring-radius, 4px);
       }
     }
 

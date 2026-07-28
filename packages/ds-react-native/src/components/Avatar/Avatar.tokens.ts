@@ -123,7 +123,7 @@ export const avatarTokenScopes = {
       name: "avatar.color.background.default",
       cssVar: "--fsds-avatar-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "avatar.color.background.inverse": {
       name: "avatar.color.background.inverse",
@@ -141,7 +141,7 @@ export const avatarTokenScopes = {
       name: "avatar.color.border.default",
       cssVar: "--fsds-avatar-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "avatar.typography.fontWeight.medium": {
       name: "avatar.typography.fontWeight.medium",

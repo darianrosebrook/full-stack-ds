@@ -52,7 +52,7 @@ export class TabsElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -64,16 +64,16 @@ export class TabsElement extends LitElement {
       --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
       --fsds-tabs-size-vertical-listWidth: 160px;
     }
@@ -93,14 +93,14 @@ export class TabsElement extends LitElement {
       display: flex;
       flex-direction: column;
       padding: var(--fsds-tabs-spacing-padding, 8px);
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
       gap: var(--fsds-tabs-spacing-gap, 8px);
-      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -119,16 +119,16 @@ export class TabsElement extends LitElement {
 
     .tabs__tab:hover {
       color: var(--fsds-tabs-color-hover-fg, #141414);
-      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
+      background-color: var(--fsds-tabs-color-hover-bg, #b8b8b8);
     }
 
     .tabs__tab--active {
       color: var(--fsds-tabs-color-active-fg, #141414);
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
+      color: var(--fsds-tabs-color-disabled-fg, #727272);
       cursor: not-allowed;
     }
 
@@ -138,7 +138,7 @@ export class TabsElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator, #d9292b);
+      background-color: var(--fsds-tabs-color-indicator, #d92d2e);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
@@ -148,7 +148,7 @@ export class TabsElement extends LitElement {
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
@@ -158,7 +158,7 @@ export class TabsElement extends LitElement {
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
     .tabs--vertical .tabs__root {
@@ -168,7 +168,7 @@ export class TabsElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -190,12 +190,12 @@ export class TabsElement extends LitElement {
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
       padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
       color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
@@ -294,7 +294,7 @@ export class TabsListElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -306,16 +306,16 @@ export class TabsListElement extends LitElement {
       --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
       --fsds-tabs-size-vertical-listWidth: 160px;
     }
@@ -335,14 +335,14 @@ export class TabsListElement extends LitElement {
       display: flex;
       flex-direction: column;
       padding: var(--fsds-tabs-spacing-padding, 8px);
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
       gap: var(--fsds-tabs-spacing-gap, 8px);
-      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -361,16 +361,16 @@ export class TabsListElement extends LitElement {
 
     .tabs__tab:hover {
       color: var(--fsds-tabs-color-hover-fg, #141414);
-      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
+      background-color: var(--fsds-tabs-color-hover-bg, #b8b8b8);
     }
 
     .tabs__tab--active {
       color: var(--fsds-tabs-color-active-fg, #141414);
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
+      color: var(--fsds-tabs-color-disabled-fg, #727272);
       cursor: not-allowed;
     }
 
@@ -380,7 +380,7 @@ export class TabsListElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator, #d9292b);
+      background-color: var(--fsds-tabs-color-indicator, #d92d2e);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
@@ -390,7 +390,7 @@ export class TabsListElement extends LitElement {
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
@@ -400,7 +400,7 @@ export class TabsListElement extends LitElement {
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
     .tabs--vertical .tabs__root {
@@ -410,7 +410,7 @@ export class TabsListElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -432,12 +432,12 @@ export class TabsListElement extends LitElement {
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
       padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
       color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
@@ -521,7 +521,7 @@ export class TabsTabElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -533,16 +533,16 @@ export class TabsTabElement extends LitElement {
       --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
       --fsds-tabs-size-vertical-listWidth: 160px;
     }
@@ -562,14 +562,14 @@ export class TabsTabElement extends LitElement {
       display: flex;
       flex-direction: column;
       padding: var(--fsds-tabs-spacing-padding, 8px);
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
       gap: var(--fsds-tabs-spacing-gap, 8px);
-      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -588,16 +588,16 @@ export class TabsTabElement extends LitElement {
 
     .tabs__tab:hover {
       color: var(--fsds-tabs-color-hover-fg, #141414);
-      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
+      background-color: var(--fsds-tabs-color-hover-bg, #b8b8b8);
     }
 
     .tabs__tab--active {
       color: var(--fsds-tabs-color-active-fg, #141414);
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
+      color: var(--fsds-tabs-color-disabled-fg, #727272);
       cursor: not-allowed;
     }
 
@@ -607,7 +607,7 @@ export class TabsTabElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator, #d9292b);
+      background-color: var(--fsds-tabs-color-indicator, #d92d2e);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
@@ -617,7 +617,7 @@ export class TabsTabElement extends LitElement {
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
@@ -627,7 +627,7 @@ export class TabsTabElement extends LitElement {
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
     .tabs--vertical .tabs__root {
@@ -637,7 +637,7 @@ export class TabsTabElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -659,12 +659,12 @@ export class TabsTabElement extends LitElement {
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
       padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
       color: var(--fsds-tabs-color-active-fg, #141414);
     }
 
@@ -737,7 +737,7 @@ export class TabsPanelElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -749,16 +749,16 @@ export class TabsPanelElement extends LitElement {
       --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
       --fsds-tabs-size-vertical-listWidth: 160px;
     }
@@ -778,14 +778,14 @@ export class TabsPanelElement extends LitElement {
       display: flex;
       flex-direction: column;
       padding: var(--fsds-tabs-spacing-padding, 8px);
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
     }
 
     .tabs__list {
       display: flex;
       flex-direction: row;
       gap: var(--fsds-tabs-spacing-gap, 8px);
-      border-bottom-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: 1px;
       position: relative;
@@ -804,16 +804,16 @@ export class TabsPanelElement extends LitElement {
 
     .tabs__tab:hover {
       color: var(--fsds-tabs-color-hover-fg, #141414);
-      background-color: var(--fsds-tabs-color-hover-bg, #cecece);
+      background-color: var(--fsds-tabs-color-hover-bg, #b8b8b8);
     }
 
     .tabs__tab--active {
       color: var(--fsds-tabs-color-active-fg, #141414);
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
     }
 
     .tabs__tab:disabled {
-      color: var(--fsds-tabs-color-disabled-fg, #aeaeae);
+      color: var(--fsds-tabs-color-disabled-fg, #727272);
       cursor: not-allowed;
     }
 
@@ -823,7 +823,7 @@ export class TabsPanelElement extends LitElement {
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--fsds-tabs-color-indicator, #d9292b);
+      background-color: var(--fsds-tabs-color-indicator, #d92d2e);
       transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
     }
 
@@ -833,7 +833,7 @@ export class TabsPanelElement extends LitElement {
     }
 
     .tabs--underline .tabs__list {
-      border-bottom-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      border-bottom-color: var(--fsds-tabs-color-underline-active, #d92d2e);
       border-bottom-style: solid;
       border-bottom-width: var(--fsds-tabs-size-indicator-thickness, 2px);
     }
@@ -843,7 +843,7 @@ export class TabsPanelElement extends LitElement {
       bottom: -1px;
       left: 0;
       right: 0;
-      background-color: var(--fsds-tabs-color-underline-active, #d9292b);
+      background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
     .tabs--vertical .tabs__root {
@@ -853,7 +853,7 @@ export class TabsPanelElement extends LitElement {
     .tabs--vertical .tabs__list {
       flex-direction: column;
       border-bottom-width: 0;
-      border-inline-end-color: var(--fsds-tabs-color-indicator, #d9292b);
+      border-inline-end-color: var(--fsds-tabs-color-indicator, #d92d2e);
       border-inline-end-style: solid;
       border-inline-end-width: 1px;
       align-self: stretch;
@@ -875,12 +875,12 @@ export class TabsPanelElement extends LitElement {
     }
 
     .tabs--pills .tabs__tab {
-      border-radius: var(--fsds-tabs-shape-radius, 8px);
+      border-radius: var(--fsds-tabs-shape-radius, 6px);
       padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
-      background-color: var(--fsds-tabs-color-active-bg, #efefef);
+      background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
       color: var(--fsds-tabs-color-active-fg, #141414);
     }
 

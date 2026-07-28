@@ -186,7 +186,7 @@
           "--fsds-box-model-padding-inline": "0",
           "--fsds-box-model-padding-inline-start": "0",
           "--fsds-box-model-padding-inline-end": "0",
-          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 16px)",
           "--fsds-box-model-width": "auto",
           "--fsds-box-model-min-width": "0",
           "--fsds-box-model-max-width": "none",
@@ -194,25 +194,25 @@
           "--fsds-box-model-min-height": "0",
           "--fsds-box-model-max-height": "none",
           "--fsds-table-color-text": "var(--fsds-semantic-color-foreground-primary, #141414)",
-          "--fsds-table-color-textMuted": "var(--fsds-semantic-color-foreground-secondary, #555555)",
-          "--fsds-table-color-border": "var(--fsds-semantic-color-border-light, #fceaea)",
-          "--fsds-table-color-background-footer": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-table-color-textMuted": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)",
+          "--fsds-table-color-border": "var(--fsds-semantic-color-border-light, #b8b8b8)",
+          "--fsds-table-color-background-footer": "var(--fsds-semantic-color-background-secondary, #d0d0d0)",
           "--fsds-table-border-width": "var(--fsds-semantic-shape-control-border-defaultWidth, 1px)",
           "--fsds-table-spacing-cellX": "var(--fsds-core-spacing-size-03, 4px)",
           "--fsds-table-spacing-cellY": "var(--fsds-core-spacing-size-02, 2px)",
           "--fsds-table-spacing-caption": "var(--fsds-core-spacing-size-04, 8px)",
           "--fsds-table-spacing-sortGap": "var(--fsds-core-spacing-size-02, 2px)",
           "--fsds-table-size-cellHeight": "var(--fsds-semantic-control-size-md-height, 32px)",
-          "--fsds-table-size-radius": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-table-size-radius": "var(--fsds-semantic-shape-control-radius-default, 6px)",
           "--fsds-table-text-size": "var(--fsds-semantic-typography-body-03, 14px)",
           "--fsds-table-text-lineHeight": "var(--fsds-semantic-typography-line-height-normal, 1.5)",
           "--fsds-table-text-sizeCaption": "var(--fsds-semantic-typography-body-04, 12px)",
           "--fsds-table-text-weightHead": "var(--fsds-semantic-typography-font-weight-bold, 700)",
           "--fsds-table-text-weightFooter": "var(--fsds-semantic-typography-font-weight-medium, 500)",
-          "--fsds-table-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #efefef)",
-          "--fsds-table-color-background-selected": "var(--fsds-semantic-color-background-accent, #d9292b)",
+          "--fsds-table-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #d0d0d0)",
+          "--fsds-table-color-background-selected": "var(--fsds-semantic-color-background-accent, #d92d2e)",
           "--fsds-table-focus-width": "var(--fsds-semantic-shape-control-border-focusWidth, 2px)",
-          "--fsds-table-focus-color": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-table-focus-color": "var(--fsds-semantic-color-border-accent, #d92d2e)",
           "--fsds-table-focus-offset": "var(--fsds-core-spacing-size-01, 1px)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
@@ -235,9 +235,9 @@
         "selector": ".table__container",
         "declarations": {
           "border-collapse": "collapse",
-          "border-color": "var(--fsds-table-color-border, #fceaea)",
+          "border-color": "var(--fsds-table-color-border, #b8b8b8)",
           "border-width": "var(--fsds-table-border-width, 1px)",
-          "border-radius": "var(--fsds-table-size-radius, 8px)",
+          "border-radius": "var(--fsds-table-size-radius, 6px)",
           "width": "100%"
         }
       },
@@ -252,13 +252,13 @@
       {
         "selector": ".table__head",
         "declarations": {
-          "background-color": "var(--fsds-table-color-background-footer, #efefef)"
+          "background-color": "var(--fsds-table-color-background-footer, #d0d0d0)"
         }
       },
       {
         "selector": ".table__footer",
         "declarations": {
-          "background-color": "var(--fsds-table-color-background-footer, #efefef)",
+          "background-color": "var(--fsds-table-color-background-footer, #d0d0d0)",
           "font-weight": "var(--fsds-table-text-weightFooter, 500)"
         }
       },
@@ -272,7 +272,7 @@
           "padding-top": "var(--fsds-table-spacing-cellY, 2px)",
           "padding-bottom": "var(--fsds-table-spacing-cellY, 2px)",
           "border-bottom-width": "var(--fsds-table-border-width, 1px)",
-          "border-bottom-color": "var(--fsds-table-color-border, #fceaea)",
+          "border-bottom-color": "var(--fsds-table-color-border, #b8b8b8)",
           "border-bottom-style": "solid",
           "text-align": "start"
         }
@@ -285,20 +285,20 @@
           "padding-top": "var(--fsds-table-spacing-cellY, 2px)",
           "padding-bottom": "var(--fsds-table-spacing-cellY, 2px)",
           "border-bottom-width": "var(--fsds-table-border-width, 1px)",
-          "border-bottom-color": "var(--fsds-table-color-border, #fceaea)",
+          "border-bottom-color": "var(--fsds-table-color-border, #b8b8b8)",
           "border-bottom-style": "solid"
         }
       },
       {
         "selector": ".table:hover",
         "declarations": {
-          "background-color": "var(--fsds-table-color-background-hover, #efefef)"
+          "background-color": "var(--fsds-table-color-background-hover, #d0d0d0)"
         }
       },
       {
         "selector": ".table[aria-selected=\"true\"]",
         "declarations": {
-          "background-color": "var(--fsds-table-color-background-selected, #d9292b)"
+          "background-color": "var(--fsds-table-color-background-selected, #d92d2e)"
         }
       }
     ],

@@ -36,7 +36,7 @@
     },
     "background-color": {
       "resolvesTo": "avatar.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "avatar.color.foreground.primary",
@@ -44,7 +44,7 @@
     },
     "border-color": {
       "resolvesTo": "avatar.color.border.default",
-      "fallback": "#fceaea"
+      "fallback": "#b8b8b8"
     },
     "border-style": {
       "literal": "solid",

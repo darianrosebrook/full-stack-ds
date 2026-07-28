@@ -8,7 +8,7 @@
     },
     "background-color": {
       "resolvesTo": "skeleton.color.base",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
@@ -38,7 +38,7 @@
     },
     "background-color": {
       "resolvesTo": "skeleton.color.base",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
@@ -184,7 +184,7 @@
   "--wipe": {
     "skeleton.color.base": {
       "resolvesTo": "semantic.color.background.tertiary",
-      "fallback": "#e5e5e5"
+      "fallback": "#b8b8b8"
     },
     "overflow": {
       "literal": "hidden",

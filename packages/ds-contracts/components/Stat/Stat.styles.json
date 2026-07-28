@@ -35,19 +35,19 @@
   "--up": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.up",
-      "fallback": "#1f8a4c"
+      "fallback": "#497f21"
     }
   },
   "--down": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.down",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   "--neutral": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.neutral",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "--sm": {

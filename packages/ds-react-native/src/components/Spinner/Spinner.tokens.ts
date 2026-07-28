@@ -118,13 +118,13 @@ export const spinnerTokenScopes = {
       name: "spinner.color.accent",
       cssVar: "--fsds-spinner-color-accent",
       ref: "semantic.color.background.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "spinner.color.track": {
       name: "spinner.color.track",
       cssVar: "--fsds-spinner-color-track",
       ref: "semantic.color.border.subtle",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
     "spinner.anim.duration": {
       name: "spinner.anim.duration",

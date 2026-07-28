@@ -26,15 +26,15 @@
     },
     "border-color": {
       "resolvesTo": "input.color.border.default",
-      "fallback": "#aeaeae"
+      "fallback": "#a0a0a1"
     },
     "min-height": {
       "resolvesTo": "input.size.height.default",
-      "fallback": "36px"
+      "fallback": "32px"
     },
     "border-radius": {
       "resolvesTo": "input.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "font-size": {
       "resolvesTo": "input.typography.size.default",
@@ -46,11 +46,11 @@
     },
     "padding-block": {
       "resolvesTo": "input.size.padding-block.default",
-      "fallback": "8px"
+      "fallback": "4px"
     },
     "padding-inline": {
       "resolvesTo": "input.size.padding-inline.default",
-      "fallback": "12px"
+      "fallback": "8px"
     },
     "transition-property": {
       "literal": "background-color, border-color, color, outline-color",
@@ -70,19 +70,19 @@
   "::placeholder": {
     "color": {
       "resolvesTo": "input.color.text.placeholder",
-      "fallback": "#717171"
+      "fallback": "#888889"
     }
   },
   "hover": {
     "border-color": {
       "resolvesTo": "input.color.border.hover",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     }
   },
   "focus": {
     "border-color": {
       "resolvesTo": "input.color.focus.default",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     },
     "outline-width": {
       "resolvesTo": "input.focus.ring.width",
@@ -90,7 +90,7 @@
     },
     "outline-color": {
       "resolvesTo": "input.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "input.focus.ring.style",
@@ -104,13 +104,13 @@
   "--invalid": {
     "border-color": {
       "resolvesTo": "input.color.invalid.default",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   ".input--invalid:focus-visible": {
     "border-color": {
       "resolvesTo": "input.color.invalid.default",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     },
     "outline-color": {
       "resolvesTo": "semantic.focus.ring.intent.danger",
@@ -120,15 +120,15 @@
   "disabled": {
     "background-color": {
       "resolvesTo": "input.color.bg.disabled",
-      "fallback": "#efefef"
+      "fallback": "#b8b8b8"
     },
     "border-color": {
       "resolvesTo": "input.color.border.disabled",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     },
     "color": {
       "resolvesTo": "input.color.text.disabled",
-      "fallback": "#717171"
+      "fallback": "#727272"
     },
     "opacity": {
       "resolvesTo": "input.opacity.disabled",

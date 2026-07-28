@@ -1,7 +1,7 @@
 {
   "progress.color.text.default": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   },
   "progress.spacing.gap": {
@@ -16,27 +16,27 @@
   },
   "progress.color.track.background": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "progress.color.fill.info": {
     "resolvesTo": "semantic.color.status.info",
-    "fallback": "#0a65fe",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "progress.color.fill.success": {
     "resolvesTo": "semantic.color.status.success",
-    "fallback": "#487e1e",
+    "fallback": "#497f21",
     "layer": "semantic"
   },
   "progress.color.fill.warning": {
     "resolvesTo": "semantic.color.status.warning",
-    "fallback": "#ac5c00",
+    "fallback": "#ae5d00",
     "layer": "semantic"
   },
   "progress.color.fill.danger": {
     "resolvesTo": "semantic.color.status.danger",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   }
 }

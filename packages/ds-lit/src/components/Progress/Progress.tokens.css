@@ -14,14 +14,14 @@
   --fsds-box-model-height: 8px;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
-  --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
   --fsds-progress-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
   --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
-  --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
-  --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
-  --fsds-progress-color-fill-success: var(--fsds-semantic-color-status-success, #487e1e);
-  --fsds-progress-color-fill-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
-  --fsds-progress-color-fill-danger: var(--fsds-semantic-color-status-danger, #d9292b);
+  --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+  --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0566fe);
+  --fsds-progress-color-fill-success: var(--fsds-semantic-color-status-success, #497f21);
+  --fsds-progress-color-fill-warning: var(--fsds-semantic-color-status-warning, #ae5d00);
+  --fsds-progress-color-fill-danger: var(--fsds-semantic-color-status-danger, #d92d2e);
 }
 /* @generated:end */
 

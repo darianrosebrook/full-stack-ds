@@ -26,7 +26,7 @@
   },
   "code-block.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "code-block.color.foreground.primary": {
@@ -36,7 +36,7 @@
   },
   "code-block.color.border.default": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "code-block.size.padding.default": {
@@ -46,7 +46,7 @@
   },
   "code-block.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "code-block.size.border.default": {

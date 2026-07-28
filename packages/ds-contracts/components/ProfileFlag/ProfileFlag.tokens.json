@@ -6,7 +6,7 @@
   },
   "profile-flag.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "profile-flag.color.foreground.primary": {
@@ -16,7 +16,7 @@
   },
   "profile-flag.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "profile-flag.spacing.gap.default": {
@@ -36,7 +36,7 @@
   },
   "profile-flag.color.border.hover": {
     "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#8f8f8f",
+    "fallback": "#888889",
     "layer": "semantic"
   }
 }

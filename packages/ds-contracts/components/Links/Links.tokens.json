@@ -6,27 +6,27 @@
   },
   "links.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.link",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "links.color.foreground.hover": {
     "resolvesTo": "semantic.color.foreground.linkHover",
-    "fallback": "#ae0001",
+    "fallback": "#b31b1b",
     "layer": "semantic"
   },
   "links.color.foreground.visited": {
     "resolvesTo": "semantic.color.foreground.linkVisited",
-    "fallback": "#9b0002",
+    "fallback": "#e55b5a",
     "layer": "semantic"
   },
   "links.color.foreground.disabled": {
     "resolvesTo": "semantic.color.foreground.disabled",
-    "fallback": "#aeaeae",
+    "fallback": "#727272",
     "layer": "semantic"
   },
   "links.color.underline.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "links.spacing.gap.default": {
@@ -61,7 +61,7 @@
   },
   "links.focus.ring.radius": {
     "resolvesTo": "semantic.shape.radius.small",
-    "fallback": "2px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "links.size.fontSize.small": {

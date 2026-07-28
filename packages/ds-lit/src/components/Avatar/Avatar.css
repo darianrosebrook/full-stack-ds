@@ -21,9 +21,9 @@
   overflow: hidden;
   position: relative;
   border-radius: var(--fsds-avatar-size-radius-default, 9999px);
-  background-color: var(--fsds-avatar-color-background-default, #efefef);
+  background-color: var(--fsds-avatar-color-background-default, #d0d0d0);
   color: var(--fsds-avatar-color-foreground-primary, #141414);
-  border-color: var(--fsds-avatar-color-border-default, #fceaea);
+  border-color: var(--fsds-avatar-color-border-default, #b8b8b8);
   border-style: solid;
   border-width: var(--fsds-avatar-size-border-default, 1px);
   font-weight: var(--fsds-avatar-typography-fontWeight-medium, 500);

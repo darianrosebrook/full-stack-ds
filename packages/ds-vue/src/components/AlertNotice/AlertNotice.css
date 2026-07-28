@@ -18,11 +18,11 @@
   border-style: solid;
   border-width: 1px;
   box-sizing: border-box;
-  background-color: var(--fsds-alert-notice-color-background-danger, #fceaea);
-  color: var(--fsds-alert-notice-color-foreground-danger, #7b0000);
-  border-color: var(--fsds-alert-notice-color-border-danger, #ae0001);
+  background-color: var(--fsds-alert-notice-color-background-danger, #fac2c2);
+  color: var(--fsds-alert-notice-color-foreground-danger, #900909);
+  border-color: var(--fsds-alert-notice-color-border-danger, #b31b1b);
   padding: var(--fsds-alert-notice-size-padding, 16px);
-  border-radius: var(--fsds-alert-notice-size-radius, 8px);
+  border-radius: var(--fsds-alert-notice-size-radius, 6px);
   font-size: var(--fsds-alert-notice-text-size, 14px);
   font-weight: var(--fsds-alert-notice-text-weight, 400);
 }
@@ -72,27 +72,27 @@
 }
 
 .alert-notice--info {
-  background-color: var(--fsds-alert-notice-color-background-info, #d9f3fe);
-  color: var(--fsds-alert-notice-color-foreground-info, #002d99);
-  border-color: var(--fsds-alert-notice-color-border-info, #0042dc);
+  background-color: var(--fsds-alert-notice-color-background-info, #95dafb);
+  color: var(--fsds-alert-notice-color-foreground-info, #013ab0);
+  border-color: var(--fsds-alert-notice-color-border-info, #034fd6);
 }
 
 .alert-notice--success {
-  background-color: var(--fsds-alert-notice-color-background-success, #e4f2e0);
-  color: var(--fsds-alert-notice-color-foreground-success, #234104);
-  border-color: var(--fsds-alert-notice-color-border-success, #336006);
+  background-color: var(--fsds-alert-notice-color-background-success, #b3dba7);
+  color: var(--fsds-alert-notice-color-foreground-success, #2c4f09);
+  border-color: var(--fsds-alert-notice-color-border-success, #3a6614);
 }
 
 .alert-notice--warning {
-  background-color: var(--fsds-alert-notice-color-background-warning, #ffedcc);
-  color: var(--fsds-alert-notice-color-foreground-warning, #593000);
-  border-color: var(--fsds-alert-notice-color-border-warning, #824500);
+  background-color: var(--fsds-alert-notice-color-background-warning, #fdc67f);
+  color: var(--fsds-alert-notice-color-foreground-warning, #6c3a00);
+  border-color: var(--fsds-alert-notice-color-border-warning, #8b4b00);
 }
 
 .alert-notice--error {
-  background-color: var(--fsds-alert-notice-color-background-danger, #fceaea);
-  color: var(--fsds-alert-notice-color-foreground-danger, #7b0000);
-  border-color: var(--fsds-alert-notice-color-border-danger, #ae0001);
+  background-color: var(--fsds-alert-notice-color-background-danger, #fac2c2);
+  color: var(--fsds-alert-notice-color-foreground-danger, #900909);
+  border-color: var(--fsds-alert-notice-color-border-danger, #b31b1b);
 }
 /* @generated:end */
 

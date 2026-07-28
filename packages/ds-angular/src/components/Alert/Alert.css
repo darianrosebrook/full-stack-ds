@@ -19,12 +19,12 @@
   border-width: 1px;
   box-sizing: border-box;
   padding: var(--fsds-alert-size-padding, 16px);
-  border-radius: var(--fsds-alert-size-radius, 8px);
+  border-radius: var(--fsds-alert-size-radius, 6px);
   font-size: var(--fsds-alert-text-size, 14px);
   font-weight: var(--fsds-alert-text-weight, 400);
   background-color: var(--fsds-alert-color-background-primary, #ffffff);
   color: var(--fsds-alert-color-foreground-primary, #141414);
-  border-color: var(--fsds-alert-color-border-primary, #f29495);
+  border-color: var(--fsds-alert-color-border-primary, #a0a0a1);
 }
 
 .alert__icon {

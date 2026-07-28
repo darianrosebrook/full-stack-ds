@@ -35,13 +35,13 @@ export class ProfileFlagElement extends LitElement {
       --fsds-box-model-min-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-max-height: none;
       --fsds-profile-flag-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-profile-flag-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-profile-flag-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-profile-flag-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-profile-flag-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-profile-flag-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-profile-flag-spacing-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-profile-flag-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-profile-flag-spacing-padding-right: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-profile-flag-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
+      --fsds-profile-flag-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
     }
 
     .profile-flag {
@@ -61,13 +61,13 @@ export class ProfileFlagElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-profile-flag-color-background-default, #ffffff);
-      border-color: var(--fsds-profile-flag-color-border-default, #fceaea);
+      border-color: var(--fsds-profile-flag-color-border-default, #b8b8b8);
       color: var(--fsds-profile-flag-color-foreground-primary, #141414);
-      border-radius: var(--fsds-profile-flag-size-radius-default, 8px);
+      border-radius: var(--fsds-profile-flag-size-radius-default, 6px);
       padding: var(--fsds-profile-flag-spacing-padding-right, 16px);
 
       &:hover {
-        border-color: var(--fsds-profile-flag-color-border-hover, #8f8f8f);
+        border-color: var(--fsds-profile-flag-color-border-hover, #888889);
       }
     }
   `;

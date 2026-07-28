@@ -15,9 +15,9 @@
   max-height: var(--fsds-box-model-max-height);
   display: inline-flex;
   align-items: center;
-  background-color: var(--fsds-toggle-switch-color-background-default, #efefef);
+  background-color: var(--fsds-toggle-switch-color-background-default, #d0d0d0);
   color: var(--fsds-toggle-switch-color-foreground-default, #141414);
-  border-color: var(--fsds-toggle-switch-color-border-default, #fceaea);
+  border-color: var(--fsds-toggle-switch-color-border-default, #b8b8b8);
   border-radius: var(--fsds-toggle-switch-border-radius-default, 9999px);
   transition-duration: var(--fsds-toggle-switch-motion-duration-fast, 150ms);
   border-style: solid;
@@ -26,21 +26,21 @@
   box-sizing: border-box;
 
   &:hover {
-    background-color: var(--fsds-toggle-switch-color-background-hover, #efefef);
+    background-color: var(--fsds-toggle-switch-color-background-hover, #d0d0d0);
   }
 
   &[aria-checked="true"] {
-    background-color: var(--fsds-toggle-switch-color-background-checked, #d9292b);
+    background-color: var(--fsds-toggle-switch-color-background-checked, #0566fe);
   }
 
   &:disabled {
-    background-color: var(--fsds-toggle-switch-color-background-disabled, #cecece);
+    background-color: var(--fsds-toggle-switch-color-background-disabled, #d0d0d0);
     cursor: not-allowed;
   }
 
   &:focus-visible {
     outline-width: var(--fsds-toggle-switch-focus-ring-width, 2px);
-    outline-color: var(--fsds-toggle-switch-focus-ring-color, #0a65fe);
+    outline-color: var(--fsds-toggle-switch-focus-ring-color, #0566fe);
     outline-style: var(--fsds-toggle-switch-focus-ring-style, solid);
     outline-offset: var(--fsds-toggle-switch-focus-ring-offset, 2px);
   }

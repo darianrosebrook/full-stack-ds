@@ -48,7 +48,7 @@ export const sheetTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.surface.size.gap",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -97,7 +97,7 @@ export const sheetTokenScopes = {
       name: "sheet.color.border",
       cssVar: "--fsds-sheet-color-border",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "sheet.color.text": {
       name: "sheet.color.text",
@@ -115,7 +115,7 @@ export const sheetTokenScopes = {
       name: "sheet.color.textDescription",
       cssVar: "--fsds-sheet-color-textDescription",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "sheet.border.width": {
       name: "sheet.border.width",
@@ -127,7 +127,7 @@ export const sheetTokenScopes = {
       name: "sheet.border.radius",
       cssVar: "--fsds-sheet-border-radius",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "sheet.size.width": {
       name: "sheet.size.width",
@@ -191,13 +191,13 @@ export const sheetTokenScopes = {
       name: "sheet.focus.color",
       cssVar: "--fsds-sheet-focus-color",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "sheet.color.backgroundHover": {
       name: "sheet.color.backgroundHover",
       cssVar: "--fsds-sheet-color-backgroundHover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
   },
 } satisfies ComponentTokenScopes;

@@ -36,7 +36,7 @@
   width: 16px;
   height: 16px;
   border-radius: var(--fsds-checkbox-border-radius, 4px);
-  border-color: var(--fsds-checkbox-color-border-default, #aeaeae);
+  border-color: var(--fsds-checkbox-color-border-default, #a0a0a1);
   background-color: var(--fsds-checkbox-color-background-default, #ffffff);
   border-style: solid;
   border-width: var(--fsds-checkbox-border-width, 1px);
@@ -46,7 +46,7 @@
 
 :has(.checkbox__input:focus-visible) .checkbox__indicator {
   outline-width: var(--fsds-checkbox-focus-ring-width, 2px);
-  outline-color: var(--fsds-checkbox-focus-ring-color, #0a65fe);
+  outline-color: var(--fsds-checkbox-focus-ring-color, #0566fe);
   outline-style: var(--fsds-checkbox-focus-ring-style, solid);
   outline-offset: var(--fsds-checkbox-focus-ring-offset, 2px);
 }

@@ -22,7 +22,7 @@
     },
     "border-color": {
       "resolvesTo": "calendar.color.border.default",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "border-width": {
       "literal": "1px",
@@ -42,7 +42,7 @@
     },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "box-shadow": {
       "resolvesTo": "calendar.elevation.default",
@@ -130,7 +130,7 @@
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.muted",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "font-size": {
       "resolvesTo": "calendar.typography.caption.size",
@@ -146,7 +146,7 @@
   ".calendar__nav:hover": {
     "background-color": {
       "resolvesTo": "calendar.color.day.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary",
@@ -332,7 +332,7 @@
   ".calendar__day:hover": {
     "background-color": {
       "resolvesTo": "calendar.color.day.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   ".calendar__day:focus-visible": {
@@ -342,7 +342,7 @@
     },
     "outline-color": {
       "resolvesTo": "calendar.color.focus.ring",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     },
     "outline-offset": {
       "resolvesTo": "calendar.focus.ring.offset",
@@ -358,7 +358,7 @@
   ".calendar__cell[aria-selected=\"true\"] .calendar__day": {
     "background-color": {
       "resolvesTo": "calendar.color.day.selected.background",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "color": {
       "resolvesTo": "calendar.color.day.selected.foreground",

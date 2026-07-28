@@ -36,7 +36,7 @@
     },
     "border-radius": {
       "resolvesTo": "alert.size.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "gap": {
       "resolvesTo": "alert.spacing.gap",
@@ -60,7 +60,7 @@
     },
     "border-color": {
       "resolvesTo": "alert.color.border.primary",
-      "fallback": "#f29495"
+      "fallback": "#a0a0a1"
     }
   },
   "icon": {
@@ -228,57 +228,57 @@
   ".alert--info": {
     "alert.color.background.primary": {
       "resolvesTo": "semantic.color.background.info.subtle",
-      "fallback": "#d9f3fe"
+      "fallback": "#95dafb"
     },
     "alert.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.info.subtle",
-      "fallback": "#002d99"
+      "fallback": "#013ab0"
     },
     "alert.color.border.primary": {
       "resolvesTo": "semantic.color.border.info",
-      "fallback": "#0042dc"
+      "fallback": "#034fd6"
     }
   },
   ".alert--success": {
     "alert.color.background.primary": {
       "resolvesTo": "semantic.color.background.success.subtle",
-      "fallback": "#e4f2e0"
+      "fallback": "#b3dba7"
     },
     "alert.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.success.subtle",
-      "fallback": "#234104"
+      "fallback": "#2c4f09"
     },
     "alert.color.border.primary": {
       "resolvesTo": "semantic.color.border.success",
-      "fallback": "#336006"
+      "fallback": "#3a6614"
     }
   },
   ".alert--warning": {
     "alert.color.background.primary": {
       "resolvesTo": "semantic.color.background.warning.subtle",
-      "fallback": "#ffedcc"
+      "fallback": "#fdc67f"
     },
     "alert.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.warning.subtle",
-      "fallback": "#593000"
+      "fallback": "#6c3a00"
     },
     "alert.color.border.primary": {
       "resolvesTo": "semantic.color.border.warning",
-      "fallback": "#824500"
+      "fallback": "#8b4b00"
     }
   },
   ".alert--danger": {
     "alert.color.background.primary": {
       "resolvesTo": "semantic.color.background.danger.subtle",
-      "fallback": "#fceaea"
+      "fallback": "#fac2c2"
     },
     "alert.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.on.danger.subtle",
-      "fallback": "#7b0000"
+      "fallback": "#900909"
     },
     "alert.color.border.primary": {
       "resolvesTo": "semantic.color.border.danger",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   "--inline": {

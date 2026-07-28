@@ -48,7 +48,7 @@ export const postcardTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.surface.size.gap",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -91,19 +91,19 @@ export const postcardTokenScopes = {
       name: "postcard.color.background.hover",
       cssVar: "--fsds-postcard-color-background-hover",
       ref: "semantic.color.background.secondary",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "postcard.color.border.default": {
       name: "postcard.color.border.default",
       cssVar: "--fsds-postcard-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "postcard.color.border.hover": {
       name: "postcard.color.border.hover",
       cssVar: "--fsds-postcard-color-border-hover",
       ref: "semantic.color.border.bold",
-      fallback: "#8f8f8f",
+      fallback: "#888889",
     },
     "postcard.color.foreground.primary": {
       name: "postcard.color.foreground.primary",
@@ -121,7 +121,7 @@ export const postcardTokenScopes = {
       name: "postcard.size.radius.default",
       cssVar: "--fsds-postcard-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "postcard.size.radius.full": {
       name: "postcard.size.radius.full",
@@ -191,7 +191,7 @@ export const postcardTokenScopes = {
       name: "postcard.color.foreground.primary",
       cssVar: "--fsds-postcard-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
   },
   "part_timestamp": {
@@ -199,7 +199,7 @@ export const postcardTokenScopes = {
       name: "postcard.color.foreground.primary",
       cssVar: "--fsds-postcard-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
   },
   "part_stat": {
@@ -213,7 +213,7 @@ export const postcardTokenScopes = {
       name: "postcard.color.foreground.primary",
       cssVar: "--fsds-postcard-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
   },
 } satisfies ComponentTokenScopes;

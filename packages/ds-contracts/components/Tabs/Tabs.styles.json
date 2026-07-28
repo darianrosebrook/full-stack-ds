@@ -22,7 +22,7 @@
     },
     "border-radius": {
       "resolvesTo": "tabs.shape.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   "list": {
@@ -44,7 +44,7 @@
     },
     "border-bottom-color": {
       "resolvesTo": "tabs.color.indicator",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -118,7 +118,7 @@
     },
     "background-color": {
       "resolvesTo": "tabs.color.hover.bg",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     }
   },
   "tab--active": {
@@ -128,13 +128,13 @@
     },
     "background-color": {
       "resolvesTo": "tabs.color.active-bg",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   ".tabs__tab:disabled": {
     "color": {
       "resolvesTo": "tabs.color.disabled-fg",
-      "fallback": "#aeaeae"
+      "fallback": "#727272"
     },
     "cursor": {
       "literal": "not-allowed",
@@ -176,7 +176,7 @@
     },
     "background-color": {
       "resolvesTo": "tabs.color.indicator",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "transition": {
       "literal": "transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease",
@@ -200,7 +200,7 @@
   "--underline __list": {
     "border-bottom-color": {
       "resolvesTo": "tabs.color.underline.active",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "border-bottom-style": {
       "literal": "solid",
@@ -238,7 +238,7 @@
     },
     "background-color": {
       "resolvesTo": "tabs.color.underline.active",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   "--vertical __root": {
@@ -264,7 +264,7 @@
     },
     "border-inline-end-color": {
       "resolvesTo": "tabs.color.indicator",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "border-inline-end-style": {
       "literal": "solid",
@@ -342,7 +342,7 @@
   "--pills __tab": {
     "border-radius": {
       "resolvesTo": "tabs.shape.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "padding": {
       "resolvesTo": "tabs.spacing.pillPadding",
@@ -352,7 +352,7 @@
   "--pills __tab--active": {
     "background-color": {
       "resolvesTo": "tabs.color.active-bg",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "color": {
       "resolvesTo": "tabs.color.active-fg",

@@ -11,11 +11,12 @@
  * defect class as an absent field).
  */
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import type { ComponentContract } from "../contract.js";
 import {
   validateContractFallbackCompleteness,
-  collectFallbackDivergenceAdvisories,
+  validateContractFallbackStale,
+  _resetResolvedGraphCacheForTests,
 } from "./fallback-completeness.js";
 
 function base(extra: Partial<ComponentContract>): ComponentContract {
@@ -173,123 +174,220 @@ describe("validateContractFallbackCompleteness — detects missing fallback", ()
   });
 });
 
-describe("collectFallbackDivergenceAdvisories — corpus-wide divergence", () => {
-  /** Build a corpus map from named contracts for the divergence pass. */
-  function corpus(...named: [string, ComponentContract][]): Map<string, ComponentContract> {
-    return new Map(named);
+describe("validateContractFallbackStale — fallback must equal the graph value", () => {
+  afterEach(() => {
+    _resetResolvedGraphCacheForTests();
+  });
+
+  /** Install a fixture resolved-token graph in place of the on-disk one. */
+  function withGraph(graph: Record<string, unknown>): void {
+    _resetResolvedGraphCacheForTests(graph);
   }
 
-  it("returns no advisories when all contracts agree on a token's fallback", () => {
-    const a = base({
-      name: "Alpha",
-      tokens: { "alpha.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
+  it("passes when the fallback equals the graph value", () => {
+    withGraph({ semantic: { color: { bg: { $value: "#ffffff" } } } });
+    const contract = base({
+      tokens: { "test.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
     });
-    const b = base({
-      name: "Beta",
-      tokens: { "beta.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
-    });
-    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+    expect(validateContractFallbackStale(contract)).toEqual([]);
   });
 
-  it("emits an advisory when two contracts give the same token different fallbacks", () => {
-    const a = base({
-      name: "Alpha",
-      tokens: { "alpha.bg": { resolvesTo: "semantic.color.action.bg", fallback: "#0566fe" } },
+  it("reports a stale fallback and names the graph-derived correct literal", () => {
+    withGraph({
+      semantic: { color: { border: { accent: { $value: "#d92d2e" } } } },
     });
-    const b = base({
-      name: "Beta",
-      tokens: { "beta.bg": { resolvesTo: "semantic.color.action.bg", fallback: "#d9292b" } },
-    });
-    const advisories = collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]));
-    expect(advisories).toHaveLength(1);
-    expect(advisories[0]).toContain("[FALLBACK_DIVERGENT]");
-    expect(advisories[0]).toContain("semantic.color.action.bg");
-    expect(advisories[0]).toContain("#0566fe");
-    expect(advisories[0]).toContain("#d9292b");
-    expect(advisories[0]).toContain("Alpha");
-    expect(advisories[0]).toContain("Beta");
-  });
-
-  it("emits an advisory for intra-contract divergence (Button base vs --primary)", () => {
-    // The reviewer's case: one contract, base block + --primary variant,
-    // same token, two fallbacks.
-    const button = base({
-      name: "Button",
+    const contract = base({
       tokens: {
-        "button.color.background.default": {
-          resolvesTo: "semantic.color.action.background.primary.default",
-          fallback: "#d9292b",
+        "test.border": { resolvesTo: "semantic.color.border.accent", fallback: "#d9292b" },
+      },
+    });
+    const issues = validateContractFallbackStale(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]!.pointer).toBe("/tokens/test.border");
+    expect(issues[0]!.message).toContain("[FALLBACK_STALE]");
+    expect(issues[0]!.message).toContain("#d9292b"); // what was authored
+    expect(issues[0]!.message).toContain("#d92d2e"); // what it should be
+  });
+
+  it("detects a stale fallback in a styles variant block and points at it", () => {
+    withGraph({ semantic: { shape: { radius: { $value: "6px" } } } });
+    const contract = base({
+      styles: {
+        "--primary": {
+          "test.radius": { resolvesTo: "semantic.shape.radius", fallback: "8px" },
+        },
+      },
+    });
+    const issues = validateContractFallbackStale(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]!.pointer).toBe("/styles/--primary/test.radius");
+    expect(issues[0]!.message).toContain("6px");
+  });
+
+  it("fires on a MAJORITY-authored literal that disagrees with the graph", () => {
+    // Frequency is not evidence. Three sites agree on 8px; the graph says 6px;
+    // all three are stale. This pins the anti-vote rule that motivated the gate.
+    withGraph({ semantic: { shape: { radius: { $value: "6px" } } } });
+    const contract = base({
+      tokens: {
+        "test.a": { resolvesTo: "semantic.shape.radius", fallback: "8px" },
+        "test.b": { resolvesTo: "semantic.shape.radius", fallback: "8px" },
+        "test.c": { resolvesTo: "semantic.shape.radius", fallback: "8px" },
+      },
+    });
+    expect(validateContractFallbackStale(contract)).toHaveLength(3);
+  });
+
+  it("follows a component-layer slot chain to the terminal graph value", () => {
+    // styles → accordion.border.color (component layer, absent from the graph)
+    // → semantic.color.border.light → #b8b8b8.
+    withGraph({
+      semantic: { color: { border: { light: { $value: "#b8b8b8" } } } },
+    });
+    const contract = base({
+      tokens: {
+        "accordion.border.color": {
+          resolvesTo: "semantic.color.border.light",
+          fallback: "#b8b8b8",
         },
       },
       styles: {
-        "--primary": {
-          "button.color.background.default": {
-            resolvesTo: "semantic.color.action.background.primary.default",
-            fallback: "#0566fe",
-          },
+        root: {
+          "border-color": { resolvesTo: "accordion.border.color", fallback: "#fceaea" },
         },
       },
     });
-    const advisories = collectFallbackDivergenceAdvisories(corpus(["Button", button]));
-    expect(advisories).toHaveLength(1);
-    expect(advisories[0]).toContain("[FALLBACK_DIVERGENT]");
-    expect(advisories[0]).toContain("#d9292b");
-    expect(advisories[0]).toContain("#0566fe");
-    expect(advisories[0]).toContain("<root>"); // the base block site
-    expect(advisories[0]).toContain("--primary"); // the variant block site
+    const issues = validateContractFallbackStale(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]!.pointer).toBe("/styles/root/border-color");
+    expect(issues[0]!.message).toContain("#b8b8b8");
   });
 
-  it("canonicalizes unit-equivalent fallbacks (16px == 1rem) and does NOT fire", () => {
-    const a = base({
-      name: "Alpha",
-      tokens: { "alpha.size": { resolvesTo: "semantic.typography.body", fallback: "16px" } },
+  it("collapses a theme-mode object to its light value", () => {
+    withGraph({
+      semantic: {
+        color: { bg: { $value: { light: "#ffffff", dark: "#141414" } } },
+      },
     });
-    const b = base({
-      name: "Beta",
-      tokens: { "beta.size": { resolvesTo: "semantic.typography.body", fallback: "1rem" } },
+    const ok = base({
+      tokens: { "test.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
     });
-    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+    expect(validateContractFallbackStale(ok)).toEqual([]);
+
+    // The DARK value is not accepted — a static fallback encodes light only.
+    const dark = base({
+      tokens: { "test.bg": { resolvesTo: "semantic.color.bg", fallback: "#141414" } },
+    });
+    expect(validateContractFallbackStale(dark)).toHaveLength(1);
   });
 
-  it("canonicalizes unit-equivalent fallbacks (14px == 0.875rem) and does NOT fire", () => {
-    const a = base({
-      name: "Alpha",
-      tokens: { "alpha.size": { resolvesTo: "semantic.typography.caption", fallback: "14px" } },
+  it("treats rem and px as equal at the 16px root", () => {
+    withGraph({ semantic: { size: { $value: "16px" } } });
+    const contract = base({
+      tokens: { "test.size": { resolvesTo: "semantic.size", fallback: "1rem" } },
     });
-    const b = base({
-      name: "Beta",
-      tokens: { "beta.size": { resolvesTo: "semantic.typography.caption", fallback: "0.875rem" } },
-    });
-    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+    expect(validateContractFallbackStale(contract)).toEqual([]);
   });
 
-  it("lowercases hex before comparing so case drift does not false-fire", () => {
-    const a = base({
-      name: "Alpha",
-      tokens: { "alpha.bg": { resolvesTo: "semantic.color.bg", fallback: "#D9292B" } },
+  it("treats 3-digit and 6-digit hex as equal", () => {
+    withGraph({ semantic: { color: { bg: { $value: "#ffffff" } } } });
+    const contract = base({
+      tokens: { "test.bg": { resolvesTo: "semantic.color.bg", fallback: "#FFF" } },
     });
-    const b = base({
-      name: "Beta",
-      tokens: { "beta.bg": { resolvesTo: "semantic.color.bg", fallback: "#d9292b" } },
-    });
-    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+    expect(validateContractFallbackStale(contract)).toEqual([]);
   });
 
-  it("returns no advisories when allContracts is absent", () => {
-    expect(collectFallbackDivergenceAdvisories(undefined)).toEqual([]);
-    expect(collectFallbackDivergenceAdvisories(new Map())).toEqual([]);
+  it("ignores whitespace drift inside a multi-part shadow value", () => {
+    withGraph({
+      semantic: { elevation: { $value: "0 1px 2px rgba(0,0,0,0.1)" } },
+    });
+    const contract = base({
+      tokens: {
+        "test.shadow": {
+          resolvesTo: "semantic.elevation",
+          fallback: "0 1px 2px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    });
+    expect(validateContractFallbackStale(contract)).toEqual([]);
+  });
+
+  it("refuses to treat a serialized DTCG composite as a CSS literal", () => {
+    // resolved.tokens.json stores $type:shadow as a JSON string of the
+    // structured form, NOT as box-shadow CSS. Deriving a fallback from it
+    // writes a JSON blob into var(…, fallback) and breaks the CSS parse — the
+    // Lit template rail caught exactly this on Calendar. The gate must report
+    // nothing here rather than "repair" the fallback into garbage.
+    const composite =
+      '[{"offsetX":{"value":0,"unit":"px"},"offsetY":{"value":4,"unit":"px"},' +
+      '"blur":{"value":6,"unit":"px"},"color":{"colorSpace":"srgb",' +
+      '"components":[0,0,0],"alpha":0.05}}]';
+    withGraph({ semantic: { elevation: { overlay: { $value: composite } } } });
+    const contract = base({
+      tokens: {
+        "test.elevation": {
+          resolvesTo: "semantic.elevation.overlay",
+          fallback: "0 4px 6px rgba(0,0,0,0.05)",
+        },
+      },
+    });
+    expect(validateContractFallbackStale(contract)).toEqual([]);
+  });
+
+  it("still compares normally when a CSS literal merely starts with a brace-like char", () => {
+    // Guard the composite check against over-refusal: only values that PARSE
+    // as JSON objects/arrays are refused, not any string starting with '['.
+    withGraph({ semantic: { content: { marker: { $value: "[stale]" } } } });
+    const contract = base({
+      tokens: {
+        "test.marker": { resolvesTo: "semantic.content.marker", fallback: "[fresh]" },
+      },
+    });
+    expect(validateContractFallbackStale(contract)).toHaveLength(1);
+  });
+
+  it("skips a reading whose chain dead-ends rather than claiming it is wrong", () => {
+    withGraph({ semantic: { color: { bg: { $value: "#ffffff" } } } });
+    const contract = base({
+      tokens: {
+        "test.mystery": { resolvesTo: "semantic.color.doesNotExist", fallback: "#123456" },
+      },
+    });
+    expect(validateContractFallbackStale(contract)).toEqual([]);
+  });
+
+  it("terminates on a self-referential slot chain instead of recursing forever", () => {
+    withGraph({ semantic: { color: { bg: { $value: "#ffffff" } } } });
+    const contract = base({
+      tokens: {
+        "test.loop": { resolvesTo: "test.loop", fallback: "#000000" },
+      },
+    });
+    expect(validateContractFallbackStale(contract)).toEqual([]);
+  });
+
+  it("returns a loud instructional issue when the token graph is not built", () => {
+    _resetResolvedGraphCacheForTests("missing");
+    const contract = base({
+      tokens: { "test.bg": { resolvesTo: "semantic.color.bg", fallback: "#ffffff" } },
+    });
+    const issues = validateContractFallbackStale(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]!.message).toContain("token graph not built");
+    expect(issues[0]!.message).toContain("@full-stack-ds/tokens build");
+  });
+
+  it("does not consult the graph at all when there are no fallback readings", () => {
+    // An unbuilt graph must not fail a contract that declares no fallbacks.
+    _resetResolvedGraphCacheForTests("missing");
+    expect(validateContractFallbackStale(base({}))).toEqual([]);
   });
 
   it("ignores slots without fallbacks (the [FALLBACK_MISSING] gate owns those)", () => {
-    const a = base({
-      name: "Alpha",
-      tokens: { "alpha.bg": { resolvesTo: "semantic.color.bg", fallback: "#fff" } },
+    withGraph({ semantic: { color: { bg: { $value: "#ffffff" } } } });
+    const contract = base({
+      tokens: { "test.bg": { resolvesTo: "semantic.color.bg" } }, // no fallback
     });
-    const b = base({
-      name: "Beta",
-      tokens: { "beta.bg": { resolvesTo: "semantic.color.bg" } }, // no fallback
-    });
-    // Only one fallback-bearing reading for semantic.color.bg → no divergence.
-    expect(collectFallbackDivergenceAdvisories(corpus(["Alpha", a], ["Beta", b]))).toEqual([]);
+    expect(validateContractFallbackStale(contract)).toEqual([]);
   });
 });

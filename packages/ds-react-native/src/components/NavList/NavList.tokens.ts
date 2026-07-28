@@ -44,7 +44,7 @@ export const navListTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -80,7 +80,7 @@ export const navListTokenScopes = {
       name: "nav-list.color.foreground.default",
       cssVar: "--fsds-nav-list-color-foreground-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      fallback: "#5c5b5c",
     },
     "nav-list.color.foreground.hover": {
       name: "nav-list.color.foreground.hover",
@@ -104,7 +104,7 @@ export const navListTokenScopes = {
       name: "nav-list.color.background.hover",
       cssVar: "--fsds-nav-list-color-background-hover",
       ref: "semantic.color.background.subtle",
-      fallback: "#f5f5f5",
+      fallback: "#d0d0d0",
     },
     "nav-list.stateLayer.hover": {
       name: "nav-list.stateLayer.hover",
@@ -122,19 +122,19 @@ export const navListTokenScopes = {
       name: "nav-list.color.background.current",
       cssVar: "--fsds-nav-list-color-background-current",
       ref: "semantic.color.background.accentSubtle",
-      fallback: "#fceaea",
+      fallback: "#95dafb",
     },
     "nav-list.color.outline.focus": {
       name: "nav-list.color.outline.focus",
       cssVar: "--fsds-nav-list-color-outline-focus",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "nav-list.size.padding.block": {
       name: "nav-list.size.padding.block",
       cssVar: "--fsds-nav-list-size-padding-block",
       ref: "core.spacing.size.02",
-      fallback: 4,
+      fallback: 2,
     },
     "nav-list.size.padding.inline": {
       name: "nav-list.size.padding.inline",
@@ -146,13 +146,13 @@ export const navListTokenScopes = {
       name: "nav-list.size.radius.default",
       cssVar: "--fsds-nav-list-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "nav-list.size.gap.list": {
       name: "nav-list.size.gap.list",
       cssVar: "--fsds-nav-list-size-gap-list",
       ref: "core.spacing.size.01",
-      fallback: 2,
+      fallback: 1,
     },
     "nav-list.size.gap.group": {
       name: "nav-list.size.gap.group",
@@ -170,7 +170,7 @@ export const navListTokenScopes = {
       name: "nav-list.size.fontSize.groupLabel",
       cssVar: "--fsds-nav-list-size-fontSize-groupLabel",
       ref: "semantic.typography.caption.03",
-      fallback: 11,
+      fallback: 10,
     },
   },
 } satisfies ComponentTokenScopes;

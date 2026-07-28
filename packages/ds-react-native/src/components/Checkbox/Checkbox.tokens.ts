@@ -19,13 +19,13 @@ export const checkboxTokenScopes = {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
       ref: "semantic.input.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.input.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
@@ -36,13 +36,13 @@ export const checkboxTokenScopes = {
       name: "box-model.padding-inline-start",
       cssVar: "--fsds-box-model-padding-inline-start",
       ref: "semantic.input.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.padding-inline-end": {
       name: "box-model.padding-inline-end",
       cssVar: "--fsds-box-model-padding-inline-end",
       ref: "semantic.input.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.gap": {
       name: "box-model.gap",
@@ -74,7 +74,7 @@ export const checkboxTokenScopes = {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       ref: "semantic.input.size.medium.min-height",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-height": {
       name: "box-model.max-height",
@@ -91,7 +91,7 @@ export const checkboxTokenScopes = {
       name: "checkbox.color.border.default",
       cssVar: "--fsds-checkbox-color-border-default",
       ref: "semantic.color.border.default",
-      fallback: "#aeaeae",
+      fallback: "#a0a0a1",
     },
     "checkbox.border.width": {
       name: "checkbox.border.width",
@@ -141,7 +141,7 @@ export const checkboxTokenScopes = {
       name: "checkbox.color.border.default",
       cssVar: "--fsds-checkbox-color-border-default",
       ref: "semantic.color.border.hover",
-      fallback: "#f29495",
+      fallback: "#888889",
     },
   },
   "checked": {
@@ -157,7 +157,7 @@ export const checkboxTokenScopes = {
       name: "checkbox.color.background.default",
       cssVar: "--fsds-checkbox-color-background-default",
       ref: "semantic.color.background.disabled",
-      fallback: "#cecece",
+      fallback: "#d0d0d0",
     },
   },
 } satisfies ComponentTokenScopes;

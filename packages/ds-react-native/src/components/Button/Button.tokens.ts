@@ -19,13 +19,13 @@ export const buttonTokenScopes = {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
       ref: "semantic.action.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.action.size.medium.padding-block",
-      fallback: 8,
+      fallback: 4,
     },
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
@@ -36,13 +36,13 @@ export const buttonTokenScopes = {
       name: "box-model.padding-inline-start",
       cssVar: "--fsds-box-model-padding-inline-start",
       ref: "semantic.action.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.padding-inline-end": {
       name: "box-model.padding-inline-end",
       cssVar: "--fsds-box-model-padding-inline-end",
       ref: "semantic.action.size.medium.padding-inline",
-      fallback: 12,
+      fallback: 8,
     },
     "box-model.gap": {
       name: "box-model.gap",
@@ -59,7 +59,7 @@ export const buttonTokenScopes = {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.action.size.medium.min-width",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-width": {
       name: "box-model.max-width",
@@ -75,7 +75,7 @@ export const buttonTokenScopes = {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       ref: "semantic.action.size.medium.min-height",
-      fallback: 36,
+      fallback: 32,
     },
     "box-model.max-height": {
       name: "box-model.max-height",
@@ -92,13 +92,13 @@ export const buttonTokenScopes = {
       name: "button.color.background.hover",
       cssVar: "--fsds-button-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#efefef",
+      fallback: "#d0d0d0",
     },
     "button.color.background.active": {
       name: "button.color.background.active",
       cssVar: "--fsds-button-color-background-active",
       ref: "semantic.interaction.background.active",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
     "button.color.background.disabled": {
       name: "button.color.background.disabled",
@@ -116,19 +116,19 @@ export const buttonTokenScopes = {
       name: "button.color.foreground.disabled",
       cssVar: "--fsds-button-color-foreground-disabled",
       ref: "semantic.color.foreground.disabled",
-      fallback: "#aeaeae",
+      fallback: "#727272",
     },
     "button.color.border.default": {
       name: "button.color.border.default",
       cssVar: "--fsds-button-color-border-default",
       ref: "semantic.color.border.light",
-      fallback: "#fceaea",
+      fallback: "#b8b8b8",
     },
     "button.color.border.hover": {
       name: "button.color.border.hover",
       cssVar: "--fsds-button-color-border-hover",
       ref: "semantic.interaction.border.hover",
-      fallback: "#8f8f8f",
+      fallback: "#888889",
     },
     "button.color.border.focus": {
       name: "button.color.border.focus",
@@ -549,7 +549,7 @@ export const buttonTokenScopes = {
       name: "button.color.border.default",
       cssVar: "--fsds-button-color-border-default",
       ref: "semantic.color.border.default",
-      fallback: "#8f8f8f",
+      fallback: "#a0a0a1",
     },
   },
 } satisfies ComponentTokenScopes;

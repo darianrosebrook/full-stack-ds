@@ -38,10 +38,10 @@ export class ChipElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-default, #fafafa);
-      --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
-      --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
+      --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #d0d0d0);
+      --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #b8b8b8);
       --fsds-chip-color-foreground-default: var(--fsds-semantic-color-action-foreground-secondary-default, #141414);
-      --fsds-chip-color-border-default: var(--fsds-semantic-color-action-border-secondary-default, #aeaeae);
+      --fsds-chip-color-border-default: var(--fsds-semantic-color-action-border-secondary-default, #a0a0a1);
       --fsds-chip-size-padding-horizontal: var(--fsds-core-spacing-size-04, 8px);
       --fsds-chip-size-padding-vertical: var(--fsds-core-spacing-size-02, 2px);
       --fsds-chip-size-gap: var(--fsds-core-spacing-size-02, 2px);
@@ -54,11 +54,11 @@ export class ChipElement extends LitElement {
       --fsds-chip-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-chip-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-chip-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-      --fsds-chip-size-minHeight: var(--fsds-core-dimension-actionMinHeight, 32px);
-      --fsds-chip-color-background-selected: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-chip-color-foreground-selected: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-chip-color-border-selected: var(--fsds-semantic-color-border-info, #0042dc);
-      --fsds-chip-dismiss-size: var(--fsds-core-spacing-size-05, 16px);
+      --fsds-chip-size-minHeight: var(--fsds-core-dimension-actionMinHeight, 36px);
+      --fsds-chip-color-background-selected: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-chip-color-foreground-selected: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-chip-color-border-selected: var(--fsds-semantic-color-border-info, #034fd6);
+      --fsds-chip-dismiss-size: var(--fsds-core-spacing-size-05, 12px);
       --fsds-chip-dismiss-gap: var(--fsds-core-spacing-size-02, 2px);
     }
 
@@ -77,16 +77,16 @@ export class ChipElement extends LitElement {
       --fsds-box-model-padding-block-end: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-min-height: var(--fsds-chip-dismiss-size, 16px);
-      --fsds-box-model-min-width: var(--fsds-chip-dismiss-size, 16px);
-      --fsds-box-model-width: var(--fsds-chip-dismiss-size, 16px);
-      --fsds-box-model-height: var(--fsds-chip-dismiss-size, 16px);
+      --fsds-box-model-min-height: var(--fsds-chip-dismiss-size, 12px);
+      --fsds-box-model-min-width: var(--fsds-chip-dismiss-size, 12px);
+      --fsds-box-model-width: var(--fsds-chip-dismiss-size, 12px);
+      --fsds-box-model-height: var(--fsds-chip-dismiss-size, 12px);
     }
 
     .chip--selected {
-      --fsds-chip-color-background-default: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-      --fsds-chip-color-foreground-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-      --fsds-chip-color-border-default: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-chip-color-background-default: var(--fsds-semantic-color-background-info-subtle, #95dafb);
+      --fsds-chip-color-foreground-default: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
+      --fsds-chip-color-border-default: var(--fsds-semantic-color-border-info, #034fd6);
     }
 
     .chip--dismissible {
@@ -98,15 +98,15 @@ export class ChipElement extends LitElement {
       --fsds-chip-size-padding-horizontal: var(--fsds-semantic-glyph-badge-size-sm-paddingX, 4px);
       --fsds-chip-text-size: var(--fsds-semantic-glyph-badge-size-sm-fontSize, 10px);
       --fsds-chip-size-gap: var(--fsds-semantic-glyph-badge-size-sm-gap, 2px);
-      --fsds-chip-size-minHeight: var(--fsds-semantic-glyph-badge-size-sm-minHeight, 24px);
+      --fsds-chip-size-minHeight: var(--fsds-semantic-glyph-badge-size-sm-minHeight, 16px);
     }
 
     .chip--medium {
-      --fsds-chip-size-padding-vertical: var(--fsds-semantic-glyph-badge-size-md-paddingY, 4px);
+      --fsds-chip-size-padding-vertical: var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px);
       --fsds-chip-size-padding-horizontal: var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px);
       --fsds-chip-text-size: var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px);
       --fsds-chip-size-gap: var(--fsds-semantic-glyph-badge-size-md-gap, 4px);
-      --fsds-chip-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 32px);
+      --fsds-chip-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
     }
 
     .chip--large {
@@ -114,7 +114,7 @@ export class ChipElement extends LitElement {
       --fsds-chip-size-padding-horizontal: var(--fsds-semantic-glyph-badge-size-lg-paddingX, 12px);
       --fsds-chip-text-size: var(--fsds-semantic-glyph-badge-size-lg-fontSize, 14px);
       --fsds-chip-size-gap: var(--fsds-semantic-glyph-badge-size-lg-gap, 4px);
-      --fsds-chip-size-minHeight: var(--fsds-semantic-glyph-badge-size-lg-minHeight, 40px);
+      --fsds-chip-size-minHeight: var(--fsds-semantic-glyph-badge-size-lg-minHeight, 32px);
     }
 
     .chip {
@@ -127,7 +127,7 @@ export class ChipElement extends LitElement {
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
-      min-height: var(--fsds-chip-size-minHeight, 32px);
+      min-height: var(--fsds-chip-size-minHeight, 36px);
       max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
@@ -137,7 +137,7 @@ export class ChipElement extends LitElement {
       user-select: none;
       background-color: var(--fsds-chip-color-background-default, #fafafa);
       color: var(--fsds-chip-color-foreground-default, #141414);
-      border-color: var(--fsds-chip-color-border-default, #aeaeae);
+      border-color: var(--fsds-chip-color-border-default, #a0a0a1);
       border-width: var(--fsds-chip-size-border, 1px);
       padding-block: var(--fsds-chip-size-padding-vertical, 2px);
       padding-inline: var(--fsds-chip-size-padding-horizontal, 8px);
@@ -147,7 +147,7 @@ export class ChipElement extends LitElement {
       transition-duration: var(--fsds-chip-motion-duration-fast, 150ms);
 
       &:hover {
-        background-color: var(--fsds-chip-color-background-hover, #efefef);
+        background-color: var(--fsds-chip-color-background-hover, #d0d0d0);
       }
     }
 

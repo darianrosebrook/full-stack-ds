@@ -1,22 +1,22 @@
 {
   "box-model.padding-block-start": {
     "resolvesTo": "semantic.input.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-block-end": {
     "resolvesTo": "semantic.input.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "box-model.padding-inline-start": {
     "resolvesTo": "semantic.input.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.padding-inline-end": {
     "resolvesTo": "semantic.input.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.gap": {
@@ -26,7 +26,7 @@
   },
   "box-model.min-height": {
     "resolvesTo": "semantic.input.size.medium.min-height",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "input.color.bg.default": {
@@ -36,7 +36,7 @@
   },
   "input.color.bg.disabled": {
     "resolvesTo": "semantic.interaction.background.disabled",
-    "fallback": "#efefef",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "input.color.text.default": {
@@ -46,47 +46,47 @@
   },
   "input.color.text.placeholder": {
     "resolvesTo": "semantic.color.foreground.placeholder",
-    "fallback": "#717171",
+    "fallback": "#888889",
     "layer": "semantic"
   },
   "input.color.text.disabled": {
     "resolvesTo": "semantic.color.foreground.disabled",
-    "fallback": "#717171",
+    "fallback": "#727272",
     "layer": "semantic"
   },
   "input.color.border.default": {
     "resolvesTo": "semantic.color.border.default",
-    "fallback": "#aeaeae",
+    "fallback": "#a0a0a1",
     "layer": "semantic"
   },
   "input.color.border.hover": {
     "resolvesTo": "semantic.color.border.hover",
-    "fallback": "#8f8f8f",
+    "fallback": "#888889",
     "layer": "semantic"
   },
   "input.color.border.disabled": {
     "resolvesTo": "semantic.color.border.disabled",
-    "fallback": "#cecece",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "input.size.height.default": {
     "resolvesTo": "semantic.input.size.medium.min-height",
-    "fallback": "36px",
+    "fallback": "32px",
     "layer": "semantic"
   },
   "input.size.padding-block.default": {
     "resolvesTo": "semantic.input.size.medium.padding-block",
-    "fallback": "8px",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "input.size.padding-inline.default": {
     "resolvesTo": "semantic.input.size.medium.padding-inline",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "input.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "input.size.border.default": {
@@ -101,12 +101,12 @@
   },
   "input.color.focus.default": {
     "resolvesTo": "semantic.color.border.focus",
-    "fallback": "#d9292b",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "input.color.invalid.default": {
     "resolvesTo": "semantic.color.border.danger",
-    "fallback": "#ae0001",
+    "fallback": "#b31b1b",
     "layer": "semantic"
   },
   "input.typography.size.default": {

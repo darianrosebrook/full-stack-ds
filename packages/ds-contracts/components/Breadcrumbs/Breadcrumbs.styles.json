@@ -6,7 +6,7 @@
     },
     "border-color": {
       "resolvesTo": "breadcrumbs.color.border.subtle",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "line-height": {
       "resolvesTo": "breadcrumbs.typography.lineHeight.collapse",
@@ -20,7 +20,7 @@
     },
     "border-radius": {
       "resolvesTo": "breadcrumbs.shape.radius.medium",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "padding": {
       "resolvesTo": "breadcrumbs.spacing.padding.default",
@@ -34,7 +34,7 @@
   "focus": {
     "outline-color": {
       "resolvesTo": "breadcrumbs.color.focus",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   "list": {

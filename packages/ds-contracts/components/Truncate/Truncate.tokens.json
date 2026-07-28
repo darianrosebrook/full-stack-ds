@@ -6,7 +6,7 @@
   },
   "truncate.color.foreground.link": {
     "resolvesTo": "semantic.color.foreground.link",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "truncate.color.background.primary": {
@@ -26,7 +26,7 @@
   },
   "truncate.color.foreground.linkHover": {
     "resolvesTo": "semantic.color.foreground.linkHover",
-    "fallback": "#ae0001",
+    "fallback": "#b31b1b",
     "layer": "semantic"
   }
 }

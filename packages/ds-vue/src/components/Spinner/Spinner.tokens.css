@@ -21,8 +21,8 @@
   --fsds-spinner-thickness-hairline: 2px;
   --fsds-spinner-thickness-regular: 3px;
   --fsds-spinner-thickness-bold: 4px;
-  --fsds-spinner-color-accent: var(--fsds-semantic-color-background-accent, #d9292b);
-  --fsds-spinner-color-track: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-spinner-color-accent: var(--fsds-semantic-color-background-accent, #d92d2e);
+  --fsds-spinner-color-track: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-spinner-anim-duration: 800ms;
 }
 /* @generated:end */

@@ -28,7 +28,7 @@ export class CalendarElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -37,19 +37,19 @@ export class CalendarElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
-      --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-calendar-color-day-selected-foreground: var(--fsds-semantic-color-foreground-inverse, #fafafa);
-      --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
-      --fsds-calendar-color-today-ring: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
+      --fsds-calendar-color-today-ring: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-calendar-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-calendar-size-cell: var(--fsds-core-spacing-size-08, 32px);
       --fsds-calendar-size-nav: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-calendar-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-calendar-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-calendar-size-radius-day: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-calendar-typography-caption-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-calendar-typography-day-size: var(--fsds-semantic-typography-body-03, 14px);
@@ -75,11 +75,11 @@ export class CalendarElement extends LitElement {
       box-sizing: border-box;
       background-color: var(--fsds-calendar-color-background-default, #ffffff);
       color: var(--fsds-calendar-color-foreground-primary, #141414);
-      border-color: var(--fsds-calendar-color-border-default, #cecece);
+      border-color: var(--fsds-calendar-color-border-default, #d0d0d0);
       border-width: 1px;
       border-style: solid;
       padding: var(--fsds-calendar-size-padding-default, 16px);
-      border-radius: var(--fsds-calendar-size-radius-default, 8px);
+      border-radius: var(--fsds-calendar-size-radius-default, 6px);
       box-shadow: var(--fsds-calendar-elevation-default, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
     }
 
@@ -101,13 +101,13 @@ export class CalendarElement extends LitElement {
       border: none;
       border-radius: var(--fsds-calendar-size-radius-day, 4px);
       cursor: pointer;
-      color: var(--fsds-calendar-color-foreground-muted, #555555);
+      color: var(--fsds-calendar-color-foreground-muted, #5c5b5c);
       font-size: var(--fsds-calendar-typography-caption-size, 16px);
       line-height: 1;
     }
 
     .calendar__nav:hover {
-      background-color: var(--fsds-calendar-color-day-hover, #efefef);
+      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
       color: var(--fsds-calendar-color-foreground-primary, #141414);
     }
 
@@ -159,18 +159,18 @@ export class CalendarElement extends LitElement {
     }
 
     .calendar__day:hover {
-      background-color: var(--fsds-calendar-color-day-hover, #efefef);
+      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
     }
 
     .calendar__day:focus-visible {
       outline-width: var(--fsds-calendar-focus-ring-width, 2px);
-      outline-color: var(--fsds-calendar-color-focus-ring, #d9292b);
+      outline-color: var(--fsds-calendar-color-focus-ring, #0566fe);
       outline-offset: var(--fsds-calendar-focus-ring-offset, 2px);
       outline-style: solid;
     }
 
     .calendar__cell[aria-selected="true"] .calendar__day {
-      background-color: var(--fsds-calendar-color-day-selected-background, #d9292b);
+      background-color: var(--fsds-calendar-color-day-selected-background, #d92d2e);
       color: var(--fsds-calendar-color-day-selected-foreground, #fafafa);
       font-weight: 600;
     }
@@ -247,7 +247,7 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -256,19 +256,19 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
-      --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-calendar-color-day-selected-foreground: var(--fsds-semantic-color-foreground-inverse, #fafafa);
-      --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
-      --fsds-calendar-color-today-ring: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
+      --fsds-calendar-color-today-ring: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-calendar-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-calendar-size-cell: var(--fsds-core-spacing-size-08, 32px);
       --fsds-calendar-size-nav: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-calendar-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-calendar-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-calendar-size-radius-day: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-calendar-typography-caption-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-calendar-typography-day-size: var(--fsds-semantic-typography-body-03, 14px);
@@ -294,11 +294,11 @@ export class CalendarHeaderElement extends LitElement {
       box-sizing: border-box;
       background-color: var(--fsds-calendar-color-background-default, #ffffff);
       color: var(--fsds-calendar-color-foreground-primary, #141414);
-      border-color: var(--fsds-calendar-color-border-default, #cecece);
+      border-color: var(--fsds-calendar-color-border-default, #d0d0d0);
       border-width: 1px;
       border-style: solid;
       padding: var(--fsds-calendar-size-padding-default, 16px);
-      border-radius: var(--fsds-calendar-size-radius-default, 8px);
+      border-radius: var(--fsds-calendar-size-radius-default, 6px);
       box-shadow: var(--fsds-calendar-elevation-default, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
     }
 
@@ -320,13 +320,13 @@ export class CalendarHeaderElement extends LitElement {
       border: none;
       border-radius: var(--fsds-calendar-size-radius-day, 4px);
       cursor: pointer;
-      color: var(--fsds-calendar-color-foreground-muted, #555555);
+      color: var(--fsds-calendar-color-foreground-muted, #5c5b5c);
       font-size: var(--fsds-calendar-typography-caption-size, 16px);
       line-height: 1;
     }
 
     .calendar__nav:hover {
-      background-color: var(--fsds-calendar-color-day-hover, #efefef);
+      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
       color: var(--fsds-calendar-color-foreground-primary, #141414);
     }
 
@@ -378,18 +378,18 @@ export class CalendarHeaderElement extends LitElement {
     }
 
     .calendar__day:hover {
-      background-color: var(--fsds-calendar-color-day-hover, #efefef);
+      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
     }
 
     .calendar__day:focus-visible {
       outline-width: var(--fsds-calendar-focus-ring-width, 2px);
-      outline-color: var(--fsds-calendar-color-focus-ring, #d9292b);
+      outline-color: var(--fsds-calendar-color-focus-ring, #0566fe);
       outline-offset: var(--fsds-calendar-focus-ring-offset, 2px);
       outline-style: solid;
     }
 
     .calendar__cell[aria-selected="true"] .calendar__day {
-      background-color: var(--fsds-calendar-color-day-selected-background, #d9292b);
+      background-color: var(--fsds-calendar-color-day-selected-background, #d92d2e);
       color: var(--fsds-calendar-color-day-selected-foreground, #fafafa);
       font-weight: 600;
     }

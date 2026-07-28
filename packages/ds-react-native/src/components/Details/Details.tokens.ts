@@ -44,7 +44,7 @@ export const detailsTokenScopes = {
       name: "box-model.gap",
       cssVar: "--fsds-box-model-gap",
       ref: "semantic.structure.size.gap",
-      fallback: 8,
+      fallback: 16,
     },
     "box-model.width": {
       name: "box-model.width",
@@ -86,7 +86,7 @@ export const detailsTokenScopes = {
       name: "details.size.radius.default",
       cssVar: "--fsds-details-size-radius-default",
       ref: "semantic.shape.control.radius.default",
-      fallback: 8,
+      fallback: 6,
     },
     "details.size.icon": {
       name: "details.size.icon",
@@ -104,7 +104,7 @@ export const detailsTokenScopes = {
       name: "details.color.background.hover",
       cssVar: "--fsds-details-color-background-hover",
       ref: "semantic.color.background.hover",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
     "details.color.foreground.primary": {
       name: "details.color.foreground.primary",
@@ -116,13 +116,13 @@ export const detailsTokenScopes = {
       name: "details.color.border.default",
       cssVar: "--fsds-details-color-border-default",
       ref: "semantic.color.border.primary",
-      fallback: "#f29495",
+      fallback: "#a0a0a1",
     },
     "details.color.border.hover": {
       name: "details.color.border.hover",
       cssVar: "--fsds-details-color-border-hover",
       ref: "semantic.color.border.bold",
-      fallback: "#8f8f8f",
+      fallback: "#888889",
     },
     "details.focus.ring.width": {
       name: "details.focus.ring.width",
@@ -134,7 +134,7 @@ export const detailsTokenScopes = {
       name: "details.focus.ring.color",
       cssVar: "--fsds-details-focus-ring-color",
       ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      fallback: "#d92d2e",
     },
     "details.focus.ring.offset": {
       name: "details.focus.ring.offset",
@@ -190,7 +190,7 @@ export const detailsTokenScopes = {
       name: "details.color.background.default",
       cssVar: "--fsds-details-color-background-default",
       ref: "semantic.color.background.hover",
-      fallback: "#cecece",
+      fallback: "#b8b8b8",
     },
   },
   "variant_compact": {
@@ -218,13 +218,13 @@ export const detailsTokenScopes = {
       name: "details.color.background.default",
       cssVar: "--fsds-details-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#f5f5f5",
+      fallback: "#d0d0d0",
     },
     "details.color.border.default": {
       name: "details.color.border.default",
       cssVar: "--fsds-details-color-border-default",
       ref: "semantic.color.border.subtle",
-      fallback: "#e0e0e0",
+      fallback: "#d0d0d0",
     },
   },
 } satisfies ComponentTokenScopes;

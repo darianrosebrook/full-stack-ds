@@ -30,12 +30,12 @@
   },
   "spinner.color.accent": {
     "resolvesTo": "semantic.color.background.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "spinner.color.track": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "spinner.anim.duration": {

@@ -14,9 +14,9 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   padding: var(--fsds-popover-size-padding-default, 16px);
-  border-radius: var(--fsds-popover-size-radius-default, 8px);
-  background-color: var(--fsds-popover-color-background-content, #efefef);
-  border-color: var(--fsds-popover-color-border-accent, #d9292b);
+  border-radius: var(--fsds-popover-size-radius-default, 6px);
+  background-color: var(--fsds-popover-color-background-content, #d0d0d0);
+  border-color: var(--fsds-popover-color-border-accent, #d92d2e);
   box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
   position: relative;
   display: inline-block;
@@ -29,9 +29,9 @@
 }
 
 [data-popover-content] {
-  background-color: var(--fsds-popover-color-background-content, #efefef);
-  border-color: var(--fsds-popover-color-border-accent, #d9292b);
-  border-radius: var(--fsds-popover-size-radius-default, 8px);
+  background-color: var(--fsds-popover-color-background-content, #d0d0d0);
+  border-color: var(--fsds-popover-color-border-accent, #d92d2e);
+  border-radius: var(--fsds-popover-size-radius-default, 6px);
   padding: var(--fsds-popover-size-padding-default, 16px);
   gap: var(--fsds-popover-size-gap-default, 8px);
   box-shadow: var(--fsds-popover-elevation-default, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));

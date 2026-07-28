@@ -34,7 +34,7 @@
   flex-direction: column;
   background-color: var(--fsds-dialog-color-background-default, #ffffff);
   color: var(--fsds-dialog-color-foreground-default, #141414);
-  border-color: var(--fsds-dialog-color-border-default, #cecece);
+  border-color: var(--fsds-dialog-color-border-default, #d0d0d0);
   border-style: solid;
   border-width: 1px;
   border-radius: var(--fsds-dialog-size-radius-default, 16px);
@@ -54,7 +54,7 @@
   padding-right: var(--fsds-dialog-spacing-body-paddingRight, 24px);
   padding-bottom: var(--fsds-dialog-spacing-header-paddingTop, 16px);
   padding-left: var(--fsds-dialog-spacing-body-paddingRight, 24px);
-  border-bottom-color: var(--fsds-dialog-color-border-default, #cecece);
+  border-bottom-color: var(--fsds-dialog-color-border-default, #d0d0d0);
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
@@ -85,7 +85,7 @@
   padding-right: var(--fsds-dialog-spacing-body-paddingRight, 24px);
   padding-bottom: var(--fsds-dialog-spacing-header-paddingTop, 16px);
   padding-left: var(--fsds-dialog-spacing-body-paddingRight, 24px);
-  border-top-color: var(--fsds-dialog-color-border-default, #cecece);
+  border-top-color: var(--fsds-dialog-color-border-default, #d0d0d0);
   border-top-style: solid;
   border-top-width: 1px;
 }

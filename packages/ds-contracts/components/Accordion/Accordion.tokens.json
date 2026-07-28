@@ -1,12 +1,12 @@
 {
   "box-model.gap": {
     "resolvesTo": "semantic.structure.size.gap",
-    "fallback": "8px",
+    "fallback": "16px",
     "layer": "semantic"
   },
   "accordion.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "accordion.color.text": {
@@ -16,12 +16,12 @@
   },
   "accordion.color.textSecondary": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   },
   "accordion.color.icon": {
     "resolvesTo": "semantic.color.foreground.tertiary",
-    "fallback": "#717171",
+    "fallback": "#727272",
     "layer": "semantic"
   },
   "accordion.border.width": {
@@ -31,7 +31,7 @@
   },
   "accordion.border.color": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "accordion.border.radius": {
@@ -91,7 +91,7 @@
   },
   "accordion.focus.color": {
     "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "accordion.focus.offset": {
@@ -106,7 +106,7 @@
   },
   "accordion.color.textHover": {
     "resolvesTo": "semantic.interaction.text.hover",
-    "fallback": "#555555",
+    "fallback": "#5c5b5c",
     "layer": "semantic"
   }
 }

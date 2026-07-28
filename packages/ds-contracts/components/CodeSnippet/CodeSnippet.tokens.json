@@ -26,7 +26,7 @@
   },
   "code-snippet.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "code-snippet.color.foreground.primary": {
@@ -36,7 +36,7 @@
   },
   "code-snippet.color.border.default": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "code-snippet.size.padding.inline": {
@@ -51,12 +51,7 @@
   },
   "code-snippet.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
-    "layer": "semantic"
-  },
-  "code-snippet.size.border.default": {
-    "resolvesTo": "semantic.shape.control.border.defaultWidth",
-    "fallback": "1px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "code-snippet.size.border.default": {

@@ -46,7 +46,7 @@ export class TooltipElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -55,7 +55,7 @@ export class TooltipElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
-      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tooltip-size-radius-default: var(--fsds-semantic-shape-radius-small, 4px);
@@ -87,7 +87,7 @@ export class TooltipElement extends LitElement {
     .tooltip__content {
       background-color: var(--fsds-tooltip-color-background-default, #141414);
       color: var(--fsds-tooltip-color-foreground-default, #fafafa);
-      border-color: var(--fsds-tooltip-color-border-default, #cecece);
+      border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
       border-radius: var(--fsds-tooltip-size-radius-default, 4px);
       padding: var(--fsds-tooltip-size-padding-x, 8px);
       max-width: var(--fsds-tooltip-size-maxWidth, 200px);
@@ -214,7 +214,7 @@ export class TooltipTriggerElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -223,7 +223,7 @@ export class TooltipTriggerElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
-      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tooltip-size-radius-default: var(--fsds-semantic-shape-radius-small, 4px);
@@ -255,7 +255,7 @@ export class TooltipTriggerElement extends LitElement {
     .tooltip__content {
       background-color: var(--fsds-tooltip-color-background-default, #141414);
       color: var(--fsds-tooltip-color-foreground-default, #fafafa);
-      border-color: var(--fsds-tooltip-color-border-default, #cecece);
+      border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
       border-radius: var(--fsds-tooltip-size-radius-default, 4px);
       padding: var(--fsds-tooltip-size-padding-x, 8px);
       max-width: var(--fsds-tooltip-size-maxWidth, 200px);
@@ -358,7 +358,7 @@ export class TooltipContentElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
@@ -367,7 +367,7 @@ export class TooltipContentElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
-      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tooltip-size-radius-default: var(--fsds-semantic-shape-radius-small, 4px);
@@ -399,7 +399,7 @@ export class TooltipContentElement extends LitElement {
     .tooltip__content {
       background-color: var(--fsds-tooltip-color-background-default, #141414);
       color: var(--fsds-tooltip-color-foreground-default, #fafafa);
-      border-color: var(--fsds-tooltip-color-border-default, #cecece);
+      border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
       border-radius: var(--fsds-tooltip-size-radius-default, 4px);
       padding: var(--fsds-tooltip-size-padding-x, 8px);
       max-width: var(--fsds-tooltip-size-maxWidth, 200px);

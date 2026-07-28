@@ -23,37 +23,37 @@ export class FieldElement extends LitElement {
     .field {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-input-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
       --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-field-pad-x: var(--fsds-semantic-spacing-density-compact-md, 12px);
       --fsds-field-pad-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-color-bg: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      --fsds-field-color-focus-border: var(--fsds-semantic-color-border-focus, #d9292b);
-      --fsds-field-color-invalid-border: var(--fsds-semantic-color-border-danger, #ae0001);
-      --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #336006);
-      --fsds-field-color-validating-border: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-field-color-valid-text: var(--fsds-semantic-color-foreground-success, #336006);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #888889);
+      --fsds-field-color-focus-border: var(--fsds-semantic-color-border-focus, #0566fe);
+      --fsds-field-color-invalid-border: var(--fsds-semantic-color-border-danger, #b31b1b);
+      --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d92d2e);
+      --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #3a6614);
+      --fsds-field-color-validating-border: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-color-valid-text: var(--fsds-semantic-color-foreground-success, #497f21);
       --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
-      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
       --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
@@ -61,22 +61,22 @@ export class FieldElement extends LitElement {
     }
 
     .field--idle {
-      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .field--validating {
-      --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .field--valid {
-      --fsds-field-color-border: var(--fsds-semantic-color-feedback-border-success, #336006);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-success, #336006);
+      --fsds-field-color-border: var(--fsds-semantic-color-feedback-border-success, #3a6614);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-success, #497f21);
     }
 
     .field--invalid {
-      --fsds-field-color-border: var(--fsds-semantic-color-border-danger, #ae0001);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-danger, #b31b1b);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-danger, #d92d2e);
     }
 
     .field {
@@ -93,14 +93,14 @@ export class FieldElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-radius: var(--fsds-field-radius, 8px);
+      border-radius: var(--fsds-field-radius, 6px);
     }
 
     .field__label {
       display: inline-block;
       font-size: var(--fsds-field-label-fontSize, 14px);
       font-weight: 500;
-      color: var(--fsds-field-label-color, #555555);
+      color: var(--fsds-field-label-color, #5c5b5c);
     }
 
     .field__header {
@@ -117,8 +117,8 @@ export class FieldElement extends LitElement {
       box-sizing: border-box;
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-field-radius, 8px);
-      border-color: var(--fsds-field-color-border, #cecece);
+      border-radius: var(--fsds-field-radius, 6px);
+      border-color: var(--fsds-field-color-border, #d0d0d0);
       background-color: var(--fsds-field-color-bg, #ffffff);
       padding: var(--fsds-field-pad-x, 12px);
     }
@@ -132,7 +132,7 @@ export class FieldElement extends LitElement {
     .field__error {
       display: block;
       font-size: 0.875em;
-      color: var(--fsds-field-color-invalid-text, #d9292b);
+      color: var(--fsds-field-color-invalid-text, #d92d2e);
     }
 
     .field__meta {
@@ -149,15 +149,15 @@ export class FieldElement extends LitElement {
     }
 
     .field__control:focus-within {
-      border-color: var(--fsds-field-color-focus-border, #d9292b);
+      border-color: var(--fsds-field-color-focus-border, #0566fe);
       outline-width: var(--fsds-field-focus-ring-width, 2px);
-      outline-color: var(--fsds-field-focus-ring-color, #0a65fe);
+      outline-color: var(--fsds-field-focus-ring-color, #0566fe);
       outline-style: var(--fsds-field-focus-ring-style, solid);
       outline-offset: var(--fsds-field-focus-ring-offset, 2px);
     }
 
     .field--invalid .field__control {
-      border-color: var(--fsds-field-color-invalid-border, #ae0001);
+      border-color: var(--fsds-field-color-invalid-border, #b31b1b);
     }
 
     .field--disabled .field__control {
@@ -166,7 +166,7 @@ export class FieldElement extends LitElement {
     }
 
     .field--valid .field__control {
-      border-color: var(--fsds-field-color-valid-border, #336006);
+      border-color: var(--fsds-field-color-valid-border, #3a6614);
     }
   `;
 
@@ -235,37 +235,37 @@ export class FieldHeaderElement extends LitElement {
     .field {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 8px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 4px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-input-size-medium-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 36px);
+      --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
       --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-field-pad-x: var(--fsds-semantic-spacing-density-compact-md, 12px);
       --fsds-field-pad-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-color-bg: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      --fsds-field-color-focus-border: var(--fsds-semantic-color-border-focus, #d9292b);
-      --fsds-field-color-invalid-border: var(--fsds-semantic-color-border-danger, #ae0001);
-      --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #336006);
-      --fsds-field-color-validating-border: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-field-color-valid-text: var(--fsds-semantic-color-foreground-success, #336006);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #888889);
+      --fsds-field-color-focus-border: var(--fsds-semantic-color-border-focus, #0566fe);
+      --fsds-field-color-invalid-border: var(--fsds-semantic-color-border-danger, #b31b1b);
+      --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d92d2e);
+      --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #3a6614);
+      --fsds-field-color-validating-border: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-color-valid-text: var(--fsds-semantic-color-foreground-success, #497f21);
       --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
-      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
       --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
@@ -273,22 +273,22 @@ export class FieldHeaderElement extends LitElement {
     }
 
     .field--idle {
-      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
     .field--validating {
-      --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d92d2e);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
     }
 
     .field--valid {
-      --fsds-field-color-border: var(--fsds-semantic-color-feedback-border-success, #336006);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-success, #336006);
+      --fsds-field-color-border: var(--fsds-semantic-color-feedback-border-success, #3a6614);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-success, #497f21);
     }
 
     .field--invalid {
-      --fsds-field-color-border: var(--fsds-semantic-color-border-danger, #ae0001);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-danger, #b31b1b);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-danger, #d92d2e);
     }
 
     .field {
@@ -305,14 +305,14 @@ export class FieldHeaderElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      border-radius: var(--fsds-field-radius, 8px);
+      border-radius: var(--fsds-field-radius, 6px);
     }
 
     .field__label {
       display: inline-block;
       font-size: var(--fsds-field-label-fontSize, 14px);
       font-weight: 500;
-      color: var(--fsds-field-label-color, #555555);
+      color: var(--fsds-field-label-color, #5c5b5c);
     }
 
     .field__header {
@@ -329,8 +329,8 @@ export class FieldHeaderElement extends LitElement {
       box-sizing: border-box;
       border-style: solid;
       border-width: 1px;
-      border-radius: var(--fsds-field-radius, 8px);
-      border-color: var(--fsds-field-color-border, #cecece);
+      border-radius: var(--fsds-field-radius, 6px);
+      border-color: var(--fsds-field-color-border, #d0d0d0);
       background-color: var(--fsds-field-color-bg, #ffffff);
       padding: var(--fsds-field-pad-x, 12px);
     }
@@ -344,7 +344,7 @@ export class FieldHeaderElement extends LitElement {
     .field__error {
       display: block;
       font-size: 0.875em;
-      color: var(--fsds-field-color-invalid-text, #d9292b);
+      color: var(--fsds-field-color-invalid-text, #d92d2e);
     }
 
     .field__meta {
@@ -361,15 +361,15 @@ export class FieldHeaderElement extends LitElement {
     }
 
     .field__control:focus-within {
-      border-color: var(--fsds-field-color-focus-border, #d9292b);
+      border-color: var(--fsds-field-color-focus-border, #0566fe);
       outline-width: var(--fsds-field-focus-ring-width, 2px);
-      outline-color: var(--fsds-field-focus-ring-color, #0a65fe);
+      outline-color: var(--fsds-field-focus-ring-color, #0566fe);
       outline-style: var(--fsds-field-focus-ring-style, solid);
       outline-offset: var(--fsds-field-focus-ring-offset, 2px);
     }
 
     .field--invalid .field__control {
-      border-color: var(--fsds-field-color-invalid-border, #ae0001);
+      border-color: var(--fsds-field-color-invalid-border, #b31b1b);
     }
 
     .field--disabled .field__control {
@@ -378,7 +378,7 @@ export class FieldHeaderElement extends LitElement {
     }
 
     .field--valid .field__control {
-      border-color: var(--fsds-field-color-valid-border, #336006);
+      border-color: var(--fsds-field-color-valid-border, #3a6614);
     }
   `;
 

@@ -46,7 +46,7 @@
     },
     "border-color": {
       "resolvesTo": "chip.color.border.default",
-      "fallback": "#aeaeae"
+      "fallback": "#a0a0a1"
     },
     "border-width": {
       "resolvesTo": "chip.size.border",
@@ -70,7 +70,7 @@
     },
     "min-height": {
       "resolvesTo": "chip.size.minHeight",
-      "fallback": "32px"
+      "fallback": "36px"
     },
     "font-size": {
       "resolvesTo": "chip.text.size",
@@ -88,7 +88,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "chip.color.background.hover",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     }
   },
   "__action": {
@@ -186,19 +186,19 @@
     },
     "box-model.min-height": {
       "resolvesTo": "chip.dismiss.size",
-      "fallback": "16px"
+      "fallback": "12px"
     },
     "box-model.min-width": {
       "resolvesTo": "chip.dismiss.size",
-      "fallback": "16px"
+      "fallback": "12px"
     },
     "box-model.width": {
       "resolvesTo": "chip.dismiss.size",
-      "fallback": "16px"
+      "fallback": "12px"
     },
     "box-model.height": {
       "resolvesTo": "chip.dismiss.size",
-      "fallback": "16px"
+      "fallback": "12px"
     }
   },
   "icon": {
@@ -276,15 +276,15 @@
   "--selected": {
     "chip.color.background.default": {
       "resolvesTo": "semantic.color.background.info.subtle",
-      "fallback": "#d9f3fe"
+      "fallback": "#95dafb"
     },
     "chip.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.on.info.subtle",
-      "fallback": "#002d99"
+      "fallback": "#013ab0"
     },
     "chip.color.border.default": {
       "resolvesTo": "semantic.color.border.info",
-      "fallback": "#0042dc"
+      "fallback": "#034fd6"
     }
   },
   "--dismissible": {
@@ -312,13 +312,13 @@
     },
     "chip.size.minHeight": {
       "resolvesTo": "semantic.glyph.badge.size.sm.minHeight",
-      "fallback": "24px"
+      "fallback": "16px"
     }
   },
   "--medium": {
     "chip.size.padding.vertical": {
       "resolvesTo": "semantic.glyph.badge.size.md.paddingY",
-      "fallback": "4px"
+      "fallback": "2px"
     },
     "chip.size.padding.horizontal": {
       "resolvesTo": "semantic.glyph.badge.size.md.paddingX",
@@ -334,7 +334,7 @@
     },
     "chip.size.minHeight": {
       "resolvesTo": "semantic.glyph.badge.size.md.minHeight",
-      "fallback": "32px"
+      "fallback": "24px"
     }
   },
   "--large": {
@@ -356,7 +356,7 @@
     },
     "chip.size.minHeight": {
       "resolvesTo": "semantic.glyph.badge.size.lg.minHeight",
-      "fallback": "40px"
+      "fallback": "32px"
     }
   }
 }

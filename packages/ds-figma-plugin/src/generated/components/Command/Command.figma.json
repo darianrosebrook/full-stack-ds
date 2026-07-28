@@ -349,7 +349,7 @@
           "--fsds-box-model-padding-inline": "0",
           "--fsds-box-model-padding-inline-start": "0",
           "--fsds-box-model-padding-inline-end": "0",
-          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 16px)",
           "--fsds-box-model-width": "auto",
           "--fsds-box-model-min-width": "0",
           "--fsds-box-model-max-width": "none",
@@ -358,12 +358,12 @@
           "--fsds-box-model-max-height": "none",
           "--fsds-command-color-overlay": "var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64))",
           "--fsds-command-color-background": "var(--fsds-semantic-color-background-primary, #ffffff)",
-          "--fsds-command-color-border": "var(--fsds-semantic-color-border-light, #fceaea)",
-          "--fsds-command-color-borderLight": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-command-color-border": "var(--fsds-semantic-color-border-light, #b8b8b8)",
+          "--fsds-command-color-borderLight": "var(--fsds-semantic-color-border-subtle, #d0d0d0)",
           "--fsds-command-color-text": "var(--fsds-semantic-color-foreground-primary, #141414)",
-          "--fsds-command-color-textMuted": "var(--fsds-semantic-color-foreground-tertiary, #717171)",
+          "--fsds-command-color-textMuted": "var(--fsds-semantic-color-foreground-tertiary, #727272)",
           "--fsds-command-border-width": "var(--fsds-semantic-shape-control-border-defaultWidth, 1px)",
-          "--fsds-command-border-radius": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-command-border-radius": "var(--fsds-semantic-shape-control-radius-default, 6px)",
           "--fsds-command-size-maxWidth": "640px",
           "--fsds-command-size-maxHeight": "400px",
           "--fsds-command-size-topOffset": "10vh",
@@ -373,7 +373,7 @@
           "--fsds-command-text-sizeSmall": "var(--fsds-semantic-typography-body-04, 12px)",
           "--fsds-command-shadow": "var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12))",
           "--fsds-command-opacity-disabled": "var(--fsds-semantic-interaction-disabled-opacity, 0.5)",
-          "--fsds-command-color-backgroundHover": "var(--fsds-semantic-interaction-background-hover, #efefef)",
+          "--fsds-command-color-backgroundHover": "var(--fsds-semantic-interaction-background-hover, #d0d0d0)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -415,10 +415,10 @@
           "max-height": "var(--fsds-command-size-maxHeight, 400px)",
           "background-color": "var(--fsds-command-color-background, #ffffff)",
           "color": "var(--fsds-command-color-text, #141414)",
-          "border-color": "var(--fsds-command-color-border, #fceaea)",
+          "border-color": "var(--fsds-command-color-border, #b8b8b8)",
           "border-style": "solid",
           "border-width": "var(--fsds-command-border-width, 1px)",
-          "border-radius": "var(--fsds-command-border-radius, 8px)",
+          "border-radius": "var(--fsds-command-border-radius, 6px)",
           "box-shadow": "var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12))",
           "overflow": "hidden",
           "pointer-events": "auto",
@@ -432,7 +432,7 @@
           "align-items": "center",
           "gap": "8px",
           "padding": "var(--fsds-command-spacing-dialogPadding, 8px)",
-          "border-bottom-color": "var(--fsds-command-color-borderLight, #cecece)",
+          "border-bottom-color": "var(--fsds-command-color-borderLight, #d0d0d0)",
           "border-bottom-style": "solid",
           "border-bottom-width": "1px"
         }
@@ -446,7 +446,7 @@
           "flex-shrink": "0",
           "width": "var(--fsds-command-size-icon, 8px)",
           "height": "var(--fsds-command-size-icon, 8px)",
-          "color": "var(--fsds-command-color-textMuted, #717171)"
+          "color": "var(--fsds-command-color-textMuted, #727272)"
         }
       },
       {
@@ -478,7 +478,7 @@
           "display": "block",
           "padding": "var(--fsds-command-spacing-dialogPadding, 8px)",
           "text-align": "center",
-          "color": "var(--fsds-command-color-textMuted, #717171)",
+          "color": "var(--fsds-command-color-textMuted, #727272)",
           "font-size": "var(--fsds-command-text-sizeSmall, 12px)"
         }
       },
@@ -493,7 +493,7 @@
         "declarations": {
           "display": "block",
           "padding": "8px 12px 4px",
-          "color": "var(--fsds-command-color-textMuted, #717171)",
+          "color": "var(--fsds-command-color-textMuted, #727272)",
           "font-size": "var(--fsds-command-text-sizeSmall, 12px)",
           "font-weight": "600",
           "text-transform": "uppercase",
@@ -516,19 +516,19 @@
           "padding": "8px 12px",
           "color": "var(--fsds-command-color-text, #141414)",
           "cursor": "pointer",
-          "border-radius": "var(--fsds-command-border-radius, 8px)"
+          "border-radius": "var(--fsds-command-border-radius, 6px)"
         }
       },
       {
         "selector": ".command__item:hover",
         "declarations": {
-          "background-color": "var(--fsds-command-color-backgroundHover, #efefef)"
+          "background-color": "var(--fsds-command-color-backgroundHover, #d0d0d0)"
         }
       },
       {
         "selector": ".command__item[aria-selected=\"true\"]",
         "declarations": {
-          "background-color": "var(--fsds-command-color-backgroundHover, #efefef)",
+          "background-color": "var(--fsds-command-color-backgroundHover, #d0d0d0)",
           "color": "var(--fsds-command-color-text, #141414)"
         }
       },
@@ -541,7 +541,7 @@
           "flex-shrink": "0",
           "width": "var(--fsds-command-size-icon, 8px)",
           "height": "var(--fsds-command-size-icon, 8px)",
-          "color": "var(--fsds-command-color-textMuted, #717171)"
+          "color": "var(--fsds-command-color-textMuted, #727272)"
         }
       },
       {
@@ -568,7 +568,7 @@
         "selector": ".command__itemDescription",
         "declarations": {
           "display": "block",
-          "color": "var(--fsds-command-color-textMuted, #717171)",
+          "color": "var(--fsds-command-color-textMuted, #727272)",
           "font-size": "var(--fsds-command-text-sizeSmall, 12px)",
           "overflow": "hidden",
           "text-overflow": "ellipsis",
@@ -581,7 +581,7 @@
           "display": "block",
           "height": "1px",
           "margin": "4px 8px",
-          "background-color": "var(--fsds-command-color-borderLight, #cecece)"
+          "background-color": "var(--fsds-command-color-borderLight, #d0d0d0)"
         }
       }
     ],

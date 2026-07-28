@@ -18,7 +18,7 @@
     },
     "border-radius": {
       "resolvesTo": "field.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     }
   },
   "label": {
@@ -40,7 +40,7 @@
     },
     "color": {
       "resolvesTo": "field.label.color",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "header": {
@@ -106,11 +106,11 @@
     },
     "border-radius": {
       "resolvesTo": "field.radius",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "border-color": {
       "resolvesTo": "field.color.border",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     },
     "background-color": {
       "resolvesTo": "field.color.bg",
@@ -154,7 +154,7 @@
     },
     "color": {
       "resolvesTo": "field.color.invalid-text",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   },
   "meta": {
@@ -202,7 +202,7 @@
   ".field__control:focus-within": {
     "border-color": {
       "resolvesTo": "field.color.focus-border",
-      "fallback": "#d9292b"
+      "fallback": "#0566fe"
     },
     "outline-width": {
       "resolvesTo": "field.focus.ring.width",
@@ -210,7 +210,7 @@
     },
     "outline-color": {
       "resolvesTo": "field.focus.ring.color",
-      "fallback": "#0a65fe"
+      "fallback": "#0566fe"
     },
     "outline-style": {
       "resolvesTo": "field.focus.ring.style",
@@ -224,7 +224,7 @@
   ".field--invalid .field__control": {
     "border-color": {
       "resolvesTo": "field.color.invalid-border",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     }
   },
   ".field--disabled .field__control": {
@@ -244,43 +244,43 @@
   ".field--valid .field__control": {
     "border-color": {
       "resolvesTo": "field.color.valid-border",
-      "fallback": "#336006"
+      "fallback": "#3a6614"
     }
   },
   "--idle": {
     "field.color.border": {
       "resolvesTo": "semantic.color.border.subtle",
-      "fallback": "#cecece"
+      "fallback": "#d0d0d0"
     }
   },
   "--validating": {
     "field.color.border": {
       "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "field.color.fg": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     }
   },
   "--valid": {
     "field.color.border": {
       "resolvesTo": "semantic.color.feedback.border.success",
-      "fallback": "#336006"
+      "fallback": "#3a6614"
     },
     "field.color.fg": {
       "resolvesTo": "semantic.color.foreground.success",
-      "fallback": "#336006"
+      "fallback": "#497f21"
     }
   },
   "--invalid": {
     "field.color.border": {
       "resolvesTo": "semantic.color.border.danger",
-      "fallback": "#ae0001"
+      "fallback": "#b31b1b"
     },
     "field.color.fg": {
       "resolvesTo": "semantic.color.foreground.danger",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     }
   }
 }

@@ -14,19 +14,19 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   padding: var(--fsds-details-size-padding-default, 16px);
-  border-radius: var(--fsds-details-size-radius-default, 8px);
+  border-radius: var(--fsds-details-size-radius-default, 6px);
   background-color: var(--fsds-details-color-background-default, #ffffff);
   line-height: var(--fsds-details-typography-lineHeight-body, 1.5);
   display: block;
   border-style: solid;
   border-width: 1px;
   box-sizing: border-box;
-  border-color: var(--fsds-details-color-border-default, #f29495);
+  border-color: var(--fsds-details-color-border-default, #a0a0a1);
   color: var(--fsds-details-color-foreground-primary, #141414);
 
   &:hover {
-    background-color: var(--fsds-details-color-background-hover, #cecece);
-    border-color: var(--fsds-details-color-border-hover, #8f8f8f);
+    background-color: var(--fsds-details-color-background-hover, #b8b8b8);
+    border-color: var(--fsds-details-color-border-hover, #888889);
   }
 
   &[open] .details__icon {
@@ -47,7 +47,7 @@
 
 .details__summary:focus-visible {
   outline-width: var(--fsds-details-focus-ring-width, 2px);
-  outline-color: var(--fsds-details-focus-ring-color, #d9292b);
+  outline-color: var(--fsds-details-focus-ring-color, #d92d2e);
   outline-offset: var(--fsds-details-focus-ring-offset, 2px);
   outline-style: solid;
 }

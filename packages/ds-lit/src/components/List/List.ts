@@ -31,7 +31,7 @@ export class ListElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 16px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -39,7 +39,7 @@ export class ListElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-list-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-list-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-list-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-list-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-list-size-sm: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-list-size-md: var(--fsds-semantic-typography-body-02, 16px);
@@ -63,7 +63,7 @@ export class ListElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-list-color-foreground-primary, #141414);
-      border-color: var(--fsds-list-color-border-default, #cecece);
+      border-color: var(--fsds-list-color-border-default, #d0d0d0);
       padding: var(--fsds-list-size-padding-default, 16px);
     }
 
@@ -139,7 +139,7 @@ export class ListElement extends LitElement {
     .list--variant-divided > * + * {
       border-block-start-width: 1px;
       border-block-start-style: solid;
-      border-block-start-color: var(--fsds-list-color-border-default, #cecece);
+      border-block-start-color: var(--fsds-list-color-border-default, #d0d0d0);
     }
 
     .list--variant-spaced > * {

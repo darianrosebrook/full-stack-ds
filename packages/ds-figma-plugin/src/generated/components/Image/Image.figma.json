@@ -249,7 +249,7 @@
           "--fsds-box-model-height": "auto",
           "--fsds-box-model-min-height": "0",
           "--fsds-box-model-max-height": "none",
-          "--fsds-image-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-image-color-background-default": "var(--fsds-semantic-color-background-secondary, #d0d0d0)",
           "--fsds-image-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-image-size-icon": "var(--fsds-core-spacing-size-08, 32px)",
           "--fsds-image-typography-error-fontSize": "var(--fsds-semantic-typography-body-04, 12px)",
@@ -275,7 +275,7 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
-          "background-color": "var(--fsds-image-color-background-default, #efefef)",
+          "background-color": "var(--fsds-image-color-background-default, #d0d0d0)",
           "color": "var(--fsds-image-color-foreground-primary, #141414)"
         }
       },

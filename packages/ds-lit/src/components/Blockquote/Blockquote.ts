@@ -28,22 +28,22 @@ export class BlockquoteElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
       --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-blockquote-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-blockquote-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-blockquote-typography-fontStyle: var(--fsds-semantic-typography-font-style-italic, italic);
       --fsds-blockquote-typography-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-blockquote-size-padding-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-blockquote-size-padding-sm: var(--fsds-core-spacing-size-04, 8px);
       --fsds-blockquote-size-padding-lg: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-blockquote-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-blockquote-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-blockquote-size-border-thick: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
       --fsds-blockquote-size-fontSize-sm: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-blockquote-size-fontSize-md: var(--fsds-core-typography-ramp-4, 1rem);
@@ -51,7 +51,7 @@ export class BlockquoteElement extends LitElement {
     }
 
     .blockquote--default {
-      --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
     }
 
     .blockquote--bordered {
@@ -60,7 +60,7 @@ export class BlockquoteElement extends LitElement {
     }
 
     .blockquote--highlighted {
-      --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
+      --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
       --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
     }
 
@@ -91,12 +91,12 @@ export class BlockquoteElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      color: var(--fsds-blockquote-color-foreground-primary, #555555);
-      background-color: var(--fsds-blockquote-color-background-default, #efefef);
-      border-color: var(--fsds-blockquote-color-border-default, #d9292b);
+      color: var(--fsds-blockquote-color-foreground-primary, #5c5b5c);
+      background-color: var(--fsds-blockquote-color-background-default, #d0d0d0);
+      border-color: var(--fsds-blockquote-color-border-default, #d92d2e);
       border-style: solid;
       border-width: 0;
-      border-radius: var(--fsds-blockquote-size-radius-default, 8px);
+      border-radius: var(--fsds-blockquote-size-radius-default, 6px);
       padding: var(--fsds-blockquote-size-padding-default, 12px);
       font-size: var(--fsds-blockquote-size-fontSize-md, 1rem);
       font-style: var(--fsds-blockquote-typography-fontStyle, italic);
@@ -111,7 +111,7 @@ export class BlockquoteElement extends LitElement {
     .blockquote--bordered {
       border-inline-start-width: var(--fsds-blockquote-size-border-thick, 2px);
       border-inline-start-style: solid;
-      border-inline-start-color: var(--fsds-blockquote-color-border-default, #d9292b);
+      border-inline-start-color: var(--fsds-blockquote-color-border-default, #d92d2e);
       padding-inline-start: var(--fsds-blockquote-size-padding-default, 12px);
     }
 

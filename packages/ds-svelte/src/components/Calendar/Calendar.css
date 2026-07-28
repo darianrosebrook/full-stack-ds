@@ -17,11 +17,11 @@
   box-sizing: border-box;
   background-color: var(--fsds-calendar-color-background-default, #ffffff);
   color: var(--fsds-calendar-color-foreground-primary, #141414);
-  border-color: var(--fsds-calendar-color-border-default, #cecece);
+  border-color: var(--fsds-calendar-color-border-default, #d0d0d0);
   border-width: 1px;
   border-style: solid;
   padding: var(--fsds-calendar-size-padding-default, 16px);
-  border-radius: var(--fsds-calendar-size-radius-default, 8px);
+  border-radius: var(--fsds-calendar-size-radius-default, 6px);
   box-shadow: var(--fsds-calendar-elevation-default, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
 }
 
@@ -43,13 +43,13 @@
   border: none;
   border-radius: var(--fsds-calendar-size-radius-day, 4px);
   cursor: pointer;
-  color: var(--fsds-calendar-color-foreground-muted, #555555);
+  color: var(--fsds-calendar-color-foreground-muted, #5c5b5c);
   font-size: var(--fsds-calendar-typography-caption-size, 16px);
   line-height: 1;
 }
 
 .calendar__nav:hover {
-  background-color: var(--fsds-calendar-color-day-hover, #efefef);
+  background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
   color: var(--fsds-calendar-color-foreground-primary, #141414);
 }
 
@@ -101,18 +101,18 @@
 }
 
 .calendar__day:hover {
-  background-color: var(--fsds-calendar-color-day-hover, #efefef);
+  background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
 }
 
 .calendar__day:focus-visible {
   outline-width: var(--fsds-calendar-focus-ring-width, 2px);
-  outline-color: var(--fsds-calendar-color-focus-ring, #d9292b);
+  outline-color: var(--fsds-calendar-color-focus-ring, #0566fe);
   outline-offset: var(--fsds-calendar-focus-ring-offset, 2px);
   outline-style: solid;
 }
 
 .calendar__cell[aria-selected="true"] .calendar__day {
-  background-color: var(--fsds-calendar-color-day-selected-background, #d9292b);
+  background-color: var(--fsds-calendar-color-day-selected-background, #d92d2e);
   color: var(--fsds-calendar-color-day-selected-foreground, #fafafa);
   font-weight: 600;
 }

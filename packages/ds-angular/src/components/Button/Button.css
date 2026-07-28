@@ -21,9 +21,9 @@
   border-style: solid;
   white-space: nowrap;
   user-select: none;
-  background-color: var(--fsds-button-color-background-default, #d9292b);
+  background-color: var(--fsds-button-color-background-default, #0566fe);
   color: var(--fsds-button-color-foreground-default, #fafafa);
-  border-color: var(--fsds-button-color-border-default, #fceaea);
+  border-color: var(--fsds-button-color-border-default, #b8b8b8);
   border-radius: var(--fsds-button-size-radius, 9999px);
   border-width: var(--fsds-button-size-border, 1px);
   font-size: var(--fsds-button-size-fontSize-medium, 1rem);
@@ -32,12 +32,12 @@
   transition-timing-function: var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 
   &:hover {
-    background-color: var(--fsds-button-color-background-hover, #efefef);
-    border-color: var(--fsds-button-color-border-hover, #8f8f8f);
+    background-color: var(--fsds-button-color-background-hover, #d0d0d0);
+    border-color: var(--fsds-button-color-border-hover, #888889);
   }
 
   &:active {
-    background-color: var(--fsds-button-color-background-active, #cecece);
+    background-color: var(--fsds-button-color-background-active, #b8b8b8);
   }
 
   &:focus-visible {
@@ -45,8 +45,8 @@
   }
 
   &:disabled {
-    background-color: var(--fsds-button-color-background-disabled, #cecece);
-    color: var(--fsds-button-color-foreground-disabled, #aeaeae);
+    background-color: var(--fsds-button-color-background-disabled, #b8b8b8);
+    color: var(--fsds-button-color-foreground-disabled, #727272);
   }
 }
 

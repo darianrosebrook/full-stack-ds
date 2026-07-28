@@ -13,10 +13,10 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  background-color: var(--fsds-shuttle-color-background-default, #efefef);
-  border-color: var(--fsds-shuttle-color-border-accent, #d9292b);
+  background-color: var(--fsds-shuttle-color-background-default, #d0d0d0);
+  border-color: var(--fsds-shuttle-color-border-accent, #d92d2e);
   padding: var(--fsds-shuttle-size-padding-default, 24px);
-  border-radius: var(--fsds-shuttle-size-radius-default, 8px);
+  border-radius: var(--fsds-shuttle-size-radius-default, 6px);
 }
 
 .shuttle__item {

@@ -6,7 +6,7 @@
     },
     "border-radius": {
       "resolvesTo": "details.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "background-color": {
       "resolvesTo": "details.color.background.default",
@@ -48,7 +48,7 @@
     },
     "border-color": {
       "resolvesTo": "details.color.border.default",
-      "fallback": "#f29495"
+      "fallback": "#a0a0a1"
     },
     "color": {
       "resolvesTo": "details.color.foreground.primary",
@@ -58,11 +58,11 @@
   "hover": {
     "background-color": {
       "resolvesTo": "details.color.background.hover",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     },
     "border-color": {
       "resolvesTo": "details.color.border.hover",
-      "fallback": "#8f8f8f"
+      "fallback": "#888889"
     }
   },
   "summary": {
@@ -110,7 +110,7 @@
   ".details__summary:hover": {
     "details.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#cecece"
+      "fallback": "#b8b8b8"
     }
   },
   ".details__summary:focus-visible": {
@@ -120,7 +120,7 @@
     },
     "outline-color": {
       "resolvesTo": "details.focus.ring.color",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "outline-offset": {
       "resolvesTo": "details.focus.ring.offset",
@@ -254,11 +254,11 @@
     },
     "details.color.background.default": {
       "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#f5f5f5"
+      "fallback": "#d0d0d0"
     },
     "details.color.border.default": {
       "resolvesTo": "semantic.color.border.subtle",
-      "fallback": "#e0e0e0"
+      "fallback": "#d0d0d0"
     }
   },
   ".details--icon-none .details__icon": {

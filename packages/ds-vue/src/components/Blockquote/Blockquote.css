@@ -13,12 +13,12 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-blockquote-color-foreground-primary, #555555);
-  background-color: var(--fsds-blockquote-color-background-default, #efefef);
-  border-color: var(--fsds-blockquote-color-border-default, #d9292b);
+  color: var(--fsds-blockquote-color-foreground-primary, #5c5b5c);
+  background-color: var(--fsds-blockquote-color-background-default, #d0d0d0);
+  border-color: var(--fsds-blockquote-color-border-default, #d92d2e);
   border-style: solid;
   border-width: 0;
-  border-radius: var(--fsds-blockquote-size-radius-default, 8px);
+  border-radius: var(--fsds-blockquote-size-radius-default, 6px);
   padding: var(--fsds-blockquote-size-padding-default, 12px);
   font-size: var(--fsds-blockquote-size-fontSize-md, 1rem);
   font-style: var(--fsds-blockquote-typography-fontStyle, italic);
@@ -33,7 +33,7 @@
 .blockquote--bordered {
   border-inline-start-width: var(--fsds-blockquote-size-border-thick, 2px);
   border-inline-start-style: solid;
-  border-inline-start-color: var(--fsds-blockquote-color-border-default, #d9292b);
+  border-inline-start-color: var(--fsds-blockquote-color-border-default, #d92d2e);
   padding-inline-start: var(--fsds-blockquote-size-padding-default, 12px);
 }
 

@@ -21,7 +21,7 @@
   },
   "box-model.gap": {
     "resolvesTo": "semantic.surface.size.gap",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.min-width": {
@@ -36,17 +36,17 @@
   },
   "postcard.color.background.hover": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "postcard.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "postcard.color.border.hover": {
     "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#8f8f8f",
+    "fallback": "#888889",
     "layer": "semantic"
   },
   "postcard.color.foreground.primary": {
@@ -61,7 +61,7 @@
   },
   "postcard.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
-    "fallback": "8px",
+    "fallback": "6px",
     "layer": "semantic"
   },
   "postcard.size.radius.full": {

@@ -1,12 +1,12 @@
 {
   "badge.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "badge.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#e4e4e4",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "badge.color.foreground.primary": {
@@ -16,7 +16,7 @@
   },
   "badge.color.border.default": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "badge.spacing.gap": {

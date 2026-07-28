@@ -21,7 +21,7 @@
   },
   "box-model.gap": {
     "resolvesTo": "semantic.surface.size.gap",
-    "fallback": "12px",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.min-width": {
@@ -41,7 +41,7 @@
   },
   "tooltip.color.border.default": {
     "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "tooltip.size.padding.y": {

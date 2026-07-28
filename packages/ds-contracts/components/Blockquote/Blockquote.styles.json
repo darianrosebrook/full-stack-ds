@@ -2,15 +2,15 @@
   "root": {
     "color": {
       "resolvesTo": "blockquote.color.foreground.primary",
-      "fallback": "#555555"
+      "fallback": "#5c5b5c"
     },
     "background-color": {
       "resolvesTo": "blockquote.color.background.default",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-color": {
       "resolvesTo": "blockquote.color.border.default",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "border-style": {
       "literal": "solid",
@@ -26,7 +26,7 @@
     },
     "border-radius": {
       "resolvesTo": "blockquote.size.radius.default",
-      "fallback": "8px"
+      "fallback": "6px"
     },
     "padding": {
       "resolvesTo": "blockquote.size.padding.default",
@@ -54,7 +54,7 @@
   "--default": {
     "blockquote.color.background.default": {
       "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef"
+      "fallback": "#d0d0d0"
     },
     "border-width": {
       "literal": "0",
@@ -84,7 +84,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "blockquote.color.border.default",
-      "fallback": "#d9292b"
+      "fallback": "#d92d2e"
     },
     "padding-inline-start": {
       "resolvesTo": "blockquote.size.padding.default",
@@ -94,7 +94,7 @@
   "--highlighted": {
     "blockquote.color.background.default": {
       "resolvesTo": "semantic.color.background.accentSubtle",
-      "fallback": "#fceaea"
+      "fallback": "#95dafb"
     },
     "blockquote.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.primary",

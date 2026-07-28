@@ -6,7 +6,7 @@
   },
   "image.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "image.color.foreground.primary": {
