@@ -420,7 +420,15 @@ export interface StyleEntry {
    * direct global passthrough; the validator catches improper uses.
    */
   resolvesTo?: string;
-  /** Optional consumer-site fallback. Usually unneeded; the slot's own fallback chains via the cascade. */
+  /**
+   * Consumer-site fallback for `var(--ref, fallback)`. REQUIRED when
+   * `resolvesTo` is present — enforced by validateContractFallbackCompleteness
+   * ([FALLBACK_MISSING]). The variant/state scope does not inherit the slot's
+   * own fallback from tokens.json once the slot is re-pointed, so the fallback
+   * must be repeated here. The value should be the real resolved literal from
+   * the composed token graph (so the component renders identically with the
+   * token sheet loaded or absent).
+   */
   fallback?: string;
   /** Hardcoded CSS value, emitted verbatim when the build target is in `platforms`. */
   literal?: string;

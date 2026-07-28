@@ -79,6 +79,7 @@ import { buildFigmaStackPrimitiveDescriptor } from "./frameworks/figma/factory.j
 import { readPrimitiveIR } from "./primitive-contract.js";
 import { validateContractIconRefs } from "./validation/icon-refs.js";
 import { validateContractTokens } from "./validation/tokens.js";
+import { validateContractFallbackCompleteness } from "./validation/fallback-completeness.js";
 import {
   validateContractStyles,
   validateStylesSelectorCollisions,
@@ -549,6 +550,7 @@ function main(): void {
           allContracts: allContractsByName,
         }),
         ...validateContractTokens(result.value),
+        ...validateContractFallbackCompleteness(result.value),
         ...validateContractEmittedCss(result.value),
         ...validateContractEmittedStyles(result.value),
         ...validateContractStyles(result.value),
