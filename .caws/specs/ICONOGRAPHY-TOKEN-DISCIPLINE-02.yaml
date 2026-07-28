@@ -2,9 +2,11 @@ id: ICONOGRAPHY-TOKEN-DISCIPLINE-02
 title: 'Token-discipline validators + component identification attribute + ledger CI gate'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'All 5 acceptance criteria demonstrated and recorded (ac events seq 1509-1513). Merged to local main via fast-forward (bc4acac6..6278d139); no remote push. Validator + 883-entry repair + dead-slot audit + iconography CI gate + data-fsds-component attribute across all 5 DOM frameworks. governed:rail overall:pass, root tests 1957/1957.'
 created_at: '2026-07-28T00:27:43.851Z'
-updated_at: '2026-07-28T00:27:43.851Z'
+updated_at: '2026-07-28T01:56:39.873Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation/fallback-completeness.ts: new validator requiring fallback on every resolvesTo slot (tokens + styles).'
