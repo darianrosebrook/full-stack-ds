@@ -7,7 +7,9 @@ created_at: '2026-07-29T18:17:31.753Z'
 updated_at: '2026-07-29T18:17:31.753Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/{react,vue,svelte,lit}/primitive-source.ts'
+    - 'packages/ds-{react,vue,svelte,lit}/src/primitives (generated Stack + CSS)'
+    - 'Every generated component whose root renders Stack layout="native" (42 of 49)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -24,12 +26,58 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - >-
+    The Stack primitive contributes a flex axis ONLY on display modes that lay
+    out on a flex axis. layout.displayByMode.native is null ("lets the rendered
+    host keep its own display/layout behavior"), so a native host receives no
+    flex-direction from Stack.
+  - >-
+    axisModes is derived in the IR from displayByMode, never hand-listed in an
+    emitter. An emitter that names "stack"/"inline-stack" literally is a defect.
+  - >-
+    All five web targets realize the same axis fact. Angular is the reference;
+    the other four converge onto it rather than Angular being changed to match.
+  - >-
+    The variant class/attribute is still emitted on native hosts. It records the
+    prop's value, which remains true; only its axis EFFECT is scoped. Suppressing
+    the class would change the DOM contract without changing the defect.
+  - >-
+    Component contracts are NOT edited by this slice. A component that genuinely
+    wants a column axis must DECLARE flex-direction in its own styles.json rather
+    than inherit one from a primitive default it never asked for; if the visual
+    diff surfaces such a component, it is a separate follow-up, not a reason to
+    restore the leak.
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given a component rendering Stack with layout=native; when the generated CSS is applied; then no flex-direction from the Stack primitive reaches the host'
+    given: 'A generated component whose root is Stack layout="native" (e.g. Button)'
+    when: 'its generated CSS is applied in a browser'
+    then: >-
+      computed flex-direction comes from the component or the UA default, never
+      from the Stack primitive; Button''s leading-and-trailing-icon usage example
+      lays out as a single row.
+  - id: A2
+    given: 'The Stack primitive CSS/host styles for react, vue, svelte and lit'
+    when: 'they are regenerated from Stack.primitive.json'
+    then: >-
+      every flex-direction rule is scoped to an axis-bearing layout mode derived
+      from ir.axisModes, and an unscoped .stack--vertical / :host([variant]) axis
+      rule appears in none of the four.
+  - id: A3
+    given: 'layout="stack" and layout="inline-stack" hosts'
+    when: 'the same regeneration runs'
+    then: >-
+      their flex-direction is unchanged from before this slice — the fix removes
+      an axis only where displayByMode is null, and regresses no axis-bearing use.
+  - id: A4
+    given: 'A mutation that drops the axisModes scoping from any one emitter'
+    when: 'the primitive-emit test suite runs'
+    then: 'it fails — proving the pin can fail for the right reason, not just pass.'
+  - id: A5
+    given: 'The full corpus regenerated with --target=all'
+    when: 'governed:rail, root tests and all framework suites run'
+    then: >-
+      all pass, and any component whose rendered axis legitimately changed is
+      enumerated with its measured before/after geometry rather than assumed safe.
 non_functional: {}
 contracts:
   - name: 'stack-primitive'
