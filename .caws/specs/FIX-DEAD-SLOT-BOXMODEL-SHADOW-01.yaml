@@ -3,6 +3,7 @@ title: 'Classify author-overridden box-model primitives as shadowed, not dead'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: s3-shadow
 created_at: '2026-07-29T01:34:20.566Z'
 updated_at: '2026-07-29T01:34:20.566Z'
 blast_radius:
