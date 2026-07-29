@@ -1,0 +1,30 @@
+id: FIX-DEAD-SLOT-BOXMODEL-SHADOW-01
+title: 'Classify author-overridden box-model primitives as shadowed, not dead'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-07-29T01:34:20.566Z'
+updated_at: '2026-07-29T01:34:20.566Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/dead-slot-audit'
+    - 'docs/dead-slot-audit'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a box-model primitive whose consumer property is overridden in styles.root; when the dead-slot audit runs; then the slot is reported shadowed and excluded from the dead count'
+non_functional: {}
+contracts:
+  - name: 'shadow-classification'
+    type: contract-test
+    path: 'scripts/dead-slot-audit/disposition.test.mjs'
