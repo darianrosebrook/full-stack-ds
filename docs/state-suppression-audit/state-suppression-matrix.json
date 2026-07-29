@@ -1,0 +1,518 @@
+{
+  "spec": "RAIL-STATE-SUPPRESSION-01",
+  "componentsDeclaringSuppression": 16,
+  "guarded": 1,
+  "leaks": 45,
+  "reachableLeaks": 15,
+  "results": [
+    {
+      "component": "Accordion",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": [
+        {
+          "component": "Accordion",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "background-color",
+          "rootTag": "div",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Accordion",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "color",
+          "rootTag": "div",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Accordion",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Accordion",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Accordion",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Accordion",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Button",
+      "rootTag": "button",
+      "guarded": false,
+      "suppressedProps": [
+        "background-color",
+        "color"
+      ],
+      "leaks": [
+        {
+          "component": "Button",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "border-color",
+          "rootTag": "button",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Button",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "border-color",
+          "rootTag": "button",
+          "reachability": "unreachable-disabled-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Calendar",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": [
+        {
+          "component": "Calendar",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "background-color",
+          "rootTag": "div",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Calendar",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "color",
+          "rootTag": "div",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Calendar",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Calendar",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Calendar",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Calendar",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Checkbox",
+      "rootTag": "input",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": []
+    },
+    {
+      "component": "Chip",
+      "rootTag": "span",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": [
+        {
+          "component": "Chip",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "background-color",
+          "rootTag": "span",
+          "reachability": "reachable"
+        }
+      ]
+    },
+    {
+      "component": "Command",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": [
+        {
+          "component": "Command",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "background-color",
+          "rootTag": "div",
+          "reachability": "reachable"
+        }
+      ]
+    },
+    {
+      "component": "Details",
+      "rootTag": "details",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": [
+        {
+          "component": "Details",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "background-color",
+          "rootTag": "details",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Details",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "border-color",
+          "rootTag": "details",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Details",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "details",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Details",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "details",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Details",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "details",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Details",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "details",
+          "reachability": "unreachable-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Field",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": []
+    },
+    {
+      "component": "Input",
+      "rootTag": "input",
+      "guarded": false,
+      "suppressedProps": [
+        "background-color",
+        "border-color",
+        "color",
+        "opacity",
+        "cursor"
+      ],
+      "leaks": [
+        {
+          "component": "Input",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "input",
+          "reachability": "unreachable-disabled-not-focusable"
+        },
+        {
+          "component": "Input",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "input",
+          "reachability": "unreachable-disabled-not-focusable"
+        },
+        {
+          "component": "Input",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "input",
+          "reachability": "unreachable-disabled-not-focusable"
+        },
+        {
+          "component": "Input",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "input",
+          "reachability": "unreachable-disabled-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Links",
+      "rootTag": "a",
+      "guarded": false,
+      "suppressedProps": [
+        "color",
+        "cursor",
+        "text-decoration-line",
+        "pointer-events"
+      ],
+      "leaks": [
+        {
+          "component": "Links",
+          "dimension": "availability",
+          "pseudo": ":hover",
+          "property": "text-decoration-color",
+          "rootTag": "a",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Links",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "a",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Links",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "a",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Links",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "a",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Links",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "a",
+          "reachability": "reachable"
+        },
+        {
+          "component": "Links",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "border-radius",
+          "rootTag": "a",
+          "reachability": "reachable"
+        }
+      ]
+    },
+    {
+      "component": "OTP",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [
+        "opacity",
+        "cursor"
+      ],
+      "leaks": [
+        {
+          "component": "OTP",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "border-color",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "OTP",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "OTP",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "OTP",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "OTP",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Select",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": [
+        {
+          "component": "Select",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Select",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Select",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        },
+        {
+          "component": "Select",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "div",
+          "reachability": "unreachable-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Switch",
+      "rootTag": "label",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": []
+    },
+    {
+      "component": "TextField",
+      "rootTag": "div",
+      "guarded": true,
+      "suppressedProps": [
+        "background-color",
+        "border-color",
+        "color",
+        "opacity",
+        "cursor"
+      ],
+      "leaks": []
+    },
+    {
+      "component": "ToggleSwitch",
+      "rootTag": "button",
+      "guarded": false,
+      "suppressedProps": [
+        "background-color",
+        "cursor"
+      ],
+      "leaks": [
+        {
+          "component": "ToggleSwitch",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-width",
+          "rootTag": "button",
+          "reachability": "unreachable-disabled-not-focusable"
+        },
+        {
+          "component": "ToggleSwitch",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-color",
+          "rootTag": "button",
+          "reachability": "unreachable-disabled-not-focusable"
+        },
+        {
+          "component": "ToggleSwitch",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-style",
+          "rootTag": "button",
+          "reachability": "unreachable-disabled-not-focusable"
+        },
+        {
+          "component": "ToggleSwitch",
+          "dimension": "availability",
+          "pseudo": ":focus-visible",
+          "property": "outline-offset",
+          "rootTag": "button",
+          "reachability": "unreachable-disabled-not-focusable"
+        }
+      ]
+    },
+    {
+      "component": "Walkthrough",
+      "rootTag": "div",
+      "guarded": false,
+      "suppressedProps": [],
+      "leaks": []
+    }
+  ]
+}

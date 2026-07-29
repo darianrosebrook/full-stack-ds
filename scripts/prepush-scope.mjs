@@ -28,7 +28,7 @@ const PATTERNS = {
   // styling-realization ledgers (dead slots + pseudo-state gaps). Their inputs
   // are the contract corpus, the generated React CSS/TSX they classify against,
   // and the audits themselves — so a change to any of those can move a verdict.
-  stylingAudits: /^(packages\/ds-(contracts|react)\/|scripts\/(dead-slot|pseudo-state)-audit\/|scripts\/lib\/ledger-ratchet)/,
+  stylingAudits: /^(packages\/ds-(contracts|react)\/|scripts\/(dead-slot|pseudo-state|state-suppression)-audit\/|scripts\/lib\/ledger-ratchet)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't

@@ -92,6 +92,13 @@ test("a generated ds-react change runs the styling-realization ledgers", () => {
   assert.equal(r.RUN_STYLING_AUDITS, true);
 });
 
+test("editing the state-suppression rail runs the styling-realization ledgers", () => {
+  assert.equal(
+    classify(["scripts/state-suppression-audit/audit.mjs"]).RUN_STYLING_AUDITS,
+    true,
+  );
+});
+
 test("editing an audit or the shared ratchet runs the styling-realization ledgers", () => {
   assert.equal(classify(["scripts/dead-slot-audit/disposition.mjs"]).RUN_STYLING_AUDITS, true);
   assert.equal(classify(["scripts/pseudo-state-audit/audit.mjs"]).RUN_STYLING_AUDITS, true);

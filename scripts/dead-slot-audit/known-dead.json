@@ -34,14 +34,14 @@
       "slot": "alert.size.padding.inline",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"inline\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Alert",
       "slot": "alert.size.padding.page",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"page\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Alert",
@@ -97,14 +97,14 @@
       "slot": "alert-notice.size.padding.inline",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"inline\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "AlertNotice",
       "slot": "alert-notice.size.padding.page",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"page\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "AlertNotice",
@@ -179,23 +179,23 @@
     {
       "component": "Button",
       "slot": "button.size.minHeight.medium",
-      "disposition": "wire",
-      "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "disposition": "unconsumed-vocabulary",
+      "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
+      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
     },
     {
       "component": "Button",
       "slot": "button.size.padding-block.medium",
-      "disposition": "wire",
-      "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "disposition": "unconsumed-vocabulary",
+      "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
+      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
     },
     {
       "component": "Button",
       "slot": "button.size.padding-inline.medium",
-      "disposition": "wire",
-      "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "disposition": "unconsumed-vocabulary",
+      "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
+      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
     },
     {
       "component": "Calendar",
@@ -314,7 +314,7 @@
       "slot": "chip.color.background.active",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"active\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"active\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Chip",
@@ -377,7 +377,7 @@
       "slot": "command.opacity.disabled",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"disabled\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Details",
@@ -412,7 +412,7 @@
       "slot": "details.typography.fontSize.compact",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"compact\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Divider",
@@ -496,14 +496,14 @@
       "slot": "input.space.inline.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Label",
       "slot": "label.typo.weight.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Links",
@@ -538,21 +538,21 @@
       "slot": "nav-list.color.background.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "NavList",
       "slot": "nav-list.color.background.hover",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"hover\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "NavList",
       "slot": "nav-list.color.outline.focus",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"focus\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "NavList",
@@ -580,7 +580,7 @@
       "slot": "otp.size.padding.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Popover",
@@ -608,14 +608,14 @@
       "slot": "profile-flag.spacing.padding.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Select",
       "slot": "select.color.icon.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Select",
@@ -657,7 +657,7 @@
       "slot": "show-more.color.border.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "ShowMore",
@@ -671,7 +671,7 @@
       "slot": "shuttle.color.border.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Skeleton",
@@ -797,7 +797,7 @@
       "slot": "tabs.color.focus",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"focus\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Tabs",
@@ -867,7 +867,7 @@
       "slot": "toast.accent.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
-      "note": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+      "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Toast",

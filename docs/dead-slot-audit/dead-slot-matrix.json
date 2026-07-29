@@ -59,7 +59,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"inline\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert.size.padding.page",
@@ -67,7 +67,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"page\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert.typography.page.fontSize",
@@ -136,7 +136,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"inline\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert-notice.size.padding.page",
@@ -144,7 +144,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"page\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert-notice.typography.page.fontSize",
@@ -238,24 +238,24 @@
           "cssVar": "--fsds-button-size-padding-block-medium",
           "source": "tokens",
           "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
         },
         {
           "slot": "button.size.padding-inline.medium",
           "cssVar": "--fsds-button-size-padding-inline-medium",
           "source": "tokens",
           "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
         },
         {
           "slot": "button.size.minHeight.medium",
           "cssVar": "--fsds-button-size-minHeight-medium",
           "source": "tokens",
           "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
         }
       ]
     },
@@ -398,7 +398,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"active\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"active\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "chip.focus.ring.width",
@@ -483,7 +483,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"disabled\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -528,7 +528,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"compact\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -644,7 +644,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -657,7 +657,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -699,7 +699,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.color.background.hover",
@@ -707,7 +707,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"hover\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.color.background.current",
@@ -723,7 +723,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.size.gap.group",
@@ -760,7 +760,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -807,7 +807,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -820,7 +820,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "select.color.icon.isOpen",
@@ -870,7 +870,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "show-more.color.border.accent",
@@ -899,7 +899,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -1063,7 +1063,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "tabs.size.vertical.listWidth",
@@ -1158,7 +1158,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "toast.color.intent.bg",
@@ -1519,7 +1519,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"inline\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert.size.padding.page",
@@ -1527,7 +1527,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"page\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert.typography.page.fontSize",
@@ -1738,7 +1738,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"inline\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert-notice.size.padding.page",
@@ -1746,7 +1746,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"page\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "alert-notice.typography.page.fontSize",
@@ -2284,24 +2284,24 @@
           "cssVar": "--fsds-button-size-padding-block-medium",
           "source": "tokens",
           "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
         },
         {
           "slot": "button.size.padding-inline.medium",
           "cssVar": "--fsds-button-size-padding-inline-medium",
           "source": "tokens",
           "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
         },
         {
           "slot": "button.size.minHeight.medium",
           "cssVar": "--fsds-button-size-minHeight-medium",
           "source": "tokens",
           "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"medium\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
         },
         {
           "slot": "button.size.fontSize.medium",
@@ -2837,7 +2837,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"active\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"active\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "chip.color.foreground.default",
@@ -3328,7 +3328,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"disabled\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "command.color.backgroundHover",
@@ -3467,7 +3467,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"compact\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -4157,7 +4157,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "input.color.focus.default",
@@ -4252,7 +4252,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "label.typo.lineHeight.default",
@@ -4485,7 +4485,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.color.background.hover",
@@ -4493,7 +4493,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"hover\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.stateLayer.hover",
@@ -4521,7 +4521,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.size.padding.block",
@@ -4640,7 +4640,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "otp.size.radius.default",
@@ -4957,7 +4957,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "profile-flag.spacing.padding.right",
@@ -5097,7 +5097,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "select.color.placeholder.default",
@@ -5431,7 +5431,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "show-more.color.border.accent",
@@ -5494,7 +5494,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "shuttle.color.border.accent",
@@ -6367,7 +6367,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "tabs.color.underline.active",
@@ -6834,7 +6834,7 @@
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value with no styling block; consumption is genuinely missing"
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "toast.color.intent.bg",

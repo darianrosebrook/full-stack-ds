@@ -1,0 +1,365 @@
+{
+  "$comment": "State-suppression ledger (RAIL-STATE-SUPPRESSION-01). Two-directional ratchet: an unledgered leak or a stale entry fails. A declared suppresses.categories that the CSS does not honour. Independent of the pseudo-state rail — a dimension can be REALIZED and its suppression contract violated simultaneously, which is why Button scores realized while a disabled Button still takes :hover border-color. `reachability` grades whether the leak can manifest on that root today; unreachable entries are ledgered for accounting, not ignored.",
+  "gaps": [
+    {
+      "component": "Accordion",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Accordion",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Accordion",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Accordion",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Accordion",
+      "pseudo": ":hover",
+      "property": "background-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<div> root: :hover sets \"background-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Accordion",
+      "pseudo": ":hover",
+      "property": "color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<div> root: :hover sets \"color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Button",
+      "pseudo": ":focus-visible",
+      "property": "border-color",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<button> root: :focus-visible sets \"border-color\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Button",
+      "pseudo": ":hover",
+      "property": "border-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<button> root: :hover sets \"border-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Calendar",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Calendar",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Calendar",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Calendar",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Calendar",
+      "pseudo": ":hover",
+      "property": "background-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<div> root: :hover sets \"background-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Calendar",
+      "pseudo": ":hover",
+      "property": "color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<div> root: :hover sets \"color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Chip",
+      "pseudo": ":hover",
+      "property": "background-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<span> root: :hover sets \"background-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Command",
+      "pseudo": ":hover",
+      "property": "background-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<div> root: :hover sets \"background-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Details",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<details> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Details",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<details> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Details",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<details> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Details",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<details> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Details",
+      "pseudo": ":hover",
+      "property": "background-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<details> root: :hover sets \"background-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Details",
+      "pseudo": ":hover",
+      "property": "border-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<details> root: :hover sets \"border-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Input",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<input> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Input",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<input> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Input",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<input> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Input",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<input> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Links",
+      "pseudo": ":focus-visible",
+      "property": "border-radius",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<a> root: :focus-visible sets \"border-radius\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Links",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<a> root: :focus-visible sets \"outline-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Links",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<a> root: :focus-visible sets \"outline-offset\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Links",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<a> root: :focus-visible sets \"outline-style\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Links",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<a> root: :focus-visible sets \"outline-width\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "Links",
+      "pseudo": ":hover",
+      "property": "text-decoration-color",
+      "reachability": "reachable",
+      "spec": "FIX-STATE-SUPPRESSION-LEAKS-01",
+      "note": "<a> root: :hover sets \"text-decoration-color\" and the availability block never resets it, so a suppressed element still takes the interaction styling — the contract declares suppresses.categories:[\"interaction\"] and the CSS does not honour it."
+    },
+    {
+      "component": "OTP",
+      "pseudo": ":focus-visible",
+      "property": "border-color",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"border-color\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "OTP",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "OTP",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "OTP",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "OTP",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Select",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Select",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Select",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "Select",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<div> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "ToggleSwitch",
+      "pseudo": ":focus-visible",
+      "property": "outline-color",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<button> root: :focus-visible sets \"outline-color\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "ToggleSwitch",
+      "pseudo": ":focus-visible",
+      "property": "outline-offset",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<button> root: :focus-visible sets \"outline-offset\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "ToggleSwitch",
+      "pseudo": ":focus-visible",
+      "property": "outline-style",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<button> root: :focus-visible sets \"outline-style\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    },
+    {
+      "component": "ToggleSwitch",
+      "pseudo": ":focus-visible",
+      "property": "outline-width",
+      "reachability": "unreachable-disabled-not-focusable",
+      "spec": "TRIAGE-STATE-SUPPRESSION-UNREACHABLE-01",
+      "note": "<button> root: :focus-visible sets \"outline-width\" unreset, but the leak is unreachable-disabled-not-focusable on this element, so it cannot manifest today. Ledgered for accounting; becomes live if the root gains focus/activation or moves to an aria-disabled convention."
+    }
+  ]
+}

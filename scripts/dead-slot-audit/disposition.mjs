@@ -30,9 +30,18 @@
  *                     no-op class. Split out precisely so a visual change can
  *                     never ride along inside a "mechanical" batch.
  *
- *   wire              The slot's leaf names a real variant value or state value
- *                     that has no styling block at all — genuinely missing
- *                     consumption, to be authored.
+ *   unconsumed-       The leaf names a real axis value AND a block named for
+ *   vocabulary        that value redefines the slot — and still nothing reads
+ *                     it. A parallel vocabulary: the consumer reads a different
+ *                     slot family. Button declares `button.size.padding-*` and
+ *                     `minHeight` in all three size blocks while Button.css
+ *                     reads `--fsds-box-model-*`; the whole `button.size.*`
+ *                     geometry vocabulary is dead. Repair is to drop the
+ *                     duplicate or re-point the consumer — NOT to author new
+ *                     styling.
+ *
+ *   wire              The leaf names a real axis value and NO block redefines
+ *                     the slot — genuinely missing consumption, to be authored.
  *
  *   delete            POSITIVE evidence of an overclaim: the slot hangs off an
  *                     anatomy part that the generated component never renders,
@@ -189,11 +198,33 @@ export function classifyDisposition(slot, { tokens, styles, contract, prefix, re
     }
   }
 
-  // 4. wire — the leaf names a real axis value that simply has no block.
+  // 4. The leaf names a real axis value. Two very different situations hide
+  //    here, and the earlier version of this rule conflated them — it asserted
+  //    "with no styling block" in its evidence while never checking for one.
   if (declaredAxisValues(contract).has(leaf)) {
+    // 4a. unconsumed-vocabulary — a block named for this axis value DOES
+    //     redefine the slot, per value, and still nothing reads it. That is a
+    //     parallel slot vocabulary: the consumer reads a different family.
+    //     Button is the reference case — every size block redefines
+    //     `button.size.padding-*`/`minHeight`, while Button.css reads
+    //     `--fsds-box-model-*`, so the whole `button.size.*` geometry
+    //     vocabulary is declared, faithfully emitted, and dead. The repair is
+    //     to drop the duplicate vocabulary or point the consumer at it — NOT
+    //     to author new styling, which is what "wire" would have implied.
+    const redefiningBlock = Object.entries(stylesObj).find(
+      ([blockKey, block]) =>
+        blockValue(blockKey) === leaf && block && typeof block === "object" && slot in block,
+    );
+    if (redefiningBlock) {
+      return {
+        disposition: "unconsumed-vocabulary",
+        evidence: `styles["${redefiningBlock[0]}"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family`,
+      };
+    }
+    // 4b. wire — genuinely no block redefines it; consumption is missing.
     return {
       disposition: "wire",
-      evidence: `"${leaf}" is a declared variant/state value with no styling block; consumption is genuinely missing`,
+      evidence: `"${leaf}" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing`,
     };
   }
 

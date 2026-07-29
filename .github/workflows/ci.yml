@@ -221,6 +221,14 @@ jobs:
       - name: Pseudo-state ledger (declared vs realized state styling)
         run: pnpm run audit:pseudo-state
 
+      # A third, independent obligation axis: a contract may declare that one
+      # state suppresses another category (disabled suppresses interaction).
+      # Realization and suppression are orthogonal — Button's `disabled` scores
+      # REALIZED on the rail above while a disabled Button still takes :hover
+      # border-color, because the :disabled block never resets it.
+      - name: State-suppression ledger (declared suppression vs honoured in CSS)
+        run: pnpm run audit:state-suppression
+
   runtime-rail:
     name: Runtime visual proof rail
     runs-on: ubuntu-latest

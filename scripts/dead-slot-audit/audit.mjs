@@ -255,6 +255,29 @@ if (RUN_DIRECTLY) {
   const current = failing.flatMap((f) => f.dead.map((d) => ({ component: f.component, ...d })));
   const ledger = loadLedger(LEDGER_PATH, ["component", "slot"]);
   const { unledgered, stale } = diffLedger({ current, ledger, idOf: deadId });
-  const code = reportRatchet({ label: "dead-slot", current, unledgered, stale, idOf: deadId });
+  let code = reportRatchet({ label: "dead-slot", current, unledgered, stale, idOf: deadId });
+
+  // Third check, specific to this ledger: entries carry the disposition and the
+  // evidence that justified them, and a downstream slice ACTS on that note. If
+  // the classifier's verdict moves and the ledger doesn't, the note becomes a
+  // confident lie — which is exactly how `button.size.padding-block.medium`
+  // came to be filed as "wire ... with no styling block" when a `--medium`
+  // block redefines it. Re-seeding fixed that once; this makes it structural.
+  const computed = new Map(current.map((row) => [deadId(row), row.disposition]));
+  const drifted = ledger.filter(
+    (entry) => computed.has(deadId(entry)) && computed.get(deadId(entry)) !== entry.disposition,
+  );
+  if (drifted.length > 0) {
+    console.error(
+      `\n[dead-slot] FAIL — ${drifted.length} ledger entr(ies) whose recorded disposition no longer matches the classifier:`,
+    );
+    for (const entry of drifted) {
+      console.error(
+        `  ${deadId(entry)}: ledger says "${entry.disposition}", classifier says "${computed.get(deadId(entry))}"`,
+      );
+    }
+    console.error("\nRe-seed the ledger so its notes describe what the classifier actually found.");
+    code = 1;
+  }
   if (code !== 0) process.exit(code);
 }
