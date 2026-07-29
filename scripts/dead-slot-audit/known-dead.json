@@ -1,9 +1,10 @@
 {
-  "$comment": "Dead-slot ledger (RAIL-STYLING-REALIZATION-LEDGERS-01). Two-directional ratchet: the audit fails if any dead slot is missing here (unledgered) or if any entry no longer reproduces (stale). Entries may only be REMOVED by proving the slot consumed or by deleting the declaration — never by loosening the scan. In particular, do NOT widen consumption scanning to <C>.tokens.css: a slot redefinition is not a consumption, and admitting it would mass-false-green the entire re-point class. `disposition` and `note` are computed by scripts/dead-slot-audit/disposition.mjs; `review` means no rule matched and the entry needs human adjudication, NOT that it is safe to delete.",
+  "$comment": "Inert-slot ledger (RAIL-STYLING-REALIZATION-LEDGERS-01, accounting corrected by FIX-DEAD-SLOT-INERT-ACCOUNTING-01). Tracks every slot NO RULE READS — setting such a custom property has no effect, so it advertises a control with no wire behind it. `status: shadowed` entries are inert BY DESIGN (an author root rule deliberately overrides the box-model primitive) and are not defects, but they remain ledgered: an entry leaves only by becoming consumed or by having its declaration deleted, never by being declared acceptable. A declared-but-unread slot is NOT an override escape hatch — the hatch requires a consumer rule. Two-directional ratchet: the audit fails if any dead slot is missing here (unledgered) or if any entry no longer reproduces (stale). Entries may only be REMOVED by proving the slot consumed or by deleting the declaration — never by loosening the scan. In particular, do NOT widen consumption scanning to <C>.tokens.css: a slot redefinition is not a consumption, and admitting it would mass-false-green the entire re-point class. `disposition` and `note` are computed by scripts/dead-slot-audit/disposition.mjs; `review` means no rule matched and the entry needs human adjudication, NOT that it is safe to delete.",
   "gaps": [
     {
       "component": "Accordion",
       "slot": "accordion.border.width",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -11,13 +12,23 @@
     {
       "component": "Accordion",
       "slot": "accordion.spacing.paddingX",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"paddingX\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
+      "component": "Accordion",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
       "component": "Alert",
       "slot": "alert.icon.size",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -25,6 +36,7 @@
     {
       "component": "Alert",
       "slot": "alert.size.padding.inline",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -32,6 +44,7 @@
     {
       "component": "Alert",
       "slot": "alert.size.padding.page",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -39,6 +52,7 @@
     {
       "component": "Alert",
       "slot": "alert.typography.inline.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -46,6 +60,7 @@
     {
       "component": "Alert",
       "slot": "alert.typography.page.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -53,13 +68,23 @@
     {
       "component": "Alert",
       "slot": "alert.typography.page.title.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
+      "component": "Alert",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
       "component": "AlertNotice",
       "slot": "alert-notice.color.background.primary",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -67,6 +92,7 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.color.foreground.primary",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -74,6 +100,7 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.icon.size",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -81,6 +108,7 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.size.padding.inline",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -88,6 +116,7 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.size.padding.page",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -95,6 +124,7 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.typography.inline.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -102,6 +132,7 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.typography.page.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -109,13 +140,23 @@
     {
       "component": "AlertNotice",
       "slot": "alert-notice.typography.page.title.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
+      "component": "AlertNotice",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
       "component": "Avatar",
       "slot": "avatar.color.background.inverse",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"inverse\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -123,6 +164,7 @@
     {
       "component": "Blockquote",
       "slot": "blockquote.size.fontSize.lg",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--lg\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -130,6 +172,7 @@
     {
       "component": "Blockquote",
       "slot": "blockquote.size.fontSize.sm",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--sm\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -137,6 +180,7 @@
     {
       "component": "Blockquote",
       "slot": "blockquote.size.padding.lg",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--lg\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -144,13 +188,23 @@
     {
       "component": "Blockquote",
       "slot": "blockquote.size.padding.sm",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
     },
     {
       "component": "Button",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Button",
       "slot": "button.size.minHeight.medium",
+      "status": "dead",
       "disposition": "unconsumed-vocabulary",
       "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
       "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
@@ -158,6 +212,7 @@
     {
       "component": "Button",
       "slot": "button.size.padding-block.medium",
+      "status": "dead",
       "disposition": "unconsumed-vocabulary",
       "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
       "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
@@ -165,6 +220,7 @@
     {
       "component": "Button",
       "slot": "button.size.padding-inline.medium",
+      "status": "dead",
       "disposition": "unconsumed-vocabulary",
       "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
       "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
@@ -172,6 +228,7 @@
     {
       "component": "Calendar",
       "slot": "calendar.color.border.accent",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -179,6 +236,7 @@
     {
       "component": "Calendar",
       "slot": "calendar.color.day.range.background",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"background\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -186,13 +244,23 @@
     {
       "component": "Calendar",
       "slot": "calendar.typography.weekday.size",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
       "component": "Card",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Card",
       "slot": "card.color.badge.error.background",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -200,6 +268,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.error.foreground",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -207,6 +276,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.info.background",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -214,6 +284,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.info.foreground",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -221,6 +292,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.neutral.background",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -228,6 +300,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.neutral.foreground",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -235,6 +308,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.success.background",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -242,6 +316,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.success.foreground",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -249,6 +324,7 @@
     {
       "component": "Card",
       "slot": "card.color.badge.warning.background",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
@@ -256,13 +332,31 @@
     {
       "component": "Card",
       "slot": "card.color.badge.warning.foreground",
+      "status": "dead",
       "disposition": "delete",
       "spec": "FIX-CONTRACT-OVERCLAIM-SWEEP-01",
       "note": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
     },
     {
       "component": "Chip",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Chip",
+      "slot": "box-model.min-height",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Chip",
       "slot": "chip.color.background.active",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"active\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -270,6 +364,7 @@
     {
       "component": "Chip",
       "slot": "chip.color.background.selected",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--selected\"] redefines sibling \"chip.color.background.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -277,6 +372,7 @@
     {
       "component": "Chip",
       "slot": "chip.color.border.selected",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -284,6 +380,7 @@
     {
       "component": "Chip",
       "slot": "chip.color.foreground.selected",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--selected\"] redefines sibling \"chip.color.foreground.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -291,6 +388,7 @@
     {
       "component": "Chip",
       "slot": "chip.dismiss.size",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -298,6 +396,7 @@
     {
       "component": "Chip",
       "slot": "chip.focus.ring.color",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -305,6 +404,7 @@
     {
       "component": "Chip",
       "slot": "chip.focus.ring.offset",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -312,6 +412,7 @@
     {
       "component": "Chip",
       "slot": "chip.focus.ring.style",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"style\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -319,6 +420,7 @@
     {
       "component": "Chip",
       "slot": "chip.focus.ring.width",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -326,13 +428,23 @@
     {
       "component": "Command",
       "slot": "command.opacity.disabled",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Details",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Details",
       "slot": "details.size.padding.compact",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--compact\"] redefines sibling \"details.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -340,6 +452,7 @@
     {
       "component": "Details",
       "slot": "details.size.padding.page",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"page\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -347,6 +460,7 @@
     {
       "component": "Details",
       "slot": "details.typography.fontSize.body",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"body\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -354,6 +468,7 @@
     {
       "component": "Details",
       "slot": "details.typography.fontSize.compact",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -361,13 +476,23 @@
     {
       "component": "Divider",
       "slot": "divider.size.thicknessThick",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
       "component": "Field",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Field",
       "slot": "field.color.borderBold",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"borderBold\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -375,6 +500,7 @@
     {
       "component": "Field",
       "slot": "field.color.valid-text",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"valid-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -382,6 +508,7 @@
     {
       "component": "Field",
       "slot": "field.color.validating-border",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"validating-border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -389,6 +516,7 @@
     {
       "component": "Field",
       "slot": "field.color.validating-text",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"validating-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -396,6 +524,7 @@
     {
       "component": "Field",
       "slot": "field.pad.y",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -403,6 +532,7 @@
     {
       "component": "Field",
       "slot": "field.spacing.indicator",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"indicator\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -410,6 +540,7 @@
     {
       "component": "Image",
       "slot": "image.size.icon",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"icon\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -417,13 +548,23 @@
     {
       "component": "Image",
       "slot": "image.typography.error.fontSize",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
       "component": "Input",
+      "slot": "box-model.min-height",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Input",
       "slot": "input.space.inline.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -431,13 +572,23 @@
     {
       "component": "Label",
       "slot": "label.typo.weight.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
       "component": "Links",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Links",
       "slot": "links.size.fontSize.large",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--large\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -445,6 +596,7 @@
     {
       "component": "Links",
       "slot": "links.size.fontSize.small",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--small\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -452,6 +604,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.color.background.current",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"current\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -459,6 +612,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.color.background.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -466,6 +620,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.color.background.hover",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -473,6 +628,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.color.outline.focus",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -480,6 +636,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.size.fontSize.groupLabel",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"groupLabel\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -487,6 +644,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.size.fontSize.item",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"item\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -494,6 +652,7 @@
     {
       "component": "NavList",
       "slot": "nav-list.size.gap.group",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"group\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -501,13 +660,31 @@
     {
       "component": "OTP",
       "slot": "otp.size.padding.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
+      "component": "Popover",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Postcard",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
       "component": "Postcard",
       "slot": "postcard.size.radius.full",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -515,6 +692,7 @@
     {
       "component": "ProfileFlag",
       "slot": "profile-flag.spacing.padding.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -522,6 +700,7 @@
     {
       "component": "Select",
       "slot": "select.color.icon.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -529,6 +708,7 @@
     {
       "component": "Select",
       "slot": "select.color.icon.isOpen",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"isOpen\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -536,6 +716,7 @@
     {
       "component": "Sheet",
       "slot": "sheet.color.backgroundHover",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"backgroundHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -543,6 +724,7 @@
     {
       "component": "Sheet",
       "slot": "sheet.focus.color",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -550,6 +732,7 @@
     {
       "component": "Sheet",
       "slot": "sheet.focus.width",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -557,6 +740,7 @@
     {
       "component": "ShowMore",
       "slot": "show-more.color.border.accent",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -564,6 +748,7 @@
     {
       "component": "ShowMore",
       "slot": "show-more.color.border.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -571,6 +756,7 @@
     {
       "component": "ShowMore",
       "slot": "show-more.overlay.imageOverlay",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"imageOverlay\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -578,6 +764,7 @@
     {
       "component": "Shuttle",
       "slot": "shuttle.color.border.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -585,6 +772,7 @@
     {
       "component": "Skeleton",
       "slot": "skeleton.color.static",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"static\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -592,6 +780,7 @@
     {
       "component": "Skeleton",
       "slot": "skeleton.gap.compact",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--compact\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -599,6 +788,7 @@
     {
       "component": "Skeleton",
       "slot": "skeleton.gap.spacious",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--spacious\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -606,6 +796,7 @@
     {
       "component": "Skeleton",
       "slot": "skeleton.radius.full",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -613,6 +804,7 @@
     {
       "component": "Skeleton",
       "slot": "skeleton.radius.lg",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"lg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -620,6 +812,7 @@
     {
       "component": "Skeleton",
       "slot": "skeleton.radius.sm",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"sm\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -627,6 +820,7 @@
     {
       "component": "Stat",
       "slot": "stat.color.foreground.label",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -634,6 +828,7 @@
     {
       "component": "Stat",
       "slot": "stat.size.gap",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"gap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -641,6 +836,7 @@
     {
       "component": "Stat",
       "slot": "stat.size.label",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -648,6 +844,7 @@
     {
       "component": "Stat",
       "slot": "stat.typography.weight.label",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -655,6 +852,7 @@
     {
       "component": "Table",
       "slot": "table.color.textMuted",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"textMuted\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -662,6 +860,7 @@
     {
       "component": "Table",
       "slot": "table.focus.color",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -669,6 +868,7 @@
     {
       "component": "Table",
       "slot": "table.focus.offset",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -676,6 +876,7 @@
     {
       "component": "Table",
       "slot": "table.focus.width",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -683,6 +884,7 @@
     {
       "component": "Table",
       "slot": "table.size.cellHeight",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"cellHeight\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -690,13 +892,23 @@
     {
       "component": "Table",
       "slot": "table.spacing.sortGap",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"sortGap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
       "component": "Tabs",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Tabs",
       "slot": "tabs.color.focus",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -704,6 +916,7 @@
     {
       "component": "Tabs",
       "slot": "tabs.size.vertical.listWidth",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -711,6 +924,7 @@
     {
       "component": "Text",
       "slot": "text.size.2xl",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--2xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -718,6 +932,7 @@
     {
       "component": "Text",
       "slot": "text.size.3xl",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--3xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -725,6 +940,7 @@
     {
       "component": "Text",
       "slot": "text.size.lg",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--lg\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -732,6 +948,7 @@
     {
       "component": "Text",
       "slot": "text.size.sm",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--sm\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -739,6 +956,7 @@
     {
       "component": "Text",
       "slot": "text.size.xl",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
@@ -746,13 +964,31 @@
     {
       "component": "Text",
       "slot": "text.size.xs",
+      "status": "dead",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
     },
     {
+      "component": "TextField",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Toast",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
       "component": "Toast",
       "slot": "toast.accent.default",
+      "status": "dead",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
@@ -760,6 +996,7 @@
     {
       "component": "Toast",
       "slot": "toast.color.intent.bg",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"bg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -767,6 +1004,7 @@
     {
       "component": "Toast",
       "slot": "toast.color.intent.border",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -774,6 +1012,7 @@
     {
       "component": "Toast",
       "slot": "toast.motion.enter",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"enter\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -781,6 +1020,7 @@
     {
       "component": "Toast",
       "slot": "toast.motion.leave",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"leave\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -788,6 +1028,7 @@
     {
       "component": "Toast",
       "slot": "toast.timing.auto-dismiss",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"auto-dismiss\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -795,6 +1036,7 @@
     {
       "component": "Tooltip",
       "slot": "tooltip.size.padding.y",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -802,6 +1044,7 @@
     {
       "component": "Truncate",
       "slot": "truncate.color.background.primary",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
@@ -809,13 +1052,23 @@
     {
       "component": "Truncate",
       "slot": "truncate.color.foreground.linkHover",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"linkHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
       "component": "Walkthrough",
+      "slot": "box-model.gap",
+      "status": "shadowed",
+      "disposition": "shadowed",
+      "spec": "NONE-inert-by-design",
+      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+    },
+    {
+      "component": "Walkthrough",
       "slot": "walkthrough.dots.active",
+      "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"active\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
