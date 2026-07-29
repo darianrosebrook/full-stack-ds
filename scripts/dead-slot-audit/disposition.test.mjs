@@ -135,6 +135,31 @@ check("a leaf naming a declared variant value with no block is `wire`", () => {
   assert.equal(r.disposition, "wire");
 });
 
+check("a slot redefined per axis value but read by nothing is `unconsumed-vocabulary`", () => {
+  // Button's reference case: every size block redefines button.size.padding-*,
+  // while Button.css reads --fsds-box-model-*. Calling this `wire` would tell a
+  // later slice to author styling, when the repair is to drop the duplicate
+  // vocabulary or re-point the consumer.
+  const r = classifyDisposition("button.size.padding-block.medium", {
+    ...ctx({ contract: { variants: { size: ["small", "medium", "large"] } } }),
+    styles: {
+      "--medium": { "button.size.padding-block.medium": { resolvesTo: "x", fallback: "8px" } },
+    },
+  });
+  assert.equal(r.disposition, "unconsumed-vocabulary");
+});
+
+check("`wire` is only used when NO block redefines the slot", () => {
+  // Guards the exact defect this split fixes: the previous rule asserted "no
+  // styling block" in its evidence without ever checking for one.
+  const r = classifyDisposition("button.size.padding-block.medium", {
+    ...ctx({ contract: { variants: { size: ["small", "medium", "large"] } } }),
+    styles: { "--medium": { "some.other.slot": { resolvesTo: "x", fallback: "1px" } } },
+  });
+  assert.equal(r.disposition, "wire");
+  assert.match(r.evidence, /no styling block redefines this slot/);
+});
+
 check("a leaf naming a declared STATE value is also `wire`", () => {
   const r = classifyDisposition(
     "chip.color.background.selected",

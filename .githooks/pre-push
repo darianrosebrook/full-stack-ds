@@ -160,6 +160,7 @@ if [ "${RUN_STYLING_AUDITS:-false}" = true ]; then
   echo ""; echo "[pre-push] audit:dead-slots + audit:pseudo-state"
   pnpm run audit:dead-slots
   pnpm run audit:pseudo-state
+  pnpm run audit:state-suppression
 else echo "[pre-push] skip styling-realization ledgers"; fi
 
 # --- heaviest, last: governed:rail + generated-tree drift diff ---
