@@ -83,6 +83,34 @@ check("dead slots are not credited by their own declaration site in tokens.css",
   // in the structure CSS. This is the exclusion working as designed.
 });
 
+// ---- 3b. CROSS-SLOT READS IN tokens.css COUNT (FIX-DEAD-SLOT-CONSUMPTION-DEFINITION-01) ----
+// A slot read by a var() inside ANOTHER slot's declaration is genuinely
+// consumed: overriding it changes what that other slot resolves to, so the knob
+// works. Chip's `chip.dismiss.size` is declared once and read by four other
+// box-model slots in tokens.css; it was previously reported dead.
+check("a slot read by ANOTHER slot's declaration in tokens.css is consumed", () => {
+  const c = classify("Chip");
+  const slot = c.slots.find((s) => s.slot === "chip.dismiss.size");
+  assert.equal(slot.status, "consumed");
+});
+
+// The paired control, and the one that keeps the widening honest: admitting
+// tokens.css reads must NOT let a slot consume itself. Button's size slots are
+// declared there (and redefined in all three size blocks) yet read by nothing,
+// so they must stay dead. If this ever flips to consumed, the scan has started
+// crediting declarations as reads and the whole rail is hollow.
+check("a slot present in tokens.css only as its own declaration stays dead", () => {
+  const c = classify("Button");
+  for (const name of [
+    "button.size.padding-inline.medium",
+    "button.size.padding-block.medium",
+    "button.size.minHeight.medium",
+  ]) {
+    const slot = c.slots.find((s) => s.slot === name);
+    assert.equal(slot.status, "dead", `${name} must not be credited by its own declaration`);
+  }
+});
+
 // ---- 4. CORPUS FLOOR: classifier runs over the full corpus cleanly ----
 check("classify runs over the full corpus and produces a non-trivial slot count", () => {
   const components = ALL_COMPONENTS();

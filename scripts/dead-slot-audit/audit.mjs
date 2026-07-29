@@ -135,11 +135,31 @@ export function classify(component) {
     prefix,
   );
 
+  // A slot is consumed when some rule READS it. Two distinct read sites:
+  //
+  //   1. the structure CSS — `padding: var(--fsds-x-size-padding-default)`
+  //   2. ANOTHER slot's declaration in tokens.css —
+  //      `--fsds-box-model-min-height: var(--fsds-chip-dismiss-size, 12px)`
+  //
+  // (2) is a real consumption under the premise this rail measures: overriding
+  // the slot changes what the other slot resolves to, so the knob works. Chip's
+  // `chip.dismiss.size` is read by four other slots this way and was reported
+  // inert — a false positive independent of any repair.
+  //
+  // What must NOT count is a slot's own declaration line. That is the reason
+  // tokens.css was excluded wholesale, and it survives: we match `var(--slot`,
+  // a READ, never `--slot:`, a declaration. So a slot still cannot consume
+  // itself, and a variant block that redefines a sibling without routing
+  // through the leaf still leaves the leaf dead.
+  const tokensCss = readText(resolve(REACT, component, `${component}.tokens.css`));
+
   const slots = declaredSlots(component).map((s) => {
     // Boundary-safe: require the cssVar followed by a non-identifier char so
     // --foo-medium doesn't match when searching for --foo-medium-extra.
     const re = new RegExp(`${escapeRe(s.cssVar)}(?![A-Za-z0-9_-])`);
-    const status = re.test(structureCss) ? "consumed" : "dead";
+    const readRe = new RegExp(`var\\(\\s*${escapeRe(s.cssVar)}(?![A-Za-z0-9_-])`);
+    const status =
+      re.test(structureCss) || readRe.test(tokensCss) ? "consumed" : "dead";
     if (status === "consumed") return { ...s, status };
     // Every dead slot carries its diagnosis and the evidence for it, so the
     // reviewer audits the rule rather than 134 individual rows — and so the
