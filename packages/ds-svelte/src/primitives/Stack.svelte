@@ -55,11 +55,13 @@
     display: contents;
   }
 
-  .FSDS-stack--vertical {
+  .FSDS-stack--layout-stack.FSDS-stack--vertical,
+  .FSDS-stack--layout-inline-stack.FSDS-stack--vertical {
     flex-direction: column;
   }
 
-  .FSDS-stack--horizontal {
+  .FSDS-stack--layout-stack.FSDS-stack--horizontal,
+  .FSDS-stack--layout-inline-stack.FSDS-stack--horizontal {
     flex-direction: row;
   }
 </style>

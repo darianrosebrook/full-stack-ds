@@ -50,10 +50,13 @@ export function generateLitStackPrimitiveSource(ir: PrimitiveIR): string {
       `    :host([layout="${mode}"]) {\n      display: ${display};\n    }`,
     );
   }
+  // Scoped to axis-bearing modes: a null-display mode (native) leaves layout to
+  // the host, so the variant must not push an axis onto it.
   for (const [variant, axis] of Object.entries(ir.layout.axisByVariant)) {
-    hostRules.push(
-      `    :host([variant="${variant}"]) {\n      flex-direction: ${axis};\n    }`,
-    );
+    const selector = ir.axisModes
+      .map((mode) => `    :host([layout="${mode}"][variant="${variant}"])`)
+      .join(",\n");
+    hostRules.push(`${selector} {\n      flex-direction: ${axis};\n    }`);
   }
 
   return `${BANNER}
