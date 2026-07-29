@@ -275,15 +275,15 @@
   },
   "--selected": {
     "chip.color.background.default": {
-      "resolvesTo": "semantic.color.background.info.subtle",
+      "resolvesTo": "chip.color.background.selected",
       "fallback": "#95dafb"
     },
     "chip.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.on.info.subtle",
+      "resolvesTo": "chip.color.foreground.selected",
       "fallback": "#013ab0"
     },
     "chip.color.border.default": {
-      "resolvesTo": "semantic.color.border.info",
+      "resolvesTo": "chip.color.border.selected",
       "fallback": "#034fd6"
     }
   },

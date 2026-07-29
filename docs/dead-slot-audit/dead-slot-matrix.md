@@ -2,7 +2,7 @@
 
 `RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).
 
-Components: **49** · slots declared: **894** · consumed: **761** · **inert: 133** (defects: **116** · inert-by-design: **17**)
+Components: **49** · slots declared: **894** · consumed: **779** · **inert: 115** (defects: **98** · inert-by-design: **17**)
 
 ## Dead slots — declared slots with no `var()` consumer in the structure CSS
 
@@ -25,10 +25,6 @@ Components: **49** · slots declared: **894** · consumed: **761** · **inert: 1
 | AlertNotice | `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | AlertNotice | `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Avatar | `avatar.color.background.inverse` | `--fsds-avatar-color-background-inverse` | `review` | no rule matched: "inverse" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Blockquote | `blockquote.size.padding.sm` | `--fsds-blockquote-size-padding-sm` | `repoint` | styles["--sm"] redefines sibling "blockquote.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Blockquote | `blockquote.size.padding.lg` | `--fsds-blockquote-size-padding-lg` | `repoint` | styles["--lg"] redefines sibling "blockquote.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Blockquote | `blockquote.size.fontSize.sm` | `--fsds-blockquote-size-fontSize-sm` | `repoint` | styles["--sm"] redefines sibling "blockquote.size.fontSize.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Blockquote | `blockquote.size.fontSize.lg` | `--fsds-blockquote-size-fontSize-lg` | `repoint` | styles["--lg"] redefines sibling "blockquote.size.fontSize.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Button | `button.size.padding-block.medium` | `--fsds-button-size-padding-block-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
 | Button | `button.size.padding-inline.medium` | `--fsds-button-size-padding-inline-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
 | Button | `button.size.minHeight.medium` | `--fsds-button-size-minHeight-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
@@ -50,11 +46,7 @@ Components: **49** · slots declared: **894** · consumed: **761** · **inert: 1
 | Chip | `chip.focus.ring.color` | `--fsds-chip-focus-ring-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Chip | `chip.focus.ring.style` | `--fsds-chip-focus-ring-style` | `review` | no rule matched: "style" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Chip | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Chip | `chip.color.background.selected` | `--fsds-chip-color-background-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.background.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Chip | `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.foreground.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Chip | `chip.color.border.selected` | `--fsds-chip-color-border-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.border.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Command | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | `wire` | "disabled" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Details | `details.size.padding.compact` | `--fsds-details-size-padding-compact` | `repoint` | styles["--compact"] redefines sibling "details.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Details | `details.size.padding.page` | `--fsds-details-size-padding-page` | `review` | no rule matched: "page" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Details | `details.typography.fontSize.body` | `--fsds-details-typography-fontSize-body` | `review` | no rule matched: "body" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Details | `details.typography.fontSize.compact` | `--fsds-details-typography-fontSize-compact` | `wire` | "compact" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
@@ -69,8 +61,6 @@ Components: **49** · slots declared: **894** · consumed: **761** · **inert: 1
 | Image | `image.typography.error.fontSize` | `--fsds-image-typography-error-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Input | `input.space.inline.default` | `--fsds-input-space-inline-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Label | `label.typo.weight.default` | `--fsds-label-typo-weight-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Links | `links.size.fontSize.small` | `--fsds-links-size-fontSize-small` | `repoint` | styles["--small"] redefines sibling "links.size.fontSize.medium" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Links | `links.size.fontSize.large` | `--fsds-links-size-fontSize-large` | `repoint` | styles["--large"] redefines sibling "links.size.fontSize.medium" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | NavList | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | `wire` | "hover" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | `review` | no rule matched: "current" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -94,8 +84,6 @@ Components: **49** · slots declared: **894** · consumed: **761** · **inert: 1
 | Skeleton | `skeleton.radius.sm` | `--fsds-skeleton-radius-sm` | `review` | no rule matched: "sm" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Skeleton | `skeleton.radius.lg` | `--fsds-skeleton-radius-lg` | `review` | no rule matched: "lg" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Skeleton | `skeleton.radius.full` | `--fsds-skeleton-radius-full` | `review` | no rule matched: "full" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Skeleton | `skeleton.gap.compact` | `--fsds-skeleton-gap-compact` | `repoint` | styles["--compact"] redefines sibling "skeleton.gap.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Skeleton | `skeleton.gap.spacious` | `--fsds-skeleton-gap-spacious` | `repoint` | styles["--spacious"] redefines sibling "skeleton.gap.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Stat | `stat.color.foreground.label` | `--fsds-stat-color-foreground-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Stat | `stat.size.label` | `--fsds-stat-size-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Stat | `stat.size.gap` | `--fsds-stat-size-gap` | `review` | no rule matched: "gap" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -108,12 +96,6 @@ Components: **49** · slots declared: **894** · consumed: **761** · **inert: 1
 | Table | `table.focus.offset` | `--fsds-table-focus-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Tabs | `tabs.color.focus` | `--fsds-tabs-color-focus` | `wire` | "focus" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Tabs | `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-listWidth` | `review` | no rule matched: "listWidth" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Text | `text.size.xs` | `--fsds-text-size-xs` | `repoint` | styles["--xs"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Text | `text.size.sm` | `--fsds-text-size-sm` | `repoint` | styles["--sm"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Text | `text.size.lg` | `--fsds-text-size-lg` | `repoint` | styles["--lg"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Text | `text.size.xl` | `--fsds-text-size-xl` | `repoint` | styles["--xl"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Text | `text.size.2xl` | `--fsds-text-size-2xl` | `repoint` | styles["--2xl"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Text | `text.size.3xl` | `--fsds-text-size-3xl` | `repoint` | styles["--3xl"] redefines sibling "text.size.md" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Toast | `toast.accent.default` | `--fsds-toast-accent-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Toast | `toast.color.intent.bg` | `--fsds-toast-color-intent-bg` | `review` | no rule matched: "bg" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Toast | `toast.color.intent.border` | `--fsds-toast-color-intent-border` | `review` | no rule matched: "border" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -249,29 +231,7 @@ declared: **12** · consumed: **12** · dead: **0**
 
 ### Blockquote  `.blockquote`
 
-declared: **19** · consumed: **15** · dead: **4**
-
-| slot | CSS var | status | source |
-|---|---|---|---|
-| `box-model.padding-block-start` | `--fsds-box-model-padding-block-start` | ✓ consumed | `tokens` |
-| `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
-| `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
-| `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
-| `box-model.min-width` | `--fsds-box-model-min-width` | ✓ consumed | `tokens` |
-| `blockquote.color.foreground.primary` | `--fsds-blockquote-color-foreground-primary` | ✓ consumed | `tokens` |
-| `blockquote.color.background.default` | `--fsds-blockquote-color-background-default` | ✓ consumed | `tokens` |
-| `blockquote.color.border.default` | `--fsds-blockquote-color-border-default` | ✓ consumed | `tokens` |
-| `blockquote.typography.fontStyle` | `--fsds-blockquote-typography-fontStyle` | ✓ consumed | `tokens` |
-| `blockquote.typography.fontWeight` | `--fsds-blockquote-typography-fontWeight` | ✓ consumed | `tokens` |
-| `blockquote.size.padding.default` | `--fsds-blockquote-size-padding-default` | ✓ consumed | `tokens` |
-| `blockquote.size.padding.sm` | `--fsds-blockquote-size-padding-sm` | ✗ dead | `tokens` |
-| `blockquote.size.padding.lg` | `--fsds-blockquote-size-padding-lg` | ✗ dead | `tokens` |
-| `blockquote.size.radius.default` | `--fsds-blockquote-size-radius-default` | ✓ consumed | `tokens` |
-| `blockquote.size.border.thick` | `--fsds-blockquote-size-border-thick` | ✓ consumed | `tokens` |
-| `blockquote.size.fontSize.sm` | `--fsds-blockquote-size-fontSize-sm` | ✗ dead | `tokens` |
-| `blockquote.size.fontSize.md` | `--fsds-blockquote-size-fontSize-md` | ✓ consumed | `tokens` |
-| `blockquote.size.fontSize.lg` | `--fsds-blockquote-size-fontSize-lg` | ✗ dead | `tokens` |
+declared: **19** · consumed: **19** · dead: **0**
 
 ### Breadcrumbs  `.breadcrumbs`
 
@@ -388,7 +348,7 @@ declared: **15** · consumed: **15** · dead: **0**
 
 ### Chip  `.chip`
 
-declared: **32** · consumed: **22** · dead: **8**
+declared: **32** · consumed: **25** · dead: **5**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -411,9 +371,9 @@ declared: **32** · consumed: **22** · dead: **8**
 | `chip.focus.ring.style` | `--fsds-chip-focus-ring-style` | ✗ dead | `tokens` |
 | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | ✗ dead | `tokens` |
 | `chip.size.minHeight` | `--fsds-chip-size-minHeight` | ✓ consumed | `tokens` |
-| `chip.color.background.selected` | `--fsds-chip-color-background-selected` | ✗ dead | `tokens` |
-| `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | ✗ dead | `tokens` |
-| `chip.color.border.selected` | `--fsds-chip-color-border-selected` | ✗ dead | `tokens` |
+| `chip.color.background.selected` | `--fsds-chip-color-background-selected` | ✓ consumed | `tokens` |
+| `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | ✓ consumed | `tokens` |
+| `chip.color.border.selected` | `--fsds-chip-color-border-selected` | ✓ consumed | `tokens` |
 | `chip.dismiss.size` | `--fsds-chip-dismiss-size` | ✓ consumed | `tokens` |
 | `chip.dismiss.gap` | `--fsds-chip-dismiss-gap` | ✓ consumed | `tokens` |
 | `box-model.padding-block-start` | `--fsds-box-model-padding-block-start` | ✓ consumed | `styles:.chip__action.button` |
@@ -461,7 +421,7 @@ declared: **19** · consumed: **18** · dead: **1**
 
 ### Details  `.details`
 
-declared: **19** · consumed: **14** · dead: **4**
+declared: **19** · consumed: **15** · dead: **3**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -480,7 +440,7 @@ declared: **19** · consumed: **14** · dead: **4**
 | `details.spacing.gap.default` | `--fsds-details-spacing-gap-default` | ✓ consumed | `tokens` |
 | `details.typography.lineHeight.body` | `--fsds-details-typography-lineHeight-body` | ✓ consumed | `tokens` |
 | `details.typography.fontWeight.medium` | `--fsds-details-typography-fontWeight-medium` | ✓ consumed | `tokens` |
-| `details.size.padding.compact` | `--fsds-details-size-padding-compact` | ✗ dead | `tokens` |
+| `details.size.padding.compact` | `--fsds-details-size-padding-compact` | ✓ consumed | `tokens` |
 | `details.size.padding.page` | `--fsds-details-size-padding-page` | ✗ dead | `tokens` |
 | `details.typography.fontSize.body` | `--fsds-details-typography-fontSize-body` | ✗ dead | `tokens` |
 | `details.typography.fontSize.compact` | `--fsds-details-typography-fontSize-compact` | ✗ dead | `tokens` |
@@ -614,26 +574,7 @@ declared: **4** · consumed: **3** · dead: **1**
 
 ### Links  `.links`
 
-declared: **16** · consumed: **13** · dead: **2**
-
-| slot | CSS var | status | source |
-|---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
-| `links.color.foreground.default` | `--fsds-links-color-foreground-default` | ✓ consumed | `tokens` |
-| `links.color.foreground.hover` | `--fsds-links-color-foreground-hover` | ✓ consumed | `tokens` |
-| `links.color.foreground.visited` | `--fsds-links-color-foreground-visited` | ✓ consumed | `tokens` |
-| `links.color.foreground.disabled` | `--fsds-links-color-foreground-disabled` | ✓ consumed | `tokens` |
-| `links.color.underline.default` | `--fsds-links-color-underline-default` | ✓ consumed | `tokens` |
-| `links.spacing.gap.default` | `--fsds-links-spacing-gap-default` | ✓ consumed | `tokens` |
-| `links.motion.duration.fast` | `--fsds-links-motion-duration-fast` | ✓ consumed | `tokens` |
-| `links.focus.ring.width` | `--fsds-links-focus-ring-width` | ✓ consumed | `tokens` |
-| `links.focus.ring.color` | `--fsds-links-focus-ring-color` | ✓ consumed | `tokens` |
-| `links.focus.ring.style` | `--fsds-links-focus-ring-style` | ✓ consumed | `tokens` |
-| `links.focus.ring.offset` | `--fsds-links-focus-ring-offset` | ✓ consumed | `tokens` |
-| `links.focus.ring.radius` | `--fsds-links-focus-ring-radius` | ✓ consumed | `tokens` |
-| `links.size.fontSize.small` | `--fsds-links-size-fontSize-small` | ✗ dead | `tokens` |
-| `links.size.fontSize.medium` | `--fsds-links-size-fontSize-medium` | ✓ consumed | `tokens` |
-| `links.size.fontSize.large` | `--fsds-links-size-fontSize-large` | ✗ dead | `tokens` |
+declared: **16** · consumed: **15** · dead: **0**
 
 ### List  `.list`
 
@@ -840,7 +781,7 @@ declared: **7** · consumed: **6** · dead: **1**
 
 ### Skeleton  `.skeleton`
 
-declared: **13** · consumed: **7** · dead: **6**
+declared: **13** · consumed: **9** · dead: **4**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -851,9 +792,9 @@ declared: **13** · consumed: **7** · dead: **6**
 | `skeleton.radius.md` | `--fsds-skeleton-radius-md` | ✓ consumed | `tokens` |
 | `skeleton.radius.lg` | `--fsds-skeleton-radius-lg` | ✗ dead | `tokens` |
 | `skeleton.radius.full` | `--fsds-skeleton-radius-full` | ✗ dead | `tokens` |
-| `skeleton.gap.compact` | `--fsds-skeleton-gap-compact` | ✗ dead | `tokens` |
+| `skeleton.gap.compact` | `--fsds-skeleton-gap-compact` | ✓ consumed | `tokens` |
 | `skeleton.gap.md` | `--fsds-skeleton-gap-md` | ✓ consumed | `tokens` |
-| `skeleton.gap.spacious` | `--fsds-skeleton-gap-spacious` | ✗ dead | `tokens` |
+| `skeleton.gap.spacious` | `--fsds-skeleton-gap-spacious` | ✓ consumed | `tokens` |
 | `skeleton.anim.duration` | `--fsds-skeleton-anim-duration` | ✓ consumed | `tokens` |
 | `skeleton.anim.easing` | `--fsds-skeleton-anim-easing` | ✓ consumed | `tokens` |
 | `skeleton.shape.height.text` | `--fsds-skeleton-shape-height-text` | ✓ consumed | `tokens` |
@@ -947,28 +888,7 @@ declared: **18** · consumed: **15** · dead: **2**
 
 ### Text  `.text`
 
-declared: **18** · consumed: **12** · dead: **6**
-
-| slot | CSS var | status | source |
-|---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
-| `text.color.foreground.primary` | `--fsds-text-color-foreground-primary` | ✓ consumed | `tokens` |
-| `text.typography.fontWeight.light` | `--fsds-text-typography-fontWeight-light` | ✓ consumed | `tokens` |
-| `text.typography.fontWeight.regular` | `--fsds-text-typography-fontWeight-regular` | ✓ consumed | `tokens` |
-| `text.typography.fontWeight.medium` | `--fsds-text-typography-fontWeight-medium` | ✓ consumed | `tokens` |
-| `text.typography.fontWeight.bold` | `--fsds-text-typography-fontWeight-bold` | ✓ consumed | `tokens` |
-| `text.typography.lineHeight.heading` | `--fsds-text-typography-lineHeight-heading` | ✓ consumed | `tokens` |
-| `text.typography.lineHeight.body` | `--fsds-text-typography-lineHeight-body` | ✓ consumed | `tokens` |
-| `text.typography.lineHeight.tight` | `--fsds-text-typography-lineHeight-tight` | ✓ consumed | `tokens` |
-| `text.typography.letterSpacing.wide` | `--fsds-text-typography-letterSpacing-wide` | ✓ consumed | `tokens` |
-| `text.typography.letterSpacing.tight` | `--fsds-text-typography-letterSpacing-tight` | ✓ consumed | `tokens` |
-| `text.size.xs` | `--fsds-text-size-xs` | ✗ dead | `tokens` |
-| `text.size.sm` | `--fsds-text-size-sm` | ✗ dead | `tokens` |
-| `text.size.md` | `--fsds-text-size-md` | ✓ consumed | `tokens` |
-| `text.size.lg` | `--fsds-text-size-lg` | ✗ dead | `tokens` |
-| `text.size.xl` | `--fsds-text-size-xl` | ✗ dead | `tokens` |
-| `text.size.2xl` | `--fsds-text-size-2xl` | ✗ dead | `tokens` |
-| `text.size.3xl` | `--fsds-text-size-3xl` | ✗ dead | `tokens` |
+declared: **18** · consumed: **18** · dead: **0**
 
 ### TextField  `.text-field`
 

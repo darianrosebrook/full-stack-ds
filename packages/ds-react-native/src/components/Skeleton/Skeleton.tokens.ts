@@ -220,7 +220,7 @@ export const skeletonTokenScopes = {
     "skeleton.gap.md": {
       name: "skeleton.gap.md",
       cssVar: "--fsds-skeleton-gap-md",
-      ref: "core.spacing.size.03",
+      ref: "skeleton.gap.compact",
       fallback: 4,
     },
   },
@@ -236,7 +236,7 @@ export const skeletonTokenScopes = {
     "skeleton.gap.md": {
       name: "skeleton.gap.md",
       cssVar: "--fsds-skeleton-gap-md",
-      ref: "core.spacing.size.07",
+      ref: "skeleton.gap.spacious",
       fallback: 24,
     },
   },

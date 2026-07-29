@@ -191,7 +191,7 @@
   },
   "--xs": {
     "text.size.md": {
-      "resolvesTo": "core.typography.ramp.2",
+      "resolvesTo": "text.size.xs",
       "fallback": "0.75rem"
     },
     "font-size": {
@@ -201,7 +201,7 @@
   },
   "--sm": {
     "text.size.md": {
-      "resolvesTo": "core.typography.ramp.3",
+      "resolvesTo": "text.size.sm",
       "fallback": "0.875rem"
     },
     "font-size": {
@@ -221,7 +221,7 @@
   },
   "--lg": {
     "text.size.md": {
-      "resolvesTo": "core.typography.ramp.5",
+      "resolvesTo": "text.size.lg",
       "fallback": "1.125rem"
     },
     "font-size": {
@@ -231,7 +231,7 @@
   },
   "--xl": {
     "text.size.md": {
-      "resolvesTo": "core.typography.ramp.6",
+      "resolvesTo": "text.size.xl",
       "fallback": "1.25rem"
     },
     "font-size": {
@@ -241,7 +241,7 @@
   },
   "--2xl": {
     "text.size.md": {
-      "resolvesTo": "core.typography.ramp.7",
+      "resolvesTo": "text.size.2xl",
       "fallback": "1.5rem"
     },
     "font-size": {
@@ -251,7 +251,7 @@
   },
   "--3xl": {
     "text.size.md": {
-      "resolvesTo": "core.typography.ramp.8",
+      "resolvesTo": "text.size.3xl",
       "fallback": "2rem"
     },
     "font-size": {

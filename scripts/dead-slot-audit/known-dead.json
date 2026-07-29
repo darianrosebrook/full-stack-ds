@@ -162,38 +162,6 @@
       "note": "no rule matched: \"inverse\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
-      "component": "Blockquote",
-      "slot": "blockquote.size.fontSize.lg",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--lg\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Blockquote",
-      "slot": "blockquote.size.fontSize.sm",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--sm\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Blockquote",
-      "slot": "blockquote.size.padding.lg",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--lg\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Blockquote",
-      "slot": "blockquote.size.padding.sm",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
       "component": "Button",
       "slot": "box-model.gap",
       "status": "shadowed",
@@ -363,30 +331,6 @@
     },
     {
       "component": "Chip",
-      "slot": "chip.color.background.selected",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--selected\"] redefines sibling \"chip.color.background.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Chip",
-      "slot": "chip.color.border.selected",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Chip",
-      "slot": "chip.color.foreground.selected",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--selected\"] redefines sibling \"chip.color.foreground.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Chip",
       "slot": "chip.focus.ring.color",
       "status": "dead",
       "disposition": "review",
@@ -432,14 +376,6 @@
       "disposition": "shadowed",
       "spec": "NONE-inert-by-design",
       "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Details",
-      "slot": "details.size.padding.compact",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--compact\"] redefines sibling \"details.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
     },
     {
       "component": "Details",
@@ -576,22 +512,6 @@
       "disposition": "shadowed",
       "spec": "NONE-inert-by-design",
       "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Links",
-      "slot": "links.size.fontSize.large",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--large\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Links",
-      "slot": "links.size.fontSize.small",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--small\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
     },
     {
       "component": "NavList",
@@ -771,22 +691,6 @@
     },
     {
       "component": "Skeleton",
-      "slot": "skeleton.gap.compact",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--compact\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Skeleton",
-      "slot": "skeleton.gap.spacious",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--spacious\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Skeleton",
       "slot": "skeleton.radius.full",
       "status": "dead",
       "disposition": "review",
@@ -912,54 +816,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Text",
-      "slot": "text.size.2xl",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--2xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Text",
-      "slot": "text.size.3xl",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--3xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Text",
-      "slot": "text.size.lg",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--lg\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Text",
-      "slot": "text.size.sm",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--sm\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Text",
-      "slot": "text.size.xl",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Text",
-      "slot": "text.size.xs",
-      "status": "dead",
-      "disposition": "repoint",
-      "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
-      "note": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
     },
     {
       "component": "TextField",

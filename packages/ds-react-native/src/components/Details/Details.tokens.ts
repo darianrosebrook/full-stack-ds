@@ -197,7 +197,7 @@ export const detailsTokenScopes = {
     "details.size.padding.default": {
       name: "details.size.padding.default",
       cssVar: "--fsds-details-size-padding-default",
-      ref: "core.spacing.size.04",
+      ref: "details.size.padding.compact",
       fallback: 8,
     },
     "details.typography.lineHeight.body": {

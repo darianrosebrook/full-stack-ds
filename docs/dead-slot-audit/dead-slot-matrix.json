@@ -2,10 +2,10 @@
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
   "components": 49,
   "slotsDeclared": 894,
-  "consumed": 761,
-  "inert": 133,
+  "consumed": 779,
+  "inert": 115,
   "shadowed": 17,
-  "dead": 116,
+  "dead": 98,
   "inertSlots": [
     {
       "component": "Accordion",
@@ -184,43 +184,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"inverse\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        }
-      ]
-    },
-    {
-      "component": "Blockquote",
-      "inert": [
-        {
-          "slot": "blockquote.size.padding.sm",
-          "cssVar": "--fsds-blockquote-size-padding-sm",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "blockquote.size.padding.lg",
-          "cssVar": "--fsds-blockquote-size-padding-lg",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "blockquote.size.fontSize.sm",
-          "cssVar": "--fsds-blockquote-size-fontSize-sm",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "blockquote.size.fontSize.lg",
-          "cssVar": "--fsds-blockquote-size-fontSize-lg",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -435,30 +398,6 @@
           "evidence": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         },
         {
-          "slot": "chip.color.background.selected",
-          "cssVar": "--fsds-chip-color-background-selected",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.background.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "chip.color.foreground.selected",
-          "cssVar": "--fsds-chip-color-foreground-selected",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.foreground.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "chip.color.border.selected",
-          "cssVar": "--fsds-chip-color-border-selected",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
           "slot": "box-model.min-height",
           "cssVar": "--fsds-box-model-min-height",
           "source": "styles:.chip__action.button",
@@ -491,14 +430,6 @@
           "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
-          "slot": "details.size.padding.compact",
-          "cssVar": "--fsds-details-size-padding-compact",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--compact\"] redefines sibling \"details.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         },
         {
           "slot": "details.size.padding.page",
@@ -665,22 +596,6 @@
           "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
-          "slot": "links.size.fontSize.small",
-          "cssVar": "--fsds-links-size-fontSize-small",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--small\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "links.size.fontSize.large",
-          "cssVar": "--fsds-links-size-fontSize-large",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--large\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -931,22 +846,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        },
-        {
-          "slot": "skeleton.gap.compact",
-          "cssVar": "--fsds-skeleton-gap-compact",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--compact\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "skeleton.gap.spacious",
-          "cssVar": "--fsds-skeleton-gap-spacious",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--spacious\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -1066,59 +965,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        }
-      ]
-    },
-    {
-      "component": "Text",
-      "inert": [
-        {
-          "slot": "text.size.xs",
-          "cssVar": "--fsds-text-size-xs",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.sm",
-          "cssVar": "--fsds-text-size-sm",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.lg",
-          "cssVar": "--fsds-text-size-lg",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.xl",
-          "cssVar": "--fsds-text-size-xl",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.2xl",
-          "cssVar": "--fsds-text-size-2xl",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--2xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.3xl",
-          "cssVar": "--fsds-text-size-3xl",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--3xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -1410,43 +1256,6 @@
       ]
     },
     {
-      "component": "Blockquote",
-      "dead": [
-        {
-          "slot": "blockquote.size.padding.sm",
-          "cssVar": "--fsds-blockquote-size-padding-sm",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "blockquote.size.padding.lg",
-          "cssVar": "--fsds-blockquote-size-padding-lg",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "blockquote.size.fontSize.sm",
-          "cssVar": "--fsds-blockquote-size-fontSize-sm",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "blockquote.size.fontSize.lg",
-          "cssVar": "--fsds-blockquote-size-fontSize-lg",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        }
-      ]
-    },
-    {
       "component": "Button",
       "dead": [
         {
@@ -1631,30 +1440,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        },
-        {
-          "slot": "chip.color.background.selected",
-          "cssVar": "--fsds-chip-color-background-selected",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.background.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "chip.color.foreground.selected",
-          "cssVar": "--fsds-chip-color-foreground-selected",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.foreground.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "chip.color.border.selected",
-          "cssVar": "--fsds-chip-color-border-selected",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -1674,14 +1459,6 @@
     {
       "component": "Details",
       "dead": [
-        {
-          "slot": "details.size.padding.compact",
-          "cssVar": "--fsds-details-size-padding-compact",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--compact\"] redefines sibling \"details.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
         {
           "slot": "details.size.padding.page",
           "cssVar": "--fsds-details-size-padding-page",
@@ -1818,27 +1595,6 @@
           "status": "dead",
           "disposition": "wire",
           "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        }
-      ]
-    },
-    {
-      "component": "Links",
-      "dead": [
-        {
-          "slot": "links.size.fontSize.small",
-          "cssVar": "--fsds-links-size-fontSize-small",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--small\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "links.size.fontSize.large",
-          "cssVar": "--fsds-links-size-fontSize-large",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--large\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -2068,22 +1824,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        },
-        {
-          "slot": "skeleton.gap.compact",
-          "cssVar": "--fsds-skeleton-gap-compact",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--compact\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "skeleton.gap.spacious",
-          "cssVar": "--fsds-skeleton-gap-spacious",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--spacious\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -2195,59 +1935,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        }
-      ]
-    },
-    {
-      "component": "Text",
-      "dead": [
-        {
-          "slot": "text.size.xs",
-          "cssVar": "--fsds-text-size-xs",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.sm",
-          "cssVar": "--fsds-text-size-sm",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.lg",
-          "cssVar": "--fsds-text-size-lg",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.xl",
-          "cssVar": "--fsds-text-size-xl",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.2xl",
-          "cssVar": "--fsds-text-size-2xl",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--2xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "text.size.3xl",
-          "cssVar": "--fsds-text-size-3xl",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--3xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
         }
       ]
     },
@@ -3047,9 +2734,9 @@
       "component": "Blockquote",
       "prefix": "blockquote",
       "total": 19,
-      "consumed": 15,
+      "consumed": 19,
       "shadowed": 0,
-      "dead": 4,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -3127,17 +2814,13 @@
           "slot": "blockquote.size.padding.sm",
           "cssVar": "--fsds-blockquote-size-padding-sm",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "blockquote.size.padding.lg",
           "cssVar": "--fsds-blockquote-size-padding-lg",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "blockquote.size.radius.default",
@@ -3155,9 +2838,7 @@
           "slot": "blockquote.size.fontSize.sm",
           "cssVar": "--fsds-blockquote-size-fontSize-sm",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "blockquote.size.fontSize.md",
@@ -3169,9 +2850,7 @@
           "slot": "blockquote.size.fontSize.lg",
           "cssVar": "--fsds-blockquote-size-fontSize-lg",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         }
       ]
     },
@@ -3913,9 +3592,9 @@
       "component": "Chip",
       "prefix": "chip",
       "total": 32,
-      "consumed": 22,
+      "consumed": 25,
       "shadowed": 2,
-      "dead": 8,
+      "dead": 5,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -4047,25 +3726,19 @@
           "slot": "chip.color.background.selected",
           "cssVar": "--fsds-chip-color-background-selected",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.background.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "chip.color.foreground.selected",
           "cssVar": "--fsds-chip-color-foreground-selected",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.foreground.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "chip.color.border.selected",
           "cssVar": "--fsds-chip-color-border-selected",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "chip.dismiss.size",
@@ -4449,9 +4122,9 @@
       "component": "Details",
       "prefix": "details",
       "total": 19,
-      "consumed": 14,
+      "consumed": 15,
       "shadowed": 1,
-      "dead": 4,
+      "dead": 3,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -4549,9 +4222,7 @@
           "slot": "details.size.padding.compact",
           "cssVar": "--fsds-details-size-padding-compact",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--compact\"] redefines sibling \"details.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "details.size.padding.page",
@@ -5381,9 +5052,9 @@
       "component": "Links",
       "prefix": "links",
       "total": 16,
-      "consumed": 13,
+      "consumed": 15,
       "shadowed": 1,
-      "dead": 2,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -5469,9 +5140,7 @@
           "slot": "links.size.fontSize.small",
           "cssVar": "--fsds-links-size-fontSize-small",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--small\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "links.size.fontSize.medium",
@@ -5483,9 +5152,7 @@
           "slot": "links.size.fontSize.large",
           "cssVar": "--fsds-links-size-fontSize-large",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--large\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         }
       ]
     },
@@ -6647,9 +6314,9 @@
       "component": "Skeleton",
       "prefix": "skeleton",
       "total": 13,
-      "consumed": 7,
+      "consumed": 9,
       "shadowed": 0,
-      "dead": 6,
+      "dead": 4,
       "slots": [
         {
           "slot": "skeleton.color.base",
@@ -6705,9 +6372,7 @@
           "slot": "skeleton.gap.compact",
           "cssVar": "--fsds-skeleton-gap-compact",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--compact\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "skeleton.gap.md",
@@ -6719,9 +6384,7 @@
           "slot": "skeleton.gap.spacious",
           "cssVar": "--fsds-skeleton-gap-spacious",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--spacious\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "skeleton.anim.duration",
@@ -7529,9 +7192,9 @@
       "component": "Text",
       "prefix": "text",
       "total": 18,
-      "consumed": 12,
+      "consumed": 18,
       "shadowed": 0,
-      "dead": 6,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -7603,17 +7266,13 @@
           "slot": "text.size.xs",
           "cssVar": "--fsds-text-size-xs",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "text.size.sm",
           "cssVar": "--fsds-text-size-sm",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--sm\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "text.size.md",
@@ -7625,33 +7284,25 @@
           "slot": "text.size.lg",
           "cssVar": "--fsds-text-size-lg",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--lg\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "text.size.xl",
           "cssVar": "--fsds-text-size-xl",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "text.size.2xl",
           "cssVar": "--fsds-text-size-2xl",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--2xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         },
         {
           "slot": "text.size.3xl",
           "cssVar": "--fsds-text-size-3xl",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "repoint",
-          "evidence": "styles[\"--3xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+          "status": "consumed"
         }
       ]
     },

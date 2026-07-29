@@ -47,7 +47,7 @@
   },
   "--small": {
     "links.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.3",
+      "resolvesTo": "links.size.fontSize.small",
       "fallback": "0.875rem"
     },
     "font-size": {
@@ -67,7 +67,7 @@
   },
   "--large": {
     "links.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.5",
+      "resolvesTo": "links.size.fontSize.large",
       "fallback": "1.125rem"
     },
     "font-size": {

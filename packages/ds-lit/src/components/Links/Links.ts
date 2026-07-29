@@ -54,7 +54,7 @@ export class LinksElement extends LitElement {
     }
 
     .links--small {
-      --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-links-size-fontSize-medium: var(--fsds-links-size-fontSize-small, 0.875rem);
     }
 
     .links--medium {
@@ -62,7 +62,7 @@ export class LinksElement extends LitElement {
     }
 
     .links--large {
-      --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-5, 1.125rem);
+      --fsds-links-size-fontSize-medium: var(--fsds-links-size-fontSize-large, 1.125rem);
     }
 
     .links {

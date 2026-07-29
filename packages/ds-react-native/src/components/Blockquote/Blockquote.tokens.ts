@@ -200,13 +200,13 @@ export const blockquoteTokenScopes = {
     "blockquote.size.padding.default": {
       name: "blockquote.size.padding.default",
       cssVar: "--fsds-blockquote-size-padding-default",
-      ref: "core.spacing.size.04",
+      ref: "blockquote.size.padding.sm",
       fallback: 8,
     },
     "blockquote.size.fontSize.md": {
       name: "blockquote.size.fontSize.md",
       cssVar: "--fsds-blockquote-size-fontSize-md",
-      ref: "core.typography.ramp.3",
+      ref: "blockquote.size.fontSize.sm",
       fallback: 14,
     },
   },
@@ -228,13 +228,13 @@ export const blockquoteTokenScopes = {
     "blockquote.size.padding.default": {
       name: "blockquote.size.padding.default",
       cssVar: "--fsds-blockquote-size-padding-default",
-      ref: "core.spacing.size.07",
+      ref: "blockquote.size.padding.lg",
       fallback: 24,
     },
     "blockquote.size.fontSize.md": {
       name: "blockquote.size.fontSize.md",
       cssVar: "--fsds-blockquote-size-fontSize-md",
-      ref: "core.typography.ramp.5",
+      ref: "blockquote.size.fontSize.lg",
       fallback: 18,
     },
   },

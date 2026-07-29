@@ -84,9 +84,9 @@ export class ChipElement extends LitElement {
     }
 
     .chip--selected {
-      --fsds-chip-color-background-default: var(--fsds-semantic-color-background-info-subtle, #95dafb);
-      --fsds-chip-color-foreground-default: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);
-      --fsds-chip-color-border-default: var(--fsds-semantic-color-border-info, #034fd6);
+      --fsds-chip-color-background-default: var(--fsds-chip-color-background-selected, #95dafb);
+      --fsds-chip-color-foreground-default: var(--fsds-chip-color-foreground-selected, #013ab0);
+      --fsds-chip-color-border-default: var(--fsds-chip-color-border-selected, #034fd6);
     }
 
     .chip--dismissible {

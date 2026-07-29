@@ -340,7 +340,7 @@
       {
         "selector": ".skeleton--compact",
         "declarations": {
-          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-03, 4px)"
+          "--fsds-skeleton-gap-md": "var(--fsds-skeleton-gap-compact, 4px)"
         }
       },
       {
@@ -352,7 +352,7 @@
       {
         "selector": ".skeleton--spacious",
         "declarations": {
-          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-07, 24px)"
+          "--fsds-skeleton-gap-md": "var(--fsds-skeleton-gap-spacious, 24px)"
         }
       }
     ],
