@@ -3,19 +3,12 @@
   "components": 49,
   "slotsDeclared": 894,
   "consumed": 760,
-  "dead": 134,
+  "shadowed": 17,
+  "dead": 117,
   "failing": [
     {
       "component": "Accordion",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "accordion.border.width",
           "cssVar": "--fsds-accordion-border-width",
@@ -37,14 +30,6 @@
     {
       "component": "Alert",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "alert.icon.size",
           "cssVar": "--fsds-alert-icon-size",
@@ -98,14 +83,6 @@
     {
       "component": "AlertNotice",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "alert-notice.color.background.primary",
           "cssVar": "--fsds-alert-notice-color-background-primary",
@@ -226,14 +203,6 @@
       "component": "Button",
       "dead": [
         {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
           "slot": "button.size.padding-block.medium",
           "cssVar": "--fsds-button-size-padding-block-medium",
           "source": "tokens",
@@ -291,14 +260,6 @@
     {
       "component": "Card",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "card.color.badge.success.background",
           "cssVar": "--fsds-card-color-badge-success-background",
@@ -385,14 +346,6 @@
       "component": "Chip",
       "dead": [
         {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
           "slot": "chip.color.background.active",
           "cssVar": "--fsds-chip-color-background-active",
           "source": "tokens",
@@ -463,14 +416,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        },
-        {
-          "slot": "box-model.min-height",
-          "cssVar": "--fsds-box-model-min-height",
-          "source": "styles:.chip__action.button",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         }
       ]
     },
@@ -490,14 +435,6 @@
     {
       "component": "Details",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "details.size.padding.compact",
           "cssVar": "--fsds-details-size-padding-compact",
@@ -548,14 +485,6 @@
     {
       "component": "Field",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "field.pad.y",
           "cssVar": "--fsds-field-pad-y",
@@ -631,14 +560,6 @@
       "component": "Input",
       "dead": [
         {
-          "slot": "box-model.min-height",
-          "cssVar": "--fsds-box-model-min-height",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
           "slot": "input.space.inline.default",
           "cssVar": "--fsds-input-space-inline-default",
           "source": "tokens",
@@ -664,14 +585,6 @@
     {
       "component": "Links",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "links.size.fontSize.small",
           "cssVar": "--fsds-links-size-fontSize-small",
@@ -765,29 +678,8 @@
       ]
     },
     {
-      "component": "Popover",
-      "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        }
-      ]
-    },
-    {
       "component": "Postcard",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "postcard.size.radius.full",
           "cssVar": "--fsds-postcard-size-radius-full",
@@ -1050,14 +942,6 @@
       "component": "Tabs",
       "dead": [
         {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
           "slot": "tabs.color.focus",
           "cssVar": "--fsds-tabs-color-focus",
           "source": "tokens",
@@ -1129,29 +1013,8 @@
       ]
     },
     {
-      "component": "TextField",
-      "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        }
-      ]
-    },
-    {
       "component": "Toast",
       "dead": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
         {
           "slot": "toast.accent.default",
           "cssVar": "--fsds-toast-accent-default",
@@ -1240,14 +1103,6 @@
       "component": "Walkthrough",
       "dead": [
         {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
           "slot": "walkthrough.dots.active",
           "cssVar": "--fsds-walkthrough-dots-active",
           "source": "tokens",
@@ -1264,13 +1119,14 @@
       "prefix": "accordion",
       "total": 22,
       "consumed": 19,
-      "dead": 3,
+      "shadowed": 1,
+      "dead": 2,
       "slots": [
         {
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -1411,7 +1267,8 @@
       "prefix": "alert",
       "total": 21,
       "consumed": 14,
-      "dead": 7,
+      "shadowed": 1,
+      "dead": 6,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -1441,7 +1298,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -1560,7 +1417,8 @@
       "prefix": "alert-notice",
       "total": 32,
       "consumed": 23,
-      "dead": 9,
+      "shadowed": 1,
+      "dead": 8,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -1590,7 +1448,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -1779,6 +1637,7 @@
       "prefix": "avatar",
       "total": 13,
       "consumed": 12,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -1868,6 +1727,7 @@
       "prefix": "badge",
       "total": 12,
       "consumed": 12,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -1949,6 +1809,7 @@
       "prefix": "blockquote",
       "total": 19,
       "consumed": 15,
+      "shadowed": 0,
       "dead": 4,
       "slots": [
         {
@@ -2080,6 +1941,7 @@
       "prefix": "breadcrumbs",
       "total": 9,
       "consumed": 9,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -2143,7 +2005,8 @@
       "prefix": "button",
       "total": 26,
       "consumed": 22,
-      "dead": 4,
+      "shadowed": 1,
+      "dead": 3,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -2173,7 +2036,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -2316,6 +2179,7 @@
       "prefix": "calendar",
       "total": 23,
       "consumed": 20,
+      "shadowed": 0,
       "dead": 3,
       "slots": [
         {
@@ -2469,7 +2333,8 @@
       "prefix": "card",
       "total": 35,
       "consumed": 24,
-      "dead": 11,
+      "shadowed": 1,
+      "dead": 10,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -2499,7 +2364,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -2710,6 +2575,7 @@
       "prefix": "checkbox",
       "total": 15,
       "consumed": 15,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -2809,13 +2675,14 @@
       "prefix": "chip",
       "total": 32,
       "consumed": 21,
-      "dead": 11,
+      "shadowed": 2,
+      "dead": 9,
       "slots": [
         {
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -3003,7 +2870,7 @@
           "slot": "box-model.min-height",
           "cssVar": "--fsds-box-model-min-height",
           "source": "styles:.chip__action.button",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -3032,6 +2899,7 @@
       "prefix": "code-block",
       "total": 13,
       "consumed": 13,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -3119,6 +2987,7 @@
       "prefix": "code-snippet",
       "total": 15,
       "consumed": 15,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -3218,6 +3087,7 @@
       "prefix": "command",
       "total": 19,
       "consumed": 18,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -3343,13 +3213,14 @@
       "prefix": "details",
       "total": 19,
       "consumed": 14,
-      "dead": 5,
+      "shadowed": 1,
+      "dead": 4,
       "slots": [
         {
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -3476,6 +3347,7 @@
       "prefix": "dialog",
       "total": 28,
       "consumed": 28,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -3653,6 +3525,7 @@
       "prefix": "divider",
       "total": 5,
       "consumed": 4,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -3694,7 +3567,8 @@
       "prefix": "field",
       "total": 29,
       "consumed": 22,
-      "dead": 7,
+      "shadowed": 1,
+      "dead": 6,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -3724,7 +3598,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -3891,6 +3765,7 @@
       "prefix": "icon",
       "total": 5,
       "consumed": 5,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -3930,6 +3805,7 @@
       "prefix": "image",
       "total": 15,
       "consumed": 13,
+      "shadowed": 0,
       "dead": 2,
       "slots": [
         {
@@ -4033,7 +3909,8 @@
       "prefix": "input",
       "total": 31,
       "consumed": 29,
-      "dead": 2,
+      "shadowed": 1,
+      "dead": 1,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -4069,7 +3946,7 @@
           "slot": "box-model.min-height",
           "cssVar": "--fsds-box-model-min-height",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -4232,6 +4109,7 @@
       "prefix": "label",
       "total": 4,
       "consumed": 3,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -4267,13 +4145,14 @@
       "prefix": "links",
       "total": 16,
       "consumed": 13,
-      "dead": 3,
+      "shadowed": 1,
+      "dead": 2,
       "slots": [
         {
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -4378,6 +4257,7 @@
       "prefix": "list",
       "total": 11,
       "consumed": 11,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -4453,6 +4333,7 @@
       "prefix": "nav-list",
       "total": 17,
       "consumed": 10,
+      "shadowed": 0,
       "dead": 7,
       "slots": [
         {
@@ -4578,6 +4459,7 @@
       "prefix": "otp",
       "total": 16,
       "consumed": 15,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -4685,7 +4567,8 @@
       "prefix": "popover",
       "total": 13,
       "consumed": 12,
-      "dead": 1,
+      "shadowed": 1,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -4715,7 +4598,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -4774,7 +4657,8 @@
       "prefix": "postcard",
       "total": 22,
       "consumed": 20,
-      "dead": 2,
+      "shadowed": 1,
+      "dead": 1,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -4804,7 +4688,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -4919,6 +4803,7 @@
       "prefix": "profile-flag",
       "total": 8,
       "consumed": 7,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -4978,6 +4863,7 @@
       "prefix": "progress",
       "total": 8,
       "consumed": 8,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -5035,6 +4921,7 @@
       "prefix": "select",
       "total": 24,
       "consumed": 22,
+      "shadowed": 0,
       "dead": 2,
       "slots": [
         {
@@ -5192,6 +5079,7 @@
       "prefix": "sheet",
       "total": 26,
       "consumed": 23,
+      "shadowed": 0,
       "dead": 3,
       "slots": [
         {
@@ -5363,6 +5251,7 @@
       "prefix": "show-more",
       "total": 15,
       "consumed": 12,
+      "shadowed": 0,
       "dead": 3,
       "slots": [
         {
@@ -5468,6 +5357,7 @@
       "prefix": "shuttle",
       "total": 7,
       "consumed": 6,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -5521,6 +5411,7 @@
       "prefix": "skeleton",
       "total": 13,
       "consumed": 7,
+      "shadowed": 0,
       "dead": 6,
       "slots": [
         {
@@ -5620,6 +5511,7 @@
       "prefix": "spinner",
       "total": 10,
       "consumed": 10,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -5689,6 +5581,7 @@
       "prefix": "stat",
       "total": 14,
       "consumed": 10,
+      "shadowed": 0,
       "dead": 4,
       "slots": [
         {
@@ -5790,6 +5683,7 @@
       "prefix": "status",
       "total": 14,
       "consumed": 14,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -5883,6 +5777,7 @@
       "prefix": "switch",
       "total": 38,
       "consumed": 38,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -6120,6 +6015,7 @@
       "prefix": "table",
       "total": 22,
       "consumed": 16,
+      "shadowed": 0,
       "dead": 6,
       "slots": [
         {
@@ -6273,13 +6169,14 @@
       "prefix": "tabs",
       "total": 18,
       "consumed": 15,
-      "dead": 3,
+      "shadowed": 1,
+      "dead": 2,
       "slots": [
         {
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -6396,6 +6293,7 @@
       "prefix": "text",
       "total": 18,
       "consumed": 12,
+      "shadowed": 0,
       "dead": 6,
       "slots": [
         {
@@ -6525,7 +6423,8 @@
       "prefix": "text-field",
       "total": 37,
       "consumed": 36,
-      "dead": 1,
+      "shadowed": 1,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -6555,7 +6454,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -6758,7 +6657,8 @@
       "prefix": "toast",
       "total": 21,
       "consumed": 14,
-      "dead": 7,
+      "shadowed": 1,
+      "dead": 6,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -6788,7 +6688,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
@@ -6907,6 +6807,7 @@
       "prefix": "toggle-switch",
       "total": 19,
       "consumed": 19,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -7030,6 +6931,7 @@
       "prefix": "tooltip",
       "total": 15,
       "consumed": 14,
+      "shadowed": 0,
       "dead": 1,
       "slots": [
         {
@@ -7131,6 +7033,7 @@
       "prefix": "truncate",
       "total": 6,
       "consumed": 4,
+      "shadowed": 0,
       "dead": 2,
       "slots": [
         {
@@ -7180,13 +7083,14 @@
       "prefix": "walkthrough",
       "total": 24,
       "consumed": 22,
-      "dead": 2,
+      "shadowed": 1,
+      "dead": 1,
       "slots": [
         {
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "dead",
+          "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
