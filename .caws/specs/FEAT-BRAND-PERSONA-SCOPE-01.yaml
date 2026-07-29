@@ -1,0 +1,54 @@
+id: FEAT-BRAND-PERSONA-SCOPE-01
+title: 'Component-scoped brand token overrides + 5 new brand personas replacing 5 abstract ones'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-29T17:09:38.838Z'
+updated_at: '2026-07-29T17:09:38.838Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-tokens/src/brands'
+    - 'packages/ds-tokens/build/generators/global.ts'
+    - 'packages/ds-tokens/generated/tokens.css'
+    - 'packages/ds-codegen/src/css.ts'
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-react/src/components'
+    - 'packages/ds-vue/src/components'
+    - 'packages/ds-svelte/src/components'
+    - 'packages/ds-angular/src/components'
+    - 'packages/ds-lit/src/components'
+    - 'packages/ds-codegen/.emission-manifest.json'
+    - 'docs/architecture/tokens-architecture.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'src/views/TokensPhilosophyView.tsx'
+    - 'src/types/data.ts'
+    - 'tmp'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a brand file with a components.<Name>.<slot> override; when tokens are built and a component consuming that slot is regenerated; then the brand''s per-component value wins over the component''s own default without needing !important or unlayered CSS'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the 5 removed brand files (ocean, midnight, rose, sunset, slate) are deleted and 5 new persona brand files exist; when pnpm -F @full-stack-ds/tokens build runs; then tokens.css contains exactly the new brand set and no dangling references to the removed ones'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the 5 new personas each declare a distinct semantic-layer identity (color, shape, spacing, motion, typography); when tokens:check-contrast and governed:rail run; then all pass with zero drift'
+non_functional: {}
+contracts:
+  - name: 'brand-component-scope'
+    type: behavior
+    path: 'packages/ds-tokens/src/brands'
+  - name: 'token-build-gate'
+    type: contract-test
+    path: 'packages/ds-tokens'
