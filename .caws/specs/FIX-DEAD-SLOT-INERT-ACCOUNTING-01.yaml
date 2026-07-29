@@ -2,10 +2,11 @@ id: FIX-DEAD-SLOT-INERT-ACCOUNTING-01
 title: 'Account for shadowed slots as inert-by-design rather than dropping them from the ledger'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: s4-inert
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s4-inert at d3bbcd133394f033fecdf30d8bc06ca65d1c76d3'
 created_at: '2026-07-29T02:03:57.453Z'
-updated_at: '2026-07-29T02:03:57.453Z'
+updated_at: '2026-07-29T02:09:27.734Z'
 blast_radius:
   modules:
     - 'scripts/dead-slot-audit/audit.mjs (accounting split: inert vs defect)'
