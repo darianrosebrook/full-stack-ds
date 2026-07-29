@@ -2,10 +2,11 @@ id: FIX-DEAD-SLOT-BOXMODEL-SHADOW-01
 title: 'Classify author-overridden box-model primitives as shadowed, not dead'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: s3-shadow
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s3-shadow at 7d6ed3d399577d1f988d854d6fcf2fabe4cc091f'
 created_at: '2026-07-29T01:34:20.566Z'
-updated_at: '2026-07-29T01:34:20.566Z'
+updated_at: '2026-07-29T01:40:00.179Z'
 blast_radius:
   modules:
     - 'scripts/dead-slot-audit/{audit,disposition}.mjs (classification only)'
