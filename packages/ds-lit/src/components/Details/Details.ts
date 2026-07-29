@@ -62,7 +62,7 @@ export class DetailsElement extends LitElement {
     }
 
     .details--compact {
-      --fsds-details-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-details-size-padding-default: var(--fsds-details-size-padding-compact, 8px);
       --fsds-details-typography-lineHeight-body: var(--fsds-core-spacing-size-06, 16px);
     }
 
@@ -253,7 +253,7 @@ export class DetailsContentElement extends LitElement {
     }
 
     .details--compact {
-      --fsds-details-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-details-size-padding-default: var(--fsds-details-size-padding-compact, 8px);
       --fsds-details-typography-lineHeight-body: var(--fsds-core-spacing-size-06, 16px);
     }
 

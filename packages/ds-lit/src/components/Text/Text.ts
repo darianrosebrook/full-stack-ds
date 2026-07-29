@@ -93,11 +93,11 @@ export class TextElement extends LitElement {
     }
 
     .text--xs {
-      --fsds-text-size-md: var(--fsds-core-typography-ramp-2, 0.75rem);
+      --fsds-text-size-md: var(--fsds-text-size-xs, 0.75rem);
     }
 
     .text--sm {
-      --fsds-text-size-md: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-text-size-md: var(--fsds-text-size-sm, 0.875rem);
     }
 
     .text--md {
@@ -105,19 +105,19 @@ export class TextElement extends LitElement {
     }
 
     .text--lg {
-      --fsds-text-size-md: var(--fsds-core-typography-ramp-5, 1.125rem);
+      --fsds-text-size-md: var(--fsds-text-size-lg, 1.125rem);
     }
 
     .text--xl {
-      --fsds-text-size-md: var(--fsds-core-typography-ramp-6, 1.25rem);
+      --fsds-text-size-md: var(--fsds-text-size-xl, 1.25rem);
     }
 
     .text--2xl {
-      --fsds-text-size-md: var(--fsds-core-typography-ramp-7, 1.5rem);
+      --fsds-text-size-md: var(--fsds-text-size-2xl, 1.5rem);
     }
 
     .text--3xl {
-      --fsds-text-size-md: var(--fsds-core-typography-ramp-8, 2rem);
+      --fsds-text-size-md: var(--fsds-text-size-3xl, 2rem);
     }
 
     .text--light {

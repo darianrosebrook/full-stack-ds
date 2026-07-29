@@ -174,8 +174,8 @@
       {
         "selector": ".blockquote--sm",
         "declarations": {
-          "--fsds-blockquote-size-padding-default": "var(--fsds-core-spacing-size-04, 8px)",
-          "--fsds-blockquote-size-fontSize-md": "var(--fsds-core-typography-ramp-3, 0.875rem)",
+          "--fsds-blockquote-size-padding-default": "var(--fsds-blockquote-size-padding-sm, 8px)",
+          "--fsds-blockquote-size-fontSize-md": "var(--fsds-blockquote-size-fontSize-sm, 0.875rem)",
           "font-size": "var(--fsds-blockquote-size-fontSize-md, 1rem)",
           "padding": "var(--fsds-blockquote-size-padding-default, 12px)"
         }
@@ -192,8 +192,8 @@
       {
         "selector": ".blockquote--lg",
         "declarations": {
-          "--fsds-blockquote-size-padding-default": "var(--fsds-core-spacing-size-07, 24px)",
-          "--fsds-blockquote-size-fontSize-md": "var(--fsds-core-typography-ramp-5, 1.125rem)",
+          "--fsds-blockquote-size-padding-default": "var(--fsds-blockquote-size-padding-lg, 24px)",
+          "--fsds-blockquote-size-fontSize-md": "var(--fsds-blockquote-size-fontSize-lg, 1.125rem)",
           "font-size": "var(--fsds-blockquote-size-fontSize-md, 1rem)",
           "padding": "var(--fsds-blockquote-size-padding-default, 12px)"
         }

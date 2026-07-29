@@ -253,19 +253,19 @@ export const chipTokenScopes = {
     "chip.color.background.default": {
       name: "chip.color.background.default",
       cssVar: "--fsds-chip-color-background-default",
-      ref: "semantic.color.background.info.subtle",
+      ref: "chip.color.background.selected",
       fallback: "#95dafb",
     },
     "chip.color.foreground.default": {
       name: "chip.color.foreground.default",
       cssVar: "--fsds-chip-color-foreground-default",
-      ref: "semantic.color.foreground.on.info.subtle",
+      ref: "chip.color.foreground.selected",
       fallback: "#013ab0",
     },
     "chip.color.border.default": {
       name: "chip.color.border.default",
       cssVar: "--fsds-chip-color-border-default",
-      ref: "semantic.color.border.info",
+      ref: "chip.color.border.selected",
       fallback: "#034fd6",
     },
   },

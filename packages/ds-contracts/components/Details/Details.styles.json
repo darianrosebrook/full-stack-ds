@@ -239,7 +239,7 @@
   },
   "--compact": {
     "details.size.padding.default": {
-      "resolvesTo": "core.spacing.size.04",
+      "resolvesTo": "details.size.padding.compact",
       "fallback": "8px"
     },
     "details.typography.lineHeight.body": {

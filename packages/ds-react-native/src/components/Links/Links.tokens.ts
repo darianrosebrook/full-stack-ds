@@ -171,7 +171,7 @@ export const linksTokenScopes = {
     "links.size.fontSize.medium": {
       name: "links.size.fontSize.medium",
       cssVar: "--fsds-links-size-fontSize-medium",
-      ref: "core.typography.ramp.3",
+      ref: "links.size.fontSize.small",
       fallback: 14,
     },
   },
@@ -187,7 +187,7 @@ export const linksTokenScopes = {
     "links.size.fontSize.medium": {
       name: "links.size.fontSize.medium",
       cssVar: "--fsds-links-size-fontSize-medium",
-      ref: "core.typography.ramp.5",
+      ref: "links.size.fontSize.large",
       fallback: 18,
     },
   },

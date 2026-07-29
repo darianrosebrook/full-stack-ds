@@ -84,7 +84,7 @@ export class SkeletonElement extends LitElement {
     }
 
     .skeleton--compact {
-      --fsds-skeleton-gap-md: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-skeleton-gap-md: var(--fsds-skeleton-gap-compact, 4px);
     }
 
     .skeleton--regular {
@@ -92,7 +92,7 @@ export class SkeletonElement extends LitElement {
     }
 
     .skeleton--spacious {
-      --fsds-skeleton-gap-md: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-skeleton-gap-md: var(--fsds-skeleton-gap-spacious, 24px);
     }
 
     .skeleton {

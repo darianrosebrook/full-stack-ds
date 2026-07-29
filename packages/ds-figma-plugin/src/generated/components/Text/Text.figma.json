@@ -323,14 +323,14 @@
       {
         "selector": ".text--xs",
         "declarations": {
-          "--fsds-text-size-md": "var(--fsds-core-typography-ramp-2, 0.75rem)",
+          "--fsds-text-size-md": "var(--fsds-text-size-xs, 0.75rem)",
           "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--sm",
         "declarations": {
-          "--fsds-text-size-md": "var(--fsds-core-typography-ramp-3, 0.875rem)",
+          "--fsds-text-size-md": "var(--fsds-text-size-sm, 0.875rem)",
           "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
@@ -344,28 +344,28 @@
       {
         "selector": ".text--lg",
         "declarations": {
-          "--fsds-text-size-md": "var(--fsds-core-typography-ramp-5, 1.125rem)",
+          "--fsds-text-size-md": "var(--fsds-text-size-lg, 1.125rem)",
           "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--xl",
         "declarations": {
-          "--fsds-text-size-md": "var(--fsds-core-typography-ramp-6, 1.25rem)",
+          "--fsds-text-size-md": "var(--fsds-text-size-xl, 1.25rem)",
           "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--2xl",
         "declarations": {
-          "--fsds-text-size-md": "var(--fsds-core-typography-ramp-7, 1.5rem)",
+          "--fsds-text-size-md": "var(--fsds-text-size-2xl, 1.5rem)",
           "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },
       {
         "selector": ".text--3xl",
         "declarations": {
-          "--fsds-text-size-md": "var(--fsds-core-typography-ramp-8, 2rem)",
+          "--fsds-text-size-md": "var(--fsds-text-size-3xl, 2rem)",
           "font-size": "var(--fsds-text-size-md, 1rem)"
         }
       },

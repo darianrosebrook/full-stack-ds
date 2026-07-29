@@ -261,7 +261,7 @@
   },
   "--compact": {
     "skeleton.gap.md": {
-      "resolvesTo": "core.spacing.size.03",
+      "resolvesTo": "skeleton.gap.compact",
       "fallback": "4px"
     }
   },
@@ -273,7 +273,7 @@
   },
   "--spacious": {
     "skeleton.gap.md": {
-      "resolvesTo": "core.spacing.size.07",
+      "resolvesTo": "skeleton.gap.spacious",
       "fallback": "24px"
     }
   }

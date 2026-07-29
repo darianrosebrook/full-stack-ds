@@ -193,7 +193,7 @@
       {
         "selector": ".links--small",
         "declarations": {
-          "--fsds-links-size-fontSize-medium": "var(--fsds-core-typography-ramp-3, 0.875rem)",
+          "--fsds-links-size-fontSize-medium": "var(--fsds-links-size-fontSize-small, 0.875rem)",
           "font-size": "var(--fsds-links-size-fontSize-medium, 1rem)"
         }
       },
@@ -207,7 +207,7 @@
       {
         "selector": ".links--large",
         "declarations": {
-          "--fsds-links-size-fontSize-medium": "var(--fsds-core-typography-ramp-5, 1.125rem)",
+          "--fsds-links-size-fontSize-medium": "var(--fsds-links-size-fontSize-large, 1.125rem)",
           "font-size": "var(--fsds-links-size-fontSize-medium, 1rem)"
         }
       },

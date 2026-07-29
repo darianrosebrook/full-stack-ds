@@ -65,8 +65,8 @@ export class BlockquoteElement extends LitElement {
     }
 
     .blockquote--sm {
-      --fsds-blockquote-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-blockquote-size-fontSize-md: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-blockquote-size-padding-default: var(--fsds-blockquote-size-padding-sm, 8px);
+      --fsds-blockquote-size-fontSize-md: var(--fsds-blockquote-size-fontSize-sm, 0.875rem);
     }
 
     .blockquote--md {
@@ -75,8 +75,8 @@ export class BlockquoteElement extends LitElement {
     }
 
     .blockquote--lg {
-      --fsds-blockquote-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-blockquote-size-fontSize-md: var(--fsds-core-typography-ramp-5, 1.125rem);
+      --fsds-blockquote-size-padding-default: var(--fsds-blockquote-size-padding-lg, 24px);
+      --fsds-blockquote-size-fontSize-md: var(--fsds-blockquote-size-fontSize-lg, 1.125rem);
     }
 
     .blockquote {

@@ -103,11 +103,11 @@
   },
   "--sm": {
     "blockquote.size.padding.default": {
-      "resolvesTo": "core.spacing.size.04",
+      "resolvesTo": "blockquote.size.padding.sm",
       "fallback": "8px"
     },
     "blockquote.size.fontSize.md": {
-      "resolvesTo": "core.typography.ramp.3",
+      "resolvesTo": "blockquote.size.fontSize.sm",
       "fallback": "0.875rem"
     },
     "font-size": {
@@ -139,11 +139,11 @@
   },
   "--lg": {
     "blockquote.size.padding.default": {
-      "resolvesTo": "core.spacing.size.07",
+      "resolvesTo": "blockquote.size.padding.lg",
       "fallback": "24px"
     },
     "blockquote.size.fontSize.md": {
-      "resolvesTo": "core.typography.ramp.5",
+      "resolvesTo": "blockquote.size.fontSize.lg",
       "fallback": "1.125rem"
     },
     "font-size": {

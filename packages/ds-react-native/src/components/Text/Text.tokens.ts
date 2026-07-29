@@ -275,7 +275,7 @@ export const textTokenScopes = {
     "text.size.md": {
       name: "text.size.md",
       cssVar: "--fsds-text-size-md",
-      ref: "core.typography.ramp.2",
+      ref: "text.size.xs",
       fallback: 12,
     },
   },
@@ -283,7 +283,7 @@ export const textTokenScopes = {
     "text.size.md": {
       name: "text.size.md",
       cssVar: "--fsds-text-size-md",
-      ref: "core.typography.ramp.3",
+      ref: "text.size.sm",
       fallback: 14,
     },
   },
@@ -299,7 +299,7 @@ export const textTokenScopes = {
     "text.size.md": {
       name: "text.size.md",
       cssVar: "--fsds-text-size-md",
-      ref: "core.typography.ramp.5",
+      ref: "text.size.lg",
       fallback: 18,
     },
   },
@@ -307,7 +307,7 @@ export const textTokenScopes = {
     "text.size.md": {
       name: "text.size.md",
       cssVar: "--fsds-text-size-md",
-      ref: "core.typography.ramp.6",
+      ref: "text.size.xl",
       fallback: 20,
     },
   },
@@ -315,7 +315,7 @@ export const textTokenScopes = {
     "text.size.md": {
       name: "text.size.md",
       cssVar: "--fsds-text-size-md",
-      ref: "core.typography.ramp.7",
+      ref: "text.size.2xl",
       fallback: 24,
     },
   },
@@ -323,7 +323,7 @@ export const textTokenScopes = {
     "text.size.md": {
       name: "text.size.md",
       cssVar: "--fsds-text-size-md",
-      ref: "core.typography.ramp.8",
+      ref: "text.size.3xl",
       fallback: 32,
     },
   },
