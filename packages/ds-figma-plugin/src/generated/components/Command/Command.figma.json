@@ -520,7 +520,7 @@
         }
       },
       {
-        "selector": ".command__item:hover",
+        "selector": ".command__item:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-command-color-backgroundHover, #d0d0d0)"
         }

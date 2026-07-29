@@ -257,13 +257,13 @@
         }
       },
       {
-        "selector": ".input:hover",
+        "selector": ".input:hover:not(:disabled)",
         "declarations": {
           "border-color": "var(--fsds-input-color-border-hover, #888889)"
         }
       },
       {
-        "selector": ".input:focus-visible",
+        "selector": ".input:focus-visible:not(:disabled)",
         "declarations": {
           "border-color": "var(--fsds-input-color-focus-default, #0566fe)",
           "outline-width": "var(--fsds-input-focus-ring-width, 2px)",
@@ -279,7 +279,7 @@
         }
       },
       {
-        "selector": ".input--invalid:focus-visible",
+        "selector": ".input--invalid:focus-visible:not(:disabled)",
         "declarations": {
           "border-color": "var(--fsds-input-color-invalid-default, #b31b1b)",
           "outline-color": "var(--fsds-semantic-focus-ring-intent-danger, #b31b1b)"

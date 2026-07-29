@@ -57,11 +57,11 @@ export class SelectElement extends LitElement {
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
-    .select__trigger:hover {
+    .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
@@ -77,7 +77,7 @@ export class SelectElement extends LitElement {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-disabled, #b8b8b8);
     }
 
-    .select__option:hover {
+    .select__option:hover:not([aria-disabled="true"]) {
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
@@ -185,7 +185,7 @@ export class SelectElement extends LitElement {
       color: var(--fsds-select-color-placeholder-default, #888889);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-select-focus-ring-width, 2px);
       outline-color: var(--fsds-select-focus-ring-color, #0566fe);
       outline-style: var(--fsds-select-focus-ring-style, solid);
@@ -317,11 +317,11 @@ export class SelectTriggerElement extends LitElement {
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
-    .select__trigger:hover {
+    .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
@@ -337,7 +337,7 @@ export class SelectTriggerElement extends LitElement {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-disabled, #b8b8b8);
     }
 
-    .select__option:hover {
+    .select__option:hover:not([aria-disabled="true"]) {
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
@@ -445,7 +445,7 @@ export class SelectTriggerElement extends LitElement {
       color: var(--fsds-select-color-placeholder-default, #888889);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-select-focus-ring-width, 2px);
       outline-color: var(--fsds-select-focus-ring-color, #0566fe);
       outline-style: var(--fsds-select-focus-ring-style, solid);
@@ -515,11 +515,11 @@ export class SelectContentElement extends LitElement {
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
-    .select__trigger:hover {
+    .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
@@ -535,7 +535,7 @@ export class SelectContentElement extends LitElement {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-disabled, #b8b8b8);
     }
 
-    .select__option:hover {
+    .select__option:hover:not([aria-disabled="true"]) {
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
@@ -643,7 +643,7 @@ export class SelectContentElement extends LitElement {
       color: var(--fsds-select-color-placeholder-default, #888889);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-select-focus-ring-width, 2px);
       outline-color: var(--fsds-select-focus-ring-color, #0566fe);
       outline-style: var(--fsds-select-focus-ring-style, solid);
@@ -713,11 +713,11 @@ export class SelectOptionElement extends LitElement {
       --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
     }
 
-    .select__trigger:hover {
+    .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
@@ -733,7 +733,7 @@ export class SelectOptionElement extends LitElement {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-disabled, #b8b8b8);
     }
 
-    .select__option:hover {
+    .select__option:hover:not([aria-disabled="true"]) {
       --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
@@ -841,7 +841,7 @@ export class SelectOptionElement extends LitElement {
       color: var(--fsds-select-color-placeholder-default, #888889);
     }
 
-    .select__trigger:focus-visible {
+    .select__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-select-focus-ring-width, 2px);
       outline-color: var(--fsds-select-focus-ring-color, #0566fe);
       outline-style: var(--fsds-select-focus-ring-style, solid);

@@ -4353,9 +4353,34 @@ export function computeCssBlocks(
   //   - compound (whitespace, +, >, ~, or mixed __/: selectors) →
   //     expanded verbatim with bare parts qualified.
   //   - portal-content   → top-level verbatim (no BEM qualification).
+  // When a contract declares that a state suppresses the interaction category
+  // (`availability: { suppresses: { categories: ["interaction"] } }`), that is a
+  // claim about rendered behaviour: while suppressed, interaction styling does
+  // not apply. Honour it by guarding the interaction selectors themselves.
+  //
+  // The alternative — resetting each interaction property inside the suppressing
+  // block — is what the corpus did, and it is why this defect existed: Button's
+  // :disabled reset background-color and color and forgot border-color, so a
+  // disabled Button still took the hover border. Guarding suppresses the whole
+  // category by construction instead of by enumeration, so a property added to
+  // :hover later cannot silently reopen the hole.
+  //
+  // WEB ONLY. The guard is CSS selector mechanics and must not leak into
+  // non-CSS targets. React Native derives its pressed state by matching the
+  // `:active` selector; appending `:not(:disabled)` made that match fail, which
+  // silently dropped EVERY `_pressed` style from RN Button — root and all four
+  // variants — and deleted the test that pinned it. RN suppresses interaction
+  // through the Pressable's own disabled handling, not a selector, so it needs
+  // no guard here.
+  const interactionGuard =
+    platformTarget === "web" ? suppressionGuardFor(contract) : undefined;
+
   for (const [key, rawBlock] of Object.entries(styles)) {
     if (key === "root") continue;
-    const selector = expandStylesKey(key, cssPrefix, expandOptions);
+    const selector = guardInteractionSelector(
+      expandStylesKey(key, cssPrefix, expandOptions),
+      interactionGuard,
+    );
     if (emitted.has(selector)) continue;
     const declarations = renderStyleBlock(rawBlock, cssPrefix, platformTarget);
     if (Object.keys(declarations).length === 0) continue;
@@ -4439,6 +4464,88 @@ export function expandStylesKey(
   const statePseudo = DERIVABLE_STATE_TO_PSEUDO[key];
   if (statePseudo) return `.${prefix}${statePseudo}`;
   return `.${prefix}__${key}`;
+}
+
+/**
+ * Interaction pseudo-classes the codegen can derive. A selector ending in one
+ * of these is interaction-state styling and is subject to a suppression guard.
+ */
+const INTERACTION_PSEUDOS = [
+  ":hover",
+  ":active",
+  ":focus-visible",
+  ":focus-within",
+  ":focus",
+] as const;
+
+/** Elements for which `disabled` is a native attribute the UA honours. */
+const NATIVE_DISABLEABLE_TAGS = new Set([
+  "button",
+  "input",
+  "select",
+  "textarea",
+  "fieldset",
+  "optgroup",
+  "option",
+]);
+
+/**
+ * Derive the guard that excludes a contract's suppressed state, or undefined
+ * when the contract declares no interaction suppression.
+ *
+ * The FORM has to follow the element, or the guard is decorative: `:disabled`
+ * only matches native form controls, so emitting `.chip:not(:disabled)` on a
+ * `<span>` root would suppress nothing while looking like it did. Order of
+ * preference:
+ *
+ *   1. a contract-declared `a11y.attribute` on the suppressing dimension —
+ *      authored intent wins, and it is the only source that can name a
+ *      non-obvious attribute.
+ *   2. `:disabled` when the root is a native form control.
+ *   3. the ARIA attribute form, which is how a non-form-control root can carry
+ *      a disabled state at all.
+ */
+function suppressionGuardFor(contract: ComponentContract): string | undefined {
+  const dimensions = contract.states?.dimensions;
+  if (!dimensions || typeof dimensions !== "object") return undefined;
+
+  for (const dim of Object.values(dimensions)) {
+    if (!dim.suppresses?.categories?.includes("interaction")) continue;
+
+    const values = dim.values ?? [];
+    const initial = dim.initial ?? values[0];
+    const suppressedValue = values.find((v) => v !== initial);
+    if (!suppressedValue) return undefined;
+
+    if (dim.a11y?.attribute) {
+      const attrValue = dim.a11y.values?.[suppressedValue] ?? "true";
+      return `:not([${dim.a11y.attribute}="${String(attrValue)}"])`;
+    }
+
+    const anatomy = contract.anatomy;
+    const rootTag =
+      anatomy && !Array.isArray(anatomy) ? anatomy.dom?.tag : undefined;
+    if (rootTag && NATIVE_DISABLEABLE_TAGS.has(rootTag)) return ":not(:disabled)";
+    return `:not([aria-disabled="true"])`;
+  }
+  return undefined;
+}
+
+/**
+ * Append the suppression guard to an interaction selector.
+ *
+ * Only selectors ENDING in an interaction pseudo are guarded: a variant
+ * modifier or an anatomy part carries no interaction semantics, and guarding
+ * those would change the cascade for rules the contract never claimed to
+ * suppress. Note this raises specificity by the guard's own weight — for
+ * `:not(:disabled)` that is (0,1,0) — which is why the framework suites and the
+ * rail run over the regenerated corpus rather than the emitter alone.
+ */
+function guardInteractionSelector(selector: string, guard: string | undefined): string {
+  if (!guard) return selector;
+  if (!INTERACTION_PSEUDOS.some((pseudo) => selector.endsWith(pseudo))) return selector;
+  if (selector.includes(guard)) return selector; // already guarded by the author
+  return `${selector}${guard}`;
 }
 
 /**

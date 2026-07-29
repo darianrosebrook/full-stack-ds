@@ -34,7 +34,7 @@
   --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
 }
 
-.details__summary:hover {
+.details__summary:hover:not([aria-disabled="true"]) {
   --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
 }
 

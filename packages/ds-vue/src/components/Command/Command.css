@@ -125,7 +125,7 @@
   border-radius: var(--fsds-command-border-radius, 6px);
 }
 
-.command__item:hover {
+.command__item:hover:not([aria-disabled="true"]) {
   background-color: var(--fsds-command-color-backgroundHover, #d0d0d0);
 }
 

@@ -148,7 +148,7 @@ export class FieldElement extends LitElement {
       color: var(--fsds-field-color-fg, #141414);
     }
 
-    .field__control:focus-within {
+    .field__control:focus-within:not([aria-disabled="true"]) {
       border-color: var(--fsds-field-color-focus-border, #0566fe);
       outline-width: var(--fsds-field-focus-ring-width, 2px);
       outline-color: var(--fsds-field-focus-ring-color, #0566fe);
@@ -360,7 +360,7 @@ export class FieldHeaderElement extends LitElement {
       color: var(--fsds-field-color-fg, #141414);
     }
 
-    .field__control:focus-within {
+    .field__control:focus-within:not([aria-disabled="true"]) {
       border-color: var(--fsds-field-color-focus-border, #0566fe);
       outline-width: var(--fsds-field-focus-ring-width, 2px);
       outline-color: var(--fsds-field-focus-ring-color, #0566fe);

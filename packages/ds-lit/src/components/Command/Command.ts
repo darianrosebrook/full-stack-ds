@@ -180,7 +180,7 @@ export class CommandElement extends LitElement {
       border-radius: var(--fsds-command-border-radius, 6px);
     }
 
-    .command__item:hover {
+    .command__item:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-command-color-backgroundHover, #d0d0d0);
     }
 
@@ -496,7 +496,7 @@ export class CommandListElement extends LitElement {
       border-radius: var(--fsds-command-border-radius, 6px);
     }
 
-    .command__item:hover {
+    .command__item:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-command-color-backgroundHover, #d0d0d0);
     }
 
@@ -717,7 +717,7 @@ export class CommandGroupElement extends LitElement {
       border-radius: var(--fsds-command-border-radius, 6px);
     }
 
-    .command__item:hover {
+    .command__item:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-command-color-backgroundHover, #d0d0d0);
     }
 
@@ -938,7 +938,7 @@ export class CommandItemElement extends LitElement {
       border-radius: var(--fsds-command-border-radius, 6px);
     }
 
-    .command__item:hover {
+    .command__item:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-command-color-backgroundHover, #d0d0d0);
     }
 

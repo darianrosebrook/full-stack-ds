@@ -99,7 +99,7 @@
   color: var(--fsds-select-color-placeholder-default, #888889);
 }
 
-.select__trigger:focus-visible {
+.select__trigger:focus-visible:not([aria-disabled="true"]) {
   outline-width: var(--fsds-select-focus-ring-width, 2px);
   outline-color: var(--fsds-select-focus-ring-color, #0566fe);
   outline-style: var(--fsds-select-focus-ring-style, solid);

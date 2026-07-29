@@ -391,20 +391,20 @@
         }
       },
       {
-        "selector": ".button:hover",
+        "selector": ".button:hover:not(:disabled)",
         "declarations": {
           "background-color": "var(--fsds-button-color-background-hover, #d0d0d0)",
           "border-color": "var(--fsds-button-color-border-hover, #888889)"
         }
       },
       {
-        "selector": ".button:active",
+        "selector": ".button:active:not(:disabled)",
         "declarations": {
           "background-color": "var(--fsds-button-color-background-active, #b8b8b8)"
         }
       },
       {
-        "selector": ".button:focus-visible",
+        "selector": ".button:focus-visible:not(:disabled)",
         "declarations": {
           "border-color": "var(--fsds-button-color-border-focus, #0566fe)"
         }
