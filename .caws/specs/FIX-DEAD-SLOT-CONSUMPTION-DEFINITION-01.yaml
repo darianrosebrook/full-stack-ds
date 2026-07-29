@@ -2,10 +2,11 @@ id: FIX-DEAD-SLOT-CONSUMPTION-DEFINITION-01
 title: 'Count a cross-slot var() read in tokens.css as consumption; keep self-reads excluded'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: s6-consumption
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s6-consumption at 3974b491a4b5b928c8547899ed7fc6cb43fa096c'
 created_at: '2026-07-29T16:43:40.842Z'
-updated_at: '2026-07-29T16:43:40.842Z'
+updated_at: '2026-07-29T16:47:28.534Z'
 blast_radius:
   modules:
     - 'scripts/dead-slot-audit/audit.mjs (consumption scan)'
