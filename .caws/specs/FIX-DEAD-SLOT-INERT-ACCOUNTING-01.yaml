@@ -3,6 +3,7 @@ title: 'Account for shadowed slots as inert-by-design rather than dropping them 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: s4-inert
 created_at: '2026-07-29T02:03:57.453Z'
 updated_at: '2026-07-29T02:03:57.453Z'
 blast_radius:
