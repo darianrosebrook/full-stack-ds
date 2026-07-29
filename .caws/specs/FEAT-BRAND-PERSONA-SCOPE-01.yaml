@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: brand-personas
 created_at: '2026-07-29T17:09:38.838Z'
-updated_at: '2026-07-29T17:52:33.968Z'
+updated_at: '2026-07-29T17:52:35.075Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/brands (delete 5 abstract brands, author 5 persona brands, extend brand schema with a components block)'
@@ -34,6 +34,7 @@ scope:
     - 'tmp'
     - packages/ds-tokens/build/generators/global.brand-components.test.ts
     - ../../../../CLAUDE.md
+    - /Users/darianrosebrook/Desktop/Projects/CLAUDE.md
   out: []
 invariants:
   - 'Every existing (non-removed) brand keeps working unmodified — the @layer re-wrap of component tokens.css changes cascade mechanics, not any single brand''s declared values, so default/corporate/forest/canary/monochrome must render identically before and after.'
