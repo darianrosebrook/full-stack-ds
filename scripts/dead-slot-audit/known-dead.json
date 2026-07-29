@@ -16,13 +16,6 @@
       "note": "no rule matched: \"paddingX\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
-      "component": "Accordion",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
       "component": "Alert",
       "slot": "alert.icon.size",
       "disposition": "review",
@@ -63,13 +56,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Alert",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "AlertNotice",
@@ -128,13 +114,6 @@
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
-      "component": "AlertNotice",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
       "component": "Avatar",
       "slot": "avatar.color.background.inverse",
       "disposition": "review",
@@ -168,13 +147,6 @@
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "Button",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Button",
@@ -217,13 +189,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Card",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Card",
@@ -297,20 +262,6 @@
     },
     {
       "component": "Chip",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Chip",
-      "slot": "box-model.min-height",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Chip",
       "slot": "chip.color.background.active",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
@@ -381,13 +332,6 @@
     },
     {
       "component": "Details",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Details",
       "slot": "details.size.padding.compact",
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
@@ -420,13 +364,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Field",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Field",
@@ -486,13 +423,6 @@
     },
     {
       "component": "Input",
-      "slot": "box-model.min-height",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Input",
       "slot": "input.space.inline.default",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
@@ -504,13 +434,6 @@
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-    },
-    {
-      "component": "Links",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Links",
@@ -581,20 +504,6 @@
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-    },
-    {
-      "component": "Popover",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Postcard",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Postcard",
@@ -787,13 +696,6 @@
     },
     {
       "component": "Tabs",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Tabs",
       "slot": "tabs.color.focus",
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
@@ -847,20 +749,6 @@
       "disposition": "repoint",
       "spec": "FIX-DEAD-SLOT-VARIANT-REPOINT-01",
       "note": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-    },
-    {
-      "component": "TextField",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Toast",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Toast",
@@ -924,13 +812,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"linkHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Walkthrough",
-      "slot": "box-model.gap",
-      "disposition": "shadowed",
-      "spec": "FIX-DEAD-SLOT-BOXMODEL-SHADOW-01",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Walkthrough",

@@ -151,12 +151,26 @@ export function classify(component) {
       prefix,
       renderedParts,
     });
+    // A shadowed slot is not a defect and is not counted dead. The primitive
+    // consumer IS emitted on every root by renderBoxModelConsumers(); the
+    // author's styles.root rule spreads after it and wins the property, so the
+    // primitive var never reaches the CSS. That is the layering working as
+    // designed. The declaration still stands in tokens.css, which is correct:
+    // tokens.css declares the full vocabulary so an override always resolves.
+    //
+    // This narrows what "dead" means, so it is fair to ask whether it moves the
+    // goalposts. The check that it does not is A2 — removing the author
+    // override must return the slot to `consumed`, never leave it `shadowed`.
+    if (disposition === "shadowed") return { ...s, status: "shadowed", disposition, evidence };
     return { ...s, status, disposition, evidence };
   });
 
   const consumed = slots.filter((s) => s.status === "consumed").length;
-  const dead = slots.length - consumed;
-  return { component, prefix, total: slots.length, consumed, dead, slots };
+  const shadowed = slots.filter((s) => s.status === "shadowed").length;
+  // `dead` is now a residual of three statuses, not two — shadowed slots are
+  // neither consumed nor a defect.
+  const dead = slots.length - consumed - shadowed;
+  return { component, prefix, total: slots.length, consumed, shadowed, dead, slots };
 }
 
 function escapeRe(s) {
@@ -179,6 +193,7 @@ if (RUN_DIRECTLY) {
   const totalSlots = components.reduce((n, c) => n + c.total, 0);
   const consumedCount = components.reduce((n, c) => n + c.consumed, 0);
   const deadCount = components.reduce((n, c) => n + c.dead, 0);
+  const shadowedCount = components.reduce((n, c) => n + c.shadowed, 0);
 
   mkdirSync(OUT_DIR, { recursive: true });
   const json = {
@@ -186,6 +201,7 @@ if (RUN_DIRECTLY) {
     components: components.length,
     slotsDeclared: totalSlots,
     consumed: consumedCount,
+    shadowed: shadowedCount,
     dead: deadCount,
     failing,
     perComponent: components,
@@ -200,7 +216,7 @@ if (RUN_DIRECTLY) {
   );
   md.push("");
   md.push(
-    `Components: **${components.length}** · slots declared: **${totalSlots}** · consumed: **${consumedCount}** · dead: **${deadCount}**`,
+    `Components: **${components.length}** · slots declared: **${totalSlots}** · consumed: **${consumedCount}** · shadowed: **${shadowedCount}** · dead: **${deadCount}**`,
   );
   md.push("");
   md.push("## Dead slots — declared slots with no `var()` consumer in the structure CSS");
@@ -237,7 +253,7 @@ if (RUN_DIRECTLY) {
   writeFileSync(resolve(OUT_DIR, "dead-slot-matrix.md"), md.join("\n") + "\n");
 
   console.log(
-    `\nRAIL-STYLING-REALIZATION-LEDGERS-01 — ${components.length} components, ${totalSlots} slots declared, ${consumedCount} consumed, ${deadCount} dead`,
+    `\nRAIL-STYLING-REALIZATION-LEDGERS-01 — ${components.length} components, ${totalSlots} slots declared, ${consumedCount} consumed, ${shadowedCount} shadowed, ${deadCount} dead`,
   );
   const byDisposition = {};
   for (const f of failing) {

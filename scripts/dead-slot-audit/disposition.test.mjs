@@ -44,6 +44,12 @@ check("a box-model slot overridden by an author root rule is `shadowed`", () => 
   assert.equal(r.disposition, "shadowed");
 });
 
+// A2 (FIX-DEAD-SLOT-BOXMODEL-SHADOW-01). Reclassifying 17 slots out of the dead
+// count narrows what "dead" means, so the reclassification must be falsifiable
+// in the direction that would expose goalpost-moving. Verified end-to-end for
+// this slice by deleting Accordion's styles.root `gap`, regenerating, and
+// observing box-model.gap return to `consumed` (NOT `shadowed`) — the shadow
+// verdict tracks the author override, not the audit's convenience.
 check("a box-model slot with NO author override is not `shadowed`", () => {
   // Control: without the override the primitive consumer is live, so calling
   // it shadowed would be the goalpost-moving failure mode this rule risks.
