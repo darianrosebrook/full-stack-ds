@@ -2,10 +2,11 @@ id: FIX-DEAD-SLOT-VARIANT-REPOINT-02
 title: 'Re-point 18 orphaned variant leaf slots so variant blocks consume them'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: s7-repoint
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s7-repoint at 2604da9d79c05313a91b30c9f7093f770f3449bc'
 created_at: '2026-07-29T16:48:54.919Z'
-updated_at: '2026-07-29T16:48:54.919Z'
+updated_at: '2026-07-29T16:53:18.094Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components/{Blockquote,Chip,Details,Links,Skeleton,Text}/*.styles.json'
