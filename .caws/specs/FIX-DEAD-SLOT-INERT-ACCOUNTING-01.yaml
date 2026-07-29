@@ -1,0 +1,30 @@
+id: FIX-DEAD-SLOT-INERT-ACCOUNTING-01
+title: 'Account for shadowed slots as inert-by-design rather than dropping them from the ledger'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-07-29T02:03:57.453Z'
+updated_at: '2026-07-29T02:03:57.453Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/dead-slot-audit'
+    - 'docs/dead-slot-audit'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a shadowed slot; when the dead-slot audit runs; then it is ledgered as inert-by-design and excluded from the defect count'
+non_functional: {}
+contracts:
+  - name: 'inert-accounting'
+    type: contract-test
+    path: 'scripts/dead-slot-audit/disposition.test.mjs'
