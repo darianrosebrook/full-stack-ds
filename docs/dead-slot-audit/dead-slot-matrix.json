@@ -3,8 +3,1263 @@
   "components": 49,
   "slotsDeclared": 894,
   "consumed": 760,
+  "inert": 134,
   "shadowed": 17,
   "dead": 117,
+  "inertSlots": [
+    {
+      "component": "Accordion",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "accordion.border.width",
+          "cssVar": "--fsds-accordion-border-width",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "accordion.spacing.paddingX",
+          "cssVar": "--fsds-accordion-spacing-paddingX",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"paddingX\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Alert",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "alert.icon.size",
+          "cssVar": "--fsds-alert-icon-size",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert.size.padding.inline",
+          "cssVar": "--fsds-alert-size-padding-inline",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "alert.size.padding.page",
+          "cssVar": "--fsds-alert-size-padding-page",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "alert.typography.page.fontSize",
+          "cssVar": "--fsds-alert-typography-page-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert.typography.page.title.fontSize",
+          "cssVar": "--fsds-alert-typography-page-title-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert.typography.inline.fontSize",
+          "cssVar": "--fsds-alert-typography-inline-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "AlertNotice",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "alert-notice.color.background.primary",
+          "cssVar": "--fsds-alert-notice-color-background-primary",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert-notice.color.foreground.primary",
+          "cssVar": "--fsds-alert-notice-color-foreground-primary",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert-notice.icon.size",
+          "cssVar": "--fsds-alert-notice-icon-size",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert-notice.size.padding.inline",
+          "cssVar": "--fsds-alert-notice-size-padding-inline",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"inline\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "alert-notice.size.padding.page",
+          "cssVar": "--fsds-alert-notice-size-padding-page",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"page\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "alert-notice.typography.page.fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert-notice.typography.page.title.fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-title-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "alert-notice.typography.inline.fontSize",
+          "cssVar": "--fsds-alert-notice-typography-inline-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Avatar",
+      "inert": [
+        {
+          "slot": "avatar.color.background.inverse",
+          "cssVar": "--fsds-avatar-color-background-inverse",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"inverse\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Blockquote",
+      "inert": [
+        {
+          "slot": "blockquote.size.padding.sm",
+          "cssVar": "--fsds-blockquote-size-padding-sm",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "blockquote.size.padding.lg",
+          "cssVar": "--fsds-blockquote-size-padding-lg",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "blockquote.size.fontSize.sm",
+          "cssVar": "--fsds-blockquote-size-fontSize-sm",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--sm\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "blockquote.size.fontSize.lg",
+          "cssVar": "--fsds-blockquote-size-fontSize-lg",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--lg\"] redefines sibling \"blockquote.size.fontSize.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        }
+      ]
+    },
+    {
+      "component": "Button",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "button.size.padding-block.medium",
+          "cssVar": "--fsds-button-size-padding-block-medium",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
+        },
+        {
+          "slot": "button.size.padding-inline.medium",
+          "cssVar": "--fsds-button-size-padding-inline-medium",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
+        },
+        {
+          "slot": "button.size.minHeight.medium",
+          "cssVar": "--fsds-button-size-minHeight-medium",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "unconsumed-vocabulary",
+          "evidence": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
+        }
+      ]
+    },
+    {
+      "component": "Calendar",
+      "inert": [
+        {
+          "slot": "calendar.color.border.accent",
+          "cssVar": "--fsds-calendar-color-border-accent",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "calendar.color.day.range.background",
+          "cssVar": "--fsds-calendar-color-day-range-background",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"background\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "calendar.typography.weekday.size",
+          "cssVar": "--fsds-calendar-typography-weekday-size",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Card",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "card.color.badge.success.background",
+          "cssVar": "--fsds-card-color-badge-success-background",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.success.foreground",
+          "cssVar": "--fsds-card-color-badge-success-foreground",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.warning.background",
+          "cssVar": "--fsds-card-color-badge-warning-background",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.warning.foreground",
+          "cssVar": "--fsds-card-color-badge-warning-foreground",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.info.background",
+          "cssVar": "--fsds-card-color-badge-info-background",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.info.foreground",
+          "cssVar": "--fsds-card-color-badge-info-foreground",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.error.background",
+          "cssVar": "--fsds-card-color-badge-error-background",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.error.foreground",
+          "cssVar": "--fsds-card-color-badge-error-foreground",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.neutral.background",
+          "cssVar": "--fsds-card-color-badge-neutral-background",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        },
+        {
+          "slot": "card.color.badge.neutral.foreground",
+          "cssVar": "--fsds-card-color-badge-neutral-foreground",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "delete",
+          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
+        }
+      ]
+    },
+    {
+      "component": "Chip",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "chip.color.background.active",
+          "cssVar": "--fsds-chip-color-background-active",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"active\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "chip.focus.ring.width",
+          "cssVar": "--fsds-chip-focus-ring-width",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "chip.focus.ring.color",
+          "cssVar": "--fsds-chip-focus-ring-color",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "chip.focus.ring.style",
+          "cssVar": "--fsds-chip-focus-ring-style",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"style\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "chip.focus.ring.offset",
+          "cssVar": "--fsds-chip-focus-ring-offset",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "chip.color.background.selected",
+          "cssVar": "--fsds-chip-color-background-selected",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.background.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "chip.color.foreground.selected",
+          "cssVar": "--fsds-chip-color-foreground-selected",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.foreground.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "chip.color.border.selected",
+          "cssVar": "--fsds-chip-color-border-selected",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "chip.dismiss.size",
+          "cssVar": "--fsds-chip-dismiss-size",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "box-model.min-height",
+          "cssVar": "--fsds-box-model-min-height",
+          "source": "styles:.chip__action.button",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        }
+      ]
+    },
+    {
+      "component": "Command",
+      "inert": [
+        {
+          "slot": "command.opacity.disabled",
+          "cssVar": "--fsds-command-opacity-disabled",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Details",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "details.size.padding.compact",
+          "cssVar": "--fsds-details-size-padding-compact",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--compact\"] redefines sibling \"details.size.padding.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "details.size.padding.page",
+          "cssVar": "--fsds-details-size-padding-page",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"page\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "details.typography.fontSize.body",
+          "cssVar": "--fsds-details-typography-fontSize-body",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"body\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "details.typography.fontSize.compact",
+          "cssVar": "--fsds-details-typography-fontSize-compact",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Divider",
+      "inert": [
+        {
+          "slot": "divider.size.thicknessThick",
+          "cssVar": "--fsds-divider-size-thicknessThick",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Field",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "field.pad.y",
+          "cssVar": "--fsds-field-pad-y",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "field.color.borderBold",
+          "cssVar": "--fsds-field-color-borderBold",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"borderBold\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "field.color.validating-border",
+          "cssVar": "--fsds-field-color-validating-border",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"validating-border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "field.color.validating-text",
+          "cssVar": "--fsds-field-color-validating-text",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"validating-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "field.color.valid-text",
+          "cssVar": "--fsds-field-color-valid-text",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"valid-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "field.spacing.indicator",
+          "cssVar": "--fsds-field-spacing-indicator",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"indicator\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Image",
+      "inert": [
+        {
+          "slot": "image.size.icon",
+          "cssVar": "--fsds-image-size-icon",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"icon\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "image.typography.error.fontSize",
+          "cssVar": "--fsds-image-typography-error-fontSize",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Input",
+      "inert": [
+        {
+          "slot": "box-model.min-height",
+          "cssVar": "--fsds-box-model-min-height",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "input.space.inline.default",
+          "cssVar": "--fsds-input-space-inline-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Label",
+      "inert": [
+        {
+          "slot": "label.typo.weight.default",
+          "cssVar": "--fsds-label-typo-weight-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Links",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "links.size.fontSize.small",
+          "cssVar": "--fsds-links-size-fontSize-small",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--small\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "links.size.fontSize.large",
+          "cssVar": "--fsds-links-size-fontSize-large",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--large\"] redefines sibling \"links.size.fontSize.medium\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        }
+      ]
+    },
+    {
+      "component": "NavList",
+      "inert": [
+        {
+          "slot": "nav-list.color.background.default",
+          "cssVar": "--fsds-nav-list-color-background-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "nav-list.color.background.hover",
+          "cssVar": "--fsds-nav-list-color-background-hover",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "nav-list.color.background.current",
+          "cssVar": "--fsds-nav-list-color-background-current",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"current\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "nav-list.color.outline.focus",
+          "cssVar": "--fsds-nav-list-color-outline-focus",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "nav-list.size.gap.group",
+          "cssVar": "--fsds-nav-list-size-gap-group",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"group\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "nav-list.size.fontSize.item",
+          "cssVar": "--fsds-nav-list-size-fontSize-item",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"item\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "nav-list.size.fontSize.groupLabel",
+          "cssVar": "--fsds-nav-list-size-fontSize-groupLabel",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"groupLabel\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "OTP",
+      "inert": [
+        {
+          "slot": "otp.size.padding.default",
+          "cssVar": "--fsds-otp-size-padding-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Popover",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        }
+      ]
+    },
+    {
+      "component": "Postcard",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "postcard.size.radius.full",
+          "cssVar": "--fsds-postcard-size-radius-full",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "ProfileFlag",
+      "inert": [
+        {
+          "slot": "profile-flag.spacing.padding.default",
+          "cssVar": "--fsds-profile-flag-spacing-padding-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Select",
+      "inert": [
+        {
+          "slot": "select.color.icon.default",
+          "cssVar": "--fsds-select-color-icon-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "select.color.icon.isOpen",
+          "cssVar": "--fsds-select-color-icon-isOpen",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"isOpen\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Sheet",
+      "inert": [
+        {
+          "slot": "sheet.focus.width",
+          "cssVar": "--fsds-sheet-focus-width",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "sheet.focus.color",
+          "cssVar": "--fsds-sheet-focus-color",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "sheet.color.backgroundHover",
+          "cssVar": "--fsds-sheet-color-backgroundHover",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"backgroundHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "ShowMore",
+      "inert": [
+        {
+          "slot": "show-more.color.border.default",
+          "cssVar": "--fsds-show-more-color-border-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "show-more.color.border.accent",
+          "cssVar": "--fsds-show-more-color-border-accent",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "show-more.overlay.imageOverlay",
+          "cssVar": "--fsds-show-more-overlay-imageOverlay",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"imageOverlay\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Shuttle",
+      "inert": [
+        {
+          "slot": "shuttle.color.border.default",
+          "cssVar": "--fsds-shuttle-color-border-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        }
+      ]
+    },
+    {
+      "component": "Skeleton",
+      "inert": [
+        {
+          "slot": "skeleton.color.static",
+          "cssVar": "--fsds-skeleton-color-static",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"static\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "skeleton.radius.sm",
+          "cssVar": "--fsds-skeleton-radius-sm",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"sm\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "skeleton.radius.lg",
+          "cssVar": "--fsds-skeleton-radius-lg",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"lg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "skeleton.radius.full",
+          "cssVar": "--fsds-skeleton-radius-full",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "skeleton.gap.compact",
+          "cssVar": "--fsds-skeleton-gap-compact",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--compact\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "skeleton.gap.spacious",
+          "cssVar": "--fsds-skeleton-gap-spacious",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--spacious\"] redefines sibling \"skeleton.gap.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        }
+      ]
+    },
+    {
+      "component": "Stat",
+      "inert": [
+        {
+          "slot": "stat.color.foreground.label",
+          "cssVar": "--fsds-stat-color-foreground-label",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "stat.size.label",
+          "cssVar": "--fsds-stat-size-label",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "stat.size.gap",
+          "cssVar": "--fsds-stat-size-gap",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"gap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "stat.typography.weight.label",
+          "cssVar": "--fsds-stat-typography-weight-label",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Table",
+      "inert": [
+        {
+          "slot": "table.color.textMuted",
+          "cssVar": "--fsds-table-color-textMuted",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"textMuted\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "table.spacing.sortGap",
+          "cssVar": "--fsds-table-spacing-sortGap",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"sortGap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "table.size.cellHeight",
+          "cssVar": "--fsds-table-size-cellHeight",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"cellHeight\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "table.focus.width",
+          "cssVar": "--fsds-table-focus-width",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "table.focus.color",
+          "cssVar": "--fsds-table-focus-color",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "table.focus.offset",
+          "cssVar": "--fsds-table-focus-offset",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Tabs",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "tabs.color.focus",
+          "cssVar": "--fsds-tabs-color-focus",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "tabs.size.vertical.listWidth",
+          "cssVar": "--fsds-tabs-size-vertical-listWidth",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Text",
+      "inert": [
+        {
+          "slot": "text.size.xs",
+          "cssVar": "--fsds-text-size-xs",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--xs\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "text.size.sm",
+          "cssVar": "--fsds-text-size-sm",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--sm\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "text.size.lg",
+          "cssVar": "--fsds-text-size-lg",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--lg\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "text.size.xl",
+          "cssVar": "--fsds-text-size-xl",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "text.size.2xl",
+          "cssVar": "--fsds-text-size-2xl",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--2xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        },
+        {
+          "slot": "text.size.3xl",
+          "cssVar": "--fsds-text-size-3xl",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "repoint",
+          "evidence": "styles[\"--3xl\"] redefines sibling \"text.size.md\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
+        }
+      ]
+    },
+    {
+      "component": "TextField",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        }
+      ]
+    },
+    {
+      "component": "Toast",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "toast.accent.default",
+          "cssVar": "--fsds-toast-accent-default",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "wire",
+          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+        },
+        {
+          "slot": "toast.color.intent.bg",
+          "cssVar": "--fsds-toast-color-intent-bg",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"bg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "toast.color.intent.border",
+          "cssVar": "--fsds-toast-color-intent-border",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "toast.motion.enter",
+          "cssVar": "--fsds-toast-motion-enter",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"enter\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "toast.motion.leave",
+          "cssVar": "--fsds-toast-motion-leave",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"leave\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "toast.timing.auto-dismiss",
+          "cssVar": "--fsds-toast-timing-auto-dismiss",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"auto-dismiss\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Tooltip",
+      "inert": [
+        {
+          "slot": "tooltip.size.padding.y",
+          "cssVar": "--fsds-tooltip-size-padding-y",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Truncate",
+      "inert": [
+        {
+          "slot": "truncate.color.background.primary",
+          "cssVar": "--fsds-truncate-color-background-primary",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        },
+        {
+          "slot": "truncate.color.foreground.linkHover",
+          "cssVar": "--fsds-truncate-color-foreground-linkHover",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"linkHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "Walkthrough",
+      "inert": [
+        {
+          "slot": "box-model.gap",
+          "cssVar": "--fsds-box-model-gap",
+          "source": "tokens",
+          "status": "shadowed",
+          "disposition": "shadowed",
+          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+        },
+        {
+          "slot": "walkthrough.dots.active",
+          "cssVar": "--fsds-walkthrough-dots-active",
+          "source": "tokens",
+          "status": "dead",
+          "disposition": "review",
+          "evidence": "no rule matched: \"active\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    }
+  ],
   "failing": [
     {
       "component": "Accordion",

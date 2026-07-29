@@ -151,12 +151,18 @@ export function classify(component) {
       prefix,
       renderedParts,
     });
-    // A shadowed slot is not a defect and is not counted dead. The primitive
+    // A shadowed slot is not a DEFECT and is not counted dead. The primitive
     // consumer IS emitted on every root by renderBoxModelConsumers(); the
     // author's styles.root rule spreads after it and wins the property, so the
     // primitive var never reaches the CSS. That is the layering working as
-    // designed. The declaration still stands in tokens.css, which is correct:
-    // tokens.css declares the full vocabulary so an override always resolves.
+    // designed.
+    //
+    // It is still INERT, and stays in the ledger for that reason. An earlier
+    // version of this comment justified the exclusion with "tokens.css declares
+    // the full vocabulary so an override always resolves" — that is wrong. The
+    // override resolves to nothing: no rule reads the shadowed var, so setting
+    // it has no effect, exactly as for any other inert slot. Not-a-defect and
+    // not-inert are different claims and only the first one holds here.
     //
     // This narrows what "dead" means, so it is fair to ask whether it moves the
     // goalposts. The check that it does not is A2 — removing the author
@@ -181,11 +187,36 @@ function deadSlotsOf(c) {
   return c.slots.filter((s) => s.status === "dead");
 }
 
+/** Every slot no rule reads: the defects AND the inert-by-design ones. */
+function inertSlotsOf(c) {
+  return c.slots.filter((s) => s.status !== "consumed");
+}
+
 // ---- run (only when executed directly; importable for the locked test) ----
 const RUN_DIRECTLY = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (RUN_DIRECTLY) {
   const components = ALL_COMPONENTS().map(classify);
 
+  // INERT is the accounting unit; DEAD is the defect subset of it.
+  //
+  // A slot is inert when no rule reads it — setting the custom property has no
+  // effect. That is the user-facing symptom, and it is identical for both
+  // statuses: `--fsds-box-model-gap` on Button is shadowed by the author's own
+  // gap rule, and `--fsds-accordion-border-width` is simply unread; a consumer
+  // or brand setting either gets nothing. (Measured: every one of these is
+  // declared in 9 emitted files and read by var() in zero.)
+  //
+  // A declared-but-unread slot is therefore NOT an override escape hatch — the
+  // hatch requires a consumer rule, and without one the declaration advertises
+  // a control with no wire behind it.
+  //
+  // Shadowed slots are inert-by-DESIGN (the author deliberately overrode the
+  // primitive), so they are not defects. But they are still inert, so they stay
+  // in the ledger: an entry leaves only by becoming consumed or by having its
+  // declaration deleted — never by being declared acceptable.
+  const inert = components
+    .filter((c) => c.dead + c.shadowed > 0)
+    .map((c) => ({ component: c.component, inert: inertSlotsOf(c) }));
   const failing = components
     .filter((c) => c.dead > 0)
     .map((c) => ({ component: c.component, dead: deadSlotsOf(c) }));
@@ -201,8 +232,10 @@ if (RUN_DIRECTLY) {
     components: components.length,
     slotsDeclared: totalSlots,
     consumed: consumedCount,
+    inert: deadCount + shadowedCount,
     shadowed: shadowedCount,
     dead: deadCount,
+    inertSlots: inert,
     failing,
     perComponent: components,
   };
@@ -216,7 +249,7 @@ if (RUN_DIRECTLY) {
   );
   md.push("");
   md.push(
-    `Components: **${components.length}** · slots declared: **${totalSlots}** · consumed: **${consumedCount}** · shadowed: **${shadowedCount}** · dead: **${deadCount}**`,
+    `Components: **${components.length}** · slots declared: **${totalSlots}** · consumed: **${consumedCount}** · **inert: ${deadCount + shadowedCount}** (defects: **${deadCount}** · inert-by-design: **${shadowedCount}**)`,
   );
   md.push("");
   md.push("## Dead slots — declared slots with no `var()` consumer in the structure CSS");
@@ -253,7 +286,7 @@ if (RUN_DIRECTLY) {
   writeFileSync(resolve(OUT_DIR, "dead-slot-matrix.md"), md.join("\n") + "\n");
 
   console.log(
-    `\nRAIL-STYLING-REALIZATION-LEDGERS-01 — ${components.length} components, ${totalSlots} slots declared, ${consumedCount} consumed, ${shadowedCount} shadowed, ${deadCount} dead`,
+    `\nRAIL-STYLING-REALIZATION-LEDGERS-01 — ${components.length} components, ${totalSlots} slots declared, ${consumedCount} consumed, ${deadCount + shadowedCount} inert (${deadCount} defects + ${shadowedCount} inert-by-design)`,
   );
   const byDisposition = {};
   for (const f of failing) {
@@ -268,7 +301,7 @@ if (RUN_DIRECTLY) {
   console.log(`Report: ${resolve(OUT_DIR, "dead-slot-matrix.md")}\n`);
 
   // --- ratchet: the ledger may only shrink truthfully ---
-  const current = failing.flatMap((f) => f.dead.map((d) => ({ component: f.component, ...d })));
+  const current = inert.flatMap((f) => f.inert.map((d) => ({ component: f.component, ...d })));
   const ledger = loadLedger(LEDGER_PATH, ["component", "slot"]);
   const { unledgered, stale } = diffLedger({ current, ledger, idOf: deadId });
   let code = reportRatchet({ label: "dead-slot", current, unledgered, stale, idOf: deadId });
