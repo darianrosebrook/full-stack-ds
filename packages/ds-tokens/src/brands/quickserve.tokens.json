@@ -1,0 +1,409 @@
+{
+  "$brand": {
+    "name": "quickserve",
+    "description": "High-energy quick-service-restaurant identity (McDonald's-inspired): a bold, deep orange signature accent, chunky rounded shapes, punchy pop-off-the-page card elevation, generous touch targets, and fast bouncy motion for 'add to order' style feedback. `components.Badge` demonstrates the component-scoped override capability: 'limited time' style tags get a bold orange fill instead of the generic neutral secondary background every other badge-shaped surface still uses.",
+    "accent": "orange",
+    "density": "spacious"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.300}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.300}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.orange.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.700}",
+          "fsds.dark": "{color.palette.orange.200}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.orange.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.500}",
+          "fsds.dark": "{color.palette.orange.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.orange.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.800}",
+          "fsds.dark": "{color.palette.orange.100}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.600}"
+        },
+        "$description": "Accent fill - orange.600, ~6.8:1 against white text in both modes"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.orange.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.100}",
+          "fsds.dark": "{color.palette.orange.800}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Kept neutral - bold color blocks carry the design, not colored borders"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.orange.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
+        }
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.400}"
+        }
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        }
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.orange.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.600}",
+            "fsds.dark": "{color.palette.orange.300}"
+          }
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}"
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.orange.600}",
+            "$description": "Primary CTA fill - orange.600"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.orange.700}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.orange.800}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.orange.600}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.orange.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.orange.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.300}",
+          "fsds.dark": "{color.palette.orange.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.04}",
+          "$description": "Chunky rounded radius (16px) - bold, punchy"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Chunky rounded card (16px) - menu-item tiles pop off the page"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.100}",
+            "fsds.dark": "{color.palette.neutral.800}"
+          }
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
+          }
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.400}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.400}",
+            "fsds.dark": "{color.palette.neutral.500}"
+          }
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          }
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.raised}",
+          "$description": "Even resting cards pop with a visible shadow - punchy from the start"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.floating}"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.overlay}"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.05}",
+        "$description": "Very rounded (32px) - big, chunky, tappable CTA"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}",
+        "$description": "Pill tag - 'NEW!' / 'LIMITED TIME' badges"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.04}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Thick border (2px) - bold, tactile"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.04}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.07}",
+        "$description": "Generous padding (24px) - big touch targets for counter/kiosk ordering"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "16px"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.08}",
+        "$description": "32px - roomy menu-item cards"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short1}",
+        "$description": "50ms - instant, energetic feedback"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.bounce}",
+        "$description": "Playful overshoot - the 'added to order' pop"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}"
+        }
+      }
+    },
+    "heading": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.bold}",
+          "$description": "Bold (700) - big, punchy menu/price headlines"
+        }
+      }
+    }
+  },
+  "components": {
+    "Badge": {
+      "color": {
+        "background": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.orange.600}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.600}",
+              "fsds.dark": "{color.palette.orange.500}"
+            },
+            "$description": "Component-scoped override: 'limited time' tags get a bold orange fill instead of the generic neutral secondary background every other badge-shaped surface still uses."
+          }
+        },
+        "foreground": {
+          "primary": {
+            "$type": "color",
+            "$value": "{color.mode.light}",
+            "$description": "Fixed near-white text on the bold orange fill (clears AA against orange.600/500)"
+          }
+        },
+        "border": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.orange.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.700}",
+              "fsds.dark": "{color.palette.orange.400}"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,376 @@
+{
+  "$brand": {
+    "name": "fintech",
+    "description": "Consumer-finance identity (Robinhood/Venmo-inspired): a deep emerald signature accent reads as growth and trust rather than playfulness, controls are crisp with modest rounding (precise, not austere), cards stay almost flat, and motion is quick with no bounce - every transition should feel deliberate, never decorative.",
+    "accent": "emerald",
+    "density": "compact"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.700}",
+          "fsds.dark": "{color.palette.emerald.400}"
+        },
+        "$description": "Deep emerald text - trust and precision over playfulness"
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.700}",
+          "fsds.dark": "{color.palette.emerald.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.800}",
+          "fsds.dark": "{color.palette.emerald.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.500}",
+          "fsds.dark": "{color.palette.emerald.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.800}",
+          "fsds.dark": "{color.palette.emerald.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.500}",
+          "fsds.dark": "{color.palette.emerald.500}"
+        },
+        "$description": "Accent fill - emerald.500 clears AA with white text in both modes"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.50}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.50}",
+          "fsds.dark": "{color.palette.emerald.900}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.600}",
+          "fsds.dark": "{color.palette.emerald.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Crisp neutral hairline - precise data-grid feel"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.400}",
+          "fsds.dark": "{color.palette.emerald.500}"
+        }
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.600}",
+          "fsds.dark": "{color.palette.emerald.400}"
+        }
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        }
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.emerald.700}",
+          "$extensions": {
+            "fsds.light": "{color.palette.emerald.700}",
+            "fsds.dark": "{color.palette.emerald.400}"
+          }
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}"
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.emerald.600}",
+            "$description": "Primary action fill - emerald.600, deep enough to read as a deliberate 'confirm/buy' signal"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.emerald.700}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.emerald.800}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.emerald.600}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.emerald.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.500}",
+          "fsds.dark": "{color.palette.emerald.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}",
+          "$description": "Small radius (4px) - precise, not austere"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Card radius (8px) - balanced, data-grid friendly"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
+          }
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.300}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.300}",
+            "fsds.dark": "{color.palette.neutral.600}"
+          }
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.500}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.500}",
+            "fsds.dark": "{color.palette.neutral.400}"
+          }
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          }
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}",
+          "$description": "Flat - financial data surfaces stay calm and still"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.raised}"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.floating}"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Moderate rounding (8px) - friendly but not playful"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Small rectangular tags (4px) - reads as data, not a pill chip"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Compact padding (8px) - dense ticker/ledger rows"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.03}",
+        "$description": "Compact gap (4px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.05}",
+        "$description": "Card padding (12px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short3}",
+        "$description": "167ms - quick, no lingering"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.standard}",
+        "$description": "Standard easing - deliberate, never bouncy or decorative"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular (400) - clean, legible numerals at density"
+        }
+      }
+    },
+    "heading": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.semibold}",
+          "$description": "Semibold (600) - confident without shouting"
+        }
+      }
+    }
+  }
+}
