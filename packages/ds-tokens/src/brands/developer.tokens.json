@@ -1,0 +1,427 @@
+{
+  "$brand": {
+    "name": "developer",
+    "description": "Developer-platform identity (Stripe-inspired): a precise indigo signature accent, small/crisp radii throughout, and refined layered shadows carrying depth instead of flatness - the opposite elevation posture from a flat-card brand. Motion is fast with a sharp-start ease. `components.Chip` demonstrates the component-scoped override capability: API/tech tag chips get an indigo-tinted fill instead of the generic neutral secondary-action background every other chip-shaped surface still uses.",
+    "accent": "indigo",
+    "density": "compact"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.700}",
+          "fsds.dark": "{color.palette.indigo.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
+        },
+        "$description": "Visited links shift to violet - a distinct but adjacent signal, same trick ocean used with teal"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.800}",
+          "fsds.dark": "{color.palette.indigo.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.500}",
+          "fsds.dark": "{color.palette.indigo.500}"
+        },
+        "$description": "Accent fill - indigo.500 clears AA with white text in both modes"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.50}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.50}",
+          "fsds.dark": "{color.palette.indigo.900}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Crisp hairline - depth comes from shadow, not border weight"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.400}",
+          "fsds.dark": "{color.palette.indigo.500}"
+        }
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        }
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        }
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.indigo.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.indigo.600}",
+            "fsds.dark": "{color.palette.indigo.400}"
+          }
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}"
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.600}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.700}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.800}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.600}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.indigo.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.indigo.500}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}",
+          "$description": "Small radius (4px) - crisp technical precision"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Small card radius (4px) - depth comes from shadow, not curvature"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.100}",
+            "fsds.dark": "{color.palette.neutral.800}"
+          }
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
+          }
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.400}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.400}",
+            "fsds.dark": "{color.palette.neutral.500}"
+          }
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          }
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.raised}",
+          "$description": "Even the resting state carries a soft shadow - refined depth is the identity"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.floating}"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.overlay}"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.01}",
+        "$description": "Near-square precision (2px)"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Small rectangular tag (4px), not a pill - reads as technical metadata"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.05}",
+        "$description": "12px - dense docs/dashboard rows"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "8px"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "16px"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short2}",
+        "$description": "100ms - fast, technical"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.emphasizedIn}",
+        "$description": "Sharp start - precise, immediate response to input"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}"
+        }
+      }
+    },
+    "heading": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.semibold}",
+          "$description": "Semibold (600) - technical confidence, not decorative weight"
+        }
+      }
+    }
+  },
+  "components": {
+    "Chip": {
+      "color": {
+        "background": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.50}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.50}",
+              "fsds.dark": "{color.palette.indigo.900}"
+            },
+            "$description": "Component-scoped override: API/tech-tag chips get an indigo-tinted fill instead of the generic neutral secondary-action background every other chip-shaped surface still uses."
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.100}",
+              "fsds.dark": "{color.palette.indigo.800}"
+            }
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.200}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.200}",
+              "fsds.dark": "{color.palette.indigo.700}"
+            }
+          }
+        },
+        "foreground": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.700}",
+              "fsds.dark": "{color.palette.indigo.200}"
+            }
+          }
+        },
+        "border": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.indigo.200}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.200}",
+              "fsds.dark": "{color.palette.indigo.700}"
+            }
+          }
+        }
+      }
+    }
+  }
+}

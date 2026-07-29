@@ -1,0 +1,406 @@
+{
+  "$brand": {
+    "name": "streaming",
+    "description": "Bold streaming/media-platform identity (Spotify-inspired): a vibrant lime signature accent carries every interactive surface, controls are fully pill-shaped, cards are borderless and flat (contrast does the separating, not hairlines), and motion is fast and punchy. `components.Avatar` demonstrates the component-scoped override capability: artist/profile avatars get a lime-tinted fill instead of the generic neutral-gray secondary background every other component's avatar-shaped surface would otherwise inherit.",
+    "accent": "lime",
+    "density": "compact"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.lime.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.600}",
+          "fsds.dark": "{color.palette.lime.300}"
+        },
+        "$description": "Accent foreground - deep lime in light for legibility on white, bright lime pop in dark"
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.lime.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.600}",
+          "fsds.dark": "{color.palette.lime.300}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.lime.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.700}",
+          "fsds.dark": "{color.palette.lime.200}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.lime.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.500}",
+          "fsds.dark": "{color.palette.lime.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.lime.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.800}",
+          "fsds.dark": "{color.palette.lime.100}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.lime.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.600}",
+          "fsds.dark": "{color.palette.lime.600}"
+        },
+        "$description": "Accent fill - lime.600 clears AA with white/near-black text in both modes"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.lime.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.100}",
+          "fsds.dark": "{color.palette.lime.800}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.lime.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.600}",
+          "fsds.dark": "{color.palette.lime.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Kept deliberately near-invisible - streaming surfaces separate by contrast, not hairlines"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.lime.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.400}",
+          "fsds.dark": "{color.palette.lime.500}"
+        }
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.lime.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.600}",
+          "fsds.dark": "{color.palette.lime.400}"
+        }
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        }
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.lime.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.lime.600}",
+            "fsds.dark": "{color.palette.lime.300}"
+          }
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}"
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.lime.600}",
+            "$description": "Primary CTA fill - lime.600, ~6.8:1 against white text"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.lime.700}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.lime.800}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.lime.600}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.lime.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.lime.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.lime.300}",
+          "fsds.dark": "{color.palette.lime.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.full}",
+          "$description": "Pill controls - the signature rounded-everything streaming look"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Rounded card (16px) - softly rounded playlist/album tiles, not a full pill"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          },
+          "$description": "No border by default - flat borderless cards rely on surface contrast"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
+          }
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.400}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.400}",
+            "fsds.dark": "{color.palette.neutral.500}"
+          }
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          }
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}",
+          "$description": "Flat - streaming cards sit flush, contrast carries hierarchy"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.raised}",
+          "$description": "Only the furthest tier lifts at all (e.g. a modal over the player bar)"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}",
+        "$description": "Pill button - the signature 'Play' CTA shape"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.full}",
+          "$description": "Pill search field, consistent with the pill-everything language"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.04}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.05}",
+        "$description": "Compact padding (12px) - dense playlist/queue rows"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Compact gap (8px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "Card padding (16px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short2}",
+        "$description": "Fast transitions (100ms) - punchy, immediate feedback"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.quick.enter}",
+        "$description": "Sharp start, smooth end - the 'snap into place' feel of a played track"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}",
+          "$description": "Medium body weight (500) - confident, readable at high density"
+        }
+      }
+    },
+    "heading": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.black}",
+          "$description": "Black heading weight - oversized playlist/album titles carry maximum visual weight"
+        }
+      }
+    }
+  },
+  "components": {
+    "Avatar": {
+      "color": {
+        "background": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.lime.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.lime.100}",
+              "fsds.dark": "{color.palette.lime.900}"
+            },
+            "$description": "Component-scoped override: artist/profile avatars get a lime-tinted fill instead of the neutral-gray secondary background every other component sharing that semantic path still uses."
+          }
+        },
+        "border": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.lime.300}",
+            "$extensions": {
+              "fsds.light": "{color.palette.lime.300}",
+              "fsds.dark": "{color.palette.lime.700}"
+            },
+            "$description": "Subtle lime ring, distinct from the generic neutral avatar border"
+          }
+        }
+      }
+    }
+  }
+}

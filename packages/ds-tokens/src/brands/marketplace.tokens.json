@@ -1,0 +1,375 @@
+{
+  "$brand": {
+    "name": "marketplace",
+    "description": "Dense online-marketplace identity (eBay-inspired): a crisp cyan signature accent, minimal radii, visible (not hairline) borders so a busy grid of listing cards reads as separable rows/tiles, near-flat elevation, and utilitarian standard-easing motion - no personality flourish, information density is the personality.",
+    "accent": "cyan",
+    "density": "tight"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.600}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.600}",
+          "fsds.dark": "{color.palette.cyan.300}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.700}",
+          "fsds.dark": "{color.palette.cyan.200}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.teal.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.teal.500}",
+          "fsds.dark": "{color.palette.teal.400}"
+        },
+        "$description": "Visited links shift to teal - a distinct but adjacent signal"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.800}",
+          "fsds.dark": "{color.palette.cyan.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.500}"
+        },
+        "$description": "Accent fill - cyan.500 clears AA with white text in both modes"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.100}",
+          "fsds.dark": "{color.palette.cyan.800}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Visible, not hairline - a busy listings grid needs dividers a viewer can actually see"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.400}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        }
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        }
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        }
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.cyan.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.cyan.600}",
+            "fsds.dark": "{color.palette.cyan.300}"
+          }
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}"
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.cyan.500}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.cyan.600}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.cyan.700}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.cyan.500}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.cyan.300}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.01}",
+          "$description": "Minimal rounding (2px) - utilitarian, dense grid"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Small radius (4px) - a busy grid of listing tiles"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.300}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.300}",
+            "fsds.dark": "{color.palette.neutral.600}"
+          },
+          "$description": "Visible even at the lightest tier - listing cards need to read as separate rows"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.400}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.400}",
+            "fsds.dark": "{color.palette.neutral.500}"
+          }
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.500}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.500}",
+            "fsds.dark": "{color.palette.neutral.400}"
+          }
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          }
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}",
+          "$description": "Flat - dense listing grids separate by border, not shadow"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.raised}"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.surface.flat}"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.01}"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Small rectangular price/bid tag, not a pill"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.03}",
+        "$description": "Tight padding (4px) - dense listing rows"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.02}",
+        "$description": "Minimal gap (2px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Tight card padding (8px) - more listings fit on screen"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short3}",
+        "$description": "167ms - standard, no flourish"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.standard}",
+        "$description": "Standard easing - utilitarian, information density is the personality"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular (400) - dense text at scale"
+        }
+      }
+    },
+    "heading": {
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.semibold}",
+          "$description": "Semibold (600) - price/title emphasis without shouting"
+        }
+      }
+    }
+  }
+}

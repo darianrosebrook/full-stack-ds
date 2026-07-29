@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 :root {
   --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
@@ -43,3 +44,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

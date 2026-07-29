@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 .stat {
   --fsds-box-model-padding: 0;
@@ -33,3 +34,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

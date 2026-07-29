@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 .spinner {
   --fsds-box-model-padding: 0;
@@ -30,3 +31,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 .shuttle {
   --fsds-box-model-padding: 0;
@@ -26,3 +27,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

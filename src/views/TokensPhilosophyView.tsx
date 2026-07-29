@@ -977,9 +977,9 @@ Brand files remap which core primitives those tokens resolve to.`}
         state and persistence:
       </p>
       <CodeBlock
-        code={`type BrandId = 'default' | 'corporate' | 'forest' | 'sunset' |
-               'midnight' | 'ocean' | 'canary' | 'monochrome' |
-               'rose' | 'slate';
+        code={`type BrandId = 'default' | 'corporate' | 'forest' | 'canary' |
+               'monochrome' | 'streaming' | 'fintech' | 'developer' |
+               'quickserve' | 'marketplace';
 
 type DensityId = 'tight' | 'compact' | 'default' | 'spacious';
 

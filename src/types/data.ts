@@ -261,7 +261,7 @@ export interface FoundationToken {
 }
 
 export interface BrandTokenSet {
-  /** Brand id matching the filename stem (`default`, `ocean`, ...). */
+  /** Brand id matching the filename stem (`default`, `streaming`, ...). */
   id: string;
   name: string;
   description?: string;

@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 :root {
   --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
@@ -41,3 +42,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

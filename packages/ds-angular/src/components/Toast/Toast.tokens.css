@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 :root {
   --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
@@ -62,3 +63,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

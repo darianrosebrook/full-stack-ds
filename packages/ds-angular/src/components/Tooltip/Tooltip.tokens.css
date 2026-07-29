@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 :root {
   --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
@@ -32,3 +33,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

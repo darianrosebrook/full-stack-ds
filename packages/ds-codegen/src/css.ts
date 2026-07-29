@@ -360,7 +360,23 @@ export function emitTokensCss(ir: ComponentIR): string {
     { kind: "between", body: "" },
   ];
 
-  return renderSections(sections, "block");
+  const rendered = renderSections(sections, "block");
+
+  // Wrapped in `@layer components` so a brand's component-scoped override
+  // (packages/ds-tokens/src/brands/<id>.tokens.json `components.<Name>.*`,
+  // emitted into `@layer brand`) wins by layer order instead of being
+  // shadowed — unlayered CSS always beats layered CSS per spec regardless
+  // of selector specificity, so this file can no longer be unlayered once a
+  // brand needs to reach into it. `@layer components` is declared between
+  // `semantic` and `theme/brand` in the global tokens.css layer order (see
+  // packages/ds-tokens/build/generators/global.ts:generateLayerDeclaration).
+  // Layer names are global to the document's cascade regardless of which
+  // stylesheet declares them, so this only takes effect when the global
+  // tokens.css (which declares the `@layer` order) shares a document with
+  // this file — true for every framework except Lit, whose shadow DOM is a
+  // separate cascade context that `@layer` cannot cross (see
+  // emitLitInlineCss, which never participates in this layer at all).
+  return `@layer components {\n${rendered}\n}\n`;
 }
 
 /**

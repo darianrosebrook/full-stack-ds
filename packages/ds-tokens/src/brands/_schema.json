@@ -43,6 +43,10 @@
     "motion": {
       "type": "object",
       "description": "Motion/animation token overrides"
+    },
+    "components": {
+      "type": "object",
+      "description": "Component-scoped token overrides. Keyed by PascalCase component name (matching the contract's directory name, e.g. 'Button', 'Badge'), then by the same nested path shape the component's own <Name>.tokens.json sidecar uses (e.g. components.Button.color.background.default). Compiles to a CSS custom property scoped to [data-brand=\"<id>\"] .<cssPrefix> — the same --fsds-<cssPrefix>-<path> variable name the component's own sidecar declares, so it overrides that one component in that one brand without touching the shared semantic default other components consume. Requires the token build's @layer components wrapping (see docs/architecture/tokens-architecture.md) to actually win the cascade; do not use for values every component sharing that semantic path should also pick up — use the top-level color/shape/spacing/motion/typography blocks for that."
     }
   }
 }
