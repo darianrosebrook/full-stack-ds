@@ -93,5 +93,73 @@ describe("emitPrimitives across frameworks", () => {
       expect(joined).toContain("column");
       expect(joined).toContain("row");
     });
+
+    // FIX-STACK-NATIVE-AXIS-LEAK-01. `native` has displayByMode === null —
+    // the host keeps its own layout — so Stack must contribute no axis there.
+    // Before this pin, four of five targets emitted an unscoped
+    // `.stack--vertical { flex-direction: column }`, which made every
+    // layout="native" component (Button among them) a column and stacked its
+    // icons above and below the label.
+    it(`${name} gates every flex-direction on an axis-bearing layout mode`, () => {
+      const files = emitter.emitPrimitives?.(ir, opts) ?? [];
+      const joined = files.map((f) => f.contents).join("\n");
+      const axisModes = ir.axisModes;
+      expect(axisModes.length).toBeGreaterThan(0);
+
+      // A guard mentions the mode as a class (`--layout-stack`), an attribute
+      // (`[layout="stack"]`) or a runtime comparison (`=== "stack"`). Which
+      // form is last-mile emitter syntax; that one exists is the contract.
+      const guardsAMode = (text: string) =>
+        axisModes.some(
+          (mode) =>
+            text.includes(`--layout-${mode}`) ||
+            text.includes(`[layout="${mode}"]`) ||
+            text.includes(`=== "${mode}"`),
+        );
+
+      // Every region introducing a flex-direction must carry such a guard.
+      // Split on `}` so each region is one rule (or, for Angular, the getter
+      // body up to its close) together with whatever preceded it.
+      const regions = joined
+        .split("}")
+        .filter((region) => region.includes("flex-direction"));
+      expect(regions.length).toBeGreaterThan(0);
+      for (const region of regions) {
+        expect(
+          guardsAMode(region),
+          `unguarded flex-direction — reaches layout="native" hosts:\n${region.trim()}`,
+        ).toBe(true);
+      }
+
+      // And the pre-fix shape must be gone outright: an axis rule keyed on the
+      // variant alone, with no layout mode anywhere in its selector.
+      for (const variant of Object.keys(ir.layout.axisByVariant)) {
+        expect(joined).not.toMatch(
+          new RegExp(`(^|[,\\s])\\.[\\w-]*${variant}\\s*\\{[^}]*flex-direction`, "m"),
+        );
+        expect(joined).not.toContain(`:host([variant="${variant}"]) {\n      flex-direction`);
+      }
+    });
   }
+
+  it("keeps an axis on the axis-bearing modes it is supposed to govern", () => {
+    // Guard against over-correcting: scoping the axis away entirely would also
+    // satisfy the test above, and would silently flatten every real Stack.
+    const react = createReactEmitter({ stackImportRelative: "../../primitives" });
+    const css = (react.emitPrimitives?.(ir, opts) ?? [])
+      .map((f) => f.contents)
+      .join("\n");
+    for (const mode of ir.axisModes) {
+      expect(css).toContain(`.stack--layout-${mode}.stack--vertical`);
+      expect(css).toContain(`.stack--layout-${mode}.stack--horizontal`);
+    }
+    // …and contributes none on the null-display modes.
+    const nullModes = Object.entries(ir.layout.displayByMode)
+      .filter(([, display]) => display === null)
+      .map(([mode]) => mode);
+    expect(nullModes).toContain("native");
+    for (const mode of nullModes) {
+      expect(css).not.toContain(`.stack--layout-${mode}.stack--vertical`);
+    }
+  });
 });

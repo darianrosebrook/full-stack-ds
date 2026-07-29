@@ -48,11 +48,13 @@ export class StackElement extends LitElement {
       display: contents;
     }
 
-    :host([variant="vertical"]) {
+    :host([layout="stack"][variant="vertical"]),
+    :host([layout="inline-stack"][variant="vertical"]) {
       flex-direction: column;
     }
 
-    :host([variant="horizontal"]) {
+    :host([layout="stack"][variant="horizontal"]),
+    :host([layout="inline-stack"][variant="horizontal"]) {
       flex-direction: row;
     }
   `;

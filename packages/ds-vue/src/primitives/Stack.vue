@@ -48,10 +48,12 @@ const classNames = computed(() =>
 .stack--layout-contents {
   display: contents;
 }
-.stack--vertical {
+.stack--layout-stack.stack--vertical,
+.stack--layout-inline-stack.stack--vertical {
   flex-direction: column;
 }
-.stack--horizontal {
+.stack--layout-stack.stack--horizontal,
+.stack--layout-inline-stack.stack--horizontal {
   flex-direction: row;
 }
 </style>

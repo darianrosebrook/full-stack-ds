@@ -42,8 +42,13 @@ export function generateVueStackPrimitiveSource(ir: PrimitiveIR): string {
     styleBlocks.push(`.${prefix}--layout-${mode} {\n  display: ${display};\n}`);
   }
 
+  // Scoped to axis-bearing modes: a null-display mode (native) leaves layout to
+  // the host, so the variant must not push an axis onto it.
   for (const [variant, axis] of Object.entries(ir.layout.axisByVariant)) {
-    styleBlocks.push(`.${prefix}--${variant} {\n  flex-direction: ${axis};\n}`);
+    const selector = ir.axisModes
+      .map((mode) => `.${prefix}--layout-${mode}.${prefix}--${variant}`)
+      .join(",\n");
+    styleBlocks.push(`${selector} {\n  flex-direction: ${axis};\n}`);
   }
 
   return `${BANNER}
