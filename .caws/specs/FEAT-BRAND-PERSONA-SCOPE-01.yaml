@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: brand-personas
 created_at: '2026-07-29T17:09:38.838Z'
-updated_at: '2026-07-29T17:53:39.163Z'
+updated_at: '2026-07-29T17:56:32.272Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/brands (delete 5 abstract brands, author 5 persona brands, extend brand schema with a components block)'
@@ -33,6 +33,7 @@ scope:
     - 'src/types/data.ts'
     - 'tmp'
     - packages/ds-tokens/build/generators/global.brand-components.test.ts
+    - CLAUDE.md
   out: []
   support:
     - CLAUDE.md
