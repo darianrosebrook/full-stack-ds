@@ -2,10 +2,11 @@ id: RAIL-STATE-SUPPRESSION-01
 title: 'State-suppression rail, plus honest disposition evidence for the dead-slot ledger'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: s2-suppression
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s2-suppression at 1f9784a0b2dc80f0c343684f6476ea6866a3a0d7'
 created_at: '2026-07-29T00:12:13.559Z'
-updated_at: '2026-07-29T00:12:13.559Z'
+updated_at: '2026-07-29T00:20:25.492Z'
 blast_radius:
   modules:
     - 'scripts/state-suppression-audit (new obligation axis: declared suppression vs realized CSS)'
