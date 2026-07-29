@@ -3,6 +3,7 @@ title: 'Emit an interaction guard when a contract declares state suppression'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: s8-suppress
 created_at: '2026-07-29T17:03:41.970Z'
 updated_at: '2026-07-29T17:03:41.970Z'
 blast_radius:
