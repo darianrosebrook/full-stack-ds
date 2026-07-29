@@ -387,14 +387,6 @@
     },
     {
       "component": "Chip",
-      "slot": "chip.dismiss.size",
-      "status": "dead",
-      "disposition": "review",
-      "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Chip",
       "slot": "chip.focus.ring.color",
       "status": "dead",
       "disposition": "review",

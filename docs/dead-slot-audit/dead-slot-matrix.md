@@ -2,7 +2,7 @@
 
 `RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).
 
-Components: **49** · slots declared: **894** · consumed: **760** · **inert: 134** (defects: **117** · inert-by-design: **17**)
+Components: **49** · slots declared: **894** · consumed: **761** · **inert: 133** (defects: **116** · inert-by-design: **17**)
 
 ## Dead slots — declared slots with no `var()` consumer in the structure CSS
 
@@ -53,7 +53,6 @@ Components: **49** · slots declared: **894** · consumed: **760** · **inert: 1
 | Chip | `chip.color.background.selected` | `--fsds-chip-color-background-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.background.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Chip | `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.foreground.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Chip | `chip.color.border.selected` | `--fsds-chip-color-border-selected` | `repoint` | styles["--selected"] redefines sibling "chip.color.border.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
-| Chip | `chip.dismiss.size` | `--fsds-chip-dismiss-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Command | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | `wire` | "disabled" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Details | `details.size.padding.compact` | `--fsds-details-size-padding-compact` | `repoint` | styles["--compact"] redefines sibling "details.size.padding.default" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit |
 | Details | `details.size.padding.page` | `--fsds-details-size-padding-page` | `review` | no rule matched: "page" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -389,7 +388,7 @@ declared: **15** · consumed: **15** · dead: **0**
 
 ### Chip  `.chip`
 
-declared: **32** · consumed: **21** · dead: **9**
+declared: **32** · consumed: **22** · dead: **8**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -415,7 +414,7 @@ declared: **32** · consumed: **21** · dead: **9**
 | `chip.color.background.selected` | `--fsds-chip-color-background-selected` | ✗ dead | `tokens` |
 | `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | ✗ dead | `tokens` |
 | `chip.color.border.selected` | `--fsds-chip-color-border-selected` | ✗ dead | `tokens` |
-| `chip.dismiss.size` | `--fsds-chip-dismiss-size` | ✗ dead | `tokens` |
+| `chip.dismiss.size` | `--fsds-chip-dismiss-size` | ✓ consumed | `tokens` |
 | `chip.dismiss.gap` | `--fsds-chip-dismiss-gap` | ✓ consumed | `tokens` |
 | `box-model.padding-block-start` | `--fsds-box-model-padding-block-start` | ✓ consumed | `styles:.chip__action.button` |
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `styles:.chip__action.button` |

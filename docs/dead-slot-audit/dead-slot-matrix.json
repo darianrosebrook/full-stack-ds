@@ -2,10 +2,10 @@
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
   "components": 49,
   "slotsDeclared": 894,
-  "consumed": 760,
-  "inert": 134,
+  "consumed": 761,
+  "inert": 133,
   "shadowed": 17,
-  "dead": 117,
+  "dead": 116,
   "inertSlots": [
     {
       "component": "Accordion",
@@ -457,14 +457,6 @@
           "status": "dead",
           "disposition": "repoint",
           "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "chip.dismiss.size",
-          "cssVar": "--fsds-chip-dismiss-size",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "review",
-          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         },
         {
           "slot": "box-model.min-height",
@@ -1663,14 +1655,6 @@
           "status": "dead",
           "disposition": "repoint",
           "evidence": "styles[\"--selected\"] redefines sibling \"chip.color.border.default\" with the identical {resolvesTo, fallback}, orphaning this slot; repair is a value-identical resolvesTo edit"
-        },
-        {
-          "slot": "chip.dismiss.size",
-          "cssVar": "--fsds-chip-dismiss-size",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "review",
-          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         }
       ]
     },
@@ -3929,9 +3913,9 @@
       "component": "Chip",
       "prefix": "chip",
       "total": 32,
-      "consumed": 21,
+      "consumed": 22,
       "shadowed": 2,
-      "dead": 9,
+      "dead": 8,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -4087,9 +4071,7 @@
           "slot": "chip.dismiss.size",
           "cssVar": "--fsds-chip-dismiss-size",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "review",
-          "evidence": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+          "status": "consumed"
         },
         {
           "slot": "chip.dismiss.gap",
