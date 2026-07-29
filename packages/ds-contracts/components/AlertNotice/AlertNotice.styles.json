@@ -6,6 +6,12 @@
         "web"
       ]
     },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": [
+        "web"
+      ]
+    },
     "align-items": {
       "literal": "flex-start",
       "platforms": [
