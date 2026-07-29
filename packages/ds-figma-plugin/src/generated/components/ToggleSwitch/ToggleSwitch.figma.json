@@ -259,7 +259,7 @@
         }
       },
       {
-        "selector": ".toggle-switch:hover",
+        "selector": ".toggle-switch:hover:not(:disabled)",
         "declarations": {
           "background-color": "var(--fsds-toggle-switch-color-background-hover, #d0d0d0)"
         }
@@ -278,7 +278,7 @@
         }
       },
       {
-        "selector": ".toggle-switch:focus-visible",
+        "selector": ".toggle-switch:focus-visible:not(:disabled)",
         "declarations": {
           "outline-width": "var(--fsds-toggle-switch-focus-ring-width, 2px)",
           "outline-color": "var(--fsds-toggle-switch-focus-ring-color, #0566fe)",

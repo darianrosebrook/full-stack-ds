@@ -146,7 +146,7 @@ export class ChipElement extends LitElement {
       font-weight: var(--fsds-chip-text-weight, 500);
       transition-duration: var(--fsds-chip-motion-duration-fast, 150ms);
 
-      &:hover {
+      &:hover:not([aria-disabled="true"]) {
         background-color: var(--fsds-chip-color-background-hover, #d0d0d0);
       }
     }

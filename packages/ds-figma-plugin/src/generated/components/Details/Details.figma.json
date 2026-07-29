@@ -298,7 +298,7 @@
         }
       },
       {
-        "selector": ".details:hover",
+        "selector": ".details:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-details-color-background-hover, #b8b8b8)",
           "border-color": "var(--fsds-details-color-border-hover, #888889)"
@@ -318,13 +318,13 @@
         }
       },
       {
-        "selector": ".details__summary:hover",
+        "selector": ".details__summary:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "--fsds-details-color-background-default": "var(--fsds-semantic-color-background-hover, #b8b8b8)"
         }
       },
       {
-        "selector": ".details__summary:focus-visible",
+        "selector": ".details__summary:focus-visible:not([aria-disabled=\"true\"])",
         "declarations": {
           "outline-width": "var(--fsds-details-focus-ring-width, 2px)",
           "outline-color": "var(--fsds-details-focus-ring-color, #d92d2e)",

@@ -373,7 +373,7 @@
         }
       },
       {
-        "selector": ".field__control:focus-within",
+        "selector": ".field__control:focus-within:not([aria-disabled=\"true\"])",
         "declarations": {
           "border-color": "var(--fsds-field-color-focus-border, #0566fe)",
           "outline-width": "var(--fsds-field-focus-ring-width, 2px)",

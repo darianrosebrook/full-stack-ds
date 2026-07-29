@@ -330,7 +330,7 @@
         }
       },
       {
-        "selector": ".chip:hover",
+        "selector": ".chip:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-chip-color-background-hover, #d0d0d0)"
         }

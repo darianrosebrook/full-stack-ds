@@ -31,16 +31,16 @@
   transition-duration: var(--fsds-button-motion-duration-fast, 150ms);
   transition-timing-function: var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--fsds-button-color-background-hover, #d0d0d0);
     border-color: var(--fsds-button-color-border-hover, #888889);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     background-color: var(--fsds-button-color-background-active, #b8b8b8);
   }
 
-  &:focus-visible {
+  &:focus-visible:not(:disabled) {
     border-color: var(--fsds-button-color-border-focus, #0566fe);
   }
 

@@ -94,11 +94,11 @@ export class InputElement extends LitElement {
         color: var(--fsds-input-color-text-placeholder, #888889);
       }
 
-      &:hover {
+      &:hover:not(:disabled) {
         border-color: var(--fsds-input-color-border-hover, #888889);
       }
 
-      &:focus-visible {
+      &:focus-visible:not(:disabled) {
         border-color: var(--fsds-input-color-focus-default, #0566fe);
         outline-width: var(--fsds-input-focus-ring-width, 2px);
         outline-color: var(--fsds-input-focus-ring-color, #0566fe);
@@ -119,7 +119,7 @@ export class InputElement extends LitElement {
       border-color: var(--fsds-input-color-invalid-default, #b31b1b);
     }
 
-    .input--invalid:focus-visible {
+    .input--invalid:focus-visible:not(:disabled) {
       border-color: var(--fsds-input-color-invalid-default, #b31b1b);
       outline-color: var(--fsds-semantic-focus-ring-intent-danger, #b31b1b);
     }

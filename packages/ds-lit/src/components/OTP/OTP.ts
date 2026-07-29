@@ -85,7 +85,7 @@ export class OTPElement extends LitElement {
       color: var(--fsds-otp-color-foreground-primary, #141414);
     }
 
-    .otp__field:focus-visible {
+    .otp__field:focus-visible:not([aria-disabled="true"]) {
       border-color: var(--fsds-otp-color-border-accent, #d92d2e);
       outline-width: var(--fsds-otp-focus-ring-width, 2px);
       outline-color: var(--fsds-otp-focus-ring-color, #0566fe);
@@ -208,7 +208,7 @@ export class OTPGroupElement extends LitElement {
       color: var(--fsds-otp-color-foreground-primary, #141414);
     }
 
-    .otp__field:focus-visible {
+    .otp__field:focus-visible:not([aria-disabled="true"]) {
       border-color: var(--fsds-otp-color-border-accent, #d92d2e);
       outline-width: var(--fsds-otp-focus-ring-width, 2px);
       outline-color: var(--fsds-otp-focus-ring-color, #0566fe);

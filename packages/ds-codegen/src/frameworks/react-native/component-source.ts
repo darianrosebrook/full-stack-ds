@@ -2116,9 +2116,23 @@ function stateBlockEntries(
   pseudo: string,
   scopeKey: string,
 ): JoinedStyleEntry[] {
-  const block = ir.cssBlocks.find(
-    (candidate) => candidate.selector === `.${ir.cssPrefix}:${pseudo}`,
-  );
+  // Match the state block by its state PREFIX, not by exact string equality.
+  //
+  // RN is reading a web selector as a fact ("this is the :active block"), and
+  // exact equality made that reading brittle: adding a suppression guard turned
+  // `.button:active` into `.button:active:not(:disabled)` and this lookup
+  // silently returned nothing, dropping every `_pressed` style from RN Button
+  // and all its variants. A decorated selector is still the same state block.
+  //
+  // Boundary-checked so `.button:active` does not match a hypothetical
+  // `.button:active-within`; a guard always continues with `:` or `[`.
+  const stateSelector = `.${ir.cssPrefix}:${pseudo}`;
+  const block = ir.cssBlocks.find((candidate) => {
+    if (candidate.selector === stateSelector) return true;
+    if (!candidate.selector.startsWith(stateSelector)) return false;
+    const next = candidate.selector.charAt(stateSelector.length);
+    return next === ":" || next === "[";
+  });
   if (!block) return [];
   const scope = ir.tokenScopes.find((candidate) => candidate.scope === scopeKey);
   const out: JoinedStyleEntry[] = [];

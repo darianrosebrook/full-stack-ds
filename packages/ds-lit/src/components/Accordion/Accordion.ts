@@ -126,12 +126,12 @@ export class AccordionElement extends LitElement {
       line-height: var(--fsds-accordion-text-lineHeight, 1.5);
     }
 
-    .accordion__trigger:hover {
+    .accordion__trigger:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
       color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
-    .accordion__trigger:focus-visible {
+    .accordion__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-accordion-focus-width, 2px);
       outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
@@ -367,12 +367,12 @@ export class AccordionItemElement extends LitElement {
       line-height: var(--fsds-accordion-text-lineHeight, 1.5);
     }
 
-    .accordion__trigger:hover {
+    .accordion__trigger:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
       color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
-    .accordion__trigger:focus-visible {
+    .accordion__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-accordion-focus-width, 2px);
       outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
@@ -510,12 +510,12 @@ export class AccordionTriggerElement extends LitElement {
       line-height: var(--fsds-accordion-text-lineHeight, 1.5);
     }
 
-    .accordion__trigger:hover {
+    .accordion__trigger:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
       color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
-    .accordion__trigger:focus-visible {
+    .accordion__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-accordion-focus-width, 2px);
       outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);
@@ -698,12 +698,12 @@ export class AccordionContentElement extends LitElement {
       line-height: var(--fsds-accordion-text-lineHeight, 1.5);
     }
 
-    .accordion__trigger:hover {
+    .accordion__trigger:hover:not([aria-disabled="true"]) {
       background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
       color: var(--fsds-accordion-color-textHover, #5c5b5c);
     }
 
-    .accordion__trigger:focus-visible {
+    .accordion__trigger:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-accordion-focus-width, 2px);
       outline-color: var(--fsds-accordion-focus-color, #d92d2e);
       outline-offset: var(--fsds-accordion-focus-offset, 1px);

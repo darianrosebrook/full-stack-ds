@@ -57,7 +57,7 @@ export class DetailsElement extends LitElement {
       --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
 
-    .details__summary:hover {
+    .details__summary:hover:not([aria-disabled="true"]) {
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
     }
 
@@ -95,7 +95,7 @@ export class DetailsElement extends LitElement {
       border-color: var(--fsds-details-color-border-default, #a0a0a1);
       color: var(--fsds-details-color-foreground-primary, #141414);
 
-      &:hover {
+      &:hover:not([aria-disabled="true"]) {
         background-color: var(--fsds-details-color-background-hover, #b8b8b8);
         border-color: var(--fsds-details-color-border-hover, #888889);
       }
@@ -116,7 +116,7 @@ export class DetailsElement extends LitElement {
       font-weight: var(--fsds-details-typography-fontWeight-medium, 500);
     }
 
-    .details__summary:focus-visible {
+    .details__summary:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-details-focus-ring-width, 2px);
       outline-color: var(--fsds-details-focus-ring-color, #d92d2e);
       outline-offset: var(--fsds-details-focus-ring-offset, 2px);
@@ -248,7 +248,7 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
 
-    .details__summary:hover {
+    .details__summary:hover:not([aria-disabled="true"]) {
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
     }
 
@@ -286,7 +286,7 @@ export class DetailsContentElement extends LitElement {
       border-color: var(--fsds-details-color-border-default, #a0a0a1);
       color: var(--fsds-details-color-foreground-primary, #141414);
 
-      &:hover {
+      &:hover:not([aria-disabled="true"]) {
         background-color: var(--fsds-details-color-background-hover, #b8b8b8);
         border-color: var(--fsds-details-color-border-hover, #888889);
       }
@@ -307,7 +307,7 @@ export class DetailsContentElement extends LitElement {
       font-weight: var(--fsds-details-typography-fontWeight-medium, 500);
     }
 
-    .details__summary:focus-visible {
+    .details__summary:focus-visible:not([aria-disabled="true"]) {
       outline-width: var(--fsds-details-focus-ring-width, 2px);
       outline-color: var(--fsds-details-focus-ring-color, #d92d2e);
       outline-offset: var(--fsds-details-focus-ring-offset, 2px);

@@ -34,11 +34,11 @@
   --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
 }
 
-.select__trigger:focus-visible {
+.select__trigger:focus-visible:not([aria-disabled="true"]) {
   --fsds-select-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
 }
 
-.select__trigger:hover {
+.select__trigger:hover:not([aria-disabled="true"]) {
   --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
   --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
   --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
@@ -54,7 +54,7 @@
   --fsds-select-color-border-default: var(--fsds-semantic-color-border-disabled, #b8b8b8);
 }
 
-.select__option:hover {
+.select__option:hover:not([aria-disabled="true"]) {
   --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
   --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
 }

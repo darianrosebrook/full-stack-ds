@@ -74,7 +74,7 @@ export class ToggleSwitchElement extends LitElement {
       cursor: pointer;
       box-sizing: border-box;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background-color: var(--fsds-toggle-switch-color-background-hover, #d0d0d0);
       }
 
@@ -87,7 +87,7 @@ export class ToggleSwitchElement extends LitElement {
         cursor: not-allowed;
       }
 
-      &:focus-visible {
+      &:focus-visible:not(:disabled) {
         outline-width: var(--fsds-toggle-switch-focus-ring-width, 2px);
         outline-color: var(--fsds-toggle-switch-focus-ring-color, #0566fe);
         outline-style: var(--fsds-toggle-switch-focus-ring-style, solid);

@@ -335,7 +335,7 @@
         }
       },
       {
-        "selector": ".text-field__field:focus-visible",
+        "selector": ".text-field__field:focus-visible:not([aria-disabled=\"true\"])",
         "declarations": {
           "border-color": "var(--fsds-text-field-focus-ring-color, #0566fe)",
           "outline-width": "var(--fsds-text-field-focus-ring-width, 2px)",
@@ -351,7 +351,7 @@
         }
       },
       {
-        "selector": ".text-field--invalid .text-field__field:focus-visible",
+        "selector": ".text-field--invalid .text-field__field:focus-visible:not([aria-disabled=\"true\"])",
         "declarations": {
           "border-color": "var(--fsds-text-field-color-input-borderError, #d92d2e)",
           "outline-color": "var(--fsds-text-field-color-input-borderError, #d92d2e)"

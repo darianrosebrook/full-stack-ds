@@ -331,14 +331,14 @@
         }
       },
       {
-        "selector": ".accordion__trigger:hover",
+        "selector": ".accordion__trigger:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-accordion-color-background-hover, #d0d0d0)",
           "color": "var(--fsds-accordion-color-textHover, #5c5b5c)"
         }
       },
       {
-        "selector": ".accordion__trigger:focus-visible",
+        "selector": ".accordion__trigger:focus-visible:not([aria-disabled=\"true\"])",
         "declarations": {
           "outline-width": "var(--fsds-accordion-focus-width, 2px)",
           "outline-color": "var(--fsds-accordion-focus-color, #d92d2e)",

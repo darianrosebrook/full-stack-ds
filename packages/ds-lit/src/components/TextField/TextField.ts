@@ -135,7 +135,7 @@ export class TextFieldElement extends LitElement {
       border-color: var(--fsds-text-field-color-input-borderHover, #888889);
     }
 
-    .text-field__field:focus-visible {
+    .text-field__field:focus-visible:not([aria-disabled="true"]) {
       border-color: var(--fsds-text-field-focus-ring-color, #0566fe);
       outline-width: var(--fsds-text-field-focus-ring-width, 2px);
       outline-color: var(--fsds-text-field-focus-ring-color, #0566fe);
@@ -147,7 +147,7 @@ export class TextFieldElement extends LitElement {
       border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
     }
 
-    .text-field--invalid .text-field__field:focus-visible {
+    .text-field--invalid .text-field__field:focus-visible:not([aria-disabled="true"]) {
       border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
       outline-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
     }
@@ -329,7 +329,7 @@ export class TextFieldDescriptionElement extends LitElement {
       border-color: var(--fsds-text-field-color-input-borderHover, #888889);
     }
 
-    .text-field__field:focus-visible {
+    .text-field__field:focus-visible:not([aria-disabled="true"]) {
       border-color: var(--fsds-text-field-focus-ring-color, #0566fe);
       outline-width: var(--fsds-text-field-focus-ring-width, 2px);
       outline-color: var(--fsds-text-field-focus-ring-color, #0566fe);
@@ -341,7 +341,7 @@ export class TextFieldDescriptionElement extends LitElement {
       border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
     }
 
-    .text-field--invalid .text-field__field:focus-visible {
+    .text-field--invalid .text-field__field:focus-visible:not([aria-disabled="true"]) {
       border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
       outline-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
     }

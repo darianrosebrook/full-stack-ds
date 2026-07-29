@@ -400,7 +400,7 @@
         }
       },
       {
-        "selector": ".calendar__nav:hover",
+        "selector": ".calendar__nav:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-calendar-color-day-hover, #d0d0d0)",
           "color": "var(--fsds-calendar-color-foreground-primary, #141414)"
@@ -466,13 +466,13 @@
         }
       },
       {
-        "selector": ".calendar__day:hover",
+        "selector": ".calendar__day:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-calendar-color-day-hover, #d0d0d0)"
         }
       },
       {
-        "selector": ".calendar__day:focus-visible",
+        "selector": ".calendar__day:focus-visible:not([aria-disabled=\"true\"])",
         "declarations": {
           "outline-width": "var(--fsds-calendar-focus-ring-width, 2px)",
           "outline-color": "var(--fsds-calendar-color-focus-ring, #0566fe)",

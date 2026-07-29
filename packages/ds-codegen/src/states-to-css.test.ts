@@ -407,6 +407,111 @@ function makeContract(extra: Partial<ComponentContract>): ComponentContract {
   } as ComponentContract;
 }
 
+describe("computeCssBlocks: interaction suppression guard (FIX-STATE-SUPPRESSION-LEAKS-01)", () => {
+  // A contract declaring `suppresses.categories: ["interaction"]` claims that
+  // while suppressed, interaction styling does not apply. Guarding the
+  // interaction selectors enforces that by construction. Resetting properties
+  // inside the suppressing block instead is enumeration, and enumeration is why
+  // the defect existed: Button's :disabled reset background-color and color and
+  // forgot border-color, so a disabled Button still took the hover border.
+  const suppressing = (over: Record<string, unknown> = {}) =>
+    ({
+    dimensions: {
+      availability: {
+        category: "availability",
+        values: ["enabled", "disabled"],
+        initial: "enabled",
+        suppresses: { categories: ["interaction"] },
+        ...over,
+      },
+    },
+  }) as unknown as ComponentContract["states"];
+
+  const interactionStyles = {
+    hover: { color: { literal: "red", platforms: ["web"] } },
+    active: { color: { literal: "blue", platforms: ["web"] } },
+    disabled: { color: { literal: "grey", platforms: ["web"] } },
+  } as unknown as ComponentContract["styles"];
+
+  it("guards interaction selectors on a native form-control root with :not(:disabled)", () => {
+    const contract = makeContract({
+      anatomy: { parts: ["root"], dom: { tag: "button", part: "root" } },
+      states: suppressing(),
+      styles: interactionStyles,
+    });
+    const selectors = computeCssBlocks(contract, "x").map((b) => b.selector);
+    expect(selectors).toContain(".x:hover:not(:disabled)");
+    expect(selectors).toContain(".x:active:not(:disabled)");
+    // The suppressing block itself is not interaction styling — never guarded,
+    // or it could never match the state it exists to style.
+    expect(selectors).toContain(".x:disabled");
+  });
+
+  it("guards with the ARIA form when the root is not a native form control", () => {
+    // `:disabled` matches only form controls, so emitting it on a <span> would
+    // suppress nothing while looking like it did.
+    const contract = makeContract({
+      anatomy: { parts: ["root"], dom: { tag: "span", part: "root" } },
+      states: suppressing(),
+      styles: interactionStyles,
+    });
+    const selectors = computeCssBlocks(contract, "x").map((b) => b.selector);
+    expect(selectors).toContain('.x:hover:not([aria-disabled="true"])');
+  });
+
+  it("prefers a contract-declared a11y attribute over the derived form", () => {
+    const contract = makeContract({
+      anatomy: { parts: ["root"], dom: { tag: "div", part: "root" } },
+      states: suppressing({
+        a11y: { attribute: "aria-disabled", values: { enabled: "false", disabled: "true" } },
+      }),
+      styles: interactionStyles,
+    });
+    const selectors = computeCssBlocks(contract, "x").map((b) => b.selector);
+    expect(selectors).toContain('.x:hover:not([aria-disabled="true"])');
+  });
+
+  it("adds NO guard when the contract declares no interaction suppression", () => {
+    // The change must be driven by the declared fact, not applied blanket.
+    const contract = makeContract({
+      anatomy: { parts: ["root"], dom: { tag: "button", part: "root" } },
+      styles: interactionStyles,
+    });
+    const selectors = computeCssBlocks(contract, "x").map((b) => b.selector);
+    expect(selectors).toContain(".x:hover");
+    expect(selectors.some((s) => s.includes(":not("))).toBe(false);
+  });
+
+  it("adds NO guard for non-web platform targets", () => {
+    // Selector mechanics are web-only. Leaking them into a native target is how
+    // this change first dropped every `_pressed` style from React Native.
+    const contract = makeContract({
+      anatomy: { parts: ["root"], dom: { tag: "button", part: "root" } },
+      states: suppressing(),
+      styles: interactionStyles,
+    });
+    for (const platformTarget of ["ios", "android"] as const) {
+      const selectors = computeCssBlocks(contract, "x", { platformTarget }).map((b) => b.selector);
+      expect(selectors.some((s) => s.includes(":not("))).toBe(false);
+    }
+  });
+
+  it("does not guard variant or anatomy-part selectors", () => {
+    const contract = makeContract({
+      anatomy: { parts: ["root", "icon"], dom: { tag: "button", part: "root" } },
+      states: suppressing(),
+      styles: {
+        "--primary": { color: { literal: "red", platforms: ["web"] } },
+        __icon: { color: { literal: "red", platforms: ["web"] } },
+      },
+    });
+    const selectors = computeCssBlocks(contract, "x").map((b) => b.selector);
+    expect(selectors).toContain(".x--primary");
+    expect(selectors).toContain(".x__icon");
+    expect(selectors.some((s) => s.includes(":not("))).toBe(false);
+  });
+});
+
 describe("renderStyleBlock — platforms-on-literal guard", () => {
   // The schema requires `platforms` whenever `literal` is set. Prior to
   // this guard, a `literal` entry that bypassed schema validation (e.g.
