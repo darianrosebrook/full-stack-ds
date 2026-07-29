@@ -2,10 +2,11 @@ id: FIX-STACK-NATIVE-AXIS-LEAK-01
 title: 'Stack must not impose a flex axis on layout=native hosts'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: stack-native-axis
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge stack-native-axis at ed2d8ca565abb19b4b1fada4c6f9895877ebf624'
 created_at: '2026-07-29T18:17:31.753Z'
-updated_at: '2026-07-29T18:17:31.753Z'
+updated_at: '2026-07-29T18:26:10.784Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/{react,vue,svelte,lit}/primitive-source.ts'
