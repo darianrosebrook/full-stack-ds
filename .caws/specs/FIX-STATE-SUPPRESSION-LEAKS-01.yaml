@@ -2,10 +2,11 @@ id: FIX-STATE-SUPPRESSION-LEAKS-01
 title: 'Emit an interaction guard when a contract declares state suppression'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: s8-suppress
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge s8-suppress at f871931375e01eb5df74e693b892336a33b68dd4'
 created_at: '2026-07-29T17:03:41.970Z'
-updated_at: '2026-07-29T17:03:41.970Z'
+updated_at: '2026-07-29T17:19:02.751Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/ir.ts (guard emission on interaction pseudo selectors)'
