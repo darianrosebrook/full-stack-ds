@@ -3,6 +3,7 @@ title: 'State-suppression rail, plus honest disposition evidence for the dead-sl
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: s2-suppression
 created_at: '2026-07-29T00:12:13.559Z'
 updated_at: '2026-07-29T00:12:13.559Z'
 blast_radius:
