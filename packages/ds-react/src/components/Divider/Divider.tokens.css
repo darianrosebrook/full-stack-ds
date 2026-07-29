@@ -1,3 +1,4 @@
+@layer components {
 /* @generated:start tokens */
 .divider {
   --fsds-box-model-padding: 0;
@@ -24,3 +25,5 @@
 /* @custom:start overrides */
 
 /* @custom:end */
+
+}

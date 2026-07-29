@@ -64,18 +64,24 @@ function isStructuredShadowValue(value: unknown): value is Record<string, unknow
   );
 }
 
-/** Available brand identifiers */
+/**
+ * Available brand identifiers. Documentation only — `loadBrandTokens` derives
+ * the actual set from `src/brands/*.tokens.json` at build time via
+ * `readdirSync` and casts to this type, so a brand file that isn't listed
+ * here still loads and builds; keep this in sync when adding/removing brands
+ * so downstream type references stay meaningful.
+ */
 export type BrandId =
   | "default"
   | "corporate"
   | "forest"
-  | "sunset"
-  | "midnight"
-  | "ocean"
   | "canary"
   | "monochrome"
-  | "rose"
-  | "slate";
+  | "streaming"
+  | "fintech"
+  | "developer"
+  | "quickserve"
+  | "marketplace";
 
 /** Available density identifiers */
 export type DensityId = "tight" | "compact" | "default" | "spacious";
@@ -94,11 +100,19 @@ export interface DensityMetadata {
   base: string;
 }
 
+/** One component's light/dark override vars, keyed by the exact CSS custom property name the component's own tokens.json sidecar declares. */
+export interface ComponentBrandOverrides {
+  light: Record<string, string>;
+  dark: Record<string, string>;
+}
+
 /** Processed brand token overrides */
 export interface BrandOverrides {
   metadata: BrandMetadata;
   lightVars: Record<string, string>;
   darkVars: Record<string, string>;
+  /** Component-scoped overrides from the brand file's `components.<Name>.*` block, keyed by kebab-cased component name (matches cssPrefix). */
+  componentVars: Map<string, ComponentBrandOverrides>;
 }
 
 /** Processed density token overrides */
@@ -612,9 +626,27 @@ function loadBrandTokens(): Map<BrandId, BrandOverrides> {
 
       const lightVars: Record<string, string> = {};
       const darkVars: Record<string, string> = {};
+      const componentVars = new Map<string, ComponentBrandOverrides>();
 
-      // Process brand token overrides (skip $brand metadata)
+      // Process brand token overrides (skip $brand metadata; "components" is
+      // a reserved top-level key handled separately below — it addresses
+      // component-local slots, not the semantic layer, so it must not be
+      // walked into `semantic.components.*`).
       processBrandTokens(brandData, [], context, lightVars, darkVars);
+
+      const componentsBlock = (brandData as Record<string, unknown>)
+        .components;
+      if (
+        componentsBlock &&
+        typeof componentsBlock === "object" &&
+        !Array.isArray(componentsBlock)
+      ) {
+        processComponentBrandTokens(
+          componentsBlock as Record<string, unknown>,
+          context,
+          componentVars,
+        );
+      }
 
       // NOTE: We deliberately do NOT call validateReferences() here. Brand
       // tokens reference core tokens via `{shape.border.style.solid}` etc.,
@@ -630,6 +662,7 @@ function loadBrandTokens(): Map<BrandId, BrandOverrides> {
         metadata: brandData.$brand,
         lightVars,
         darkVars,
+        componentVars,
       });
 
       console.log(
@@ -656,6 +689,10 @@ export function processBrandTokens(
 ): void {
   for (const [key, value] of Object.entries(obj)) {
     if (key.startsWith("$")) continue; // Skip metadata
+    // "components" is a reserved top-level key (component-scoped overrides,
+    // processed separately by processComponentBrandTokens) — only reserved
+    // at the root so a genuine nested semantic key can never collide.
+    if (pathArr.length === 0 && key === "components") continue;
 
     const currentPath = [...pathArr, key];
 
@@ -711,6 +748,124 @@ export function processBrandTokens(
 }
 
 /**
+ * Convert a PascalCase/camelCase component name (matching the contract's
+ * directory name, e.g. "Button", "ShowMore") to the kebab-case form used as
+ * the component's default `cssPrefix` (see component.contract.schema.json:
+ * "Defaults to kebab-cased component name").
+ */
+export function componentNameToKebab(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
+}
+
+/**
+ * Build the CSS custom property name for a component-scoped brand override.
+ * Mirrors ds-codegen's `tokenSlug()` (packages/ds-codegen/src/ir.ts) exactly:
+ * `--fsds-` + the dot path with dots replaced by dashes, no case
+ * transformation. `pathArr[0]` must already be kebab-cased (the component
+ * name); remaining segments are the literal sidecar-style key names
+ * (e.g. "fontWeight") so a brand override targets the exact same variable
+ * name the component's own <Name>.tokens.json sidecar declares. Deliberately
+ * bypasses `tokenPathToCSSVar`'s core/semantic namespace inference — a
+ * component path is never a core/semantic path, and a component literally
+ * named e.g. "Icon" or "Layer" would otherwise collide with those patterns.
+ */
+export function componentTokenPathToCSSVar(pathArr: string[]): string {
+  return `--fsds-${pathArr.join(".").replace(/\./g, "-")}`;
+}
+
+/**
+ * Walk a brand file's `components.<ComponentName>.*` subtree, one component
+ * at a time, into per-component light/dark CSS var maps.
+ */
+function processComponentBrandTokens(
+  componentsObj: Record<string, unknown>,
+  context: CollectionContext,
+  componentVars: Map<string, ComponentBrandOverrides>,
+): void {
+  for (const [componentName, subtree] of Object.entries(componentsObj)) {
+    if (componentName.startsWith("$")) continue;
+    if (!subtree || typeof subtree !== "object" || Array.isArray(subtree)) {
+      continue;
+    }
+
+    const kebab = componentNameToKebab(componentName);
+    const entry = componentVars.get(kebab) ?? { light: {}, dark: {} };
+    walkComponentBrandSubtree(
+      subtree as Record<string, unknown>,
+      [kebab],
+      context,
+      entry.light,
+      entry.dark,
+    );
+    componentVars.set(kebab, entry);
+  }
+}
+
+/** Recursive walker for a single component's override subtree. Exported for tests. */
+export function walkComponentBrandSubtree(
+  obj: Record<string, unknown>,
+  pathArr: string[],
+  context: CollectionContext,
+  lightVars: Record<string, string>,
+  darkVars: Record<string, string>,
+): void {
+  for (const [key, value] of Object.entries(obj)) {
+    if (key.startsWith("$")) continue;
+
+    const currentPath = [...pathArr, key];
+
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      const valueObj = value as Record<string, unknown>;
+
+      if ("$value" in valueObj || "$type" in valueObj) {
+        const tokenValue = valueObj.$value;
+        const extensions = valueObj.$extensions as
+          | Record<string, unknown>
+          | undefined;
+        const cssVar = componentTokenPathToCSSVar(currentPath);
+
+        const lightValue = extensions?.["fsds.light"] || tokenValue;
+        if (lightValue !== undefined) {
+          const processedLight = processTokenValue(
+            lightValue,
+            context,
+            undefined,
+            undefined,
+          );
+          if (processedLight) {
+            lightVars[cssVar] = processedLight;
+          }
+        }
+
+        const darkValue = extensions?.["fsds.dark"];
+        if (darkValue !== undefined) {
+          const processedDark = processTokenValue(
+            darkValue,
+            context,
+            undefined,
+            undefined,
+          );
+          if (processedDark) {
+            darkVars[cssVar] = processedDark;
+          }
+        }
+      } else {
+        walkComponentBrandSubtree(
+          valueObj,
+          currentPath,
+          context,
+          lightVars,
+          darkVars,
+        );
+      }
+    }
+  }
+}
+
+/**
  * Format CSS block for brand selector
  */
 function formatBrandBlock(
@@ -728,22 +883,57 @@ function formatBrandBlock(
 }
 
 /**
+ * Format a component-scoped CSS block: `[data-brand="<id>"] .<component> { ... }`.
+ * Lands inside `@layer brand`, which is declared after `@layer components`
+ * (see `generateLayerDeclaration`), so this wins over the component's own
+ * `.tokens.css` default for the same custom property regardless of
+ * selector specificity.
+ */
+function formatComponentBrandBlock(
+  brandId: string,
+  componentKebab: string,
+  properties: Record<string, string>,
+): string {
+  if (Object.keys(properties).length === 0) return "";
+
+  const lines = Object.entries(properties)
+    .map(([prop, value]) => `    ${prop}: ${value};`)
+    .join("\n");
+
+  return `  [data-brand="${brandId}"] .${componentKebab} {\n${lines}\n  }`;
+}
+
+/**
  * Generate CSS layers declaration
  */
 function generateLayerDeclaration(): string {
-  return "/* CSS Cascade Layers - order defines precedence */\n@layer core, semantic, theme, brand, density;";
+  // "components" sits between semantic and theme/brand: component-local
+  // slot defaults (each component's own <Name>.tokens.css, wrapped in
+  // `@layer components` by ds-codegen's emitTokensCss) must lose to a
+  // brand's component-scoped override in `@layer brand` regardless of
+  // selector specificity or file load order — that's what makes
+  // components.<Name>.<slot> brand overrides actually take effect instead
+  // of being silently shadowed by the component's own unlayered default.
+  return "/* CSS Cascade Layers - order defines precedence */\n@layer core, semantic, components, theme, brand, density;";
 }
 
 /**
  * Generate brand layer CSS with all brand overrides
  */
-function generateBrandLayerCSS(brands: Map<BrandId, BrandOverrides>): string {
+export function generateBrandLayerCSS(
+  brands: Map<BrandId, BrandOverrides>,
+): string {
   if (brands.size === 0) return "";
 
   const blocks: string[] = ["@layer brand {"];
 
   for (const [brandId, overrides] of brands) {
-    if (Object.keys(overrides.lightVars).length === 0) continue;
+    if (
+      Object.keys(overrides.lightVars).length === 0 &&
+      overrides.componentVars.size === 0
+    ) {
+      continue;
+    }
 
     // The brand named "default" applies unconditionally at :root in
     // addition to its [data-brand="default"] selector. Without this, the
@@ -801,6 +991,30 @@ function generateBrandLayerCSS(brands: Map<BrandId, BrandOverrides>): string {
         );
         blocks.push(
           `  .dark, [data-theme="dark"] {\n${darkProps}\n  }`,
+        );
+      }
+    }
+
+    // Component-scoped overrides (brand `components.<Name>.*` block).
+    for (const [componentKebab, compOverrides] of overrides.componentVars) {
+      const lightCompBlock = formatComponentBrandBlock(
+        brandId,
+        componentKebab,
+        compOverrides.light,
+      );
+      if (lightCompBlock) {
+        blocks.push(lightCompBlock);
+      }
+
+      if (Object.keys(compOverrides.dark).length > 0) {
+        const darkCompProps = Object.entries(compOverrides.dark)
+          .map(([p, v]) => `    ${p}: ${v};`)
+          .join("\n");
+        blocks.push(
+          `  @media (prefers-color-scheme: dark) {\n    [data-brand="${brandId}"] .${componentKebab} {\n${darkCompProps}\n    }\n  }`,
+        );
+        blocks.push(
+          `  .dark[data-brand="${brandId}"] .${componentKebab}, [data-theme="dark"][data-brand="${brandId}"] .${componentKebab} {\n${darkCompProps}\n  }`,
         );
       }
     }

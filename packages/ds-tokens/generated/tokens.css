@@ -3,7 +3,7 @@
  */
 
 /* CSS Cascade Layers - order defines precedence */
-@layer core, semantic, theme, brand, density;
+@layer core, semantic, components, theme, brand, density;
 
 @layer core {
   :root {
