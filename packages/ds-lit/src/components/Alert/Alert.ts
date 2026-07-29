@@ -113,6 +113,7 @@ export class AlertElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       display: flex;
+      flex-direction: column;
       align-items: flex-start;
       border-style: solid;
       border-width: 1px;
@@ -301,6 +302,7 @@ export class AlertBodyElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       display: flex;
+      flex-direction: column;
       align-items: flex-start;
       border-style: solid;
       border-width: 1px;
@@ -461,6 +463,7 @@ export class AlertTitleElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       display: flex;
+      flex-direction: column;
       align-items: flex-start;
       border-style: solid;
       border-width: 1px;
