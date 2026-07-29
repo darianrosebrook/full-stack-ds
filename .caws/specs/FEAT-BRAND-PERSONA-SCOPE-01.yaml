@@ -2,10 +2,11 @@ id: FEAT-BRAND-PERSONA-SCOPE-01
 title: 'Component-scoped brand token overrides + 5 new brand personas replacing 5 abstract ones'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: brand-personas
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge brand-personas at 8107091b8aea6a4dad4ca2080ea6b25ff9c14ef8'
 created_at: '2026-07-29T17:09:38.838Z'
-updated_at: '2026-07-29T17:57:06.781Z'
+updated_at: '2026-07-29T17:58:45.161Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/brands (delete 5 abstract brands, author 5 persona brands, extend brand schema with a components block)'
