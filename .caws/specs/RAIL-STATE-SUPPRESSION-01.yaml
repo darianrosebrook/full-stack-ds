@@ -1,0 +1,38 @@
+id: RAIL-STATE-SUPPRESSION-01
+title: 'State-suppression rail, plus honest disposition evidence for the dead-slot ledger'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-29T00:12:13.559Z'
+updated_at: '2026-07-29T00:12:13.559Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/state-suppression-audit'
+    - 'scripts/dead-slot-audit'
+    - 'scripts/lib'
+    - 'scripts/prepush-scope.mjs'
+    - 'scripts/prepush-scope.test.mjs'
+    - '.githooks'
+    - '.github/workflows/ci.yml'
+    - 'package.json'
+    - 'docs/state-suppression-audit'
+    - 'docs/dead-slot-audit'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a contract declaring availability suppresses interaction whose CSS leaks an interaction property into the disabled state; when the rail runs; then it reports the leak'
+non_functional: {}
+contracts:
+  - name: 'state-suppression'
+    type: contract-test
+    path: 'scripts/state-suppression-audit/selfcheck.mjs'
