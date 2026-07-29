@@ -3,6 +3,7 @@ title: 'Re-point 18 orphaned variant leaf slots so variant blocks consume them'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: s7-repoint
 created_at: '2026-07-29T16:48:54.919Z'
 updated_at: '2026-07-29T16:48:54.919Z'
 blast_radius:
