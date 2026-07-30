@@ -3,6 +3,7 @@ title: 'Gate token health on reference resolvability, not reference count'
 risk_tier: 2
 mode: refactor
 lifecycle_state: active
+worktree: token-resolvability
 created_at: '2026-07-30T04:48:46.543Z'
 updated_at: '2026-07-30T14:50:23.979Z'
 blast_radius:
