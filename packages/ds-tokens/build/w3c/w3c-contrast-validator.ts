@@ -331,6 +331,17 @@ export function extractCanonicalPairs(
       bg: 'semantic.color.background.accent',
       context: 'On-color text on accent fill (brand mark, accent chips). Caught the dark-mode brand-logo failure (white on red.400).',
     },
+    // Inverted surfaces (tooltips, inverted callouts). Both sides flip per
+    // theme and must flip OPPOSITE ways. Tooltip originally paired
+    // background.inverse with foreground.INVERSE, which is light in both
+    // themes — light-on-light in dark mode, i.e. an invisible tooltip. It went
+    // unnoticed because the tooltip's styles were authored against a selector
+    // that matched no element, so the wrong pairing rendered as no pairing.
+    {
+      fg: 'semantic.color.foreground.on-inverse',
+      bg: 'semantic.color.background.inverse',
+      context: 'Label on an inverted surface (tooltip). Both sides flip per theme; pairing either one with its non-mirrored sibling goes invisible in one mode.',
+    },
     // Status / feedback colors against the primary surface.
     {
       fg: 'semantic.color.status.info',

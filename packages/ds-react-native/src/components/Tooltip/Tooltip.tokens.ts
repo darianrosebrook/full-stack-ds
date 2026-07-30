@@ -90,7 +90,7 @@ export const tooltipTokenScopes = {
     "tooltip.color.foreground.default": {
       name: "tooltip.color.foreground.default",
       cssVar: "--fsds-tooltip-color-foreground-default",
-      ref: "semantic.color.foreground.inverse",
+      ref: "semantic.color.foreground.on-inverse",
       fallback: "#fafafa",
     },
     "tooltip.color.border.default": {

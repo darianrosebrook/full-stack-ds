@@ -54,7 +54,7 @@ export class TooltipElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
-      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-on-inverse, #fafafa);
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
@@ -222,7 +222,7 @@ export class TooltipTriggerElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
-      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-on-inverse, #fafafa);
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
@@ -366,7 +366,7 @@ export class TooltipContentElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
-      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-on-inverse, #fafafa);
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
