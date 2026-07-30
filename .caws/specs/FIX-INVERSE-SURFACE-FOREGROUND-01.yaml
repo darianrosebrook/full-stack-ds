@@ -2,10 +2,11 @@ id: FIX-INVERSE-SURFACE-FOREGROUND-01
 title: 'Add foreground.onInverse and pair it with background.inverse surfaces'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: inverse-fg
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge inverse-fg at c5605ef66f1694a63642379bad8b532107e43017'
 created_at: '2026-07-30T00:47:30.704Z'
-updated_at: '2026-07-30T00:47:30.704Z'
+updated_at: '2026-07-30T00:55:59.299Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/color/semantic/foreground.tokens.json'
