@@ -88,14 +88,19 @@ jobs:
       - name: Validate brand references
         run: pnpm run tokens:check-brand-refs
 
-      # Design tokens — usage regression gate. Fails if any token in the
-      # composed graph that was USED at baseline time has become unused,
-      # or if total unused count grew. Baseline lives at
-      # packages/ds-tokens/usage-baseline.json. To intentionally land a
-      # new unused token, re-baseline with
-      # `pnpm run tokens:write-usage-baseline` and commit the result.
-      - name: Gate token usage regressions
-        run: pnpm run tokens:check-usage:gate
+      # Design-token usage is REPORT-ONLY as of
+      # RAIL-TOKEN-REFERENCE-RESOLVABILITY-01. It asked "is every declared token
+      # referenced?", which is the wrong health question for a vocabulary layer:
+      # base and semantic exist to be drawn from by path, and a brand may
+      # legitimately ship a palette ramp ahead of its consumer. Gating on
+      # reference count made that legal act fail the build — replacing a brand
+      # persona orphaned 26 palette stops and blocked a push with nothing
+      # broken. The blocking question is now the inverse (does every reference
+      # RESOLVE) and lives in the token-resolvability ledger in the audits job.
+      #
+      # Non-claim: the new gate is NOT a superset. The signal dropped here — a
+      # semantic token that lost its last consumer — is not preserved anywhere.
+      # See docs/architecture/tokens-architecture.md.
 
       # Full usage report uploaded for visibility into the baseline floor
       # (398 tokens unused at baseline time, mostly data-viz palettes).
@@ -228,6 +233,17 @@ jobs:
       # border-color, because the :disabled block never resets it.
       - name: State-suppression ledger (declared suppression vs honoured in CSS)
         run: pnpm run audit:state-suppression
+
+      # The blocking token gate (RAIL-TOKEN-REFERENCE-RESOLVABILITY-01),
+      # replacing the count-based usage gate demoted to report-only above. Fires
+      # when generated CSS reads a --fsds-* name the token graph never declares:
+      # CSS falls back to the literal, so the property renders a plausible value
+      # while the token layer is decorative for it and no brand or theme
+      # re-point can reach it. Invisible to every other rail — the dead-slot
+      # audit asks whether a slot has a var() consumer, and here the consumer
+      # exists and reads a name nothing declares.
+      - name: Token-resolvability ledger (references that never resolve)
+        run: pnpm run audit:token-resolvability
 
   runtime-rail:
     name: Runtime visual proof rail

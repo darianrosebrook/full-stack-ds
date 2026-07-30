@@ -29,6 +29,14 @@ const PATTERNS = {
   // are the contract corpus, the generated React CSS/TSX they classify against,
   // and the audits themselves — so a change to any of those can move a verdict.
   stylingAudits: /^(packages\/ds-(contracts|react)\/|scripts\/(dead-slot|pseudo-state|state-suppression)-audit\/|scripts\/lib\/ledger-ratchet)/,
+  // token-reference resolvability. Its verdict is a diff between two name
+  // spaces, so BOTH sides are inputs: the generated React CSS that reads a
+  // --fsds-* name, and the ds-tokens source that decides which names the graph
+  // declares. Renaming a token is exactly how a previously-resolving reference
+  // goes dangling, so ds-tokens must be in this group even though the finding
+  // surfaces in ds-react.
+  resolvability:
+    /^(packages\/ds-(react|tokens)\/|scripts\/token-resolvability-audit\/|scripts\/lib\/ledger-ratchet)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -47,6 +55,7 @@ export function classify(files, opts = {}) {
   const generated = full || has("generated");
   const iconography = full || has("iconography");
   const stylingAudits = full || has("stylingAudits");
+  const resolvability = full || has("resolvability");
   const lintable = full || has("lintable");
   const typed = full || has("typed");
   const testable = full || has("testable");
@@ -58,7 +67,12 @@ export function classify(files, opts = {}) {
 
   const flags = {
     // shared prerequisite: build tokens once for BOTH generate:check and the gates
-    RUN_TOKEN_BUILD: genGroup,
+    // `|| resolvability`: that audit diffs generated CSS against the COMPOSED
+    // graph, so it is only meaningful once the graph is built. A change to the
+    // audit script alone is outside genGroup, and without this the audit would
+    // run against a missing tokens.css — where it fails loudly by design, but
+    // for the wrong reason.
+    RUN_TOKEN_BUILD: genGroup || resolvability,
     RUN_TOKEN_GATES: tokens,
     RUN_GENERATE_CHECK: genGroup,
     RUN_DOCS_CLAIMS: codegen || docs,
@@ -75,6 +89,11 @@ export function classify(files, opts = {}) {
     // rather than genGroup — it classifies committed generated output, so it is
     // meaningful even when nothing regenerates.
     RUN_STYLING_AUDITS: stylingAudits,
+    // token-reference resolvability (RAIL-TOKEN-REFERENCE-RESOLVABILITY-01):
+    // the blocking token gate, replacing the count-based usage gate. Its own
+    // flag rather than riding `tokens`, because a change to EITHER side of the
+    // name diff can move the verdict.
+    RUN_TOKEN_RESOLVABILITY: resolvability,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)

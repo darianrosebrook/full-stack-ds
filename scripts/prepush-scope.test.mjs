@@ -116,3 +116,40 @@ test("an unrelated package change does NOT run the styling-realization ledgers",
     false,
   );
 });
+
+// --- token-reference resolvability (RAIL-TOKEN-REFERENCE-RESOLVABILITY-01) ---
+// This audit's verdict is a diff between two name spaces, so both sides are
+// inputs. These pin that BOTH sides trigger it — a rail wired to only one side
+// of a diff goes quietly blind whenever the other side moves.
+
+test("changing generated React CSS runs the token-resolvability ledger", () => {
+  assert.equal(
+    classify(["packages/ds-react/src/components/Button/Button.tokens.css"])
+      .RUN_TOKEN_RESOLVABILITY,
+    true,
+  );
+});
+
+test("changing a token source runs the token-resolvability ledger", () => {
+  // Renaming a token is exactly how a previously-resolving reference goes
+  // dangling, so ds-tokens must trigger it even though the finding surfaces in
+  // ds-react.
+  assert.equal(
+    classify(["packages/ds-tokens/src/color/semantic/foreground.tokens.json"])
+      .RUN_TOKEN_RESOLVABILITY,
+    true,
+  );
+});
+
+test("editing the resolvability audit runs it, and builds the graph it needs", () => {
+  // A scripts-only change is outside genGroup, so without the explicit
+  // `|| resolvability` on RUN_TOKEN_BUILD the audit would run against a missing
+  // composed graph — failing for the wrong reason.
+  const flags = classify(["scripts/token-resolvability-audit/audit.mjs"]);
+  assert.equal(flags.RUN_TOKEN_RESOLVABILITY, true);
+  assert.equal(flags.RUN_TOKEN_BUILD, true);
+});
+
+test("a docs-only push does NOT run the token-resolvability ledger", () => {
+  assert.equal(classify(["docs/x.md"]).RUN_TOKEN_RESOLVABILITY, false);
+});

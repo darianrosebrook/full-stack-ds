@@ -2,9 +2,9 @@
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
   "components": 49,
   "slotsDeclared": 894,
-  "consumed": 779,
-  "inert": 115,
-  "shadowed": 17,
+  "consumed": 780,
+  "inert": 114,
+  "shadowed": 16,
   "dead": 98,
   "inertSlots": [
     {
@@ -670,19 +670,6 @@
           "status": "dead",
           "disposition": "wire",
           "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        }
-      ]
-    },
-    {
-      "component": "Popover",
-      "inert": [
-        {
-          "slot": "box-model.gap",
-          "cssVar": "--fsds-box-model-gap",
-          "source": "tokens",
-          "status": "shadowed",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         }
       ]
     },
@@ -5470,8 +5457,8 @@
       "component": "Popover",
       "prefix": "popover",
       "total": 13,
-      "consumed": 12,
-      "shadowed": 1,
+      "consumed": 13,
+      "shadowed": 0,
       "dead": 0,
       "slots": [
         {
@@ -5502,9 +5489,7 @@
           "slot": "box-model.gap",
           "cssVar": "--fsds-box-model-gap",
           "source": "tokens",
-          "status": "shadowed",
-          "disposition": "shadowed",
-          "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
+          "status": "consumed"
         },
         {
           "slot": "box-model.min-width",
