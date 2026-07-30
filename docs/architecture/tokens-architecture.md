@@ -28,7 +28,7 @@ The workstream that produced this surface (`TOKENS-WORKSTREAM-STEP-02` through `
 The design-token graph in `packages/ds-tokens` provides:
 
 1. **A DTCG-1.0-valid source.** Every leaf token is a W3C Design Tokens Community Group spec object (`$type`, `$value`, optional `$description` / `$extensions`). The strict schema in `build/w3c/w3c-schema-strict.json` is the gate; `pnpm -F @full-stack-ds/tokens validate` fails loud on any non-spec input.
-2. **A single CSS surface for consumers** at `packages/ds-tokens/generated/tokens.css`. One file. Cascade-layered: `@layer core, semantic, theme, brand, density;`. Read by `vite-plugin-fsds-data.ts` and shipped to framework preview iframes.
+2. **A single CSS surface for consumers** at `packages/ds-tokens/generated/tokens.css`. One file. Cascade-layered: `@layer core, semantic, components, theme, brand, density;`. Read by `vite-plugin-fsds-data.ts` and shipped to framework preview iframes.
 3. **A namespace-prefixed CSS variable surface.** Every emitted custom property is prefixed `--fsds-` (e.g. `--fsds-core-color-palette-neutral-500`). Project-namespaced so two design systems can coexist in the same DOM without collision.
 4. **A brand cascade.** Brand identity overrides land at `@layer brand` keyed by `[data-brand="<id>"]` attribute selectors. Adding a brand is one file (`src/brands/<id>.tokens.json`) and a re-build.
 5. **A density cascade.** Content-density overrides land at `@layer density` keyed by `[data-density="<id>"]`. The four canonical modes (`tight`, `compact`, `default`, `spacious`) live as siblings under `src/density/`.
@@ -249,13 +249,15 @@ Every emitted CSS custom property has the prefix `--fsds-`. The default is set i
 
 **Consequence:** contracts always reference the unprefixed dot-path (`semantic.color.foreground.primary`); the prefix is appended at emission. Don't put `--fsds-` in `resolvesTo`. If you ever need to change the prefix, edit one line in `tokenPathToCSSVar` — every emitter call site picks it up.
 
-### Decision 3: Cascade layer order — `core, semantic, theme, brand, density`
+### Decision 3: Cascade layer order — `core, semantic, components, theme, brand, density`
 
-`@layer core, semantic, theme, brand, density;` at the top of every emitted `tokens.css`. The order is the precedence order: later layers win.
+`@layer core, semantic, components, theme, brand, density;` at the top of every emitted `tokens.css` (`generateLayerDeclaration()` in `packages/ds-tokens/build/generators/global.ts`). The order is the precedence order: later layers win.
 
-**Why:** brand tokens are identity overrides — they should beat semantic defaults for the same path. Density tokens are content-density overrides — they should beat brand for spacing because density is a viewer preference, brand is a producer identity. Theme is reserved between semantic and brand for light/dark variants where a brand wants to opt out (none currently use it, but the slot exists).
+**Why:** brand tokens are identity overrides — they should beat semantic defaults for the same path. Density tokens are content-density overrides — they should beat brand for spacing because density is a viewer preference, brand is a producer identity. Theme is reserved between semantic and components for light/dark variants where a brand wants to opt out (none currently use it, but the slot exists).
 
-**Consequence:** if you introduce a new layer (e.g. `motion-reduce`, `high-contrast`), think about where it belongs in this stack and update both the `@layer` declaration in `global.ts` and this doc. Layer order is not configurable — it is part of the system's stance.
+`components` sits between `semantic` and `theme` for a reason distinct from the other layers: it doesn't hold token *values* the way `semantic`/`brand`/`density` do — it holds the generated component CSS itself. `ds-codegen`'s `emitTokensCss` (`packages/ds-codegen/src/css.ts`) wraps every component's structure/tokens CSS in `@layer components`. Per the CSS Cascade Layers spec, unlayered styles always beat layered styles regardless of specificity — so this also gives a consuming app's plain (unlayered) CSS a reliable way to override FSDS component CSS without `!important` or specificity games. It has to sit before `brand` so that a brand's component-scoped override (`components.<Name>.<path>` in a brand's token file, landing in `@layer brand`) wins over the component's own default — see "Component-scoped brand overrides" under "How to add a new brand" below. Shipped under `FEAT-BRAND-PERSONA-SCOPE-01` (closed, merge `8107091b`) and `FEAT-BRAND-PERSONA-VISUAL-QA-01` (closed, merge `3c5f398f`).
+
+**Consequence:** if you introduce a new layer (e.g. `motion-reduce`, `high-contrast`), think about where it belongs in this stack and update both the `@layer` declaration in `global.ts` and this doc. Layer order is not configurable — it is part of the system's stance. This mechanism does not reach Lit's shadow DOM — `emitLitInlineCss` renders inside a separate cascade context `@layer` cannot cross, so Lit's isolation still comes from shadow DOM boundaries, not this layer order.
 
 ### Decision 4: Brand selector — `[data-brand="<id>"]`, not class
 
@@ -348,6 +350,7 @@ The byte-compare script remains in the tree for re-running if the graph or contr
 |---|---|---|---|
 | `@layer core` | `src/*/core/*.tokens.json` | `:root` | Primitives — palette, raw scales, font weights, shape primitives. Should not reference anything; should be referenced. |
 | `@layer semantic` | `src/*/semantic/*.tokens.json` | `:root` | Named aliases of core primitives — `foreground.primary`, `radius.medium`, `gap.grid`. References core via `{path}`. This is what contracts almost always cite. |
+| `@layer components` | Generated component CSS (`emitTokensCss` in `packages/ds-codegen/src/css.ts`) | Each component's own class selectors (e.g. `.button`) | Every generated component's structure/tokens CSS. Not a token-value layer like the others — it holds the CSS itself, positioned here so unlayered consumer-app CSS always wins (per spec) and so `@layer brand` component-scoped overrides win over it. Does not reach Lit shadow DOM. |
 | `@layer theme` | `$extensions.fsds.{light,dark}` on any token | `.light`, `.dark`, `@media (prefers-color-scheme: dark) :root` | Light/dark variants. Live and load-bearing — theme-flipping pairs must mirror each other, or a surface and its label can both be legible alone and invisible together. |
 | `@layer brand` | `src/brands/<id>.tokens.json` | `[data-brand="<id>"]` | Brand-identity overrides. Each brand redeclares the semantic tokens it wants to differ. Ten brands: `default`, `canary`, `corporate`, `developer`, `fintech`, `forest`, `marketplace`, `monochrome`, `quickserve`, `streaming`. |
 | `@layer density` | `src/density/<id>.tokens.json` | `[data-density="<id>"]` | Content-density overrides. Each density redeclares the semantic spacing tokens it wants to differ. Currently 4 densities (`tight`, `compact`, `default`, `spacious`, 14 overrides each). |
@@ -422,6 +425,15 @@ so disabled foreground keeps AA_LARGE 3:1) rather than loosening the gate.
 2. Use `$extensions.fsds.{light,dark}` for theme variants if needed.
 3. Run `pnpm -F @full-stack-ds/tokens build`. `loadBrandTokens` auto-detects new brand files.
 4. Consumer wires `<html data-brand="<id>">` to activate.
+
+### Component-scoped brand overrides
+
+A brand file can also override a single component's own local token, without touching the shared semantic default every other component consumes. This is a separate capability from the top-level `color`/`typography`/`spacing`/`shape`/`motion` blocks above, keyed by component name instead of semantic path:
+
+1. Add a `components.<Name>.<path>` block to the brand file, where `<Name>` is the PascalCase component directory name (matching the contract, e.g. `Button`, `Badge`) and `<path>` is the same nested path shape the component's own `<Name>.tokens.json` sidecar uses (e.g. `components.Button.color.background.default`).
+2. Run `pnpm -F @full-stack-ds/tokens build`. `processComponentBrandTokens` / `walkComponentBrandSubtree` (`packages/ds-tokens/build/generators/global.ts`) compile this to a CSS custom property scoped to `[data-brand="<id>"] .<cssPrefix>` — the same `--fsds-<cssPrefix>-<path>` variable name the component's sidecar declares — landing in `@layer brand`.
+3. This only wins the cascade because the component's own CSS is wrapped in `@layer components`, declared earlier than `@layer brand` (see Decision 3 above and the layer table). Without that wrapping, the component's unlayered CSS would beat the layered brand override regardless of layer order.
+4. Schema reference: `packages/ds-tokens/src/brands/_schema.json`'s `components` property description. Use this only for values specific to one component in one brand — for values every component sharing that semantic path should also pick up, use the top-level blocks instead.
 
 ## How to add a new density mode
 
