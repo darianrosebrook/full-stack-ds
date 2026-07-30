@@ -1,0 +1,43 @@
+id: FIX-SURFACE-PART-CLASS-01
+title: 'Anchored-surface trigger and content must carry their part classes'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-07-30T00:30:54.643Z'
+updated_at: '2026-07-30T00:30:54.643Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/react/surface-emit.ts'
+    - 'packages/ds-codegen/src/frameworks/vue/surface-emit.ts'
+    - 'packages/ds-codegen/src/frameworks/svelte/surface-emit.ts'
+    - 'packages/ds-codegen/src/frameworks/angular/surface-emit.ts'
+    - 'packages/ds-codegen/src/frameworks/lit/surface-emit.ts'
+    - 'packages/ds-codegen/src/frameworks/surface-part-class.test.ts'
+    - 'packages/ds-contracts/components/Popover'
+    - 'packages/ds-contracts/components/Tooltip'
+    - 'packages/ds-react/src/components'
+    - 'packages/ds-vue/src/components'
+    - 'packages/ds-svelte/src/components'
+    - 'packages/ds-angular/src/components'
+    - 'packages/ds-lit/src/components'
+    - 'packages/ds-react-native/src/components'
+    - 'packages/ds-figma-plugin/src/generated/components'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Tooltip content declares surface styles by part key; when rendered in a browser; then the declared background, border and padding are computed on the content element'
+non_functional: {}
+contracts:
+  - name: 'popover-styles'
+    type: schema
+    path: 'packages/ds-contracts/components/Popover/Popover.styles.json'
