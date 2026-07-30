@@ -578,14 +578,6 @@
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
     },
     {
-      "component": "Popover",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
       "component": "Postcard",
       "slot": "box-model.gap",
       "status": "shadowed",
