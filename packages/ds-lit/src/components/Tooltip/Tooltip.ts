@@ -79,12 +79,12 @@ export class TooltipElement extends LitElement {
       display: inline-block;
     }
     
-    .tooltip__trigger {
+    .tooltip [data-tooltip-trigger] {
       display: inline-flex;
       align-items: center;
     }
     
-    .tooltip__content {
+    [data-tooltip-content] {
       background-color: var(--fsds-tooltip-color-background-default, #141414);
       color: var(--fsds-tooltip-color-foreground-default, #fafafa);
       border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
@@ -247,12 +247,12 @@ export class TooltipTriggerElement extends LitElement {
       display: inline-block;
     }
     
-    .tooltip__trigger {
+    .tooltip [data-tooltip-trigger] {
       display: inline-flex;
       align-items: center;
     }
     
-    .tooltip__content {
+    [data-tooltip-content] {
       background-color: var(--fsds-tooltip-color-background-default, #141414);
       color: var(--fsds-tooltip-color-foreground-default, #fafafa);
       border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
@@ -391,12 +391,12 @@ export class TooltipContentElement extends LitElement {
       display: inline-block;
     }
     
-    .tooltip__trigger {
+    .tooltip [data-tooltip-trigger] {
       display: inline-flex;
       align-items: center;
     }
     
-    .tooltip__content {
+    [data-tooltip-content] {
       background-color: var(--fsds-tooltip-color-background-default, #141414);
       color: var(--fsds-tooltip-color-foreground-default, #fafafa);
       border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);

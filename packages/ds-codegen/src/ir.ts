@@ -55,6 +55,7 @@ import {
   ROOT_ONLY_PARTS,
   SEMANTIC_ELEMENTS,
   getRootElement,
+  isAnchoredPresenceKind,
   isCompoundPart,
 } from "./semantics.js";
 import { resolveStyleProfile } from "./box-model.js";
@@ -4333,13 +4334,7 @@ export function computeCssBlocks(
   // under the root, or they won't apply. Derive the content selector
   // from the cssPrefix to match what surface-emit.ts emits as the
   // data-<prefix>-content attribute.
-  const portalEnabled = contract.portal?.enabled === true;
-  const portalContentSelector = portalEnabled
-    ? `[data-${cssPrefix}-content]`
-    : undefined;
-  const expandOptions = portalContentSelector
-    ? { portalContentSelector }
-    : undefined;
+  const expandOptions = expandOptionsForContract(contract, cssPrefix);
 
   // Every other selector key in styles.json gets its own block. The
   // selector key is interpreted by expandStylesKey:
@@ -4424,6 +4419,58 @@ export interface ExpandStylesKeyOptions {
    * the rule actually targets the portaled element.
    */
   portalContentSelector?: string;
+  /**
+   * Part key → selector overrides for components whose parts are marked by a
+   * data-attribute rather than a part class (the anchored-surface family).
+   * Consulted before the default `.<prefix>__<part>` lowering.
+   */
+  surfacePartSelectors?: Record<string, string>;
+}
+
+/**
+ * Derive the selector-lowering options a contract needs. Single source for both
+ * callsites (css blocks + token scopes) so their selectors cannot drift apart.
+ *
+ * The anchored-surface family is the reason `surfacePartSelectors` exists: its
+ * emitters mark `trigger` and `content` with `data-<prefix>-<part>` and emit NO
+ * part class. The trigger may be the consumer's own adopted element (React
+ * `asChild`, Vue slot-props host adoption) where codegen cannot put a class, and
+ * the content is portaled out of the `.<prefix>` ancestor entirely. So for these
+ * components a bare part key must lower to the marker selector.
+ *
+ * Without this, `content: {...}` compiled to `.tooltip__content`, which matched
+ * zero elements — all 11 of Tooltip's declared surface properties were silently
+ * inert and the tooltip rendered as bare text. Popover worked around it by
+ * hand-writing `[data-popover-content]` as a styles key; this makes that
+ * mechanism reachable from the part vocabulary instead of by hand.
+ */
+export function expandOptionsForContract(
+  contract: ComponentContract,
+  cssPrefix: string,
+): ExpandStylesKeyOptions | undefined {
+  const portalContentSelector =
+    contract.portal?.enabled === true
+      ? `[data-${cssPrefix}-content]`
+      : undefined;
+
+  const isAnchoredSurface =
+    contract.surface !== undefined &&
+    isAnchoredPresenceKind(contract.surface.kind);
+
+  const surfacePartSelectors: Record<string, string> | undefined =
+    isAnchoredSurface
+      ? {
+          // Portaled content sits at document.body — top level, unqualified.
+          // Un-portaled content stays inside the root, so keep it qualified.
+          content:
+            portalContentSelector ?? `.${cssPrefix} [data-${cssPrefix}-content]`,
+          // The trigger is never portaled; it always renders inside the root.
+          trigger: `.${cssPrefix} [data-${cssPrefix}-trigger]`,
+        }
+      : undefined;
+
+  if (!portalContentSelector && !surfacePartSelectors) return undefined;
+  return { portalContentSelector, surfacePartSelectors };
 }
 
 export function expandStylesKey(
@@ -4431,7 +4478,7 @@ export function expandStylesKey(
   prefix: string,
   options: ExpandStylesKeyOptions = {},
 ): string {
-  const { portalContentSelector } = options;
+  const { portalContentSelector, surfacePartSelectors } = options;
 
   // Portal-aware fast path: emit content-targeting selectors at top
   // level when portal is enabled, regardless of whether the author
@@ -4442,6 +4489,13 @@ export function expandStylesKey(
     const compoundPrefix = `.${prefix} ${portalContentSelector}`;
     if (trimmed === compoundPrefix) return portalContentSelector;
   }
+
+  // Data-attribute-marked part: a bare part key lowers to the marker selector
+  // instead of `.<prefix>__<part>`, because that is what the emitters actually
+  // render. Checked before the compound/qualified branches so it only ever
+  // intercepts the bare part name an author writes as a styles key.
+  const surfacePartSelector = surfacePartSelectors?.[key.trim()];
+  if (surfacePartSelector) return surfacePartSelector;
 
   const isCompound =
     /[\s+~>]/.test(key) ||
@@ -4726,9 +4780,7 @@ function buildTokenScopes(
         : expandStylesKey(
             key,
             cssPrefix,
-            contract.portal?.enabled === true
-              ? { portalContentSelector: `[data-${cssPrefix}-content]` }
-              : undefined,
+            expandOptionsForContract(contract, cssPrefix),
           );
     const scope = tokenScopeKeyFromSelector(selector, cssPrefix);
     for (const [property, entry] of Object.entries(rawBlock)) {

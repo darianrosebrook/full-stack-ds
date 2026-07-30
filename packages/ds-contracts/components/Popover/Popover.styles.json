@@ -1,29 +1,5 @@
 {
   "root": {
-    "padding": {
-      "resolvesTo": "popover.size.padding.default",
-      "fallback": "16px"
-    },
-    "border-radius": {
-      "resolvesTo": "popover.size.radius.default",
-      "fallback": "6px"
-    },
-    "gap": {
-      "resolvesTo": "popover.size.gap.default",
-      "fallback": "8px"
-    },
-    "background-color": {
-      "resolvesTo": "popover.color.background.content",
-      "fallback": "#d0d0d0"
-    },
-    "border-color": {
-      "resolvesTo": "popover.color.border.accent",
-      "fallback": "#d92d2e"
-    },
-    "box-shadow": {
-      "resolvesTo": "popover.elevation.default",
-      "fallback": "0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1)"
-    },
     "position": {
       "literal": "relative",
       "platforms": [
@@ -39,7 +15,7 @@
       ]
     }
   },
-  ".popover [data-popover-trigger]": {
+  "trigger": {
     "display": {
       "literal": "inline-flex",
       "platforms": [
@@ -59,7 +35,7 @@
       ]
     }
   },
-  "[data-popover-content]": {
+  "content": {
     "background-color": {
       "resolvesTo": "popover.color.background.content",
       "fallback": "#d0d0d0"

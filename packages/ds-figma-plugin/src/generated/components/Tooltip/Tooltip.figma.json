@@ -208,14 +208,14 @@
         }
       },
       {
-        "selector": ".tooltip__trigger",
+        "selector": ".tooltip [data-tooltip-trigger]",
         "declarations": {
           "display": "inline-flex",
           "align-items": "center"
         }
       },
       {
-        "selector": ".tooltip__content",
+        "selector": "[data-tooltip-content]",
         "declarations": {
           "background-color": "var(--fsds-tooltip-color-background-default, #141414)",
           "color": "var(--fsds-tooltip-color-foreground-default, #fafafa)",
