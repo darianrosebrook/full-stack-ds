@@ -1,0 +1,31 @@
+id: FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01
+title: 'Every declared component slot owes a binding — reread the dead-slot ledger as interface completeness'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-30T04:49:59.373Z'
+updated_at: '2026-07-30T04:49:59.373Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/dead-slot-audit'
+    - 'packages/ds-contracts/components'
+    - 'docs/architecture/tokens-architecture.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a contract declares a component slot; when the audit runs; then the slot is reported as unbound interface rather than dead drift, and the ledger shrinks by binding not by deletion'
+non_functional: {}
+contracts:
+  - name: 'dead-slot-audit'
+    type: behavior
+    path: 'scripts/dead-slot-audit/audit.mjs'
