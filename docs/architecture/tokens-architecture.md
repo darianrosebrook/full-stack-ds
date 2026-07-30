@@ -4,10 +4,11 @@ authority: architecture
 status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
-updated: 2026-05-21
-verified_at_commit: c02cfc0
+updated: 2026-07-30
+verified_at_commit: 652a157f
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
+  - src/components/properties-panel/**
   - packages/ds-tokens/build/**
   - packages/ds-tokens/generated/tokens.css
   - packages/ds-codegen/src/validation/tokens.ts
@@ -75,6 +76,110 @@ Contracts are **not** allowed to: invent token names that don't exist in the gra
 ### Validator owns the contracts ↔ graph invariant, not generation policy
 
 `validateContractTokens` (`packages/ds-codegen/src/validation/tokens.ts`) loads the composed tree, projects every `$value`-bearing leaf to a dot-path, walks every contract's `tokens.*` tree, and reports DRIFT for any `resolvesTo` that isn't in the projected set. It does **not** decide what tokens should exist, which `fallback` is correct, or what `property` a token binds to. It only proves the path the contract names is a path the graph defines.
+
+## The consumption model: what each token scope is FOR
+
+The authority split above says who *owns* each stage of the pipeline. This section
+says what each token scope is *for* from the consumer's side — who invokes it, and
+therefore what "declared but unreferenced" means in that scope. The two are
+different questions, and conflating them produces gates that measure the wrong
+thing.
+
+| Scope | Its consumer | Invoked by | "Declared but unreferenced" means |
+|---|---|---|---|
+| **base + semantic** (`tokens.css`) | the system | a contract names the path in `resolvesTo` | vocabulary nobody has drawn from yet. Normal. |
+| **component-scoped** (`<Name>.tokens.json`) | the design tool | overriding the custom property on an instance | the override **interface is not wired yet**. A gap, not drift. |
+| **brand-scoped** (`src/brands/<id>.tokens.json`) | the system's user | a family override, a single-token override, or a palette/ramp declared for later use | an offering nobody has drawn from yet. Normal, and explicitly expected. |
+
+Three consequences follow, and each one is a different gate.
+
+### A declaration is vocabulary when it is inert until invoked
+
+The defect is never "declared and unused." It is **advertised as usable and inert
+when used.**
+
+- `color.palette.pink.300` with no referrer is a word in the dictionary. Nothing
+  observes it until something references it, and then it resolves. Legitimate.
+- A component variant or state axis declared with no realizing CSS is *already in
+  the public API* — it surfaces as a prop and as a control in the showcase. A
+  consumer can select it and nothing happens. That is a broken promise, not unused
+  vocabulary.
+
+The distinguishing test is whether the declaration is **reachable by a consumer
+before anyone wires it.** Palette stops are not; props and editor controls are.
+
+### Base + semantic: gate resolvability, not reference count
+
+For a vocabulary layer, "how much of it is in use" is not a health signal. The
+health signal is the inverse: **every reference must resolve.** An unresolvable
+reference silently falls back to its literal, which makes the token layer
+decorative for that binding while leaving every other gate green.
+
+This is why the non-negotiable invariant above is stated in the resolvability
+direction, and it is the direction the gates should extend in — see
+`RAIL-TOKEN-REFERENCE-RESOLVABILITY-01`.
+
+### Component-scoped: the slot is the interface, so the binding is the obligation
+
+A component-scoped slot exists to be the design tool's override point. Its
+declaration is legitimate on its own terms. But an override is only live if some
+rule **reads** the custom property, so a declared slot with no binding is an
+interface that is not yet wired.
+
+Two pools behave differently here, and the difference is load-bearing:
+
+- **Box-model pool** — wired by construction. `renderBoxModelConsumers` emits a
+  `var()` consumer for every pool slot on every component root, so adding a slot to
+  the pool makes it genuinely settable-later by anyone, with no authoring.
+- **Component-local slots** — wired only when a `styles.json` entry binds them.
+  Their names are semantic role paths (`button.color.background.default`), not CSS
+  properties, so no generic auto-consumption is derivable. The binding must be
+  declared.
+
+Therefore: **extend the pool, or declare the binding. Declaring a component-local
+slot and expecting to wire it later does not give the design tool anything.**
+
+The corollary constrains the editor. Control derivation must not offer a control it
+cannot prove is read — see `FIX-EDITOR-CONTROL-BINDING-PROOF-01` — and the audit of
+unbound slots is an interface-completeness obligation, not a deletion list, see
+`FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01`.
+
+### Brand-scoped: may declare ahead of use, must still resolve
+
+The brand layer's job is identity — hue, type family, radius character, motion
+feel. It may legitimately declare a family override, a single token, or a whole
+ramp intended for later use. A ramp shipped for later use is unreferenced *by
+definition*, so usage-gating this scope contradicts one of its stated purposes.
+What the brand layer does owe is resolvability, which `tokens:check-brand-refs`
+already enforces.
+
+Two limits on the brand layer, both incident-derived:
+
+- **A brand sets identity, never per-component geometry.** Geometry is morphology —
+  a property of what the thing *is*, shared across brands. A brand that had to
+  declare geometry per component would be a fork, not a theme, and every new
+  component would become a migration across every brand.
+- **A brand must not reach past a semantic role into a value another role depends
+  on.** Re-pointing `action.background.primary` at the same core token
+  `action.background.danger` uses collapses two opposed intents onto one value; the
+  cascade makes the brand win and no contrast gate can see it, because both sides
+  are individually legible.
+
+### What the absence of a token restricts
+
+Absence of a token for a design decision restricts three things:
+
+1. **What a designer can express in the editor.** The properties panel derives its
+   controls from the token surface. No token, no control, drop to code.
+2. **What survives the Figma round-trip.** The descriptor target emits from IR
+   facts; a decision with no token is lost or frozen as a literal, silently.
+3. **What can vary per brand or theme.** With no token the value is a literal in a
+   `styles.json` and cannot be re-pointed, so the axis is frozen system-wide.
+
+It does **not** restrict the rendered result — the literal can always be
+hardcoded. Absence never blocks shipping a look; it removes that look from
+governance. That asymmetry is why this particular debt accumulates without
+anything appearing broken.
 
 ## The non-negotiable invariant
 
@@ -209,8 +314,8 @@ The byte-compare script remains in the tree for re-running if the graph or contr
 |---|---|---|---|
 | `@layer core` | `src/*/core/*.tokens.json` | `:root` | Primitives — palette, raw scales, font weights, shape primitives. Should not reference anything; should be referenced. |
 | `@layer semantic` | `src/*/semantic/*.tokens.json` | `:root` | Named aliases of core primitives — `foreground.primary`, `radius.medium`, `gap.grid`. References core via `{path}`. This is what contracts almost always cite. |
-| `@layer theme` | `$extensions.fsds.{light,dark}` on any token | `.light`, `.dark`, `@media (prefers-color-scheme: dark) :root` | Light/dark variants. Currently empty for our tokens (no contract uses theme extensions); reserved for future dark-mode support. |
-| `@layer brand` | `src/brands/<id>.tokens.json` | `[data-brand="<id>"]` | Brand-identity overrides. Each brand redeclares the semantic tokens it wants to differ. Currently 1 brand (`default`, 47 overrides). |
+| `@layer theme` | `$extensions.fsds.{light,dark}` on any token | `.light`, `.dark`, `@media (prefers-color-scheme: dark) :root` | Light/dark variants. Live and load-bearing — theme-flipping pairs must mirror each other, or a surface and its label can both be legible alone and invisible together. |
+| `@layer brand` | `src/brands/<id>.tokens.json` | `[data-brand="<id>"]` | Brand-identity overrides. Each brand redeclares the semantic tokens it wants to differ. Ten brands: `default`, `canary`, `corporate`, `developer`, `fintech`, `forest`, `marketplace`, `monochrome`, `quickserve`, `streaming`. |
 | `@layer density` | `src/density/<id>.tokens.json` | `[data-density="<id>"]` | Content-density overrides. Each density redeclares the semantic spacing tokens it wants to differ. Currently 4 densities (`tight`, `compact`, `default`, `spacious`, 14 overrides each). |
 
 ### Adjacent: per-component slot pools
