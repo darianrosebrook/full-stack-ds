@@ -7,7 +7,8 @@ created_at: '2026-07-30T04:49:59.373Z'
 updated_at: '2026-07-30T04:49:59.373Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'scripts/dead-slot-audit/{audit.mjs,disposition.mjs,known-dead.json}'
+    - 'packages/ds-contracts/components/*/*.styles.json (the bindings themselves)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,12 +19,63 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - >-
+    A component-scoped slot is the design-tool override interface. A declared slot
+    with no binding is therefore an INTERFACE NOT YET WIRED, not drift to delete.
+    The ledger shrinks by binding slots, and only by deletion where the slot names
+    a property the component has no business owning.
+  - >-
+    This supersedes the framing the ledger was seeded with. The seeding argument was
+    "nothing reads it, so it is not an override escape hatch, so it is a defect in
+    the public override API." The mechanism claim is correct — an unread custom
+    property does nothing. The CONCLUSION was wrong: it treated the declaration as
+    the defect when the missing binding is the defect. Consistently applied, the old
+    reasoning would also condemn an unreferenced palette stop, which is plainly
+    legitimate vocabulary.
+  - >-
+    Disposition changes that follow: `review` (66) is mostly "bind it", not "await
+    human adjudication"; `delete` (10) must clear a higher bar — the property is not
+    part of the component's design surface at all, not merely unwired; `wire` (19)
+    was always right. `shadowed` (17) is reclassified pending
+    FIX-EDITOR-CONTROL-BINDING-PROOF-01 A3: if the editor binds a shadowed pool slot
+    instead of the live component slot, "inert by design" is wrong and they are
+    mis-bound controls.
+  - >-
+    The audit's scan definition does NOT widen to <Name>.tokens.css declarations. A
+    redefinition is not a binding; widening it would mass-false-green the entire
+    class. This was an explicit invariant of the original rail and it survives the
+    reframing.
+  - >-
+    Binding a slot is a real styling decision and can move rendered output. Any
+    binding that changes a computed value is called out with its before/after, not
+    folded into a bulk "wired N slots" claim.
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given a contract declares a component slot; when the audit runs; then the slot is reported as unbound interface rather than dead drift, and the ledger shrinks by binding not by deletion'
+    given: 'The dead-slot audit and its 115-entry ledger'
+    when: 'the reframing lands'
+    then: >-
+      output and ledger notes describe unbound interface, the disposition set is
+      re-derived under the higher deletion bar, and every re-disposition is
+      machine-computed rather than hand-edited.
+  - id: A2
+    given: 'A slot bound by this slice'
+    when: 'the corpus is regenerated'
+    then: >-
+      a rule reads it, the editor control for it moves the computed style in a
+      browser, and any changed computed value is reported before/after.
+  - id: A3
+    given: 'A slot proposed for deletion'
+    when: 'the disposition is assigned'
+    then: >-
+      positive evidence is recorded that the property is outside the component's
+      design surface — an unrendered part, or an axis the component has no prop for.
+      "Nothing reads it" alone is NOT sufficient grounds under the new framing.
+  - id: A4
+    given: 'The two-directional ledger ratchet'
+    when: 'the audit runs after the reframing'
+    then: >-
+      it still fails on both an unledgered entry and a stale entry; the reframing
+      changes the interpretation and the dispositions, never the strictness.
 non_functional: {}
 contracts:
   - name: 'dead-slot-audit'

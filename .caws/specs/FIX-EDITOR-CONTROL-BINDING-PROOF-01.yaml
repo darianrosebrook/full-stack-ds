@@ -7,7 +7,9 @@ created_at: '2026-07-30T04:49:21.152Z'
 updated_at: '2026-07-30T04:49:21.152Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'src/components/properties-panel/control-derivation.ts (resolveBoxModel, ROLE_MATCHERS)'
+    - 'src/components/properties-panel/{BoxModelEditor,PropertiesPanel}.tsx'
+    - 'packages/ds-codegen/src/ir.ts (expose which slots a rule reads, if not already derivable)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,12 +19,55 @@ scope:
     - 'docs/architecture/tokens-architecture.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - >-
+    A component-scoped token IS the design-tool override interface — that is its
+    purpose, and its declaration is legitimate whether or not it is wired yet. The
+    defect is not the declaration; it is the EDITOR claiming a control it cannot
+    honour. Fix the derivation, do not delete the slots.
+  - >-
+    resolveBoxModel (control-derivation.ts:467-511) derives controls from slot NAME
+    patterns — first regex match per role, with a used-set to avoid double-binding.
+    It never checks whether any rule reads the slot it picked, so it renders a
+    control on the strength of a name. 115 slots corpus-wide are read by var() in
+    zero rules, so any control resolving to one of those is dead on arrival.
+  - >-
+    An override is only live if some rule READS the custom property. The box-model
+    pool is wired by construction (renderBoxModelConsumers emits a consumer for
+    every pool slot on every root); component-scoped slots are wired only when a
+    styles.json entry binds them. The editor must distinguish these two cases
+    rather than assuming a declared slot is settable.
+  - >-
+    A dead knob is worse than an absent one: it teaches the designer the system is
+    broken and costs a debugging session to disprove. Prefer omitting or explicitly
+    marking a control over rendering one that silently does nothing.
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given a component slot no CSS rule reads; when the properties panel derives its controls; then no editable control is offered for that slot, or it is marked unwired'
+    given: 'A component slot that no CSS rule reads (one of the 115 measured)'
+    when: 'the properties panel derives its controls'
+    then: >-
+      no editable control is offered for it, or it is rendered explicitly as
+      unwired. Verified in a browser by changing the control and asserting the
+      computed style does NOT move — the pre-fix behaviour, which must now be
+      unreachable.
+  - id: A2
+    given: 'A component slot that a rule does read'
+    when: 'the panel derives its controls'
+    then: >-
+      the control is offered AND changing it moves the computed style. Both
+      directions measured, so the fix cannot be satisfied by hiding everything.
+  - id: A3
+    given: 'A component declaring both box-model.gap and <prefix>.size.gap.default'
+    when: 'resolveBoxModel picks a slot for the gap role'
+    then: >-
+      it binds the slot that actually wins the cascade, not merely the first name
+      match in row order. This is an UNVERIFIED risk as of spec authoring — row
+      ordering was not checked — so the first task is to determine whether any of
+      the 17 shadowed entries is currently mis-bound, and report the finding either
+      way rather than assuming.
+  - id: A4
+    given: 'The derivation logic'
+    when: 'a mutation removes the read-proof check'
+    then: 'a test fails naming the component and slot that regained a dead control.'
 non_functional: {}
 contracts:
   - name: 'control-derivation'
