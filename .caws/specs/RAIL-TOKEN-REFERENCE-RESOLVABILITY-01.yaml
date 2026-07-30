@@ -5,7 +5,7 @@ mode: refactor
 lifecycle_state: active
 worktree: token-resolvability
 created_at: '2026-07-30T04:48:46.543Z'
-updated_at: '2026-07-30T14:50:23.979Z'
+updated_at: '2026-07-30T15:12:08.896Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/build/runners/usage.ts (gate mode)'
@@ -27,6 +27,7 @@ scope:
     - docs/token-resolvability-audit
     - docs/current-implementation-snapshot.md
     - packages/ds-tokens/package.json
+    - scripts/prepush-scope.test.mjs
   out: []
 invariants:
   - >-
