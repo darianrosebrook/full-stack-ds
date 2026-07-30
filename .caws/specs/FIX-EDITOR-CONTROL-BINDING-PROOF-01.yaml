@@ -1,0 +1,30 @@
+id: FIX-EDITOR-CONTROL-BINDING-PROOF-01
+title: 'The properties editor must only surface controls whose slot is provably read'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-07-30T04:49:21.152Z'
+updated_at: '2026-07-30T04:49:21.152Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'src/components/properties-panel'
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'docs/architecture/tokens-architecture.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a component slot no CSS rule reads; when the properties panel derives its controls; then no editable control is offered for that slot, or it is marked unwired'
+non_functional: {}
+contracts:
+  - name: 'control-derivation'
+    type: behavior
+    path: 'src/components/properties-panel/control-derivation.ts'
