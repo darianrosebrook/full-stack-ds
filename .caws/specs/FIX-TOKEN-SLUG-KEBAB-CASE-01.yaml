@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: token-slug-kebab
 created_at: '2026-07-30T15:14:39.892Z'
-updated_at: '2026-07-30T16:36:37.396Z'
+updated_at: '2026-07-30T17:03:39.097Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/ir.ts (tokenSlug — the emit side of the seam)'
@@ -28,6 +28,7 @@ scope:
     - docs/token-resolvability-audit
     - docs/architecture/tokens-architecture.md
     - packages/ds-codegen/src
+    - packages/ds-contracts/components
   out: []
 invariants:
   - >-
