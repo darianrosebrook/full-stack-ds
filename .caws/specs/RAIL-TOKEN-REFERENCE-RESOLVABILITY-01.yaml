@@ -4,7 +4,7 @@ risk_tier: 2
 mode: refactor
 lifecycle_state: active
 created_at: '2026-07-30T04:48:46.543Z'
-updated_at: '2026-07-30T04:48:46.543Z'
+updated_at: '2026-07-30T14:50:23.979Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/build/runners/usage.ts (gate mode)'
@@ -18,6 +18,14 @@ scope:
     - 'packages/ds-tokens/build/analytics/usageTracker.ts'
     - 'packages/ds-tokens/usage-baseline.json'
     - 'docs/architecture/tokens-architecture.md'
+    - scripts/token-resolvability-audit
+    - scripts/prepush-scope.mjs
+    - .githooks
+    - .github/workflows/ci.yml
+    - package.json
+    - docs/token-resolvability-audit
+    - docs/current-implementation-snapshot.md
+    - packages/ds-tokens/package.json
   out: []
 invariants:
   - >-
