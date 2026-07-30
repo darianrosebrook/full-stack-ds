@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: brand-personas-qa
 created_at: '2026-07-30T01:04:44.327Z'
-updated_at: '2026-07-30T01:04:44.327Z'
+updated_at: '2026-07-30T01:11:29.767Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/brands (targeted value fixes on the 5 personas from FEAT-BRAND-PERSONA-SCOPE-01, informed by full-grid visual QA)'
@@ -19,6 +19,7 @@ scope:
     - 'src/views/DisplayCaseView.tsx'
     - 'src/layout/Header.tsx'
     - 'tmp'
+    - packages/ds-tokens/build/generators/global.ts
   out: []
 invariants:
   - 'Fixes are confined to the 5 new personas (streaming/fintech/developer/quickserve/marketplace) and, if touched, the Display Case view — the 5 pre-existing brands (default/corporate/forest/canary/monochrome) are not modified by this pass.'
