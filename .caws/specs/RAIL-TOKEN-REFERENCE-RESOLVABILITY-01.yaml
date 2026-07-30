@@ -2,10 +2,11 @@ id: RAIL-TOKEN-REFERENCE-RESOLVABILITY-01
 title: 'Gate token health on reference resolvability, not reference count'
 risk_tier: 2
 mode: refactor
-lifecycle_state: active
-worktree: token-resolvability
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge token-resolvability at 45c00b1037aca3d81cfa491f2f8dbb3c657a8520'
 created_at: '2026-07-30T04:48:46.543Z'
-updated_at: '2026-07-30T15:18:05.683Z'
+updated_at: '2026-07-30T15:21:50.450Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/build/runners/usage.ts (gate mode)'
