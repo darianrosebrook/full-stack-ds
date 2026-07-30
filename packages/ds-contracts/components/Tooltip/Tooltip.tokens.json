@@ -35,7 +35,7 @@
     "layer": "semantic"
   },
   "tooltip.color.foreground.default": {
-    "resolvesTo": "semantic.color.foreground.inverse",
+    "resolvesTo": "semantic.color.foreground.on-inverse",
     "fallback": "#fafafa",
     "layer": "semantic"
   },

@@ -293,7 +293,16 @@
           "fsds.light": "{color.mode.light}",
           "fsds.dark": "{color.mode.light}"
         },
-        "$description": "Inverse foreground color — the label color used INSIDE colored action surfaces (primary/danger buttons). The colored surface keeps its hue across light and dark themes, so the inverse label stays light in both. NOT the inverse of foreground.primary — use color.mode.dark/light directly for that."
+        "$description": "Inverse foreground color — the label color used INSIDE colored action surfaces (primary/danger buttons). The colored surface keeps its hue across light and dark themes, so the inverse label stays light in both. NOT the inverse of foreground.primary — use foreground.on-inverse for a surface painted background.inverse."
+      },
+      "on-inverse": {
+        "$type": "color",
+        "$value": "{color.mode.light}",
+        "$extensions": {
+          "fsds.light": "{color.mode.light}",
+          "fsds.dark": "{color.mode.dark}"
+        },
+        "$description": "Label color for a surface painted background.inverse (tooltips, inverted callouts). background.inverse flips per theme — mode.dark in light, mode.light in dark — so this flips the OPPOSITE way to stay readable. Pair the two together. Do NOT use foreground.inverse here: it is light in both themes, which renders light-on-light in dark mode."
       }
     }
   }
