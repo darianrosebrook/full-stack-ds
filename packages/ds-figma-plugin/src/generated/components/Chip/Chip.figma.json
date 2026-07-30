@@ -286,7 +286,7 @@
           "--fsds-chip-size-padding-vertical": "var(--fsds-core-spacing-size-02, 2px)",
           "--fsds-chip-size-gap": "var(--fsds-core-spacing-size-02, 2px)",
           "--fsds-chip-size-radius": "var(--fsds-semantic-shape-control-radius-pill, 9999px)",
-          "--fsds-chip-size-border": "var(--fsds-semantic-shape-control-border-defaultWidth, 1px)",
+          "--fsds-chip-size-border": "var(--fsds-semantic-shape-control-border-default-width, 1px)",
           "--fsds-chip-text-size": "var(--fsds-semantic-typography-body-04, 12px)",
           "--fsds-chip-text-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
           "--fsds-chip-motion-duration-fast": "var(--fsds-core-motion-duration-short, 150ms)",
@@ -294,7 +294,7 @@
           "--fsds-chip-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0566fe)",
           "--fsds-chip-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
           "--fsds-chip-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
-          "--fsds-chip-size-minHeight": "var(--fsds-core-dimension-actionMinHeight, 36px)",
+          "--fsds-chip-size-min-height": "var(--fsds-core-dimension-action-min-height, 36px)",
           "--fsds-chip-color-background-selected": "var(--fsds-semantic-color-background-info-subtle, #95dafb)",
           "--fsds-chip-color-foreground-selected": "var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0)",
           "--fsds-chip-color-border-selected": "var(--fsds-semantic-color-border-info, #034fd6)",
@@ -309,7 +309,7 @@
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",
           "height": "var(--fsds-box-model-height)",
-          "min-height": "var(--fsds-chip-size-minHeight, 36px)",
+          "min-height": "var(--fsds-chip-size-min-height, 36px)",
           "max-height": "var(--fsds-box-model-max-height)",
           "display": "inline-flex",
           "align-items": "center",
@@ -413,31 +413,31 @@
       {
         "selector": ".chip--small",
         "declarations": {
-          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-sm-paddingY, 2px)",
-          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-sm-paddingX, 4px)",
-          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-sm-fontSize, 10px)",
+          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-sm-padding-y, 2px)",
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-sm-padding-x, 4px)",
+          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-sm-font-size, 10px)",
           "--fsds-chip-size-gap": "var(--fsds-semantic-glyph-badge-size-sm-gap, 2px)",
-          "--fsds-chip-size-minHeight": "var(--fsds-semantic-glyph-badge-size-sm-minHeight, 16px)"
+          "--fsds-chip-size-min-height": "var(--fsds-semantic-glyph-badge-size-sm-min-height, 16px)"
         }
       },
       {
         "selector": ".chip--medium",
         "declarations": {
-          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px)",
-          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px)",
-          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px)",
+          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-md-padding-y, 2px)",
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-md-padding-x, 8px)",
+          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-md-font-size, 12px)",
           "--fsds-chip-size-gap": "var(--fsds-semantic-glyph-badge-size-md-gap, 4px)",
-          "--fsds-chip-size-minHeight": "var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px)"
+          "--fsds-chip-size-min-height": "var(--fsds-semantic-glyph-badge-size-md-min-height, 24px)"
         }
       },
       {
         "selector": ".chip--large",
         "declarations": {
-          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-lg-paddingY, 4px)",
-          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-lg-paddingX, 12px)",
-          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-lg-fontSize, 14px)",
+          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-lg-padding-y, 4px)",
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-lg-padding-x, 12px)",
+          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-lg-font-size, 14px)",
           "--fsds-chip-size-gap": "var(--fsds-semantic-glyph-badge-size-lg-gap, 4px)",
-          "--fsds-chip-size-minHeight": "var(--fsds-semantic-glyph-badge-size-lg-minHeight, 32px)"
+          "--fsds-chip-size-min-height": "var(--fsds-semantic-glyph-badge-size-lg-min-height, 32px)"
         }
       }
     ],

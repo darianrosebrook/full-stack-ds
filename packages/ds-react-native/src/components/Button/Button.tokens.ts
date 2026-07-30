@@ -186,13 +186,13 @@ export const buttonTokenScopes = {
     },
     "button.size.minHeight.medium": {
       name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-minHeight-medium",
+      cssVar: "--fsds-button-size-min-height-medium",
       ref: "core.dimension.actionMinHeight",
       fallback: 36,
     },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
-      cssVar: "--fsds-button-size-fontSize-medium",
+      cssVar: "--fsds-button-size-font-size-medium",
       ref: "semantic.typography.action.02",
       fallback: 16,
     },
@@ -242,13 +242,13 @@ export const buttonTokenScopes = {
     },
     "button.size.minHeight.medium": {
       name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-minHeight-medium",
+      cssVar: "--fsds-button-size-min-height-medium",
       ref: "core.dimension.actionMinHeightSmall",
       fallback: 28,
     },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
-      cssVar: "--fsds-button-size-fontSize-medium",
+      cssVar: "--fsds-button-size-font-size-medium",
       ref: "semantic.typography.action.03",
       fallback: 14,
     },
@@ -298,13 +298,13 @@ export const buttonTokenScopes = {
     },
     "button.size.minHeight.medium": {
       name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-minHeight-medium",
+      cssVar: "--fsds-button-size-min-height-medium",
       ref: "core.dimension.actionMinHeight",
       fallback: 36,
     },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
-      cssVar: "--fsds-button-size-fontSize-medium",
+      cssVar: "--fsds-button-size-font-size-medium",
       ref: "semantic.typography.action.02",
       fallback: 16,
     },
@@ -354,13 +354,13 @@ export const buttonTokenScopes = {
     },
     "button.size.minHeight.medium": {
       name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-minHeight-medium",
+      cssVar: "--fsds-button-size-min-height-medium",
       ref: "core.dimension.actionMinHeightLarge",
       fallback: 48,
     },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
-      cssVar: "--fsds-button-size-fontSize-medium",
+      cssVar: "--fsds-button-size-font-size-medium",
       ref: "semantic.typography.action.01",
       fallback: 18,
     },

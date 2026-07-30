@@ -28,7 +28,7 @@
         },
         {
           "slot": "accordion.spacing.paddingX",
-          "cssVar": "--fsds-accordion-spacing-paddingX",
+          "cssVar": "--fsds-accordion-spacing-padding-x",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -73,7 +73,7 @@
         },
         {
           "slot": "alert.typography.page.fontSize",
-          "cssVar": "--fsds-alert-typography-page-fontSize",
+          "cssVar": "--fsds-alert-typography-page-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -81,7 +81,7 @@
         },
         {
           "slot": "alert.typography.page.title.fontSize",
-          "cssVar": "--fsds-alert-typography-page-title-fontSize",
+          "cssVar": "--fsds-alert-typography-page-title-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -89,7 +89,7 @@
         },
         {
           "slot": "alert.typography.inline.fontSize",
-          "cssVar": "--fsds-alert-typography-inline-fontSize",
+          "cssVar": "--fsds-alert-typography-inline-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -150,7 +150,7 @@
         },
         {
           "slot": "alert-notice.typography.page.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-page-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -158,7 +158,7 @@
         },
         {
           "slot": "alert-notice.typography.page.title.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-page-title-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-title-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -166,7 +166,7 @@
         },
         {
           "slot": "alert-notice.typography.inline.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-inline-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-inline-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -216,7 +216,7 @@
         },
         {
           "slot": "button.size.minHeight.medium",
-          "cssVar": "--fsds-button-size-minHeight-medium",
+          "cssVar": "--fsds-button-size-min-height-medium",
           "source": "tokens",
           "status": "dead",
           "disposition": "unconsumed-vocabulary",
@@ -441,7 +441,7 @@
         },
         {
           "slot": "details.typography.fontSize.body",
-          "cssVar": "--fsds-details-typography-fontSize-body",
+          "cssVar": "--fsds-details-typography-font-size-body",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -449,7 +449,7 @@
         },
         {
           "slot": "details.typography.fontSize.compact",
-          "cssVar": "--fsds-details-typography-fontSize-compact",
+          "cssVar": "--fsds-details-typography-font-size-compact",
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
@@ -462,7 +462,7 @@
       "inert": [
         {
           "slot": "divider.size.thicknessThick",
-          "cssVar": "--fsds-divider-size-thicknessThick",
+          "cssVar": "--fsds-divider-size-thickness-thick",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -491,7 +491,7 @@
         },
         {
           "slot": "field.color.borderBold",
-          "cssVar": "--fsds-field-color-borderBold",
+          "cssVar": "--fsds-field-color-border-bold",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -544,7 +544,7 @@
         },
         {
           "slot": "image.typography.error.fontSize",
-          "cssVar": "--fsds-image-typography-error-fontSize",
+          "cssVar": "--fsds-image-typography-error-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -644,7 +644,7 @@
         },
         {
           "slot": "nav-list.size.fontSize.item",
-          "cssVar": "--fsds-nav-list-size-fontSize-item",
+          "cssVar": "--fsds-nav-list-size-font-size-item",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -652,7 +652,7 @@
         },
         {
           "slot": "nav-list.size.fontSize.groupLabel",
-          "cssVar": "--fsds-nav-list-size-fontSize-groupLabel",
+          "cssVar": "--fsds-nav-list-size-font-size-group-label",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -720,7 +720,7 @@
         },
         {
           "slot": "select.color.icon.isOpen",
-          "cssVar": "--fsds-select-color-icon-isOpen",
+          "cssVar": "--fsds-select-color-icon-is-open",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -749,7 +749,7 @@
         },
         {
           "slot": "sheet.color.backgroundHover",
-          "cssVar": "--fsds-sheet-color-backgroundHover",
+          "cssVar": "--fsds-sheet-color-background-hover",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -778,7 +778,7 @@
         },
         {
           "slot": "show-more.overlay.imageOverlay",
-          "cssVar": "--fsds-show-more-overlay-imageOverlay",
+          "cssVar": "--fsds-show-more-overlay-image-overlay",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -878,7 +878,7 @@
       "inert": [
         {
           "slot": "table.color.textMuted",
-          "cssVar": "--fsds-table-color-textMuted",
+          "cssVar": "--fsds-table-color-text-muted",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -886,7 +886,7 @@
         },
         {
           "slot": "table.spacing.sortGap",
-          "cssVar": "--fsds-table-spacing-sortGap",
+          "cssVar": "--fsds-table-spacing-sort-gap",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -894,7 +894,7 @@
         },
         {
           "slot": "table.size.cellHeight",
-          "cssVar": "--fsds-table-size-cellHeight",
+          "cssVar": "--fsds-table-size-cell-height",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -947,7 +947,7 @@
         },
         {
           "slot": "tabs.size.vertical.listWidth",
-          "cssVar": "--fsds-tabs-size-vertical-listWidth",
+          "cssVar": "--fsds-tabs-size-vertical-list-width",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1055,7 +1055,7 @@
         },
         {
           "slot": "truncate.color.foreground.linkHover",
-          "cssVar": "--fsds-truncate-color-foreground-linkHover",
+          "cssVar": "--fsds-truncate-color-foreground-link-hover",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1099,7 +1099,7 @@
         },
         {
           "slot": "accordion.spacing.paddingX",
-          "cssVar": "--fsds-accordion-spacing-paddingX",
+          "cssVar": "--fsds-accordion-spacing-padding-x",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1136,7 +1136,7 @@
         },
         {
           "slot": "alert.typography.page.fontSize",
-          "cssVar": "--fsds-alert-typography-page-fontSize",
+          "cssVar": "--fsds-alert-typography-page-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1144,7 +1144,7 @@
         },
         {
           "slot": "alert.typography.page.title.fontSize",
-          "cssVar": "--fsds-alert-typography-page-title-fontSize",
+          "cssVar": "--fsds-alert-typography-page-title-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1152,7 +1152,7 @@
         },
         {
           "slot": "alert.typography.inline.fontSize",
-          "cssVar": "--fsds-alert-typography-inline-fontSize",
+          "cssVar": "--fsds-alert-typography-inline-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1205,7 +1205,7 @@
         },
         {
           "slot": "alert-notice.typography.page.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-page-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1213,7 +1213,7 @@
         },
         {
           "slot": "alert-notice.typography.page.title.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-page-title-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-title-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1221,7 +1221,7 @@
         },
         {
           "slot": "alert-notice.typography.inline.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-inline-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-inline-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1263,7 +1263,7 @@
         },
         {
           "slot": "button.size.minHeight.medium",
-          "cssVar": "--fsds-button-size-minHeight-medium",
+          "cssVar": "--fsds-button-size-min-height-medium",
           "source": "tokens",
           "status": "dead",
           "disposition": "unconsumed-vocabulary",
@@ -1456,7 +1456,7 @@
         },
         {
           "slot": "details.typography.fontSize.body",
-          "cssVar": "--fsds-details-typography-fontSize-body",
+          "cssVar": "--fsds-details-typography-font-size-body",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1464,7 +1464,7 @@
         },
         {
           "slot": "details.typography.fontSize.compact",
-          "cssVar": "--fsds-details-typography-fontSize-compact",
+          "cssVar": "--fsds-details-typography-font-size-compact",
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
@@ -1477,7 +1477,7 @@
       "dead": [
         {
           "slot": "divider.size.thicknessThick",
-          "cssVar": "--fsds-divider-size-thicknessThick",
+          "cssVar": "--fsds-divider-size-thickness-thick",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1498,7 +1498,7 @@
         },
         {
           "slot": "field.color.borderBold",
-          "cssVar": "--fsds-field-color-borderBold",
+          "cssVar": "--fsds-field-color-border-bold",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1551,7 +1551,7 @@
         },
         {
           "slot": "image.typography.error.fontSize",
-          "cssVar": "--fsds-image-typography-error-fontSize",
+          "cssVar": "--fsds-image-typography-error-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1630,7 +1630,7 @@
         },
         {
           "slot": "nav-list.size.fontSize.item",
-          "cssVar": "--fsds-nav-list-size-fontSize-item",
+          "cssVar": "--fsds-nav-list-size-font-size-item",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1638,7 +1638,7 @@
         },
         {
           "slot": "nav-list.size.fontSize.groupLabel",
-          "cssVar": "--fsds-nav-list-size-fontSize-groupLabel",
+          "cssVar": "--fsds-nav-list-size-font-size-group-label",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1698,7 +1698,7 @@
         },
         {
           "slot": "select.color.icon.isOpen",
-          "cssVar": "--fsds-select-color-icon-isOpen",
+          "cssVar": "--fsds-select-color-icon-is-open",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1727,7 +1727,7 @@
         },
         {
           "slot": "sheet.color.backgroundHover",
-          "cssVar": "--fsds-sheet-color-backgroundHover",
+          "cssVar": "--fsds-sheet-color-background-hover",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1756,7 +1756,7 @@
         },
         {
           "slot": "show-more.overlay.imageOverlay",
-          "cssVar": "--fsds-show-more-overlay-imageOverlay",
+          "cssVar": "--fsds-show-more-overlay-image-overlay",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1856,7 +1856,7 @@
       "dead": [
         {
           "slot": "table.color.textMuted",
-          "cssVar": "--fsds-table-color-textMuted",
+          "cssVar": "--fsds-table-color-text-muted",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1864,7 +1864,7 @@
         },
         {
           "slot": "table.spacing.sortGap",
-          "cssVar": "--fsds-table-spacing-sortGap",
+          "cssVar": "--fsds-table-spacing-sort-gap",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1872,7 +1872,7 @@
         },
         {
           "slot": "table.size.cellHeight",
-          "cssVar": "--fsds-table-size-cellHeight",
+          "cssVar": "--fsds-table-size-cell-height",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -1917,7 +1917,7 @@
         },
         {
           "slot": "tabs.size.vertical.listWidth",
-          "cssVar": "--fsds-tabs-size-vertical-listWidth",
+          "cssVar": "--fsds-tabs-size-vertical-list-width",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2004,7 +2004,7 @@
         },
         {
           "slot": "truncate.color.foreground.linkHover",
-          "cssVar": "--fsds-truncate-color-foreground-linkHover",
+          "cssVar": "--fsds-truncate-color-foreground-link-hover",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2057,7 +2057,7 @@
         },
         {
           "slot": "accordion.color.textSecondary",
-          "cssVar": "--fsds-accordion-color-textSecondary",
+          "cssVar": "--fsds-accordion-color-text-secondary",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2095,7 +2095,7 @@
         },
         {
           "slot": "accordion.spacing.paddingX",
-          "cssVar": "--fsds-accordion-spacing-paddingX",
+          "cssVar": "--fsds-accordion-spacing-padding-x",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2103,7 +2103,7 @@
         },
         {
           "slot": "accordion.spacing.paddingY",
-          "cssVar": "--fsds-accordion-spacing-paddingY",
+          "cssVar": "--fsds-accordion-spacing-padding-y",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2121,19 +2121,19 @@
         },
         {
           "slot": "accordion.text.lineHeight",
-          "cssVar": "--fsds-accordion-text-lineHeight",
+          "cssVar": "--fsds-accordion-text-line-height",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "accordion.text.sizeContent",
-          "cssVar": "--fsds-accordion-text-sizeContent",
+          "cssVar": "--fsds-accordion-text-size-content",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "accordion.text.lineHeightContent",
-          "cssVar": "--fsds-accordion-text-lineHeightContent",
+          "cssVar": "--fsds-accordion-text-line-height-content",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2169,7 +2169,7 @@
         },
         {
           "slot": "accordion.color.textHover",
-          "cssVar": "--fsds-accordion-color-textHover",
+          "cssVar": "--fsds-accordion-color-text-hover",
           "source": "tokens",
           "status": "consumed"
         }
@@ -2273,13 +2273,13 @@
         },
         {
           "slot": "alert.typography.title.fontWeight",
-          "cssVar": "--fsds-alert-typography-title-fontWeight",
+          "cssVar": "--fsds-alert-typography-title-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "alert.typography.title.fontSize",
-          "cssVar": "--fsds-alert-typography-title-fontSize",
+          "cssVar": "--fsds-alert-typography-title-font-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2301,7 +2301,7 @@
         },
         {
           "slot": "alert.typography.page.fontSize",
-          "cssVar": "--fsds-alert-typography-page-fontSize",
+          "cssVar": "--fsds-alert-typography-page-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2309,7 +2309,7 @@
         },
         {
           "slot": "alert.typography.page.title.fontSize",
-          "cssVar": "--fsds-alert-typography-page-title-fontSize",
+          "cssVar": "--fsds-alert-typography-page-title-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2317,7 +2317,7 @@
         },
         {
           "slot": "alert.typography.inline.fontSize",
-          "cssVar": "--fsds-alert-typography-inline-fontSize",
+          "cssVar": "--fsds-alert-typography-inline-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2493,13 +2493,13 @@
         },
         {
           "slot": "alert-notice.typography.title.fontWeight",
-          "cssVar": "--fsds-alert-notice-typography-title-fontWeight",
+          "cssVar": "--fsds-alert-notice-typography-title-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "alert-notice.typography.title.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-title-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-title-font-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2521,7 +2521,7 @@
         },
         {
           "slot": "alert-notice.typography.page.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-page-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2529,7 +2529,7 @@
         },
         {
           "slot": "alert-notice.typography.page.title.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-page-title-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-page-title-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2537,7 +2537,7 @@
         },
         {
           "slot": "alert-notice.typography.inline.fontSize",
-          "cssVar": "--fsds-alert-notice-typography-inline-fontSize",
+          "cssVar": "--fsds-alert-notice-typography-inline-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2623,13 +2623,13 @@
         },
         {
           "slot": "avatar.typography.fontWeight.medium",
-          "cssVar": "--fsds-avatar-typography-fontWeight-medium",
+          "cssVar": "--fsds-avatar-typography-font-weight-medium",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "avatar.typography.fontFamily.sans",
-          "cssVar": "--fsds-avatar-typography-fontFamily-sans",
+          "cssVar": "--fsds-avatar-typography-font-family-sans",
           "source": "tokens",
           "status": "consumed"
         }
@@ -2687,25 +2687,25 @@
         },
         {
           "slot": "badge.size.paddingX",
-          "cssVar": "--fsds-badge-size-paddingX",
+          "cssVar": "--fsds-badge-size-padding-x",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "badge.size.paddingY",
-          "cssVar": "--fsds-badge-size-paddingY",
+          "cssVar": "--fsds-badge-size-padding-y",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "badge.size.fontSize",
-          "cssVar": "--fsds-badge-size-fontSize",
+          "cssVar": "--fsds-badge-size-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "badge.size.minHeight",
-          "cssVar": "--fsds-badge-size-minHeight",
+          "cssVar": "--fsds-badge-size-min-height",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2781,13 +2781,13 @@
         },
         {
           "slot": "blockquote.typography.fontStyle",
-          "cssVar": "--fsds-blockquote-typography-fontStyle",
+          "cssVar": "--fsds-blockquote-typography-font-style",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "blockquote.typography.fontWeight",
-          "cssVar": "--fsds-blockquote-typography-fontWeight",
+          "cssVar": "--fsds-blockquote-typography-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
@@ -2823,19 +2823,19 @@
         },
         {
           "slot": "blockquote.size.fontSize.sm",
-          "cssVar": "--fsds-blockquote-size-fontSize-sm",
+          "cssVar": "--fsds-blockquote-size-font-size-sm",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "blockquote.size.fontSize.md",
-          "cssVar": "--fsds-blockquote-size-fontSize-md",
+          "cssVar": "--fsds-blockquote-size-font-size-md",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "blockquote.size.fontSize.lg",
-          "cssVar": "--fsds-blockquote-size-fontSize-lg",
+          "cssVar": "--fsds-blockquote-size-font-size-lg",
           "source": "tokens",
           "status": "consumed"
         }
@@ -2875,7 +2875,7 @@
         },
         {
           "slot": "breadcrumbs.typography.lineHeight.collapse",
-          "cssVar": "--fsds-breadcrumbs-typography-lineHeight-collapse",
+          "cssVar": "--fsds-breadcrumbs-typography-line-height-collapse",
           "source": "tokens",
           "status": "consumed"
         },
@@ -3065,7 +3065,7 @@
         },
         {
           "slot": "button.size.minHeight.medium",
-          "cssVar": "--fsds-button-size-minHeight-medium",
+          "cssVar": "--fsds-button-size-min-height-medium",
           "source": "tokens",
           "status": "dead",
           "disposition": "unconsumed-vocabulary",
@@ -3073,7 +3073,7 @@
         },
         {
           "slot": "button.size.fontSize.medium",
-          "cssVar": "--fsds-button-size-fontSize-medium",
+          "cssVar": "--fsds-button-size-font-size-medium",
           "source": "tokens",
           "status": "consumed"
         }
@@ -3329,13 +3329,13 @@
         },
         {
           "slot": "card.typography.lineHeight.heading",
-          "cssVar": "--fsds-card-typography-lineHeight-heading",
+          "cssVar": "--fsds-card-typography-line-height-heading",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "card.typography.lineHeight.normal",
-          "cssVar": "--fsds-card-typography-lineHeight-normal",
+          "cssVar": "--fsds-card-typography-line-height-normal",
           "source": "tokens",
           "status": "consumed"
         },
@@ -3433,13 +3433,13 @@
         },
         {
           "slot": "card.color.statusAccent.default",
-          "cssVar": "--fsds-card-color-statusAccent-default",
+          "cssVar": "--fsds-card-color-status-accent-default",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "card.size.statusAccent.width",
-          "cssVar": "--fsds-card-size-statusAccent-width",
+          "cssVar": "--fsds-card-size-status-accent-width",
           "source": "tokens",
           "status": "consumed"
         },
@@ -3705,7 +3705,7 @@
         },
         {
           "slot": "chip.size.minHeight",
-          "cssVar": "--fsds-chip-size-minHeight",
+          "cssVar": "--fsds-chip-size-min-height",
           "source": "tokens",
           "status": "consumed"
         },
@@ -3867,13 +3867,13 @@
         },
         {
           "slot": "code-block.size.fontSize.default",
-          "cssVar": "--fsds-code-block-size-fontSize-default",
+          "cssVar": "--fsds-code-block-size-font-size-default",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "code-block.typography.lineHeight.default",
-          "cssVar": "--fsds-code-block-typography-lineHeight-default",
+          "cssVar": "--fsds-code-block-typography-line-height-default",
           "source": "tokens",
           "status": "consumed"
         }
@@ -3961,13 +3961,13 @@
         },
         {
           "slot": "code-snippet.size.fontSize.default",
-          "cssVar": "--fsds-code-snippet-size-fontSize-default",
+          "cssVar": "--fsds-code-snippet-size-font-size-default",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "code-snippet.typography.lineHeight.default",
-          "cssVar": "--fsds-code-snippet-typography-lineHeight-default",
+          "cssVar": "--fsds-code-snippet-typography-line-height-default",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4013,7 +4013,7 @@
         },
         {
           "slot": "command.color.borderLight",
-          "cssVar": "--fsds-command-color-borderLight",
+          "cssVar": "--fsds-command-color-border-light",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4025,7 +4025,7 @@
         },
         {
           "slot": "command.color.textMuted",
-          "cssVar": "--fsds-command-color-textMuted",
+          "cssVar": "--fsds-command-color-text-muted",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4043,19 +4043,19 @@
         },
         {
           "slot": "command.size.maxWidth",
-          "cssVar": "--fsds-command-size-maxWidth",
+          "cssVar": "--fsds-command-size-max-width",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "command.size.maxHeight",
-          "cssVar": "--fsds-command-size-maxHeight",
+          "cssVar": "--fsds-command-size-max-height",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "command.size.topOffset",
-          "cssVar": "--fsds-command-size-topOffset",
+          "cssVar": "--fsds-command-size-top-offset",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4067,7 +4067,7 @@
         },
         {
           "slot": "command.spacing.dialogPadding",
-          "cssVar": "--fsds-command-spacing-dialogPadding",
+          "cssVar": "--fsds-command-spacing-dialog-padding",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4079,7 +4079,7 @@
         },
         {
           "slot": "command.text.sizeSmall",
-          "cssVar": "--fsds-command-text-sizeSmall",
+          "cssVar": "--fsds-command-text-size-small",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4099,7 +4099,7 @@
         },
         {
           "slot": "command.color.backgroundHover",
-          "cssVar": "--fsds-command-color-backgroundHover",
+          "cssVar": "--fsds-command-color-background-hover",
           "source": "tokens",
           "status": "consumed"
         }
@@ -4195,13 +4195,13 @@
         },
         {
           "slot": "details.typography.lineHeight.body",
-          "cssVar": "--fsds-details-typography-lineHeight-body",
+          "cssVar": "--fsds-details-typography-line-height-body",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "details.typography.fontWeight.medium",
-          "cssVar": "--fsds-details-typography-fontWeight-medium",
+          "cssVar": "--fsds-details-typography-font-weight-medium",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4221,7 +4221,7 @@
         },
         {
           "slot": "details.typography.fontSize.body",
-          "cssVar": "--fsds-details-typography-fontSize-body",
+          "cssVar": "--fsds-details-typography-font-size-body",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -4229,7 +4229,7 @@
         },
         {
           "slot": "details.typography.fontSize.compact",
-          "cssVar": "--fsds-details-typography-fontSize-compact",
+          "cssVar": "--fsds-details-typography-font-size-compact",
           "source": "tokens",
           "status": "dead",
           "disposition": "wire",
@@ -4313,7 +4313,7 @@
         },
         {
           "slot": "dialog.size.sm.maxWidth",
-          "cssVar": "--fsds-dialog-size-sm-maxWidth",
+          "cssVar": "--fsds-dialog-size-sm-max-width",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4325,7 +4325,7 @@
         },
         {
           "slot": "dialog.size.md.maxWidth",
-          "cssVar": "--fsds-dialog-size-md-maxWidth",
+          "cssVar": "--fsds-dialog-size-md-max-width",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4337,7 +4337,7 @@
         },
         {
           "slot": "dialog.size.lg.maxWidth",
-          "cssVar": "--fsds-dialog-size-lg-maxWidth",
+          "cssVar": "--fsds-dialog-size-lg-max-width",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4349,7 +4349,7 @@
         },
         {
           "slot": "dialog.size.xl.maxWidth",
-          "cssVar": "--fsds-dialog-size-xl-maxWidth",
+          "cssVar": "--fsds-dialog-size-xl-max-width",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4367,7 +4367,7 @@
         },
         {
           "slot": "dialog.size.closeButton.size",
-          "cssVar": "--fsds-dialog-size-closeButton-size",
+          "cssVar": "--fsds-dialog-size-close-button-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4379,13 +4379,13 @@
         },
         {
           "slot": "dialog.spacing.header.paddingTop",
-          "cssVar": "--fsds-dialog-spacing-header-paddingTop",
+          "cssVar": "--fsds-dialog-spacing-header-padding-top",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "dialog.spacing.body.paddingRight",
-          "cssVar": "--fsds-dialog-spacing-body-paddingRight",
+          "cssVar": "--fsds-dialog-spacing-body-padding-right",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4397,19 +4397,19 @@
         },
         {
           "slot": "dialog.typography.title.fontSize",
-          "cssVar": "--fsds-dialog-typography-title-fontSize",
+          "cssVar": "--fsds-dialog-typography-title-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "dialog.typography.title.fontWeight",
-          "cssVar": "--fsds-dialog-typography-title-fontWeight",
+          "cssVar": "--fsds-dialog-typography-title-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "dialog.typography.title.lineHeight",
-          "cssVar": "--fsds-dialog-typography-title-lineHeight",
+          "cssVar": "--fsds-dialog-typography-title-line-height",
           "source": "tokens",
           "status": "consumed"
         }
@@ -4443,7 +4443,7 @@
         },
         {
           "slot": "divider.size.thicknessThick",
-          "cssVar": "--fsds-divider-size-thicknessThick",
+          "cssVar": "--fsds-divider-size-thickness-thick",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -4555,7 +4555,7 @@
         },
         {
           "slot": "field.color.borderBold",
-          "cssVar": "--fsds-field-color-borderBold",
+          "cssVar": "--fsds-field-color-border-bold",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -4619,7 +4619,7 @@
         },
         {
           "slot": "field.label.fontSize",
-          "cssVar": "--fsds-field-label-fontSize",
+          "cssVar": "--fsds-field-label-font-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -4731,7 +4731,7 @@
         },
         {
           "slot": "image.typography.error.fontSize",
-          "cssVar": "--fsds-image-typography-error-fontSize",
+          "cssVar": "--fsds-image-typography-error-font-size",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -5029,7 +5029,7 @@
         },
         {
           "slot": "label.typo.lineHeight.default",
-          "cssVar": "--fsds-label-typo-lineHeight-default",
+          "cssVar": "--fsds-label-typo-line-height-default",
           "source": "tokens",
           "status": "consumed"
         }
@@ -5125,19 +5125,19 @@
         },
         {
           "slot": "links.size.fontSize.small",
-          "cssVar": "--fsds-links-size-fontSize-small",
+          "cssVar": "--fsds-links-size-font-size-small",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "links.size.fontSize.medium",
-          "cssVar": "--fsds-links-size-fontSize-medium",
+          "cssVar": "--fsds-links-size-font-size-medium",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "links.size.fontSize.large",
-          "cssVar": "--fsds-links-size-fontSize-large",
+          "cssVar": "--fsds-links-size-font-size-large",
           "source": "tokens",
           "status": "consumed"
         }
@@ -5269,13 +5269,13 @@
         },
         {
           "slot": "nav-list.stateLayer.hover",
-          "cssVar": "--fsds-nav-list-stateLayer-hover",
+          "cssVar": "--fsds-nav-list-state-layer-hover",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "nav-list.stateLayer.selected",
-          "cssVar": "--fsds-nav-list-stateLayer-selected",
+          "cssVar": "--fsds-nav-list-state-layer-selected",
           "source": "tokens",
           "status": "consumed"
         },
@@ -5329,7 +5329,7 @@
         },
         {
           "slot": "nav-list.size.fontSize.item",
-          "cssVar": "--fsds-nav-list-size-fontSize-item",
+          "cssVar": "--fsds-nav-list-size-font-size-item",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -5337,7 +5337,7 @@
         },
         {
           "slot": "nav-list.size.fontSize.groupLabel",
-          "cssVar": "--fsds-nav-list-size-fontSize-groupLabel",
+          "cssVar": "--fsds-nav-list-size-font-size-group-label",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -5651,37 +5651,37 @@
         },
         {
           "slot": "postcard.typography.displayName.fontSize",
-          "cssVar": "--fsds-postcard-typography-displayName-fontSize",
+          "cssVar": "--fsds-postcard-typography-display-name-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "postcard.typography.displayName.fontWeight",
-          "cssVar": "--fsds-postcard-typography-displayName-fontWeight",
+          "cssVar": "--fsds-postcard-typography-display-name-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "postcard.typography.handle.fontSize",
-          "cssVar": "--fsds-postcard-typography-handle-fontSize",
+          "cssVar": "--fsds-postcard-typography-handle-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "postcard.typography.content.fontSize",
-          "cssVar": "--fsds-postcard-typography-content-fontSize",
+          "cssVar": "--fsds-postcard-typography-content-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "postcard.typography.content.lineHeight",
-          "cssVar": "--fsds-postcard-typography-content-lineHeight",
+          "cssVar": "--fsds-postcard-typography-content-line-height",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "postcard.typography.footer.fontSize",
-          "cssVar": "--fsds-postcard-typography-footer-fontSize",
+          "cssVar": "--fsds-postcard-typography-footer-font-size",
           "source": "tokens",
           "status": "consumed"
         }
@@ -5925,13 +5925,13 @@
         },
         {
           "slot": "select.font.lineHeight.default",
-          "cssVar": "--fsds-select-font-lineHeight-default",
+          "cssVar": "--fsds-select-font-line-height-default",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "select.color.icon.isOpen",
-          "cssVar": "--fsds-select-color-icon-isOpen",
+          "cssVar": "--fsds-select-color-icon-is-open",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -6033,13 +6033,13 @@
         },
         {
           "slot": "sheet.color.textTitle",
-          "cssVar": "--fsds-sheet-color-textTitle",
+          "cssVar": "--fsds-sheet-color-text-title",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "sheet.color.textDescription",
-          "cssVar": "--fsds-sheet-color-textDescription",
+          "cssVar": "--fsds-sheet-color-text-description",
           "source": "tokens",
           "status": "consumed"
         },
@@ -6093,13 +6093,13 @@
         },
         {
           "slot": "sheet.text.sizeTitle",
-          "cssVar": "--fsds-sheet-text-sizeTitle",
+          "cssVar": "--fsds-sheet-text-size-title",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "sheet.text.weightTitle",
-          "cssVar": "--fsds-sheet-text-weightTitle",
+          "cssVar": "--fsds-sheet-text-weight-title",
           "source": "tokens",
           "status": "consumed"
         },
@@ -6127,7 +6127,7 @@
         },
         {
           "slot": "sheet.color.backgroundHover",
-          "cssVar": "--fsds-sheet-color-backgroundHover",
+          "cssVar": "--fsds-sheet-color-background-hover",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -6233,7 +6233,7 @@
         },
         {
           "slot": "show-more.overlay.imageOverlay",
-          "cssVar": "--fsds-show-more-overlay-imageOverlay",
+          "cssVar": "--fsds-show-more-overlay-image-overlay",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -6543,7 +6543,7 @@
         },
         {
           "slot": "stat.typography.lineHeight.value",
-          "cssVar": "--fsds-stat-typography-lineHeight-value",
+          "cssVar": "--fsds-stat-typography-line-height-value",
           "source": "tokens",
           "status": "consumed"
         },
@@ -6627,13 +6627,13 @@
         },
         {
           "slot": "status.size.minHeight",
-          "cssVar": "--fsds-status-size-minHeight",
+          "cssVar": "--fsds-status-size-min-height",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "status.size.fontSize",
-          "cssVar": "--fsds-status-size-fontSize",
+          "cssVar": "--fsds-status-size-font-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -6651,7 +6651,7 @@
         },
         {
           "slot": "status.typography.lineHeight",
-          "cssVar": "--fsds-status-typography-lineHeight",
+          "cssVar": "--fsds-status-typography-line-height",
           "source": "tokens",
           "status": "consumed"
         }
@@ -6917,7 +6917,7 @@
         },
         {
           "slot": "table.color.textMuted",
-          "cssVar": "--fsds-table-color-textMuted",
+          "cssVar": "--fsds-table-color-text-muted",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -6943,13 +6943,13 @@
         },
         {
           "slot": "table.spacing.cellX",
-          "cssVar": "--fsds-table-spacing-cellX",
+          "cssVar": "--fsds-table-spacing-cell-x",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "table.spacing.cellY",
-          "cssVar": "--fsds-table-spacing-cellY",
+          "cssVar": "--fsds-table-spacing-cell-y",
           "source": "tokens",
           "status": "consumed"
         },
@@ -6961,7 +6961,7 @@
         },
         {
           "slot": "table.spacing.sortGap",
-          "cssVar": "--fsds-table-spacing-sortGap",
+          "cssVar": "--fsds-table-spacing-sort-gap",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -6969,7 +6969,7 @@
         },
         {
           "slot": "table.size.cellHeight",
-          "cssVar": "--fsds-table-size-cellHeight",
+          "cssVar": "--fsds-table-size-cell-height",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -6989,25 +6989,25 @@
         },
         {
           "slot": "table.text.lineHeight",
-          "cssVar": "--fsds-table-text-lineHeight",
+          "cssVar": "--fsds-table-text-line-height",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "table.text.sizeCaption",
-          "cssVar": "--fsds-table-text-sizeCaption",
+          "cssVar": "--fsds-table-text-size-caption",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "table.text.weightHead",
-          "cssVar": "--fsds-table-text-weightHead",
+          "cssVar": "--fsds-table-text-weight-head",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "table.text.weightFooter",
-          "cssVar": "--fsds-table-text-weightFooter",
+          "cssVar": "--fsds-table-text-weight-footer",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7079,13 +7079,13 @@
         },
         {
           "slot": "tabs.spacing.pillPadding",
-          "cssVar": "--fsds-tabs-spacing-pillPadding",
+          "cssVar": "--fsds-tabs-spacing-pill-padding",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "tabs.spacing.panelGap",
-          "cssVar": "--fsds-tabs-spacing-panelGap",
+          "cssVar": "--fsds-tabs-spacing-panel-gap",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7165,7 +7165,7 @@
         },
         {
           "slot": "tabs.size.vertical.listWidth",
-          "cssVar": "--fsds-tabs-size-vertical-listWidth",
+          "cssVar": "--fsds-tabs-size-vertical-list-width",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -7195,55 +7195,55 @@
         },
         {
           "slot": "text.typography.fontWeight.light",
-          "cssVar": "--fsds-text-typography-fontWeight-light",
+          "cssVar": "--fsds-text-typography-font-weight-light",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.fontWeight.regular",
-          "cssVar": "--fsds-text-typography-fontWeight-regular",
+          "cssVar": "--fsds-text-typography-font-weight-regular",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.fontWeight.medium",
-          "cssVar": "--fsds-text-typography-fontWeight-medium",
+          "cssVar": "--fsds-text-typography-font-weight-medium",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.fontWeight.bold",
-          "cssVar": "--fsds-text-typography-fontWeight-bold",
+          "cssVar": "--fsds-text-typography-font-weight-bold",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.lineHeight.heading",
-          "cssVar": "--fsds-text-typography-lineHeight-heading",
+          "cssVar": "--fsds-text-typography-line-height-heading",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.lineHeight.body",
-          "cssVar": "--fsds-text-typography-lineHeight-body",
+          "cssVar": "--fsds-text-typography-line-height-body",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.lineHeight.tight",
-          "cssVar": "--fsds-text-typography-lineHeight-tight",
+          "cssVar": "--fsds-text-typography-line-height-tight",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.letterSpacing.wide",
-          "cssVar": "--fsds-text-typography-letterSpacing-wide",
+          "cssVar": "--fsds-text-typography-letter-spacing-wide",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text.typography.letterSpacing.tight",
-          "cssVar": "--fsds-text-typography-letterSpacing-tight",
+          "cssVar": "--fsds-text-typography-letter-spacing-tight",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7399,31 +7399,31 @@
         },
         {
           "slot": "text-field.color.input.borderHover",
-          "cssVar": "--fsds-text-field-color-input-borderHover",
+          "cssVar": "--fsds-text-field-color-input-border-hover",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text-field.color.input.backgroundDisabled",
-          "cssVar": "--fsds-text-field-color-input-backgroundDisabled",
+          "cssVar": "--fsds-text-field-color-input-background-disabled",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text-field.color.input.textDisabled",
-          "cssVar": "--fsds-text-field-color-input-textDisabled",
+          "cssVar": "--fsds-text-field-color-input-text-disabled",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text-field.color.input.borderDisabled",
-          "cssVar": "--fsds-text-field-color-input-borderDisabled",
+          "cssVar": "--fsds-text-field-color-input-border-disabled",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "text-field.color.input.borderError",
-          "cssVar": "--fsds-text-field-color-input-borderError",
+          "cssVar": "--fsds-text-field-color-input-border-error",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7639,13 +7639,13 @@
         },
         {
           "slot": "toast.spacing.stackGap",
-          "cssVar": "--fsds-toast-spacing-stackGap",
+          "cssVar": "--fsds-toast-spacing-stack-gap",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "toast.size.maxWidth",
-          "cssVar": "--fsds-toast-size-maxWidth",
+          "cssVar": "--fsds-toast-size-max-width",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7883,13 +7883,13 @@
         },
         {
           "slot": "tooltip.size.maxWidth",
-          "cssVar": "--fsds-tooltip-size-maxWidth",
+          "cssVar": "--fsds-tooltip-size-max-width",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "tooltip.typography.fontSize",
-          "cssVar": "--fsds-tooltip-typography-fontSize",
+          "cssVar": "--fsds-tooltip-typography-font-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7931,7 +7931,7 @@
         },
         {
           "slot": "truncate.typography.fontWeight",
-          "cssVar": "--fsds-truncate-typography-fontWeight",
+          "cssVar": "--fsds-truncate-typography-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
@@ -7943,7 +7943,7 @@
         },
         {
           "slot": "truncate.color.foreground.linkHover",
-          "cssVar": "--fsds-truncate-color-foreground-linkHover",
+          "cssVar": "--fsds-truncate-color-foreground-link-hover",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -7999,13 +7999,13 @@
         },
         {
           "slot": "walkthrough.title.fontSize",
-          "cssVar": "--fsds-walkthrough-title-fontSize",
+          "cssVar": "--fsds-walkthrough-title-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
           "slot": "walkthrough.title.fontWeight",
-          "cssVar": "--fsds-walkthrough-title-fontWeight",
+          "cssVar": "--fsds-walkthrough-title-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
@@ -8017,7 +8017,7 @@
         },
         {
           "slot": "walkthrough.description.fontSize",
-          "cssVar": "--fsds-walkthrough-description-fontSize",
+          "cssVar": "--fsds-walkthrough-description-font-size",
           "source": "tokens",
           "status": "consumed"
         },
@@ -8029,7 +8029,7 @@
         },
         {
           "slot": "walkthrough.description.marginTop",
-          "cssVar": "--fsds-walkthrough-description-marginTop",
+          "cssVar": "--fsds-walkthrough-description-margin-top",
           "source": "tokens",
           "status": "consumed"
         },
@@ -8041,7 +8041,7 @@
         },
         {
           "slot": "walkthrough.controls.marginTop",
-          "cssVar": "--fsds-walkthrough-controls-marginTop",
+          "cssVar": "--fsds-walkthrough-controls-margin-top",
           "source": "tokens",
           "status": "consumed"
         },

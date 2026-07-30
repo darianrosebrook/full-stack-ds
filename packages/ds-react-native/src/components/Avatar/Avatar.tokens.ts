@@ -145,13 +145,13 @@ export const avatarTokenScopes = {
     },
     "avatar.typography.fontWeight.medium": {
       name: "avatar.typography.fontWeight.medium",
-      cssVar: "--fsds-avatar-typography-fontWeight-medium",
+      cssVar: "--fsds-avatar-typography-font-weight-medium",
       ref: "core.typography.weight.medium",
       fallback: "500",
     },
     "avatar.typography.fontFamily.sans": {
       name: "avatar.typography.fontFamily.sans",
-      cssVar: "--fsds-avatar-typography-fontFamily-sans",
+      cssVar: "--fsds-avatar-typography-font-family-sans",
       ref: "core.typography.font.family.sans",
       fallback: "\"Inter\", sans-serif",
     },

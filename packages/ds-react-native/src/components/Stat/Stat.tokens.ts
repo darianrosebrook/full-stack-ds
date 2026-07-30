@@ -138,7 +138,7 @@ export const statTokenScopes = {
     },
     "stat.typography.lineHeight.value": {
       name: "stat.typography.lineHeight.value",
-      cssVar: "--fsds-stat-typography-lineHeight-value",
+      cssVar: "--fsds-stat-typography-line-height-value",
       literal: "1.1",
     },
     "stat.typography.weight.value": {

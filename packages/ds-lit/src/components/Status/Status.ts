@@ -22,11 +22,11 @@ export class StatusElement extends LitElement {
     .status {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px);
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-glyph-badge-size-md-padding-y, 2px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-glyph-badge-size-md-padding-y, 2px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px);
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-glyph-badge-size-md-padding-x, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-glyph-badge-size-md-padding-x, 8px);
       --fsds-box-model-gap: var(--fsds-semantic-glyph-badge-size-md-gap, 4px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
@@ -38,11 +38,11 @@ export class StatusElement extends LitElement {
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-status-size-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
-      --fsds-status-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
-      --fsds-status-size-fontSize: var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px);
-      --fsds-status-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+      --fsds-status-size-min-height: var(--fsds-semantic-glyph-badge-size-md-min-height, 24px);
+      --fsds-status-size-font-size: var(--fsds-semantic-glyph-badge-size-md-font-size, 12px);
+      --fsds-status-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-status-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-status-typography-lineHeight: var(--fsds-semantic-typography-line-height-collapse, 1);
+      --fsds-status-typography-line-height: var(--fsds-semantic-typography-line-height-collapse, 1);
     }
 
     .status--info {
@@ -85,7 +85,7 @@ export class StatusElement extends LitElement {
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
       height: var(--fsds-box-model-height);
-      min-height: var(--fsds-status-size-minHeight, 24px);
+      min-height: var(--fsds-status-size-min-height, 24px);
       max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
@@ -98,9 +98,9 @@ export class StatusElement extends LitElement {
       border-color: var(--fsds-status-color-border-default, #d0d0d0);
       border-width: var(--fsds-status-size-border-default, 1px);
       border-radius: var(--fsds-status-size-radius-default, 9999px);
-      font-size: var(--fsds-status-size-fontSize, 12px);
+      font-size: var(--fsds-status-size-font-size, 12px);
       font-weight: var(--fsds-status-text-weight, 500);
-      line-height: var(--fsds-status-typography-lineHeight, 1);
+      line-height: var(--fsds-status-typography-line-height, 1);
     }
 
     .status__icon {

@@ -9,25 +9,25 @@ Components: **49** · slots declared: **894** · consumed: **780** · **inert: 1
 | component | slot | CSS var | disposition | evidence |
 |---|---|---|---|---|
 | Accordion | `accordion.border.width` | `--fsds-accordion-border-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Accordion | `accordion.spacing.paddingX` | `--fsds-accordion-spacing-paddingX` | `review` | no rule matched: "paddingX" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Accordion | `accordion.spacing.paddingX` | `--fsds-accordion-spacing-padding-x` | `review` | no rule matched: "paddingX" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Alert | `alert.icon.size` | `--fsds-alert-icon-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Alert | `alert.size.padding.inline` | `--fsds-alert-size-padding-inline` | `wire` | "inline" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Alert | `alert.size.padding.page` | `--fsds-alert-size-padding-page` | `wire` | "page" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Alert | `alert.typography.page.fontSize` | `--fsds-alert-typography-page-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Alert | `alert.typography.page.title.fontSize` | `--fsds-alert-typography-page-title-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Alert | `alert.typography.inline.fontSize` | `--fsds-alert-typography-inline-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `alert.typography.page.fontSize` | `--fsds-alert-typography-page-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `alert.typography.page.title.fontSize` | `--fsds-alert-typography-page-title-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Alert | `alert.typography.inline.fontSize` | `--fsds-alert-typography-inline-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | AlertNotice | `alert-notice.color.background.primary` | `--fsds-alert-notice-color-background-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | AlertNotice | `alert-notice.color.foreground.primary` | `--fsds-alert-notice-color-foreground-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | AlertNotice | `alert-notice.icon.size` | `--fsds-alert-notice-icon-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | AlertNotice | `alert-notice.size.padding.inline` | `--fsds-alert-notice-size-padding-inline` | `wire` | "inline" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | AlertNotice | `alert-notice.size.padding.page` | `--fsds-alert-notice-size-padding-page` | `wire` | "page" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| AlertNotice | `alert-notice.typography.page.fontSize` | `--fsds-alert-notice-typography-page-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| AlertNotice | `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| AlertNotice | `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.typography.page.fontSize` | `--fsds-alert-notice-typography-page-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| AlertNotice | `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Avatar | `avatar.color.background.inverse` | `--fsds-avatar-color-background-inverse` | `review` | no rule matched: "inverse" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Button | `button.size.padding-block.medium` | `--fsds-button-size-padding-block-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
 | Button | `button.size.padding-inline.medium` | `--fsds-button-size-padding-inline-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
-| Button | `button.size.minHeight.medium` | `--fsds-button-size-minHeight-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
+| Button | `button.size.minHeight.medium` | `--fsds-button-size-min-height-medium` | `unconsumed-vocabulary` | styles["--medium"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family |
 | Calendar | `calendar.color.border.accent` | `--fsds-calendar-color-border-accent` | `review` | no rule matched: "accent" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Calendar | `calendar.color.day.range.background` | `--fsds-calendar-color-day-range-background` | `review` | no rule matched: "background" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Calendar | `calendar.typography.weekday.size` | `--fsds-calendar-typography-weekday-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -48,17 +48,17 @@ Components: **49** · slots declared: **894** · consumed: **780** · **inert: 1
 | Chip | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Command | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | `wire` | "disabled" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Details | `details.size.padding.page` | `--fsds-details-size-padding-page` | `review` | no rule matched: "page" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Details | `details.typography.fontSize.body` | `--fsds-details-typography-fontSize-body` | `review` | no rule matched: "body" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Details | `details.typography.fontSize.compact` | `--fsds-details-typography-fontSize-compact` | `wire` | "compact" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Divider | `divider.size.thicknessThick` | `--fsds-divider-size-thicknessThick` | `review` | no rule matched: "thicknessThick" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Details | `details.typography.fontSize.body` | `--fsds-details-typography-font-size-body` | `review` | no rule matched: "body" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Details | `details.typography.fontSize.compact` | `--fsds-details-typography-font-size-compact` | `wire` | "compact" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
+| Divider | `divider.size.thicknessThick` | `--fsds-divider-size-thickness-thick` | `review` | no rule matched: "thicknessThick" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.pad.y` | `--fsds-field-pad-y` | `review` | no rule matched: "y" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Field | `field.color.borderBold` | `--fsds-field-color-borderBold` | `review` | no rule matched: "borderBold" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Field | `field.color.borderBold` | `--fsds-field-color-border-bold` | `review` | no rule matched: "borderBold" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.color.validating-border` | `--fsds-field-color-validating-border` | `review` | no rule matched: "validating-border" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.color.validating-text` | `--fsds-field-color-validating-text` | `review` | no rule matched: "validating-text" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.color.valid-text` | `--fsds-field-color-valid-text` | `review` | no rule matched: "valid-text" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.spacing.indicator` | `--fsds-field-spacing-indicator` | `review` | no rule matched: "indicator" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Image | `image.size.icon` | `--fsds-image-size-icon` | `review` | no rule matched: "icon" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Image | `image.typography.error.fontSize` | `--fsds-image-typography-error-fontSize` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Image | `image.typography.error.fontSize` | `--fsds-image-typography-error-font-size` | `review` | no rule matched: "fontSize" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Input | `input.space.inline.default` | `--fsds-input-space-inline-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Label | `label.typo.weight.default` | `--fsds-label-typo-weight-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
@@ -66,19 +66,19 @@ Components: **49** · slots declared: **894** · consumed: **780** · **inert: 1
 | NavList | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | `review` | no rule matched: "current" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | NavList | `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | `wire` | "focus" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.size.gap.group` | `--fsds-nav-list-size-gap-group` | `review` | no rule matched: "group" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| NavList | `nav-list.size.fontSize.item` | `--fsds-nav-list-size-fontSize-item` | `review` | no rule matched: "item" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| NavList | `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-fontSize-groupLabel` | `review` | no rule matched: "groupLabel" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| NavList | `nav-list.size.fontSize.item` | `--fsds-nav-list-size-font-size-item` | `review` | no rule matched: "item" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| NavList | `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-font-size-group-label` | `review` | no rule matched: "groupLabel" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | OTP | `otp.size.padding.default` | `--fsds-otp-size-padding-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Postcard | `postcard.size.radius.full` | `--fsds-postcard-size-radius-full` | `review` | no rule matched: "full" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | ProfileFlag | `profile-flag.spacing.padding.default` | `--fsds-profile-flag-spacing-padding-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Select | `select.color.icon.default` | `--fsds-select-color-icon-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Select | `select.color.icon.isOpen` | `--fsds-select-color-icon-isOpen` | `review` | no rule matched: "isOpen" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Select | `select.color.icon.isOpen` | `--fsds-select-color-icon-is-open` | `review` | no rule matched: "isOpen" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Sheet | `sheet.focus.width` | `--fsds-sheet-focus-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Sheet | `sheet.focus.color` | `--fsds-sheet-focus-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Sheet | `sheet.color.backgroundHover` | `--fsds-sheet-color-backgroundHover` | `review` | no rule matched: "backgroundHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Sheet | `sheet.color.backgroundHover` | `--fsds-sheet-color-background-hover` | `review` | no rule matched: "backgroundHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | ShowMore | `show-more.color.border.default` | `--fsds-show-more-color-border-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | ShowMore | `show-more.color.border.accent` | `--fsds-show-more-color-border-accent` | `review` | no rule matched: "accent" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| ShowMore | `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-imageOverlay` | `review` | no rule matched: "imageOverlay" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| ShowMore | `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-image-overlay` | `review` | no rule matched: "imageOverlay" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Shuttle | `shuttle.color.border.default` | `--fsds-shuttle-color-border-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Skeleton | `skeleton.color.static` | `--fsds-skeleton-color-static` | `review` | no rule matched: "static" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Skeleton | `skeleton.radius.sm` | `--fsds-skeleton-radius-sm` | `review` | no rule matched: "sm" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -88,14 +88,14 @@ Components: **49** · slots declared: **894** · consumed: **780** · **inert: 1
 | Stat | `stat.size.label` | `--fsds-stat-size-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Stat | `stat.size.gap` | `--fsds-stat-size-gap` | `review` | no rule matched: "gap" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Stat | `stat.typography.weight.label` | `--fsds-stat-typography-weight-label` | `review` | no rule matched: "label" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Table | `table.color.textMuted` | `--fsds-table-color-textMuted` | `review` | no rule matched: "textMuted" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Table | `table.spacing.sortGap` | `--fsds-table-spacing-sortGap` | `review` | no rule matched: "sortGap" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Table | `table.size.cellHeight` | `--fsds-table-size-cellHeight` | `review` | no rule matched: "cellHeight" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.color.textMuted` | `--fsds-table-color-text-muted` | `review` | no rule matched: "textMuted" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.spacing.sortGap` | `--fsds-table-spacing-sort-gap` | `review` | no rule matched: "sortGap" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Table | `table.size.cellHeight` | `--fsds-table-size-cell-height` | `review` | no rule matched: "cellHeight" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Table | `table.focus.width` | `--fsds-table-focus-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Table | `table.focus.color` | `--fsds-table-focus-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Table | `table.focus.offset` | `--fsds-table-focus-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Tabs | `tabs.color.focus` | `--fsds-tabs-color-focus` | `wire` | "focus" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Tabs | `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-listWidth` | `review` | no rule matched: "listWidth" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Tabs | `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-list-width` | `review` | no rule matched: "listWidth" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Toast | `toast.accent.default` | `--fsds-toast-accent-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Toast | `toast.color.intent.bg` | `--fsds-toast-color-intent-bg` | `review` | no rule matched: "bg" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Toast | `toast.color.intent.border` | `--fsds-toast-color-intent-border` | `review` | no rule matched: "border" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -104,7 +104,7 @@ Components: **49** · slots declared: **894** · consumed: **780** · **inert: 1
 | Toast | `toast.timing.auto-dismiss` | `--fsds-toast-timing-auto-dismiss` | `review` | no rule matched: "auto-dismiss" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Tooltip | `tooltip.size.padding.y` | `--fsds-tooltip-size-padding-y` | `review` | no rule matched: "y" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Truncate | `truncate.color.background.primary` | `--fsds-truncate-color-background-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Truncate | `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-linkHover` | `review` | no rule matched: "linkHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Truncate | `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-link-hover` | `review` | no rule matched: "linkHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Walkthrough | `walkthrough.dots.active` | `--fsds-walkthrough-dots-active` | `review` | no rule matched: "active" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 
 ## Full matrix (per component)
@@ -118,25 +118,25 @@ declared: **22** · consumed: **19** · dead: **2**
 | `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
 | `accordion.color.background.hover` | `--fsds-accordion-color-background-hover` | ✓ consumed | `tokens` |
 | `accordion.color.text` | `--fsds-accordion-color-text` | ✓ consumed | `tokens` |
-| `accordion.color.textSecondary` | `--fsds-accordion-color-textSecondary` | ✓ consumed | `tokens` |
+| `accordion.color.textSecondary` | `--fsds-accordion-color-text-secondary` | ✓ consumed | `tokens` |
 | `accordion.color.icon` | `--fsds-accordion-color-icon` | ✓ consumed | `tokens` |
 | `accordion.border.width` | `--fsds-accordion-border-width` | ✗ dead | `tokens` |
 | `accordion.border.color` | `--fsds-accordion-border-color` | ✓ consumed | `tokens` |
 | `accordion.border.radius` | `--fsds-accordion-border-radius` | ✓ consumed | `tokens` |
 | `accordion.spacing.gap` | `--fsds-accordion-spacing-gap` | ✓ consumed | `tokens` |
-| `accordion.spacing.paddingX` | `--fsds-accordion-spacing-paddingX` | ✗ dead | `tokens` |
-| `accordion.spacing.paddingY` | `--fsds-accordion-spacing-paddingY` | ✓ consumed | `tokens` |
+| `accordion.spacing.paddingX` | `--fsds-accordion-spacing-padding-x` | ✗ dead | `tokens` |
+| `accordion.spacing.paddingY` | `--fsds-accordion-spacing-padding-y` | ✓ consumed | `tokens` |
 | `accordion.text.weight` | `--fsds-accordion-text-weight` | ✓ consumed | `tokens` |
 | `accordion.text.size` | `--fsds-accordion-text-size` | ✓ consumed | `tokens` |
-| `accordion.text.lineHeight` | `--fsds-accordion-text-lineHeight` | ✓ consumed | `tokens` |
-| `accordion.text.sizeContent` | `--fsds-accordion-text-sizeContent` | ✓ consumed | `tokens` |
-| `accordion.text.lineHeightContent` | `--fsds-accordion-text-lineHeightContent` | ✓ consumed | `tokens` |
+| `accordion.text.lineHeight` | `--fsds-accordion-text-line-height` | ✓ consumed | `tokens` |
+| `accordion.text.sizeContent` | `--fsds-accordion-text-size-content` | ✓ consumed | `tokens` |
+| `accordion.text.lineHeightContent` | `--fsds-accordion-text-line-height-content` | ✓ consumed | `tokens` |
 | `accordion.icon.size` | `--fsds-accordion-icon-size` | ✓ consumed | `tokens` |
 | `accordion.focus.width` | `--fsds-accordion-focus-width` | ✓ consumed | `tokens` |
 | `accordion.focus.color` | `--fsds-accordion-focus-color` | ✓ consumed | `tokens` |
 | `accordion.focus.offset` | `--fsds-accordion-focus-offset` | ✓ consumed | `tokens` |
 | `accordion.opacity.disabled` | `--fsds-accordion-opacity-disabled` | ✓ consumed | `tokens` |
-| `accordion.color.textHover` | `--fsds-accordion-color-textHover` | ✓ consumed | `tokens` |
+| `accordion.color.textHover` | `--fsds-accordion-color-text-hover` | ✓ consumed | `tokens` |
 
 ### Alert  `.alert`
 
@@ -158,13 +158,13 @@ declared: **21** · consumed: **14** · dead: **6**
 | `alert.text.size` | `--fsds-alert-text-size` | ✓ consumed | `tokens` |
 | `alert.text.weight` | `--fsds-alert-text-weight` | ✓ consumed | `tokens` |
 | `alert.icon.size` | `--fsds-alert-icon-size` | ✗ dead | `tokens` |
-| `alert.typography.title.fontWeight` | `--fsds-alert-typography-title-fontWeight` | ✓ consumed | `tokens` |
-| `alert.typography.title.fontSize` | `--fsds-alert-typography-title-fontSize` | ✓ consumed | `tokens` |
+| `alert.typography.title.fontWeight` | `--fsds-alert-typography-title-font-weight` | ✓ consumed | `tokens` |
+| `alert.typography.title.fontSize` | `--fsds-alert-typography-title-font-size` | ✓ consumed | `tokens` |
 | `alert.size.padding.inline` | `--fsds-alert-size-padding-inline` | ✗ dead | `tokens` |
 | `alert.size.padding.page` | `--fsds-alert-size-padding-page` | ✗ dead | `tokens` |
-| `alert.typography.page.fontSize` | `--fsds-alert-typography-page-fontSize` | ✗ dead | `tokens` |
-| `alert.typography.page.title.fontSize` | `--fsds-alert-typography-page-title-fontSize` | ✗ dead | `tokens` |
-| `alert.typography.inline.fontSize` | `--fsds-alert-typography-inline-fontSize` | ✗ dead | `tokens` |
+| `alert.typography.page.fontSize` | `--fsds-alert-typography-page-font-size` | ✗ dead | `tokens` |
+| `alert.typography.page.title.fontSize` | `--fsds-alert-typography-page-title-font-size` | ✗ dead | `tokens` |
+| `alert.typography.inline.fontSize` | `--fsds-alert-typography-inline-font-size` | ✗ dead | `tokens` |
 
 ### AlertNotice  `.alert-notice`
 
@@ -197,13 +197,13 @@ declared: **32** · consumed: **23** · dead: **8**
 | `alert-notice.text.size` | `--fsds-alert-notice-text-size` | ✓ consumed | `tokens` |
 | `alert-notice.text.weight` | `--fsds-alert-notice-text-weight` | ✓ consumed | `tokens` |
 | `alert-notice.icon.size` | `--fsds-alert-notice-icon-size` | ✗ dead | `tokens` |
-| `alert-notice.typography.title.fontWeight` | `--fsds-alert-notice-typography-title-fontWeight` | ✓ consumed | `tokens` |
-| `alert-notice.typography.title.fontSize` | `--fsds-alert-notice-typography-title-fontSize` | ✓ consumed | `tokens` |
+| `alert-notice.typography.title.fontWeight` | `--fsds-alert-notice-typography-title-font-weight` | ✓ consumed | `tokens` |
+| `alert-notice.typography.title.fontSize` | `--fsds-alert-notice-typography-title-font-size` | ✓ consumed | `tokens` |
 | `alert-notice.size.padding.inline` | `--fsds-alert-notice-size-padding-inline` | ✗ dead | `tokens` |
 | `alert-notice.size.padding.page` | `--fsds-alert-notice-size-padding-page` | ✗ dead | `tokens` |
-| `alert-notice.typography.page.fontSize` | `--fsds-alert-notice-typography-page-fontSize` | ✗ dead | `tokens` |
-| `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-fontSize` | ✗ dead | `tokens` |
-| `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-fontSize` | ✗ dead | `tokens` |
+| `alert-notice.typography.page.fontSize` | `--fsds-alert-notice-typography-page-font-size` | ✗ dead | `tokens` |
+| `alert-notice.typography.page.title.fontSize` | `--fsds-alert-notice-typography-page-title-font-size` | ✗ dead | `tokens` |
+| `alert-notice.typography.inline.fontSize` | `--fsds-alert-notice-typography-inline-font-size` | ✗ dead | `tokens` |
 
 ### Avatar  `.avatar`
 
@@ -222,8 +222,8 @@ declared: **13** · consumed: **12** · dead: **1**
 | `avatar.color.background.inverse` | `--fsds-avatar-color-background-inverse` | ✗ dead | `tokens` |
 | `avatar.color.foreground.primary` | `--fsds-avatar-color-foreground-primary` | ✓ consumed | `tokens` |
 | `avatar.color.border.default` | `--fsds-avatar-color-border-default` | ✓ consumed | `tokens` |
-| `avatar.typography.fontWeight.medium` | `--fsds-avatar-typography-fontWeight-medium` | ✓ consumed | `tokens` |
-| `avatar.typography.fontFamily.sans` | `--fsds-avatar-typography-fontFamily-sans` | ✓ consumed | `tokens` |
+| `avatar.typography.fontWeight.medium` | `--fsds-avatar-typography-font-weight-medium` | ✓ consumed | `tokens` |
+| `avatar.typography.fontFamily.sans` | `--fsds-avatar-typography-font-family-sans` | ✓ consumed | `tokens` |
 
 ### Badge  `.badge`
 
@@ -267,8 +267,8 @@ declared: **26** · consumed: **22** · dead: **3**
 | `button.motion.easing.standard` | `--fsds-button-motion-easing-standard` | ✓ consumed | `tokens` |
 | `button.size.padding-block.medium` | `--fsds-button-size-padding-block-medium` | ✗ dead | `tokens` |
 | `button.size.padding-inline.medium` | `--fsds-button-size-padding-inline-medium` | ✗ dead | `tokens` |
-| `button.size.minHeight.medium` | `--fsds-button-size-minHeight-medium` | ✗ dead | `tokens` |
-| `button.size.fontSize.medium` | `--fsds-button-size-fontSize-medium` | ✓ consumed | `tokens` |
+| `button.size.minHeight.medium` | `--fsds-button-size-min-height-medium` | ✗ dead | `tokens` |
+| `button.size.fontSize.medium` | `--fsds-button-size-font-size-medium` | ✓ consumed | `tokens` |
 
 ### Calendar  `.calendar`
 
@@ -320,8 +320,8 @@ declared: **35** · consumed: **24** · dead: **10**
 | `card.size.padding.inset` | `--fsds-card-size-padding-inset` | ✓ consumed | `tokens` |
 | `card.size.radius.default` | `--fsds-card-size-radius-default` | ✓ consumed | `tokens` |
 | `card.size.gap.default` | `--fsds-card-size-gap-default` | ✓ consumed | `tokens` |
-| `card.typography.lineHeight.heading` | `--fsds-card-typography-lineHeight-heading` | ✓ consumed | `tokens` |
-| `card.typography.lineHeight.normal` | `--fsds-card-typography-lineHeight-normal` | ✓ consumed | `tokens` |
+| `card.typography.lineHeight.heading` | `--fsds-card-typography-line-height-heading` | ✓ consumed | `tokens` |
+| `card.typography.lineHeight.normal` | `--fsds-card-typography-line-height-normal` | ✓ consumed | `tokens` |
 | `card.color.badge.success.background` | `--fsds-card-color-badge-success-background` | ✗ dead | `tokens` |
 | `card.color.badge.success.foreground` | `--fsds-card-color-badge-success-foreground` | ✗ dead | `tokens` |
 | `card.color.badge.warning.background` | `--fsds-card-color-badge-warning-background` | ✗ dead | `tokens` |
@@ -334,8 +334,8 @@ declared: **35** · consumed: **24** · dead: **10**
 | `card.color.badge.neutral.foreground` | `--fsds-card-color-badge-neutral-foreground` | ✗ dead | `tokens` |
 | `card.color.badge.accent.background` | `--fsds-card-color-badge-accent-background` | ✓ consumed | `tokens` |
 | `card.color.badge.accent.foreground` | `--fsds-card-color-badge-accent-foreground` | ✓ consumed | `tokens` |
-| `card.color.statusAccent.default` | `--fsds-card-color-statusAccent-default` | ✓ consumed | `tokens` |
-| `card.size.statusAccent.width` | `--fsds-card-size-statusAccent-width` | ✓ consumed | `tokens` |
+| `card.color.statusAccent.default` | `--fsds-card-color-status-accent-default` | ✓ consumed | `tokens` |
+| `card.size.statusAccent.width` | `--fsds-card-size-status-accent-width` | ✓ consumed | `tokens` |
 | `card.elevation.resting` | `--fsds-card-elevation-resting` | ✓ consumed | `tokens` |
 | `card.elevation.raised` | `--fsds-card-elevation-raised` | ✓ consumed | `tokens` |
 | `card.color.focus.ring` | `--fsds-card-color-focus-ring` | ✓ consumed | `tokens` |
@@ -370,7 +370,7 @@ declared: **32** · consumed: **25** · dead: **5**
 | `chip.focus.ring.color` | `--fsds-chip-focus-ring-color` | ✗ dead | `tokens` |
 | `chip.focus.ring.style` | `--fsds-chip-focus-ring-style` | ✗ dead | `tokens` |
 | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | ✗ dead | `tokens` |
-| `chip.size.minHeight` | `--fsds-chip-size-minHeight` | ✓ consumed | `tokens` |
+| `chip.size.minHeight` | `--fsds-chip-size-min-height` | ✓ consumed | `tokens` |
 | `chip.color.background.selected` | `--fsds-chip-color-background-selected` | ✓ consumed | `tokens` |
 | `chip.color.foreground.selected` | `--fsds-chip-color-foreground-selected` | ✓ consumed | `tokens` |
 | `chip.color.border.selected` | `--fsds-chip-color-border-selected` | ✓ consumed | `tokens` |
@@ -403,21 +403,21 @@ declared: **19** · consumed: **18** · dead: **1**
 | `command.color.overlay` | `--fsds-command-color-overlay` | ✓ consumed | `tokens` |
 | `command.color.background` | `--fsds-command-color-background` | ✓ consumed | `tokens` |
 | `command.color.border` | `--fsds-command-color-border` | ✓ consumed | `tokens` |
-| `command.color.borderLight` | `--fsds-command-color-borderLight` | ✓ consumed | `tokens` |
+| `command.color.borderLight` | `--fsds-command-color-border-light` | ✓ consumed | `tokens` |
 | `command.color.text` | `--fsds-command-color-text` | ✓ consumed | `tokens` |
-| `command.color.textMuted` | `--fsds-command-color-textMuted` | ✓ consumed | `tokens` |
+| `command.color.textMuted` | `--fsds-command-color-text-muted` | ✓ consumed | `tokens` |
 | `command.border.width` | `--fsds-command-border-width` | ✓ consumed | `tokens` |
 | `command.border.radius` | `--fsds-command-border-radius` | ✓ consumed | `tokens` |
-| `command.size.maxWidth` | `--fsds-command-size-maxWidth` | ✓ consumed | `tokens` |
-| `command.size.maxHeight` | `--fsds-command-size-maxHeight` | ✓ consumed | `tokens` |
-| `command.size.topOffset` | `--fsds-command-size-topOffset` | ✓ consumed | `tokens` |
+| `command.size.maxWidth` | `--fsds-command-size-max-width` | ✓ consumed | `tokens` |
+| `command.size.maxHeight` | `--fsds-command-size-max-height` | ✓ consumed | `tokens` |
+| `command.size.topOffset` | `--fsds-command-size-top-offset` | ✓ consumed | `tokens` |
 | `command.size.icon` | `--fsds-command-size-icon` | ✓ consumed | `tokens` |
-| `command.spacing.dialogPadding` | `--fsds-command-spacing-dialogPadding` | ✓ consumed | `tokens` |
+| `command.spacing.dialogPadding` | `--fsds-command-spacing-dialog-padding` | ✓ consumed | `tokens` |
 | `command.text.size` | `--fsds-command-text-size` | ✓ consumed | `tokens` |
-| `command.text.sizeSmall` | `--fsds-command-text-sizeSmall` | ✓ consumed | `tokens` |
+| `command.text.sizeSmall` | `--fsds-command-text-size-small` | ✓ consumed | `tokens` |
 | `command.shadow` | `--fsds-command-shadow` | ✓ consumed | `tokens` |
 | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | ✗ dead | `tokens` |
-| `command.color.backgroundHover` | `--fsds-command-color-backgroundHover` | ✓ consumed | `tokens` |
+| `command.color.backgroundHover` | `--fsds-command-color-background-hover` | ✓ consumed | `tokens` |
 
 ### Details  `.details`
 
@@ -438,12 +438,12 @@ declared: **19** · consumed: **15** · dead: **3**
 | `details.focus.ring.color` | `--fsds-details-focus-ring-color` | ✓ consumed | `tokens` |
 | `details.focus.ring.offset` | `--fsds-details-focus-ring-offset` | ✓ consumed | `tokens` |
 | `details.spacing.gap.default` | `--fsds-details-spacing-gap-default` | ✓ consumed | `tokens` |
-| `details.typography.lineHeight.body` | `--fsds-details-typography-lineHeight-body` | ✓ consumed | `tokens` |
-| `details.typography.fontWeight.medium` | `--fsds-details-typography-fontWeight-medium` | ✓ consumed | `tokens` |
+| `details.typography.lineHeight.body` | `--fsds-details-typography-line-height-body` | ✓ consumed | `tokens` |
+| `details.typography.fontWeight.medium` | `--fsds-details-typography-font-weight-medium` | ✓ consumed | `tokens` |
 | `details.size.padding.compact` | `--fsds-details-size-padding-compact` | ✓ consumed | `tokens` |
 | `details.size.padding.page` | `--fsds-details-size-padding-page` | ✗ dead | `tokens` |
-| `details.typography.fontSize.body` | `--fsds-details-typography-fontSize-body` | ✗ dead | `tokens` |
-| `details.typography.fontSize.compact` | `--fsds-details-typography-fontSize-compact` | ✗ dead | `tokens` |
+| `details.typography.fontSize.body` | `--fsds-details-typography-font-size-body` | ✗ dead | `tokens` |
+| `details.typography.fontSize.compact` | `--fsds-details-typography-font-size-compact` | ✗ dead | `tokens` |
 
 ### Dialog  `.dialog`
 
@@ -458,7 +458,7 @@ declared: **5** · consumed: **4** · dead: **1**
 | `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
 | `divider.color.default` | `--fsds-divider-color-default` | ✓ consumed | `tokens` |
 | `divider.size.thickness` | `--fsds-divider-size-thickness` | ✓ consumed | `tokens` |
-| `divider.size.thicknessThick` | `--fsds-divider-size-thicknessThick` | ✗ dead | `tokens` |
+| `divider.size.thicknessThick` | `--fsds-divider-size-thickness-thick` | ✗ dead | `tokens` |
 | `divider.spacing.margin` | `--fsds-divider-spacing-margin` | ✓ consumed | `tokens` |
 
 ### Field  `.field`
@@ -481,7 +481,7 @@ declared: **29** · consumed: **22** · dead: **6**
 | `field.color.bg` | `--fsds-field-color-bg` | ✓ consumed | `tokens` |
 | `field.color.fg` | `--fsds-field-color-fg` | ✓ consumed | `tokens` |
 | `field.color.border` | `--fsds-field-color-border` | ✓ consumed | `tokens` |
-| `field.color.borderBold` | `--fsds-field-color-borderBold` | ✗ dead | `tokens` |
+| `field.color.borderBold` | `--fsds-field-color-border-bold` | ✗ dead | `tokens` |
 | `field.color.focus-border` | `--fsds-field-color-focus-border` | ✓ consumed | `tokens` |
 | `field.color.invalid-border` | `--fsds-field-color-invalid-border` | ✓ consumed | `tokens` |
 | `field.color.invalid-text` | `--fsds-field-color-invalid-text` | ✓ consumed | `tokens` |
@@ -490,7 +490,7 @@ declared: **29** · consumed: **22** · dead: **6**
 | `field.color.validating-text` | `--fsds-field-color-validating-text` | ✗ dead | `tokens` |
 | `field.color.valid-text` | `--fsds-field-color-valid-text` | ✗ dead | `tokens` |
 | `field.spacing.indicator` | `--fsds-field-spacing-indicator` | ✗ dead | `tokens` |
-| `field.label.fontSize` | `--fsds-field-label-fontSize` | ✓ consumed | `tokens` |
+| `field.label.fontSize` | `--fsds-field-label-font-size` | ✓ consumed | `tokens` |
 | `field.label.color` | `--fsds-field-label-color` | ✓ consumed | `tokens` |
 | `field.focus.ring.width` | `--fsds-field-focus-ring-width` | ✓ consumed | `tokens` |
 | `field.focus.ring.color` | `--fsds-field-focus-ring-color` | ✓ consumed | `tokens` |
@@ -511,7 +511,7 @@ declared: **15** · consumed: **13** · dead: **2**
 | `image.color.background.default` | `--fsds-image-color-background-default` | ✓ consumed | `tokens` |
 | `image.color.foreground.primary` | `--fsds-image-color-foreground-primary` | ✓ consumed | `tokens` |
 | `image.size.icon` | `--fsds-image-size-icon` | ✗ dead | `tokens` |
-| `image.typography.error.fontSize` | `--fsds-image-typography-error-fontSize` | ✗ dead | `tokens` |
+| `image.typography.error.fontSize` | `--fsds-image-typography-error-font-size` | ✗ dead | `tokens` |
 | `image.size.xs` | `--fsds-image-size-xs` | ✓ consumed | `tokens` |
 | `image.size.sm` | `--fsds-image-size-sm` | ✓ consumed | `tokens` |
 | `image.size.md` | `--fsds-image-size-md` | ✓ consumed | `tokens` |
@@ -570,7 +570,7 @@ declared: **4** · consumed: **3** · dead: **1**
 | `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
 | `label.color.text.default` | `--fsds-label-color-text-default` | ✓ consumed | `tokens` |
 | `label.typo.weight.default` | `--fsds-label-typo-weight-default` | ✗ dead | `tokens` |
-| `label.typo.lineHeight.default` | `--fsds-label-typo-lineHeight-default` | ✓ consumed | `tokens` |
+| `label.typo.lineHeight.default` | `--fsds-label-typo-line-height-default` | ✓ consumed | `tokens` |
 
 ### Links  `.links`
 
@@ -592,8 +592,8 @@ declared: **17** · consumed: **10** · dead: **7**
 | `nav-list.color.foreground.current` | `--fsds-nav-list-color-foreground-current` | ✓ consumed | `tokens` |
 | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | ✗ dead | `tokens` |
 | `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | ✗ dead | `tokens` |
-| `nav-list.stateLayer.hover` | `--fsds-nav-list-stateLayer-hover` | ✓ consumed | `tokens` |
-| `nav-list.stateLayer.selected` | `--fsds-nav-list-stateLayer-selected` | ✓ consumed | `tokens` |
+| `nav-list.stateLayer.hover` | `--fsds-nav-list-state-layer-hover` | ✓ consumed | `tokens` |
+| `nav-list.stateLayer.selected` | `--fsds-nav-list-state-layer-selected` | ✓ consumed | `tokens` |
 | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | ✗ dead | `tokens` |
 | `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | ✗ dead | `tokens` |
 | `nav-list.size.padding.block` | `--fsds-nav-list-size-padding-block` | ✓ consumed | `tokens` |
@@ -601,8 +601,8 @@ declared: **17** · consumed: **10** · dead: **7**
 | `nav-list.size.radius.default` | `--fsds-nav-list-size-radius-default` | ✓ consumed | `tokens` |
 | `nav-list.size.gap.list` | `--fsds-nav-list-size-gap-list` | ✓ consumed | `tokens` |
 | `nav-list.size.gap.group` | `--fsds-nav-list-size-gap-group` | ✗ dead | `tokens` |
-| `nav-list.size.fontSize.item` | `--fsds-nav-list-size-fontSize-item` | ✗ dead | `tokens` |
-| `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-fontSize-groupLabel` | ✗ dead | `tokens` |
+| `nav-list.size.fontSize.item` | `--fsds-nav-list-size-font-size-item` | ✗ dead | `tokens` |
+| `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-font-size-group-label` | ✗ dead | `tokens` |
 
 ### OTP  `.otp`
 
@@ -653,12 +653,12 @@ declared: **22** · consumed: **20** · dead: **1**
 | `postcard.size.radius.full` | `--fsds-postcard-size-radius-full` | ✗ dead | `tokens` |
 | `postcard.size.gap.default` | `--fsds-postcard-size-gap-default` | ✓ consumed | `tokens` |
 | `postcard.size.border.default` | `--fsds-postcard-size-border-default` | ✓ consumed | `tokens` |
-| `postcard.typography.displayName.fontSize` | `--fsds-postcard-typography-displayName-fontSize` | ✓ consumed | `tokens` |
-| `postcard.typography.displayName.fontWeight` | `--fsds-postcard-typography-displayName-fontWeight` | ✓ consumed | `tokens` |
-| `postcard.typography.handle.fontSize` | `--fsds-postcard-typography-handle-fontSize` | ✓ consumed | `tokens` |
-| `postcard.typography.content.fontSize` | `--fsds-postcard-typography-content-fontSize` | ✓ consumed | `tokens` |
-| `postcard.typography.content.lineHeight` | `--fsds-postcard-typography-content-lineHeight` | ✓ consumed | `tokens` |
-| `postcard.typography.footer.fontSize` | `--fsds-postcard-typography-footer-fontSize` | ✓ consumed | `tokens` |
+| `postcard.typography.displayName.fontSize` | `--fsds-postcard-typography-display-name-font-size` | ✓ consumed | `tokens` |
+| `postcard.typography.displayName.fontWeight` | `--fsds-postcard-typography-display-name-font-weight` | ✓ consumed | `tokens` |
+| `postcard.typography.handle.fontSize` | `--fsds-postcard-typography-handle-font-size` | ✓ consumed | `tokens` |
+| `postcard.typography.content.fontSize` | `--fsds-postcard-typography-content-font-size` | ✓ consumed | `tokens` |
+| `postcard.typography.content.lineHeight` | `--fsds-postcard-typography-content-line-height` | ✓ consumed | `tokens` |
+| `postcard.typography.footer.fontSize` | `--fsds-postcard-typography-footer-font-size` | ✓ consumed | `tokens` |
 
 ### ProfileFlag  `.profile-flag`
 
@@ -703,8 +703,8 @@ declared: **24** · consumed: **22** · dead: **2**
 | `select.size.md.height` | `--fsds-select-size-md-height` | ✓ consumed | `tokens` |
 | `select.size.lg.height` | `--fsds-select-size-lg-height` | ✓ consumed | `tokens` |
 | `select.font.size.default` | `--fsds-select-font-size-default` | ✓ consumed | `tokens` |
-| `select.font.lineHeight.default` | `--fsds-select-font-lineHeight-default` | ✓ consumed | `tokens` |
-| `select.color.icon.isOpen` | `--fsds-select-color-icon-isOpen` | ✗ dead | `tokens` |
+| `select.font.lineHeight.default` | `--fsds-select-font-line-height-default` | ✓ consumed | `tokens` |
+| `select.color.icon.isOpen` | `--fsds-select-color-icon-is-open` | ✗ dead | `tokens` |
 | `select.focus.ring.width` | `--fsds-select-focus-ring-width` | ✓ consumed | `tokens` |
 | `select.focus.ring.color` | `--fsds-select-focus-ring-color` | ✓ consumed | `tokens` |
 | `select.focus.ring.style` | `--fsds-select-focus-ring-style` | ✓ consumed | `tokens` |
@@ -726,8 +726,8 @@ declared: **26** · consumed: **23** · dead: **3**
 | `sheet.color.background` | `--fsds-sheet-color-background` | ✓ consumed | `tokens` |
 | `sheet.color.border` | `--fsds-sheet-color-border` | ✓ consumed | `tokens` |
 | `sheet.color.text` | `--fsds-sheet-color-text` | ✓ consumed | `tokens` |
-| `sheet.color.textTitle` | `--fsds-sheet-color-textTitle` | ✓ consumed | `tokens` |
-| `sheet.color.textDescription` | `--fsds-sheet-color-textDescription` | ✓ consumed | `tokens` |
+| `sheet.color.textTitle` | `--fsds-sheet-color-text-title` | ✓ consumed | `tokens` |
+| `sheet.color.textDescription` | `--fsds-sheet-color-text-description` | ✓ consumed | `tokens` |
 | `sheet.border.width` | `--fsds-sheet-border-width` | ✓ consumed | `tokens` |
 | `sheet.border.radius` | `--fsds-sheet-border-radius` | ✓ consumed | `tokens` |
 | `sheet.size.width` | `--fsds-sheet-size-width` | ✓ consumed | `tokens` |
@@ -736,12 +736,12 @@ declared: **26** · consumed: **23** · dead: **3**
 | `sheet.spacing.padding` | `--fsds-sheet-spacing-padding` | ✓ consumed | `tokens` |
 | `sheet.spacing.gap` | `--fsds-sheet-spacing-gap` | ✓ consumed | `tokens` |
 | `sheet.text.size` | `--fsds-sheet-text-size` | ✓ consumed | `tokens` |
-| `sheet.text.sizeTitle` | `--fsds-sheet-text-sizeTitle` | ✓ consumed | `tokens` |
-| `sheet.text.weightTitle` | `--fsds-sheet-text-weightTitle` | ✓ consumed | `tokens` |
+| `sheet.text.sizeTitle` | `--fsds-sheet-text-size-title` | ✓ consumed | `tokens` |
+| `sheet.text.weightTitle` | `--fsds-sheet-text-weight-title` | ✓ consumed | `tokens` |
 | `sheet.shadow` | `--fsds-sheet-shadow` | ✓ consumed | `tokens` |
 | `sheet.focus.width` | `--fsds-sheet-focus-width` | ✗ dead | `tokens` |
 | `sheet.focus.color` | `--fsds-sheet-focus-color` | ✗ dead | `tokens` |
-| `sheet.color.backgroundHover` | `--fsds-sheet-color-backgroundHover` | ✗ dead | `tokens` |
+| `sheet.color.backgroundHover` | `--fsds-sheet-color-background-hover` | ✗ dead | `tokens` |
 
 ### ShowMore  `.show-more`
 
@@ -763,7 +763,7 @@ declared: **15** · consumed: **12** · dead: **3**
 | `show-more.color.border.accent` | `--fsds-show-more-color-border-accent` | ✗ dead | `tokens` |
 | `show-more.size.padding.default` | `--fsds-show-more-size-padding-default` | ✓ consumed | `tokens` |
 | `show-more.size.radius.default` | `--fsds-show-more-size-radius-default` | ✓ consumed | `tokens` |
-| `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-imageOverlay` | ✗ dead | `tokens` |
+| `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-image-overlay` | ✗ dead | `tokens` |
 
 ### Shuttle  `.shuttle`
 
@@ -820,7 +820,7 @@ declared: **14** · consumed: **10** · dead: **4**
 | `stat.size.value.lg` | `--fsds-stat-size-value-lg` | ✓ consumed | `tokens` |
 | `stat.size.label` | `--fsds-stat-size-label` | ✗ dead | `tokens` |
 | `stat.size.gap` | `--fsds-stat-size-gap` | ✗ dead | `tokens` |
-| `stat.typography.lineHeight.value` | `--fsds-stat-typography-lineHeight-value` | ✓ consumed | `tokens` |
+| `stat.typography.lineHeight.value` | `--fsds-stat-typography-line-height-value` | ✓ consumed | `tokens` |
 | `stat.typography.weight.value` | `--fsds-stat-typography-weight-value` | ✓ consumed | `tokens` |
 | `stat.typography.weight.label` | `--fsds-stat-typography-weight-label` | ✗ dead | `tokens` |
 
@@ -840,21 +840,21 @@ declared: **22** · consumed: **16** · dead: **6**
 |---|---|---|---|
 | `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
 | `table.color.text` | `--fsds-table-color-text` | ✓ consumed | `tokens` |
-| `table.color.textMuted` | `--fsds-table-color-textMuted` | ✗ dead | `tokens` |
+| `table.color.textMuted` | `--fsds-table-color-text-muted` | ✗ dead | `tokens` |
 | `table.color.border` | `--fsds-table-color-border` | ✓ consumed | `tokens` |
 | `table.color.background.footer` | `--fsds-table-color-background-footer` | ✓ consumed | `tokens` |
 | `table.border.width` | `--fsds-table-border-width` | ✓ consumed | `tokens` |
-| `table.spacing.cellX` | `--fsds-table-spacing-cellX` | ✓ consumed | `tokens` |
-| `table.spacing.cellY` | `--fsds-table-spacing-cellY` | ✓ consumed | `tokens` |
+| `table.spacing.cellX` | `--fsds-table-spacing-cell-x` | ✓ consumed | `tokens` |
+| `table.spacing.cellY` | `--fsds-table-spacing-cell-y` | ✓ consumed | `tokens` |
 | `table.spacing.caption` | `--fsds-table-spacing-caption` | ✓ consumed | `tokens` |
-| `table.spacing.sortGap` | `--fsds-table-spacing-sortGap` | ✗ dead | `tokens` |
-| `table.size.cellHeight` | `--fsds-table-size-cellHeight` | ✗ dead | `tokens` |
+| `table.spacing.sortGap` | `--fsds-table-spacing-sort-gap` | ✗ dead | `tokens` |
+| `table.size.cellHeight` | `--fsds-table-size-cell-height` | ✗ dead | `tokens` |
 | `table.size.radius` | `--fsds-table-size-radius` | ✓ consumed | `tokens` |
 | `table.text.size` | `--fsds-table-text-size` | ✓ consumed | `tokens` |
-| `table.text.lineHeight` | `--fsds-table-text-lineHeight` | ✓ consumed | `tokens` |
-| `table.text.sizeCaption` | `--fsds-table-text-sizeCaption` | ✓ consumed | `tokens` |
-| `table.text.weightHead` | `--fsds-table-text-weightHead` | ✓ consumed | `tokens` |
-| `table.text.weightFooter` | `--fsds-table-text-weightFooter` | ✓ consumed | `tokens` |
+| `table.text.lineHeight` | `--fsds-table-text-line-height` | ✓ consumed | `tokens` |
+| `table.text.sizeCaption` | `--fsds-table-text-size-caption` | ✓ consumed | `tokens` |
+| `table.text.weightHead` | `--fsds-table-text-weight-head` | ✓ consumed | `tokens` |
+| `table.text.weightFooter` | `--fsds-table-text-weight-footer` | ✓ consumed | `tokens` |
 | `table.color.background.hover` | `--fsds-table-color-background-hover` | ✓ consumed | `tokens` |
 | `table.color.background.selected` | `--fsds-table-color-background-selected` | ✓ consumed | `tokens` |
 | `table.focus.width` | `--fsds-table-focus-width` | ✗ dead | `tokens` |
@@ -870,8 +870,8 @@ declared: **18** · consumed: **15** · dead: **2**
 | `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
 | `tabs.spacing.gap` | `--fsds-tabs-spacing-gap` | ✓ consumed | `tokens` |
 | `tabs.spacing.padding` | `--fsds-tabs-spacing-padding` | ✓ consumed | `tokens` |
-| `tabs.spacing.pillPadding` | `--fsds-tabs-spacing-pillPadding` | ✓ consumed | `tokens` |
-| `tabs.spacing.panelGap` | `--fsds-tabs-spacing-panelGap` | ✓ consumed | `tokens` |
+| `tabs.spacing.pillPadding` | `--fsds-tabs-spacing-pill-padding` | ✓ consumed | `tokens` |
+| `tabs.spacing.panelGap` | `--fsds-tabs-spacing-panel-gap` | ✓ consumed | `tokens` |
 | `tabs.color.fg` | `--fsds-tabs-color-fg` | ✓ consumed | `tokens` |
 | `tabs.color.disabled-fg` | `--fsds-tabs-color-disabled-fg` | ✓ consumed | `tokens` |
 | `tabs.color.indicator` | `--fsds-tabs-color-indicator` | ✓ consumed | `tokens` |
@@ -884,7 +884,7 @@ declared: **18** · consumed: **15** · dead: **2**
 | `tabs.color.focus` | `--fsds-tabs-color-focus` | ✗ dead | `tokens` |
 | `tabs.color.underline.active` | `--fsds-tabs-color-underline-active` | ✓ consumed | `tokens` |
 | `tabs.size.indicator.thickness` | `--fsds-tabs-size-indicator-thickness` | ✓ consumed | `tokens` |
-| `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-listWidth` | ✗ dead | `tokens` |
+| `tabs.size.vertical.listWidth` | `--fsds-tabs-size-vertical-list-width` | ✗ dead | `tokens` |
 
 ### Text  `.text`
 
@@ -916,8 +916,8 @@ declared: **21** · consumed: **14** · dead: **6**
 | `toast.color.intent.border` | `--fsds-toast-color-intent-border` | ✗ dead | `tokens` |
 | `toast.spacing.padding` | `--fsds-toast-spacing-padding` | ✓ consumed | `tokens` |
 | `toast.spacing.gap` | `--fsds-toast-spacing-gap` | ✓ consumed | `tokens` |
-| `toast.spacing.stackGap` | `--fsds-toast-spacing-stackGap` | ✓ consumed | `tokens` |
-| `toast.size.maxWidth` | `--fsds-toast-size-maxWidth` | ✓ consumed | `tokens` |
+| `toast.spacing.stackGap` | `--fsds-toast-spacing-stack-gap` | ✓ consumed | `tokens` |
+| `toast.size.maxWidth` | `--fsds-toast-size-max-width` | ✓ consumed | `tokens` |
 | `toast.motion.enter` | `--fsds-toast-motion-enter` | ✗ dead | `tokens` |
 | `toast.motion.leave` | `--fsds-toast-motion-leave` | ✗ dead | `tokens` |
 | `toast.timing.auto-dismiss` | `--fsds-toast-timing-auto-dismiss` | ✗ dead | `tokens` |
@@ -944,8 +944,8 @@ declared: **15** · consumed: **14** · dead: **1**
 | `tooltip.size.padding.y` | `--fsds-tooltip-size-padding-y` | ✗ dead | `tokens` |
 | `tooltip.size.padding.x` | `--fsds-tooltip-size-padding-x` | ✓ consumed | `tokens` |
 | `tooltip.size.radius.default` | `--fsds-tooltip-size-radius-default` | ✓ consumed | `tokens` |
-| `tooltip.size.maxWidth` | `--fsds-tooltip-size-maxWidth` | ✓ consumed | `tokens` |
-| `tooltip.typography.fontSize` | `--fsds-tooltip-typography-fontSize` | ✓ consumed | `tokens` |
+| `tooltip.size.maxWidth` | `--fsds-tooltip-size-max-width` | ✓ consumed | `tokens` |
+| `tooltip.typography.fontSize` | `--fsds-tooltip-typography-font-size` | ✓ consumed | `tokens` |
 | `tooltip.layer.content` | `--fsds-tooltip-layer-content` | ✓ consumed | `tokens` |
 
 ### Truncate  `.truncate`
@@ -957,9 +957,9 @@ declared: **6** · consumed: **4** · dead: **2**
 | `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
 | `truncate.color.foreground.link` | `--fsds-truncate-color-foreground-link` | ✓ consumed | `tokens` |
 | `truncate.color.background.primary` | `--fsds-truncate-color-background-primary` | ✗ dead | `tokens` |
-| `truncate.typography.fontWeight` | `--fsds-truncate-typography-fontWeight` | ✓ consumed | `tokens` |
+| `truncate.typography.fontWeight` | `--fsds-truncate-typography-font-weight` | ✓ consumed | `tokens` |
 | `truncate.spacing.toggle` | `--fsds-truncate-spacing-toggle` | ✓ consumed | `tokens` |
-| `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-linkHover` | ✗ dead | `tokens` |
+| `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-link-hover` | ✗ dead | `tokens` |
 
 ### Walkthrough  `.walkthrough`
 
@@ -973,14 +973,14 @@ declared: **24** · consumed: **22** · dead: **1**
 | `walkthrough.surface.radius` | `--fsds-walkthrough-surface-radius` | ✓ consumed | `tokens` |
 | `walkthrough.surface.shadow` | `--fsds-walkthrough-surface-shadow` | ✓ consumed | `tokens` |
 | `walkthrough.surface.padding` | `--fsds-walkthrough-surface-padding` | ✓ consumed | `tokens` |
-| `walkthrough.title.fontSize` | `--fsds-walkthrough-title-fontSize` | ✓ consumed | `tokens` |
-| `walkthrough.title.fontWeight` | `--fsds-walkthrough-title-fontWeight` | ✓ consumed | `tokens` |
+| `walkthrough.title.fontSize` | `--fsds-walkthrough-title-font-size` | ✓ consumed | `tokens` |
+| `walkthrough.title.fontWeight` | `--fsds-walkthrough-title-font-weight` | ✓ consumed | `tokens` |
 | `walkthrough.title.color` | `--fsds-walkthrough-title-color` | ✓ consumed | `tokens` |
-| `walkthrough.description.fontSize` | `--fsds-walkthrough-description-fontSize` | ✓ consumed | `tokens` |
+| `walkthrough.description.fontSize` | `--fsds-walkthrough-description-font-size` | ✓ consumed | `tokens` |
 | `walkthrough.description.color` | `--fsds-walkthrough-description-color` | ✓ consumed | `tokens` |
-| `walkthrough.description.marginTop` | `--fsds-walkthrough-description-marginTop` | ✓ consumed | `tokens` |
+| `walkthrough.description.marginTop` | `--fsds-walkthrough-description-margin-top` | ✓ consumed | `tokens` |
 | `walkthrough.controls.gap` | `--fsds-walkthrough-controls-gap` | ✓ consumed | `tokens` |
-| `walkthrough.controls.marginTop` | `--fsds-walkthrough-controls-marginTop` | ✓ consumed | `tokens` |
+| `walkthrough.controls.marginTop` | `--fsds-walkthrough-controls-margin-top` | ✓ consumed | `tokens` |
 | `walkthrough.dots.size` | `--fsds-walkthrough-dots-size` | ✓ consumed | `tokens` |
 | `walkthrough.dots.gap` | `--fsds-walkthrough-dots-gap` | ✓ consumed | `tokens` |
 | `walkthrough.dots.active` | `--fsds-walkthrough-dots-active` | ✗ dead | `tokens` |

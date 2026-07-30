@@ -26,8 +26,8 @@
   border-color: var(--fsds-avatar-color-border-default, #b8b8b8);
   border-style: solid;
   border-width: var(--fsds-avatar-size-border-default, 1px);
-  font-weight: var(--fsds-avatar-typography-fontWeight-medium, 500);
-  font-family: var(--fsds-avatar-typography-fontFamily-sans, "Inter", sans-serif);
+  font-weight: var(--fsds-avatar-typography-font-weight-medium, 500);
+  font-family: var(--fsds-avatar-typography-font-family-sans, "Inter", sans-serif);
 }
 
 .avatar__image {

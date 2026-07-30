@@ -101,13 +101,13 @@ export const blockquoteTokenScopes = {
     },
     "blockquote.typography.fontStyle": {
       name: "blockquote.typography.fontStyle",
-      cssVar: "--fsds-blockquote-typography-fontStyle",
+      cssVar: "--fsds-blockquote-typography-font-style",
       ref: "semantic.typography.font.style.italic",
       fallback: "italic",
     },
     "blockquote.typography.fontWeight": {
       name: "blockquote.typography.fontWeight",
-      cssVar: "--fsds-blockquote-typography-fontWeight",
+      cssVar: "--fsds-blockquote-typography-font-weight",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
@@ -143,19 +143,19 @@ export const blockquoteTokenScopes = {
     },
     "blockquote.size.fontSize.sm": {
       name: "blockquote.size.fontSize.sm",
-      cssVar: "--fsds-blockquote-size-fontSize-sm",
+      cssVar: "--fsds-blockquote-size-font-size-sm",
       ref: "core.typography.ramp.3",
       fallback: 14,
     },
     "blockquote.size.fontSize.md": {
       name: "blockquote.size.fontSize.md",
-      cssVar: "--fsds-blockquote-size-fontSize-md",
+      cssVar: "--fsds-blockquote-size-font-size-md",
       ref: "core.typography.ramp.4",
       fallback: 16,
     },
     "blockquote.size.fontSize.lg": {
       name: "blockquote.size.fontSize.lg",
-      cssVar: "--fsds-blockquote-size-fontSize-lg",
+      cssVar: "--fsds-blockquote-size-font-size-lg",
       ref: "core.typography.ramp.5",
       fallback: 18,
     },
@@ -205,7 +205,7 @@ export const blockquoteTokenScopes = {
     },
     "blockquote.size.fontSize.md": {
       name: "blockquote.size.fontSize.md",
-      cssVar: "--fsds-blockquote-size-fontSize-md",
+      cssVar: "--fsds-blockquote-size-font-size-md",
       ref: "blockquote.size.fontSize.sm",
       fallback: 14,
     },
@@ -219,7 +219,7 @@ export const blockquoteTokenScopes = {
     },
     "blockquote.size.fontSize.md": {
       name: "blockquote.size.fontSize.md",
-      cssVar: "--fsds-blockquote-size-fontSize-md",
+      cssVar: "--fsds-blockquote-size-font-size-md",
       ref: "core.typography.ramp.4",
       fallback: 16,
     },
@@ -233,7 +233,7 @@ export const blockquoteTokenScopes = {
     },
     "blockquote.size.fontSize.md": {
       name: "blockquote.size.fontSize.md",
-      cssVar: "--fsds-blockquote-size-fontSize-md",
+      cssVar: "--fsds-blockquote-size-font-size-md",
       ref: "blockquote.size.fontSize.lg",
       fallback: 18,
     },

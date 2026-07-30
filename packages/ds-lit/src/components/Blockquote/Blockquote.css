@@ -20,9 +20,9 @@
   border-width: 0;
   border-radius: var(--fsds-blockquote-size-radius-default, 6px);
   padding: var(--fsds-blockquote-size-padding-default, 12px);
-  font-size: var(--fsds-blockquote-size-fontSize-md, 1rem);
-  font-style: var(--fsds-blockquote-typography-fontStyle, italic);
-  font-weight: var(--fsds-blockquote-typography-fontWeight, 500);
+  font-size: var(--fsds-blockquote-size-font-size-md, 1rem);
+  font-style: var(--fsds-blockquote-typography-font-style, italic);
+  font-weight: var(--fsds-blockquote-typography-font-weight, 500);
   margin: 0;
 }
 
@@ -38,17 +38,17 @@
 }
 
 .blockquote--sm {
-  font-size: var(--fsds-blockquote-size-fontSize-md, 1rem);
+  font-size: var(--fsds-blockquote-size-font-size-md, 1rem);
   padding: var(--fsds-blockquote-size-padding-default, 12px);
 }
 
 .blockquote--md {
-  font-size: var(--fsds-blockquote-size-fontSize-md, 1rem);
+  font-size: var(--fsds-blockquote-size-font-size-md, 1rem);
   padding: var(--fsds-blockquote-size-padding-default, 12px);
 }
 
 .blockquote--lg {
-  font-size: var(--fsds-blockquote-size-fontSize-md, 1rem);
+  font-size: var(--fsds-blockquote-size-font-size-md, 1rem);
   padding: var(--fsds-blockquote-size-padding-default, 12px);
 }
 /* @generated:end */

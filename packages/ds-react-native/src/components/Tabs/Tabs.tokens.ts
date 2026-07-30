@@ -90,12 +90,12 @@ export const tabsTokenScopes = {
     },
     "tabs.spacing.pillPadding": {
       name: "tabs.spacing.pillPadding",
-      cssVar: "--fsds-tabs-spacing-pillPadding",
+      cssVar: "--fsds-tabs-spacing-pill-padding",
       literal: "4px 10px",
     },
     "tabs.spacing.panelGap": {
       name: "tabs.spacing.panelGap",
-      cssVar: "--fsds-tabs-spacing-panelGap",
+      cssVar: "--fsds-tabs-spacing-panel-gap",
       ref: "core.spacing.size.06",
       fallback: 16,
     },
@@ -172,7 +172,7 @@ export const tabsTokenScopes = {
     },
     "tabs.size.vertical.listWidth": {
       name: "tabs.size.vertical.listWidth",
-      cssVar: "--fsds-tabs-size-vertical-listWidth",
+      cssVar: "--fsds-tabs-size-vertical-list-width",
       literal: 160,
     },
   },

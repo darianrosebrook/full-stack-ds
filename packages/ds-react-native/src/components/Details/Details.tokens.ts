@@ -150,13 +150,13 @@ export const detailsTokenScopes = {
     },
     "details.typography.lineHeight.body": {
       name: "details.typography.lineHeight.body",
-      cssVar: "--fsds-details-typography-lineHeight-body",
+      cssVar: "--fsds-details-typography-line-height-body",
       ref: "semantic.typography.line.height.body",
       fallback: "1.5",
     },
     "details.typography.fontWeight.medium": {
       name: "details.typography.fontWeight.medium",
-      cssVar: "--fsds-details-typography-fontWeight-medium",
+      cssVar: "--fsds-details-typography-font-weight-medium",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
@@ -174,13 +174,13 @@ export const detailsTokenScopes = {
     },
     "details.typography.fontSize.body": {
       name: "details.typography.fontSize.body",
-      cssVar: "--fsds-details-typography-fontSize-body",
+      cssVar: "--fsds-details-typography-font-size-body",
       ref: "semantic.typography.body.03",
       fallback: 14,
     },
     "details.typography.fontSize.compact": {
       name: "details.typography.fontSize.compact",
-      cssVar: "--fsds-details-typography-fontSize-compact",
+      cssVar: "--fsds-details-typography-font-size-compact",
       ref: "semantic.typography.body.04",
       fallback: 12,
     },
@@ -202,7 +202,7 @@ export const detailsTokenScopes = {
     },
     "details.typography.lineHeight.body": {
       name: "details.typography.lineHeight.body",
-      cssVar: "--fsds-details-typography-lineHeight-body",
+      cssVar: "--fsds-details-typography-line-height-body",
       ref: "core.spacing.size.06",
       fallback: 16,
     },

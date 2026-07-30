@@ -40,9 +40,9 @@ export class CodeSnippetElement extends LitElement {
       --fsds-code-snippet-size-padding-inline: var(--fsds-core-spacing-size-02, 2px);
       --fsds-code-snippet-size-padding-block: var(--fsds-core-spacing-size-01, 1px);
       --fsds-code-snippet-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-code-snippet-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-      --fsds-code-snippet-size-fontSize-default: var(--fsds-core-typography-ramp-3, 0.875rem);
-      --fsds-code-snippet-typography-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-code-snippet-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
+      --fsds-code-snippet-size-font-size-default: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-code-snippet-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-code-snippet-elevation-kbd: var(--fsds-semantic-elevation-surface-raised, 0 1px 1px rgba(0,0,0,0.14));
     }
 
@@ -65,8 +65,8 @@ export class CodeSnippetElement extends LitElement {
       border-radius: var(--fsds-code-snippet-size-radius-default, 6px);
       color: var(--fsds-code-snippet-color-foreground-primary, #141414);
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-      font-size: var(--fsds-code-snippet-size-fontSize-default, 0.875rem);
-      line-height: var(--fsds-code-snippet-typography-lineHeight-default, 1.5);
+      font-size: var(--fsds-code-snippet-size-font-size-default, 0.875rem);
+      line-height: var(--fsds-code-snippet-typography-line-height-default, 1.5);
       margin: 0;
       padding-block: var(--fsds-code-snippet-size-padding-block, 1px);
       padding-inline: var(--fsds-code-snippet-size-padding-inline, 2px);

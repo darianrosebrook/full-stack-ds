@@ -40,7 +40,7 @@
   background-color: var(--fsds-select-color-background-default, #ffffff);
   color: var(--fsds-select-color-foreground-default, #141414);
   font-size: var(--fsds-select-font-size-default, 16px);
-  line-height: var(--fsds-select-font-lineHeight-default, 1.5);
+  line-height: var(--fsds-select-font-line-height-default, 1.5);
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;

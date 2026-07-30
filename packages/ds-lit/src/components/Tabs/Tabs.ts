@@ -61,8 +61,8 @@ export class TabsElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tabs-spacing-pillPadding: 4px 10px;
-      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-spacing-pill-padding: 4px 10px;
+      --fsds-tabs-spacing-panel-gap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
@@ -75,7 +75,7 @@ export class TabsElement extends LitElement {
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-listWidth: 160px;
+      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     .tabs {
@@ -83,7 +83,7 @@ export class TabsElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap, 16px);
+      gap: var(--fsds-tabs-spacing-panel-gap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -191,7 +191,7 @@ export class TabsElement extends LitElement {
 
     .tabs--pills .tabs__tab {
       border-radius: var(--fsds-tabs-shape-radius, 6px);
-      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
+      padding: var(--fsds-tabs-spacing-pill-padding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
@@ -303,8 +303,8 @@ export class TabsListElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tabs-spacing-pillPadding: 4px 10px;
-      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-spacing-pill-padding: 4px 10px;
+      --fsds-tabs-spacing-panel-gap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
@@ -317,7 +317,7 @@ export class TabsListElement extends LitElement {
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-listWidth: 160px;
+      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     .tabs {
@@ -325,7 +325,7 @@ export class TabsListElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap, 16px);
+      gap: var(--fsds-tabs-spacing-panel-gap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -433,7 +433,7 @@ export class TabsListElement extends LitElement {
 
     .tabs--pills .tabs__tab {
       border-radius: var(--fsds-tabs-shape-radius, 6px);
-      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
+      padding: var(--fsds-tabs-spacing-pill-padding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
@@ -530,8 +530,8 @@ export class TabsTabElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tabs-spacing-pillPadding: 4px 10px;
-      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-spacing-pill-padding: 4px 10px;
+      --fsds-tabs-spacing-panel-gap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
@@ -544,7 +544,7 @@ export class TabsTabElement extends LitElement {
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-listWidth: 160px;
+      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     .tabs {
@@ -552,7 +552,7 @@ export class TabsTabElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap, 16px);
+      gap: var(--fsds-tabs-spacing-panel-gap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -660,7 +660,7 @@ export class TabsTabElement extends LitElement {
 
     .tabs--pills .tabs__tab {
       border-radius: var(--fsds-tabs-shape-radius, 6px);
-      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
+      padding: var(--fsds-tabs-spacing-pill-padding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {
@@ -746,8 +746,8 @@ export class TabsPanelElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tabs-spacing-pillPadding: 4px 10px;
-      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-spacing-pill-padding: 4px 10px;
+      --fsds-tabs-spacing-panel-gap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #727272);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d92d2e);
@@ -760,7 +760,7 @@ export class TabsPanelElement extends LitElement {
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-listWidth: 160px;
+      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     .tabs {
@@ -768,7 +768,7 @@ export class TabsPanelElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-tabs-spacing-panelGap, 16px);
+      gap: var(--fsds-tabs-spacing-panel-gap, 16px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -876,7 +876,7 @@ export class TabsPanelElement extends LitElement {
 
     .tabs--pills .tabs__tab {
       border-radius: var(--fsds-tabs-shape-radius, 6px);
-      padding: var(--fsds-tabs-spacing-pillPadding, 4px 10px);
+      padding: var(--fsds-tabs-spacing-pill-padding, 4px 10px);
     }
 
     .tabs--pills .tabs__tab--active {

@@ -84,55 +84,55 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.light": {
       name: "text.typography.fontWeight.light",
-      cssVar: "--fsds-text-typography-fontWeight-light",
+      cssVar: "--fsds-text-typography-font-weight-light",
       ref: "semantic.typography.font.weight.light",
       fallback: "300",
     },
     "text.typography.fontWeight.regular": {
       name: "text.typography.fontWeight.regular",
-      cssVar: "--fsds-text-typography-fontWeight-regular",
+      cssVar: "--fsds-text-typography-font-weight-regular",
       ref: "semantic.typography.font.weight.regular",
       fallback: "400",
     },
     "text.typography.fontWeight.medium": {
       name: "text.typography.fontWeight.medium",
-      cssVar: "--fsds-text-typography-fontWeight-medium",
+      cssVar: "--fsds-text-typography-font-weight-medium",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
     "text.typography.fontWeight.bold": {
       name: "text.typography.fontWeight.bold",
-      cssVar: "--fsds-text-typography-fontWeight-bold",
+      cssVar: "--fsds-text-typography-font-weight-bold",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
     "text.typography.lineHeight.heading": {
       name: "text.typography.lineHeight.heading",
-      cssVar: "--fsds-text-typography-lineHeight-heading",
+      cssVar: "--fsds-text-typography-line-height-heading",
       ref: "semantic.typography.line.height.heading",
       fallback: "1",
     },
     "text.typography.lineHeight.body": {
       name: "text.typography.lineHeight.body",
-      cssVar: "--fsds-text-typography-lineHeight-body",
+      cssVar: "--fsds-text-typography-line-height-body",
       ref: "semantic.typography.line.height.body",
       fallback: "1.5",
     },
     "text.typography.lineHeight.tight": {
       name: "text.typography.lineHeight.tight",
-      cssVar: "--fsds-text-typography-lineHeight-tight",
+      cssVar: "--fsds-text-typography-line-height-tight",
       ref: "semantic.typography.line.height.tight",
       fallback: "1.2",
     },
     "text.typography.letterSpacing.wide": {
       name: "text.typography.letterSpacing.wide",
-      cssVar: "--fsds-text-typography-letterSpacing-wide",
+      cssVar: "--fsds-text-typography-letter-spacing-wide",
       ref: "semantic.typography.letter.spacing.wide",
       fallback: 0.288,
     },
     "text.typography.letterSpacing.tight": {
       name: "text.typography.letterSpacing.tight",
-      cssVar: "--fsds-text-typography-letterSpacing-tight",
+      cssVar: "--fsds-text-typography-letter-spacing-tight",
       ref: "semantic.typography.letter.spacing.tight",
       fallback: -0.288,
     },
@@ -188,7 +188,7 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.bold": {
       name: "text.typography.fontWeight.bold",
-      cssVar: "--fsds-text-typography-fontWeight-bold",
+      cssVar: "--fsds-text-typography-font-weight-bold",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
@@ -202,7 +202,7 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.bold": {
       name: "text.typography.fontWeight.bold",
-      cssVar: "--fsds-text-typography-fontWeight-bold",
+      cssVar: "--fsds-text-typography-font-weight-bold",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
@@ -216,7 +216,7 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.bold": {
       name: "text.typography.fontWeight.bold",
-      cssVar: "--fsds-text-typography-fontWeight-bold",
+      cssVar: "--fsds-text-typography-font-weight-bold",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
@@ -230,7 +230,7 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.regular": {
       name: "text.typography.fontWeight.regular",
-      cssVar: "--fsds-text-typography-fontWeight-regular",
+      cssVar: "--fsds-text-typography-font-weight-regular",
       ref: "semantic.typography.font.weight.regular",
       fallback: "400",
     },
@@ -244,7 +244,7 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.regular": {
       name: "text.typography.fontWeight.regular",
-      cssVar: "--fsds-text-typography-fontWeight-regular",
+      cssVar: "--fsds-text-typography-font-weight-regular",
       ref: "semantic.typography.font.weight.regular",
       fallback: "400",
     },
@@ -258,7 +258,7 @@ export const textTokenScopes = {
     },
     "text.typography.fontWeight.medium": {
       name: "text.typography.fontWeight.medium",
-      cssVar: "--fsds-text-typography-fontWeight-medium",
+      cssVar: "--fsds-text-typography-font-weight-medium",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
@@ -330,7 +330,7 @@ export const textTokenScopes = {
   "variant_light": {
     "text.typography.fontWeight.light": {
       name: "text.typography.fontWeight.light",
-      cssVar: "--fsds-text-typography-fontWeight-light",
+      cssVar: "--fsds-text-typography-font-weight-light",
       ref: "semantic.typography.font.weight.light",
       fallback: "300",
     },
@@ -338,7 +338,7 @@ export const textTokenScopes = {
   "variant_normal": {
     "text.typography.fontWeight.regular": {
       name: "text.typography.fontWeight.regular",
-      cssVar: "--fsds-text-typography-fontWeight-regular",
+      cssVar: "--fsds-text-typography-font-weight-regular",
       ref: "semantic.typography.font.weight.regular",
       fallback: "400",
     },
@@ -346,7 +346,7 @@ export const textTokenScopes = {
   "variant_medium": {
     "text.typography.fontWeight.medium": {
       name: "text.typography.fontWeight.medium",
-      cssVar: "--fsds-text-typography-fontWeight-medium",
+      cssVar: "--fsds-text-typography-font-weight-medium",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
@@ -354,7 +354,7 @@ export const textTokenScopes = {
   "variant_semibold": {
     "text.typography.fontWeight.medium": {
       name: "text.typography.fontWeight.medium",
-      cssVar: "--fsds-text-typography-fontWeight-medium",
+      cssVar: "--fsds-text-typography-font-weight-medium",
       ref: "semantic.typography.font.weight.semibold",
       fallback: "600",
     },
@@ -362,7 +362,7 @@ export const textTokenScopes = {
   "variant_bold": {
     "text.typography.fontWeight.bold": {
       name: "text.typography.fontWeight.bold",
-      cssVar: "--fsds-text-typography-fontWeight-bold",
+      cssVar: "--fsds-text-typography-font-weight-bold",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },

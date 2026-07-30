@@ -11,8 +11,8 @@
   --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
   --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-toast-size-maxWidth: 400px;
+  --fsds-toast-spacing-stack-gap: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-toast-size-max-width: 400px;
   --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
   --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
   --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);

@@ -23,6 +23,10 @@ import type {
   ComponentContract,
   TokenDefinition,
 } from "../../types/data";
+// The panel writes the same custom properties the generated CSS reads, so it
+// must lower token paths through the same authority codegen and the token build
+// use — see packages/ds-codegen/src/token-path.ts.
+import { tokenSlug } from "../../../packages/ds-codegen/src/token-path";
 
 /** A single editable control rendered as a row in the panel. */
 export type ControlDescriptor =
@@ -102,13 +106,11 @@ export interface DerivedControls {
 const COLOR_RE = /^(#|rgb|hsl|oklch|color\()/i;
 
 /**
- * Map a dotted token slot to its CSS custom-property name. The token CSS the
- * components consume uses the `--fsds-` prefix with dots and dot-segments
- * lowered to dashes; this mirrors that convention so an override here patches
- * the same variable the generated component CSS reads.
+ * Map a dotted token slot to its CSS custom-property name, so an override here
+ * patches the same variable the generated component CSS reads.
  */
 export function slotToCssVar(slot: string): string {
-  return "--fsds-" + slot.replace(/\./g, "-");
+  return "--" + tokenSlug(slot);
 }
 
 /**
@@ -119,11 +121,11 @@ export function slotToCssVar(slot: string): string {
  * slot override — e.g. `.button--primary { --fsds-button-color-background-default:
  * var(--fsds-semantic-color-action-background-primary-default); }`. Overriding
  * the semantic var is what actually re-skins a variant-styled component live.
- * Same dot→dash lowering as slotToCssVar; the path already carries its
- * semantic/core layer prefix.
+ * Same lowering as slotToCssVar; the path already carries its semantic/core
+ * layer prefix.
  */
 export function resolvesToCssVar(resolvesTo: string): string {
-  return "--fsds-" + resolvesTo.replace(/\./g, "-");
+  return "--" + tokenSlug(resolvesTo);
 }
 
 /** A literal value that reads as a CSS color (drives swatch vs. text input). */

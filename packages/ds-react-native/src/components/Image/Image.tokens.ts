@@ -96,7 +96,7 @@ export const imageTokenScopes = {
     },
     "image.typography.error.fontSize": {
       name: "image.typography.error.fontSize",
-      cssVar: "--fsds-image-typography-error-fontSize",
+      cssVar: "--fsds-image-typography-error-font-size",
       ref: "semantic.typography.body.04",
       fallback: 12,
     },

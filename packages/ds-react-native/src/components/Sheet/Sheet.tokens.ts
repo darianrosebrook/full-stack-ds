@@ -107,13 +107,13 @@ export const sheetTokenScopes = {
     },
     "sheet.color.textTitle": {
       name: "sheet.color.textTitle",
-      cssVar: "--fsds-sheet-color-textTitle",
+      cssVar: "--fsds-sheet-color-text-title",
       ref: "semantic.color.foreground.primary",
       fallback: "#141414",
     },
     "sheet.color.textDescription": {
       name: "sheet.color.textDescription",
-      cssVar: "--fsds-sheet-color-textDescription",
+      cssVar: "--fsds-sheet-color-text-description",
       ref: "semantic.color.foreground.secondary",
       fallback: "#5c5b5c",
     },
@@ -165,13 +165,13 @@ export const sheetTokenScopes = {
     },
     "sheet.text.sizeTitle": {
       name: "sheet.text.sizeTitle",
-      cssVar: "--fsds-sheet-text-sizeTitle",
+      cssVar: "--fsds-sheet-text-size-title",
       ref: "semantic.typography.heading.06",
       fallback: 14,
     },
     "sheet.text.weightTitle": {
       name: "sheet.text.weightTitle",
-      cssVar: "--fsds-sheet-text-weightTitle",
+      cssVar: "--fsds-sheet-text-weight-title",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
@@ -195,7 +195,7 @@ export const sheetTokenScopes = {
     },
     "sheet.color.backgroundHover": {
       name: "sheet.color.backgroundHover",
-      cssVar: "--fsds-sheet-color-backgroundHover",
+      cssVar: "--fsds-sheet-color-background-hover",
       ref: "semantic.interaction.background.hover",
       fallback: "#d0d0d0",
     },

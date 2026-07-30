@@ -27,9 +27,9 @@
   border-color: var(--fsds-tooltip-color-border-default, #d0d0d0);
   border-radius: var(--fsds-tooltip-size-radius-default, 4px);
   padding: var(--fsds-tooltip-size-padding-x, 8px);
-  max-width: var(--fsds-tooltip-size-maxWidth, 200px);
+  max-width: var(--fsds-tooltip-size-max-width, 200px);
   z-index: var(--fsds-tooltip-layer-content, 1800);
-  font-size: var(--fsds-tooltip-typography-fontSize, 14px);
+  font-size: var(--fsds-tooltip-typography-font-size, 14px);
   display: inline-block;
   border-style: solid;
   border-width: 1px;

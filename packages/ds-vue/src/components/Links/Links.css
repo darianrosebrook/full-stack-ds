@@ -14,7 +14,7 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-links-color-foreground-default, #d92d2e);
-  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
+  font-size: var(--fsds-links-size-font-size-medium, 1rem);
   text-decoration-color: var(--fsds-links-color-underline-default, #b8b8b8);
   text-decoration-line: underline;
   text-underline-offset: 2px;
@@ -48,15 +48,15 @@
 }
 
 .links--small {
-  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
+  font-size: var(--fsds-links-size-font-size-medium, 1rem);
 }
 
 .links--medium {
-  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
+  font-size: var(--fsds-links-size-font-size-medium, 1rem);
 }
 
 .links--large {
-  font-size: var(--fsds-links-size-fontSize-medium, 1rem);
+  font-size: var(--fsds-links-size-font-size-medium, 1rem);
 }
 /* @generated:end */
 

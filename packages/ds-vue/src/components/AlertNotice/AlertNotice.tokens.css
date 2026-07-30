@@ -31,39 +31,39 @@
   --fsds-alert-notice-color-border-danger: var(--fsds-semantic-color-border-danger, #b31b1b);
   --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
   --fsds-alert-notice-size-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
-  --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
+  --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
   --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
   --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
   --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);
-  --fsds-alert-notice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-  --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+  --fsds-alert-notice-typography-title-font-weight: var(--fsds-semantic-typography-font-weight-bold, 700);
+  --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-02, 16px);
   --fsds-alert-notice-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
   --fsds-alert-notice-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
-  --fsds-alert-notice-typography-page-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-  --fsds-alert-notice-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
-  --fsds-alert-notice-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
+  --fsds-alert-notice-typography-page-font-size: var(--fsds-semantic-typography-body-02, 16px);
+  --fsds-alert-notice-typography-page-title-font-size: var(--fsds-semantic-typography-body-01, 18px);
+  --fsds-alert-notice-typography-inline-font-size: var(--fsds-semantic-typography-body-04, 12px);
 }
 
 .alert-notice--inline {
   --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-04, 8px);
   --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
   --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-04, 12px);
-  --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+  --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-03, 14px);
 }
 
 .alert-notice--section {
   --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
   --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
   --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
-  --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+  --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-02, 16px);
 }
 
 .alert-notice--page {
   --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-07, 24px);
   --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
   --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-02, 16px);
-  --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
-  --fsds-alert-notice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+  --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-01, 18px);
+  --fsds-alert-notice-typography-title-font-weight: var(--fsds-semantic-typography-font-weight-bold, 700);
   --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-softer, #cfeefe);
   --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-softer, #ddefd8);
   --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-softer, #ffe6c8);

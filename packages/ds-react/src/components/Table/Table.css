@@ -15,7 +15,7 @@
   max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-table-color-text, #141414);
   font-size: var(--fsds-table-text-size, 14px);
-  line-height: var(--fsds-table-text-lineHeight, 1.5);
+  line-height: var(--fsds-table-text-line-height, 1.5);
   overflow-x: auto;
 
   &:hover {
@@ -36,7 +36,7 @@
 }
 
 .table__caption {
-  font-size: var(--fsds-table-text-sizeCaption, 12px);
+  font-size: var(--fsds-table-text-size-caption, 12px);
   text-align: start;
   padding-bottom: var(--fsds-table-spacing-caption, 8px);
 }
@@ -47,16 +47,16 @@
 
 .table__footer {
   background-color: var(--fsds-table-color-background-footer, #d0d0d0);
-  font-weight: var(--fsds-table-text-weightFooter, 500);
+  font-weight: var(--fsds-table-text-weight-footer, 500);
 }
 
 .table__headerCell {
-  font-weight: var(--fsds-table-text-weightHead, 700);
+  font-weight: var(--fsds-table-text-weight-head, 700);
   color: var(--fsds-table-color-text, #141414);
-  padding-left: var(--fsds-table-spacing-cellX, 4px);
-  padding-right: var(--fsds-table-spacing-cellX, 4px);
-  padding-top: var(--fsds-table-spacing-cellY, 2px);
-  padding-bottom: var(--fsds-table-spacing-cellY, 2px);
+  padding-left: var(--fsds-table-spacing-cell-x, 4px);
+  padding-right: var(--fsds-table-spacing-cell-x, 4px);
+  padding-top: var(--fsds-table-spacing-cell-y, 2px);
+  padding-bottom: var(--fsds-table-spacing-cell-y, 2px);
   border-bottom-width: var(--fsds-table-border-width, 1px);
   border-bottom-color: var(--fsds-table-color-border, #b8b8b8);
   border-bottom-style: solid;
@@ -64,10 +64,10 @@
 }
 
 .table__cell {
-  padding-left: var(--fsds-table-spacing-cellX, 4px);
-  padding-right: var(--fsds-table-spacing-cellX, 4px);
-  padding-top: var(--fsds-table-spacing-cellY, 2px);
-  padding-bottom: var(--fsds-table-spacing-cellY, 2px);
+  padding-left: var(--fsds-table-spacing-cell-x, 4px);
+  padding-right: var(--fsds-table-spacing-cell-x, 4px);
+  padding-top: var(--fsds-table-spacing-cell-y, 2px);
+  padding-bottom: var(--fsds-table-spacing-cell-y, 2px);
   border-bottom-width: var(--fsds-table-border-width, 1px);
   border-bottom-color: var(--fsds-table-color-border, #b8b8b8);
   border-bottom-style: solid;

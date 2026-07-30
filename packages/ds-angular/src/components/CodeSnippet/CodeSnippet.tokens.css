@@ -21,9 +21,9 @@
   --fsds-code-snippet-size-padding-inline: var(--fsds-core-spacing-size-02, 2px);
   --fsds-code-snippet-size-padding-block: var(--fsds-core-spacing-size-01, 1px);
   --fsds-code-snippet-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-  --fsds-code-snippet-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-  --fsds-code-snippet-size-fontSize-default: var(--fsds-core-typography-ramp-3, 0.875rem);
-  --fsds-code-snippet-typography-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
+  --fsds-code-snippet-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
+  --fsds-code-snippet-size-font-size-default: var(--fsds-core-typography-ramp-3, 0.875rem);
+  --fsds-code-snippet-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
   --fsds-code-snippet-elevation-kbd: var(--fsds-semantic-elevation-surface-raised, 0 1px 1px rgba(0,0,0,0.14));
 }
 /* @generated:end */

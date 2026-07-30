@@ -131,13 +131,13 @@ export const cardTokenScopes = {
     },
     "card.typography.lineHeight.heading": {
       name: "card.typography.lineHeight.heading",
-      cssVar: "--fsds-card-typography-lineHeight-heading",
+      cssVar: "--fsds-card-typography-line-height-heading",
       ref: "semantic.typography.line.height.heading",
       fallback: "1",
     },
     "card.typography.lineHeight.normal": {
       name: "card.typography.lineHeight.normal",
-      cssVar: "--fsds-card-typography-lineHeight-normal",
+      cssVar: "--fsds-card-typography-line-height-normal",
       ref: "semantic.typography.line.height.normal",
       fallback: "1.5",
     },
@@ -215,13 +215,13 @@ export const cardTokenScopes = {
     },
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
     "card.size.statusAccent.width": {
       name: "card.size.statusAccent.width",
-      cssVar: "--fsds-card-size-statusAccent-width",
+      cssVar: "--fsds-card-size-status-accent-width",
       ref: "core.spacing.size.02",
       fallback: 2,
     },
@@ -259,7 +259,7 @@ export const cardTokenScopes = {
   "variant_completed": {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.success",
       fallback: "#3a6614",
     },
@@ -267,7 +267,7 @@ export const cardTokenScopes = {
   "variant_in_progress": {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.info",
       fallback: "#034fd6",
     },
@@ -275,7 +275,7 @@ export const cardTokenScopes = {
   "variant_planned": {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
@@ -283,7 +283,7 @@ export const cardTokenScopes = {
   "variant_deprecated": {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.danger",
       fallback: "#b31b1b",
     },
@@ -291,7 +291,7 @@ export const cardTokenScopes = {
   "variant_category": {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.accent",
       fallback: "#d92d2e",
     },
@@ -299,7 +299,7 @@ export const cardTokenScopes = {
   "variant_complexity": {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-statusAccent-default",
+      cssVar: "--fsds-card-color-status-accent-default",
       ref: "semantic.color.border.warning",
       fallback: "#8b4b00",
     },

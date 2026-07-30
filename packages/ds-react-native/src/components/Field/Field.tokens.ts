@@ -131,7 +131,7 @@ export const fieldTokenScopes = {
     },
     "field.color.borderBold": {
       name: "field.color.borderBold",
-      cssVar: "--fsds-field-color-borderBold",
+      cssVar: "--fsds-field-color-border-bold",
       ref: "semantic.color.border.bold",
       fallback: "#888889",
     },
@@ -185,7 +185,7 @@ export const fieldTokenScopes = {
     },
     "field.label.fontSize": {
       name: "field.label.fontSize",
-      cssVar: "--fsds-field-label-fontSize",
+      cssVar: "--fsds-field-label-font-size",
       ref: "semantic.typography.body.small.font.size",
       fallback: 14,
     },

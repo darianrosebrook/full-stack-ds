@@ -90,7 +90,7 @@ export const truncateTokenScopes = {
     },
     "truncate.typography.fontWeight": {
       name: "truncate.typography.fontWeight",
-      cssVar: "--fsds-truncate-typography-fontWeight",
+      cssVar: "--fsds-truncate-typography-font-weight",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
@@ -102,7 +102,7 @@ export const truncateTokenScopes = {
     },
     "truncate.color.foreground.linkHover": {
       name: "truncate.color.foreground.linkHover",
-      cssVar: "--fsds-truncate-color-foreground-linkHover",
+      cssVar: "--fsds-truncate-color-foreground-link-hover",
       ref: "semantic.color.foreground.linkHover",
       fallback: "#b31b1b",
     },

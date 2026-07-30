@@ -15,54 +15,54 @@
   max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-text-color-foreground-primary, #141414);
   font-size: var(--fsds-text-size-md, 1rem);
-  line-height: var(--fsds-text-typography-lineHeight-body, 1.5);
+  line-height: var(--fsds-text-typography-line-height-body, 1.5);
   margin: 0;
 }
 
 .text--display {
   font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
-  line-height: var(--fsds-text-typography-lineHeight-heading, 1);
-  letter-spacing: var(--fsds-text-typography-letterSpacing-tight, -0.018rem);
+  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+  line-height: var(--fsds-text-typography-line-height-heading, 1);
+  letter-spacing: var(--fsds-text-typography-letter-spacing-tight, -0.018rem);
 }
 
 .text--headline {
   font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
-  line-height: var(--fsds-text-typography-lineHeight-heading, 1);
-  letter-spacing: var(--fsds-text-typography-letterSpacing-tight, -0.018rem);
+  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+  line-height: var(--fsds-text-typography-line-height-heading, 1);
+  letter-spacing: var(--fsds-text-typography-letter-spacing-tight, -0.018rem);
 }
 
 .text--title {
   font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
-  line-height: var(--fsds-text-typography-lineHeight-heading, 1);
+  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+  line-height: var(--fsds-text-typography-line-height-heading, 1);
 }
 
 .text--body {
   font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-fontWeight-regular, 400);
-  line-height: var(--fsds-text-typography-lineHeight-body, 1.5);
+  font-weight: var(--fsds-text-typography-font-weight-regular, 400);
+  line-height: var(--fsds-text-typography-line-height-body, 1.5);
 }
 
 .text--caption {
   font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-fontWeight-regular, 400);
-  line-height: var(--fsds-text-typography-lineHeight-tight, 1.2);
+  font-weight: var(--fsds-text-typography-font-weight-regular, 400);
+  line-height: var(--fsds-text-typography-line-height-tight, 1.2);
 }
 
 .text--overline {
   font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-fontWeight-medium, 500);
-  line-height: var(--fsds-text-typography-lineHeight-tight, 1.2);
+  font-weight: var(--fsds-text-typography-font-weight-medium, 500);
+  line-height: var(--fsds-text-typography-line-height-tight, 1.2);
   text-transform: uppercase;
-  letter-spacing: var(--fsds-text-typography-letterSpacing-wide, 0.018rem);
+  letter-spacing: var(--fsds-text-typography-letter-spacing-wide, 0.018rem);
 }
 
 .text--code {
   font-size: var(--fsds-text-size-md, 1rem);
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-  line-height: var(--fsds-text-typography-lineHeight-body, 1.5);
+  line-height: var(--fsds-text-typography-line-height-body, 1.5);
 }
 
 .text--xs {
@@ -94,23 +94,23 @@
 }
 
 .text--light {
-  font-weight: var(--fsds-text-typography-fontWeight-light, 300);
+  font-weight: var(--fsds-text-typography-font-weight-light, 300);
 }
 
 .text--normal {
-  font-weight: var(--fsds-text-typography-fontWeight-regular, 400);
+  font-weight: var(--fsds-text-typography-font-weight-regular, 400);
 }
 
 .text--medium {
-  font-weight: var(--fsds-text-typography-fontWeight-medium, 500);
+  font-weight: var(--fsds-text-typography-font-weight-medium, 500);
 }
 
 .text--semibold {
-  font-weight: var(--fsds-text-typography-fontWeight-medium, 500);
+  font-weight: var(--fsds-text-typography-font-weight-medium, 500);
 }
 
 .text--bold {
-  font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
+  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
 }
 
 .text--left {

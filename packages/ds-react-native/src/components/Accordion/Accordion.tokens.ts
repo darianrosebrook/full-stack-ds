@@ -90,7 +90,7 @@ export const accordionTokenScopes = {
     },
     "accordion.color.textSecondary": {
       name: "accordion.color.textSecondary",
-      cssVar: "--fsds-accordion-color-textSecondary",
+      cssVar: "--fsds-accordion-color-text-secondary",
       ref: "semantic.color.foreground.secondary",
       fallback: "#5c5b5c",
     },
@@ -126,13 +126,13 @@ export const accordionTokenScopes = {
     },
     "accordion.spacing.paddingX": {
       name: "accordion.spacing.paddingX",
-      cssVar: "--fsds-accordion-spacing-paddingX",
+      cssVar: "--fsds-accordion-spacing-padding-x",
       ref: "core.spacing.size.00",
       fallback: 0,
     },
     "accordion.spacing.paddingY": {
       name: "accordion.spacing.paddingY",
-      cssVar: "--fsds-accordion-spacing-paddingY",
+      cssVar: "--fsds-accordion-spacing-padding-y",
       ref: "core.spacing.size.04",
       fallback: 8,
     },
@@ -150,19 +150,19 @@ export const accordionTokenScopes = {
     },
     "accordion.text.lineHeight": {
       name: "accordion.text.lineHeight",
-      cssVar: "--fsds-accordion-text-lineHeight",
+      cssVar: "--fsds-accordion-text-line-height",
       ref: "semantic.typography.line.height.normal",
       fallback: "1.5",
     },
     "accordion.text.sizeContent": {
       name: "accordion.text.sizeContent",
-      cssVar: "--fsds-accordion-text-sizeContent",
+      cssVar: "--fsds-accordion-text-size-content",
       ref: "semantic.typography.body.03",
       fallback: 14,
     },
     "accordion.text.lineHeightContent": {
       name: "accordion.text.lineHeightContent",
-      cssVar: "--fsds-accordion-text-lineHeightContent",
+      cssVar: "--fsds-accordion-text-line-height-content",
       ref: "semantic.typography.line.height.loose",
       fallback: "1.8",
     },
@@ -198,7 +198,7 @@ export const accordionTokenScopes = {
     },
     "accordion.color.textHover": {
       name: "accordion.color.textHover",
-      cssVar: "--fsds-accordion-color-textHover",
+      cssVar: "--fsds-accordion-color-text-hover",
       ref: "semantic.interaction.text.hover",
       fallback: "#5c5b5c",
     },

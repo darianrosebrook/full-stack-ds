@@ -15,7 +15,7 @@
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-breadcrumbs-color-background-elevated, #ffffff);
   border-color: var(--fsds-breadcrumbs-color-border-subtle, #d0d0d0);
-  line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse, 1);
+  line-height: var(--fsds-breadcrumbs-typography-line-height-collapse, 1);
   display: block;
   border-radius: var(--fsds-breadcrumbs-shape-radius-medium, 6px);
   padding: var(--fsds-breadcrumbs-spacing-padding-default, 8px);

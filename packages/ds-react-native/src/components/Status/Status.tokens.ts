@@ -106,13 +106,13 @@ export const statusTokenScopes = {
     },
     "status.size.minHeight": {
       name: "status.size.minHeight",
-      cssVar: "--fsds-status-size-minHeight",
+      cssVar: "--fsds-status-size-min-height",
       ref: "semantic.glyph.badge.size.md.minHeight",
       fallback: 24,
     },
     "status.size.fontSize": {
       name: "status.size.fontSize",
-      cssVar: "--fsds-status-size-fontSize",
+      cssVar: "--fsds-status-size-font-size",
       ref: "semantic.glyph.badge.size.md.fontSize",
       fallback: 12,
     },
@@ -130,7 +130,7 @@ export const statusTokenScopes = {
     },
     "status.typography.lineHeight": {
       name: "status.typography.lineHeight",
-      cssVar: "--fsds-status-typography-lineHeight",
+      cssVar: "--fsds-status-typography-line-height",
       ref: "semantic.typography.line.height.collapse",
       fallback: "1",
     },
