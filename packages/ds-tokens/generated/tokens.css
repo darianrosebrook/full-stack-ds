@@ -2228,6 +2228,14 @@
     --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-200);
   }
 
+  .light[data-brand="developer"] .chip, [data-theme="light"][data-brand="developer"] .chip {
+    --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-50);
+    --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-100);
+    --fsds-chip-color-background-active: var(--fsds-core-color-palette-indigo-200);
+    --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-700);
+    --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-200);
+  }
+
   @media (prefers-color-scheme: dark) {
     [data-brand="developer"] .chip {
     --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-900);
@@ -3072,6 +3080,12 @@
     --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-700);
   }
 
+  .light[data-brand="quickserve"] .badge, [data-theme="light"][data-brand="quickserve"] .badge {
+    --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-600);
+    --fsds-badge-color-foreground-primary: var(--fsds-core-color-mode-light);
+    --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-700);
+  }
+
   @media (prefers-color-scheme: dark) {
     [data-brand="quickserve"] .badge {
     --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-500);
@@ -3237,6 +3251,11 @@
   }
 
   [data-brand="streaming"] .avatar {
+    --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-100);
+    --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-300);
+  }
+
+  .light[data-brand="streaming"] .avatar, [data-theme="light"][data-brand="streaming"] .avatar {
     --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-100);
     --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-300);
   }

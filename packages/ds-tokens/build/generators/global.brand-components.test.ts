@@ -260,4 +260,44 @@ describe("generateBrandLayerCSS component-scoped output", () => {
     const css = generateBrandLayerCSS(makeBrand(new Map()));
     expect(css).not.toContain(".button {");
   });
+
+  it("emits an explicit .light[data-brand] block with higher specificity than the @media dark block, so an explicit light override beats an OS dark preference", () => {
+    // Regression pin: without this block, the bare `[data-brand] .button`
+    // default and the `@media (prefers-color-scheme: dark)` block both have
+    // specificity (0,2,0) — a tie the cascade breaks by source order, so the
+    // later @media block always won even when the page explicitly forced
+    // light mode. Confirmed live in a real browser (OS dark + forced
+    // .light): Avatar's component-scoped background resolved to the dark
+    // value until this `.light[data-brand]` block (specificity (0,3,0),
+    // matching formatBrandBlock's semantic-layer equivalent) was added.
+    // jsdom does not implement cascade-layer/specificity resolution, so
+    // this test pins the compensating rule's presence and exact selector
+    // text — not the resolved cascade outcome, which only a real browser
+    // can prove.
+    const componentVars = new Map([
+      [
+        "button",
+        {
+          light: { "--fsds-button-color-background-default": "#1ed760" },
+          dark: { "--fsds-button-color-background-default": "#17b34e" },
+        },
+      ],
+    ]);
+    const css = generateBrandLayerCSS(makeBrand(componentVars));
+
+    expect(css).toContain(
+      '.light[data-brand="streaming"] .button, [data-theme="light"][data-brand="streaming"] .button {\n    --fsds-button-color-background-default: #1ed760;\n  }',
+    );
+  });
+
+  it("does not emit a .light component block when the brand has no dark override for that component (nothing for it to out-specificity)", () => {
+    const componentVars = new Map([
+      [
+        "button",
+        { light: { "--fsds-button-color-background-default": "#1ed760" }, dark: {} },
+      ],
+    ]);
+    const css = generateBrandLayerCSS(makeBrand(componentVars));
+    expect(css).not.toContain('.light[data-brand="streaming"] .button');
+  });
 });
