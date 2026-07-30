@@ -1,0 +1,31 @@
+id: RAIL-TOKEN-REFERENCE-RESOLVABILITY-01
+title: 'Gate token health on reference resolvability, not reference count'
+risk_tier: 2
+mode: refactor
+lifecycle_state: active
+created_at: '2026-07-30T04:48:46.543Z'
+updated_at: '2026-07-30T04:48:46.543Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-tokens/build/runners/usage.ts'
+    - 'packages/ds-tokens/build/analytics/usageTracker.ts'
+    - 'packages/ds-tokens/usage-baseline.json'
+    - 'docs/architecture/tokens-architecture.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a brand declares a palette ramp for later use; when the token gate runs; then it passes, while a contract referencing a token path the graph does not declare fails'
+non_functional: {}
+contracts:
+  - name: 'usage-gate'
+    type: behavior
+    path: 'packages/ds-tokens/build/runners/usage.ts'
