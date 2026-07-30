@@ -1007,6 +1007,26 @@ export function generateBrandLayerCSS(
       }
 
       if (Object.keys(compOverrides.dark).length > 0) {
+        // Explicit-light block, mirroring formatBrandBlock's semantic-layer
+        // equivalent. Without this, the bare default block above and the
+        // `@media (prefers-color-scheme: dark)` block below have EQUAL
+        // specificity ([data-brand] .component, once each) — a tie the
+        // cascade breaks by source order, so the later @media block always
+        // wins whenever the OS prefers dark, even when the page has
+        // explicitly forced light mode via .light/[data-theme="light"].
+        // This block's higher specificity (3 selector components vs. 2)
+        // is what lets an explicit light override actually win. Only
+        // needed when a dark override exists at all — with no @media
+        // block to lose to, there's nothing to out-specificity.
+        if (Object.keys(compOverrides.light).length > 0) {
+          const lightCompProps = Object.entries(compOverrides.light)
+            .map(([p, v]) => `    ${p}: ${v};`)
+            .join("\n");
+          blocks.push(
+            `  .light[data-brand="${brandId}"] .${componentKebab}, [data-theme="light"][data-brand="${brandId}"] .${componentKebab} {\n${lightCompProps}\n  }`,
+          );
+        }
+
         const darkCompProps = Object.entries(compOverrides.dark)
           .map(([p, v]) => `    ${p}: ${v};`)
           .join("\n");
