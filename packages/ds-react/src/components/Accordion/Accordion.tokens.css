@@ -17,25 +17,25 @@
   --fsds-box-model-max-height: none;
   --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
   --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+  --fsds-accordion-color-text-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
   --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
-  --fsds-accordion-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+  --fsds-accordion-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
   --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #b8b8b8);
   --fsds-accordion-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
   --fsds-accordion-spacing-gap: var(--fsds-core-spacing-size-07, 24px);
-  --fsds-accordion-spacing-paddingX: var(--fsds-core-spacing-size-00, 0px);
-  --fsds-accordion-spacing-paddingY: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-accordion-spacing-padding-x: var(--fsds-core-spacing-size-00, 0px);
+  --fsds-accordion-spacing-padding-y: var(--fsds-core-spacing-size-04, 8px);
   --fsds-accordion-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
   --fsds-accordion-text-size: var(--fsds-semantic-typography-body-02, 16px);
-  --fsds-accordion-text-lineHeight: var(--fsds-semantic-typography-line-height-normal, 1.5);
-  --fsds-accordion-text-sizeContent: var(--fsds-semantic-typography-body-03, 14px);
-  --fsds-accordion-text-lineHeightContent: var(--fsds-semantic-typography-line-height-loose, 1.8);
+  --fsds-accordion-text-line-height: var(--fsds-semantic-typography-line-height-normal, 1.5);
+  --fsds-accordion-text-size-content: var(--fsds-semantic-typography-body-03, 14px);
+  --fsds-accordion-text-line-height-content: var(--fsds-semantic-typography-line-height-loose, 1.8);
   --fsds-accordion-icon-size: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-accordion-focus-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
+  --fsds-accordion-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
   --fsds-accordion-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
   --fsds-accordion-focus-offset: var(--fsds-core-spacing-size-01, 1px);
   --fsds-accordion-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-  --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #5c5b5c);
+  --fsds-accordion-color-text-hover: var(--fsds-semantic-interaction-text-hover, #5c5b5c);
 }
 /* @generated:end */
 

@@ -20,9 +20,9 @@
   --fsds-code-block-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-code-block-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
   --fsds-code-block-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-  --fsds-code-block-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
-  --fsds-code-block-size-fontSize-default: var(--fsds-core-typography-ramp-3, 0.875rem);
-  --fsds-code-block-typography-lineHeight-default: var(--fsds-semantic-typography-line-height-body, 1.5);
+  --fsds-code-block-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
+  --fsds-code-block-size-font-size-default: var(--fsds-core-typography-ramp-3, 0.875rem);
+  --fsds-code-block-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
 }
 /* @generated:end */
 

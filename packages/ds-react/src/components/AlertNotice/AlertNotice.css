@@ -68,8 +68,8 @@
 
 .alert-notice__title {
   margin: 0;
-  font-weight: var(--fsds-alert-notice-typography-title-fontWeight, 700);
-  font-size: var(--fsds-alert-notice-typography-title-fontSize, 16px);
+  font-weight: var(--fsds-alert-notice-typography-title-font-weight, 700);
+  font-size: var(--fsds-alert-notice-typography-title-font-size, 16px);
 }
 
 .alert-notice--info {

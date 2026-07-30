@@ -14,7 +14,7 @@
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
-  min-height: var(--fsds-badge-size-minHeight, 24px);
+  min-height: var(--fsds-badge-size-min-height, 24px);
   max-height: var(--fsds-box-model-max-height);
   justify-content: center;
   white-space: nowrap;
@@ -24,9 +24,9 @@
   border-color: var(--fsds-badge-color-border-default, #d0d0d0);
   border-width: var(--fsds-badge-size-border, 1px);
   border-radius: var(--fsds-badge-size-radius, 9999px);
-  padding-block: var(--fsds-badge-size-paddingY, 2px);
-  padding-inline: var(--fsds-badge-size-paddingX, 8px);
-  font-size: var(--fsds-badge-size-fontSize, 12px);
+  padding-block: var(--fsds-badge-size-padding-y, 2px);
+  padding-inline: var(--fsds-badge-size-padding-x, 8px);
+  font-size: var(--fsds-badge-size-font-size, 12px);
   font-weight: var(--fsds-badge-text-weight, 500);
   line-height: 1;
 

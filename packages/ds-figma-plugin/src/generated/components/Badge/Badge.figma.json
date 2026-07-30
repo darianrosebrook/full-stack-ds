@@ -163,11 +163,11 @@
           "--fsds-badge-color-border-default": "var(--fsds-semantic-color-border-subtle, #d0d0d0)",
           "--fsds-badge-spacing-gap": "var(--fsds-semantic-glyph-badge-size-md-gap, 4px)",
           "--fsds-badge-size-radius": "var(--fsds-semantic-shape-control-radius-pill, 9999px)",
-          "--fsds-badge-size-border": "var(--fsds-semantic-shape-control-border-defaultWidth, 1px)",
-          "--fsds-badge-size-paddingX": "var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px)",
-          "--fsds-badge-size-paddingY": "var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px)",
-          "--fsds-badge-size-fontSize": "var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px)",
-          "--fsds-badge-size-minHeight": "var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px)",
+          "--fsds-badge-size-border": "var(--fsds-semantic-shape-control-border-default-width, 1px)",
+          "--fsds-badge-size-padding-x": "var(--fsds-semantic-glyph-badge-size-md-padding-x, 8px)",
+          "--fsds-badge-size-padding-y": "var(--fsds-semantic-glyph-badge-size-md-padding-y, 2px)",
+          "--fsds-badge-size-font-size": "var(--fsds-semantic-glyph-badge-size-md-font-size, 12px)",
+          "--fsds-badge-size-min-height": "var(--fsds-semantic-glyph-badge-size-md-min-height, 24px)",
           "--fsds-badge-text-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
           "display": "inline-flex",
           "align-items": "center",
@@ -181,7 +181,7 @@
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",
           "height": "var(--fsds-box-model-height)",
-          "min-height": "var(--fsds-badge-size-minHeight, 24px)",
+          "min-height": "var(--fsds-badge-size-min-height, 24px)",
           "max-height": "var(--fsds-box-model-max-height)",
           "justify-content": "center",
           "white-space": "nowrap",
@@ -191,9 +191,9 @@
           "border-color": "var(--fsds-badge-color-border-default, #d0d0d0)",
           "border-width": "var(--fsds-badge-size-border, 1px)",
           "border-radius": "var(--fsds-badge-size-radius, 9999px)",
-          "padding-block": "var(--fsds-badge-size-paddingY, 2px)",
-          "padding-inline": "var(--fsds-badge-size-paddingX, 8px)",
-          "font-size": "var(--fsds-badge-size-fontSize, 12px)",
+          "padding-block": "var(--fsds-badge-size-padding-y, 2px)",
+          "padding-inline": "var(--fsds-badge-size-padding-x, 8px)",
+          "font-size": "var(--fsds-badge-size-font-size, 12px)",
           "font-weight": "var(--fsds-badge-text-weight, 500)",
           "line-height": "1"
         }
@@ -224,30 +224,30 @@
       {
         "selector": ".badge--sm",
         "declarations": {
-          "--fsds-badge-size-paddingX": "var(--fsds-semantic-glyph-badge-size-sm-paddingX, 4px)",
-          "--fsds-badge-size-paddingY": "var(--fsds-semantic-glyph-badge-size-sm-paddingY, 2px)",
-          "--fsds-badge-size-fontSize": "var(--fsds-semantic-glyph-badge-size-sm-fontSize, 10px)",
-          "--fsds-badge-size-minHeight": "var(--fsds-semantic-glyph-badge-size-sm-minHeight, 16px)",
+          "--fsds-badge-size-padding-x": "var(--fsds-semantic-glyph-badge-size-sm-padding-x, 4px)",
+          "--fsds-badge-size-padding-y": "var(--fsds-semantic-glyph-badge-size-sm-padding-y, 2px)",
+          "--fsds-badge-size-font-size": "var(--fsds-semantic-glyph-badge-size-sm-font-size, 10px)",
+          "--fsds-badge-size-min-height": "var(--fsds-semantic-glyph-badge-size-sm-min-height, 16px)",
           "--fsds-badge-spacing-gap": "var(--fsds-semantic-glyph-badge-size-sm-gap, 2px)"
         }
       },
       {
         "selector": ".badge--md",
         "declarations": {
-          "--fsds-badge-size-paddingX": "var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px)",
-          "--fsds-badge-size-paddingY": "var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px)",
-          "--fsds-badge-size-fontSize": "var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px)",
-          "--fsds-badge-size-minHeight": "var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px)",
+          "--fsds-badge-size-padding-x": "var(--fsds-semantic-glyph-badge-size-md-padding-x, 8px)",
+          "--fsds-badge-size-padding-y": "var(--fsds-semantic-glyph-badge-size-md-padding-y, 2px)",
+          "--fsds-badge-size-font-size": "var(--fsds-semantic-glyph-badge-size-md-font-size, 12px)",
+          "--fsds-badge-size-min-height": "var(--fsds-semantic-glyph-badge-size-md-min-height, 24px)",
           "--fsds-badge-spacing-gap": "var(--fsds-semantic-glyph-badge-size-md-gap, 4px)"
         }
       },
       {
         "selector": ".badge--lg",
         "declarations": {
-          "--fsds-badge-size-paddingX": "var(--fsds-semantic-glyph-badge-size-lg-paddingX, 12px)",
-          "--fsds-badge-size-paddingY": "var(--fsds-semantic-glyph-badge-size-lg-paddingY, 4px)",
-          "--fsds-badge-size-fontSize": "var(--fsds-semantic-glyph-badge-size-lg-fontSize, 14px)",
-          "--fsds-badge-size-minHeight": "var(--fsds-semantic-glyph-badge-size-lg-minHeight, 32px)",
+          "--fsds-badge-size-padding-x": "var(--fsds-semantic-glyph-badge-size-lg-padding-x, 12px)",
+          "--fsds-badge-size-padding-y": "var(--fsds-semantic-glyph-badge-size-lg-padding-y, 4px)",
+          "--fsds-badge-size-font-size": "var(--fsds-semantic-glyph-badge-size-lg-font-size, 14px)",
+          "--fsds-badge-size-min-height": "var(--fsds-semantic-glyph-badge-size-lg-min-height, 32px)",
           "--fsds-badge-spacing-gap": "var(--fsds-semantic-glyph-badge-size-lg-gap, 4px)"
         }
       },

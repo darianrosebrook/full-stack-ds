@@ -96,7 +96,7 @@ export const breadcrumbsTokenScopes = {
     },
     "breadcrumbs.typography.lineHeight.collapse": {
       name: "breadcrumbs.typography.lineHeight.collapse",
-      cssVar: "--fsds-breadcrumbs-typography-lineHeight-collapse",
+      cssVar: "--fsds-breadcrumbs-typography-line-height-collapse",
       ref: "semantic.typography.line.height.collapse",
       fallback: "1",
     },

@@ -23,7 +23,7 @@
   --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
   --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d92d2e);
   --fsds-calendar-color-day-selected-foreground: var(--fsds-semantic-color-foreground-inverse, #fafafa);
-  --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
+  --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
   --fsds-calendar-color-today-ring: var(--fsds-semantic-color-border-accent, #d92d2e);
   --fsds-calendar-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
   --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-06, 16px);

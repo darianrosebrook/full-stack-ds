@@ -136,13 +136,13 @@ export const alertTokenScopes = {
     },
     "alert.typography.title.fontWeight": {
       name: "alert.typography.title.fontWeight",
-      cssVar: "--fsds-alert-typography-title-fontWeight",
+      cssVar: "--fsds-alert-typography-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
     "alert.typography.title.fontSize": {
       name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-fontSize",
+      cssVar: "--fsds-alert-typography-title-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
@@ -160,19 +160,19 @@ export const alertTokenScopes = {
     },
     "alert.typography.page.fontSize": {
       name: "alert.typography.page.fontSize",
-      cssVar: "--fsds-alert-typography-page-fontSize",
+      cssVar: "--fsds-alert-typography-page-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
     "alert.typography.page.title.fontSize": {
       name: "alert.typography.page.title.fontSize",
-      cssVar: "--fsds-alert-typography-page-title-fontSize",
+      cssVar: "--fsds-alert-typography-page-title-font-size",
       ref: "semantic.typography.body.01",
       fallback: 18,
     },
     "alert.typography.inline.fontSize": {
       name: "alert.typography.inline.fontSize",
-      cssVar: "--fsds-alert-typography-inline-fontSize",
+      cssVar: "--fsds-alert-typography-inline-font-size",
       ref: "semantic.typography.body.04",
       fallback: 12,
     },
@@ -278,7 +278,7 @@ export const alertTokenScopes = {
     },
     "alert.typography.title.fontSize": {
       name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-fontSize",
+      cssVar: "--fsds-alert-typography-title-font-size",
       ref: "semantic.typography.body.03",
       fallback: 14,
     },
@@ -304,7 +304,7 @@ export const alertTokenScopes = {
     },
     "alert.typography.title.fontSize": {
       name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-fontSize",
+      cssVar: "--fsds-alert-typography-title-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
@@ -330,13 +330,13 @@ export const alertTokenScopes = {
     },
     "alert.typography.title.fontSize": {
       name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-fontSize",
+      cssVar: "--fsds-alert-typography-title-font-size",
       ref: "semantic.typography.body.01",
       fallback: 18,
     },
     "alert.typography.title.fontWeight": {
       name: "alert.typography.title.fontWeight",
-      cssVar: "--fsds-alert-typography-title-fontWeight",
+      cssVar: "--fsds-alert-typography-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },

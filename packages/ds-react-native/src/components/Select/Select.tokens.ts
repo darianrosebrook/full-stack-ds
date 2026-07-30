@@ -155,13 +155,13 @@ export const selectTokenScopes = {
     },
     "select.font.lineHeight.default": {
       name: "select.font.lineHeight.default",
-      cssVar: "--fsds-select-font-lineHeight-default",
+      cssVar: "--fsds-select-font-line-height-default",
       ref: "semantic.typography.line.height.body",
       fallback: "1.5",
     },
     "select.color.icon.isOpen": {
       name: "select.color.icon.isOpen",
-      cssVar: "--fsds-select-color-icon-isOpen",
+      cssVar: "--fsds-select-color-icon-is-open",
       ref: "semantic.color.foreground.accent",
       fallback: "#d92d2e",
     },

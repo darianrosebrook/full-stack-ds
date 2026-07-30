@@ -48,8 +48,8 @@ export class ToastElement extends LitElement {
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-spacing-stack-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-max-width: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
@@ -84,7 +84,7 @@ export class ToastElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap, 8px);
+      gap: var(--fsds-toast-spacing-stack-gap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -108,7 +108,7 @@ export class ToastElement extends LitElement {
       border-radius: var(--fsds-toast-surface-radius, 6px);
       box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       padding: var(--fsds-toast-spacing-padding, 12px);
-      max-width: var(--fsds-toast-size-maxWidth, 400px);
+      max-width: var(--fsds-toast-size-max-width, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -265,8 +265,8 @@ export class ToastItemElement extends LitElement {
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-spacing-stack-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-max-width: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
@@ -301,7 +301,7 @@ export class ToastItemElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap, 8px);
+      gap: var(--fsds-toast-spacing-stack-gap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -325,7 +325,7 @@ export class ToastItemElement extends LitElement {
       border-radius: var(--fsds-toast-surface-radius, 6px);
       box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       padding: var(--fsds-toast-spacing-padding, 12px);
-      max-width: var(--fsds-toast-size-maxWidth, 400px);
+      max-width: var(--fsds-toast-size-max-width, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -409,8 +409,8 @@ export class ToastTitleElement extends LitElement {
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-spacing-stack-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-max-width: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
@@ -445,7 +445,7 @@ export class ToastTitleElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap, 8px);
+      gap: var(--fsds-toast-spacing-stack-gap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -469,7 +469,7 @@ export class ToastTitleElement extends LitElement {
       border-radius: var(--fsds-toast-surface-radius, 6px);
       box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       padding: var(--fsds-toast-spacing-padding, 12px);
-      max-width: var(--fsds-toast-size-maxWidth, 400px);
+      max-width: var(--fsds-toast-size-max-width, 400px);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -553,8 +553,8 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-spacing-stack-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-max-width: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
@@ -589,7 +589,7 @@ export class ToastDescriptionElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-toast-spacing-stackGap, 8px);
+      gap: var(--fsds-toast-spacing-stack-gap, 8px);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -613,7 +613,7 @@ export class ToastDescriptionElement extends LitElement {
       border-radius: var(--fsds-toast-surface-radius, 6px);
       box-shadow: var(--fsds-toast-surface-shadow, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       padding: var(--fsds-toast-spacing-padding, 12px);
-      max-width: var(--fsds-toast-size-maxWidth, 400px);
+      max-width: var(--fsds-toast-size-max-width, 400px);
       display: flex;
       flex-direction: column;
       position: relative;

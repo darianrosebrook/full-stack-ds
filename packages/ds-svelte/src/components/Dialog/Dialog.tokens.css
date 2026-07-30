@@ -6,23 +6,23 @@
   --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
   --fsds-dialog-size-sm-width: 400px;
-  --fsds-dialog-size-sm-maxWidth: 90vw;
+  --fsds-dialog-size-sm-max-width: 90vw;
   --fsds-dialog-size-md-width: 500px;
-  --fsds-dialog-size-md-maxWidth: 90vw;
+  --fsds-dialog-size-md-max-width: 90vw;
   --fsds-dialog-size-lg-width: 700px;
-  --fsds-dialog-size-lg-maxWidth: 90vw;
+  --fsds-dialog-size-lg-max-width: 90vw;
   --fsds-dialog-size-xl-width: 900px;
-  --fsds-dialog-size-xl-maxWidth: 95vw;
+  --fsds-dialog-size-xl-max-width: 95vw;
   --fsds-dialog-size-full-width: 100vw;
   --fsds-dialog-size-full-height: 100vh;
-  --fsds-dialog-size-closeButton-size: var(--fsds-core-spacing-size-08, 32px);
+  --fsds-dialog-size-close-button-size: var(--fsds-core-spacing-size-08, 32px);
   --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
-  --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
-  --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+  --fsds-dialog-spacing-header-padding-top: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-dialog-spacing-body-padding-right: var(--fsds-core-spacing-size-07, 24px);
   --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
-  --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
-  --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-  --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+  --fsds-dialog-typography-title-font-size: var(--fsds-semantic-typography-heading-04, 18px);
+  --fsds-dialog-typography-title-font-weight: var(--fsds-semantic-typography-font-weight-bold, 700);
+  --fsds-dialog-typography-title-line-height: var(--fsds-semantic-typography-line-height-heading, 1);
 }
 
 .dialog {

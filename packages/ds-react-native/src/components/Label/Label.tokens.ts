@@ -90,7 +90,7 @@ export const labelTokenScopes = {
     },
     "label.typo.lineHeight.default": {
       name: "label.typo.lineHeight.default",
-      cssVar: "--fsds-label-typo-lineHeight-default",
+      cssVar: "--fsds-label-typo-line-height-default",
       ref: "semantic.typography.line.height.tight",
       fallback: "1.2",
     },

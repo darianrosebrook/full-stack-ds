@@ -30,6 +30,7 @@ import { fileURLToPath } from "node:url";
 
 import { diffLedger, loadLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
 import { classifyDisposition, renderedPartsOf } from "./disposition.mjs";
+import { tokenSlug } from "../../packages/ds-codegen/dist/token-path.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "../..");
@@ -53,12 +54,19 @@ export const ALL_COMPONENTS = () =>
     .sort();
 
 /**
- * The slug transform mirroring the codegen: token key `button.size.fontSize.medium`
- * → CSS custom property `--fsds-button-size-fontSize-medium`. Dots become dashes;
- * the `--fsds-` prefix is prepended; case is preserved (camelCase stays camelCase).
+ * Token key `button.size.fontSize.medium` → CSS custom property
+ * `--fsds-button-size-font-size-medium`.
+ *
+ * This audit used to carry its own copy of the transform, and when the shared
+ * lowering gained kebab-casing the copy silently stopped matching — 106 live
+ * slots reported dead in one run. It now imports the same compiled function
+ * codegen emits with, so a future change to the naming cannot make this audit
+ * lie. The import is of `dist/`, not source, because the audit runs under plain
+ * node; `pnpm run generate` (and the pre-push `RUN_*` groups that call it)
+ * builds that artifact first.
  */
 function slotToCssVar(slotKey) {
-  return `--fsds-${slotKey.split(".").join("-")}`;
+  return `--${tokenSlug(slotKey)}`;
 }
 
 /**

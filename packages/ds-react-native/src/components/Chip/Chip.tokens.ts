@@ -180,7 +180,7 @@ export const chipTokenScopes = {
     },
     "chip.size.minHeight": {
       name: "chip.size.minHeight",
-      cssVar: "--fsds-chip-size-minHeight",
+      cssVar: "--fsds-chip-size-min-height",
       ref: "core.dimension.actionMinHeight",
       fallback: 36,
     },
@@ -304,7 +304,7 @@ export const chipTokenScopes = {
     },
     "chip.size.minHeight": {
       name: "chip.size.minHeight",
-      cssVar: "--fsds-chip-size-minHeight",
+      cssVar: "--fsds-chip-size-min-height",
       ref: "semantic.glyph.badge.size.sm.minHeight",
       fallback: 16,
     },
@@ -336,7 +336,7 @@ export const chipTokenScopes = {
     },
     "chip.size.minHeight": {
       name: "chip.size.minHeight",
-      cssVar: "--fsds-chip-size-minHeight",
+      cssVar: "--fsds-chip-size-min-height",
       ref: "semantic.glyph.badge.size.md.minHeight",
       fallback: 24,
     },
@@ -368,7 +368,7 @@ export const chipTokenScopes = {
     },
     "chip.size.minHeight": {
       name: "chip.size.minHeight",
-      cssVar: "--fsds-chip-size-minHeight",
+      cssVar: "--fsds-chip-size-min-height",
       ref: "semantic.glyph.badge.size.lg.minHeight",
       fallback: 32,
     },

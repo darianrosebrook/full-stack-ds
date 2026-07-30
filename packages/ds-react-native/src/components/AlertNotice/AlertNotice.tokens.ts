@@ -202,13 +202,13 @@ export const alertNoticeTokenScopes = {
     },
     "alert-notice.typography.title.fontWeight": {
       name: "alert-notice.typography.title.fontWeight",
-      cssVar: "--fsds-alert-notice-typography-title-fontWeight",
+      cssVar: "--fsds-alert-notice-typography-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
     "alert-notice.typography.title.fontSize": {
       name: "alert-notice.typography.title.fontSize",
-      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
@@ -226,19 +226,19 @@ export const alertNoticeTokenScopes = {
     },
     "alert-notice.typography.page.fontSize": {
       name: "alert-notice.typography.page.fontSize",
-      cssVar: "--fsds-alert-notice-typography-page-fontSize",
+      cssVar: "--fsds-alert-notice-typography-page-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
     "alert-notice.typography.page.title.fontSize": {
       name: "alert-notice.typography.page.title.fontSize",
-      cssVar: "--fsds-alert-notice-typography-page-title-fontSize",
+      cssVar: "--fsds-alert-notice-typography-page-title-font-size",
       ref: "semantic.typography.body.01",
       fallback: 18,
     },
     "alert-notice.typography.inline.fontSize": {
       name: "alert-notice.typography.inline.fontSize",
-      cssVar: "--fsds-alert-notice-typography-inline-fontSize",
+      cssVar: "--fsds-alert-notice-typography-inline-font-size",
       ref: "semantic.typography.body.04",
       fallback: 12,
     },
@@ -264,7 +264,7 @@ export const alertNoticeTokenScopes = {
     },
     "alert-notice.typography.title.fontSize": {
       name: "alert-notice.typography.title.fontSize",
-      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-font-size",
       ref: "semantic.typography.body.03",
       fallback: 14,
     },
@@ -290,7 +290,7 @@ export const alertNoticeTokenScopes = {
     },
     "alert-notice.typography.title.fontSize": {
       name: "alert-notice.typography.title.fontSize",
-      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
@@ -316,13 +316,13 @@ export const alertNoticeTokenScopes = {
     },
     "alert-notice.typography.title.fontSize": {
       name: "alert-notice.typography.title.fontSize",
-      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-font-size",
       ref: "semantic.typography.body.01",
       fallback: 18,
     },
     "alert-notice.typography.title.fontWeight": {
       name: "alert-notice.typography.title.fontWeight",
-      cssVar: "--fsds-alert-notice-typography-title-fontWeight",
+      cssVar: "--fsds-alert-notice-typography-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },

@@ -11,7 +11,7 @@
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
-  min-height: var(--fsds-chip-size-minHeight, 36px);
+  min-height: var(--fsds-chip-size-min-height, 36px);
   max-height: var(--fsds-box-model-max-height);
   display: inline-flex;
   align-items: center;

@@ -108,13 +108,13 @@ export const walkthroughTokenScopes = {
     },
     "walkthrough.title.fontSize": {
       name: "walkthrough.title.fontSize",
-      cssVar: "--fsds-walkthrough-title-fontSize",
+      cssVar: "--fsds-walkthrough-title-font-size",
       ref: "semantic.typography.heading.03",
       fallback: 20,
     },
     "walkthrough.title.fontWeight": {
       name: "walkthrough.title.fontWeight",
-      cssVar: "--fsds-walkthrough-title-fontWeight",
+      cssVar: "--fsds-walkthrough-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
@@ -126,7 +126,7 @@ export const walkthroughTokenScopes = {
     },
     "walkthrough.description.fontSize": {
       name: "walkthrough.description.fontSize",
-      cssVar: "--fsds-walkthrough-description-fontSize",
+      cssVar: "--fsds-walkthrough-description-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
@@ -138,7 +138,7 @@ export const walkthroughTokenScopes = {
     },
     "walkthrough.description.marginTop": {
       name: "walkthrough.description.marginTop",
-      cssVar: "--fsds-walkthrough-description-marginTop",
+      cssVar: "--fsds-walkthrough-description-margin-top",
       ref: "core.spacing.size.04",
       fallback: 8,
     },
@@ -150,7 +150,7 @@ export const walkthroughTokenScopes = {
     },
     "walkthrough.controls.marginTop": {
       name: "walkthrough.controls.marginTop",
-      cssVar: "--fsds-walkthrough-controls-marginTop",
+      cssVar: "--fsds-walkthrough-controls-margin-top",
       ref: "core.spacing.size.06",
       fallback: 16,
     },

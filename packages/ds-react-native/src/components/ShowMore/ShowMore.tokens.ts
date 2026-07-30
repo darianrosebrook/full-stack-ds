@@ -126,7 +126,7 @@ export const showMoreTokenScopes = {
     },
     "show-more.overlay.imageOverlay": {
       name: "show-more.overlay.imageOverlay",
-      cssVar: "--fsds-show-more-overlay-imageOverlay",
+      cssVar: "--fsds-show-more-overlay-image-overlay",
       ref: "semantic.color.background.image.overlay",
       fallback: "rgba(0, 0, 0, 0.5)",
     },

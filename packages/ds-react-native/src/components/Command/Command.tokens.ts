@@ -96,7 +96,7 @@ export const commandTokenScopes = {
     },
     "command.color.borderLight": {
       name: "command.color.borderLight",
-      cssVar: "--fsds-command-color-borderLight",
+      cssVar: "--fsds-command-color-border-light",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
@@ -108,7 +108,7 @@ export const commandTokenScopes = {
     },
     "command.color.textMuted": {
       name: "command.color.textMuted",
-      cssVar: "--fsds-command-color-textMuted",
+      cssVar: "--fsds-command-color-text-muted",
       ref: "semantic.color.foreground.tertiary",
       fallback: "#727272",
     },
@@ -126,17 +126,17 @@ export const commandTokenScopes = {
     },
     "command.size.maxWidth": {
       name: "command.size.maxWidth",
-      cssVar: "--fsds-command-size-maxWidth",
+      cssVar: "--fsds-command-size-max-width",
       literal: 640,
     },
     "command.size.maxHeight": {
       name: "command.size.maxHeight",
-      cssVar: "--fsds-command-size-maxHeight",
+      cssVar: "--fsds-command-size-max-height",
       literal: 400,
     },
     "command.size.topOffset": {
       name: "command.size.topOffset",
-      cssVar: "--fsds-command-size-topOffset",
+      cssVar: "--fsds-command-size-top-offset",
       literal: "10vh",
     },
     "command.size.icon": {
@@ -147,7 +147,7 @@ export const commandTokenScopes = {
     },
     "command.spacing.dialogPadding": {
       name: "command.spacing.dialogPadding",
-      cssVar: "--fsds-command-spacing-dialogPadding",
+      cssVar: "--fsds-command-spacing-dialog-padding",
       ref: "core.spacing.size.04",
       fallback: 8,
     },
@@ -159,7 +159,7 @@ export const commandTokenScopes = {
     },
     "command.text.sizeSmall": {
       name: "command.text.sizeSmall",
-      cssVar: "--fsds-command-text-sizeSmall",
+      cssVar: "--fsds-command-text-size-small",
       ref: "semantic.typography.body.04",
       fallback: 12,
     },
@@ -177,7 +177,7 @@ export const commandTokenScopes = {
     },
     "command.color.backgroundHover": {
       name: "command.color.backgroundHover",
-      cssVar: "--fsds-command-color-backgroundHover",
+      cssVar: "--fsds-command-color-background-hover",
       ref: "semantic.interaction.background.hover",
       fallback: "#d0d0d0",
     },

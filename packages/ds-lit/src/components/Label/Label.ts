@@ -37,7 +37,7 @@ export class LabelElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-label-color-text-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-label-typo-weight-default: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-label-typo-lineHeight-default: var(--fsds-semantic-typography-line-height-tight, 1.2);
+      --fsds-label-typo-line-height-default: var(--fsds-semantic-typography-line-height-tight, 1.2);
     }
 
     .label {
@@ -53,7 +53,7 @@ export class LabelElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-label-color-text-default, #141414);
-      line-height: var(--fsds-label-typo-lineHeight-default, 1.2);
+      line-height: var(--fsds-label-typo-line-height-default, 1.2);
     }
   `;
 

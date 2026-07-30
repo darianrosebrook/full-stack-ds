@@ -60,6 +60,7 @@ import {
 } from "./semantics.js";
 import { resolveStyleProfile } from "./box-model.js";
 import { resolveIdRelationships } from "./id-relationships.js";
+import { tokenSlug } from "./token-path.js";
 
 // ---------------------------------------------------------------------------
 // IR types
@@ -4974,26 +4975,6 @@ function renderStyleBlock(
     }
   }
   return declarations;
-}
-
-/**
- * Convert a dotted token path into its CSS custom-property slug,
- * prefixed with the project namespace.
- *
- *   "semantic.color.fg" → "fsds-semantic-color-fg"
- *
- * Caller prepends `--` (e.g. `--${tokenSlug(...)}`) so the IR never carries
- * the leading dashes — same convention as packages/ds-tokens/build/core/
- * index.ts:tokenPathToCSSVar (which is the authority for the prefix
- * choice; see docs/architecture/tokens-architecture.md §Decision 2).
- *
- * The prefix is identical on every call. Threading it as a parameter
- * would just push the constant up to every caller without unlocking
- * any meaningful configurability — if the prefix needs to change, this
- * is the one site to edit, and the token-graph emitter is the other.
- */
-function tokenSlug(name: string): string {
-  return `fsds-${name.replace(/\./g, "-")}`;
 }
 
 /**

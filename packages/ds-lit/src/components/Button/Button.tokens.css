@@ -26,14 +26,14 @@
   --fsds-button-color-border-focus: var(--fsds-semantic-focus-ring-color, #0566fe);
   --fsds-button-size-gap-default: var(--fsds-semantic-action-size-medium-gap, 8px);
   --fsds-button-size-radius: var(--fsds-semantic-shape-control-radius-pill, 9999px);
-  --fsds-button-size-border: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+  --fsds-button-size-border: var(--fsds-semantic-shape-control-border-default-width, 1px);
   --fsds-button-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
   --fsds-button-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
   --fsds-button-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
-  --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
-  --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-02, 1rem);
+  --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height, 36px);
+  --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-02, 1rem);
 }
 
 .button--small {
@@ -41,11 +41,11 @@
   --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-03, 4px);
   --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-04, 8px);
   --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
+  --fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-small, 28px);
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-03, 4px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
-  --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-03, 0.875rem);
+  --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height-small, 28px);
+  --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-03, 0.875rem);
 }
 
 .button--medium {
@@ -53,11 +53,11 @@
   --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-04, 8px);
   --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-05, 12px);
   --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-05, 12px);
-  --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeight, 36px);
+  --fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height, 36px);
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
-  --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
-  --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-02, 1rem);
+  --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height, 36px);
+  --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-02, 1rem);
 }
 
 .button--large {
@@ -65,11 +65,11 @@
   --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-05, 12px);
   --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);
   --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-06, 16px);
-  --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
+  --fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-large, 48px);
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);
-  --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
-  --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-01, 1.125rem);
+  --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height-large, 48px);
+  --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-01, 1.125rem);
 }
 
 .button--primary {

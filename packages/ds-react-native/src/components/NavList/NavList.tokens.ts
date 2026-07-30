@@ -108,13 +108,13 @@ export const navListTokenScopes = {
     },
     "nav-list.stateLayer.hover": {
       name: "nav-list.stateLayer.hover",
-      cssVar: "--fsds-nav-list-stateLayer-hover",
+      cssVar: "--fsds-nav-list-state-layer-hover",
       ref: "semantic.interaction.stateLayer.hover",
       fallback: "0.04",
     },
     "nav-list.stateLayer.selected": {
       name: "nav-list.stateLayer.selected",
-      cssVar: "--fsds-nav-list-stateLayer-selected",
+      cssVar: "--fsds-nav-list-state-layer-selected",
       ref: "semantic.interaction.stateLayer.selected",
       fallback: "0.08",
     },
@@ -162,13 +162,13 @@ export const navListTokenScopes = {
     },
     "nav-list.size.fontSize.item": {
       name: "nav-list.size.fontSize.item",
-      cssVar: "--fsds-nav-list-size-fontSize-item",
+      cssVar: "--fsds-nav-list-size-font-size-item",
       ref: "semantic.typography.body.03",
       fallback: 14,
     },
     "nav-list.size.fontSize.groupLabel": {
       name: "nav-list.size.fontSize.groupLabel",
-      cssVar: "--fsds-nav-list-size-fontSize-groupLabel",
+      cssVar: "--fsds-nav-list-size-font-size-group-label",
       ref: "semantic.typography.caption.03",
       fallback: 10,
     },

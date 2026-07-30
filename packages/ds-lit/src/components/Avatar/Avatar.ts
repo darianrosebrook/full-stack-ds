@@ -42,13 +42,13 @@ export class AvatarElement extends LitElement {
       --fsds-avatar-size-large: var(--fsds-core-spacing-size-08, 32px);
       --fsds-avatar-size-extra-large: var(--fsds-core-spacing-size-09, 48px);
       --fsds-avatar-size-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
-      --fsds-avatar-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+      --fsds-avatar-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-avatar-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-avatar-color-background-inverse: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-avatar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-avatar-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-avatar-typography-fontWeight-medium: var(--fsds-core-typography-weight-medium, 500);
-      --fsds-avatar-typography-fontFamily-sans: var(--fsds-core-typography-font-family-sans, "Inter", sans-serif);
+      --fsds-avatar-typography-font-weight-medium: var(--fsds-core-typography-weight-medium, 500);
+      --fsds-avatar-typography-font-family-sans: var(--fsds-core-typography-font-family-sans, "Inter", sans-serif);
     }
 
     .avatar {
@@ -76,8 +76,8 @@ export class AvatarElement extends LitElement {
       border-color: var(--fsds-avatar-color-border-default, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-avatar-size-border-default, 1px);
-      font-weight: var(--fsds-avatar-typography-fontWeight-medium, 500);
-      font-family: var(--fsds-avatar-typography-fontFamily-sans, "Inter", sans-serif);
+      font-weight: var(--fsds-avatar-typography-font-weight-medium, 500);
+      font-family: var(--fsds-avatar-typography-font-family-sans, "Inter", sans-serif);
     }
 
     .avatar__image {

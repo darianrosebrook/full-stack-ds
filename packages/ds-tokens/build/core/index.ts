@@ -9,6 +9,11 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// The character-level lowering of a dotted token path is shared with codegen so
+// the declared name and the emitted read cannot drift apart. See
+// packages/ds-codegen/src/token-path.ts for why the module lives on that side.
+import { lowerTokenPath } from "../../../ds-codegen/src/token-path.js";
+
 // Common types and interfaces
 export interface TokenValue {
   $value: unknown;
@@ -219,13 +224,9 @@ export function tokenPathToCSSVar(
   // Remove namespace prefix if present (we'll add it back)
   const pathWithoutNamespace = tokenPath.replace(/^(core|semantic)\./, "");
 
-  // Convert path to CSS variable format
-  const cssVarName = pathWithoutNamespace
-    .replace(/\./g, "-") // Convert dots to hyphens first
-    .replace(/[A-Z]/g, (m) => "-" + m.toLowerCase()) // Convert camelCase
-    .replace(/[\s_]/g, "-") // Convert spaces and underscores
-    .replace(/[^a-z0-9-]/g, "") // Remove any remaining invalid characters
-    .replace(/-+/g, "-"); // Collapse multiple hyphens into one
+  // Convert path to CSS variable format. The transformation itself is the
+  // shared authority — codegen emits reads through the same function.
+  const cssVarName = lowerTokenPath(pathWithoutNamespace);
 
   // Add namespace prefix if determined
   const namespacePrefix = namespace ? `${namespace}-` : "";

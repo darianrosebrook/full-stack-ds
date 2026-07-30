@@ -58,15 +58,15 @@
 
 .sheet__title {
   margin: 0;
-  font-size: var(--fsds-sheet-text-sizeTitle, 14px);
-  font-weight: var(--fsds-sheet-text-weightTitle, 500);
-  color: var(--fsds-sheet-color-textTitle, #141414);
+  font-size: var(--fsds-sheet-text-size-title, 14px);
+  font-weight: var(--fsds-sheet-text-weight-title, 500);
+  color: var(--fsds-sheet-color-text-title, #141414);
   flex: 1 1 auto;
 }
 
 .sheet__description {
   margin: 0;
-  color: var(--fsds-sheet-color-textDescription, #5c5b5c);
+  color: var(--fsds-sheet-color-text-description, #5c5b5c);
   font-size: var(--fsds-sheet-text-size, 16px);
 }
 
@@ -100,7 +100,7 @@
   background-color: transparent;
   border: 0;
   border-radius: 9999px;
-  color: var(--fsds-sheet-color-textDescription, #5c5b5c);
+  color: var(--fsds-sheet-color-text-description, #5c5b5c);
   cursor: pointer;
 }
 

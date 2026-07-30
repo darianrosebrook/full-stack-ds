@@ -20,7 +20,7 @@
 
 .field__label {
   display: inline-block;
-  font-size: var(--fsds-field-label-fontSize, 14px);
+  font-size: var(--fsds-field-label-font-size, 14px);
   font-weight: 500;
   color: var(--fsds-field-label-color, #5c5b5c);
 }

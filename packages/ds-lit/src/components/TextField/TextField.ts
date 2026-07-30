@@ -40,17 +40,17 @@ export class TextFieldElement extends LitElement {
       --fsds-text-field-field-padding-block: var(--fsds-semantic-input-size-medium-padding-block, 4px);
       --fsds-text-field-field-padding-inline: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
       --fsds-text-field-field-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
-      --fsds-text-field-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+      --fsds-text-field-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-text-field-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-text-field-color-input-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-text-field-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-text-field-color-input-border: var(--fsds-semantic-color-border-default, #a0a0a1);
-      --fsds-text-field-color-input-borderHover: var(--fsds-semantic-color-border-hover, #888889);
-      --fsds-text-field-color-input-backgroundDisabled: var(--fsds-semantic-interaction-background-disabled, #b8b8b8);
-      --fsds-text-field-color-input-textDisabled: var(--fsds-semantic-color-foreground-disabled, #727272);
-      --fsds-text-field-color-input-borderDisabled: var(--fsds-semantic-color-border-disabled, #b8b8b8);
-      --fsds-text-field-color-input-borderError: var(--fsds-semantic-color-status-danger, #d92d2e);
+      --fsds-text-field-color-input-border-hover: var(--fsds-semantic-color-border-hover, #888889);
+      --fsds-text-field-color-input-background-disabled: var(--fsds-semantic-interaction-background-disabled, #b8b8b8);
+      --fsds-text-field-color-input-text-disabled: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-text-field-color-input-border-disabled: var(--fsds-semantic-color-border-disabled, #b8b8b8);
+      --fsds-text-field-color-input-border-error: var(--fsds-semantic-color-status-danger, #d92d2e);
       --fsds-text-field-color-error: var(--fsds-semantic-color-foreground-danger, #d92d2e);
       --fsds-text-field-color-supporting-text: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-text-field-typography-label-size: var(--fsds-semantic-typography-caption-01, 0.875rem);
@@ -132,7 +132,7 @@ export class TextFieldElement extends LitElement {
     }
 
     .text-field__field:hover:not(:disabled) {
-      border-color: var(--fsds-text-field-color-input-borderHover, #888889);
+      border-color: var(--fsds-text-field-color-input-border-hover, #888889);
     }
 
     .text-field__field:focus-visible:not([aria-disabled="true"]) {
@@ -144,18 +144,18 @@ export class TextFieldElement extends LitElement {
     }
 
     .text-field--invalid .text-field__field {
-      border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
+      border-color: var(--fsds-text-field-color-input-border-error, #d92d2e);
     }
 
     .text-field--invalid .text-field__field:focus-visible:not([aria-disabled="true"]) {
-      border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
-      outline-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
+      border-color: var(--fsds-text-field-color-input-border-error, #d92d2e);
+      outline-color: var(--fsds-text-field-color-input-border-error, #d92d2e);
     }
 
     .text-field__field:disabled {
-      background-color: var(--fsds-text-field-color-input-backgroundDisabled, #b8b8b8);
-      border-color: var(--fsds-text-field-color-input-borderDisabled, #b8b8b8);
-      color: var(--fsds-text-field-color-input-textDisabled, #727272);
+      background-color: var(--fsds-text-field-color-input-background-disabled, #b8b8b8);
+      border-color: var(--fsds-text-field-color-input-border-disabled, #b8b8b8);
+      color: var(--fsds-text-field-color-input-text-disabled, #727272);
       opacity: var(--fsds-text-field-opacity-disabled, 0.5);
       cursor: not-allowed;
     }
@@ -234,17 +234,17 @@ export class TextFieldDescriptionElement extends LitElement {
       --fsds-text-field-field-padding-block: var(--fsds-semantic-input-size-medium-padding-block, 4px);
       --fsds-text-field-field-padding-inline: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
       --fsds-text-field-field-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
-      --fsds-text-field-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+      --fsds-text-field-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-text-field-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-text-field-color-input-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-text-field-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-text-field-color-input-border: var(--fsds-semantic-color-border-default, #a0a0a1);
-      --fsds-text-field-color-input-borderHover: var(--fsds-semantic-color-border-hover, #888889);
-      --fsds-text-field-color-input-backgroundDisabled: var(--fsds-semantic-interaction-background-disabled, #b8b8b8);
-      --fsds-text-field-color-input-textDisabled: var(--fsds-semantic-color-foreground-disabled, #727272);
-      --fsds-text-field-color-input-borderDisabled: var(--fsds-semantic-color-border-disabled, #b8b8b8);
-      --fsds-text-field-color-input-borderError: var(--fsds-semantic-color-status-danger, #d92d2e);
+      --fsds-text-field-color-input-border-hover: var(--fsds-semantic-color-border-hover, #888889);
+      --fsds-text-field-color-input-background-disabled: var(--fsds-semantic-interaction-background-disabled, #b8b8b8);
+      --fsds-text-field-color-input-text-disabled: var(--fsds-semantic-color-foreground-disabled, #727272);
+      --fsds-text-field-color-input-border-disabled: var(--fsds-semantic-color-border-disabled, #b8b8b8);
+      --fsds-text-field-color-input-border-error: var(--fsds-semantic-color-status-danger, #d92d2e);
       --fsds-text-field-color-error: var(--fsds-semantic-color-foreground-danger, #d92d2e);
       --fsds-text-field-color-supporting-text: var(--fsds-semantic-color-foreground-tertiary, #727272);
       --fsds-text-field-typography-label-size: var(--fsds-semantic-typography-caption-01, 0.875rem);
@@ -326,7 +326,7 @@ export class TextFieldDescriptionElement extends LitElement {
     }
 
     .text-field__field:hover:not(:disabled) {
-      border-color: var(--fsds-text-field-color-input-borderHover, #888889);
+      border-color: var(--fsds-text-field-color-input-border-hover, #888889);
     }
 
     .text-field__field:focus-visible:not([aria-disabled="true"]) {
@@ -338,18 +338,18 @@ export class TextFieldDescriptionElement extends LitElement {
     }
 
     .text-field--invalid .text-field__field {
-      border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
+      border-color: var(--fsds-text-field-color-input-border-error, #d92d2e);
     }
 
     .text-field--invalid .text-field__field:focus-visible:not([aria-disabled="true"]) {
-      border-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
-      outline-color: var(--fsds-text-field-color-input-borderError, #d92d2e);
+      border-color: var(--fsds-text-field-color-input-border-error, #d92d2e);
+      outline-color: var(--fsds-text-field-color-input-border-error, #d92d2e);
     }
 
     .text-field__field:disabled {
-      background-color: var(--fsds-text-field-color-input-backgroundDisabled, #b8b8b8);
-      border-color: var(--fsds-text-field-color-input-borderDisabled, #b8b8b8);
-      color: var(--fsds-text-field-color-input-textDisabled, #727272);
+      background-color: var(--fsds-text-field-color-input-background-disabled, #b8b8b8);
+      border-color: var(--fsds-text-field-color-input-border-disabled, #b8b8b8);
+      color: var(--fsds-text-field-color-input-text-disabled, #727272);
       opacity: var(--fsds-text-field-opacity-disabled, 0.5);
       cursor: not-allowed;
     }

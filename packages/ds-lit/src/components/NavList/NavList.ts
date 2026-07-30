@@ -40,17 +40,17 @@ export class NavListElement extends LitElement {
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #d0d0d0);
-      --fsds-nav-list-stateLayer-hover: var(--fsds-semantic-interaction-stateLayer-hover, 0.04);
-      --fsds-nav-list-stateLayer-selected: var(--fsds-semantic-interaction-stateLayer-selected, 0.08);
-      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
+      --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
+      --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
+      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
       --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
       --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 1px);
       --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 10px);
+      --fsds-nav-list-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-nav-list-size-font-size-group-label: var(--fsds-semantic-typography-caption-03, 10px);
     }
 
     .nav-list {
@@ -88,12 +88,12 @@ export class NavListElement extends LitElement {
     }
 
     .nav-list__item:hover {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-hover, #141414);
     }
 
     .nav-list__item[aria-current="page"] {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-current, #141414);
     }
   `;
@@ -148,17 +148,17 @@ export class NavListListElement extends LitElement {
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #d0d0d0);
-      --fsds-nav-list-stateLayer-hover: var(--fsds-semantic-interaction-stateLayer-hover, 0.04);
-      --fsds-nav-list-stateLayer-selected: var(--fsds-semantic-interaction-stateLayer-selected, 0.08);
-      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
+      --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
+      --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
+      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
       --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
       --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 1px);
       --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 10px);
+      --fsds-nav-list-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-nav-list-size-font-size-group-label: var(--fsds-semantic-typography-caption-03, 10px);
     }
 
     .nav-list {
@@ -196,12 +196,12 @@ export class NavListListElement extends LitElement {
     }
 
     .nav-list__item:hover {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-hover, #141414);
     }
 
     .nav-list__item[aria-current="page"] {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-current, #141414);
     }
   `;
@@ -236,17 +236,17 @@ export class NavListItemElement extends LitElement {
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #d0d0d0);
-      --fsds-nav-list-stateLayer-hover: var(--fsds-semantic-interaction-stateLayer-hover, 0.04);
-      --fsds-nav-list-stateLayer-selected: var(--fsds-semantic-interaction-stateLayer-selected, 0.08);
-      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #95dafb);
+      --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
+      --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
+      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
       --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
       --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 1px);
       --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 10px);
+      --fsds-nav-list-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-nav-list-size-font-size-group-label: var(--fsds-semantic-typography-caption-03, 10px);
     }
 
     .nav-list {
@@ -284,12 +284,12 @@ export class NavListItemElement extends LitElement {
     }
 
     .nav-list__item:hover {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-hover, #141414);
     }
 
     .nav-list__item[aria-current="page"] {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-current, #141414);
     }
   `;

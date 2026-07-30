@@ -112,7 +112,7 @@ export const dialogTokenScopes = {
     },
     "dialog.size.sm.maxWidth": {
       name: "dialog.size.sm.maxWidth",
-      cssVar: "--fsds-dialog-size-sm-maxWidth",
+      cssVar: "--fsds-dialog-size-sm-max-width",
       literal: "90vw",
     },
     "dialog.size.md.width": {
@@ -122,7 +122,7 @@ export const dialogTokenScopes = {
     },
     "dialog.size.md.maxWidth": {
       name: "dialog.size.md.maxWidth",
-      cssVar: "--fsds-dialog-size-md-maxWidth",
+      cssVar: "--fsds-dialog-size-md-max-width",
       literal: "90vw",
     },
     "dialog.size.lg.width": {
@@ -132,7 +132,7 @@ export const dialogTokenScopes = {
     },
     "dialog.size.lg.maxWidth": {
       name: "dialog.size.lg.maxWidth",
-      cssVar: "--fsds-dialog-size-lg-maxWidth",
+      cssVar: "--fsds-dialog-size-lg-max-width",
       literal: "90vw",
     },
     "dialog.size.xl.width": {
@@ -142,7 +142,7 @@ export const dialogTokenScopes = {
     },
     "dialog.size.xl.maxWidth": {
       name: "dialog.size.xl.maxWidth",
-      cssVar: "--fsds-dialog-size-xl-maxWidth",
+      cssVar: "--fsds-dialog-size-xl-max-width",
       literal: "95vw",
     },
     "dialog.size.full.width": {
@@ -157,7 +157,7 @@ export const dialogTokenScopes = {
     },
     "dialog.size.closeButton.size": {
       name: "dialog.size.closeButton.size",
-      cssVar: "--fsds-dialog-size-closeButton-size",
+      cssVar: "--fsds-dialog-size-close-button-size",
       ref: "core.spacing.size.08",
       fallback: 32,
     },
@@ -169,13 +169,13 @@ export const dialogTokenScopes = {
     },
     "dialog.spacing.header.paddingTop": {
       name: "dialog.spacing.header.paddingTop",
-      cssVar: "--fsds-dialog-spacing-header-paddingTop",
+      cssVar: "--fsds-dialog-spacing-header-padding-top",
       ref: "core.spacing.size.06",
       fallback: 16,
     },
     "dialog.spacing.body.paddingRight": {
       name: "dialog.spacing.body.paddingRight",
-      cssVar: "--fsds-dialog-spacing-body-paddingRight",
+      cssVar: "--fsds-dialog-spacing-body-padding-right",
       ref: "core.spacing.size.07",
       fallback: 24,
     },
@@ -187,19 +187,19 @@ export const dialogTokenScopes = {
     },
     "dialog.typography.title.fontSize": {
       name: "dialog.typography.title.fontSize",
-      cssVar: "--fsds-dialog-typography-title-fontSize",
+      cssVar: "--fsds-dialog-typography-title-font-size",
       ref: "semantic.typography.heading.04",
       fallback: 18,
     },
     "dialog.typography.title.fontWeight": {
       name: "dialog.typography.title.fontWeight",
-      cssVar: "--fsds-dialog-typography-title-fontWeight",
+      cssVar: "--fsds-dialog-typography-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
     "dialog.typography.title.lineHeight": {
       name: "dialog.typography.title.lineHeight",
-      cssVar: "--fsds-dialog-typography-title-lineHeight",
+      cssVar: "--fsds-dialog-typography-title-line-height",
       ref: "semantic.typography.line.height.heading",
       fallback: "1",
     },

@@ -16,7 +16,7 @@
   background-color: var(--fsds-postcard-color-background-default, #ffffff);
   padding: var(--fsds-postcard-size-padding-default, 16px);
   border-radius: var(--fsds-postcard-size-radius-default, 6px);
-  line-height: var(--fsds-postcard-typography-content-lineHeight, 1.5);
+  line-height: var(--fsds-postcard-typography-content-line-height, 1.5);
   display: flex;
   flex-direction: column;
   border-style: solid;
@@ -32,12 +32,12 @@
 }
 
 .postcard__content {
-  line-height: var(--fsds-postcard-typography-content-lineHeight, 1.5);
+  line-height: var(--fsds-postcard-typography-content-line-height, 1.5);
   display: flex;
   flex-direction: column;
   gap: var(--fsds-postcard-size-gap-default, 12px);
   color: var(--fsds-postcard-color-foreground-primary, #141414);
-  font-size: var(--fsds-postcard-typography-content-fontSize, 16px);
+  font-size: var(--fsds-postcard-typography-content-font-size, 16px);
 }
 
 .postcard__header {
@@ -54,17 +54,17 @@
 }
 
 .postcard__displayName {
-  font-weight: var(--fsds-postcard-typography-displayName-fontWeight, 500);
-  font-size: var(--fsds-postcard-typography-displayName-fontSize, 16px);
+  font-weight: var(--fsds-postcard-typography-display-name-font-weight, 500);
+  font-size: var(--fsds-postcard-typography-display-name-font-size, 16px);
   color: var(--fsds-postcard-color-foreground-primary, #141414);
 }
 
 .postcard__handle {
-  font-size: var(--fsds-postcard-typography-handle-fontSize, 14px);
+  font-size: var(--fsds-postcard-typography-handle-font-size, 14px);
 }
 
 .postcard__timestamp {
-  font-size: var(--fsds-postcard-typography-footer-fontSize, 14px);
+  font-size: var(--fsds-postcard-typography-footer-font-size, 14px);
   flex-shrink: 0;
 }
 
@@ -76,7 +76,7 @@
   border-top-color: var(--fsds-postcard-color-border-default, #b8b8b8);
   border-top-style: solid;
   border-top-width: var(--fsds-postcard-size-border-default, 1px);
-  font-size: var(--fsds-postcard-typography-footer-fontSize, 14px);
+  font-size: var(--fsds-postcard-typography-footer-font-size, 14px);
 }
 
 .postcard__stats {
@@ -88,7 +88,7 @@
 .postcard__stat {
   display: inline-flex;
   align-items: center;
-  font-size: var(--fsds-postcard-typography-footer-fontSize, 14px);
+  font-size: var(--fsds-postcard-typography-footer-font-size, 14px);
 }
 /* @generated:end */
 

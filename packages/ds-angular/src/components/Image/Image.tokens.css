@@ -18,7 +18,7 @@
   --fsds-image-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
   --fsds-image-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-image-size-icon: var(--fsds-core-spacing-size-08, 32px);
-  --fsds-image-typography-error-fontSize: var(--fsds-semantic-typography-body-04, 12px);
+  --fsds-image-typography-error-font-size: var(--fsds-semantic-typography-body-04, 12px);
   --fsds-image-size-xs: 24px;
   --fsds-image-size-sm: 32px;
   --fsds-image-size-md: 48px;

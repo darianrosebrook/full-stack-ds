@@ -4,21 +4,21 @@
   --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
   --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-command-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
-  --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+  --fsds-command-color-border-light: var(--fsds-semantic-color-border-subtle, #d0d0d0);
   --fsds-command-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-command-color-textMuted: var(--fsds-semantic-color-foreground-tertiary, #727272);
-  --fsds-command-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+  --fsds-command-color-text-muted: var(--fsds-semantic-color-foreground-tertiary, #727272);
+  --fsds-command-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
   --fsds-command-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
-  --fsds-command-size-maxWidth: 640px;
-  --fsds-command-size-maxHeight: 400px;
-  --fsds-command-size-topOffset: 10vh;
+  --fsds-command-size-max-width: 640px;
+  --fsds-command-size-max-height: 400px;
+  --fsds-command-size-top-offset: 10vh;
   --fsds-command-size-icon: var(--fsds-core-spacing-size-04, 8px);
-  --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-command-spacing-dialog-padding: var(--fsds-core-spacing-size-04, 8px);
   --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
-  --fsds-command-text-sizeSmall: var(--fsds-semantic-typography-body-04, 12px);
+  --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
   --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
   --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-  --fsds-command-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+  --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
 }
 
 .command {

@@ -230,12 +230,14 @@ describe("emitTokensCss with box-model defaults", () => {
     const tokensCss = emitTokensCss(ir);
     const css = emitCss(ir);
 
-    expect(css).toContain("font-size: var(--fsds-button-size-fontSize-medium, 1rem);");
-    expect(tokensCss).toContain(
-      "--fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightSmall, 28px);",
+    expect(css).toContain(
+      "font-size: var(--fsds-button-size-font-size-medium, 1rem);",
     );
     expect(tokensCss).toContain(
-      "--fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightLarge, 48px);",
+      "--fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-small, 28px);",
+    );
+    expect(tokensCss).toContain(
+      "--fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-large, 48px);",
     );
     expect(tokensCss).toContain(
       "--fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);",

@@ -143,13 +143,13 @@ export const toastTokenScopes = {
     },
     "toast.spacing.stackGap": {
       name: "toast.spacing.stackGap",
-      cssVar: "--fsds-toast-spacing-stackGap",
+      cssVar: "--fsds-toast-spacing-stack-gap",
       ref: "core.spacing.size.04",
       fallback: 8,
     },
     "toast.size.maxWidth": {
       name: "toast.size.maxWidth",
-      cssVar: "--fsds-toast-size-maxWidth",
+      cssVar: "--fsds-toast-size-max-width",
       literal: 400,
     },
     "toast.motion.enter": {

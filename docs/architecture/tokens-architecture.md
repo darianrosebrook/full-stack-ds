@@ -141,17 +141,23 @@ deliberately — it could not distinguish an accidental binding deletion from an
 intentional redesign, and it demonstrated that by firing on the latter — but the
 loss is real, not an upgrade in disguise.
 
-The naming seam this rail exists to catch: codegen lowers a contract's
-`resolvesTo` verbatim (`tokenSlug`, `packages/ds-codegen/src/ir.ts`) while the
-token build kebab-cases the same path (`tokenPathToCSSVar`,
-`packages/ds-tokens/build/core/index.ts`). A camelCase segment therefore emits a
-name the graph never declares, and the property renders its fallback literal —
-unreachable by any brand or theme re-point. Burn-down is
-`FIX-TOKEN-SLUG-KEBAB-CASE-01`; the ledger at
-`scripts/token-resolvability-audit/known-unresolvable.json` splits the population
-by whether repair preserves the rendered value.
+The naming seam this rail exists to catch: a dotted token path is lowered to a
+CSS custom-property name in more than one place, and if those places disagree,
+codegen emits a read of a name the graph never declares. The property then
+renders its fallback literal — unreachable by any brand or theme re-point, and
+invisible to every other gate, because CSS has no undefined-variable error.
 
-**Author kebab-case token names** until that lands.
+`packages/ds-codegen/src/token-path.ts` is the single authority for that
+lowering. Both `tokenSlug` (codegen's emit side) and `tokenPathToCSSVar`
+(`packages/ds-tokens/build/core/index.ts`, the declare side) call it, and
+`packages/ds-tokens/build/core/token-path.test.ts` fails if either re-inlines a
+second one. Namespace inference — deciding that a bare `spacing.size.04` belongs
+under `core-` — deliberately stays in the token build: it applies only to
+unprefixed paths and its heuristics collide with component slot names.
+
+Token names are kebab-case in emitted CSS regardless of how the source path is
+cased, so a `resolvesTo` of `semantic.shape.control.border.defaultWidth` reads
+`--fsds-semantic-shape-control-border-default-width` on both sides.
 
 ### Component-scoped: the slot is the interface, so the binding is the obligation
 

@@ -36,12 +36,12 @@
 }
 
 .nav-list__item:hover {
-  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
   color: var(--fsds-nav-list-color-foreground-hover, #141414);
 }
 
 .nav-list__item[aria-current="page"] {
-  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent);
   color: var(--fsds-nav-list-color-foreground-current, #141414);
 }
 /* @generated:end */

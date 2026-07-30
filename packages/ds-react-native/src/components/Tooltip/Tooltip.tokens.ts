@@ -119,12 +119,12 @@ export const tooltipTokenScopes = {
     },
     "tooltip.size.maxWidth": {
       name: "tooltip.size.maxWidth",
-      cssVar: "--fsds-tooltip-size-maxWidth",
+      cssVar: "--fsds-tooltip-size-max-width",
       literal: 200,
     },
     "tooltip.typography.fontSize": {
       name: "tooltip.typography.fontSize",
-      cssVar: "--fsds-tooltip-typography-fontSize",
+      cssVar: "--fsds-tooltip-typography-font-size",
       ref: "semantic.typography.caption.01",
       fallback: 14,
     },

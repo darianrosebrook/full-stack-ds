@@ -48,7 +48,7 @@ export class InputElement extends LitElement {
       --fsds-input-size-padding-block-default: var(--fsds-semantic-input-size-medium-padding-block, 4px);
       --fsds-input-size-padding-inline-default: var(--fsds-semantic-input-size-medium-padding-inline, 8px);
       --fsds-input-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-input-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+      --fsds-input-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-input-space-inline-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-input-color-focus-default: var(--fsds-semantic-color-border-focus, #0566fe);
       --fsds-input-color-invalid-default: var(--fsds-semantic-color-border-danger, #b31b1b);

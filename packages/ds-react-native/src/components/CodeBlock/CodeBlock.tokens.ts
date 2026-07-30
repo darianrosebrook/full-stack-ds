@@ -118,13 +118,13 @@ export const codeBlockTokenScopes = {
     },
     "code-block.size.fontSize.default": {
       name: "code-block.size.fontSize.default",
-      cssVar: "--fsds-code-block-size-fontSize-default",
+      cssVar: "--fsds-code-block-size-font-size-default",
       ref: "core.typography.ramp.3",
       fallback: 14,
     },
     "code-block.typography.lineHeight.default": {
       name: "code-block.typography.lineHeight.default",
-      cssVar: "--fsds-code-block-typography-lineHeight-default",
+      cssVar: "--fsds-code-block-typography-line-height-default",
       ref: "semantic.typography.line.height.body",
       fallback: "1.5",
     },

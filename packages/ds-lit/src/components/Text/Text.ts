@@ -40,15 +40,15 @@ export class TextElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
-      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
-      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
-      --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-      --fsds-text-typography-lineHeight-tight: var(--fsds-semantic-typography-line-height-tight, 1.2);
-      --fsds-text-typography-letterSpacing-wide: var(--fsds-semantic-typography-letter-spacing-wide, 0.018rem);
-      --fsds-text-typography-letterSpacing-tight: var(--fsds-semantic-typography-letter-spacing-tight, -0.018rem);
+      --fsds-text-typography-font-weight-light: var(--fsds-semantic-typography-font-weight-light, 300);
+      --fsds-text-typography-font-weight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-font-weight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-text-typography-font-weight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-text-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-text-typography-line-height-body: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-text-typography-line-height-tight: var(--fsds-semantic-typography-line-height-tight, 1.2);
+      --fsds-text-typography-letter-spacing-wide: var(--fsds-semantic-typography-letter-spacing-wide, 0.018rem);
+      --fsds-text-typography-letter-spacing-tight: var(--fsds-semantic-typography-letter-spacing-tight, -0.018rem);
       --fsds-text-size-xs: var(--fsds-core-typography-ramp-2, 0.75rem);
       --fsds-text-size-sm: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-text-size-md: var(--fsds-core-typography-ramp-4, 1rem);
@@ -60,32 +60,32 @@ export class TextElement extends LitElement {
 
     .text--display {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-11, 3.75rem);
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-text-typography-font-weight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
 
     .text--headline {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-8, 2rem);
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-text-typography-font-weight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
 
     .text--title {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-6, 1.25rem);
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-text-typography-font-weight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
 
     .text--body {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-4, 1rem);
-      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-font-weight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
     }
 
     .text--caption {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-2, 0.75rem);
-      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-font-weight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
     }
 
     .text--overline {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-2, 0.75rem);
-      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-text-typography-font-weight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
 
     .text--code {
@@ -121,23 +121,23 @@ export class TextElement extends LitElement {
     }
 
     .text--light {
-      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
+      --fsds-text-typography-font-weight-light: var(--fsds-semantic-typography-font-weight-light, 300);
     }
 
     .text--normal {
-      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-font-weight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
     }
 
     .text--medium {
-      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-text-typography-font-weight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
 
     .text--semibold {
-      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-semibold, 600);
+      --fsds-text-typography-font-weight-medium: var(--fsds-semantic-typography-font-weight-semibold, 600);
     }
 
     .text--bold {
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-text-typography-font-weight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
 
     .text {
@@ -154,54 +154,54 @@ export class TextElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-text-color-foreground-primary, #141414);
       font-size: var(--fsds-text-size-md, 1rem);
-      line-height: var(--fsds-text-typography-lineHeight-body, 1.5);
+      line-height: var(--fsds-text-typography-line-height-body, 1.5);
       margin: 0;
     }
 
     .text--display {
       font-size: var(--fsds-text-size-md, 1rem);
-      font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
-      line-height: var(--fsds-text-typography-lineHeight-heading, 1);
-      letter-spacing: var(--fsds-text-typography-letterSpacing-tight, -0.018rem);
+      font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+      line-height: var(--fsds-text-typography-line-height-heading, 1);
+      letter-spacing: var(--fsds-text-typography-letter-spacing-tight, -0.018rem);
     }
 
     .text--headline {
       font-size: var(--fsds-text-size-md, 1rem);
-      font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
-      line-height: var(--fsds-text-typography-lineHeight-heading, 1);
-      letter-spacing: var(--fsds-text-typography-letterSpacing-tight, -0.018rem);
+      font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+      line-height: var(--fsds-text-typography-line-height-heading, 1);
+      letter-spacing: var(--fsds-text-typography-letter-spacing-tight, -0.018rem);
     }
 
     .text--title {
       font-size: var(--fsds-text-size-md, 1rem);
-      font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
-      line-height: var(--fsds-text-typography-lineHeight-heading, 1);
+      font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+      line-height: var(--fsds-text-typography-line-height-heading, 1);
     }
 
     .text--body {
       font-size: var(--fsds-text-size-md, 1rem);
-      font-weight: var(--fsds-text-typography-fontWeight-regular, 400);
-      line-height: var(--fsds-text-typography-lineHeight-body, 1.5);
+      font-weight: var(--fsds-text-typography-font-weight-regular, 400);
+      line-height: var(--fsds-text-typography-line-height-body, 1.5);
     }
 
     .text--caption {
       font-size: var(--fsds-text-size-md, 1rem);
-      font-weight: var(--fsds-text-typography-fontWeight-regular, 400);
-      line-height: var(--fsds-text-typography-lineHeight-tight, 1.2);
+      font-weight: var(--fsds-text-typography-font-weight-regular, 400);
+      line-height: var(--fsds-text-typography-line-height-tight, 1.2);
     }
 
     .text--overline {
       font-size: var(--fsds-text-size-md, 1rem);
-      font-weight: var(--fsds-text-typography-fontWeight-medium, 500);
-      line-height: var(--fsds-text-typography-lineHeight-tight, 1.2);
+      font-weight: var(--fsds-text-typography-font-weight-medium, 500);
+      line-height: var(--fsds-text-typography-line-height-tight, 1.2);
       text-transform: uppercase;
-      letter-spacing: var(--fsds-text-typography-letterSpacing-wide, 0.018rem);
+      letter-spacing: var(--fsds-text-typography-letter-spacing-wide, 0.018rem);
     }
 
     .text--code {
       font-size: var(--fsds-text-size-md, 1rem);
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-      line-height: var(--fsds-text-typography-lineHeight-body, 1.5);
+      line-height: var(--fsds-text-typography-line-height-body, 1.5);
     }
 
     .text--xs {
@@ -233,23 +233,23 @@ export class TextElement extends LitElement {
     }
 
     .text--light {
-      font-weight: var(--fsds-text-typography-fontWeight-light, 300);
+      font-weight: var(--fsds-text-typography-font-weight-light, 300);
     }
 
     .text--normal {
-      font-weight: var(--fsds-text-typography-fontWeight-regular, 400);
+      font-weight: var(--fsds-text-typography-font-weight-regular, 400);
     }
 
     .text--medium {
-      font-weight: var(--fsds-text-typography-fontWeight-medium, 500);
+      font-weight: var(--fsds-text-typography-font-weight-medium, 500);
     }
 
     .text--semibold {
-      font-weight: var(--fsds-text-typography-fontWeight-medium, 500);
+      font-weight: var(--fsds-text-typography-font-weight-medium, 500);
     }
 
     .text--bold {
-      font-weight: var(--fsds-text-typography-fontWeight-bold, 700);
+      font-weight: var(--fsds-text-typography-font-weight-bold, 700);
     }
 
     .text--left {

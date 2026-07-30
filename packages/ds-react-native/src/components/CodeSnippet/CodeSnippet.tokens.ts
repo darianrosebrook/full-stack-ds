@@ -124,13 +124,13 @@ export const codeSnippetTokenScopes = {
     },
     "code-snippet.size.fontSize.default": {
       name: "code-snippet.size.fontSize.default",
-      cssVar: "--fsds-code-snippet-size-fontSize-default",
+      cssVar: "--fsds-code-snippet-size-font-size-default",
       ref: "core.typography.ramp.3",
       fallback: 14,
     },
     "code-snippet.typography.lineHeight.default": {
       name: "code-snippet.typography.lineHeight.default",
-      cssVar: "--fsds-code-snippet-typography-lineHeight-default",
+      cssVar: "--fsds-code-snippet-typography-line-height-default",
       ref: "semantic.typography.line.height.body",
       fallback: "1.5",
     },

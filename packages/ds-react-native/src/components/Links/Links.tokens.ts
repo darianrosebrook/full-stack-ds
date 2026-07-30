@@ -150,19 +150,19 @@ export const linksTokenScopes = {
     },
     "links.size.fontSize.small": {
       name: "links.size.fontSize.small",
-      cssVar: "--fsds-links-size-fontSize-small",
+      cssVar: "--fsds-links-size-font-size-small",
       ref: "core.typography.ramp.3",
       fallback: 14,
     },
     "links.size.fontSize.medium": {
       name: "links.size.fontSize.medium",
-      cssVar: "--fsds-links-size-fontSize-medium",
+      cssVar: "--fsds-links-size-font-size-medium",
       ref: "core.typography.ramp.4",
       fallback: 16,
     },
     "links.size.fontSize.large": {
       name: "links.size.fontSize.large",
-      cssVar: "--fsds-links-size-fontSize-large",
+      cssVar: "--fsds-links-size-font-size-large",
       ref: "core.typography.ramp.5",
       fallback: 18,
     },
@@ -170,7 +170,7 @@ export const linksTokenScopes = {
   "variant_small": {
     "links.size.fontSize.medium": {
       name: "links.size.fontSize.medium",
-      cssVar: "--fsds-links-size-fontSize-medium",
+      cssVar: "--fsds-links-size-font-size-medium",
       ref: "links.size.fontSize.small",
       fallback: 14,
     },
@@ -178,7 +178,7 @@ export const linksTokenScopes = {
   "variant_medium": {
     "links.size.fontSize.medium": {
       name: "links.size.fontSize.medium",
-      cssVar: "--fsds-links-size-fontSize-medium",
+      cssVar: "--fsds-links-size-font-size-medium",
       ref: "core.typography.ramp.4",
       fallback: 16,
     },
@@ -186,7 +186,7 @@ export const linksTokenScopes = {
   "variant_large": {
     "links.size.fontSize.medium": {
       name: "links.size.fontSize.medium",
-      cssVar: "--fsds-links-size-fontSize-medium",
+      cssVar: "--fsds-links-size-font-size-medium",
       ref: "links.size.fontSize.large",
       fallback: 18,
     },
