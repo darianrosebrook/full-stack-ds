@@ -3,6 +3,7 @@ title: 'Visual QA + iteration pass on the 5 new brand personas using the Display
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: brand-personas-qa
 created_at: '2026-07-30T01:04:44.327Z'
 updated_at: '2026-07-30T01:04:44.327Z'
 blast_radius:
