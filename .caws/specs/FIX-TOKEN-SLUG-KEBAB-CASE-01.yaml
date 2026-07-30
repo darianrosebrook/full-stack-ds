@@ -2,10 +2,11 @@ id: FIX-TOKEN-SLUG-KEBAB-CASE-01
 title: 'Repair the camelCase/kebab-case seam between codegen var names and the token graph'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: token-slug-kebab
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge token-slug-kebab at 2bc0a6571cbd48ad8a8065a5e029b190f1d41d86'
 created_at: '2026-07-30T15:14:39.892Z'
-updated_at: '2026-07-30T17:03:39.097Z'
+updated_at: '2026-07-30T17:19:26.129Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/ir.ts (tokenSlug — the emit side of the seam)'
