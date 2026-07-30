@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: surface-part-class
 created_at: '2026-07-30T00:30:54.643Z'
-updated_at: '2026-07-30T00:30:54.643Z'
+updated_at: '2026-07-30T00:35:41.778Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/{react,vue,svelte,angular,lit}/surface-emit.ts'
@@ -31,6 +31,8 @@ scope:
     - 'packages/ds-react-native/src/components'
     - 'packages/ds-figma-plugin/src/generated/components'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-codegen/src/ir.ts
+    - packages/ds-codegen/src/styles-to-css.test.ts
   out: []
 invariants:
   - >-
