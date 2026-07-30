@@ -2,10 +2,11 @@ id: FEAT-BRAND-PERSONA-VISUAL-QA-01
 title: 'Visual QA + iteration pass on the 5 new brand personas using the Display Case grid'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: brand-personas-qa
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge brand-personas-qa at 3c5f398f59a90c34dbe5e2262c9ea6acf6726523'
 created_at: '2026-07-30T01:04:44.327Z'
-updated_at: '2026-07-30T01:12:39.129Z'
+updated_at: '2026-07-30T01:16:44.622Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/brands (targeted value fixes on the 5 personas from FEAT-BRAND-PERSONA-SCOPE-01, informed by full-grid visual QA)'
