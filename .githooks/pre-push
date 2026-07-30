@@ -125,7 +125,14 @@ if [ "${RUN_TOKEN_GATES:-false}" = true ]; then
   echo ""; echo "[pre-push] tokens:validate"; pnpm run tokens:validate
   echo "[pre-push] tokens:check-contrast"; pnpm run tokens:check-contrast
   echo "[pre-push] tokens:check-brand-refs"; pnpm run tokens:check-brand-refs
-  echo "[pre-push] tokens:check-usage:gate"; pnpm run tokens:check-usage:gate
+  # tokens:check-usage is REPORT-ONLY (RAIL-TOKEN-REFERENCE-RESOLVABILITY-01).
+  # It asks "is every declared token referenced?", which is the wrong health
+  # question for a vocabulary layer: base and semantic exist to be drawn from,
+  # and a brand may ship a palette ramp ahead of its consumer. Gating on
+  # reference count made that legal act fail the build. The blocking question is
+  # now the inverse — does every reference RESOLVE — and lives in
+  # audit:token-resolvability below. See docs/architecture/tokens-architecture.md.
+  echo "[pre-push] tokens:check-usage (report-only)"; pnpm run tokens:check-usage || true
 else echo "[pre-push] skip token gates"; fi
 
 # --- generate:check (reuses the composed graph built above) + docs claims ---
@@ -162,6 +169,18 @@ if [ "${RUN_STYLING_AUDITS:-false}" = true ]; then
   pnpm run audit:pseudo-state
   pnpm run audit:state-suppression
 else echo "[pre-push] skip styling-realization ledgers"; fi
+
+# Token-reference resolvability (RAIL-TOKEN-REFERENCE-RESOLVABILITY-01). The
+# blocking token gate, replacing the count-based usage gate demoted above. Fires
+# when a generated stylesheet reads a --fsds-* name the token graph never
+# declares — CSS falls back to the literal, so the property renders a plausible
+# value while the token layer is decorative for it. Needs the composed graph, so
+# it runs after the token build; the audit fails loudly rather than reporting
+# every reference as broken if the graph is missing.
+if [ "${RUN_TOKEN_RESOLVABILITY:-false}" = true ]; then
+  echo ""; echo "[pre-push] audit:token-resolvability"
+  pnpm run audit:token-resolvability
+else echo "[pre-push] skip token-resolvability ledger"; fi
 
 # --- heaviest, last: governed:rail + generated-tree drift diff ---
 if [ "${RUN_RAIL:-false}" = true ]; then

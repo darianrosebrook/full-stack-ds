@@ -116,8 +116,42 @@ reference silently falls back to its literal, which makes the token layer
 decorative for that binding while leaving every other gate green.
 
 This is why the non-negotiable invariant above is stated in the resolvability
-direction, and it is the direction the gates should extend in — see
-`RAIL-TOKEN-REFERENCE-RESOLVABILITY-01`.
+direction, and it is the direction the gates run in.
+
+**Which gate asks which question:**
+
+| gate | question | disposition |
+|---|---|---|
+| `audit:token-resolvability` | does every `var(--fsds-*)` a generated stylesheet reads resolve to a declared name? | **blocking**, two-directional ledger |
+| `tokens:check-contrast` | do the curated foreground/background pairs meet WCAG AA? | blocking |
+| `tokens:check-brand-refs` | does every `{ref}` in a brand override resolve? | blocking |
+| `tokens:check-usage` | how much of the vocabulary is referenced? | **report-only** |
+
+`tokens:check-usage` is report-only because reference count is not a health
+signal for a layer that exists to be drawn from. Gating on it makes a legal act
+fail the build: replacing a brand persona orphaned 26 `core.color.palette.*`
+stops — a complete generated ramp losing its last consumer — and blocked a push
+with nothing broken. The remedy the gate offered was to re-baseline, which would
+have recorded a deliberate redesign as permanent debt.
+
+**Non-claim.** The resolvability rail is *not* a superset of the usage gate. A
+semantic or component token that loses its last consumer is no longer detected by
+any blocking gate; that signal is not preserved elsewhere. It was dropped
+deliberately — it could not distinguish an accidental binding deletion from an
+intentional redesign, and it demonstrated that by firing on the latter — but the
+loss is real, not an upgrade in disguise.
+
+The naming seam this rail exists to catch: codegen lowers a contract's
+`resolvesTo` verbatim (`tokenSlug`, `packages/ds-codegen/src/ir.ts`) while the
+token build kebab-cases the same path (`tokenPathToCSSVar`,
+`packages/ds-tokens/build/core/index.ts`). A camelCase segment therefore emits a
+name the graph never declares, and the property renders its fallback literal —
+unreachable by any brand or theme re-point. Burn-down is
+`FIX-TOKEN-SLUG-KEBAB-CASE-01`; the ledger at
+`scripts/token-resolvability-audit/known-unresolvable.json` splits the population
+by whether repair preserves the rendered value.
+
+**Author kebab-case token names** until that lands.
 
 ### Component-scoped: the slot is the interface, so the binding is the obligation
 
