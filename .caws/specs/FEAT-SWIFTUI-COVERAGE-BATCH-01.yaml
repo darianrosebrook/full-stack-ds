@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: "Label(FsdsLabel)/Blockquote/Links/List static-content emissions compile; List `as` axis keyword-escaped; Links untyped size axis omitted (31/31 swift tests)"
     recorded_at: "2026-08-15T17:50:44.564Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Sheet.swift routes through centered-modal: .sheet(isPresented:)+open projection; side:/modal: absent (surface-emit.test pins)"
+    recorded_at: "2026-08-15T17:50:45.574Z"
