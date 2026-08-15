@@ -55,7 +55,7 @@ const SWIFTUI_RESERVED_TYPES: ReadonlySet<string> = new Set([
   "Field",
 ]);
 
-function swiftExportName(componentName: string): string {
+export function swiftExportName(componentName: string): string {
   return SWIFTUI_RESERVED_TYPES.has(componentName)
     ? `Fsds${componentName}`
     : componentName;
@@ -379,7 +379,7 @@ function allDomLeavesAreSlots(
  * `*.size.radius`, Card `*.size.radius.default`; foreground is `.default`
  * on Button but `.primary` on Card).
  */
-const SLOT_SUFFIX_ALTERNATIVES = {
+export const SLOT_SUFFIX_ALTERNATIVES = {
   background: ["color.background.default", "color.bg.default", "color.bg"],
   foreground: ["color.foreground.default", "color.foreground.primary", "color.text.default", "color.fg"],
   borderColor: ["color.border.default", "color.border"],
@@ -393,7 +393,7 @@ const SLOT_SUFFIX_ALTERNATIVES = {
   statusAccentWidth: ["size.statusAccent.width"],
 } as const;
 
-type SlotConcern = keyof typeof SLOT_SUFFIX_ALTERNATIVES;
+export type SlotConcern = keyof typeof SLOT_SUFFIX_ALTERNATIVES;
 
 /**
  * The first alternative suffix that exists in any of the component's
@@ -679,7 +679,7 @@ function emitActionComponent(ir: ComponentIR): string {
  * consult this once and generate accessors/modifiers only for present
  * concerns — absent concerns are skipped, never defaulted into existence.
  */
-function resolveChrome(ir: ComponentIR): Partial<Record<SlotConcern, string>> {
+export function resolveChrome(ir: ComponentIR): Partial<Record<SlotConcern, string>> {
   const chrome: Partial<Record<SlotConcern, string>> = {};
   for (const concern of Object.keys(SLOT_SUFFIX_ALTERNATIVES) as SlotConcern[]) {
     const suffix = pickSuffix(ir, concern);
@@ -956,25 +956,103 @@ function escapeSwiftKeyword(identifier: string): string {
 }
 
 /** `in-progress` → `case inProgress = "in-progress"` (kebab values keep a raw value). */
-function swiftCaseDecl(value: string): string {
+export function swiftCaseDecl(value: string): string {
   const swiftName = swiftCase(value);
   if (swiftName !== value) return `${swiftName} = "${value}"`;
   return escapeSwiftKeyword(swiftName);
 }
 
 /** Enum member reference: `.default` → `` .`default` `` for keyword members. */
-function swiftCaseRef(value: string): string {
+export function swiftCaseRef(value: string): string {
   return escapeSwiftKeyword(swiftCase(value));
 }
 
 /** `in-progress` → `inProgress` (Swift identifier reference). */
-function swiftCase(value: string): string {
+export function swiftCase(value: string): string {
   return value
     .split("-")
     .map((part, i) =>
       i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1),
     )
     .join("");
+}
+
+
+/** Chrome accessor lines shared by the component and surface emitters. */
+export function emitChromeAccessorLines(
+  chrome: Partial<Record<SlotConcern, string>>,
+  include: readonly SlotConcern[],
+): string[] {
+  const accessors: string[] = [];
+  for (const concern of include) {
+    const suffix = chrome[concern];
+    if (!suffix) continue;
+    switch (concern) {
+      case "background":
+        accessors.push(`${INDENT}private var background: Color { colorSlot("${suffix}") ?? .accentColor }`);
+        break;
+      case "foreground":
+        accessors.push(`${INDENT}private var foreground: Color { colorSlot("${suffix}") ?? .primary }`);
+        break;
+      case "borderColor":
+        accessors.push(`${INDENT}private var borderColor: Color { colorSlot("${suffix}") ?? .clear }`);
+        break;
+      case "borderWidth":
+        accessors.push(`${INDENT}private var borderWidth: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+      case "radius":
+        accessors.push(`${INDENT}private var radius: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+      case "blockPadding":
+        accessors.push(`${INDENT}private var blockPadding: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+      case "inlinePadding":
+        accessors.push(`${INDENT}private var inlinePadding: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+      case "gap":
+        accessors.push(`${INDENT}private var gap: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+      case "minHeight":
+        accessors.push(`${INDENT}private var minHeight: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+      case "statusAccentColor":
+        accessors.push(`${INDENT}private var statusAccent: Color { colorSlot("${suffix}") ?? .clear }`);
+        break;
+      case "statusAccentWidth":
+        accessors.push(`${INDENT}private var statusAccentWidth: CGFloat { pxSlot("${suffix}") ?? 0 }`);
+        break;
+    }
+  }
+  return accessors;
+}
+
+/** Generated token-scope-data lines shared by the component and surface emitters. */
+export function emitTokenScopesSection(ir: ComponentIR): string[] {
+  const lines: string[] = [];
+  lines.push(
+    `/// Token scope data for ${swiftExportName(ir.name)} (ir.tokenScopes → RN normal ` +
+      `form: data consumed through FsdsTheme at render, never resolved ` +
+      `constants). A caseless enum namespace because generic types cannot ` +
+      `hold static stored properties.`,
+  );
+  lines.push(`enum ${ir.name}Tokens {`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  for (const scope of ir.tokenScopes) {
+    lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
+    for (const value of scope.values) {
+      const literalArg = value.rawValue
+        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
+        : "";
+      lines.push(
+        `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
+          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+      );
+    }
+    lines.push(`${INDENT}${INDENT}],`);
+  }
+  lines.push(`${INDENT}]`);
+  lines.push(`}`);
+  return lines;
 }
 
 function hasConventionalProp(ir: ComponentIR, name: string): boolean {
