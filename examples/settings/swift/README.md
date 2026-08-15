@@ -19,9 +19,11 @@ A macOS SwiftUI app can consume the generated DsSwiftUI package via
 the FSDS `Stack` primitive — its primary/destructive action buttons
 (`FsdsButton`, styled from token scopes through `FsdsTheme`), its
 section chrome (`Card`, the compound-part composer with header/content/
-footer/description regions), and its form rows (`FsdsField`, the
-named-slot composer: label/control/help/error/validatingIndicator
-regions; the control owns state on this target) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
+footer/description regions), its
+form rows (`FsdsField`, the named-slot composer: label/control/help/
+error/validatingIndicator regions), and its text controls (`Input`, the
+value-channel text-control class: controlled Binding + @State + onChange
+through the Switch-proven projection) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
 package boundary.
 
 ## Falsifier
@@ -41,10 +43,13 @@ package boundary.
   primitive, `FsdsButton` (the projected-children action path), and `Card`
   (the compound-part composer; header/content/footer/description realize
   as region closures rather than separate subcomponent exports), and
-  `FsdsField` (the named-slot composer) are emitted for swiftui today.
+  `FsdsField` (the named-slot composer), and `Input` (the value-channel
+  text control, `value`/`defaultValue`/`onChange`/`placeholder`/`disabled`
+  realized) are emitted for swiftui today.
   The web Field's value-channel/control-association API is NOT part of
   the Swift surface — the consumer's control owns state (documented
-  omission, not accepted-and-ignored). Input, Dialog, and Tooltip do not
+  omission, not accepted-and-ignored). Input's HTML-form props (type/required/
+  name/invalid) are likewise omitted. Dialog and Tooltip do not
   exist on this target; those regions of the spec are composed from plain SwiftUI and
   marked `NOT FSDS` in the app source. This lane does not claim parity with
   the react/vue lanes.

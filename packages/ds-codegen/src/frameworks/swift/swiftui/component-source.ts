@@ -81,6 +81,14 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isTextValueControl(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitTextControlComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (isCompoundPartComposer(ir)) {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -104,10 +112,12 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
       `component "${ir.name}". Implemented classes: native-toggle-affordance ` +
       `collapse, the projected-children action root (root element button ` +
       `with a single projected children region), and the compound-part ` +
-      `composer (root-dom-less passive container), and the named-slot ` +
-      `composer (dom tree whose leaves are all named slots). Component-` +
-      `instance leaves (e.g. TextField), control roots, and surfaces are ` +
-      `not yet implemented.`,
+      `composer (root-dom-less passive container), the named-slot ` +
+      `composer (dom tree whose leaves are all named slots), and the ` +
+      `value-channel text control (input root, one string channel). ` +
+      `Component-` +
+      `instance leaves (e.g. TextField) and surfaces are not yet ` +
+      `implemented.`,
   );
 }
 
@@ -123,6 +133,184 @@ function isProjectedChildrenAction(ir: ComponentIR): boolean {
     children[0]!.tag === "children" &&
     (children[0]!.children ?? []).length === 0
   );
+}
+
+/**
+ * The value-channel text-control class: a dom root `input` element with
+ * exactly one string channel and no slots/surface. Input is the corpus
+ * consumer. The string channel projects through the Switch-proven
+ * controllable-state pattern (Binding + @State + onChange).
+ */
+function isTextValueControl(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.dom.tag !== "input") return false;
+  if (ir.surface != null) return false;
+  if ((ir.dom.children ?? []).length > 0) return false;
+  const stringChannels = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "string",
+  );
+  return stringChannels.length === 1;
+}
+
+/** The single string channel of a text control (gate guarantees it). */
+function soleStringChannel(ir: ComponentIR): NormalizedChannelIR {
+  return ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "string",
+  )!;
+}
+
+function emitTextControlComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  // The class gate guarantees exactly one string channel; the projection
+  // below is its realization (value/defaultValue/onChange trio).
+  soleStringChannel(ir);
+  const chrome = resolveChrome(ir);
+  const has = (concern: SlotConcern) => chrome[concern] !== undefined;
+  const hasProp = (name: string) => hasConventionalProp(ir, name);
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Token scope data for ${exportName} (ir.tokenScopes → RN normal ` +
+      `form: data consumed through FsdsTheme at render, never resolved ` +
+      `constants). A caseless enum namespace because generic types cannot ` +
+      `hold static stored properties.`,
+  );
+  lines.push(`enum ${ir.name}Tokens {`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  for (const scope of ir.tokenScopes) {
+    lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
+    for (const value of scope.values) {
+      const literalArg = value.rawValue
+        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
+        : "";
+      lines.push(
+        `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
+          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+      );
+    }
+    lines.push(`${INDENT}${INDENT}],`);
+  }
+  lines.push(`${INDENT}]`);
+  lines.push(`}`);
+  lines.push("");
+  lines.push(
+    `/// Emitted through the value-channel text-control path: input root ` +
+      `whose string channel projects through the controllable-state ` +
+      `pattern (controlled Binding takes precedence over @State).`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+  lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+  lines.push(`${INDENT}}`);
+  lines.push(`${INDENT}private let controlledValue: Binding<String>?`);
+  lines.push(`${INDENT}@State private var uncontrolledValue: String`);
+  lines.push(`${INDENT}private let onChange: ((String) -> Void)?`);
+  if (hasProp("placeholder")) {
+    lines.push(`${INDENT}private let placeholder: String?`);
+  }
+  if (hasProp("disabled")) {
+    lines.push(`${INDENT}private let disabled: Bool`);
+  }
+  lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params: string[] = [`value: Binding<String>? = nil,`];
+  if (hasProp("defaultValue")) {
+    params.push(`defaultValue: String = "",`);
+  }
+  params.push(`onChange: ((String) -> Void)? = nil,`);
+  if (hasProp("placeholder")) {
+    params.push(`placeholder: String? = nil,`);
+  }
+  if (hasProp("disabled")) {
+    params.push(`disabled: Bool = false,`);
+  }
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.controlledValue = value`);
+  if (hasProp("defaultValue")) {
+    lines.push(`${INDENT}${INDENT}self._uncontrolledValue = State(initialValue: defaultValue)`);
+  } else {
+    lines.push(`${INDENT}${INDENT}self._uncontrolledValue = State(initialValue: "")`);
+  }
+  lines.push(`${INDENT}${INDENT}self.onChange = onChange`);
+  if (hasProp("placeholder")) {
+    lines.push(`${INDENT}${INDENT}self.placeholder = placeholder`);
+  }
+  if (hasProp("disabled")) {
+    lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var value: String {`);
+  lines.push(`${INDENT}${INDENT}controlledValue?.wrappedValue ?? uncontrolledValue`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func setValue(_ next: String) {`);
+  lines.push(`${INDENT}${INDENT}if let binding = controlledValue {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
+  lines.push(`${INDENT}${INDENT}} else {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledValue = next`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}onChange?(next)`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+  lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+  lines.push(`${INDENT}${INDENT})`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+  lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+  lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  const accessors: string[] = [];
+  if (has("background")) accessors.push(`${INDENT}private var background: Color { colorSlot("${chrome.background}") ?? .accentColor }`);
+  if (has("foreground")) accessors.push(`${INDENT}private var foreground: Color { colorSlot("${chrome.foreground}") ?? .primary }`);
+  if (has("blockPadding")) accessors.push(`${INDENT}private var blockPadding: CGFloat { pxSlot("${chrome.blockPadding}") ?? 0 }`);
+  if (has("inlinePadding")) accessors.push(`${INDENT}private var inlinePadding: CGFloat { pxSlot("${chrome.inlinePadding}") ?? 0 }`);
+  if (has("minHeight")) accessors.push(`${INDENT}private var minHeight: CGFloat { pxSlot("${chrome.minHeight}") ?? 0 }`);
+  lines.push(...accessors);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  const textFieldArgs = [`""`, `text: Binding(`, `${INDENT}${INDENT}get: { value },`, `${INDENT}${INDENT}set: { setValue($0) }`, `${INDENT})`];
+  lines.push(`${INDENT}${INDENT}TextField(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}"",`);
+  lines.push(`${INDENT}${INDENT}${INDENT}text: Binding(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { setValue($0) }`);
+  if (hasProp("placeholder")) {
+    lines.push(`${INDENT}${INDENT}${INDENT}),`);
+    lines.push(`${INDENT}${INDENT}${INDENT}prompt: placeholder.map(Text.init)`);
+  } else {
+    lines.push(`${INDENT}${INDENT}${INDENT})`);
+  }
+  lines.push(`${INDENT}${INDENT})`);
+  if (has("blockPadding")) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+  if (has("inlinePadding")) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+  if (has("minHeight")) lines.push(`${INDENT}${INDENT}${INDENT}.frame(minHeight: minHeight)`);
+  if (has("background")) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  if (has("foreground")) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  if (hasProp("disabled")) lines.push(`${INDENT}${INDENT}${INDENT}.disabled(disabled)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  void textFieldArgs;
+  return lines.join("\n");
 }
 
 /**
@@ -192,8 +380,8 @@ function allDomLeavesAreSlots(
  * on Button but `.primary` on Card).
  */
 const SLOT_SUFFIX_ALTERNATIVES = {
-  background: ["color.background.default", "color.bg"],
-  foreground: ["color.foreground.default", "color.foreground.primary", "color.fg"],
+  background: ["color.background.default", "color.bg.default", "color.bg"],
+  foreground: ["color.foreground.default", "color.foreground.primary", "color.text.default", "color.fg"],
   borderColor: ["color.border.default", "color.border"],
   borderWidth: ["size.border", "size.border.default"],
   radius: ["size.radius", "size.radius.default", "radius"],

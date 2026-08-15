@@ -64,12 +64,12 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     expect(actual).toBe(expected);
   });
 
-  it.each(["TextField", "Dialog", "Input"])(
+  it.each(["TextField", "Dialog"])(
     "refuses to emit for contracts outside every emission class (%s)",
     (name) => {
-      // TextField carries a component-instance leaf (fsds.Input), Dialog is
-      // a surface block with a dom tree, Input is a control root with no
-      // slots — none match an emission class. Fail loud, never approximate.
+      // TextField carries a component-instance leaf (fsds.Input) and
+      // Dialog is a surface block with a dom tree — neither matches an
+      // emission class. Fail loud, never approximate.
       const contract = loadContract(name) as Parameters<
         typeof buildComponentIR
       >[0];
@@ -259,5 +259,42 @@ describe("generateSwiftUIComponentSource — named-slot composer (Field)", () =>
     expect(source).not.toContain("value:");
     expect(source).not.toContain("onChange");
     expect(source).not.toContain("validate:");
+  });
+});
+
+describe("generateSwiftUIComponentSource — value-channel text control (Input)", () => {
+  function emitInput(): string {
+    const contract = loadContract("Input") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("projects the string channel through the controllable-state pattern", () => {
+    const source = emitInput();
+    expect(source).toContain("public struct Input: View {");
+    expect(source).toContain("private let controlledValue: Binding<String>?");
+    expect(source).toContain("@State private var uncontrolledValue: String");
+    expect(source).toContain("private let onChange: ((String) -> Void)?");
+    expect(source).toContain("value: Binding<String>? = nil");
+    expect(source).toContain("controlledValue?.wrappedValue ?? uncontrolledValue");
+    expect(source).toContain("onChange?(next)");
+    expect(source).toContain("TextField(");
+    expect(source).toContain("prompt: placeholder.map(Text.init)");
+  });
+
+  it("omits HTML-form props instead of accepting-and-ignoring them", () => {
+    const source = emitInput();
+    for (const omitted of ["type: String", "required: Bool", "name: String", "invalid: Bool"]) {
+      expect(source).not.toContain(omitted);
+    }
+  });
+
+  it("realizes chrome through FsdsTheme with the input suffix forms", () => {
+    const source = emitInput();
+    expect(source).toContain('colorSlot("color.bg.default")');
+    expect(source).toContain('colorSlot("color.text.default")');
+    expect(source).toContain('.background(background)');
+    expect(source).toContain('.frame(minHeight: minHeight)');
   });
 });
