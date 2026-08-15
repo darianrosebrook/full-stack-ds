@@ -70,3 +70,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run governed:rail (exit 0; swiftui absent from regen-all; no drift in committed trees)"
     recorded_at: "2026-08-15T01:42:00.167Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "pnpm run typecheck (0 errors) + pnpm test (2021/2021, incl. manifest pack iteration + 4 swift emitter tests)"
+    recorded_at: "2026-08-15T01:42:01.094Z"
