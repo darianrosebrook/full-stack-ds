@@ -1,0 +1,289 @@
+{
+  "description": "Golden token streams for FEAT-CODEBLOCK-HIGHLIGHT-01. Every web framework package tokenizer MUST produce these exact streams (cross-framework behavioral identity invariant). Generated from the canonical tokenizer at packages/ds-codegen/src/highlight/tokenize.ts — regenerate, audit, and freeze; never hand-edit token arrays.",
+  "cases": [
+    {
+      "language": "typescript",
+      "code": "export function sum(values: number[]) {\n  return values.reduce((total, value) => total + value, 0);\n}",
+      "expected": [
+        {
+          "kind": "keyword",
+          "text": "export"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "keyword",
+          "text": "function"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "definition",
+          "text": "sum"
+        },
+        {
+          "kind": "punctuation",
+          "text": "("
+        },
+        {
+          "kind": "plain",
+          "text": "values"
+        },
+        {
+          "kind": "punctuation",
+          "text": ":"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "definition",
+          "text": "number"
+        },
+        {
+          "kind": "punctuation",
+          "text": "[])"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "punctuation",
+          "text": "{"
+        },
+        {
+          "kind": "plain",
+          "text": "\n  "
+        },
+        {
+          "kind": "keyword",
+          "text": "return"
+        },
+        {
+          "kind": "plain",
+          "text": " values"
+        },
+        {
+          "kind": "punctuation",
+          "text": "."
+        },
+        {
+          "kind": "definition",
+          "text": "reduce"
+        },
+        {
+          "kind": "punctuation",
+          "text": "(("
+        },
+        {
+          "kind": "plain",
+          "text": "total"
+        },
+        {
+          "kind": "punctuation",
+          "text": ","
+        },
+        {
+          "kind": "plain",
+          "text": " value"
+        },
+        {
+          "kind": "punctuation",
+          "text": ")"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "punctuation",
+          "text": "=>"
+        },
+        {
+          "kind": "plain",
+          "text": " total "
+        },
+        {
+          "kind": "punctuation",
+          "text": "+"
+        },
+        {
+          "kind": "plain",
+          "text": " value"
+        },
+        {
+          "kind": "punctuation",
+          "text": ","
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "static",
+          "text": "0"
+        },
+        {
+          "kind": "punctuation",
+          "text": ");"
+        },
+        {
+          "kind": "plain",
+          "text": "\n"
+        },
+        {
+          "kind": "punctuation",
+          "text": "}"
+        }
+      ]
+    },
+    {
+      "language": "bash",
+      "code": "# install dependencies\npnpm install --frozen-lockfile && pnpm run build",
+      "expected": [
+        {
+          "kind": "comment",
+          "text": "# install dependencies"
+        },
+        {
+          "kind": "plain",
+          "text": "\n"
+        },
+        {
+          "kind": "keyword",
+          "text": "pnpm"
+        },
+        {
+          "kind": "plain",
+          "text": " install "
+        },
+        {
+          "kind": "property",
+          "text": "--frozen-lockfile"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "punctuation",
+          "text": "&&"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "keyword",
+          "text": "pnpm"
+        },
+        {
+          "kind": "plain",
+          "text": " run build"
+        }
+      ]
+    },
+    {
+      "language": "json",
+      "code": "{\n  \"name\": \"@full-stack-ds/react\",\n  \"private\": true,\n  \"version\": 1\n}",
+      "expected": [
+        {
+          "kind": "punctuation",
+          "text": "{"
+        },
+        {
+          "kind": "plain",
+          "text": "\n  "
+        },
+        {
+          "kind": "property",
+          "text": "\"name\""
+        },
+        {
+          "kind": "punctuation",
+          "text": ":"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "string",
+          "text": "\"@full-stack-ds/react\""
+        },
+        {
+          "kind": "punctuation",
+          "text": ","
+        },
+        {
+          "kind": "plain",
+          "text": "\n  "
+        },
+        {
+          "kind": "property",
+          "text": "\"private\""
+        },
+        {
+          "kind": "punctuation",
+          "text": ":"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "static",
+          "text": "true"
+        },
+        {
+          "kind": "punctuation",
+          "text": ","
+        },
+        {
+          "kind": "plain",
+          "text": "\n  "
+        },
+        {
+          "kind": "property",
+          "text": "\"version\""
+        },
+        {
+          "kind": "punctuation",
+          "text": ":"
+        },
+        {
+          "kind": "plain",
+          "text": " "
+        },
+        {
+          "kind": "static",
+          "text": "1"
+        },
+        {
+          "kind": "plain",
+          "text": "\n"
+        },
+        {
+          "kind": "punctuation",
+          "text": "}"
+        }
+      ]
+    },
+    {
+      "language": "plaintext",
+      "code": "BUILD OK <no markup> & done",
+      "expected": [
+        {
+          "kind": "plain",
+          "text": "BUILD OK <no markup> & done"
+        }
+      ]
+    }
+  ]
+}
