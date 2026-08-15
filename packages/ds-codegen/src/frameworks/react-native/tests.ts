@@ -1,6 +1,8 @@
 import type { ComponentIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
 import {
+  compoundSelectionSubcomponentNames,
+  isCompoundSelectionContainer,
   rnAutoDismiss,
   stateStyleFacts,
   variantStyleFacts,
@@ -42,6 +44,7 @@ function runtimeTestBody(ir: ComponentIR): string | null {
   if (anchored) return anchoredSurfaceTest(ir, anchored);
   const surface = rnSurfaceLowering(ir);
   if (surface?.openChannel) return surfaceTest(ir, surface);
+  if (isCompoundSelectionContainer(ir)) return compoundSelectionTest(ir);
   if (isNativeToggle(ir)) return nativeToggleTest(ir);
   if (isTextInput(ir)) return textInputTest(ir);
   if (isCheckbox(ir)) return checkboxTest(ir);
@@ -52,12 +55,13 @@ function runtimeTestBody(ir: ComponentIR): string | null {
   return null;
 }
 
-function renderImports(ir: ComponentIR): string[] {
+function renderImports(ir: ComponentIR, extraImports: string[] = []): string[] {
+  const importedNames = [ir.name, ...extraImports].join(", ");
   return [
     "// @generated:start imports",
     `import { describe, expect, it } from "vitest";`,
     `import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";`,
-    `import { ${ir.name} } from "../${ir.name}";`,
+    `import { ${importedNames} } from "../${ir.name}";`,
     "// @generated:end",
     "",
     "// @generated:start tests",
@@ -89,6 +93,75 @@ function nativeToggleTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}expect(subject.props.accessibilityRole).toBe("switch");`,
     `${INDENT}${INDENT}expect(subject.props.value).toBe(false);`,
     `${INDENT}${INDENT}expect(subject.props.onValueChange).toEqual(expect.any(Function));`,
+    `${INDENT}});`,
+    `});`,
+    ...renderFooter(),
+  ].join("\n");
+}
+
+/**
+ * Compound-selection (tab-family) interaction proof: press-driven selection,
+ * accessibilityState flip, inactive-panel omission under default
+ * unmountInactive, controlled-value override, and the outside-provider throw.
+ * Subcomponent and channel prop names derive from the IR — no literals.
+ */
+function compoundSelectionTest(ir: ComponentIR): string {
+  const channel = ir.behavior.normalizedChannels[0]!;
+  const { listName, tabName, panelName } =
+    compoundSelectionSubcomponentNames(ir);
+  const defaultProp = channel.defaultValueProp ?? "defaultValue";
+  const changeProp = channel.changeHandlerProp;
+  const valueProp = channel.valueProp;
+  const base = INDENT.repeat(3);
+  const mountJsx = (openProp: string, openValue: string) =>
+    [
+      `<${ir.name} ${openProp}=${JSON.stringify(openValue)} ${changeProp}={(value: string) => changes.push(value)}>`,
+      `${base}<${listName}>`,
+      `${base}${INDENT}<${tabName} value="a" testID="tab-a">A</${tabName}>`,
+      `${base}${INDENT}<${tabName} value="b" testID="tab-b">B</${tabName}>`,
+      `${base}</${listName}>`,
+      `${base}<${panelName} value="a" testID="panel-a">Content A</${panelName}>`,
+      `${base}<${panelName} value="b" testID="panel-b">Content B</${panelName}>`,
+      `</${ir.name}>,`,
+    ].join("\n");
+
+  return [
+    ...renderImports(ir, [listName, tabName, panelName]),
+    `describe("${ir.name} React Native compound selection", () => {`,
+    `${INDENT}it("pressing a tab drives ${changeProp} and flips accessibilityState.selected", () => {`,
+    `${INDENT}${INDENT}const changes: string[] = [];`,
+    ...rendererHelper(mountJsx(defaultProp, "a")),
+    `${INDENT}${INDENT}const tabB = renderer!.root.findAllByProps({ testID: "tab-b" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(tabB.props.accessibilityRole).toBe("tab");`,
+    `${INDENT}${INDENT}expect(tabB.props.accessibilityState).toMatchObject({ selected: false });`,
+    `${INDENT}${INDENT}act(() => {`,
+    `${INDENT}${INDENT}${INDENT}tabB.props.onPress();`,
+    `${INDENT}${INDENT}});`,
+    `${INDENT}${INDENT}expect(changes).toEqual(["b"]);`,
+    `${INDENT}${INDENT}expect(tabB.props.accessibilityState).toMatchObject({ selected: true });`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => String(node.type) === "View" && node.props.testID === "panel-b").length).toBe(1);`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => String(node.type) === "View" && node.props.testID === "panel-a").length).toBe(0);`,
+    `${INDENT}});`,
+    ``,
+    `${INDENT}it("controlled ${valueProp} overrides internal selection state", () => {`,
+    `${INDENT}${INDENT}const changes: string[] = [];`,
+    ...rendererHelper(mountJsx(valueProp, "a")),
+    `${INDENT}${INDENT}const tabB = renderer!.root.findAllByProps({ testID: "tab-b" }).at(-1)!;`,
+    `${INDENT}${INDENT}act(() => {`,
+    `${INDENT}${INDENT}${INDENT}tabB.props.onPress();`,
+    `${INDENT}${INDENT}});`,
+    `${INDENT}${INDENT}expect(changes).toEqual(["b"]);`,
+    `${INDENT}${INDENT}expect(tabB.props.accessibilityState).toMatchObject({ selected: false });`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => String(node.type) === "View" && node.props.testID === "panel-b").length).toBe(0);`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => String(node.type) === "View" && node.props.testID === "panel-a").length).toBe(1);`,
+    `${INDENT}});`,
+    ``,
+    `${INDENT}it("throws when a tab renders outside the compound provider", () => {`,
+    `${INDENT}${INDENT}expect(() => {`,
+    `${INDENT}${INDENT}${INDENT}act(() => {`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}TestRenderer.create(<${tabName} value="a">A</${tabName}>);`,
+    `${INDENT}${INDENT}${INDENT}});`,
+    `${INDENT}${INDENT}}).toThrow(/compound component used outside/);`,
     `${INDENT}});`,
     `});`,
     ...renderFooter(),
