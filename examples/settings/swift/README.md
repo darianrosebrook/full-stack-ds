@@ -23,10 +23,13 @@ footer/description regions), its
 form rows (`FsdsField`, the named-slot composer: label/control/help/
 error/validatingIndicator regions), its
 text controls (`Input`, the value-channel text-control class: controlled
-Binding + @State + onChange through the Switch-proven projection), and
-its confirmation modal (`Dialog`, the centered-modal surface class: a
-sheet whose native Esc/overlay dismissal drives the openness channel
-back through onOpenChange) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
+Binding + @State + onChange through the Switch-proven projection), its
+confirmation modal (`Dialog`, the centered-modal surface class: a sheet
+whose native Esc/overlay dismissal drives the openness channel back
+through onOpenChange), and its tooltip (`Tooltip`, the anchored-surface
+branch: hover on the trigger region drives the open channel into a
+token-styled popover with placement lowered through a grammar table) from
+public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
 package boundary.
 
 ## Falsifier
@@ -50,13 +53,16 @@ package boundary.
   text control, `value`/`defaultValue`/`onChange`/`placeholder`/`disabled`
   realized), and `Dialog` (the centered-modal surface; header/title/
   bodyContent/footer regions — `body` renames for Swift's View collision —
-  with the openness channel projected and dismissal realized natively) are
-  emitted for swiftui today.
+  with the openness channel projected and dismissal realized natively), and
+  `Tooltip` (the anchored surface; trigger/content regions, hover-driven
+  open channel, popover placement incl. auto→platform-default) are
+  emitted for swiftui today. Every component the settings spec names is
+  now composed from DsSwiftUI public exports.
   The web Field's value-channel/control-association API is NOT part of
   the Swift surface — the consumer's control owns state (documented
   omission, not accepted-and-ignored). Input's HTML-form props (type/required/
-  name/invalid) and Dialog's modal/dismissal-flag/focus props are likewise
-  omitted (native sheet behavior). Tooltip does not
+  name/invalid) and Dialog's/Tooltip's dismissal-flag props are likewise
+  omitted (native sheet/popover behavior).
   exist on this target; those regions of the spec are composed from plain SwiftUI and
   marked `NOT FSDS` in the app source. This lane does not claim parity with
   the react/vue lanes.
