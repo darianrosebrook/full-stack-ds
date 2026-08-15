@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-CARD-COMPOSER-01
 title: 'SwiftUI compound-part composer emission class; Card first'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Card lands through the compound-part composer class with FsdsTheme chrome; Field is the new fail-loud boundary'
 created_at: '2026-08-15T02:23:10.790Z'
-updated_at: '2026-08-15T02:23:10.790Z'
+updated_at: '2026-08-15T02:36:04.876Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (composer class + shared suffix vocabulary)'
