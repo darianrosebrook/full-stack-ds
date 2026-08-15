@@ -60,11 +60,14 @@ struct SettingsView: View {
             LabeledContent("Email") {
                 TextField("Email", text: $email)
             }
-            // NOT FSDS: Button variant=primary is not emitted for swiftui yet.
-            Button("Save profile") {
-                print("save profile: \(displayName) <\(email)>")
+            // FSDS: emitted through the multi-part action path. The export
+            // is FsdsButton — SwiftUI reserves the Button type name.
+            FsdsButton(
+                variant: .primary,
+                onTap: { print("save profile: \(displayName) <\(email)>") }
+            ) {
+                Text("Save profile")
             }
-            .buttonStyle(.borderedProminent)
         }
         .padding()
         .background(.background.secondary)
@@ -111,13 +114,15 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeading("Danger zone")
             Text("Permanently delete your account. This cannot be undone.")
-            // NOT FSDS: Button variant=destructive + Dialog are not emitted
-            // for swiftui yet; a confirmation dialog stands in.
-            Button("Delete account") {
-                confirmOpen = true
+            // FSDS: destructive action through the multi-part FsdsButton.
+            // NOT FSDS: Dialog is not emitted for swiftui yet; a
+            // confirmation dialog stands in.
+            FsdsButton(
+                variant: .destructive,
+                onTap: { confirmOpen = true }
+            ) {
+                Text("Delete account")
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.red)
         }
         .padding()
         .background(.background.secondary)

@@ -17,9 +17,10 @@ function repoRoot(): string {
 }
 
 /**
- * Load a component contract along with its tokens sidecar (if any), returning
- * the merged shape `buildComponentIR` expects. Mirrors the CLI's load order:
- * contract first, then sidecar attached as `contract.tokens`.
+ * Load a component contract along with its tokens/styles sidecars (if any),
+ * returning the merged shape `buildComponentIR` expects. Mirrors the CLI's
+ * load order: contract first, then sidecars attached as `contract.tokens` /
+ * `contract.styles`.
  */
 function loadContract(name: string): unknown {
   const folder = resolve(
@@ -29,10 +30,14 @@ function loadContract(name: string): unknown {
   );
   const contract = JSON.parse(
     readFileSync(resolve(folder, `${name}.contract.json`), "utf8"),
-  ) as { tokens?: unknown };
+  ) as { tokens?: unknown; styles?: unknown };
   const tokensPath = resolve(folder, `${name}.tokens.json`);
   if (existsSync(tokensPath)) {
     contract.tokens = JSON.parse(readFileSync(tokensPath, "utf8"));
+  }
+  const stylesPath = resolve(folder, `${name}.styles.json`);
+  if (existsSync(stylesPath)) {
+    contract.styles = JSON.parse(readFileSync(stylesPath, "utf8"));
   }
   return contract;
 }
@@ -59,18 +64,74 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     expect(actual).toBe(expected);
   });
 
-  it("refuses to emit for components without native-toggle-affordance intent", () => {
-    // A minimal IR shape with no collapse intent on any part. Emitter
-    // should fail loud rather than silently emit a multi-part fallback
-    // (which is not implemented in round 2).
-    const contract = loadContract("Button") as Parameters<
+  it("refuses to emit for contracts outside every emission class (Card)", () => {
+    // Card is a slot-projected composer (named slot children, compound
+    // parts) — not a collapse intent, not a projected-children action root.
+    // The emitter must fail loud rather than approximate.
+    const contract = loadContract("Card") as Parameters<
       typeof buildComponentIR
     >[0];
     const ir = buildComponentIR(contract);
 
     expect(() => generateSwiftUIComponentSource(ir)).toThrow(
-      /native-toggle-affordance/,
+      /no emission class matches/,
     );
+  });
+});
+
+describe("generateSwiftUIComponentSource — projected-children action (Button)", () => {
+  it("emits under the Fsds prefix when the name collides with SwiftUI", () => {
+    const contract = loadContract("Button") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const ir = buildComponentIR(contract);
+
+    const source = generateSwiftUIComponentSource(ir);
+
+    // Reserved-type table: SwiftUI.Button collision → FsdsButton export.
+    expect(source).toContain("public struct FsdsButton<Label: View>: View {");
+    expect(source).not.toContain("public struct Button");
+  });
+
+  it("ships token scope data from ir.tokenScopes and resolves through FsdsTheme", () => {
+    const contract = loadContract("Button") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const ir = buildComponentIR(contract);
+
+    const source = generateSwiftUIComponentSource(ir);
+
+    // RN normal form: data in a caseless-enum namespace, never resolved
+    // constants; resolution goes through the theme at render.
+    expect(source).toContain("enum ButtonTokens {");
+    expect(source).toContain("public static let scopes: FsdsComponentTokenScopes = [");
+    expect(source).toContain('"variant_destructive": [');
+    expect(source).toContain('fallback: .string("#d92d2e")');
+    expect(source).toContain("resolveFsdsLayeredTokens(");
+    expect(source).toContain("@Environment(\\.fsdsTheme)");
+    // Layering: root base + variant_<size> + variant_<intent> (Swift
+    // interpolation survives into the emitted source).
+    expect(source).toContain('layers: ["root", "variant_\\(size.rawValue)", "variant_\\(variant.rawValue)"]');
+  });
+
+  it("derives init defaults from contract prop defaults and applies presence-driven chrome", () => {
+    const contract = loadContract("Button") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const ir = buildComponentIR(contract);
+
+    const source = generateSwiftUIComponentSource(ir);
+
+    expect(source).toContain("variant: ButtonVariant = .primary,");
+    expect(source).toContain("size: ButtonSize = .medium,");
+    expect(source).toContain("onTap: (() -> Void)? = nil,");
+    expect(source).toContain("Button(action: { onTap?() }) {");
+    // Chrome slots that exist in the corpus get accessors + modifiers…
+    expect(source).toContain('.background(background)');
+    expect(source).toContain('.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))');
+    // …and the loading affordance swaps the projected label.
+    expect(source).toContain("ProgressView().controlSize(.small)");
+    expect(source).toContain(".disabled(disabled || loading)");
   });
 });
 
