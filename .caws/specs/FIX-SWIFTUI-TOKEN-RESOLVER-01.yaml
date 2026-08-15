@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "ci.yml native-compile-rail-swift job gains 'ds-swiftui token runtime tests' step (swift test) after the example compile; smoke passes untouched"
     recorded_at: "2026-08-15T18:59:12.722Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: Button.swift + Stack.swift use fsdsAccessibilityLabel/fsdsAccessibilityIdentifier (conditional helpers in FsdsTheme.swift); 15 components regenerated; package + example swift build exit 0; Switch golden refreshed
+    recorded_at: "2026-08-15T18:59:15.764Z"
