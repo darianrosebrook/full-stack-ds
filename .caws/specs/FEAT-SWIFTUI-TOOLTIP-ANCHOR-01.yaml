@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "PLACEMENT_EDGE grammar table: auto→.bottom (platform default, commented), top/bottom/left/right + corners mapped; unknown value auto failed loudly at emit time before the mapping was added; test pins case .auto: return .bottom"
     recorded_at: "2026-08-15T03:10:12.759Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "SettingsExampleApp: Tooltip(placement:.bottom) wraps the Email-notifications label; example swift build exit 0; zero NOT FSDS markers remain for settings-spec components"
+    recorded_at: "2026-08-15T03:10:13.627Z"
