@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "component-source.test.ts: 'public struct FsdsButton<Label: View>: View' present, 'public struct Button' absent; reserved-type table maps Button->FsdsButton"
     recorded_at: "2026-08-15T02:19:27.341Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Button.swift ships ButtonTokens.scopes from ir.tokenScopes (variant_destructive #d92d2e pinned); resolves via resolveFsdsLayeredTokens + @Environment(\\.fsdsTheme) with layers root/variant_size/variant_intent; chrome accessors presence-driven"
+    recorded_at: "2026-08-15T02:19:28.303Z"
