@@ -70,3 +70,8 @@ evidence:
     status: pass
     evidence_ref: "post-repair: zero [FALLBACK_STALE], zero DRIFT, 49/49, governed:rail overall:pass, root 2072/2072, frameworks 70/70"
     recorded_at: "2026-08-15T18:19:48.288Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: fallback-completeness.test.ts canonicalization equivalence cases incl. the comma-boundary bare-zero regression found on Dialog/Popover; 35/35
+    recorded_at: "2026-08-15T18:19:49.890Z"
+    test_nodeid: fallback-completeness.test.ts
