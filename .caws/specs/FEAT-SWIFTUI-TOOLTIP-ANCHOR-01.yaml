@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-TOOLTIP-ANCHOR-01
 title: 'SwiftUI anchored-surface branch; Tooltip closes the settings screen'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Tooltip lands through the anchored-surface branch; the settings screen is fully FSDS-composed; popovers remain fail-loud'
 created_at: '2026-08-15T03:04:42.762Z'
-updated_at: '2026-08-15T03:04:42.762Z'
+updated_at: '2026-08-15T03:10:15.329Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.ts (anchored tooltip branch + surface tests)'
