@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp.swift preferencesSection composes Stack(variant: .horizontal) rows; swift build --package-path examples/settings/swift exit 0"
     recorded_at: "2026-08-15T02:00:01.750Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "mutation-falsified live: replacing ${axisModes.has(mode)} with true made primitive-source.test.ts fail (case .native: return true diff); reverted and re-verified 9/9 green"
+    recorded_at: "2026-08-15T02:00:02.585Z"
