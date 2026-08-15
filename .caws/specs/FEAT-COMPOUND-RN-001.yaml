@@ -67,3 +67,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm --filter @full-stack-ds/react-native exec vitest run src/components/Tabs — 3/3: press→onValueChange+accessibilityState.selected flip+panel omission, controlled override, outside-provider throw"
     recorded_at: "2026-08-15T19:08:11.446Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "full gate in worktree compound-rn-tabs pre-merge: pnpm run governed:rail (required mode) OK; pnpm test 2072/2072; pnpm run test:frameworks (RN suite 72/72); audit:behavior-realization + audit:a11y-realization PASS; git status byte-clean after full-target regen (only Tabs + primitives + emitter sources changed)"
+    recorded_at: "2026-08-15T19:08:18.840Z"
