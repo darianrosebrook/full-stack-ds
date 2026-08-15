@@ -330,3 +330,44 @@ describe("generateSwiftUIComponentSource — coverage batch (disclosure + static
     expect(emit("List")).toContain("@ViewBuilder content: () -> Content");
   });
 });
+
+describe("generateSwiftUIComponentSource — coverage batch 2", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("lowers the boolean input channel to a checkbox Toggle (Checkbox)", () => {
+    const source = emit("Checkbox");
+    expect(source).toContain("public struct Checkbox: View {");
+    expect(source).toContain(".toggleStyle(.checkbox)");
+    expect(source).toContain("checked: Binding<Bool>? = nil");
+    expect(source).toContain("onChange?(next)");
+    expect(source).not.toContain("indeterminate:");
+  });
+
+  it("lowers the bare hr rule to FsdsDivider with a local orientation enum", () => {
+    const source = emit("Divider");
+    expect(source).toContain("public struct FsdsDivider: View {");
+    expect(source).toContain("public enum DividerOrientation: String, CaseIterable {");
+    expect(source).toContain("orientation: DividerOrientation? = nil");
+    expect(source).toContain("Divider()");
+  });
+
+  it("lowers the progressbar role to ProgressView with contract 0-100 semantics", () => {
+    const source = emit("Progress");
+    expect(source).toContain("ProgressView(value: value / 100)");
+    expect(source).toContain("value: Double? = nil");
+    expect(source).toContain("ProgressView()");
+    expect(source).toContain(".fsdsAccessibilityLabel(label)");
+  });
+
+  it("lowers the visual-only leaf to a native spinner (Spinner)", () => {
+    const source = emit("Spinner");
+    expect(source).toContain("public struct Spinner: View {");
+    expect(source).toContain("ProgressView()");
+    expect(source).not.toContain("showAfterMs");
+  });
+});

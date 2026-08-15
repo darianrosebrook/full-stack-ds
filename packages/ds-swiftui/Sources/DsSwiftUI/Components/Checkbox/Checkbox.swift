@@ -1,0 +1,57 @@
+// @generated:start imports
+import SwiftUI
+// @generated:end
+
+// @generated:start types
+public enum CheckboxSize: String, CaseIterable {
+    case sm
+    case md
+    case lg
+}
+// @generated:end
+
+// @generated:start component
+/// Emitted through the boolean-channel control path: the checked channel projects through the controllable-state pattern onto a native checkbox Toggle.
+public struct Checkbox: View {
+    private let controlledChecked: Binding<Bool>?
+    @State private var uncontrolledChecked: Bool
+    private let onChange: ((Bool) -> Void)?
+    private let disabled: Bool
+
+    public init(
+        checked: Binding<Bool>? = nil,
+        defaultChecked: Bool = false,
+        onChange: ((Bool) -> Void)? = nil,
+        disabled: Bool = false
+    ) {
+        self.controlledChecked = checked
+        self._uncontrolledChecked = State(initialValue: defaultChecked)
+        self.onChange = onChange
+        self.disabled = disabled
+    }
+
+    private var isChecked: Bool {
+        controlledChecked?.wrappedValue ?? uncontrolledChecked
+    }
+
+    private func setChecked(_ next: Bool) {
+        if let binding = controlledChecked {
+            binding.wrappedValue = next
+        } else {
+            uncontrolledChecked = next
+        }
+        onChange?(next)
+    }
+
+    public var body: some View {
+        Toggle(isOn: Binding(
+            get: { isChecked },
+            set: { setChecked($0) }
+        )) {
+            EmptyView()
+        }
+        .toggleStyle(.checkbox)
+        .disabled(disabled)
+    }
+}
+// @generated:end
