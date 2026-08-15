@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-MULTIPART-BUTTON-01
 title: 'SwiftUI multi-part anatomy path + FsdsTheme token module; Button first'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'First multi-part component: FsdsButton via projected-children action path with FsdsTheme token runtime; Card remains the fail-loud boundary'
 created_at: '2026-08-15T02:07:41.559Z'
-updated_at: '2026-08-15T02:19:04.900Z'
+updated_at: '2026-08-15T02:19:32.090Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (multi-part path, reserved names, scope data)'
