@@ -81,12 +81,21 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isCompoundPartComposer(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitComposerComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   throw new Error(
     `generateSwiftUIComponentSource: no emission class matches ` +
       `component "${ir.name}". Implemented classes: native-toggle-affordance ` +
-      `collapse, and the projected-children action root (root element button ` +
-      `with a single projected children region). Slot-projected composers, ` +
-      `compound parts, and surfaces are not yet implemented.`,
+      `collapse, the projected-children action root (root element button ` +
+      `with a single projected children region), and the compound-part ` +
+      `composer (root-dom-less passive container). Named-slot composers with ` +
+      `root dom trees, and surfaces are not yet implemented.`,
   );
 }
 
@@ -104,27 +113,70 @@ function isProjectedChildrenAction(ir: ComponentIR): boolean {
   );
 }
 
-/** Slot-name suffixes the action path knows how to apply, and the chrome they drive. */
-const ACTION_SLOT_SUFFIXES = {
-  background: "color.background.default",
-  foreground: "color.foreground.default",
-  borderColor: "color.border.default",
-  borderWidth: "size.border",
-  radius: "size.radius",
-  blockPadding: "padding-block-start",
-  inlinePadding: "padding-inline-start",
-  minHeight: "min-height",
+/**
+ * The compound-part composer class: a passive container root with NO root
+ * dom tree, whose content regions are its compound parts. Card is the
+ * corpus consumer. Anchored surfaces (Popover/Tooltip) share the shape but
+ * carry `ir.surface` and dispatch to the surface path before this point.
+ */
+function isCompoundPartComposer(ir: ComponentIR): boolean {
+  return (
+    ir.dom === undefined &&
+    ir.surface == null &&
+    ir.compoundParts.length > 0 &&
+    ir.root.element === "div"
+  );
+}
+
+/**
+ * Token slot-name suffixes the emitters know how to apply, and the chrome
+ * they drive. This is the corpus-wide token naming vocabulary — the
+ * SwiftUI analog of the primitive emitter's axis table. Alternatives exist
+ * because slot naming is not uniform across the corpus (Button authors
+ * `*.size.radius`, Card `*.size.radius.default`; foreground is `.default`
+ * on Button but `.primary` on Card).
+ */
+const SLOT_SUFFIX_ALTERNATIVES = {
+  background: ["color.background.default"],
+  foreground: ["color.foreground.default", "color.foreground.primary"],
+  borderColor: ["color.border.default"],
+  borderWidth: ["size.border", "size.border.default"],
+  radius: ["size.radius", "size.radius.default"],
+  blockPadding: ["padding-block-start"],
+  inlinePadding: ["padding-inline-start"],
+  gap: ["box-model.gap"],
+  minHeight: ["min-height"],
+  statusAccentColor: ["color.statusAccent.default"],
+  statusAccentWidth: ["size.statusAccent.width"],
 } as const;
 
-function actionSlotPresent(ir: ComponentIR, suffix: string): boolean {
-  return ir.tokenScopes.some((scope) =>
-    scope.values.some((v) => v.name.endsWith(suffix)),
-  );
+type SlotConcern = keyof typeof SLOT_SUFFIX_ALTERNATIVES;
+
+/**
+ * The first alternative suffix that exists in any of the component's
+ * scopes, or null when the component authors no slot for the concern.
+ * Chrome is presence-driven: a null concern is simply not applied.
+ */
+function pickSuffix(
+  ir: ComponentIR,
+  concern: SlotConcern,
+): string | null {
+  for (const suffix of SLOT_SUFFIX_ALTERNATIVES[concern]) {
+    if (
+      ir.tokenScopes.some((scope) =>
+        scope.values.some((v) => v.name.endsWith(suffix)),
+      )
+    ) {
+      return suffix;
+    }
+  }
+  return null;
 }
 
 function emitActionComponent(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);
-  const has = (suffix: string) => actionSlotPresent(ir, suffix);
+  const chrome = resolveChrome(ir);
+  const has = (concern: SlotConcern) => chrome[concern] !== undefined;
 
   const lines: string[] = [];
   lines.push("// @generated:start component");
@@ -194,7 +246,7 @@ function emitActionComponent(ir: ComponentIR): string {
   for (const axis of variantAxes) {
     const def = findPropDefault(ir, axis);
     params.push(
-      `${INDENT}${INDENT}${axis}: ${ir.name}${capitalize(axis)} = .${def},`,
+      `${INDENT}${INDENT}${axis}: ${ir.name}${capitalize(axis)} = .${swiftCaseRef(def)},`,
     );
   }
   if (hasConventionalProp(ir, "disabled")) {
@@ -263,44 +315,44 @@ function emitActionComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}}`);
   lines.push("");
   const accessors: string[] = [];
-  if (has(ACTION_SLOT_SUFFIXES.background)) {
+  if (has("background")) {
     accessors.push(
-      `${INDENT}private var background: Color { colorSlot("${ACTION_SLOT_SUFFIXES.background}") ?? .accentColor }`,
+      `${INDENT}private var background: Color { colorSlot("${chrome.background}") ?? .accentColor }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.foreground)) {
+  if (has("foreground")) {
     accessors.push(
-      `${INDENT}private var foreground: Color { colorSlot("${ACTION_SLOT_SUFFIXES.foreground}") ?? .primary }`,
+      `${INDENT}private var foreground: Color { colorSlot("${chrome.foreground}") ?? .primary }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.borderColor)) {
+  if (has("borderColor")) {
     accessors.push(
-      `${INDENT}private var borderColor: Color { colorSlot("${ACTION_SLOT_SUFFIXES.borderColor}") ?? .clear }`,
+      `${INDENT}private var borderColor: Color { colorSlot("${chrome.borderColor}") ?? .clear }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.borderWidth)) {
+  if (has("borderWidth")) {
     accessors.push(
-      `${INDENT}private var borderWidth: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.borderWidth}") ?? 0 }`,
+      `${INDENT}private var borderWidth: CGFloat { pxSlot("${chrome.borderWidth}") ?? 0 }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.radius)) {
+  if (has("radius")) {
     accessors.push(
-      `${INDENT}private var radius: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.radius}") ?? 0 }`,
+      `${INDENT}private var radius: CGFloat { pxSlot("${chrome.radius}") ?? 0 }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.blockPadding)) {
+  if (has("blockPadding")) {
     accessors.push(
-      `${INDENT}private var blockPadding: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.blockPadding}") ?? 0 }`,
+      `${INDENT}private var blockPadding: CGFloat { pxSlot("${chrome.blockPadding}") ?? 0 }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.inlinePadding)) {
+  if (has("inlinePadding")) {
     accessors.push(
-      `${INDENT}private var inlinePadding: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.inlinePadding}") ?? 0 }`,
+      `${INDENT}private var inlinePadding: CGFloat { pxSlot("${chrome.inlinePadding}") ?? 0 }`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.minHeight)) {
+  if (has("minHeight")) {
     accessors.push(
-      `${INDENT}private var minHeight: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.minHeight}") ?? 0 }`,
+      `${INDENT}private var minHeight: CGFloat { pxSlot("${chrome.minHeight}") ?? 0 }`,
     );
   }
   lines.push(...accessors);
@@ -328,31 +380,31 @@ function emitActionComponent(ir: ComponentIR): string {
     : "label";
   lines.push(`${INDENT}${INDENT}Button(action: ${action}) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${innerContent}`);
-  if (has(ACTION_SLOT_SUFFIXES.blockPadding)) {
+  if (has("blockPadding")) {
     lines.push(
       `${INDENT}${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.inlinePadding)) {
+  if (has("inlinePadding")) {
     lines.push(
       `${INDENT}${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.minHeight)) {
+  if (has("minHeight")) {
     lines.push(
       `${INDENT}${INDENT}${INDENT}${INDENT}.frame(minHeight: minHeight)`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.background)) {
+  if (has("background")) {
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.background(background)`);
   }
-  if (has(ACTION_SLOT_SUFFIXES.radius)) {
+  if (has("radius")) {
     lines.push(
       `${INDENT}${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`,
     );
   }
-  if (has(ACTION_SLOT_SUFFIXES.borderColor) && has(ACTION_SLOT_SUFFIXES.borderWidth)) {
-    const radiusExpr = has(ACTION_SLOT_SUFFIXES.radius) ? "radius" : "0";
+  if (has("borderColor") && has("borderWidth")) {
+    const radiusExpr = has("radius") ? "radius" : "0";
     lines.push(
       `${INDENT}${INDENT}${INDENT}${INDENT}.overlay(` +
         `RoundedRectangle(cornerRadius: ${radiusExpr}, style: .continuous)` +
@@ -361,7 +413,7 @@ function emitActionComponent(ir: ComponentIR): string {
   }
   lines.push(`${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}.buttonStyle(.plain)`);
-  if (has(ACTION_SLOT_SUFFIXES.foreground)) {
+  if (has("foreground")) {
     lines.push(`${INDENT}${INDENT}.foregroundStyle(foreground)`);
   }
   if (hasConventionalProp(ir, "disabled") && hasConventionalProp(ir, "loading")) {
@@ -377,6 +429,306 @@ function emitActionComponent(ir: ComponentIR): string {
   lines.push("// @generated:end");
 
   return lines.join("\n");
+}
+
+/**
+ * Resolve every chrome concern the component authors slots for. Emitters
+ * consult this once and generate accessors/modifiers only for present
+ * concerns — absent concerns are skipped, never defaulted into existence.
+ */
+function resolveChrome(ir: ComponentIR): Partial<Record<SlotConcern, string>> {
+  const chrome: Partial<Record<SlotConcern, string>> = {};
+  for (const concern of Object.keys(SLOT_SUFFIX_ALTERNATIVES) as SlotConcern[]) {
+    const suffix = pickSuffix(ir, concern);
+    if (suffix) chrome[concern] = suffix;
+  }
+  return chrome;
+}
+
+/**
+ * Axis facts for variant-layered components. An axis with an authored
+ * contract default always layers; an axis without one becomes an optional
+ * parameter whose layer is applied only when set (the web behavior for
+ * unset variant props — no variant class, no overrides).
+ */
+interface VariantAxis {
+  prop: string;
+  typeName: string;
+  defaultMember: string | null;
+}
+
+function collectVariantAxes(ir: ComponentIR): VariantAxis[] {
+  return Object.keys(ir.variants).map((axis) => ({
+    prop: axis,
+    typeName: `${ir.name}${capitalize(axis)}`,
+    defaultMember: findPropDefaultOrNull(ir, axis),
+  }));
+}
+
+function findPropDefaultOrNull(ir: ComponentIR, name: string): string | null {
+  const prop = ir.styledProps.find((p) => p.safeName === name);
+  const authored = prop?.defaultExpr?.replace(/^["']|["']$/g, "");
+  const values = ir.variants[name];
+  if (authored && values?.includes(authored)) return authored;
+  return null;
+}
+
+/**
+ * Emit the Swift layer-expression list for the variant axes: authored
+ * defaults layer unconditionally; optional axes layer via compactMap over
+ * the optional parameter.
+ */
+function emitLayerExpressions(axes: VariantAxis[]): {
+  expressions: string[];
+  needsCompactMap: boolean;
+} {
+  const expressions = axes.map((axis) =>
+    axis.defaultMember !== null
+      ? `"variant_\\(${axis.prop}.rawValue)"`
+      : `${axis.prop}.map { "variant_\\($0.rawValue)" }`,
+  );
+  return {
+    expressions,
+    needsCompactMap: axes.some((a) => a.defaultMember === null),
+  };
+}
+
+/**
+ * Emit a compound-part composer: one ViewBuilder region closure per
+ * compound part (contract part order), chrome from the root scope, variant
+ * axes layered per their defaults. Card is the corpus consumer.
+ */
+function emitComposerComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const regions = ir.compoundParts.map((part) => part.name);
+  const axes = collectVariantAxes(ir);
+  const layerInfo = emitLayerExpressions(axes);
+  const layerArray = [
+    '"root"',
+    ...layerInfo.expressions,
+  ];
+  const layersExpr = layerInfo.needsCompactMap
+    ? `[${layerArray.join(", ")}].compactMap { $0 }`
+    : `[${layerArray.join(", ")}]`;
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Token scope data for ${exportName} (ir.tokenScopes → RN normal ` +
+      `form: data consumed through FsdsTheme at render, never resolved ` +
+      `constants). A caseless enum namespace because generic types cannot ` +
+      `hold static stored properties.`,
+  );
+  lines.push(`enum ${ir.name}Tokens {`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  for (const scope of ir.tokenScopes) {
+    lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
+    for (const value of scope.values) {
+      const literalArg = value.rawValue
+        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
+        : "";
+      lines.push(
+        `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
+          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+      );
+    }
+    lines.push(`${INDENT}${INDENT}],`);
+  }
+  lines.push(`${INDENT}]`);
+  lines.push(`}`);
+  lines.push("");
+  lines.push(
+    `/// Emitted through the compound-part composer path: passive container ` +
+      `root, one content region per compound part.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  const genericParams = regions.map((r) => swiftCase(capitalize(r)));
+  lines.push(
+    `public struct ${exportName}${genericParams.length > 0 ? `<${genericParams.map((g) => `${g}: View`).join(", ")}>` : ""}: View {`,
+  );
+  lines.push(
+    `${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`,
+  );
+  lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+  lines.push(`${INDENT}}`);
+  for (const axis of axes) {
+    lines.push(
+      `${INDENT}private let ${axis.prop}: ${axis.typeName}${axis.defaultMember === null ? "?" : ""}`,
+    );
+  }
+  for (const region of regions) {
+    lines.push(`${INDENT}private let ${swiftCase(region)}: ${swiftCase(capitalize(region))}`);
+  }
+  lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params: string[] = [];
+  for (const axis of axes) {
+    params.push(
+      axis.defaultMember !== null
+        ? `${INDENT}${INDENT}${axis.prop}: ${axis.typeName} = .${swiftCaseRef(axis.defaultMember)},`
+        : `${INDENT}${INDENT}${axis.prop}: ${axis.typeName}? = nil,`,
+    );
+  }
+  for (const region of regions) {
+    params.push(
+      `${INDENT}${INDENT}@ViewBuilder ${region}: () -> ${capitalize(region)} = { EmptyView() },`,
+    );
+  }
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  lines.push(...params);
+  lines.push(`${INDENT}) {`);
+  for (const axis of axes) {
+    lines.push(`${INDENT}${INDENT}self.${axis.prop} = ${axis.prop}`);
+  }
+  for (const region of regions) {
+    lines.push(`${INDENT}${INDENT}self.${region} = ${region}()`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+  lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}layers: ${layersExpr}`);
+  lines.push(`${INDENT}${INDENT})`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+  lines.push(
+    `${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`,
+  );
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+  lines.push(
+    `${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`,
+  );
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  const accessors: string[] = [];
+  if (chrome.background) {
+    accessors.push(`${INDENT}private var background: Color { colorSlot("${chrome.background}") ?? .accentColor }`);
+  }
+  if (chrome.foreground) {
+    accessors.push(`${INDENT}private var foreground: Color { colorSlot("${chrome.foreground}") ?? .primary }`);
+  }
+  if (chrome.borderColor) {
+    accessors.push(`${INDENT}private var borderColor: Color { colorSlot("${chrome.borderColor}") ?? .clear }`);
+  }
+  if (chrome.borderWidth) {
+    accessors.push(`${INDENT}private var borderWidth: CGFloat { pxSlot("${chrome.borderWidth}") ?? 0 }`);
+  }
+  if (chrome.radius) {
+    accessors.push(`${INDENT}private var radius: CGFloat { pxSlot("${chrome.radius}") ?? 0 }`);
+  }
+  if (chrome.blockPadding) {
+    accessors.push(`${INDENT}private var blockPadding: CGFloat { pxSlot("${chrome.blockPadding}") ?? 0 }`);
+  }
+  if (chrome.inlinePadding) {
+    accessors.push(`${INDENT}private var inlinePadding: CGFloat { pxSlot("${chrome.inlinePadding}") ?? 0 }`);
+  }
+  if (chrome.gap) {
+    accessors.push(`${INDENT}private var gap: CGFloat { pxSlot("${chrome.gap}") ?? 0 }`);
+  }
+  if (chrome.statusAccentColor) {
+    accessors.push(`${INDENT}private var statusAccent: Color { colorSlot("${chrome.statusAccentColor}") ?? .clear }`);
+  }
+  if (chrome.statusAccentWidth) {
+    accessors.push(`${INDENT}private var statusAccentWidth: CGFloat { pxSlot("${chrome.statusAccentWidth}") ?? 0 }`);
+  }
+  lines.push(...accessors);
+  lines.push("");
+  lines.push(`${INDENT}@ViewBuilder`);
+  lines.push(`${INDENT}private var regions: some View {`);
+  lines.push(
+    `${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`,
+  );
+  for (const region of regions) {
+    lines.push(`${INDENT}${INDENT}${INDENT}${region}`);
+  }
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  const hasAccentBar =
+    chrome.statusAccentColor !== undefined && chrome.statusAccentWidth !== undefined;
+  lines.push(`${INDENT}public var body: some View {`);
+  if (hasAccentBar) {
+    lines.push(`${INDENT}${INDENT}HStack(spacing: 0) {`);
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}Rectangle().fill(statusAccent).frame(width: statusAccentWidth)`,
+    );
+    lines.push(`${INDENT}${INDENT}${INDENT}regions`);
+    lines.push(`${INDENT}${INDENT}}`);
+  } else {
+    lines.push(`${INDENT}${INDENT}regions`);
+  }
+  if (chrome.blockPadding) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+  }
+  if (chrome.inlinePadding) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+  }
+  if (chrome.background) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  }
+  if (chrome.radius) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  }
+  if (chrome.borderColor && chrome.borderWidth) {
+    const radiusExpr = chrome.radius ? "radius" : "0";
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}.overlay(` +
+        `RoundedRectangle(cornerRadius: ${radiusExpr}, style: .continuous)` +
+        `.stroke(borderColor, lineWidth: borderWidth))`,
+    );
+  }
+  if (chrome.foreground) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+
+  return lines.join("\n");
+}
+
+/** Swift keywords that may appear as union values (e.g. CardDensity `default`). */
+const SWIFT_KEYWORDS: ReadonlySet<string> = new Set([
+  "default", "in", "out", "case", "for", "if", "else", "return", "init",
+  "internal", "public", "private", "open", "static", "self", "Type", "Protocol",
+]);
+
+function escapeSwiftKeyword(identifier: string): string {
+  return SWIFT_KEYWORDS.has(identifier) ? `\`${identifier}\`` : identifier;
+}
+
+/** `in-progress` → `case inProgress = "in-progress"` (kebab values keep a raw value). */
+function swiftCaseDecl(value: string): string {
+  const swiftName = swiftCase(value);
+  if (swiftName !== value) return `${swiftName} = "${value}"`;
+  return escapeSwiftKeyword(swiftName);
+}
+
+/** Enum member reference: `.default` → `` .`default` `` for keyword members. */
+function swiftCaseRef(value: string): string {
+  return escapeSwiftKeyword(swiftCase(value));
+}
+
+/** `in-progress` → `inProgress` (Swift identifier reference). */
+function swiftCase(value: string): string {
+  return value
+    .split("-")
+    .map((part, i) =>
+      i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1),
+    )
+    .join("");
 }
 
 function hasConventionalProp(ir: ComponentIR, name: string): boolean {
@@ -409,7 +761,7 @@ function emitTypes(ir: ComponentIR): string {
     if (def.kind !== "union" || !def.values) continue;
     lines.push(`public enum ${typeName}: String, CaseIterable {`);
     for (const value of def.values) {
-      lines.push(`${INDENT}case ${value}`);
+      lines.push(`${INDENT}case ${swiftCaseDecl(value)}`);
     }
     lines.push("}");
   }
@@ -485,7 +837,7 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}defaultChecked: Bool = false,`);
   lines.push(`${INDENT}${INDENT}onChange: ((Bool) -> Void)? = nil,`);
   if (sizeTypeName && sizeDefaultMember) {
-    lines.push(`${INDENT}${INDENT}size: ${sizeTypeName} = .${sizeDefaultMember},`);
+    lines.push(`${INDENT}${INDENT}size: ${sizeTypeName} = .${swiftCaseRef(sizeDefaultMember)},`);
   }
   lines.push(`${INDENT}${INDENT}disabled: Bool = false,`);
   lines.push(`${INDENT}${INDENT}name: String? = nil,`);
@@ -589,7 +941,7 @@ function emitSizeAccessor(
   for (const value of sizeDef.values) {
     const variantPx = sizeValuePx(ir, value, dimension);
     const px = variantPx ?? defaultValue ?? 0;
-    lines.push(`${INDENT}${INDENT}case .${value}: return ${px}`);
+    lines.push(`${INDENT}${INDENT}case .${swiftCaseRef(value)}: return ${px}`);
   }
   lines.push(`${INDENT}${INDENT}}`);
   lines.push(`${INDENT}}`);

@@ -64,11 +64,11 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     expect(actual).toBe(expected);
   });
 
-  it("refuses to emit for contracts outside every emission class (Card)", () => {
-    // Card is a slot-projected composer (named slot children, compound
-    // parts) — not a collapse intent, not a projected-children action root.
-    // The emitter must fail loud rather than approximate.
-    const contract = loadContract("Card") as Parameters<
+  it("refuses to emit for contracts outside every emission class (Field)", () => {
+    // Field is a named-slot composer with a root dom tree and control
+    // association — not a collapse intent, not an action root, not a
+    // root-dom-less compound-part composer. The emitter must fail loud.
+    const contract = loadContract("Field") as Parameters<
       typeof buildComponentIR
     >[0];
     const ir = buildComponentIR(contract);
@@ -172,5 +172,48 @@ describe("generateSwiftUIComponentSource — default size member (ToggleSwitch)"
     expect(source).not.toContain(".frame(width: trackWidth");
     expect(source).not.toContain("trackWidth");
     expect(source).not.toContain("return 0");
+  });
+});
+
+describe("generateSwiftUIComponentSource — compound-part composer (Card)", () => {
+  function emitCard(): string {
+    const contract = loadContract("Card") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("emits one ViewBuilder region per compound part", () => {
+    const source = emitCard();
+    expect(source).toContain(
+      "public struct Card<Header: View, Content: View, Footer: View, Description: View>: View {",
+    );
+    expect(source).toContain("@ViewBuilder header: () -> Header = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder content: () -> Content = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder footer: () -> Footer = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder description: () -> Description = { EmptyView() }");
+    expect(source).toContain("VStack(spacing: gap) {");
+  });
+
+  it("realizes chrome presence-driven with the status accent bar", () => {
+    const source = emitCard();
+    expect(source).toContain("enum CardTokens {");
+    expect(source).toContain('fallback: .string("#ffffff")');
+    expect(source).toContain(
+      "Rectangle().fill(statusAccent).frame(width: statusAccentWidth)",
+    );
+    expect(source).toContain(".clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))");
+    expect(source).toContain(".foregroundStyle(foreground)");
+  });
+
+  it("keeps authored-default axes defaulted and no-default axes optional", () => {
+    const source = emitCard();
+    // status has no authored contract default → optional, layered via map.
+    expect(source).toContain("status: CardStatus? = nil,");
+    expect(source).toContain('status.map { "variant_\\($0.rawValue)" }');
+    expect(source).toContain(".compactMap { $0 }");
+    // density defaults to the `default` member — a Swift keyword, escaped.
+    expect(source).toContain("case `default`");
+    expect(source).toContain("density: CardDensity = .`default`,");
   });
 });
