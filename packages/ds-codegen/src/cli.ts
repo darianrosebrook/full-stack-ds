@@ -668,7 +668,17 @@ function main(): void {
   const allGroups: EmittedArtifactGroup[] = [];
   for (const targetId of requestedTargets) {
     const binding = registry.get(targetId);
-    const { processed, groups } = emitForTarget(binding, irInputs, args);
+    // Declared admission: full-corpus runs (no explicit component names)
+    // filter to the target's fsds.targets.json allowlist. Explicit
+    // requests bypass it — unimplemented components surface their real
+    // emitter errors, never a silent skip.
+    const targetInputs =
+      binding.admittedComponents && args.names.length === 0
+        ? irInputs.filter((input) =>
+            binding.admittedComponents!.includes(input.ir.name),
+          )
+        : irInputs;
+    const { processed, groups } = emitForTarget(binding, targetInputs, args);
     totalGenerated += processed;
     allGroups.push(...groups);
   }
@@ -741,6 +751,13 @@ function emitForTarget(
 ): { processed: number; groups: EmittedArtifactGroup[] } {
   const { emitter, componentsRoot } = binding;
   console.log(`\n[${emitter.id}] components root: ${path.relative(cwd, componentsRoot)}`);
+  if (binding.admittedComponents) {
+    console.log(
+      `  ADMITTED ${irInputs.length}/${binding.admittedComponents.length} ` +
+        `component(s) per fsds.targets.json allowlist (full-corpus run; ` +
+        `explicit component requests bypass it)`,
+    );
+  }
 
   const groups: EmittedArtifactGroup[] = [];
   for (const { ir, provenance } of irInputs) {
