@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "pre-repair run fired 23 [FALLBACK_STALE] findings on previously-skipped shadow chains, each naming the lowered literal as repair (Walkthrough: 0 4px 24px rgba(0,0,0,0.12) -> 0px 2px 4px #0000000f, 0px 4px 8px #0000001a)"
     recorded_at: "2026-08-15T18:19:47.023Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "post-repair: zero [FALLBACK_STALE], zero DRIFT, 49/49, governed:rail overall:pass, root 2072/2072, frameworks 70/70"
+    recorded_at: "2026-08-15T18:19:48.288Z"
