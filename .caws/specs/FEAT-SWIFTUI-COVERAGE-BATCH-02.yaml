@@ -3,6 +3,7 @@ title: 'SwiftUI coverage batch 2: Checkbox, Divider, Progress, Spinner (15→19 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: swift-coverage-batch2
 created_at: '2026-08-15T19:41:50.032Z'
 updated_at: '2026-08-15T19:41:50.032Z'
 blast_radius:
