@@ -67,3 +67,7 @@ evidence:
     status: pass
     evidence_ref: "Command.swift: search trio + panel-top TextField(prompt: Text(\"Search...\")); Dialog contrast-pinned without search surface"
     recorded_at: "2026-08-15T17:50:46.523Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; rail exit 0 ADMITTED 15/15 byte-stable; pnpm test 2062/2062; frameworks 573+492+532+70; main re-verified builds + clean tree"
+    recorded_at: "2026-08-15T17:50:47.506Z"
