@@ -362,8 +362,44 @@
           "description": "Event handlers keyed by *unprefixed* event name (`click`, `input`, `change`, `keydown`, ...). Values use the same binding-expression mini-language as `bindings`, PLUS two event-position-only forms. (1) `channel:<name>.onChange(<arg>)` invokes that channel's setter WITH a per-item payload (FEAT-BINDING-CALL-WITH-ARG-01), e.g. `channel:selection.onChange(iter:item.value)` lowers to `() => setSelection(item.value)`. (2) `channel:<name>.onChange:<op>(<operand>, ...)` applies a NAMED update operation from a closed vocabulary that composes the channel's CURRENT value with the event payload / operands (FEAT-CHANNEL-UPDATE-OPERATIONS-01). Two operations exist: `setCharAt(<index>)` — string channel only — sets the character at `<index>` (an iteration local, e.g. `iter:index`) to the LAST character of the native input payload, preserving all other positions (witness: OTP `channel:value.onChange:setCharAt(iter:index)`; whole-paste distribution across fields is out of scope, a field takes only the last char); and `toggleMembership(<member>, <modeGate>)` — array-capable channel (a `T[]` arm, e.g. `string | string[]`) — where `<modeGate>` is a boolean prop that when false REPLACES (single-select) and when true toggles `<member>`'s membership in the selection array (witness: Select `channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)`; the mode dispatch is contract-authored via the prop, never a component-name literal in an emitter). For BOTH forms every operand is a closed, value-shaped payload only — `iter:item` / `iter:item.<path>` / `iter:index`, `prop:<name>` / `prop:<name>.<path>`, or `literal:<text>` — never another channel, predicate, conditional, or nested call (no arbitrary-expression escape hatch). The bare `channel:<name>.onChange` (no-arg) form is still legal and lowers to the framework's default DOM-event unwrap. Each framework emitter lowers to its idiom: React `onClick={...}`, Vue `@click=\"...\"`, Svelte `on:click={...}`, Angular `(click)=\"...\"`, Lit `@click=${...}`; the update-operation form composes the next value through the canonical channel setter (Angular via a synthesized method, since its template expressions forbid arrows/spread). Distinct from attribute bindings because Angular and Lit reject event-shaped attribute bindings; the call/operation forms are legal ONLY here (they produce a `() => …` handler, not a value)."
         },
         "content": {
-          "type": "string",
-          "description": "Single inner-content binding (one binding expression). Lowers to the framework's content-projection idiom (React `{prop}`, Vue/Angular `{{ prop }}`, Svelte `{prop}`, Lit `${this.prop}`). Mutually exclusive with `children` on the same node — wrap a content value in its own child if you need both."
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Single inner-content binding (one binding expression). Lowers to the framework's content-projection idiom (React `{prop}`, Vue/Angular `{{ prop }}`, Svelte `{prop}`, Lit `${this.prop}`). Mutually exclusive with `children` on the same node — wrap a content value in its own child if you need both."
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["transform", "source", "tokenPart"],
+              "description": "Content-transform directive: the node's inner content is produced by a named transform applied to a source prop binding, not by projecting the binding verbatim. The transform is an IR-level fact lowered generically by every emitter — no emitter may branch on the host component's name. One transform is admitted today: `highlight` splits the source string into syntax tokens via the shared pure tokenizer and renders one span per token (the `tokenPart` part class plus a `data-token=\"<kind>\"` attribute; token-kind vocabulary is declared by the component's types). Text-only by construction: token spans carry text children, so the source is never interpreted as markup. Targets that do not realize the transform degrade to plain rendering of the source binding.",
+              "properties": {
+                "transform": {
+                  "const": "highlight",
+                  "description": "Transform name. Closed set — `highlight` is the only admitted transform today."
+                },
+                "source": {
+                  "type": "string",
+                  "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+                  "description": "Binding expression naming the string prop that carries the literal source text to tokenize (e.g. \"prop:code\")."
+                },
+                "language": {
+                  "type": "string",
+                  "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+                  "description": "`highlight` only: binding expression naming the string prop that carries the declared tokenization language (e.g. \"prop:language\")."
+                },
+                "gate": {
+                  "type": "string",
+                  "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+                  "description": "`highlight` only, optional: binding expression naming the boolean prop that enables the transform. When the gate prop is false the node renders the source binding as a single plain text run instead of token spans."
+                },
+                "tokenPart": {
+                  "type": "string",
+                  "description": "`highlight` only: `anatomy.parts` entry realized as one span per token. The part must exist, be `tag: \"span\"`, and be marked `multiple: true`."
+                }
+              }
+            }
+          ],
+          "description": "Inner content: either a single binding expression (string form) or a content-transform directive (object form). Mutually exclusive with `children` on the same node — wrap a content value in its own child if you need both."
         },
         "children": {
           "type": "array",
