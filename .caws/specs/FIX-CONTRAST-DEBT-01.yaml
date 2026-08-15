@@ -59,3 +59,8 @@ non_functional: {}
 contracts:
   - name: 'component-contrast-ledger'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "resolved.tokens.json now carries #00000000 for core.color.mode.transparent and #00000066 for semantic.color.overlay.scrim (verified post-build); rule matches generateCSSTokens.mjs byte-for-byte; resolve.test.ts 5/5 incl. fractional alpha, alpha=1 opaque passthrough, ref chains, themed variants"
+    recorded_at: "2026-08-15T03:43:42.385Z"
