@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "Button.swift ships ButtonTokens.scopes from ir.tokenScopes (variant_destructive #d92d2e pinned); resolves via resolveFsdsLayeredTokens + @Environment(\\.fsdsTheme) with layers root/variant_size/variant_intent; chrome accessors presence-driven"
     recorded_at: "2026-08-15T02:19:28.303Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "negative control moved to Card: generateSwiftUIComponentSource(Card) throws /no emission class matches/; test green"
+    recorded_at: "2026-08-15T02:19:29.240Z"
