@@ -3,7 +3,6 @@ title: 'SwiftUI Stack primitive: emitPrimitives lowering from PrimitiveIR'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swift-stack-primitive
 created_at: '2026-08-15T01:51:10.065Z'
 updated_at: '2026-08-15T01:51:10.065Z'
 blast_radius:
