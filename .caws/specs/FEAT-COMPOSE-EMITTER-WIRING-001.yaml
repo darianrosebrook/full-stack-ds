@@ -1,0 +1,52 @@
+id: FEAT-COMPOSE-EMITTER-WIRING-001
+title: 'Register jetpack-compose as an explicit builtin target with a Gradle Compose (JVM) output package'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-15T19:34:23.897Z'
+updated_at: '2026-08-15T19:34:23.897Z'
+blast_radius:
+  modules:
+    - 'ds-codegen target registry and jetpack-compose emitter'
+    - 'ds-jetpack-compose Gradle output package'
+    - 'fsds target registry'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/emitter.ts'
+    - 'packages/ds-codegen/src/registry.ts'
+    - 'packages/ds-codegen/src/target-packs/builtin.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose'
+    - 'packages/ds-jetpack-compose'
+    - 'fsds.targets.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'the Switch/ToggleSwitch native-toggle contracts and the hand-authored golden Switch.compose.kt'
+    when: 'jetpack-compose is registered as an explicit-only builtin target and the native-collapse path is implemented'
+    then: '--target=jetpack-compose emits both components as .kt into packages/ds-jetpack-compose with the golden controlled/uncontrolled channel hoisting and semantics mapping, correcting the golden line-67 ?? defect to the Kotlin elvis operator'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'the output package compiles against the real Compose runtime via Gradle Compose Multiplatform targeting the JVM — the declared falsification rung — with no hand-authored androidx stubs (compile exit 0)'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'explicit-only admission: --target=all and governed:rail emit nothing for jetpack-compose; the fsds.targets.json components allowlist gates full-corpus runs to Switch and ToggleSwitch while explicit requests bypass it, mirroring the swiftui registration'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'all other targets generated trees remain byte-identical and the existing gates pass: generate:check, root tests, governed:rail'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'the spec, builtin knownGaps, and snapshot record the declared Android ladder explicitly: this JVM real-runtime compile is rung 1 of 3; rung 2 (full Android SDK + Gradle compile lane) and rung 3 (runtime admission — Robolectric or instrumented) are reserved follow-up specs; named non-claims: no Android linking, Lint, or device execution, and JVM artifacts are not Android-compiled artifacts'
+non_functional: {}
+contracts:
+  - name: 'Switch'
+    type: behavior
+    path: 'packages/ds-contracts/components/Switch/Switch.contract.json'
