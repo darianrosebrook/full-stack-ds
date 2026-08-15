@@ -63,3 +63,7 @@ evidence:
     status: pass
     evidence_ref: "packages/ds-react-native/src/primitives/hooks/createCompoundContext.ts + barrel re-export @ ea1f3f2b; pnpm run typecheck:react-native exit 0 (no ds-react import; grep-verified)"
     recorded_at: "2026-08-15T19:08:10.506Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm --filter @full-stack-ds/react-native exec vitest run src/components/Tabs — 3/3: press→onValueChange+accessibilityState.selected flip+panel omission, controlled override, outside-provider throw"
+    recorded_at: "2026-08-15T19:08:11.446Z"
