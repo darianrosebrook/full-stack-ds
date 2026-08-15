@@ -85,3 +85,24 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).not.toContain("closeOnBlur");
   });
 });
+
+describe("generateSwiftUISurfaceFiles — coverage batch (sheet + search channel)", () => {
+  it("routes the sheet kind through the centered-modal branch", () => {
+    const { componentFile } = generateSwiftUISurfaceFiles(irFor("Sheet"));
+    expect(componentFile).toContain(".sheet(isPresented: Binding(");
+    expect(componentFile).toContain("open: Binding<Bool>? = nil");
+    // side/modal props omitted, never accepted-and-ignored.
+    expect(componentFile).not.toContain("side:");
+    expect(componentFile).not.toContain("modal:");
+  });
+
+  it("projects a second string channel as the panel search field (Command)", () => {
+    const { componentFile } = generateSwiftUISurfaceFiles(irFor("Command"));
+    expect(componentFile).toContain("search: Binding<String>? = nil");
+    expect(componentFile).toContain("onSearchChange?(next)");
+    expect(componentFile).toContain('prompt: Text("Search...")');
+    // Dialog carries no string channel → no search surface.
+    const dialog = generateSwiftUISurfaceFiles(irFor("Dialog")).componentFile;
+    expect(dialog).not.toContain("search: Binding<String>");
+  });
+});

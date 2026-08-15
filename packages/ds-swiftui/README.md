@@ -12,7 +12,7 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=swiftui Switch ToggleSwitch Button Card Field Input Dialog Tooltip
+pnpm run generate -- --target=all   # emits the allowlisted set (15 components)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission

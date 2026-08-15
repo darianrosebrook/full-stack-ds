@@ -298,3 +298,35 @@ describe("generateSwiftUIComponentSource — value-channel text control (Input)"
     expect(source).toContain('.frame(minHeight: minHeight)');
   });
 });
+
+describe("generateSwiftUIComponentSource — coverage batch (disclosure + static content)", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("collapses native-disclosure to DisclosureGroup (Details)", () => {
+    const source = emit("Details");
+    expect(source).toContain("DisclosureGroup(isExpanded: Binding(");
+    expect(source).toContain("summary: String? = nil");
+    expect(source).toContain("onOpenChange?(next)");
+    expect(source).toContain("Text(summary)");
+  });
+
+  it("emits static content for Label and Blockquote", () => {
+    // Label collides with SwiftUI.Label → FsdsLabel via the reserved table.
+    const label = emit("Label");
+    expect(label).toContain("public struct FsdsLabel<Content: View>: View {");
+    expect(label).toContain("@ViewBuilder content: () -> Content");
+    const quote = emit("Blockquote");
+    expect(quote).toContain("public struct Blockquote<Content: View>: View {");
+    expect(quote).not.toContain("cite:");
+  });
+
+  it("emits static content for Links and List (gate breadth)", () => {
+    expect(emit("Links")).toContain("@ViewBuilder content: () -> Content");
+    expect(emit("List")).toContain("@ViewBuilder content: () -> Content");
+  });
+});

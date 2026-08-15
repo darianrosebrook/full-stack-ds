@@ -52,16 +52,27 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   if (ir.surface.kind === "tooltip") {
     return { componentFile: withTypes(emitAnchoredTooltip(ir)), behaviorFile: null };
   }
-  if (ir.surface.kind !== "dialog") {
+  // `sheet` shares the centered-modal presentation shape (openness
+  // channel + compound content regions); macOS sheets are window-attached
+  // and modal, so side/modal props are omitted-and-documented.
+  if (ir.surface.kind !== "dialog" && ir.surface.kind !== "sheet") {
     throw new Error(
       `generateSwiftUISurfaceFiles: surface kind "${ir.surface.kind}" is not ` +
-        `implemented — implemented kinds are the centered modal (dialog) ` +
-        `and the anchored tooltip. Anchored popovers remain a later slice.`,
+        `implemented — implemented kinds are the centered modal (dialog/` +
+        `sheet) and the anchored tooltip. Anchored popovers remain a later ` +
+        `slice.`,
     );
   }
   const openness = ir.behavior.normalizedChannels.find(
     (c) => c.valueType === "boolean",
   );
+  const searchChannel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "string",
+  );
+  const searchPlaceholder = searchChannel
+    ? ir.styledProps.find((p) => p.safeName === "placeholder")?.defaultExpr
+        ?.replace(/^["']|["']$/g, "") ?? "Search..."
+    : null;
   if (!openness) {
     throw new Error(
       `generateSwiftUISurfaceFiles: dialog surface on "${ir.name}" declares ` +
@@ -103,6 +114,11 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}private let controlledOpen: Binding<Bool>?`);
   lines.push(`${INDENT}@State private var uncontrolledOpen: Bool`);
   lines.push(`${INDENT}private let onOpenChange: ((Bool) -> Void)?`);
+  if (searchChannel) {
+    lines.push(`${INDENT}private let controlledSearch: Binding<String>?`);
+    lines.push(`${INDENT}@State private var uncontrolledSearch: String`);
+    lines.push(`${INDENT}private let onSearchChange: ((String) -> Void)?`);
+  }
   for (const region of regions) {
     lines.push(`${INDENT}private let ${region}: ${swiftCase(capitalize(region))}`);
   }
@@ -114,6 +130,11 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
     "defaultOpen: Bool = false,",
     "onOpenChange: ((Bool) -> Void)? = nil,",
   ];
+  if (searchChannel) {
+    params.push("search: Binding<String>? = nil,");
+    params.push('defaultSearch: String = "",');
+    params.push("onSearchChange: ((String) -> Void)? = nil,");
+  }
   for (const region of regions) {
     params.push(
       `@ViewBuilder ${region}: () -> ${swiftCase(capitalize(region))} = { EmptyView() }${region === regions[regions.length - 1] ? "" : ","}`,
@@ -124,6 +145,11 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}${INDENT}self.controlledOpen = open`);
   lines.push(`${INDENT}${INDENT}self._uncontrolledOpen = State(initialValue: defaultOpen)`);
   lines.push(`${INDENT}${INDENT}self.onOpenChange = onOpenChange`);
+  if (searchChannel) {
+    lines.push(`${INDENT}${INDENT}self.controlledSearch = search`);
+    lines.push(`${INDENT}${INDENT}self._uncontrolledSearch = State(initialValue: defaultSearch)`);
+    lines.push(`${INDENT}${INDENT}self.onSearchChange = onSearchChange`);
+  }
   for (const region of regions) {
     lines.push(`${INDENT}${INDENT}self.${region} = ${region}()`);
   }
@@ -142,6 +168,21 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}${INDENT}onOpenChange?(next)`);
   lines.push(`${INDENT}}`);
   lines.push("");
+  if (searchChannel) {
+    lines.push(`${INDENT}private var searchText: String {`);
+    lines.push(`${INDENT}${INDENT}controlledSearch?.wrappedValue ?? uncontrolledSearch`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func setSearch(_ next: String) {`);
+    lines.push(`${INDENT}${INDENT}if let binding = controlledSearch {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
+    lines.push(`${INDENT}${INDENT}} else {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledSearch = next`);
+    lines.push(`${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}${INDENT}onSearchChange?(next)`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+  }
   lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
   lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
   lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
@@ -174,6 +215,16 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}@ViewBuilder`);
   lines.push(`${INDENT}private var panel: some View {`);
   lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`);
+  if (searchChannel) {
+    lines.push(`${INDENT}${INDENT}${INDENT}TextField(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}"",`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}text: Binding(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { searchText },`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { setSearch($0) }`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}),`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}prompt: Text("${searchPlaceholder}")`);
+    lines.push(`${INDENT}${INDENT}${INDENT})`);
+  }
   for (const region of regions) {
     lines.push(`${INDENT}${INDENT}${INDENT}${region}`);
   }
