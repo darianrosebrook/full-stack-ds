@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "Harness scenario S2 in /tmp/prepush-harness: regenerated output staged-but-uncommitted -> hook exits 1 with drift message; old index-vs-worktree form 'git diff --exit-code -- packages/ds-react/src' exits 0 on the same tree, proving the hole the tip-commit diff (git diff --exit-code $TIP) closes."
     recorded_at: "2026-08-15T18:34:48.492Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Harness calls.log order: governed:rail (line 9) before audit:behavior-realization (10), audit:a11y-realization (11), styling ledgers (12-14), audit:token-resolvability (15) — mirrors ci.yml gate-job placement. Scenario S5b: scripts-only push scopes to exactly A11Y_AUDIT, rail skipped, audit still runs against existing tree."
+    recorded_at: "2026-08-15T18:34:50.074Z"
