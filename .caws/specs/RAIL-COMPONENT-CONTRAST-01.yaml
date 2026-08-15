@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "deriveComponentContrastPairs exempts /disabled/i scope+block keys per WCAG 1.4.3 Note 5, documented on the validator; corpus disabled pairs (Button/Input/TextField/Select) ungated; unit test 'exempts disabled blocks and disabled scopes' passes"
     recorded_at: "2026-08-15T01:33:21.388Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 in worktree: script runs pnpm run generate:check (Validation 49/49) before generate --target=all, then validate-cli.js --require-artifact-manifest Overall PASS; no generated-tree drift"
+    recorded_at: "2026-08-15T01:33:22.831Z"
