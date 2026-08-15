@@ -34,3 +34,8 @@ contracts:
   - name: 'swiftui-coverage-batch'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Details.swift: DisclosureGroup(isExpanded: Binding(get:{isOpen},set:{setOpen($0)})) with summary label + onOpenChange; swift build exit 0"
+    recorded_at: "2026-08-15T17:49:16.500Z"
