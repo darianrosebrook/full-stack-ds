@@ -44,20 +44,22 @@ struct SettingsView: View {
         Card {
             Text("Profile").font(.headline)
         } content: {
-            // FSDS: FsdsField (named-slot composer; `Field` is reserved by
-            // the SwiftUI table). NOT FSDS: Input is not emitted yet — the
-            // control region hosts a SwiftUI TextField, which owns state on
-            // this target (the web value-channel API is documented as a
-            // non-claim, not accepted-and-ignored).
+            // FSDS: FsdsField (named-slot composer; `Field` is reserved
+            // by the SwiftUI table) hosting the FSDS value-channel text
+            // control Input (controlled Binding + onChange through the
+            // controllable-state projection).
             FsdsField {
                 Text("Display name")
             } control: {
-                TextField("Display name", text: $displayName)
+                Input(value: $displayName, onChange: { _ in })
             }
             FsdsField {
                 Text("Email")
             } control: {
-                TextField("Email", text: $email)
+                Input(
+                    value: $email,
+                    placeholder: "ada@example.com"
+                )
             }
         } footer: {
             // FSDS: emitted through the multi-part action path. The export
