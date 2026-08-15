@@ -19,6 +19,14 @@ export type TargetRegistryConfigSourceV1 =
 export interface TargetRegistryConfigTargetV1 {
   id: string;
   source: TargetRegistryConfigSourceV1;
+  /**
+   * Declared-admission allowlist: the only components full-corpus runs
+   * (`--target=all`, bare `generate`, `governed:rail`) emit for this
+   * target. Absent = full corpus. Explicit single-component requests
+   * bypass the allowlist and surface the emitter's own errors — the
+   * allowlist scopes default generation, never silences fail-loud.
+   */
+  components?: readonly string[];
 }
 
 export interface TargetRegistryConfigV1 {
@@ -73,6 +81,19 @@ export function assertTargetRegistryConfigV1(
       throw new Error(`Duplicate target id in registry config: ${id}.`);
     }
     seen.add(id);
+    const components = (target as TargetRegistryConfigTargetV1).components;
+    if (components !== undefined) {
+      const componentSeen = new Set<string>();
+      for (const [cIndex, component] of components.entries()) {
+        if (typeof component !== "string" || component.length === 0) {
+          throw new Error(`targets[${index}].components[${cIndex}] must be a non-empty string.`);
+        }
+        if (componentSeen.has(component)) {
+          throw new Error(`Duplicate component "${component}" in targets[${index}].components.`);
+        }
+        componentSeen.add(component);
+      }
+    }
   }
 }
 

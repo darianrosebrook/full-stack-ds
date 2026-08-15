@@ -1,3 +1,13 @@
+// @generated:start types
+public enum DialogSize: String, CaseIterable {
+    case sm
+    case md
+    case lg
+    case xl
+    case full
+}
+// @generated:end
+
 // @generated:start imports
 import SwiftUI
 // @generated:end

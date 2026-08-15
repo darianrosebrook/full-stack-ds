@@ -15,10 +15,13 @@ From the repository root:
 pnpm run generate -- --target=swiftui Switch ToggleSwitch Button Card Field Input Dialog Tooltip
 ```
 
-`swiftui` is an **explicit-only** target in this slice: it is not in
-`fsds.targets.json`, so `--target=all` and `pnpm run governed:rail` do not
-generate it. Corpus-wide (default-rail) admission is a later spec once the
-emitter grows past the native-collapse path.
+`swiftui` is registered in `fsds.targets.json` with a **declared-admission
+allowlist** (the eight realized components): `--target=all` and
+`pnpm run governed:rail` emit exactly that set and skip the rest by
+declaration. Explicit single-component requests bypass the allowlist and
+surface the emitter's own fail-loud errors. The target remains outside the
+admission rail (no railFrameworkId, not in CI's generated-driff diff) —
+registration governs generation scope only.
 
 ## Build
 

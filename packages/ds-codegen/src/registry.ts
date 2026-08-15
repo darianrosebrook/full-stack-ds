@@ -49,6 +49,12 @@ export interface TargetBinding {
   componentsRoot: string;
   /** File name for the components barrel within the components root. */
   barrelFile: string;
+  /**
+   * Declared-admission allowlist from fsds.targets.json (`components`),
+   * when the target declares one. Full-corpus generation runs filter to
+   * this set; explicit component requests do not.
+   */
+  admittedComponents?: readonly string[];
 }
 
 export interface TargetDeclaration {
@@ -101,6 +107,8 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   ]);
   const bindings = new Map<TargetId, TargetBinding>();
   const declarations = new Map<TargetId, TargetDeclaration>();
+  const declaredComponents = (id: string): readonly string[] | undefined =>
+    loadedConfig.config.targets.find((t) => t.id === id)?.components;
 
   // React target
   const reactRoot = path.join(
@@ -121,6 +129,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       }),
       componentsRoot: reactRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("react"),
     });
   }
 
@@ -142,6 +151,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createVueEmitter(),
       componentsRoot: vueRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("vue"),
     });
   }
 
@@ -163,6 +173,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createAngularEmitter(),
       componentsRoot: angularRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("angular"),
     });
   }
 
@@ -184,6 +195,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createLitEmitter(),
       componentsRoot: litRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("lit"),
     });
   }
 
@@ -205,6 +217,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createSvelteEmitter(),
       componentsRoot: svelteRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("svelte"),
     });
   }
 
@@ -226,6 +239,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createFigmaEmitter(),
       componentsRoot: figmaRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("figma"),
     });
   }
 
@@ -249,6 +263,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createReactNativeEmitter(),
       componentsRoot: reactNativeRoot,
       barrelFile: "index.ts",
+      admittedComponents: declaredComponents("react-native"),
     });
   }
 
@@ -274,6 +289,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       emitter: createSwiftUIEmitter(),
       componentsRoot: swiftUIRoot,
       barrelFile: "Components.generated.swift",
+      admittedComponents: declaredComponents("swiftui"),
     });
   }
 
