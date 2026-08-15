@@ -1,62 +1,226 @@
 /**
- * Jetpack Compose composable emission — scaffold.
+ * Jetpack Compose composable emission.
  *
- * Target shape (single `.kt` file per component):
+ * Implemented path: native-collapse (native-toggle-affordance) — the Compose
+ * twin of the SwiftUI collapse class. A contract whose multi-part anatomy
+ * collapses to a native on/off control (Switch, ToggleSwitch) emits a single
+ * `@Composable fun` wrapping Material 3's `Switch` with the contract's
+ * controlled/uncontrolled channel hoisting and the IR's normalized semantics
+ * (role, toggleableState, stateDescription). Every other collapse class and
+ * shape throws an explicit not-implemented error — corpus-wide generation
+ * stays out of scope until their slices land.
  *
- *   // @generated:start imports
- *   package com.fullstackds.button
- *
- *   import androidx.compose.foundation.layout.Row
- *   import androidx.compose.material3.Text
- *   import androidx.compose.runtime.Composable
- *   import androidx.compose.runtime.getValue
- *   import androidx.compose.runtime.mutableStateOf
- *   import androidx.compose.runtime.remember
- *   import androidx.compose.runtime.setValue
- *   import androidx.compose.ui.Modifier
- *   import androidx.compose.ui.semantics.Role
- *   import androidx.compose.ui.semantics.role
- *   import androidx.compose.ui.semantics.semantics
- *   import com.fullstackds.primitives.Stack
- *   // @generated:end
- *
- *   // @generated:start types
- *   enum class ButtonSize { Small, Medium, Large }
- *   // @generated:end
- *
- *   // @generated:start component
- *   @Composable
- *   fun Button(
- *     onClick: () -> Unit,
- *     modifier: Modifier = Modifier,
- *     size: ButtonSize = ButtonSize.Medium,
- *     enabled: Boolean = true,
- *     content: @Composable () -> Unit,
- *   ) {
- *     Stack(
- *       modifier = modifier
- *         .semantics { role = Role.Button }
- *         .clickable(enabled = enabled, onClick = onClick),
- *     ) { content() }
- *   }
- *   // @generated:end
- *
- * IR projection rules (deferred — must live in IR or a sibling
- * `non-react-types.ts`-equivalent, NOT branched on in this emitter):
- *   - Tag → Compose composable: `button` → clickable `Box`/`Surface`,
- *     `input` → `BasicTextField`, `div`/`span` → `Box`/`Row`/`Column`,
- *     text leaves → `Text`.
- *   - ARIA → `Modifier.semantics { ... }` with the IR's normalized
- *     projection.
- *   - Channels: controlled/uncontrolled state hoisting pair, identical
- *     in shape to Material 3's `value` / `onValueChange` convention.
- *   - Children slot: `content: @Composable () -> Unit` parameter,
- *     idiomatic Compose composition.
+ * All facts derive from the ComponentIR: channel param names come from
+ * `behavior.normalizedChannels[0]` (Switch's `onChange`, not a Material
+ * idiom literal), the size axis from `styledProps` ∩ `definedTypes` with
+ * enum values, boolean/string passthroughs from the remaining styled props.
+ * The one framework-grammar table this slice owns: track dimensions per size
+ * value (dp) — md is contract-token-shaped, sm/lg are annotated defaults
+ * pending token-graph coverage (mirrored from the hand-authored golden
+ * prototype, `__golden__/Switch/Switch.compose.kt`, with its line-67 `??`
+ * defect corrected to the Kotlin elvis operator).
  */
 import type { ComponentIR } from "../../ir.js";
+import { collectCollapseIntents } from "../../ir.js";
 
-export function generateJetpackComposeComponentSource(_ir: ComponentIR): string {
-  throw new Error(
-    "generateJetpackComposeComponentSource: not implemented — Jetpack Compose emitter is scaffold-only.",
+/** Kotlin hard keywords that cannot appear as package-name segments. */
+const KOTLIN_HARD_KEYWORDS = new Set([
+  "as", "break", "class", "continue", "do", "else", "false", "for", "fun",
+  "if", "in", "interface", "is", "null", "object", "package", "return",
+  "super", "this", "throw", "true", "try", "typealias", "typeof", "val",
+  "var", "when", "while",
+]);
+
+function packageSegment(name: string): string {
+  const segment = name.replace(/([a-z0-9])([A-Z])/g, "$1$2").toLowerCase();
+  return KOTLIN_HARD_KEYWORDS.has(segment) ? `${segment}component` : segment;
+}
+
+function pascalCase(value: string): string {
+  return value
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+
+/**
+ * Track dimensions per size value (width x height, dp). Framework grammar.
+ * The corpus carries two size vocabularies (Switch: sm/md/lg;
+ * ToggleSwitch: small/medium/large) — both map onto the same physical
+ * ladder. md is contract-token-shaped; the rest are annotated defaults
+ * pending token-graph coverage.
+ */
+const SIZE_TRACK_DP: Record<string, [number, number]> = {
+  sm: [36, 18],
+  md: [48, 24],
+  lg: [60, 30],
+  small: [36, 18],
+  medium: [48, 24],
+  large: [60, 30],
+};
+
+export function generateJetpackComposeComponentSource(
+  ir: ComponentIR,
+): string {
+  const collapseIntents = collectCollapseIntents(ir);
+  if (!collapseIntents.has("native-toggle-affordance")) {
+    throw new Error(
+      `generateJetpackComposeComponentSource: only the native-toggle collapse path is implemented for ${ir.name} — ` +
+        `multi-part anatomy, surfaces, and other collapse classes throw by design until their slices land.`,
+    );
+  }
+  const channel = ir.behavior.normalizedChannels[0];
+  if (!channel || channel.valueType !== "boolean") {
+    throw new Error(
+      `generateJetpackComposeComponentSource: ${ir.name} declares native-toggle-affordance without a boolean value channel`,
+    );
+  }
+
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const valueProp = channel.valueProp;
+  const defaultValueProp = channel.defaultValueProp ?? `${valueProp}Default`;
+  const changeProp = channel.changeHandlerProp;
+
+  // Size axis: a styled prop referencing a contract-defined enum type.
+  const sizeProp = ir.styledProps.find((p) =>
+    p.typeRefs.some((ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0),
   );
+  let sizeEnumName: string | null = null;
+  let sizeValues: string[] = [];
+  let sizeDefault: string | null = null;
+  if (sizeProp) {
+    const ref = sizeProp.typeRefs.find(
+      (r) => (ir.definedTypes[r]?.values?.length ?? 0) > 0,
+    )!;
+    const def = ir.definedTypes[ref]!;
+    sizeEnumName = ref;
+    sizeValues = def.values!;
+    const rawDefault = sizeProp.defaultExpr?.replace(/^"|"$/g, "") ?? null;
+    sizeDefault = rawDefault;
+    for (const value of sizeValues) {
+      if (!SIZE_TRACK_DP[value]) {
+        throw new Error(
+          `generateJetpackComposeComponentSource: no track dimensions for size value "${value}" on ${name} — extend the framework-grammar table or the token graph`,
+        );
+      }
+    }
+  }
+
+  const hasDisabled = ir.styledProps.some(
+    (p) => p.name === "disabled" && p.propType.kind === "boolean",
+  );
+  const handled = new Set<string>([
+    valueProp,
+    defaultValueProp,
+    changeProp,
+    ...(sizeProp ? [sizeProp.safeName] : []),
+    ...(hasDisabled ? ["disabled"] : []),
+  ]);
+  const stringProps = ir.styledProps.filter(
+    (p) => p.propType.kind === "string" && !handled.has(p.name),
+  );
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`import androidx.compose.foundation.layout.size`);
+  lines.push(`import androidx.compose.material3.Switch as M3Switch`);
+  lines.push(`import androidx.compose.material3.SwitchDefaults`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.mutableStateOf`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.runtime.setValue`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.semantics.Role`);
+  lines.push(`import androidx.compose.ui.semantics.role`);
+  lines.push(`import androidx.compose.ui.semantics.semantics`);
+  lines.push(`import androidx.compose.ui.semantics.stateDescription`);
+  lines.push(`import androidx.compose.ui.semantics.toggleableState`);
+  lines.push(`import androidx.compose.ui.state.ToggleableState`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(``);
+  if (sizeEnumName && sizeValues.length > 0) {
+    lines.push(
+      `/** Size axis lowered from the contract's ${sizeEnumName} type. */`,
+    );
+    lines.push(
+      `enum class ${sizeEnumName} { ${sizeValues.map(pascalCase).join(", ")} }`,
+    );
+    lines.push(``);
+  }
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    ${valueProp}: Boolean? = null,`);
+  lines.push(`    ${defaultValueProp}: Boolean = false,`);
+  lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
+  if (sizeEnumName && sizeDefault) {
+    lines.push(
+      `    size: ${sizeEnumName} = ${sizeEnumName}.${pascalCase(sizeDefault)},`,
+    );
+  }
+  if (hasDisabled) {
+    lines.push(`    enabled: Boolean = true,`);
+  }
+  for (const prop of stringProps) {
+    lines.push(`    ${prop.safeName}: String? = null,`);
+  }
+  lines.push(`    contentDescription: String? = null,`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`) {`);
+  lines.push(
+    `    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`,
+  );
+  lines.push(
+    `    val resolved${pascalCase(valueProp)} = ${valueProp} ?: uncontrolled${pascalCase(valueProp)}`,
+  );
+  if (sizeEnumName) {
+    lines.push(``);
+    lines.push(`    val (trackWidth, trackHeight) = when (size) {`);
+    for (const value of sizeValues) {
+      const [w, h] = SIZE_TRACK_DP[value]!;
+      lines.push(
+        `        ${sizeEnumName}.${pascalCase(value)} -> ${w}.dp to ${h}.dp`,
+      );
+    }
+    lines.push(`    }`);
+  }
+  lines.push(``);
+  lines.push(`    M3Switch(`);
+  lines.push(`        checked = resolved${pascalCase(valueProp)},`);
+  lines.push(`        onCheckedChange = { next ->`);
+  lines.push(`            if (${valueProp} == null) {`);
+  lines.push(
+    `                uncontrolled${pascalCase(valueProp)} = next`,
+  );
+  lines.push(`            }`);
+  lines.push(`            ${changeProp}?.invoke(next)`);
+  lines.push(`        },`);
+  if (hasDisabled) {
+    lines.push(`        enabled = enabled,`);
+  }
+  lines.push(`        modifier = modifier`);
+  if (sizeEnumName) {
+    lines.push(`            .size(width = trackWidth, height = trackHeight)`);
+  }
+  lines.push(`            .semantics {`);
+  lines.push(`                role = Role.Switch`);
+  lines.push(
+    `                toggleableState = if (resolved${pascalCase(valueProp)}) ToggleableState.On else ToggleableState.Off`,
+  );
+  lines.push(`                if (contentDescription != null) {`);
+  lines.push(
+    `                    stateDescription = if (resolved${pascalCase(valueProp)}) "on" else "off"`,
+  );
+  lines.push(`                }`);
+  lines.push(`            },`);
+  lines.push(`        colors = SwitchDefaults.colors(),`);
+  lines.push(`    )`);
+  lines.push(`}`);
+  lines.push(``);
+  return lines.join("\n");
 }

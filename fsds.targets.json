@@ -65,6 +65,16 @@
         "Links",
         "List"
       ]
+    },
+    {
+      "id": "jetpack-compose",
+      "source": {
+        "kind": "builtin"
+      },
+      "components": [
+        "Switch",
+        "ToggleSwitch"
+      ]
     }
   ]
 }

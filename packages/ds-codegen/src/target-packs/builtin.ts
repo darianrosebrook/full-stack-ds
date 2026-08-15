@@ -297,6 +297,67 @@ export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackMa
       ],
     },
   },
+  "jetpack-compose": {
+    schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
+    target: {
+      id: "jetpack-compose",
+      family: "native-view",
+      label: "Jetpack Compose",
+      maturity: "experimental",
+    },
+    compatibility: {
+      codegenProtocol: "builtin-framework-emitter-v1",
+      componentIR: "ComponentIR@v1",
+      targetFamilyIR: "native-view@compose-collapse-only",
+    },
+    entrypoints: {
+      emitter:
+        "packages/ds-codegen/src/frameworks/jetpack-compose/factory.ts",
+    },
+    outputs: {
+      componentsRoot:
+        "library/src/main/kotlin/com/fullstackds/components",
+      barrelFile: "Components.generated.kt",
+      fileKinds: ["component-source", "barrel"],
+    },
+    capabilities: {
+      components: true,
+      tests: false,
+      behavior: false,
+      compoundParts: false,
+      surface: false,
+      tokens: "native-theme-module",
+      customRegions: true,
+    },
+    permissions: SAFE_BUILTIN_PERMISSIONS,
+    admission: {
+      commands: [
+        {
+          check: "compile",
+          command: [
+            "./gradlew",
+            "-p",
+            "packages/ds-jetpack-compose",
+            ":library:compileKotlin",
+            "--no-daemon",
+          ],
+          scope: {
+            packageRoot: "packages/ds-jetpack-compose/",
+            extensions: [".kt"],
+            coverage: "not_selected",
+          },
+        },
+      ],
+      knownGaps: [
+        "Explicit-only target: selectable via --target=jetpack-compose; outside rail verification and CI drift diffs in this slice (no railFrameworkId). The fsds.targets.json components allowlist gates full-corpus runs to Switch and ToggleSwitch; explicit requests bypass it. Default-rail admission is a later spec.",
+        "Only the native-collapse path is implemented (native-toggle-affordance: Switch, ToggleSwitch). Multi-part anatomy and anchored surfaces throw explicit not-implemented errors.",
+        "Declared Android ladder — rung 1 of 3 (this slice): Gradle + Compose Multiplatform (JVM) compilation against the real androidx.compose-compatible runtime, no hand-authored stubs. Rung 2 (full Android SDK + Gradle compile lane) and rung 3 (runtime admission — Robolectric or instrumented) are reserved follow-up specs.",
+        "Rung 1 non-claims: JVM compilation is not Android compilation — no Android resource linking, AGP validation, or Android Lint; JVM artifacts are not Android-compiled artifacts; no emulator/device execution; no runtime behavioral claims.",
+        "No generated test target; no behavior files; no shared Compose theme/token module — size values inline per component (md from contract token facts; sm/lg framework-grammar defaults pending token-graph coverage).",
+        "The declared gradlew admission command requires network on first run (Gradle distribution + Maven artifact bootstrap) and is not executed by any rail lane yet.",
+      ],
+    },
+  },
 };
 
 export function getBuiltinTargetPackManifest(id: BuiltinTargetId): TargetPackManifestV1 {
