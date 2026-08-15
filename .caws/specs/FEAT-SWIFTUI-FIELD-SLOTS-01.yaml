@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: generate -- --target=swiftui Switch ToggleSwitch Button Card Field emits 5; swift build exit 0; Switch golden + Button/Card structural tests byte-stable (20/20 swift tests)
     recorded_at: "2026-08-15T02:45:02.007Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "it.each([TextField, Dialog, Input]) negative controls all throw /no emission class matches/ — gate proven narrow (component-instance leaf, surface block, control root each excluded)"
+    recorded_at: "2026-08-15T02:45:02.906Z"
