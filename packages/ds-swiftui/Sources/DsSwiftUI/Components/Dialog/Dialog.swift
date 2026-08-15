@@ -46,7 +46,7 @@ enum DialogTokens {
             "dialog.size.full.width": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-size-full-width", name: "dialog.size.full.width", literal: .string("100vw")),
             "dialog.size.full.height": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-size-full-height", name: "dialog.size.full.height", literal: .string("100vh")),
             "dialog.size.closeButton.size": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-size-close-button-size", name: "dialog.size.closeButton.size", fallback: .string("32px")),
-            "dialog.elevation.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-elevation-default", name: "dialog.elevation.default", fallback: .string("0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15)")),
+            "dialog.elevation.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-elevation-default", name: "dialog.elevation.default", fallback: .string("0px 12px 16px #0000000f, 0px 25px 50px #00000026")),
             "dialog.spacing.header.paddingTop": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-spacing-header-padding-top", name: "dialog.spacing.header.paddingTop", fallback: .string("16px")),
             "dialog.spacing.body.paddingRight": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-spacing-body-padding-right", name: "dialog.spacing.body.paddingRight", fallback: .string("24px")),
             "dialog.spacing.footer.gap": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-spacing-footer-gap", name: "dialog.spacing.footer.gap", fallback: .string("4px")),

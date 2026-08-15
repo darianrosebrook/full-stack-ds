@@ -46,7 +46,7 @@ enum SheetTokens {
             "sheet.text.size": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-text-size", name: "sheet.text.size", fallback: .string("16px")),
             "sheet.text.sizeTitle": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-text-size-title", name: "sheet.text.sizeTitle", fallback: .string("14px")),
             "sheet.text.weightTitle": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-text-weight-title", name: "sheet.text.weightTitle", fallback: .string("500")),
-            "sheet.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-shadow", name: "sheet.shadow", fallback: .string("0 4px 24px rgba(0,0,0,0.12)")),
+            "sheet.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-shadow", name: "sheet.shadow", fallback: .string("0px 2px 4px #0000000f, 0px 4px 8px #0000001a")),
             "sheet.focus.width": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-focus-width", name: "sheet.focus.width", fallback: .string("2px")),
             "sheet.focus.color": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-focus-color", name: "sheet.focus.color", fallback: .string("#d92d2e")),
             "sheet.color.backgroundHover": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-color-background-hover", name: "sheet.color.backgroundHover", fallback: .string("#d0d0d0")),

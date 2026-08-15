@@ -40,7 +40,7 @@ enum CommandTokens {
             "command.spacing.dialogPadding": FsdsComponentTokenDefinition(cssVar: "--fsds-command-spacing-dialog-padding", name: "command.spacing.dialogPadding", fallback: .string("8px")),
             "command.text.size": FsdsComponentTokenDefinition(cssVar: "--fsds-command-text-size", name: "command.text.size", fallback: .string("16px")),
             "command.text.sizeSmall": FsdsComponentTokenDefinition(cssVar: "--fsds-command-text-size-small", name: "command.text.sizeSmall", fallback: .string("12px")),
-            "command.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-command-shadow", name: "command.shadow", fallback: .string("0 4px 24px rgba(0,0,0,0.12)")),
+            "command.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-command-shadow", name: "command.shadow", fallback: .string("0px 2px 4px #0000000f, 0px 4px 8px #0000001a")),
             "command.opacity.disabled": FsdsComponentTokenDefinition(cssVar: "--fsds-command-opacity-disabled", name: "command.opacity.disabled", fallback: .string("0.5")),
             "command.color.backgroundHover": FsdsComponentTokenDefinition(cssVar: "--fsds-command-color-background-hover", name: "command.color.backgroundHover", fallback: .string("#d0d0d0")),
         ],
