@@ -3,6 +3,7 @@ title: 'SwiftUI named-slot composer emission class; Field first'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: swift-field-slots
 created_at: '2026-08-15T02:39:21.241Z'
 updated_at: '2026-08-15T02:39:21.241Z'
 blast_radius:
