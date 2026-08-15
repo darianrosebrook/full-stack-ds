@@ -1,0 +1,53 @@
+id: FIX-CONTRAST-DEBT-01
+title: 'Burn the component-contrast debt ledger: resolver alpha preservation + token fixes'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-15T03:28:08.921Z'
+updated_at: '2026-08-15T03:28:08.921Z'
+blast_radius:
+  modules:
+    - 'packages/ds-tokens/build/generators/resolve.ts (alpha-preserving color serialization)'
+    - 'packages/ds-tokens/src (interaction.text.hover, foreground.hover, foreground.secondary)'
+    - 'contract sidecars whose fallbacks chain to the changed tokens (fallback-stale driven)'
+    - 'packages/ds-codegen/src/validation/component-contrast-known-gaps.json (burned to empty)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-tokens'
+    - 'packages/ds-contracts/components'
+    - 'packages/ds-codegen/src'
+    - 'AGENTS.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A token named transparent resolves to a transparent value: the resolver''s color serialization preserves alpha by the same rule as the CSS emitter (hex + two-digit alpha when alpha < 1), so resolved.tokens.json and tokens.css never disagree about opacity again.'
+  - 'Ledger entries leave only because their pair now passes or is underivable — proven by the ratchet itself: removing the entries while any still reproduced would fail generate:check.'
+  - 'Fallback literals stay byte-equal to the resolved light value of their chain (fallback-stale enforces); every fallback this slice touches is a mechanically forced update, never a hand-picked value.'
+  - 'No generated framework bytes change: the fixes move token values and contract fallbacks only; governed:rail regenerates identical framework sources.'
+acceptance:
+  - id: A1
+    given: 'tokens with alpha < 1 in the DTCG source'
+    when: 'the token build resolves them'
+    then: 'resolved.tokens.json preserves alpha as 8-digit hex matching the CSS emitter rule, and core.color.mode.transparent resolves to #00000000'
+  - id: A2
+    given: 'the six ledgered contrast pair identities'
+    when: 'the token fixes land'
+    then: 'generate:check passes with the contrast ledger empty because no entry reproduces (the ratchet proves the burn)'
+  - id: A3
+    given: 'Accordion trigger hover, Select trigger/option hover, and secondary-on-secondary pairs'
+    when: 'measured after the fixes'
+    then: 'every theme measures at least 4.5:1 or is skipped because a terminal is transparent'
+  - id: A4
+    given: 'resolved.tokens.json and tokens.css are committed outputs'
+    when: 'the build reruns'
+    then: 'tokens:build:check exits 0 over the committed regenerated artifacts'
+  - id: A5
+    given: 'the full local gate'
+    when: 'root tests, typecheck, lint, and governed:rail run in the worktree'
+    then: 'all exit 0'
+non_functional: {}
+contracts:
+  - name: 'component-contrast-ledger'
+    type: behavior
