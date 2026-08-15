@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp Profile rows compose FsdsField { label } control: { TextField }; example swift build exit 0; value-channel omission documented in lane + package READMEs"
     recorded_at: "2026-08-15T02:45:04.716Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0 errors; governed:rail exit 0; pnpm test 2054/2054; test:frameworks 573+492+532+70"
+    recorded_at: "2026-08-15T02:45:05.900Z"
