@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "swift build --package-path examples/settings/swift (exit 0, links SettingsExample against DsSwiftUI via ../../../packages/ds-swiftui)"
     recorded_at: "2026-08-15T01:49:29.197Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "examples/settings/swift/Sources/SettingsExample/SettingsExampleApp.swift: import DsSwiftUI only; NOT FSDS markers on unrealized regions; non-claims ledgered in examples/settings/swift/README.md"
+    recorded_at: "2026-08-15T01:49:30.140Z"
