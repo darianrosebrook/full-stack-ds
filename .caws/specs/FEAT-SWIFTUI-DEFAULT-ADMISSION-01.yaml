@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "generate -- --target=swiftui Tabs bypasses the allowlist and throws generateSwiftUIComponentSource: no emission class matches component Tabs"
     recorded_at: "2026-08-15T03:15:57.833Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "config.test.ts: unique non-empty components accepted; duplicate (Duplicate component) and empty (non-empty string) rejected"
+    recorded_at: "2026-08-15T03:15:58.764Z"
