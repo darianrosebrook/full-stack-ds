@@ -1,0 +1,47 @@
+{
+  "$comment": "Pre-existing component-derived contrast debt, ledgered at the landing of RAIL-COMPONENT-CONTRAST-01. Two-directional ratchet: a failing pair NOT listed here fails generate:check, and an entry that no longer reproduces a failing pair fails as stale (delete it when fixed). fg/bg are terminal identities — a global token path or a literal hex — exactly as derived by component-contrast.ts. Entries match per (component, fg, bg) across themes, scopes, and blocks. This ledger can only shrink truthfully.",
+  "gaps": [
+    {
+      "component": "Accordion",
+      "fg": "semantic.interaction.text.hover",
+      "bg": "semantic.interaction.background.hover",
+      "note": "Trigger hover: light 4.38:1, dark 1.92:1. The hover text token does not flip per theme while the hover background does, so dark-mode hover text is near-invisible against the hover surface. Token-side fix: make semantic.interaction.text.hover theme-aware.",
+      "spec": "RAIL-COMPONENT-CONTRAST-01"
+    },
+    {
+      "component": "Blockquote",
+      "fg": "semantic.color.foreground.secondary",
+      "bg": "semantic.color.background.secondary",
+      "note": "Light 4.38:1 (dark passes at 4.98:1). Secondary text on the secondary surface sits just under AA. Same root-cause token pair as ShowMore and Status; one token-side fix burns all three entries.",
+      "spec": "RAIL-COMPONENT-CONTRAST-01"
+    },
+    {
+      "component": "ShowMore",
+      "fg": "semantic.color.foreground.secondary",
+      "bg": "semantic.color.background.secondary",
+      "note": "Light 4.38:1. Root cause identical to the Blockquote entry (same fg/bg token pair).",
+      "spec": "RAIL-COMPONENT-CONTRAST-01"
+    },
+    {
+      "component": "Status",
+      "fg": "semantic.color.foreground.secondary",
+      "bg": "semantic.color.background.secondary",
+      "note": "Light 4.38:1. Root cause identical to the Blockquote entry (same fg/bg token pair).",
+      "spec": "RAIL-COMPONENT-CONTRAST-01"
+    },
+    {
+      "component": "Select",
+      "fg": "semantic.color.foreground.hover",
+      "bg": "semantic.color.background.hover",
+      "note": "Dark 3.60:1 (light passes at 4.74:1). Trigger/option hover pair is under AA in dark mode only. Token-side fix: widen the dark hover fg/bg spread.",
+      "spec": "RAIL-COMPONENT-CONTRAST-01"
+    },
+    {
+      "component": "Walkthrough",
+      "fg": "semantic.color.foreground.secondary",
+      "bg": "core.color.mode.transparent",
+      "note": "Light 3.11:1 on the prev button. The background chain terminates at core.color.mode.transparent, which resolves to OPAQUE #000000 — a token named transparent carrying black. Either the name or the value is wrong; whichever is repaired, re-derive this pair before deleting the entry.",
+      "spec": "RAIL-COMPONENT-CONTRAST-01"
+    }
+  ]
+}
