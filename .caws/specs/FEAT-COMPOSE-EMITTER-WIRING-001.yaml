@@ -43,7 +43,7 @@ acceptance:
   - id: A3
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
-    then: 'explicit-only admission: --target=all and governed:rail emit nothing for jetpack-compose; the fsds.targets.json components allowlist gates full-corpus runs to Switch and ToggleSwitch while explicit requests bypass it, mirroring the swiftui registration'
+    then: 'swift-mirrored admission posture: jetpack-compose carries no railFrameworkId so it stays outside rail verification and CI drift diffs, and the fsds.targets.json components allowlist gates full-corpus runs to Switch and ToggleSwitch while explicit requests bypass it'
   - id: A4
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
