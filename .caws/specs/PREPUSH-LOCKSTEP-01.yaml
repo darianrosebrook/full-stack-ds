@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "Harness calls.log order: governed:rail (line 9) before audit:behavior-realization (10), audit:a11y-realization (11), styling ledgers (12-14), audit:token-resolvability (15) — mirrors ci.yml gate-job placement. Scenario S5b: scripts-only push scopes to exactly A11Y_AUDIT, rail skipped, audit still runs against existing tree."
     recorded_at: "2026-08-15T18:34:50.074Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Harness S1: install fires on fresh clone (no node_modules) despite no lockfile change in diff. Scenario S3: stubbed Node 20 -> '[pre-push] FATAL: Node >= 22 required (CI pins Node 22); found 20', exit 1 before any gate work. Every hook step line carries a [+Ns] elapsed prefix (see S1/S4 outputs)."
+    recorded_at: "2026-08-15T18:34:52.388Z"
