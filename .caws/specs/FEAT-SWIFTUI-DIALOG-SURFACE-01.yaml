@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-DIALOG-SURFACE-01
 title: 'SwiftUI centered-modal surface path; Dialog first'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Dialog lands through the centered-modal surface path as a sheet with the openness channel; anchored surfaces remain fail-loud'
 created_at: '2026-08-15T02:54:35.067Z'
-updated_at: '2026-08-15T02:54:35.067Z'
+updated_at: '2026-08-15T03:02:25.343Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.ts (+ shared helpers exported from component-source.ts; new surface-emit.test.ts)'
