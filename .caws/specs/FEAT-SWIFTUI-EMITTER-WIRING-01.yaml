@@ -1,0 +1,51 @@
+id: FEAT-SWIFTUI-EMITTER-WIRING-01
+title: 'Register swiftui as an explicit builtin target with a SwiftPM output package'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-15T01:27:10.623Z'
+updated_at: '2026-08-15T01:27:10.623Z'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/emitter.ts (BuiltinTargetId/KNOWN_TARGETS widening)'
+    - 'packages/ds-codegen/src/target-packs/{builtin,config}.ts (swiftui manifest + default-config filter)'
+    - 'packages/ds-codegen/src/registry.ts (swiftui binding + Package.swift package marker)'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui (factory wiring, hook/tests/barrel/discover honesty fixes)'
+    - 'packages/ds-swiftui (new SwiftPM output package: Package.swift, README, generated tree)'
+    - 'docs/current-implementation-snapshot.md (stale no-SwiftUI-emitter claim correction)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-swiftui'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'the swiftui emitter and the new packages/ds-swiftui SwiftPM package on disk'
+    when: 'pnpm run generate -- --target=swiftui Switch runs'
+    then: 'it emits Sources/DsSwiftUI/Components/Switch/Switch.swift and exits 0'
+  - id: A2
+    given: 'the generated package tree'
+    when: 'swift build runs with package path packages/ds-swiftui'
+    then: 'the build exits 0 (compile-positive over the generated Swift source)'
+  - id: A3
+    given: 'a multi-part contract with no collapse intent (Button)'
+    when: 'pnpm run generate -- --target=swiftui Button runs'
+    then: 'the command fails with the explicit not-implemented anatomy error (fail-loud negative control)'
+  - id: A4
+    given: 'fsds.targets.json unchanged'
+    when: 'pnpm run governed:rail runs'
+    then: 'swiftui is not generated and all rail outputs are byte-identical to pre-slice (explicit-only registration, no railFrameworkId)'
+  - id: A5
+    given: 'the widened BuiltinTargetId and new builtin manifest'
+    when: 'pnpm run typecheck and pnpm test run at the root'
+    then: 'both pass including the manifest validation test iterating all builtin packs'
+non_functional: {}
+contracts:
+  - name: 'swiftui-switch-emission'
+    type: contract-test
+    path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
