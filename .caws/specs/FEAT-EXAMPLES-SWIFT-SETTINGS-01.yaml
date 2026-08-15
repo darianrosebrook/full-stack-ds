@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "examples/README.md: settings row + status table + parity non-claim + run commands all name the swift lane with claim/falsifier/non-claims"
     recorded_at: "2026-08-15T01:49:32.633Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: governed:rail exit 0 (no committed-tree drift); pnpm test 2038/2038; test:frameworks 573+492+532+70 all passing"
+    recorded_at: "2026-08-15T01:49:34.203Z"
