@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "Field.swift: FieldTokens.scopes; colorSlot(color.bg)/colorSlot(color.fg)/colorSlot(color.border)/pxSlot(radius) accessors; status optional + compactMap layering; vocabulary extension left Button/Card bytes unchanged"
     recorded_at: "2026-08-15T02:45:03.809Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "SettingsExampleApp Profile rows compose FsdsField { label } control: { TextField }; example swift build exit 0; value-channel omission documented in lane + package READMEs"
+    recorded_at: "2026-08-15T02:45:04.716Z"
