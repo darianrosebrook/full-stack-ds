@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: swift-default-admission
 created_at: '2026-08-15T03:10:57.341Z'
-updated_at: '2026-08-15T03:10:57.341Z'
+updated_at: '2026-08-15T03:15:34.267Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/target-packs/config.ts (components field + validation)'
@@ -21,6 +21,7 @@ scope:
     - 'fsds.targets.json'
     - 'packages/ds-swiftui/README.md'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-swiftui
   out: []
 invariants:
   - 'The allowlist is DECLARED ADMISSION, not silent skipping: full-corpus runs log the admitted set per target; explicit component requests bypass it and hit the real emitter errors.'
