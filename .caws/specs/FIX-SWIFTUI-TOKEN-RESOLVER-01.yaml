@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "FsdsTheme.swift: both resolvers stage the chain in a local before subscript assignment; the compiler's own warning on the trap form (left operand non-optional at outer depth) confirms the mechanism"
     recorded_at: "2026-08-15T18:59:07.996Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "swift test --package-path packages/ds-swiftui: 6/6 pass; mutation-falsified live — reverting one resolver to the trap form fails 2 tests (fallback-only + override), restored fix passes"
+    recorded_at: "2026-08-15T18:59:10.152Z"
