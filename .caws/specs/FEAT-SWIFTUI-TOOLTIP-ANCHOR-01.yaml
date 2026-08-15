@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp: Tooltip(placement:.bottom) wraps the Email-notifications label; example swift build exit 0; zero NOT FSDS markers remain for settings-spec components"
     recorded_at: "2026-08-15T03:10:13.627Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2060/2060; test:frameworks 573+492+532+70"
+    recorded_at: "2026-08-15T03:10:14.479Z"
