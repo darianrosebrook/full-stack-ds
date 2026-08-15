@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "swift build --package-path packages/ds-swiftui (exit 0, Build complete over Switch+ToggleSwitch)"
     recorded_at: "2026-08-15T01:41:58.269Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run generate -- --target=swiftui Button (exit 1: explicit native-toggle-affordance not-implemented error)"
+    recorded_at: "2026-08-15T01:41:59.191Z"
