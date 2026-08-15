@@ -12,12 +12,12 @@ Read this as a proving-ground portfolio, not a demo gallery. Every app shape mus
 
 | App shape | Implementations | Standing | Primary claim |
 |---|---|---|---|
-| `settings/` | `react/`, `vue/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The Vue lane is build/typecheck consumer evidence; the RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
+| `settings/` | `react/`, `vue/`, `react-native/`, `swift/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The Vue lane is build/typecheck consumer evidence; the RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. The Swift lane is compile-only consumer evidence over the generated `ds-swiftui` package (macOS CI job; locally runnable for visual checks) realizing the Switch rows today, with unrealized regions composed from plain SwiftUI and ledgered as non-claims in the lane README. |
 | `operations-dashboard/` | _none yet_ | spec scaffold only | A dense internal operations surface — multi-axis filtering, a high-density queue, a selection-driven detail panel, status summaries, and overlay workflows — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
 | `storefront-checkout/` | _none yet_ | spec scaffold only | A storefront-to-checkout assembly — product browsing, a derived-total cart, promo/error messaging, a validated multi-step checkout with disabled/validating/pending states, and review/confirmation — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
 | `social-feed/` | _none yet_ | spec scaffold only | A dense social-feed assembly — nested-action feed items, a validating composer, optimistic reactions/comments with pending/error reconciliation, overflow menus driving report/hide flows, and a profile/notification surface — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
 
-`settings/` is the only app shape with implemented lanes (`react`, `vue`, and a typecheck-only `react-native` fixture). The three assembly-layer app shapes — `operations-dashboard/`, `storefront-checkout/`, `social-feed/` — are **spec scaffolds only**: each has a framework-neutral `spec.md` and empty `react/`, `vue/`, `svelte/`, `angular/`, `lit/` lane folders (`src/.gitkeep` placeholders), and **no** implementation, package, or build files. They name a bounded claim a future lane will pressure; none of that claim is proven yet.
+`settings/` is the only app shape with implemented lanes (`react`, `vue`, a typecheck-only `react-native` fixture, and a compile-only `swift` lane over the generated ds-swiftui package). The three assembly-layer app shapes — `operations-dashboard/`, `storefront-checkout/`, `social-feed/` — are **spec scaffolds only**: each has a framework-neutral `spec.md` and empty `react/`, `vue/`, `svelte/`, `angular/`, `lit/` lane folders (`src/.gitkeep` placeholders), and **no** implementation, package, or build files. They name a bounded claim a future lane will pressure; none of that claim is proven yet.
 
 The five-framework app-parity claim is not proven by `examples/` yet. The repo's admitted five-framework evidence lives in codegen, generated packages, the governed rail, and the runtime fact rail. The examples directory is the consumer-transfer lane that should eventually make those claims more app-shaped.
 
@@ -137,7 +137,7 @@ The examples lane should fail honestly on any of these:
 - Not accessibility adequacy proof. They exercise shipped behavior, but accessibility claims belong to component contracts, generated behavior primitives, and dedicated rails.
 - Not a replacement for unit tests. Component tests remain in `packages/ds-*/src/components/`.
 - Not a replacement for the governed rail. Examples pressure package consumption; the rail binds emitted artifacts to contract, codegen, and environment evidence.
-- Not current five-framework app parity. Today `settings/` has React, Vue, and React Native lanes, not all admitted Web DOM frameworks; the three assembly-layer app shapes are spec scaffolds with no lanes.
+- Not current five-framework app parity. Today `settings/` has React, Vue, React Native, and Swift lanes, not all admitted Web DOM frameworks; the three assembly-layer app shapes are spec scaffolds with no lanes. The Swift lane is partial-realization evidence (only Switch exists on that target), not parity evidence.
 - Not backend / data proof. Examples have no server, no network, and no persistence. Where a spec calls for a "functional API", that is a lane-local, typed, promise-returning data-access layer backed by static JSON/JSONL fixtures read through an adapter — a real-to-life *shape*, not a real backend. It proves nothing about data fetching, scale, or persistence.
 - Not contract authority. App specs pressure package consumption; component semantics still live in `packages/ds-contracts/`.
 
@@ -159,6 +159,13 @@ pnpm build
 cd examples/settings/react-native
 pnpm install
 pnpm typecheck
+```
+
+The Swift lane needs no install (SwiftPM, not pnpm). From the repo root:
+
+```bash
+swift build --package-path examples/settings/swift   # CI parity
+swift run --package-path examples/settings/swift     # opens the window (local)
 ```
 
 Run the committed examples data/API test lane (all three seams, one command):
@@ -192,7 +199,7 @@ Good app shapes prove distinct consumer seams:
 
 | App shape | Standing | Stress axis | Useful components |
 |---|---|---|---|
-| `settings/` | implemented (`react`, `react-native` typecheck fixture) | Forms, overlays, basic layout | `Stack`, `Card`, `Field`, `Input`, `Switch`, `Button`, `Dialog`, `Tooltip` |
+| `settings/` | implemented (`react`, `react-native` typecheck fixture, `swift` compile-only lane) | Forms, overlays, basic layout | `Stack`, `Card`, `Field`, `Input`, `Switch`, `Button`, `Dialog`, `Tooltip` |
 | `operations-dashboard/` | spec scaffold only | Dense operational state, filters, selection-driven detail | `Table`, `List`, `Stat`, `Status`, `Badge`, `Select`, `Checkbox`, `Dialog`, `Sheet`, `Toast`, `Alert` |
 | `storefront-checkout/` | spec scaffold only | Choice controls, validation, derived totals, multi-step flow | `Card`, `Image`, `Field`, `Input`, `Select`, `Badge`, `Progress`, `Tabs`, `Dialog`, `Toast`, `OTP` |
 | `social-feed/` | spec scaffold only | Dense nested interaction, media/identity, menus, optimistic state | `Postcard`, `Avatar`, `ProfileFlag`, `Image`, `Card`, `ShowMore`, `Truncate`, `Popover`, `Command`, `Details`, `Toast` |

@@ -388,3 +388,11 @@ jobs:
 
       - name: Compile-admission negative (invalid `?:` Swift must fail to compile)
         run: node scripts/run-native-compile-lane.mjs --lane swift-smoke --compiler "$(command -v swiftc)" --negative
+
+      # FEAT-EXAMPLES-SWIFT-SETTINGS-01. Escalates this job past bare swiftc
+      # fixtures: compiles the settings example lane's full SwiftPM graph
+      # (including the committed generated packages/ds-swiftui tree) as a
+      # consumed dependency. The only CI surface proving the generated Swift
+      # package compiles when imported by a real consumer.
+      - name: Settings example compile (consumer lane over ds-swiftui)
+        run: swift build --package-path examples/settings/swift
