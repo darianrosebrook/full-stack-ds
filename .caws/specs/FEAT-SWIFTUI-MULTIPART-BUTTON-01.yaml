@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: pnpm run generate -- --target=swiftui Switch ToggleSwitch Button emits all three + Stack primitive; swift build --package-path packages/ds-swiftui exit 0; Switch golden test byte-stable
     recorded_at: "2026-08-15T02:19:26.449Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "component-source.test.ts: 'public struct FsdsButton<Label: View>: View' present, 'public struct Button' absent; reserved-type table maps Button->FsdsButton"
+    recorded_at: "2026-08-15T02:19:27.341Z"
