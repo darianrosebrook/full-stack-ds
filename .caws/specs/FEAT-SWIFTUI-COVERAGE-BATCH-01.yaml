@@ -63,3 +63,7 @@ evidence:
     status: pass
     evidence_ref: "Sheet.swift routes through centered-modal: .sheet(isPresented:)+open projection; side:/modal: absent (surface-emit.test pins)"
     recorded_at: "2026-08-15T17:50:45.574Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Command.swift: search trio + panel-top TextField(prompt: Text(\"Search...\")); Dialog contrast-pinned without search surface"
+    recorded_at: "2026-08-15T17:50:46.523Z"
