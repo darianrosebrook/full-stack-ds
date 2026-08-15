@@ -77,3 +77,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp.swift composes FsdsButton(variant:.primary/.destructive) for Save profile + Delete account; swift build --package-path examples/settings/swift exit 0; lane/package/examples READMEs updated"
     recorded_at: "2026-08-15T02:19:30.217Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "worktree gates: typecheck clean; governed:rail exit 0; pnpm test 2046/2046; test:frameworks 573+492+532+70"
+    recorded_at: "2026-08-15T02:19:31.179Z"
