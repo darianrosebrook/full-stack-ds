@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: "negative control moved to Card: generateSwiftUIComponentSource(Card) throws /no emission class matches/; test green"
     recorded_at: "2026-08-15T02:19:29.240Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "SettingsExampleApp.swift composes FsdsButton(variant:.primary/.destructive) for Save profile + Delete account; swift build --package-path examples/settings/swift exit 0; lane/package/examples READMEs updated"
+    recorded_at: "2026-08-15T02:19:30.217Z"
