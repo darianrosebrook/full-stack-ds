@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "governed:rail exit 0 with swiftui in the default set; no rail groups contributed (no railFrameworkId); rail verification green"
     recorded_at: "2026-08-15T03:15:59.627Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail 0; pnpm test 2051/2051 (164 files); test:frameworks 573+492+532+70"
+    recorded_at: "2026-08-15T03:16:00.467Z"
