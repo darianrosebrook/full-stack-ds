@@ -80,3 +80,8 @@ evidence:
     evidence_ref: "envelope-refusal tests: oklch, string dimension, typography composite, unparseable, empty array all skip"
     recorded_at: "2026-08-15T18:19:52.398Z"
     test_nodeid: fallback-completeness.test.ts
+  - criterion_id: A5
+    status: pass
+    evidence_ref: oracle test lowers all 5 semantic.elevation.surface composites from committed resolved.tokens.json and asserts equality with tokens.css emitted values via var() alias-following
+    recorded_at: "2026-08-15T18:19:53.596Z"
+    test_nodeid: fallback-completeness.test.ts
