@@ -73,3 +73,43 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     );
   });
 });
+
+describe("generateSwiftUIComponentSource — default size member (ToggleSwitch)", () => {
+  // ToggleSwitch's size union is small/medium/large with contract default
+  // `medium` — unlike Switch's sm/md/lg with default `md`. Pins the
+  // FEAT-SWIFTUI-EMITTER-WIRING-01 derivation: the initializer default and
+  // the size-accessor fallback come from the contract's props[].default
+  // fact, never a hardcoded `.md` (which produced invalid Swift:
+  // "type 'ToggleSwitchSize' has no member 'md'").
+  it("derives the initializer default from the contract prop default", () => {
+    const contract = loadContract("ToggleSwitch") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const ir = buildComponentIR(contract);
+
+    const source = generateSwiftUIComponentSource(ir);
+
+    expect(source).toContain("size: ToggleSwitchSize = .medium,");
+    expect(source).not.toContain("= .md,");
+    expect(source).toContain("case small");
+    expect(source).toContain("case medium");
+    expect(source).toContain("case large");
+  });
+
+  it("omits track geometry when no size token facts are authored", () => {
+    // ToggleSwitch's sidecar authors no *.size.*.track.* slots, so the
+    // emitter must NOT emit a .frame(width:height:) or 0-valued accessors —
+    // the native Toggle keeps its intrinsic platform size instead of
+    // silently rendering an invisible 0x0 control.
+    const contract = loadContract("ToggleSwitch") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const ir = buildComponentIR(contract);
+
+    const source = generateSwiftUIComponentSource(ir);
+
+    expect(source).not.toContain(".frame(width: trackWidth");
+    expect(source).not.toContain("trackWidth");
+    expect(source).not.toContain("return 0");
+  });
+});

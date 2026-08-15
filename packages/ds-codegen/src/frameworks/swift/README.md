@@ -1,59 +1,58 @@
-# Swift framework emitter (scaffold)
+# Swift framework emitter
 
-Status: **scaffold only — not wired into `TargetId`, `registry.ts`, or the
-`--target=swift` CLI flag.** Imports compile in isolation; the factory casts
-`id` to `TargetId` so the emitter conforms to `FrameworkEmitter` without
-touching `emitter.ts`.
+Status: **swiftui is a registered explicit-only builtin target** (`--target=swiftui`),
+emitting into the SwiftPM package `packages/ds-swiftui`. It is not in
+`fsds.targets.json`, so `--target=all` and `pnpm run governed:rail` do not
+generate it, and it carries no `railFrameworkId` (outside the admission rail)
+until the emitter covers the corpus. `uikit/` remains scaffold-only.
+
+## What is implemented (swiftui)
+
+- `component-source.ts` — the native-collapse path: contracts whose anatomy
+  declares `native-toggle-affordance` (Switch, ToggleSwitch) emit a SwiftUI
+  `Toggle(.switch)` View with the full controllable-state channel projection
+  (`Binding<Bool>?` + `@State` + `onChange`, controlled-takes-precedence),
+  union types as Swift enums, a11y modifiers, and size variants resolved from
+  typed `ir.tokenFacts`. The size default comes from the contract's
+  `props[].default` fact (never a hardcoded member); when no track-geometry
+  token facts are authored the `.frame` modifier is omitted and the native
+  control keeps its intrinsic size.
+- `factory.ts` — full `FrameworkEmitter` conformance. Tests return `[]`
+  (XCTest emission is deferred until a SwiftPM test target exists — test
+  files must not live inside the library target). Hooks return no file
+  (controllable-state lives inside the View struct until a component needs
+  focus-trap/portal/dismissal behavior).
+- `barrel.ts` + `discoverComponentIds` — SwiftPM auto-exports target sources,
+  so the barrel is a comment-only generation stamp.
+
+## What still throws (fail-loud, by design)
+
+- Multi-part anatomy (any contract without a collapse intent, e.g. Button).
+- Anchored surfaces (`surface-emit.ts`: Tooltip/Popover `.popover`/overlay
+  lowering).
+- `tests.ts` — deferred, see above.
 
 ## Layout
 
-Two parallel surfaces live side-by-side so the SwiftUI-vs-UIKit decision can
-be deferred until contracts and primitives are mapped:
-
 ```
 swift/
-├── swiftui/   # SwiftUI View structs + ObservableObject behavior
+├── swiftui/   # SwiftUI View structs (registered, explicit-only)
 │   ├── factory.ts
-│   ├── component-source.ts
-│   ├── hook-source.ts
-│   ├── tests.ts
-│   ├── surface-emit.ts
-│   ├── surface-tests.ts
+│   ├── component-source.ts (+ .test.ts)
+│   ├── hook-source.ts      # returns null for now — see file docstring
+│   ├── tests.ts            # deferred — throws if wired prematurely
+│   ├── surface-emit.ts     # scaffold — throws
+│   ├── surface-tests.ts    # scaffold — throws
 │   └── barrel.ts
-└── uikit/     # UIView subclasses + imperative state controllers
-    ├── factory.ts
-    ├── component-source.ts
-    ├── hook-source.ts
-    ├── tests.ts
-    ├── surface-emit.ts
-    ├── surface-tests.ts
-    └── barrel.ts
+└── uikit/     # UIView subclasses — scaffold only, all stubs throw
 ```
 
-Each module is a stub: function signatures match the React/Vue/Svelte/Lit
-counterparts, bodies throw `NotImplementedError`. Nothing here knows how to
-emit Swift source yet.
+## History
 
-## Outstanding decisions (not resolved by this scaffold)
-
-- **`TargetId` union.** `"swift"` (or `"swiftui"` / `"uikit"`) must be added
-  to `TargetId` and `KNOWN_TARGETS` in `packages/ds-codegen/src/emitter.ts`
-  before the CLI can dispatch to these emitters.
-- **Workspace package(s).** `packages/ds-swiftui/` and/or
-  `packages/ds-uikit/` need to exist (with a `Package.swift` and a
-  `Sources/<Module>/Components/` root) before `createDefaultRegistry` can
-  bind output paths.
-- **Stack primitive port.** `packages/ds-contracts/primitives/Stack.primitive.json`
-  needs `implementation.targets.swiftui` / `implementation.targets.uikit`
-  entries describing how generated components import the primitive.
-- **Behavior primitives.** The six behavior primitives
-  (controllable-state, dismissal, focus-trap, scroll-lock, portal,
-  anchor-toggle — see root `CLAUDE.md`) need Swift analogues per surface.
-  SwiftUI maps reasonably to `@State` / `@Binding` / `ObservableObject`;
-  UIKit will likely need explicit controller classes (closer to Lit).
-- **CSS analogue.** `emitCss(ir)` produces CSS strings for the web targets.
-  Swift has no equivalent — token mapping will need a separate emitter
-  (likely a `tokens.swift` per component, or a single shared
-  `DesignTokens.swift`).
-- **Test runner.** `XCTest` for both surfaces. The `tests.ts` stubs return
-  empty strings until the test-plan-to-XCTest translation is designed.
+- Round 1 (paper traceability) and round 2 (Switch emitter, byte-identical
+  to a stripped golden) are documented in
+  `docs/internal/non-web-generation.md` (machine-local) and pinned by
+  `__golden__/Switch/` + `component-source.test.ts`.
+- `FEAT-SWIFTUI-EMITTER-WIRING-01` registered the target, created the
+  SwiftPM output package, and fixed the hardcoded `.md` default the
+  ToggleSwitch contract exposed.

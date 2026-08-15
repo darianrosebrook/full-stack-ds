@@ -1,36 +1,45 @@
 /**
- * SwiftUI FrameworkEmitter — scaffold only.
+ * SwiftUI FrameworkEmitter.
  *
  * Targets SwiftUI: each component emits a `View` struct (+ optional
  * `ObservableObject` behavior class) into a `${Name}.swift` file. Compound
  * parts (e.g. `DialogHeader`) become sibling `View` structs in the same
  * file, paralleling the Vue/Svelte single-file convention.
  *
- * NOT YET REGISTERED: `"swiftui"` is not a member of `TargetId`. The factory
- * casts its `id` so the object satisfies `FrameworkEmitter` in isolation;
- * wiring into the CLI requires widening `TargetId` and `KNOWN_TARGETS` in
- * `../../../emitter.ts` and adding a binding in `../../../registry.ts`.
+ * Registered as an explicit-only builtin target (`--target=swiftui`): the
+ * emitter implements the native-collapse path only (Switch/ToggleSwitch via
+ * `native-toggle-affordance`); multi-part anatomy and anchored surfaces
+ * throw explicit not-implemented errors, so corpus-wide generation and
+ * default-rail admission stay out of scope until those paths exist.
+ *
+ * Deliberate emissions gaps in this slice:
+ *   - Tests return `[]`: an XCTest file cannot live inside the SwiftPM
+ *     library target (it would fail to link). Generated tests arrive with
+ *     a dedicated test target in a later slice.
+ *   - No behavior files: the controllable-state channel pattern lives
+ *     inside the View struct (Binding + @State + onChange), so
+ *     `generateSwiftUIHookSource` returns null until a component needs a
+ *     shared ObservableObject (focus trap, portal, dismissal).
  */
+import fs from "node:fs";
+import path from "node:path";
 import type {
   EmitOptions,
   FrameworkEmitter,
   GeneratedFile,
-  TargetId,
 } from "../../../emitter.js";
 import type { ComponentIR } from "../../../ir.js";
 import { generateSwiftUIComponentSource } from "./component-source.js";
 import { generateSwiftUIHookSource } from "./hook-source.js";
 import { generateSwiftUIBarrel } from "./barrel.js";
-import { generateSwiftUITest } from "./tests.js";
 import {
   generateSwiftUISurfaceFiles,
   isSurfaceComponent,
 } from "./surface-emit.js";
-import { generateSwiftUISurfaceTest } from "./surface-tests.js";
 
 export function createSwiftUIEmitter(): FrameworkEmitter {
   return {
-    id: "swiftui" as TargetId,
+    id: "swiftui",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       if (isSurfaceComponent(ir)) {
@@ -53,23 +62,8 @@ export function createSwiftUIEmitter(): FrameworkEmitter {
       ];
     },
 
-    emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (isSurfaceComponent(ir)) {
-        return [
-          {
-            relativePath: `${ir.name}/Tests/${ir.name}Tests.swift`,
-            contents: generateSwiftUISurfaceTest(ir),
-            preservable: true,
-          },
-        ];
-      }
-      return [
-        {
-          relativePath: `${ir.name}/Tests/${ir.name}Tests.swift`,
-          contents: generateSwiftUITest(ir),
-          preservable: true,
-        },
-      ];
+    emitTests(_ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      return [];
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
@@ -99,10 +93,22 @@ export function createSwiftUIEmitter(): FrameworkEmitter {
       return generateSwiftUIBarrel(componentNames, componentsRoot);
     },
 
-    discoverComponentIds(_componentsRoot: string): string[] {
-      // TODO: walk `${componentsRoot}/<Name>/<Name>.swift` once the
-      // workspace package exists.
-      return [];
+    discoverComponentIds(componentsRoot: string): string[] {
+      // SwiftPM compiles every .swift file under the target directory as one
+      // module, so there is no import barrel to maintain — discovery exists
+      // to list what the generator owns on disk (and gate barrel emission).
+      if (!fs.existsSync(componentsRoot)) return [];
+      const ids: string[] = [];
+      for (const entry of fs.readdirSync(componentsRoot, {
+        withFileTypes: true,
+      })) {
+        if (!entry.isDirectory()) continue;
+        const source = path.join(componentsRoot, entry.name, `${entry.name}.swift`);
+        if (fs.existsSync(source)) {
+          ids.push(entry.name);
+        }
+      }
+      return ids.sort();
     },
   };
 }

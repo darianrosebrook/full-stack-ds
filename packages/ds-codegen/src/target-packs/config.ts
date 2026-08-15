@@ -28,7 +28,10 @@ export interface TargetRegistryConfigV1 {
 
 export const DEFAULT_TARGET_REGISTRY_CONFIG: TargetRegistryConfigV1 = {
   schemaVersion: TARGET_REGISTRY_CONFIG_SCHEMA_VERSION,
-  targets: KNOWN_TARGETS.filter((id) => id !== "react-native").map((id) => ({
+  // The no-fsds.targets.json fallback stays conservative: pnpm web targets
+  // only. react-native joins via the committed config file; swiftui is
+  // explicit-only (--target=swiftui) until default-rail admission.
+  targets: KNOWN_TARGETS.filter((id) => id !== "react-native" && id !== "swiftui").map((id) => ({
     id,
     source: { kind: "builtin" },
   })),
