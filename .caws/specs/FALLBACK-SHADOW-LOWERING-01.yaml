@@ -2,9 +2,11 @@ id: FALLBACK-SHADOW-LOWERING-01
 title: 'Close the shadow gap: lower DTCG shadow composites in the fallback-staleness gate'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Shadow gap closed: narrow srgb mirror lowering drift-locked by oracle test; 23 readings repaired across 10 components (incl. single-site Dialog/Popover blind spot); A1-A5 all pass on the spec evidence block; rail green, 2072/2072 root, 70/70 frameworks.'
 created_at: '2026-08-15T18:05:31.011Z'
-updated_at: '2026-08-15T18:18:24.068Z'
+updated_at: '2026-08-15T18:20:05.734Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation/fallback-completeness.ts: new lowerShadowComposite() (narrow srgb mirror of the tokens build lowering) wired into toLightLiteral; canonicalizeFallback extended (rgba/rgb -> hex, bare-0 -> 0px).'
