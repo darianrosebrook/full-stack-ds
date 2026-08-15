@@ -56,12 +56,32 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain(".clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))");
   });
 
-  it("throws for anchored surfaces and surface-less components", () => {
-    expect(() => generateSwiftUISurfaceFiles(irFor("Tooltip"))).toThrow(
-      /surface kind "tooltip" is not implemented/,
+  it("throws for unimplemented anchored surfaces and surface-less components", () => {
+    expect(() => generateSwiftUISurfaceFiles(irFor("Popover"))).toThrow(
+      /surface kind "popover" is not implemented/,
     );
     expect(() => generateSwiftUISurfaceFiles(irFor("Button"))).toThrow(
       /declares no surface block/,
     );
+  });
+
+  it("emits the anchored tooltip with hover-driven open channel and placement edge", () => {
+    const { componentFile } = generateSwiftUISurfaceFiles(irFor("Tooltip"));
+    expect(componentFile).toContain(
+      "public struct Tooltip<Trigger: View, Content: View>: View {",
+    );
+    expect(componentFile).toContain(".popover(isPresented: Binding(");
+    expect(componentFile).toContain("arrowEdge: placementEdge");
+    expect(componentFile).toContain(".onHover { hovering in");
+    expect(componentFile).toContain("if !disabled { setOpen(hovering) }");
+    expect(componentFile).toContain("onOpenChange?(next)");
+    // placement union lowers through the grammar table, auto → platform default.
+    expect(componentFile).toContain("case .auto: return .bottom");
+    expect(componentFile).toContain("case .top: return .top");
+    // Chrome is presence-driven through FsdsTheme.
+    expect(componentFile).toContain('fallback: .string("#141414")');
+    // Dismissal flags are omitted, not accepted-and-ignored.
+    expect(componentFile).not.toContain("closeOnEscape");
+    expect(componentFile).not.toContain("closeOnBlur");
   });
 });

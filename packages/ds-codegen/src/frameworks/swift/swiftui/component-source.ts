@@ -1079,7 +1079,7 @@ function emitImports(): string {
   ].join("\n");
 }
 
-function emitTypes(ir: ComponentIR): string {
+export function emitTypes(ir: ComponentIR): string {
   const lines: string[] = ["// @generated:start types"];
   for (const [typeName, def] of Object.entries(ir.definedTypes)) {
     if (def.kind !== "union" || !def.values) continue;

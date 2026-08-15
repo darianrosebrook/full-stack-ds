@@ -90,13 +90,12 @@ struct SettingsView: View {
                 )
             }
             Stack(variant: .horizontal) {
-                // NOT FSDS: Tooltip is not emitted for swiftui yet; the
-                // spec's tooltip content renders as caption text instead.
-                VStack(alignment: .leading, spacing: 2) {
+                // FSDS: anchored-tooltip surface — hover the label to see
+                // the spec's tooltip content in a token-styled popover.
+                Tooltip(placement: .bottom) {
                     Text("Email notifications")
+                } content: {
                     Text("Product announcements and security alerts only.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Switch(
