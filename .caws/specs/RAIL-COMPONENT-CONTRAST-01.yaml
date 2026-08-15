@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "falsification: unledgered Accordion pair DRIFTed with entry removed, VALID when restored; stale-entry ratchet proven by vitest component-contrast.test.ts 17/17 (suppresses ledgered failures; flags entries that no longer reproduce)"
     recorded_at: "2026-08-15T01:33:20.135Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "deriveComponentContrastPairs exempts /disabled/i scope+block keys per WCAG 1.4.3 Note 5, documented on the validator; corpus disabled pairs (Button/Input/TextField/Select) ungated; unit test 'exempts disabled blocks and disabled scopes' passes"
+    recorded_at: "2026-08-15T01:33:21.388Z"
