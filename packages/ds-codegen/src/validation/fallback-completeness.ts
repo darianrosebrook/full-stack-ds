@@ -144,19 +144,45 @@ function escapePointerSegment(seg: string): string {
  * - `1rem` ≡ `16px` (at the default 16px root)
  * - `6.0px` ≡ `6px`
  * - `#ABC` ≡ `#aabbcc`
- * - `0 2px 4px rgba(0, 0, 0, 0.1)` ≡ `0 2px 4px rgba(0,0,0,0.1)`
+ * - `rgba(0, 0, 0, 0.1)` ≡ `rgba(0,0,0,0.1)` ≡ `#0000001a` (rgba/rgb fold to
+ *   hex with the same `Math.round(a*255)` rounding the shadow lowering uses,
+ *   so authored rgba shadows compare equal to the emitter's hex8 output)
+ * - `0 1px 2px …` ≡ `0px 1px 2px …` (bare zero as a whole space-delimited
+ *   component; runs AFTER the rgba fold so rgba internals are never touched)
  *
  * Canonicalization only ever suppresses findings, never creates them, so an
  * over-broad rule here costs recall (a missed stale value), not precision.
  */
 function canonicalizeFallback(literal: string): string {
   let v = literal.trim().toLowerCase().replace(/\s+/g, " ").replace(/,\s*/g, ",");
+  // rgba()/rgb() → #rrggbb[aa]. Global: shadows embed rgba() as a component.
+  // Channel clamp is defensive-only — identical to the emitter on-envelope
+  // (authored components are 0-255 / alpha 0-1).
+  v = v.replace(/rgba?\(([^)]+)\)/g, (match, inner: string) => {
+    const nums = inner.split(",").map((s) => parseFloat(s.trim()));
+    if (nums.length < 3 || nums.some((n) => !Number.isFinite(n))) return match;
+    const chan = (n: number) =>
+      Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+    let hex = `#${chan(nums[0]!)}${chan(nums[1]!)}${chan(nums[2]!)}`;
+    const alpha = nums[3];
+    if (alpha !== undefined && Number.isFinite(alpha) && alpha < 1) {
+      hex += Math.max(0, Math.min(255, Math.round(alpha * 255)))
+        .toString(16)
+        .padStart(2, "0");
+    }
+    return hex;
+  });
   const rem = v.match(/^(-?\d*\.?\d+)rem$/);
   if (rem) v = `${parseFloat(rem[1]!) * 16}px`;
   const px = v.match(/^(-?\d*\.?\d+)px$/);
   if (px) v = `${parseFloat(px[1]!)}px`;
   const hex3 = v.match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/);
   if (hex3) v = `#${hex3[1]!}${hex3[1]!}${hex3[2]!}${hex3[2]!}${hex3[3]!}${hex3[3]!}`;
+  // Bare zero as a whole component ≡ `0px` (idiomatic CSS shadow form).
+  // Boundaries include commas (shadow layer separators) — after the rgba fold
+  // ran, commas only occur between lowered layers, so this cannot touch color
+  // internals. Hex digits and multi-digit numbers fail the boundary check.
+  v = v.replace(/(^|[\s,])0(?=[\s,]|$)/g, "$10px");
   return v;
 }
 
@@ -250,15 +276,18 @@ function graphValueAt(graph: ResolvedGraph, path: string): unknown {
  * DTCG composite types (`$type: shadow` and friends) are stored in
  * resolved.tokens.json as a JSON *string* holding the structured form —
  * `[{"offsetX":{"value":0,"unit":"px"},…}]` — not as the CSS `box-shadow`
- * text. The CSS lowering happens downstream in the tokens.css emitter, so the
- * graph cannot answer "what literal should the fallback be" for these 13
- * elevation tokens. Treating the serialization as a literal writes a JSON blob
- * into a `var(…, fallback)` and breaks the CSS parse outright — a real defect
- * caught by the Lit template rail on Calendar during this slice.
+ * text. Treating the serialization as a literal writes a JSON blob into a
+ * `var(…, fallback)` and breaks the CSS parse outright — a real defect caught
+ * by the Lit template rail on Calendar during FALLBACK-STALE-01.
  *
- * We refuse to guess rather than reimplement the emitter's shadow lowering
- * here: a second lowering would be a second source of truth, and any drift
- * between the two would silently write wrong fallbacks.
+ * Since FALLBACK-SHADOW-LOWERING-01, composites INSIDE the shadow envelope
+ * (structured dimensions + srgb structured colors) are lowered by
+ * `lowerShadowComposite` — a narrow mirror of the emitter's
+ * `shadowValueToCSS` — and drift-locked against the committed tokens.css by
+ * an oracle test, so emitter/mirror divergence fails the suite rather than
+ * silently writing wrong fallbacks. Everything OUTSIDE that envelope (other
+ * color spaces, string-typed dimensions, typography and other composite
+ * types) is still refused: we do not guess.
  */
 function isSerializedComposite(literal: string): boolean {
   const trimmed = literal.trim();
@@ -271,10 +300,143 @@ function isSerializedComposite(literal: string): boolean {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Shadow-composite lowering (FALLBACK-SHADOW-LOWERING-01)
+// ---------------------------------------------------------------------------
+
+interface StructuredDimension {
+  value: number;
+  unit: string;
+}
+
+interface StructuredColor {
+  colorSpace: string;
+  components: number[];
+  alpha?: number;
+}
+
+function isStructuredDimension(v: unknown): v is StructuredDimension {
+  return (
+    typeof v === "object" &&
+    v !== null &&
+    "value" in v &&
+    "unit" in v &&
+    typeof (v as { value: unknown }).value === "number" &&
+    typeof (v as { unit: unknown }).unit === "string"
+  );
+}
+
+function isStructuredSrgbColor(v: unknown): v is StructuredColor {
+  if (
+    typeof v !== "object" ||
+    v === null ||
+    !("colorSpace" in v) ||
+    !("components" in v)
+  ) {
+    return false;
+  }
+  const c = v as { colorSpace: unknown; components: unknown };
+  return (
+    c.colorSpace === "srgb" &&
+    Array.isArray(c.components) &&
+    c.components.length >= 3 &&
+    c.components.every((n) => typeof n === "number" && Number.isFinite(n))
+  );
+}
+
+/** Channel clamp is defensive-only — identical to the emitter on-envelope. */
+function hexChannel(n: number): string {
+  return Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+}
+
+/**
+ * Lower one structured srgb color to the emitter's hex form: `#rrggbb`, plus
+ * a hex8 alpha byte when `alpha < 1` (mirrors colorValueToCSS's `hasAlpha`
+ * branch — alpha >= 1 and absent alpha both emit 6-digit hex).
+ */
+function srgbColorToHex(color: StructuredColor): string {
+  const [r, g, b] = color.components;
+  let hex = `#${hexChannel(r! * 255)}${hexChannel(g! * 255)}${hexChannel(b! * 255)}`;
+  if (color.alpha !== undefined && color.alpha < 1) {
+    hex += hexChannel(color.alpha * 255);
+  }
+  return hex;
+}
+
+/**
+ * Lower ONE shadow layer to CSS. Component order mirrors the emitter's
+ * `shadowValueToCSS`: `[inset] offsetX offsetY [blur] [spread] color`.
+ * Returns undefined for any shape outside the mirror envelope — string-typed
+ * dimensions (the emitter passes them through; we refuse rather than guess),
+ * non-srgb colors, or a missing color.
+ */
+function shadowLayerToCss(layer: Record<string, unknown>): string | undefined {
+  if (!isStructuredDimension(layer.offsetX) || !isStructuredDimension(layer.offsetY)) {
+    return undefined;
+  }
+  const parts: string[] = [];
+  parts.push(`${layer.offsetX.value}${layer.offsetX.unit}`);
+  parts.push(`${layer.offsetY.value}${layer.offsetY.unit}`);
+  for (const key of ["blur", "spread"] as const) {
+    const dim = layer[key];
+    if (dim === undefined) continue;
+    if (!isStructuredDimension(dim)) return undefined;
+    parts.push(`${dim.value}${dim.unit}`);
+  }
+  if (!isStructuredSrgbColor(layer.color)) return undefined;
+  parts.push(srgbColorToHex(layer.color));
+  if (layer.inset === true) parts.unshift("inset");
+  return parts.join(" ");
+}
+
+/**
+ * Lower a serialized DTCG shadow composite (as stored in resolved.tokens.json)
+ * to the CSS `box-shadow` literal the tokens build emits. A NARROW mirror of
+ * the build's lowering (`packages/ds-tokens/build/lib/transforms.ts`
+ * `shadowValueToCSS` + the shadow transform's `, ` join): structured
+ * dimensions as `${value}${unit}`, srgb structured colors as lowercase
+ * `#rrggbb`/`#rrggbbaa`, layers joined `", "`.
+ *
+ * The build lib is not importable from here (not exported; runs via tsx with
+ * no compiled output), so the mirror is local — and kept honest by the oracle
+ * test, which lowers the real `semantic.elevation.surface.*` composites from
+ * the committed resolved.tokens.json and compares against the emitted
+ * tokens.css values. Emitter drift fails the suite instead of silently
+ * writing wrong fallbacks.
+ *
+ * Returns undefined for anything outside the envelope (non-shadow composites,
+ * non-srgb colors, string dimensions, unparseable JSON) — the caller treats
+ * that as unresolvable and skips the chain, per the refuse-to-guess doctrine.
+ */
+export function lowerShadowComposite(raw: string): string | undefined {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return undefined;
+  }
+  const layers: unknown[] = Array.isArray(parsed)
+    ? parsed
+    : typeof parsed === "object" && parsed !== null
+      ? [parsed]
+      : [];
+  if (layers.length === 0) return undefined;
+  const lowered: string[] = [];
+  for (const layer of layers) {
+    if (typeof layer !== "object" || layer === null) return undefined;
+    const css = shadowLayerToCss(layer as Record<string, unknown>);
+    if (css === undefined) return undefined;
+    lowered.push(css);
+  }
+  return lowered.join(", ");
+}
+
 /**
  * Project a DTCG value to the literal a fallback should carry. Theme-mode
  * objects collapse to their `light` entry — see the light-mode non-claim in
- * the module header. Serialized composites yield undefined (unresolvable).
+ * the module header. Serialized composites are lowered when they sit inside
+ * the shadow envelope (lowerShadowComposite); all other composites yield
+ * undefined (unresolvable).
  */
 function toLightLiteral(value: unknown): string | undefined {
   let scalar: string | undefined;
@@ -286,7 +448,8 @@ function toLightLiteral(value: unknown): string | undefined {
     else if (typeof light === "number") scalar = String(light);
   }
   if (scalar === undefined) return undefined;
-  return isSerializedComposite(scalar) ? undefined : scalar;
+  if (!isSerializedComposite(scalar)) return scalar;
+  return lowerShadowComposite(scalar);
 }
 
 /** Depth cap for chain resolution — guards a malformed self-referential slot. */
