@@ -30,7 +30,7 @@ export const reactNativeValidationPlan: FrameworkValidationPlan = {
   },
   knownGaps: [
     "Runtime evidence is limited to generated React Native render tests (host-render archetypes, variant style realization, surface substrate); it does not prove simulator or device execution, native visual parity, or platform accessibility parity.",
-    "Presence surfaces are admitted: Dialog/Sheet via Modal, Toast via live region with the dwell-token auto-dismiss timer, Tooltip/Popover via the anchored Modal substrate. Documented anchored divergences: outside content is inert while open, hover/focus open-triggers lower to long-press, pointer-leave dismissal lowers to backdrop press, and collision handling (flip/shift) is not implemented. Walkthrough/coachmark and compound-part emission (Tabs/Accordion) remain unadmitted.",
+    "Presence surfaces are admitted: Dialog/Sheet via Modal, Toast via live region with the dwell-token auto-dismiss timer, Tooltip/Popover via the anchored Modal substrate. Documented anchored divergences: outside content is inert while open, hover/focus open-triggers lower to long-press, pointer-leave dismissal lowers to backdrop press, and collision handling (flip/shift) is not implemented. Compound selection is admitted for Tabs (context+provider, press-driven selection, accessibilityState.selected): no keyboard navigation or roving tabindex on touch, a static indicator ornament, no orientation layout effect, and unmountInactive=false renders inactive panels mounted-but-suppressed rather than hidden. Walkthrough/coachmark and the disclosure family (Accordion) remain unadmitted.",
     "Part-scoped variant styling and boolean-modifier styling (e.g. Card --inset) are not yet realized natively.",
   ],
 };

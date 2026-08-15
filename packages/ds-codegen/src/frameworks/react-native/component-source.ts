@@ -16,6 +16,14 @@ import {
   type RnSurfaceLowering,
 } from "./surface-emit.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import {
+  getGroupHostOrnamentPart,
+  getGroupHostPart,
+  getInteractiveItemPart,
+  getRegionPart,
+  isCompoundStateContainer,
+  isDisclosureContainer,
+} from "../react/hook-source.js";
 
 export interface ReactNativeComponentFiles {
   componentFile: string;
@@ -45,6 +53,37 @@ interface RuntimeUsage {
   channelSetters: Set<string>;
 }
 
+/**
+ * Compound-state (tab-selection) containers: the same `multiple+interactive`
+ * item part + region part gate the web emitters consume from
+ * react/hook-source, minus the disclosure family (Accordion-shaped items) —
+ * the RN lowering is the touch-native reading of the same IR facts: no
+ * keyboard host, no roving tabindex, press-driven selection.
+ */
+export function isCompoundSelectionContainer(ir: ComponentIR): boolean {
+  return isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
+}
+
+/**
+ * Subcomponent names the compound-selection lowering derives from the
+ * resolved anatomy parts. Shared with the test generator so generated tests
+ * import exactly the emitted names — no component-name literals in either.
+ */
+export function compoundSelectionSubcomponentNames(ir: ComponentIR): {
+  listName: string;
+  tabName: string;
+  panelName: string;
+} {
+  const groupPart = getGroupHostPart(ir);
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  return {
+    listName: `${ir.name}${capitalize(groupPart?.name ?? "list")}`,
+    tabName: `${ir.name}${capitalize(itemPart?.name ?? "tab")}`,
+    panelName: `${ir.name}${capitalize(regionPart?.name ?? "panel")}`,
+  };
+}
+
 export function generateReactNativeComponentSource(
   ir: ComponentIR,
 ): ReactNativeComponentFiles {
@@ -60,8 +99,325 @@ function generateReactNativeComponentFile(ir: ComponentIR): string {
   sections.push(emitImports(ir));
   sections.push(emitTypes(ir));
   sections.push(emitProps(ir));
-  sections.push(emitComponent(ir));
+  sections.push(
+    isCompoundSelectionContainer(ir)
+      ? emitCompoundSelectionComponent(ir)
+      : emitComponent(ir),
+  );
   return sections.filter(Boolean).join("\n\n") + "\n";
+}
+
+/**
+ * Compound-state (tab-selection) lowering for React Native — the touch-native
+ * reading of the same IR facts the web emitters consume. Emitted shape:
+ * a context created through the ported createCompoundContext primitive, a
+ * provider root that owns the selection channel (emitChannelState
+ * controllable semantics inlined), and per-part subcomponents named from the
+ * resolved anatomy parts (list → View, tab → Pressable, panel → View).
+ *
+ * Documented divergences (never contract facts): no keyboard navigation or
+ * roving tabindex on touch; the indicator ornament is a static View; RN has
+ * no tablist/tabpanel accessibility roles, so only the tab role is lowered;
+ * `unmountInactive: false` renders inactive panels mounted-but-suppressed
+ * (accessible={false} + display:none inline) instead of DOM-hidden.
+ */
+function emitCompoundSelectionComponent(ir: ComponentIR): string {
+  const name = ir.name;
+  const channel = ir.behavior.normalizedChannels[0];
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const groupPart = getGroupHostPart(ir);
+  const ornamentPart = getGroupHostOrnamentPart(ir);
+  if (!channel || !itemPart || !regionPart) {
+    throw new Error(
+      `compound-state lowering for ${name} requires a channel, an interactive item part, and a region part`,
+    );
+  }
+  const capChannel = capitalize(channel.name);
+  const setterName = `set${capChannel}`;
+  const controlled = `controlled${capChannel}`;
+  const internal = `uncontrolled${capChannel}`;
+  const setInternal = `setUncontrolled${capChannel}`;
+  const listName = `${name}${capitalize(groupPart?.name ?? "list")}`;
+  const tabName = `${name}${capitalize(itemPart.name)}`;
+  const panelName = `${name}${capitalize(regionPart.name)}`;
+
+  const propByName = new Map(ir.styledProps.map((p) => [p.name, p]));
+  const variantAxes = realizedVariantAxes(ir);
+  const variantFacts = variantStyleFacts(ir);
+  const axisStyleConsts = variantAxes
+    .map((axis) => {
+      const factsForAxis = variantFacts.filter((fact) => fact.axis === axis);
+      const hasViewEntries = factsForAxis.some(
+        (fact) => fact.viewEntries.length > 0,
+      );
+      return hasViewEntries
+        ? variantStyleConstName(factsForAxis[0]!.axisSafeName)
+        : null;
+    })
+    .filter((constName): constName is string => constName !== null);
+
+  const orientationType = propByName.has("orientation")
+    ? `${name}Orientation`
+    : `"horizontal" | "vertical"`;
+  const activationType = propByName.has("activationMode")
+    ? `${name}ActivationMode`
+    : `"automatic" | "manual"`;
+
+  // Destructure order: channel props → behavior props → variant axes → the
+  // standard RN tail. Each name enters once.
+  const destructured: string[] = [];
+  const handled = new Set<string>();
+  const pushProp = (entry: string, propName: string) => {
+    if (handled.has(propName)) return;
+    destructured.push(entry);
+    handled.add(propName);
+  };
+  pushProp(`${channel.valueProp}: ${controlled}`, channel.valueProp);
+  if (channel.defaultValueProp) {
+    pushProp(channel.defaultValueProp, channel.defaultValueProp);
+  }
+  pushProp(channel.changeHandlerProp, channel.changeHandlerProp);
+  const behaviorDefaults: Record<string, string> = {
+    orientation: `"horizontal"`,
+    activationMode: `"automatic"`,
+    loop: "true",
+    unmountInactive: "true",
+  };
+  for (const propName of [
+    "orientation",
+    "activationMode",
+    "loop",
+    "unmountInactive",
+    "idBase",
+  ]) {
+    const prop = propByName.get(propName);
+    if (!prop) continue;
+    const fallback = behaviorDefaults[propName];
+    const def = prop.defaultExpr ?? fallback;
+    pushProp(def ? `${prop.safeName} = ${def}` : prop.safeName, propName);
+  }
+  for (const axis of variantAxes) {
+    const axisSafeName = variantFacts.find((fact) => fact.axis === axis)
+      ?.axisSafeName;
+    if (!axisSafeName || handled.has(axisSafeName)) continue;
+    const prop = propByName.get(axisSafeName);
+    const def = prop?.defaultExpr;
+    pushProp(def ? `${axisSafeName} = ${def}` : axisSafeName, axisSafeName);
+  }
+  for (const tailProp of [
+    "children",
+    "style",
+    "testID",
+    "accessibilityLabel",
+    "accessibilityLabelledBy",
+  ]) {
+    pushProp(tailProp, tailProp);
+  }
+
+  const rootStyleEntries = ["styles.root", ...axisStyleConsts, "style"];
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  ${channel.name}: string;`);
+  lines.push(`  ${setterName}: (value: string) => void;`);
+  lines.push(`  registerTab: (value: string) => void;`);
+  lines.push(`  unregisterTab: (value: string) => void;`);
+  lines.push(`  registeredTabs: string[];`);
+  lines.push(`  idBase: string;`);
+  lines.push(`  orientation: ${orientationType};`);
+  lines.push(`  activationMode: ${activationType};`);
+  lines.push(`  loop: boolean;`);
+  lines.push(`  unmountInactive: boolean;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `const [${name}ContextProvider, use${name}Context] = createCompoundContext<${name}ContextValue>("${name}");`,
+  );
+  lines.push(`export { use${name}Context };`);
+  lines.push(``);
+  lines.push(`export function ${name}({`);
+  for (const entry of destructured) lines.push(`${INDENT}${entry},`);
+  lines.push(`}: ${name}Props) {`);
+  lines.push(`${INDENT}const fsdsTheme = useFsdsTheme();`);
+  lines.push(
+    `${INDENT}const styles = useMemo(() => create${name}Styles(fsdsTheme), [fsdsTheme]);`,
+  );
+  lines.push(...emitVariantStyleConsts(ir));
+  lines.push(
+    `${INDENT}const [${internal}, ${setInternal}] = useState<string>((${channel.defaultValueProp} ?? "") as string);`,
+  );
+  lines.push(`${INDENT}const ${channel.name} = ${controlled} ?? ${internal};`);
+  lines.push(
+    `${INDENT}const ${setterName} = useCallback((next: string) => {`,
+  );
+  lines.push(
+    `${INDENT}${INDENT}if (${controlled} === undefined) ${setInternal}(next);`,
+  );
+  lines.push(`${INDENT}${INDENT}${channel.changeHandlerProp}?.(next);`);
+  lines.push(`${INDENT}}, [${controlled}, ${channel.changeHandlerProp}]);`);
+  lines.push(`${INDENT}const [registeredTabs, setRegisteredTabs] = useState<string[]>([]);`);
+  lines.push(`${INDENT}const registerTab = useCallback((value: string) => {`);
+  lines.push(
+    `${INDENT}${INDENT}setRegisteredTabs((tabs) => (tabs.includes(value) ? tabs : [...tabs, value]));`,
+  );
+  lines.push(`${INDENT}}, []);`);
+  lines.push(
+    `${INDENT}const unregisterTab = useCallback((value: string) => {`,
+  );
+  lines.push(
+    `${INDENT}${INDENT}setRegisteredTabs((tabs) => tabs.filter((tab) => tab !== value));`,
+  );
+  lines.push(`${INDENT}}, []);`);
+  lines.push(
+    `${INDENT}const resolvedIdBase = idBase ?? useId().replace(/:/g, "");`,
+  );
+  lines.push(``);
+  lines.push(`${INDENT}return (`);
+  lines.push(`${INDENT}${INDENT}<${name}ContextProvider`);
+  lines.push(`${INDENT}${INDENT}${INDENT}value={{`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${channel.name},`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${setterName},`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}registeredTabs,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}registerTab,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}unregisterTab,`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}idBase: resolvedIdBase,`,
+  );
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}orientation,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}activationMode,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}loop,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}unmountInactive,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}}`);
+  lines.push(`${INDENT}${INDENT}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}<View`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}testID={testID}`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}style={[${rootStyleEntries.join(", ")}]}`,
+  );
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`,
+  );
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`,
+  );
+  lines.push(`${INDENT}${INDENT}${INDENT}>`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}{typeof children === "string" ? <RNText>{children}</RNText> : children}`,
+  );
+  lines.push(`${INDENT}${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT}${INDENT}</${name}ContextProvider>`);
+  lines.push(`${INDENT});`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export interface ${listName}Props {`);
+  lines.push(`${INDENT}children?: ReactNode;`);
+  lines.push(`${INDENT}testID?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${listName}({ children, testID }: ${listName}Props) {`);
+  lines.push(`${INDENT}use${name}Context();`);
+  lines.push(`${INDENT}const fsdsTheme = useFsdsTheme();`);
+  lines.push(
+    `${INDENT}const styles = useMemo(() => create${name}Styles(fsdsTheme), [fsdsTheme]);`,
+  );
+  lines.push(``);
+  lines.push(`${INDENT}return (`);
+  lines.push(`${INDENT}${INDENT}<View testID={testID} style={styles.${groupPart?.name ?? "list"}}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}{children}`);
+  if (ornamentPart) {
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}<View style={styles.${ornamentPart.name}} accessible={false} />`,
+    );
+  }
+  lines.push(`${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT});`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export interface ${tabName}Props {`);
+  lines.push(`${INDENT}value: string;`);
+  lines.push(`${INDENT}disabled?: boolean;`);
+  lines.push(`${INDENT}children?: ReactNode;`);
+  lines.push(`${INDENT}testID?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `export function ${tabName}({ value, disabled, children, testID }: ${tabName}Props) {`,
+  );
+  lines.push(`${INDENT}const ctx = use${name}Context();`);
+  lines.push(`${INDENT}const isActive = ctx.${channel.name} === value;`);
+  lines.push(`${INDENT}const fsdsTheme = useFsdsTheme();`);
+  lines.push(
+    `${INDENT}const styles = useMemo(() => create${name}Styles(fsdsTheme), [fsdsTheme]);`,
+  );
+  lines.push(`${INDENT}const { registerTab, unregisterTab } = ctx;`);
+  lines.push(`${INDENT}const valueRef = useRef(value);`);
+  lines.push(`${INDENT}valueRef.current = value;`);
+  lines.push(`${INDENT}useEffect(() => {`);
+  lines.push(`${INDENT}${INDENT}registerTab(valueRef.current);`);
+  lines.push(
+    `${INDENT}${INDENT}return () => unregisterTab(valueRef.current);`,
+  );
+  lines.push(`${INDENT}}, [registerTab, unregisterTab]);`);
+  lines.push(``);
+  lines.push(`${INDENT}return (`);
+  lines.push(`${INDENT}${INDENT}<Pressable`);
+  lines.push(`${INDENT}${INDENT}${INDENT}testID={testID}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}style={styles.${itemPart.name}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityRole="tab"`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}accessibilityState={{ selected: isActive, disabled: disabled === true }}`,
+  );
+  lines.push(`${INDENT}${INDENT}${INDENT}disabled={disabled}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}onPress={() => {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}if (disabled) return;`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}ctx.${setterName}(value);`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}}`);
+  lines.push(`${INDENT}${INDENT}>`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}{typeof children === "string" ? <RNText>{children}</RNText> : children}`,
+  );
+  lines.push(`${INDENT}${INDENT}</Pressable>`);
+  lines.push(`${INDENT});`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export interface ${panelName}Props {`);
+  lines.push(`${INDENT}value: string;`);
+  lines.push(`${INDENT}children?: ReactNode;`);
+  lines.push(`${INDENT}testID?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `export function ${panelName}({ value, children, testID }: ${panelName}Props) {`,
+  );
+  lines.push(`${INDENT}const ctx = use${name}Context();`);
+  lines.push(`${INDENT}const isActive = ctx.${channel.name} === value;`);
+  lines.push(`${INDENT}const fsdsTheme = useFsdsTheme();`);
+  lines.push(
+    `${INDENT}const styles = useMemo(() => create${name}Styles(fsdsTheme), [fsdsTheme]);`,
+  );
+  lines.push(``);
+  lines.push(
+    `${INDENT}if (ctx.unmountInactive && !isActive) return null;`,
+  );
+  lines.push(``);
+  lines.push(`${INDENT}return (`);
+  lines.push(`${INDENT}${INDENT}<View`);
+  lines.push(`${INDENT}${INDENT}${INDENT}testID={testID}`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}style={[styles.${regionPart.name}, isActive ? undefined : { display: "none" }]}`,
+  );
+  lines.push(`${INDENT}${INDENT}${INDENT}accessible={isActive}`);
+  lines.push(`${INDENT}${INDENT}>`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}{typeof children === "string" ? <RNText>{children}</RNText> : children}`,
+  );
+  lines.push(`${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT});`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
 }
 
 function emitImports(ir: ComponentIR): string {
@@ -96,6 +452,11 @@ function emitImports(ir: ComponentIR): string {
     rnValueImports.add("Text as RNText");
     rnValueImports.add("View");
   }
+  if (isCompoundSelectionContainer(ir)) {
+    rnValueImports.add("Pressable");
+    rnValueImports.add("Text as RNText");
+    rnValueImports.add("View");
+  }
   if (
     !usesNativeToggle(ir) &&
     !isCheckboxRootPattern(ir) &&
@@ -118,6 +479,12 @@ function emitImports(ir: ComponentIR): string {
     reactImports.add("useRef");
     reactImports.add("useState");
   }
+  if (isCompoundSelectionContainer(ir)) {
+    reactImports.add("useCallback");
+    reactImports.add("useEffect");
+    reactImports.add("useId");
+    reactImports.add("useRef");
+  }
   if (usage.channels.size > 0) {
     reactImports.add("useState");
   }
@@ -139,6 +506,9 @@ function emitImports(ir: ComponentIR): string {
     `import { create${ir.name}Styles } from "./${ir.name}.styles";`,
     usesNativeToggle(ir) || rnAutoDismiss(ir)
       ? `import { resolve${ir.name}Tokens } from "./${ir.name}.tokens";`
+      : "",
+    isCompoundSelectionContainer(ir)
+      ? `import { createCompoundContext } from "../../primitives/hooks";`
       : "",
     // componentRef: import each referenced DS-RN sibling component
     // (CODEGEN-RECURSIVE-COMPOSITION-01). Named imports, relative sibling path.
