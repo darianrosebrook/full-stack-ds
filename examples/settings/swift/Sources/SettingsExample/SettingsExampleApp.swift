@@ -40,19 +40,10 @@ struct SettingsView: View {
         }
     }
 
-    // NOT FSDS: Card/CardHeader/CardContent are not emitted for swiftui yet.
-    @ViewBuilder
-    private func sectionHeading(_ heading: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(heading)
-                .font(.headline)
-            Divider()
-        }
-    }
-
     private var profileSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("Profile")
+        Card {
+            Text("Profile").font(.headline)
+        } content: {
             // NOT FSDS: Field/Input are not emitted for swiftui yet.
             LabeledContent("Display name") {
                 TextField("Display name", text: $displayName)
@@ -60,6 +51,7 @@ struct SettingsView: View {
             LabeledContent("Email") {
                 TextField("Email", text: $email)
             }
+        } footer: {
             // FSDS: emitted through the multi-part action path. The export
             // is FsdsButton — SwiftUI reserves the Button type name.
             FsdsButton(
@@ -69,9 +61,6 @@ struct SettingsView: View {
                 Text("Save profile")
             }
         }
-        .padding()
-        .background(.background.secondary)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     /// Fully realized region: every switch row is the FSDS `Switch` from
@@ -79,8 +68,9 @@ struct SettingsView: View {
     /// layout composes the FSDS `Stack` primitive (the spec mandates Stack
     /// for all multi-child layout).
     private var preferencesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("Preferences")
+        Card {
+            Text("Preferences").font(.headline)
+        } content: {
             Stack(variant: .horizontal) {
                 Text("Dark mode")
                 Spacer()
@@ -105,14 +95,12 @@ struct SettingsView: View {
                 )
             }
         }
-        .padding()
-        .background(.background.secondary)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private var dangerZoneSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("Danger zone")
+        Card {
+            Text("Danger zone").font(.headline)
+        } content: {
             Text("Permanently delete your account. This cannot be undone.")
             // FSDS: destructive action through the multi-part FsdsButton.
             // NOT FSDS: Dialog is not emitted for swiftui yet; a
@@ -124,9 +112,6 @@ struct SettingsView: View {
                 Text("Delete account")
             }
         }
-        .padding()
-        .background(.background.secondary)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
         .confirmationDialog(
             "Delete account?",
             isPresented: $confirmOpen,
