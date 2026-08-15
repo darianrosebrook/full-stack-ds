@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: "node --test scripts/prepush-scope.test.mjs: 29/29 pass incl. 8 new lockstep pins (contract/codegen/web-tree -> both audits; react-native -> a11y only; tokens-only -> neither; --full -> both). Harness calls.log shows hook executing audit:behavior-realization + audit:a11y-realization. In-worktree full gate green: tokens build + governed:rail + pnpm test (165 files) + test:frameworks (54/51/51/51) -> GATE EXIT=0."
     recorded_at: "2026-08-15T18:34:46.923Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Harness scenario S2 in /tmp/prepush-harness: regenerated output staged-but-uncommitted -> hook exits 1 with drift message; old index-vs-worktree form 'git diff --exit-code -- packages/ds-react/src' exits 0 on the same tree, proving the hole the tip-commit diff (git diff --exit-code $TIP) closes."
+    recorded_at: "2026-08-15T18:34:48.492Z"
