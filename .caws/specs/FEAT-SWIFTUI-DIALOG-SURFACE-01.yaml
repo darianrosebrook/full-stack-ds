@@ -51,3 +51,8 @@ contracts:
   - name: 'swiftui-dialog-surface'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: generate -- --target=swiftui ... Dialog emits 7 components; swift build exit 0; prior outputs byte-stable (25/25 swift tests incl. new surface-emit.test.ts)
+    recorded_at: "2026-08-15T03:02:20.963Z"
