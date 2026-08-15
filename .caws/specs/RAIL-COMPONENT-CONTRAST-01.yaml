@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run governed:rail exit 0 in worktree: script runs pnpm run generate:check (Validation 49/49) before generate --target=all, then validate-cli.js --require-artifact-manifest Overall PASS; no generated-tree drift"
     recorded_at: "2026-08-15T01:33:22.831Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "unit test 'emits one instructional issue when the resolved graph is missing' in component-contrast.test.ts: single /styles issue naming pnpm -F @full-stack-ds/tokens build"
+    recorded_at: "2026-08-15T01:33:24.414Z"
