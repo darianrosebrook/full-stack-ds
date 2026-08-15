@@ -49,3 +49,8 @@ non_functional: {}
 contracts:
   - name: 'component-contrast-validator'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run generate:check in worktree component-contrast-rail: 49/49 contracts VALID with validateComponentContrast in the semantics pass; falsified live — removing the Accordion ledger entry produced DRIFT citing light 4.38:1 and dark 1.92:1 on /styles/.accordion__trigger:hover"
+    recorded_at: "2026-08-15T01:33:18.885Z"
