@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp.swift: all three sections compose Card { } content: { } footer: { }; sectionHeading + hand-rolled chrome removed; example swift build exit 0"
     recorded_at: "2026-08-15T02:36:02.576Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck clean; governed:rail exit 0; pnpm test 2049/2049; test:frameworks 573+492+532+70"
+    recorded_at: "2026-08-15T02:36:03.765Z"
