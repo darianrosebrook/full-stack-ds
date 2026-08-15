@@ -75,3 +75,8 @@ evidence:
     evidence_ref: fallback-completeness.test.ts canonicalization equivalence cases incl. the comma-boundary bare-zero regression found on Dialog/Popover; 35/35
     recorded_at: "2026-08-15T18:19:49.890Z"
     test_nodeid: fallback-completeness.test.ts
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "envelope-refusal tests: oklch, string dimension, typography composite, unparseable, empty array all skip"
+    recorded_at: "2026-08-15T18:19:52.398Z"
+    test_nodeid: fallback-completeness.test.ts
