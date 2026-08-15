@@ -51,3 +51,8 @@ contracts:
   - name: 'swiftui-tooltip-anchor'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: generate -- --target=swiftui ... Tooltip emits 8 components; swift build exit 0; prior outputs byte-stable (26/26 swift tests)
+    recorded_at: "2026-08-15T03:10:11.100Z"
