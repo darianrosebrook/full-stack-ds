@@ -2,9 +2,11 @@ id: FEAT-EXAMPLES-SWIFT-SETTINGS-01
 title: 'Swift settings example lane: macOS consumer app over the ds-swiftui package'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'swift settings consumer lane over ds-swiftui: local-path package dep, compile in macOS CI, partial-realization non-claims ledgered'
 created_at: '2026-08-15T01:43:27.487Z'
-updated_at: '2026-08-15T01:43:27.487Z'
+updated_at: '2026-08-15T01:49:35.169Z'
 blast_radius:
   modules:
     - 'examples/settings/swift (new SwiftPM lane: Package.swift with local path dep on packages/ds-swiftui, executable SettingsExample, lane README with claim/falsifier/non-claim)'
