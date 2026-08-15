@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: pnpm run generate -- --target=swiftui Switch ToggleSwitch (exit 0; Switch.swift + barrel emitted)
     recorded_at: "2026-08-15T01:41:57.222Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "swift build --package-path packages/ds-swiftui (exit 0, Build complete over Switch+ToggleSwitch)"
+    recorded_at: "2026-08-15T01:41:58.269Z"
