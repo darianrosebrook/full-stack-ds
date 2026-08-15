@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "Card.swift: CardTokens.scopes data; chrome via FsdsTheme with radius.default+foreground.primary alternatives; status optional + compactMap layering; statusAccent color+width → leading bar; case `default` keyword-escaped"
     recorded_at: "2026-08-15T02:36:01.518Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "SettingsExampleApp.swift: all three sections compose Card { } content: { } footer: { }; sectionHeading + hand-rolled chrome removed; example swift build exit 0"
+    recorded_at: "2026-08-15T02:36:02.576Z"
