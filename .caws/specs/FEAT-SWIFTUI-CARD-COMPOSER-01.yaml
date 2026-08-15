@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: generate -- --target=swiftui Switch ToggleSwitch Button Card emits 4 + Stack primitive; swift build exit 0; Switch golden + Button structural tests byte-stable (15/15)
     recorded_at: "2026-08-15T02:35:59.642Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "corpus sweep: only Card matches the composer gate (Popover/Tooltip carry ir.surface); negative control moved Card→Field, throws /no emission class matches/"
+    recorded_at: "2026-08-15T02:36:00.572Z"
