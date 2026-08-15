@@ -3,6 +3,7 @@ title: 'SwiftUI compound-part composer emission class; Card first'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: swift-card-composer
 created_at: '2026-08-15T02:23:10.790Z'
 updated_at: '2026-08-15T02:23:10.790Z'
 blast_radius:
