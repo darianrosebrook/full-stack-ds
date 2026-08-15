@@ -29,7 +29,9 @@ import type {
   GeneratedFile,
 } from "../../../emitter.js";
 import type { ComponentIR } from "../../../ir.js";
+import type { PrimitiveIR } from "../../../primitive-contract.js";
 import { generateSwiftUIComponentSource } from "./component-source.js";
+import { generateSwiftUIPrimitiveFiles } from "./primitive-source.js";
 import { generateSwiftUIHookSource } from "./hook-source.js";
 import { generateSwiftUIBarrel } from "./barrel.js";
 import {
@@ -91,6 +93,13 @@ export function createSwiftUIEmitter(): FrameworkEmitter {
 
     emitBarrel(componentNames: string[], componentsRoot?: string): string {
       return generateSwiftUIBarrel(componentNames, componentsRoot);
+    },
+
+    emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      // Written to the `primitives/` root (sibling of `Components/`) by the
+      // CLI's shared primitive pass; single-module SwiftPM target, so the
+      // primitive is visible to every component without imports.
+      return generateSwiftUIPrimitiveFiles(ir);
     },
 
     discoverComponentIds(componentsRoot: string): string[] {

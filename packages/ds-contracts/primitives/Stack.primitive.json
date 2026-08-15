@@ -91,6 +91,11 @@
         "module": "@full-stack-ds/react-native/primitives",
         "export": "Stack",
         "relativeFromComponents": "../../primitives"
+      },
+      "swiftui": {
+        "module": "DsSwiftUI",
+        "export": "Stack",
+        "relativeFromComponents": "../../primitives"
       }
     }
   }
