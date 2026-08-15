@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "surface-emit.test.ts: Tooltip throws /surface kind \"tooltip\" is not implemented/; Button throws /declares no surface block/; component-path it.each still refuses TextField; isSurfaceComponent routes all surfaces"
     recorded_at: "2026-08-15T03:02:22.672Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "SettingsExampleApp Danger zone: confirmationDialog stand-in replaced by Dialog(open:title:bodyContent:footer:) hosting FsdsButton; example swift build exit 0"
+    recorded_at: "2026-08-15T03:02:23.541Z"
