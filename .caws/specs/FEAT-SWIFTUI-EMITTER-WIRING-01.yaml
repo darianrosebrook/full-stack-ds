@@ -22,7 +22,11 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The swiftui emitter never branches on component identity — only on IR facts (collapse intents, normalized channels, defined types, token facts), per the binding-rule doctrine in docs/codegen-authority.md.'
+  - 'swiftui is explicit-only in this slice: absent from fsds.targets.json, from FrameworkId/NativeLaneId, and carrying no railFrameworkId, so --target=all and governed:rail outputs must be byte-identical to pre-slice. Corpus-wide/default-rail admission is a later spec.'
+  - 'The SwiftPM library target contains only generator-owned .swift files under Sources/DsSwiftUI/Components plus hand-maintained Package.swift/README at the package root; no test files and no non-Swift files inside the target directory (SwiftPM rejects unhandled files).'
+  - 'The workspaceExists generalization accepts Package.swift as an alternative package marker without weakening existing gating: the six pnpm targets remain gated on package.json exactly as before.'
+  - 'Unimplemented emitter surfaces (multi-part anatomy, anchored surfaces) fail loudly with explicit errors when invoked — never silently degrade to wrong output.'
 acceptance:
   - id: A1
     given: 'the swiftui emitter and the new packages/ds-swiftui SwiftPM package on disk'
