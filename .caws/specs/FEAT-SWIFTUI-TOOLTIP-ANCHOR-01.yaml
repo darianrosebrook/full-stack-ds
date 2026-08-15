@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "Tooltip.swift: onHover { if !disabled { setOpen(hovering) } } with controllable-state projection; .popover(isPresented: Binding(get:{isOpen}, set:{setOpen($0)}), arrowEdge:)"
     recorded_at: "2026-08-15T03:10:11.924Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "PLACEMENT_EDGE grammar table: auto→.bottom (platform default, commented), top/bottom/left/right + corners mapped; unknown value auto failed loudly at emit time before the mapping was added; test pins case .auto: return .bottom"
+    recorded_at: "2026-08-15T03:10:12.759Z"
