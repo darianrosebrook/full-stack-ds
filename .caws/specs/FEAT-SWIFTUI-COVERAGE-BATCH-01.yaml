@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-COVERAGE-BATCH-01
 title: 'SwiftUI coverage batch: Details, Sheet, Label, Blockquote, Command (8→13 admitted)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Coverage batch 8-to-15 via disclosure collapse, sheet routing, static-content class, and search-channel projection; 34 remaining fail loud'
 created_at: '2026-08-15T17:39:36.696Z'
-updated_at: '2026-08-15T17:39:36.696Z'
+updated_at: '2026-08-15T17:50:48.447Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (disclosure collapse + static-content class)'
