@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-DEFAULT-ADMISSION-01
 title: 'Register swiftui in fsds.targets.json with a per-target component allowlist'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'swiftui registered in fsds.targets.json via the components-allowlist mechanism; fail-loud bypass preserved; rail boundary unchanged'
 created_at: '2026-08-15T03:10:57.341Z'
-updated_at: '2026-08-15T03:15:34.267Z'
+updated_at: '2026-08-15T03:16:01.324Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/target-packs/config.ts (components field + validation)'
