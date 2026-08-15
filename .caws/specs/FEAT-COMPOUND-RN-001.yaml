@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: "packages/ds-react-native/src/components/Tabs/Tabs.tsx @ ea1f3f2b — context-wired Tabs/TabsList/TabsTab/TabsPanel emitted through isCompoundSelectionContainer (= isCompoundStateContainer && !isDisclosureContainer from react/hook-source, the same gates web consumes); no contract/schema diff in merge"
     recorded_at: "2026-08-15T19:08:09.490Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "packages/ds-react-native/src/primitives/hooks/createCompoundContext.ts + barrel re-export @ ea1f3f2b; pnpm run typecheck:react-native exit 0 (no ds-react import; grep-verified)"
+    recorded_at: "2026-08-15T19:08:10.506Z"
