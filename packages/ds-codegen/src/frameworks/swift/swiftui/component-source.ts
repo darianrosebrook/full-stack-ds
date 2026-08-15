@@ -85,7 +85,17 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     const sections: string[] = [];
     sections.push(emitImports());
     sections.push(emitTypes(ir));
-    sections.push(emitComposerComponent(ir));
+    sections.push(
+      emitComposerComponent(ir, ir.compoundParts.map((part) => part.name)),
+    );
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isNamedSlotComposer(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitComposerComponent(ir, collectDomSlots(ir.dom!)));
     return sections.join("\n\n") + "\n";
   }
 
@@ -94,8 +104,10 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
       `component "${ir.name}". Implemented classes: native-toggle-affordance ` +
       `collapse, the projected-children action root (root element button ` +
       `with a single projected children region), and the compound-part ` +
-      `composer (root-dom-less passive container). Named-slot composers with ` +
-      `root dom trees, and surfaces are not yet implemented.`,
+      `composer (root-dom-less passive container), and the named-slot ` +
+      `composer (dom tree whose leaves are all named slots). Component-` +
+      `instance leaves (e.g. TextField), control roots, and surfaces are ` +
+      `not yet implemented.`,
   );
 }
 
@@ -129,6 +141,49 @@ function isCompoundPartComposer(ir: ComponentIR): boolean {
 }
 
 /**
+ * The named-slot composer class: a passive container WITH a root dom tree
+ * whose every leaf is a named slot — semantic wrapper elements (label,
+ * help spans) above the slots are allowed; component-instance leaves
+ * (TextField's Input) and surfaces are not. Field is the corpus consumer.
+ */
+function isNamedSlotComposer(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div") return false;
+  const slots = collectDomSlots(ir.dom);
+  return slots.length > 0 && allDomLeavesAreSlots(ir.dom);
+}
+
+/** Ordered named-slot list from the dom tree (document order). */
+function collectDomSlots(
+  node: NonNullable<ComponentIR["dom"]>,
+): string[] {
+  const out: string[] = [];
+  const walk = (n: NonNullable<ComponentIR["dom"]>): void => {
+    if (n.tag === "slot") {
+      const name = (n as { slotName?: string; name?: string }).slotName
+        ?? (n as { name?: string }).name;
+      if (name) out.push(name);
+    }
+    for (const child of n.children ?? []) walk(child);
+  };
+  walk(node);
+  return out;
+}
+
+/** True when every leaf of the dom tree is a named slot node. */
+function allDomLeavesAreSlots(
+  node: NonNullable<ComponentIR["dom"]>,
+): boolean {
+  const children = node.children ?? [];
+  if (children.length === 0) {
+    return node.tag === "slot"
+      && ((node as { slotName?: string; name?: string }).slotName
+        ?? (node as { name?: string }).name) !== undefined;
+  }
+  return children.every((child) => allDomLeavesAreSlots(child));
+}
+
+/**
  * Token slot-name suffixes the emitters know how to apply, and the chrome
  * they drive. This is the corpus-wide token naming vocabulary — the
  * SwiftUI analog of the primitive emitter's axis table. Alternatives exist
@@ -137,11 +192,11 @@ function isCompoundPartComposer(ir: ComponentIR): boolean {
  * on Button but `.primary` on Card).
  */
 const SLOT_SUFFIX_ALTERNATIVES = {
-  background: ["color.background.default"],
-  foreground: ["color.foreground.default", "color.foreground.primary"],
-  borderColor: ["color.border.default"],
+  background: ["color.background.default", "color.bg"],
+  foreground: ["color.foreground.default", "color.foreground.primary", "color.fg"],
+  borderColor: ["color.border.default", "color.border"],
   borderWidth: ["size.border", "size.border.default"],
-  radius: ["size.radius", "size.radius.default"],
+  radius: ["size.radius", "size.radius.default", "radius"],
   blockPadding: ["padding-block-start"],
   inlinePadding: ["padding-inline-start"],
   gap: ["box-model.gap"],
@@ -498,10 +553,13 @@ function emitLayerExpressions(axes: VariantAxis[]): {
  * compound part (contract part order), chrome from the root scope, variant
  * axes layered per their defaults. Card is the corpus consumer.
  */
-function emitComposerComponent(ir: ComponentIR): string {
+function emitComposerComponent(
+  ir: ComponentIR,
+  regionNames: string[],
+): string {
   const exportName = swiftExportName(ir.name);
   const chrome = resolveChrome(ir);
-  const regions = ir.compoundParts.map((part) => part.name);
+  const regions = regionNames;
   const axes = collectVariantAxes(ir);
   const layerInfo = emitLayerExpressions(axes);
   const layerArray = [
@@ -539,8 +597,8 @@ function emitComposerComponent(ir: ComponentIR): string {
   lines.push(`}`);
   lines.push("");
   lines.push(
-    `/// Emitted through the compound-part composer path: passive container ` +
-      `root, one content region per compound part.`,
+    `/// Emitted through a composer path: passive container root, one ` +
+      `content region per named region (compound part or named slot).`,
   );
   if (exportName !== ir.name) {
     lines.push(

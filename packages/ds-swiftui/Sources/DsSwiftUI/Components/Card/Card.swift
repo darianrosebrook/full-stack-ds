@@ -96,7 +96,7 @@ enum CardTokens {
     ]
 }
 
-/// Emitted through the compound-part composer path: passive container root, one content region per compound part.
+/// Emitted through a composer path: passive container root, one content region per named region (compound part or named slot).
 public struct Card<Header: View, Content: View, Footer: View, Description: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         CardTokens.scopes
