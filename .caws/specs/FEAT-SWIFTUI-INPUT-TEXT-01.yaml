@@ -51,3 +51,8 @@ contracts:
   - name: 'swiftui-input-text'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: generate -- --target=swiftui Switch ToggleSwitch Button Card Field Input emits 6; swift build exit 0; prior outputs byte-stable (22/22 swift tests)
+    recorded_at: "2026-08-15T02:52:30.580Z"
