@@ -81,6 +81,22 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (collapseIntents.has("native-disclosure")) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitDisclosureComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isStaticContent(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitStaticContentComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (isTextValueControl(ir)) {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -310,6 +326,226 @@ function emitTextControlComponent(ir: ComponentIR): string {
   lines.push(`}`);
   lines.push("// @generated:end");
   void textFieldArgs;
+  return lines.join("\n");
+}
+
+/**
+ * The native-disclosure collapse class: contracts declaring the
+ * `native-disclosure` intent (Details) collapse to SwiftUI
+ * DisclosureGroup — the open channel projects through the controllable
+ * state pattern; the summary string prop is the group label; the content
+ * compound part is the expanded region.
+ */
+function emitDisclosureComponent(ir: ComponentIR): string {
+  const openChannel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "boolean",
+  );
+  if (!openChannel) {
+    throw new Error(
+      `emitDisclosureComponent: ${ir.name} declares native-disclosure but ` +
+        `has no boolean open channel.`,
+    );
+  }
+  const contentParts = ir.compoundParts.filter((p) => p.name === "content");
+  if (contentParts.length !== 1) {
+    throw new Error(
+      `emitDisclosureComponent: ${ir.name} needs exactly one content ` +
+        `compound part (found: ${ir.compoundParts.map((p) => p.name).join("/") || "none"}).`,
+    );
+  }
+  const hasSummary = hasConventionalProp(ir, "summary");
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the native-disclosure collapse path: SwiftUI ` +
+      `DisclosureGroup realizes the summary + expandable content anatomy.`,
+  );
+  const exportName = swiftExportName(ir.name);
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}<Content: View>: View {`);
+  lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+  lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+  lines.push(`${INDENT}}`);
+  lines.push(`${INDENT}private let controlledOpen: Binding<Bool>?`);
+  lines.push(`${INDENT}@State private var uncontrolledOpen: Bool`);
+  lines.push(`${INDENT}private let onOpenChange: ((Bool) -> Void)?`);
+  if (hasSummary) lines.push(`${INDENT}private let summary: String?`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  lines.push(`${INDENT}private let content: Content`);
+  lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = ["open: Binding<Bool>? = nil,", "defaultOpen: Bool = false,", "onOpenChange: ((Bool) -> Void)? = nil,"];
+  if (hasSummary) params.push("summary: String? = nil,");
+  if (hasDisabled) params.push("disabled: Bool = false,");
+  params.push("@ViewBuilder content: () -> Content");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.controlledOpen = open`);
+  lines.push(`${INDENT}${INDENT}self._uncontrolledOpen = State(initialValue: defaultOpen)`);
+  lines.push(`${INDENT}${INDENT}self.onOpenChange = onOpenChange`);
+  if (hasSummary) lines.push(`${INDENT}${INDENT}self.summary = summary`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  lines.push(`${INDENT}${INDENT}self.content = content()`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var isOpen: Bool {`);
+  lines.push(`${INDENT}${INDENT}controlledOpen?.wrappedValue ?? uncontrolledOpen`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func setOpen(_ next: Bool) {`);
+  lines.push(`${INDENT}${INDENT}if let binding = controlledOpen {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
+  lines.push(`${INDENT}${INDENT}} else {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledOpen = next`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}onOpenChange?(next)`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}DisclosureGroup(isExpanded: Binding(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}get: { isOpen },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}set: { setOpen($0) }`);
+  lines.push(`${INDENT}${INDENT})) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}content`);
+  lines.push(`${INDENT}${INDENT}} label: {`);
+  if (hasSummary) {
+    lines.push(`${INDENT}${INDENT}${INDENT}if let summary {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(summary)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}EmptyView()`);
+    lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  } else {
+    lines.push(`${INDENT}${INDENT}${INDENT}EmptyView()`);
+  }
+  lines.push(`${INDENT}${INDENT}}`);
+  if (hasDisabled) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.disabled(disabled)`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * The static-content class: a passive non-container root (label,
+ * blockquote, p, …) whose entire dom is one projected children region —
+ * no channels, no surface. Label and Blockquote are the corpus consumers.
+ */
+function isStaticContent(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if (ir.dom.tag === "div" || ir.dom.tag === "button" || ir.dom.tag === "input") {
+    return false;
+  }
+  const children = ir.dom.children ?? [];
+  return (
+    children.length === 1 &&
+    children[0]!.tag === "children" &&
+    (children[0]!.children ?? []).length === 0
+  );
+}
+
+function emitStaticContentComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const axes = collectVariantAxes(ir);
+  const layerInfo = emitLayerExpressions(axes);
+  const layerArray = ['"root"', ...layerInfo.expressions];
+  const layersExpr = layerInfo.needsCompactMap
+    ? `[${layerArray.join(", ")}].compactMap { $0 }`
+    : `[${layerArray.join(", ")}]`;
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the static-content path: passive ` +
+      `${ir.dom!.tag} root with a single consumer content region.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}<Content: View>: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  for (const axis of axes) {
+    lines.push(`${INDENT}private let ${escapeSwiftKeyword(axis.prop)}: ${axis.typeName}${axis.defaultMember === null ? "?" : ""}`);
+  }
+  lines.push(`${INDENT}private let content: Content`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = axes.map((axis) =>
+    axis.defaultMember !== null
+      ? `${axis.prop}: ${axis.typeName} = .${swiftCaseRef(axis.defaultMember)},`
+      : `${axis.prop}: ${axis.typeName}? = nil,`,
+  );
+  params.push("@ViewBuilder content: () -> Content");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  for (const axis of axes) lines.push(`${INDENT}${INDENT}self.${escapeSwiftKeyword(axis.prop)} = ${escapeSwiftKeyword(axis.prop)}`);
+  lines.push(`${INDENT}${INDENT}self.content = content()`);
+  lines.push(`${INDENT}}`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push("");
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ${layersExpr}`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "borderWidth",
+        "radius", "blockPadding", "inlinePadding", "gap", "minHeight",
+      ]),
+    );
+  }
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}content`);
+  if (ir.tokenScopes.length > 0) {
+    if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+    if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+    if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+    if (chrome.radius) lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+    if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
   return lines.join("\n");
 }
 
@@ -701,11 +937,21 @@ interface VariantAxis {
 }
 
 function collectVariantAxes(ir: ComponentIR): VariantAxis[] {
-  return Object.keys(ir.variants).map((axis) => ({
-    prop: axis,
-    typeName: `${ir.name}${capitalize(axis)}`,
-    defaultMember: findPropDefaultOrNull(ir, axis),
-  }));
+  // An axis is emitted only when its prop references a declared union
+  // type (e.g. ButtonVariant); axes without a typed prop (Links' inline
+  // size values) are omitted from the API rather than guessed at.
+  return Object.keys(ir.variants)
+    .map((axis) => {
+      const prop = ir.styledProps.find((p) => p.safeName === axis);
+      const typeName = prop?.typeRefs.find((ref) => ir.definedTypes[ref]);
+      if (!typeName) return null;
+      return {
+        prop: axis,
+        typeName,
+        defaultMember: findPropDefaultOrNull(ir, axis),
+      };
+    })
+    .filter((axis): axis is VariantAxis => axis !== null);
 }
 
 function findPropDefaultOrNull(ir: ComponentIR, name: string): string | null {
@@ -727,8 +973,8 @@ function emitLayerExpressions(axes: VariantAxis[]): {
 } {
   const expressions = axes.map((axis) =>
     axis.defaultMember !== null
-      ? `"variant_\\(${axis.prop}.rawValue)"`
-      : `${axis.prop}.map { "variant_\\($0.rawValue)" }`,
+      ? `"variant_\\(${escapeSwiftKeyword(axis.prop)}.rawValue)"`
+      : `${escapeSwiftKeyword(axis.prop)}.map { "variant_\\($0.rawValue)" }`,
   );
   return {
     expressions,
@@ -805,7 +1051,7 @@ function emitComposerComponent(
   lines.push(`${INDENT}}`);
   for (const axis of axes) {
     lines.push(
-      `${INDENT}private let ${axis.prop}: ${axis.typeName}${axis.defaultMember === null ? "?" : ""}`,
+      `${INDENT}private let ${escapeSwiftKeyword(axis.prop)}: ${axis.typeName}${axis.defaultMember === null ? "?" : ""}`,
     );
   }
   for (const region of regions) {
@@ -831,7 +1077,7 @@ function emitComposerComponent(
   lines.push(...params);
   lines.push(`${INDENT}) {`);
   for (const axis of axes) {
-    lines.push(`${INDENT}${INDENT}self.${axis.prop} = ${axis.prop}`);
+    lines.push(`${INDENT}${INDENT}self.${escapeSwiftKeyword(axis.prop)} = ${escapeSwiftKeyword(axis.prop)}`);
   }
   for (const region of regions) {
     lines.push(`${INDENT}${INDENT}self.${region} = ${region}()`);
@@ -945,13 +1191,14 @@ function emitComposerComponent(
   return lines.join("\n");
 }
 
-/** Swift keywords that may appear as union values (e.g. CardDensity `default`). */
+/** Swift keywords that may appear as union values (e.g. CardDensity `default`, ListVariant `as`). */
 const SWIFT_KEYWORDS: ReadonlySet<string> = new Set([
   "default", "in", "out", "case", "for", "if", "else", "return", "init",
+  "as", "is", "guard", "while", "defer", "where", "extension",
   "internal", "public", "private", "open", "static", "self", "Type", "Protocol",
 ]);
 
-function escapeSwiftKeyword(identifier: string): string {
+export function escapeSwiftKeyword(identifier: string): string {
   return SWIFT_KEYWORDS.has(identifier) ? `\`${identifier}\`` : identifier;
 }
 

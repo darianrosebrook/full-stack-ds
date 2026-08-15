@@ -56,7 +56,14 @@
         "Field",
         "Input",
         "Dialog",
-        "Tooltip"
+        "Tooltip",
+        "Command",
+        "Details",
+        "Sheet",
+        "Label",
+        "Blockquote",
+        "Links",
+        "List"
       ]
     }
   ]
