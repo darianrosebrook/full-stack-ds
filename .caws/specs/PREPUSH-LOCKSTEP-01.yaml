@@ -2,9 +2,11 @@ id: PREPUSH-LOCKSTEP-01
 title: 'Pre-push lockstep: wire realization audits, close drift-diff hole, mirror CI audit placement'
 risk_tier: 2
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Pre-push hook back in lockstep with ci.yml: behavior/a11y realization audits wired with exact input surfaces, drift diff compares pushed tip commit, audit group placed after rail mirroring CI, plus install/Node guards and step timing'
 created_at: '2026-08-15T18:24:03.242Z'
-updated_at: '2026-08-15T18:24:03.242Z'
+updated_at: '2026-08-15T18:35:12.120Z'
 blast_radius:
   modules:
     - '.githooks/pre-push: wires audit:behavior-realization + audit:a11y-realization, moves the realization-audit group after rail + drift diff, diffs against the pushed tip commit, adds install/Node guards and per-step elapsed timing'
