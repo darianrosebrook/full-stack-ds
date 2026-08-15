@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "primitive-source.ts derives all facts from ir.layout.{axisByVariant,displayByMode,gap} + ir.props defaults; unit test pins VStack/HStack arms, axisModes-only gating, gap token doc reference"
     recorded_at: "2026-08-15T02:00:00.893Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "SettingsExampleApp.swift preferencesSection composes Stack(variant: .horizontal) rows; swift build --package-path examples/settings/swift exit 0"
+    recorded_at: "2026-08-15T02:00:01.750Z"
