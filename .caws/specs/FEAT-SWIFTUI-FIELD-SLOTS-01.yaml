@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "it.each([TextField, Dialog, Input]) negative controls all throw /no emission class matches/ — gate proven narrow (component-instance leaf, surface block, control root each excluded)"
     recorded_at: "2026-08-15T02:45:02.906Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Field.swift: FieldTokens.scopes; colorSlot(color.bg)/colorSlot(color.fg)/colorSlot(color.border)/pxSlot(radius) accessors; status optional + compactMap layering; vocabulary extension left Button/Card bytes unchanged"
+    recorded_at: "2026-08-15T02:45:03.809Z"
