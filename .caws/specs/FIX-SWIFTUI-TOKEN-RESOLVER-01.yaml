@@ -3,6 +3,7 @@ title: 'Fix FsdsTheme nested-optional resolver trap; add XCTest regression targe
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: swift-resolver-fix
 created_at: '2026-08-15T18:42:45.282Z'
 updated_at: '2026-08-15T18:42:45.282Z'
 blast_radius:
