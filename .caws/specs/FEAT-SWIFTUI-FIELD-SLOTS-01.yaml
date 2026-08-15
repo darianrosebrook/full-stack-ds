@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-FIELD-SLOTS-01
 title: 'SwiftUI named-slot composer emission class; Field first'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Field lands through the named-slot composer class; TextField/Dialog/Input are the pinned fail-loud boundaries'
 created_at: '2026-08-15T02:39:21.241Z'
-updated_at: '2026-08-15T02:39:21.241Z'
+updated_at: '2026-08-15T02:45:06.866Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (named-slot class, slot extraction, composer region parameterization, vocabulary extension)'
