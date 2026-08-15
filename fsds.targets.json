@@ -63,7 +63,11 @@
         "Label",
         "Blockquote",
         "Links",
-        "List"
+        "List",
+        "Checkbox",
+        "Divider",
+        "Progress",
+        "Spinner"
       ]
     }
   ]
