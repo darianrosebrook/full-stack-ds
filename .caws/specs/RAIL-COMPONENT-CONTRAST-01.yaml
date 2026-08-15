@@ -2,10 +2,11 @@ id: RAIL-COMPONENT-CONTRAST-01
 title: 'Component-derived WCAG contrast gate in the pre-emission semantics rail'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: component-contrast-rail
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge component-contrast-rail at b23f25c8fead4f63178de80e1d88ea5e63a89dbc'
 created_at: '2026-08-15T01:10:52.910Z'
-updated_at: '2026-08-15T01:10:52.910Z'
+updated_at: '2026-08-15T01:30:08.545Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation (new component-contrast validator + tests)'
