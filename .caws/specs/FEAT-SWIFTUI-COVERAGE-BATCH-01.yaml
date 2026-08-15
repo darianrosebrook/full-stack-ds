@@ -29,6 +29,22 @@ acceptance:
     given: 'Details (native-disclosure intent, open boolean channel, summary string prop, content compound part)'
     when: 'generated'
     then: 'the collapse table maps native-disclosure to SwiftUI DisclosureGroup with the open channel projected and summary as the label — compiles via swift build'
+  - id: A2
+    given: 'Label (label root, children-only dom), Blockquote, Links, and List (passive non-container roots, children-only dom)'
+    when: 'generated'
+    then: 'the static-content class emits content-closure components with presence-driven chrome and axis layering (Label exports as FsdsLabel via the reserved table; untyped axes omitted); all compile'
+  - id: A3
+    given: 'Sheet (surface kind sheet, openness channel, compound regions)'
+    when: 'generated'
+    then: 'the sheet kind routes through the centered-modal branch and compiles; side/modal props omitted-and-documented'
+  - id: A4
+    given: 'Command (dialog surface with a second search string channel + placeholder prop)'
+    when: 'generated'
+    then: 'the dialog branch projects the search channel as a panel-top TextField keyed on channel presence; compiles; Dialog (no string channel) gains no search surface'
+  - id: A5
+    given: 'the full worktree gate'
+    when: 'governed:rail, pnpm test, test:frameworks run'
+    then: 'all pass; allowlist grows to 15; --target=all regenerates byte-stably; remaining corpus contracts still fail loudly'
 non_functional: {}
 contracts:
   - name: 'swiftui-coverage-batch'
