@@ -47,6 +47,26 @@ swift build --package-path packages/ds-swiftui
 | Value-channel text controls emit with the controllable-state projection | Yes — Input is a SwiftUI TextField whose string channel projects through Binding + @State + onChange (controlled takes precedence), keyed on the IR channel rather than component identity; placeholder/disabled realized, HTML-form props omitted |
 | Named-slot composers emit as region closures | Yes — Field is one ViewBuilder region per dom slot (label/control/help/error/validatingIndicator), gated on every dom leaf being a slot (TextField's component-instance leaf and Dialog's surface block stay out); the web value-channel API is omitted, not accepted-and-ignored |
 
+## Known gaps ledgered from the deduper consumption pilot (2026-08-15)
+
+The first real-consumer pilot (deduper's settings window, branch
+`fsds/ds-swiftui-integration`) surfaced these beyond the resolver fix:
+
+- **Dark mode**: color fallbacks are light-mode hex (`#ffffff`/`#141414`)
+  — components render light boxes on dark windows. Needs appearance-scoped
+  token resolution (CSS variables give the web this for free).
+- **Override seam is hex-only**: `FsdsTokenValue` cannot express system
+  colors (`Color(nsColor: .windowBackgroundColor)`), so consumers cannot
+  bridge dark-mode adaptation through the sanctioned channel.
+- **Interaction depth**: hover/active slots exist as data but no `onHover`
+  applies them; `.buttonStyle(.plain)` drops the focus ring; `9999px`
+  radius reads as a pill everywhere it applies.
+- **Field row form**: `FsdsField` always paints boxed chrome — no
+  horizontal label-value row shape for settings screens (box-in-box when
+  nested in Card).
+- **Distribution**: path dependencies from sibling repos work, but the
+  package cannot be consumed remotely while it lives in this monorepo.
+
 ## Non-claims
 
 - Only components whose anatomy declares a collapse intent

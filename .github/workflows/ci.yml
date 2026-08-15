@@ -396,3 +396,9 @@ jobs:
       # package compiles when imported by a real consumer.
       - name: Settings example compile (consumer lane over ds-swiftui)
         run: swift build --package-path examples/settings/swift
+
+      # FIX-SWIFTUI-TOKEN-RESOLVER-01. The resolver regression suite born
+      # from the deduper consumption pilot — catches the nested-optional ??
+      # trap class that compile-only admission cannot see.
+      - name: ds-swiftui token runtime tests
+        run: swift test --package-path packages/ds-swiftui

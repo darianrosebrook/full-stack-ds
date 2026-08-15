@@ -16,7 +16,7 @@ import SwiftUI
 /// A token value as authored in the token graph: a number-with-unit or a
 /// bare string. Accessors parse target-usable forms; unparsable units
 /// (rem, cubic-bezier, …) return nil and callers skip the property.
-public enum FsdsTokenValue: Sendable {
+public enum FsdsTokenValue: Sendable, Equatable {
     case number(Double)
     case string(String)
 
@@ -112,10 +112,16 @@ public func resolveFsdsComponentTokens(
     for (scopeName, scope) in scopes {
         var resolved: [String: FsdsTokenValue?] = [:]
         for (slotName, definition) in scope {
-            resolved[slotName] =
+            // Stage the chain in a local before the subscript assignment:
+            // a ?? chain assigned directly into an optional-Value dictionary
+            // subscript type-infers at double-optional depth, wrapping a nil
+            // literal as .some(nil) and short-circuiting the remaining arms
+            // (FIX-SWIFTUI-TOKEN-RESOLVER-01).
+            let value: FsdsTokenValue? =
                 theme.tokens[definition.name]
                 ?? definition.literal
                 ?? definition.fallback
+            resolved[slotName] = value
         }
         out[scopeName] = resolved
     }
@@ -134,11 +140,37 @@ public func resolveFsdsLayeredTokens(
     for layer in layers {
         guard let scope = scopes[layer] else { continue }
         for (slotName, definition) in scope {
-            merged[slotName] =
+            // Same staged-assignment rule as resolveFsdsComponentTokens.
+            let value: FsdsTokenValue? =
                 theme.tokens[definition.name]
                 ?? definition.literal
                 ?? definition.fallback
+            merged[slotName] = value
         }
     }
     return merged
+}
+
+// MARK: - Conditional accessibility attachment
+
+/// A nil-coalesced `.accessibilityLabel("")` erases a view's intrinsic
+/// label from assistive tech; these helpers attach nothing when nil.
+extension View {
+    @ViewBuilder
+    public func fsdsAccessibilityLabel(_ label: String?) -> some View {
+        if let label {
+            self.accessibilityLabel(label)
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    public func fsdsAccessibilityIdentifier(_ identifier: String?) -> some View {
+        if let identifier {
+            self.accessibilityIdentifier(identifier)
+        } else {
+            self
+        }
+    }
 }

@@ -62,7 +62,7 @@ public struct Stack<Content: View>: View {
 
   public var body: some View {
     stackBody
-      .accessibilityIdentifier(accessibilityIdentifier ?? "")
+      .fsdsAccessibilityIdentifier(accessibilityIdentifier)
   }
 
   @ViewBuilder

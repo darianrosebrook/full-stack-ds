@@ -220,7 +220,7 @@ public struct FsdsButton<Label: View>: View {
         .buttonStyle(.plain)
         .foregroundStyle(foreground)
         .disabled(disabled || loading)
-        .accessibilityLabel(accessibilityLabel ?? "")
+        .fsdsAccessibilityLabel(accessibilityLabel)
     }
 }
 // @generated:end

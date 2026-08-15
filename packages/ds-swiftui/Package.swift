@@ -10,6 +10,10 @@ let package = Package(
         .library(name: "DsSwiftUI", targets: ["DsSwiftUI"])
     ],
     targets: [
-        .target(name: "DsSwiftUI")
+        .target(name: "DsSwiftUI"),
+        .testTarget(
+            name: "DsSwiftUITests",
+            dependencies: ["DsSwiftUI"]
+        )
     ]
 )

@@ -901,7 +901,7 @@ function emitActionComponent(ir: ComponentIR): string {
     lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
   }
   if (hasConventionalProp(ir, "ariaLabel")) {
-    lines.push(`${INDENT}${INDENT}.accessibilityLabel(accessibilityLabel ?? "")`);
+    lines.push(`${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
   }
   lines.push(`${INDENT}}`);
   lines.push(`}`);
@@ -1462,7 +1462,7 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}.toggleStyle(.switch)`);
   lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
   lines.push(
-    `${INDENT}${INDENT}.accessibilityLabel(accessibilityLabel ?? "")`,
+    `${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`,
   );
   lines.push(
     `${INDENT}${INDENT}.accessibilityValue(checked ? "on" : "off")`,
