@@ -130,7 +130,7 @@
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.muted",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "font-size": {
       "resolvesTo": "calendar.typography.caption.size",

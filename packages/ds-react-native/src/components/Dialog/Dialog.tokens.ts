@@ -209,7 +209,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.background.default",
       cssVar: "--fsds-dialog-color-background-default",
       ref: "semantic.color.overlay.scrim",
-      fallback: "#000000",
+      fallback: "#00000066",
     },
   },
   "part_body": {
@@ -217,7 +217,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.foreground.default",
       cssVar: "--fsds-dialog-color-foreground-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
   },
   "part_closeButton": {
@@ -225,7 +225,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.foreground.default",
       cssVar: "--fsds-dialog-color-foreground-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
   },
   "hover": {

@@ -51,7 +51,7 @@
   },
   "walkthrough.description.color": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "walkthrough.description.marginTop": {
@@ -106,12 +106,12 @@
   },
   "walkthrough.button.secondary.bg": {
     "resolvesTo": "core.color.mode.transparent",
-    "fallback": "#000000",
+    "fallback": "#00000000",
     "layer": "core"
   },
   "walkthrough.button.secondary.color": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "walkthrough.button.secondary.border": {

@@ -35,7 +35,7 @@ export class StatusElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-status-size-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-status-size-min-height: var(--fsds-semantic-glyph-badge-size-md-min-height, 24px);
@@ -94,7 +94,7 @@ export class StatusElement extends LitElement {
       white-space: nowrap;
       border-style: solid;
       background-color: var(--fsds-status-color-background-default, #d0d0d0);
-      color: var(--fsds-status-color-foreground-primary, #5c5b5c);
+      color: var(--fsds-status-color-foreground-primary, #474647);
       border-color: var(--fsds-status-color-border-default, #d0d0d0);
       border-width: var(--fsds-status-size-border-default, 1px);
       border-radius: var(--fsds-status-size-radius-default, 9999px);
@@ -113,7 +113,7 @@ export class StatusElement extends LitElement {
 
     .status__label {
       display: inline-block;
-      color: var(--fsds-status-color-foreground-primary, #5c5b5c);
+      color: var(--fsds-status-color-foreground-primary, #474647);
     }
   `;
 

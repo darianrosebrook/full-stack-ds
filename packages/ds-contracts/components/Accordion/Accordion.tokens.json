@@ -16,7 +16,7 @@
   },
   "accordion.color.textSecondary": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "accordion.color.icon": {
@@ -106,7 +106,7 @@
   },
   "accordion.color.textHover": {
     "resolvesTo": "semantic.interaction.text.hover",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   }
 }

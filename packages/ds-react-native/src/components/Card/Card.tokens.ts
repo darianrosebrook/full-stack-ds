@@ -199,7 +199,7 @@ export const cardTokenScopes = {
       name: "card.color.badge.neutral.foreground",
       cssVar: "--fsds-card-color-badge-neutral-foreground",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "card.color.badge.accent.background": {
       name: "card.color.badge.accent.background",
@@ -309,7 +309,7 @@ export const cardTokenScopes = {
       name: "card.color.foreground.primary",
       cssVar: "--fsds-card-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
   },
   "part_link": {
@@ -325,7 +325,7 @@ export const cardTokenScopes = {
       name: "card.color.foreground.primary",
       cssVar: "--fsds-card-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
   },
 } satisfies ComponentTokenScopes;

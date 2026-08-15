@@ -92,7 +92,7 @@ export const calendarTokenScopes = {
       name: "calendar.color.foreground.muted",
       cssVar: "--fsds-calendar-color-foreground-muted",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "calendar.color.border.default": {
       name: "calendar.color.border.default",

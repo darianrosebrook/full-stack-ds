@@ -115,7 +115,7 @@ export const sheetTokenScopes = {
       name: "sheet.color.textDescription",
       cssVar: "--fsds-sheet-color-text-description",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "sheet.border.width": {
       name: "sheet.border.width",

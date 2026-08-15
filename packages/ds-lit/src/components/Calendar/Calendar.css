@@ -43,7 +43,7 @@
   border: none;
   border-radius: var(--fsds-calendar-size-radius-day, 4px);
   cursor: pointer;
-  color: var(--fsds-calendar-color-foreground-muted, #5c5b5c);
+  color: var(--fsds-calendar-color-foreground-muted, #474647);
   font-size: var(--fsds-calendar-typography-caption-size, 16px);
   line-height: 1;
 }

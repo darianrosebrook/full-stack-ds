@@ -15,7 +15,7 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-progress-color-text-default, #5c5b5c);
+  color: var(--fsds-progress-color-text-default, #474647);
   transition-duration: var(--fsds-progress-motion-duration-indeterminate, 1500ms);
 }
 
@@ -36,7 +36,7 @@
 
 .progress__value {
   display: inline-block;
-  color: var(--fsds-progress-color-text-default, #5c5b5c);
+  color: var(--fsds-progress-color-text-default, #474647);
   font-size: 0.875em;
   margin-left: var(--fsds-progress-spacing-gap, 2px);
 }

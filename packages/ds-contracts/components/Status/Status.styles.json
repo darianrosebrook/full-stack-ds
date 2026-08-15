@@ -48,7 +48,7 @@
     },
     "color": {
       "resolvesTo": "status.color.foreground.primary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "border-color": {
       "resolvesTo": "status.color.border.default",
@@ -120,7 +120,7 @@
     },
     "color": {
       "resolvesTo": "status.color.foreground.primary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "--info": {

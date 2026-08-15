@@ -35,7 +35,7 @@ export class BlockquoteElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-blockquote-color-border-default: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-blockquote-typography-font-style: var(--fsds-semantic-typography-font-style-italic, italic);
@@ -91,7 +91,7 @@ export class BlockquoteElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      color: var(--fsds-blockquote-color-foreground-primary, #5c5b5c);
+      color: var(--fsds-blockquote-color-foreground-primary, #474647);
       background-color: var(--fsds-blockquote-color-background-default, #d0d0d0);
       border-color: var(--fsds-blockquote-color-border-default, #d92d2e);
       border-style: solid;

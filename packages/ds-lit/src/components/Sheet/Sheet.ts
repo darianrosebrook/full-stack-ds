@@ -41,7 +41,7 @@ export class SheetElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -123,7 +123,7 @@ export class SheetElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -157,7 +157,7 @@ export class SheetElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 
@@ -309,7 +309,7 @@ export class SheetContentElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -391,7 +391,7 @@ export class SheetContentElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -425,7 +425,7 @@ export class SheetContentElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 
@@ -500,7 +500,7 @@ export class SheetHeaderElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -582,7 +582,7 @@ export class SheetHeaderElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -616,7 +616,7 @@ export class SheetHeaderElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 
@@ -691,7 +691,7 @@ export class SheetTitleElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -773,7 +773,7 @@ export class SheetTitleElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -807,7 +807,7 @@ export class SheetTitleElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 
@@ -882,7 +882,7 @@ export class SheetDescriptionElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -964,7 +964,7 @@ export class SheetDescriptionElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -998,7 +998,7 @@ export class SheetDescriptionElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 
@@ -1073,7 +1073,7 @@ export class SheetBodyElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -1155,7 +1155,7 @@ export class SheetBodyElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -1189,7 +1189,7 @@ export class SheetBodyElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 
@@ -1264,7 +1264,7 @@ export class SheetFooterElement extends LitElement {
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-sheet-size-width: 400px;
@@ -1346,7 +1346,7 @@ export class SheetFooterElement extends LitElement {
 
     .sheet__description {
       margin: 0;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       font-size: var(--fsds-sheet-text-size, 16px);
     }
 
@@ -1380,7 +1380,7 @@ export class SheetFooterElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-sheet-color-text-description, #5c5b5c);
+      color: var(--fsds-sheet-color-text-description, #474647);
       cursor: pointer;
     }
 

@@ -38,7 +38,7 @@ export class ShowMoreElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -59,7 +59,7 @@ export class ShowMoreElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
-      color: var(--fsds-show-more-color-foreground-secondary, #5c5b5c);
+      color: var(--fsds-show-more-color-foreground-secondary, #474647);
       padding: var(--fsds-show-more-size-padding-default, 24px);
       border-radius: var(--fsds-show-more-size-radius-default, 6px);
     }
@@ -146,7 +146,7 @@ export class ShowMoreContentElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -167,7 +167,7 @@ export class ShowMoreContentElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
-      color: var(--fsds-show-more-color-foreground-secondary, #5c5b5c);
+      color: var(--fsds-show-more-color-foreground-secondary, #474647);
       padding: var(--fsds-show-more-size-padding-default, 24px);
       border-radius: var(--fsds-show-more-size-radius-default, 6px);
     }
@@ -224,7 +224,7 @@ export class ShowMoreTriggerElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -245,7 +245,7 @@ export class ShowMoreTriggerElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
-      color: var(--fsds-show-more-color-foreground-secondary, #5c5b5c);
+      color: var(--fsds-show-more-color-foreground-secondary, #474647);
       padding: var(--fsds-show-more-size-padding-default, 24px);
       border-radius: var(--fsds-show-more-size-radius-default, 6px);
     }

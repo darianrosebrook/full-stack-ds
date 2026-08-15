@@ -85,7 +85,7 @@ export const blockquoteTokenScopes = {
       name: "blockquote.color.foreground.primary",
       cssVar: "--fsds-blockquote-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "blockquote.color.background.default": {
       name: "blockquote.color.background.default",

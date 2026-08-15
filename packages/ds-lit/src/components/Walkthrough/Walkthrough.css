@@ -41,7 +41,7 @@
 .walkthrough__description {
   margin: 0;
   font-size: var(--fsds-walkthrough-description-font-size, 16px);
-  color: var(--fsds-walkthrough-description-color, #5c5b5c);
+  color: var(--fsds-walkthrough-description-color, #474647);
   line-height: 1.5;
 }
 
@@ -60,19 +60,19 @@
 .walkthrough__skip {
   background: transparent;
   border: none;
-  color: var(--fsds-walkthrough-button-secondary-color, #5c5b5c);
+  color: var(--fsds-walkthrough-button-secondary-color, #474647);
   cursor: pointer;
   padding: 0;
   margin-right: auto;
 }
 
 .walkthrough__prev {
-  background-color: var(--fsds-walkthrough-button-secondary-bg, #000000);
+  background-color: var(--fsds-walkthrough-button-secondary-bg, #00000000);
   border-color: var(--fsds-walkthrough-button-secondary-border, #d0d0d0);
   border-style: solid;
   border-width: 1px;
   border-radius: var(--fsds-walkthrough-button-primary-radius, 6px);
-  color: var(--fsds-walkthrough-button-secondary-color, #5c5b5c);
+  color: var(--fsds-walkthrough-button-secondary-color, #474647);
   cursor: pointer;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .walkthrough__counter {
-  color: var(--fsds-walkthrough-description-color, #5c5b5c);
+  color: var(--fsds-walkthrough-description-color, #474647);
   font-size: var(--fsds-walkthrough-description-font-size, 16px);
 }
 /* @generated:end */

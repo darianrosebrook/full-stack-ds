@@ -285,7 +285,7 @@
         "selector": ".postcard__handle",
         "declarations": {
           "font-size": "var(--fsds-postcard-typography-handle-font-size, 14px)",
-          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)"
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #474647)"
         }
       },
       {
@@ -293,7 +293,7 @@
         "declarations": {
           "font-size": "var(--fsds-postcard-typography-footer-font-size, 14px)",
           "flex-shrink": "0",
-          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)"
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #474647)"
         }
       },
       {
@@ -324,7 +324,7 @@
           "align-items": "center",
           "font-size": "var(--fsds-postcard-typography-footer-font-size, 14px)",
           "--fsds-postcard-size-gap-default": "var(--fsds-core-spacing-size-03, 4px)",
-          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)"
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #474647)"
         }
       }
     ],

@@ -27,7 +27,7 @@
 
 .nav-list__item {
   display: block;
-  color: var(--fsds-nav-list-color-foreground-default, #5c5b5c);
+  color: var(--fsds-nav-list-color-foreground-default, #474647);
   padding-block: var(--fsds-nav-list-size-padding-block, 2px);
   padding-inline: var(--fsds-nav-list-size-padding-inline, 8px);
   border-radius: var(--fsds-nav-list-size-radius-default, 6px);

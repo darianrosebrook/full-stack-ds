@@ -166,7 +166,7 @@
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "timestamp": {
@@ -182,7 +182,7 @@
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "footer": {
@@ -266,7 +266,7 @@
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   }
 }

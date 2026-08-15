@@ -330,7 +330,7 @@
           "position": "absolute",
           "inset": "0",
           "pointer-events": "auto",
-          "--fsds-dialog-color-background-default": "var(--fsds-semantic-color-overlay-scrim, #000000)"
+          "--fsds-dialog-color-background-default": "var(--fsds-semantic-color-overlay-scrim, #00000066)"
         }
       },
       {
@@ -387,7 +387,7 @@
           "padding-bottom": "var(--fsds-dialog-spacing-header-padding-top, 16px)",
           "padding-left": "var(--fsds-dialog-spacing-body-padding-right, 24px)",
           "overflow-y": "auto",
-          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)"
+          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #474647)"
         }
       },
       {
@@ -421,7 +421,7 @@
           "border": "0",
           "border-radius": "9999px",
           "cursor": "pointer",
-          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)"
+          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #474647)"
         }
       },
       {

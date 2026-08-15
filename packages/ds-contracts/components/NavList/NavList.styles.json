@@ -52,7 +52,7 @@
     },
     "color": {
       "resolvesTo": "nav-list.color.foreground.default",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "padding-block": {
       "resolvesTo": "nav-list.size.padding.block",

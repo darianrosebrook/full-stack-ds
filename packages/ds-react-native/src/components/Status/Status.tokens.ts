@@ -90,7 +90,7 @@ export const statusTokenScopes = {
       name: "status.color.foreground.primary",
       cssVar: "--fsds-status-color-foreground-primary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "status.color.border.default": {
       name: "status.color.border.default",

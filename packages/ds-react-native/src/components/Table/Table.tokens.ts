@@ -86,7 +86,7 @@ export const tableTokenScopes = {
       name: "table.color.textMuted",
       cssVar: "--fsds-table-color-text-muted",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "table.color.border": {
       name: "table.color.border",

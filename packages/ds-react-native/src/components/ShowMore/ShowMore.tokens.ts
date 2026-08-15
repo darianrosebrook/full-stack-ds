@@ -98,7 +98,7 @@ export const showMoreTokenScopes = {
       name: "show-more.color.foreground.secondary",
       cssVar: "--fsds-show-more-color-foreground-secondary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "show-more.color.border.default": {
       name: "show-more.color.border.default",

@@ -49,11 +49,11 @@ export class FieldElement extends LitElement {
       --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d92d2e);
       --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #3a6614);
       --fsds-field-color-validating-border: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-field-color-valid-text: var(--fsds-semantic-color-foreground-success, #497f21);
       --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-label-font-size: var(--fsds-semantic-typography-body-small-font-size, 14px);
-      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
@@ -66,7 +66,7 @@ export class FieldElement extends LitElement {
 
     .field--validating {
       --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .field--valid {
@@ -100,7 +100,7 @@ export class FieldElement extends LitElement {
       display: inline-block;
       font-size: var(--fsds-field-label-font-size, 14px);
       font-weight: 500;
-      color: var(--fsds-field-label-color, #5c5b5c);
+      color: var(--fsds-field-label-color, #474647);
     }
 
     .field__header {
@@ -261,11 +261,11 @@ export class FieldHeaderElement extends LitElement {
       --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d92d2e);
       --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #3a6614);
       --fsds-field-color-validating-border: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-color-validating-text: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-field-color-valid-text: var(--fsds-semantic-color-foreground-success, #497f21);
       --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-label-font-size: var(--fsds-semantic-typography-body-small-font-size, 14px);
-      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
@@ -278,7 +278,7 @@ export class FieldHeaderElement extends LitElement {
 
     .field--validating {
       --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .field--valid {
@@ -312,7 +312,7 @@ export class FieldHeaderElement extends LitElement {
       display: inline-block;
       font-size: var(--fsds-field-label-font-size, 14px);
       font-weight: 500;
-      color: var(--fsds-field-label-color, #5c5b5c);
+      color: var(--fsds-field-label-color, #474647);
     }
 
     .field__header {

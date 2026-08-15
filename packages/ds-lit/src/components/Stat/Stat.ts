@@ -36,10 +36,10 @@ export class StatElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-stat-color-foreground-value: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-stat-color-foreground-label: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-stat-color-foreground-label: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-stat-color-foreground-trend-up: var(--fsds-semantic-color-feedback-foreground-success-default, #497f21);
       --fsds-stat-color-foreground-trend-down: var(--fsds-semantic-color-feedback-foreground-danger-default, #d92d2e);
-      --fsds-stat-color-foreground-trend-neutral: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-stat-color-foreground-trend-neutral: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-stat-size-value-sm: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-stat-size-value-md: var(--fsds-semantic-typography-heading-02, 24px);
       --fsds-stat-size-value-lg: var(--fsds-semantic-typography-heading-01, 32px);
@@ -79,7 +79,7 @@ export class StatElement extends LitElement {
     }
 
     .stat--neutral {
-      color: var(--fsds-stat-color-foreground-trend-neutral, #5c5b5c);
+      color: var(--fsds-stat-color-foreground-trend-neutral, #474647);
     }
 
     .stat--sm {

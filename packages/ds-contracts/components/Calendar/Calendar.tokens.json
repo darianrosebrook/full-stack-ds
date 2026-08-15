@@ -16,7 +16,7 @@
   },
   "calendar.color.foreground.muted": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "calendar.color.border.default": {

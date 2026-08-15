@@ -46,7 +46,7 @@
   },
   "show-more.color.foreground.secondary": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "show-more.color.border.default": {

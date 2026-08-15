@@ -270,4 +270,29 @@ describe("validateComponentContrast", () => {
     _resetKnownGapsCacheForTests([]);
     expect(validateComponentContrast(base({}))).toEqual([]);
   });
+
+  it("skips pairs whose terminal is transparent (alpha hex is unmeasurable)", () => {
+    // FIX-CONTRAST-DEBT-01: the resolver now preserves alpha, so a
+    // genuinely transparent background resolves to an 8-digit hex the
+    // WCAG math cannot consume. Contrast against transparent is defined
+    // by whatever sits beneath — the pair must be skipped, not failed
+    // (the pre-alpha-fix phantom that ledgered Walkthrough's prev pair).
+    _resetResolvedTokensCacheForTests({
+      semantic: {
+        color: {
+          fg: { good: { $value: { light: "#141414", dark: "#fafafa" } } },
+          bg: { clear: { $value: { light: "#00000000", dark: "#00000000" } } },
+        },
+      },
+    });
+    _resetKnownGapsCacheForTests([]);
+    const contract = base({
+      tokens: {
+        "test.fg": { resolvesTo: "semantic.color.fg.good", fallback: "#141414" },
+        "test.bg": { resolvesTo: "semantic.color.bg.clear", fallback: "#00000000" },
+      },
+      styles: { root: ROOT_BLOCK },
+    } as Partial<ComponentContract>);
+    expect(validateComponentContrast(contract)).toEqual([]);
+  });
 });

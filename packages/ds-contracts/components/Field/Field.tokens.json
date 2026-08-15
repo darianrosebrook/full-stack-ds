@@ -101,7 +101,7 @@
   },
   "field.color.validating-text": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "field.color.valid-text": {
@@ -121,7 +121,7 @@
   },
   "field.label.color": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "field.focus.ring.width": {

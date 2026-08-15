@@ -52,7 +52,7 @@
 
 .accordion__trigger:hover:not([aria-disabled="true"]) {
   background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
-  color: var(--fsds-accordion-color-text-hover, #5c5b5c);
+  color: var(--fsds-accordion-color-text-hover, #474647);
 }
 
 .accordion__trigger:focus-visible:not([aria-disabled="true"]) {
@@ -84,7 +84,7 @@
 
 .accordion__contentInner {
   padding: var(--fsds-accordion-spacing-padding-y, 8px);
-  color: var(--fsds-accordion-color-text-secondary, #5c5b5c);
+  color: var(--fsds-accordion-color-text-secondary, #474647);
   font-size: var(--fsds-accordion-text-size-content, 14px);
   line-height: var(--fsds-accordion-text-line-height-content, 1.8);
 }

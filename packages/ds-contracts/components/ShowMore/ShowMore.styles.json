@@ -6,7 +6,7 @@
     },
     "color": {
       "resolvesTo": "show-more.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "padding": {
       "resolvesTo": "show-more.size.padding.default",

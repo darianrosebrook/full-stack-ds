@@ -61,15 +61,15 @@ export class DialogElement extends LitElement {
     }
 
     .dialog__backdrop {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #000000);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
     }
 
     .dialog__body {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton:hover {
@@ -336,15 +336,15 @@ export class DialogHeaderElement extends LitElement {
     }
 
     .dialog__backdrop {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #000000);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
     }
 
     .dialog__body {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton:hover {
@@ -529,15 +529,15 @@ export class DialogTitleElement extends LitElement {
     }
 
     .dialog__backdrop {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #000000);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
     }
 
     .dialog__body {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton:hover {
@@ -722,15 +722,15 @@ export class DialogBodyElement extends LitElement {
     }
 
     .dialog__backdrop {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #000000);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
     }
 
     .dialog__body {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton:hover {
@@ -915,15 +915,15 @@ export class DialogFooterElement extends LitElement {
     }
 
     .dialog__backdrop {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #000000);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
     }
 
     .dialog__body {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton {
-      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .dialog__closeButton:hover {

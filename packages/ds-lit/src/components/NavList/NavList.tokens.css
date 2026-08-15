@@ -15,7 +15,7 @@
   --fsds-box-model-height: auto;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
-  --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+  --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
   --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);

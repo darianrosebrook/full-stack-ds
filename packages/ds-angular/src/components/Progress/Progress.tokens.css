@@ -15,7 +15,7 @@
   --fsds-box-model-height: 8px;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
-  --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+  --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #474647);
   --fsds-progress-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
   --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
   --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);

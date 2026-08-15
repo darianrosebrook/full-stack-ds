@@ -347,7 +347,7 @@
         },
         "transparent": {
           "$type": "color",
-          "$value": "#000000"
+          "$value": "#00000000"
         }
       },
       "opacity": {
@@ -359,7 +359,7 @@
       "overlay": {
         "scrim": {
           "$type": "color",
-          "$value": "#000000"
+          "$value": "#00000066"
         }
       },
       "palette": {
@@ -2955,9 +2955,9 @@
         },
         "secondary": {
           "$type": "color",
-          "$description": "Secondary foreground color",
+          "$description": "Secondary foreground color. Light darkened neutral.600 -> neutral.700 (FIX-CONTRAST-DEBT-01): neutral.600 measured 4.38:1 on background.secondary (neutral.100), under AA 4.5:1.",
           "$value": {
-            "light": "#5c5b5c",
+            "light": "#474647",
             "dark": "#a0a0a1"
           }
         },
@@ -2987,10 +2987,10 @@
         },
         "hover": {
           "$type": "color",
-          "$description": "Hover foreground color",
+          "$description": "Hover foreground color. Dark brightened neutral.300 -> neutral.200 (FIX-CONTRAST-DEBT-01): neutral.300 measured 3.60:1 on background.hover dark (neutral.700), under AA 4.5:1. Mirrors the light direction — hover strengthens the text.",
           "$value": {
             "light": "#474647",
-            "dark": "#a0a0a1"
+            "dark": "#b8b8b8"
           }
         },
         "link": {
@@ -3293,22 +3293,22 @@
         "scrim": {
           "$type": "color",
           "$description": "Default overlay scrim (medium weight, 40% black). Used by Dialog and other surfaces that need a single canonical scrim. Weighted variants live as siblings.",
-          "$value": "#000000"
+          "$value": "#00000066"
         },
         "scrimWeak": {
           "$type": "color",
           "$description": "Light overlay scrim",
-          "$value": "#000000"
+          "$value": "#0000003d"
         },
         "scrimMedium": {
           "$type": "color",
           "$description": "Medium overlay scrim (canonical default — same value as bare 'scrim')",
-          "$value": "#000000"
+          "$value": "#00000066"
         },
         "scrimStrong": {
           "$type": "color",
           "$description": "Strong overlay scrim",
-          "$value": "#000000"
+          "$value": "#000000a3"
         }
       },
       "status": {
@@ -3932,7 +3932,11 @@
       "text": {
         "hover": {
           "$type": "color",
-          "$value": "#5c5b5c"
+          "$description": "Hover text on neutral hover surfaces. Theme-aware: the previous unthemed neutral.600 measured 1.92:1 on the dark hover surface (FIX-CONTRAST-DEBT-01).",
+          "$value": {
+            "light": "#474647",
+            "dark": "#a0a0a1"
+          }
         },
         "active": {
           "$type": "color",
