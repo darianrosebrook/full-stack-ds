@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: generate -- --target=swiftui Switch ToggleSwitch Button Card Field Input emits 6; swift build exit 0; prior outputs byte-stable (22/22 swift tests)
     recorded_at: "2026-08-15T02:52:30.580Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Input.swift: value: Binding<String>? + @State + onChange projection, controlled-takes-precedence; placeholder→prompt; disabled; type/required/name/invalid omitted and documented in READMEs"
+    recorded_at: "2026-08-15T02:52:31.477Z"
