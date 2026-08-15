@@ -86,6 +86,7 @@ import {
 } from "./validation/styles.js";
 import { validateContractEmittedCss } from "./validation/contract-tokens.js";
 import { validateContractEmittedStyles } from "./validation/contract-styles.js";
+import { validateComponentContrast } from "./validation/component-contrast.js";
 import {
   parseUsageJsonl,
   validateUsageLine as validateUsageLineCrossRefs,
@@ -542,6 +543,13 @@ function main(): void {
     //      exist in the icon corpus (packages/ds-iconography/icons/). The
     //      token-resolvesTo analogy for icons; usage-sidecar literals get
     //      the same check in the --check-usage pass.
+    //   8. validateComponentContrast — fg × bg pairs derived mechanically
+    //      from each contract's styles.json/tokens.json binding chains must
+    //      meet WCAG AA 4.5:1 in light + dark themes of resolved.tokens.json
+    //      (disabled-state pairs exempt per WCAG 1.4.3 Note 5; pre-existing
+    //      debt ledgered in component-contrast-known-gaps.json under a
+    //      two-directional ratchet). Catches component-level token usage the
+    //      curated ds-tokens pair gate cannot see (RAIL-COMPONENT-CONTRAST-01).
     // All pass results merge — one DRIFT line per failing contract
     // with all issues from all validators concatenated.
     if (args.checkSemantics) {
@@ -556,6 +564,7 @@ function main(): void {
         ...validateContractEmittedStyles(result.value),
         ...validateContractStyles(result.value),
         ...validateStylesSelectorCollisions(result.value),
+        ...validateComponentContrast(result.value),
         ...validateContractIconRefs(result.value, {
           allContracts: allContractsByName,
         }),
