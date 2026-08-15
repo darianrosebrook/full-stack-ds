@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "corpus sweep: only Card matches the composer gate (Popover/Tooltip carry ir.surface); negative control moved Card→Field, throws /no emission class matches/"
     recorded_at: "2026-08-15T02:36:00.572Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Card.swift: CardTokens.scopes data; chrome via FsdsTheme with radius.default+foreground.primary alternatives; status optional + compactMap layering; statusAccent color+width → leading bar; case `default` keyword-escaped"
+    recorded_at: "2026-08-15T02:36:01.518Z"
