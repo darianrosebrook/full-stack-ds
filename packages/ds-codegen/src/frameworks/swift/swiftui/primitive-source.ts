@@ -124,7 +124,7 @@ export function generateSwiftUIPrimitiveFiles(ir: PrimitiveIR): GeneratedFile[] 
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}stackBody`);
-  lines.push(`${INDENT}${INDENT}${INDENT}.accessibilityIdentifier(accessibilityIdentifier ?? "")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityIdentifier(accessibilityIdentifier)`);
   lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}@ViewBuilder`);
