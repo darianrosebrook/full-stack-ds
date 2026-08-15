@@ -2,8 +2,9 @@
 
 Generated SwiftUI realization of the FSDS component contracts. This is a
 SwiftPM package (not a pnpm workspace member): `Package.swift` and this README
-are hand-maintained; everything under `Sources/DsSwiftUI/Components/` is
-generated output and must not be hand-edited.
+are hand-maintained; everything under `Sources/DsSwiftUI/Components/` and
+`Sources/DsSwiftUI/primitives/` is generated output and must not be
+hand-edited.
 
 ## Regenerate
 
@@ -33,6 +34,7 @@ swift build --package-path packages/ds-swiftui
 | Contracts can emit compiling SwiftUI source through the shared IR | Yes — Switch emits a `Toggle(.switch)` View via the `native-toggle-affordance` collapse intent; `swift build` compiles the module |
 | Controlled/uncontrolled channel semantics survive the projection | The `checked` channel lowers to `Binding<Bool>?` + `@State` + `onChange` with controlled-takes-precedence, matching React's `useControllableState` rule |
 | Size variants resolve from typed token facts | Yes — `ir.tokenFacts` (FEAT-MOBILE-IR-001), not CSS parsing; `sm`/`lg` fall through to `md` until those tokens are authored |
+| The Stack primitive lowers from `PrimitiveIR` like the web targets | Yes — axis (VStack/HStack) from `axisByVariant`, gated on `axisModes` only (native = neutral container, no imposed spacing); emitted via `emitPrimitives` with mutation-pinned gating |
 
 ## Non-claims
 

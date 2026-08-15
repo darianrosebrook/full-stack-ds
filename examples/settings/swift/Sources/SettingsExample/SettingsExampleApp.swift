@@ -72,11 +72,13 @@ struct SettingsView: View {
     }
 
     /// Fully realized region: every switch row is the FSDS `Switch` from
-    /// `import DsSwiftUI`, driven through its controlled channel.
+    /// `import DsSwiftUI`, driven through its controlled channel, and row
+    /// layout composes the FSDS `Stack` primitive (the spec mandates Stack
+    /// for all multi-child layout).
     private var preferencesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeading("Preferences")
-            HStack {
+            Stack(variant: .horizontal) {
                 Text("Dark mode")
                 Spacer()
                 Switch(
@@ -84,7 +86,7 @@ struct SettingsView: View {
                     onChange: { value in print("dark mode:", value) }
                 )
             }
-            HStack {
+            Stack(variant: .horizontal) {
                 // NOT FSDS: Tooltip is not emitted for swiftui yet; the
                 // spec's tooltip content renders as caption text instead.
                 VStack(alignment: .leading, spacing: 2) {
