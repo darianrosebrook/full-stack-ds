@@ -3,6 +3,7 @@ title: 'Pre-push lockstep: wire realization audits, close drift-diff hole, mirro
 risk_tier: 2
 mode: chore
 lifecycle_state: active
+worktree: prepush-lockstep
 created_at: '2026-08-15T18:24:03.242Z'
 updated_at: '2026-08-15T18:24:03.242Z'
 blast_radius:
