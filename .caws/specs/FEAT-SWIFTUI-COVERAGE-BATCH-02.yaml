@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: "Checkbox.swift: Toggle(.checkbox) with checked/defaultChecked/onChange projection; indeterminate absent from API; swift build exit 0"
     recorded_at: "2026-08-15T19:49:25.963Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: FsdsDivider (reserved table) with synthesized DividerOrientation inline enum + native Divider()/vertical rule; Spinner visual-only leaf → ProgressView with conditional label; both compile
+    recorded_at: "2026-08-15T19:49:28.722Z"
