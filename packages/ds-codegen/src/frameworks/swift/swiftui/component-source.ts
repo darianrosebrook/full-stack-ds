@@ -1,22 +1,30 @@
 /**
- * SwiftUI View struct emission for components whose anatomy collapses
- * into a native SwiftUI primitive on this target.
+ * SwiftUI View struct emission.
  *
- * Round-2 scope (CODEGEN-NON-WEB-ROUND2-SWITCH-01): Switch only. The
- * emitter dispatches on `collectCollapseIntents(ir)` and, when the
- * `native-toggle-affordance` intent is present, emits a SwiftUI
- * `Toggle(.switch)` instead of walking the multi-part anatomy.
+ * Two IR-described emission classes:
  *
- * The emitter intentionally consumes the IR's framework-neutral
- * facts only (channels, props, defined types, collapse intents). It
- * does not branch on component identity. Per binding-rule doctrine,
- * the toggle-style realization is keyed on the collapse intent —
- * which is a per-part anatomy fact declared in the contract.
+ * 1. Native-collapse (round 2, CODEGEN-NON-WEB-ROUND2-SWITCH-01): contracts
+ *    whose anatomy declares `native-toggle-affordance` (Switch,
+ *    ToggleSwitch) collapse to SwiftUI `Toggle(.switch)` — the multi-part
+ *    anatomy describes a single native affordance on this target.
  *
- * Out of scope for round 2: multi-part anatomy fallback, surface
- * components (Tooltip/Popover), compound parts, hand-edit
- * preservation via @custom sections, full token resolution against
- * a SwiftUI Theme module.
+ * 2. Projected-children action (FEAT-SWIFTUI-MULTIPART-BUTTON-01): the
+ *    first multi-part path. Admits contracts whose root is a native action
+ *    affordance (`ir.root.element === "button"`) and whose dom children are
+ *    exactly one projected `{tag:"children"}` region — Button is the
+ *    corpus consumer. Realized as a SwiftUI `Button` whose label is the
+ *    consumer's content, styled from `ir.tokenScopes` through the
+ *    hand-authored `Tokens/FsdsTheme.swift` runtime (RN's normal form:
+ *    components ship scope data, resolution is theme-driven at render).
+ *
+ * The emitter consumes only framework-neutral IR facts (channels, props,
+ * defined types, collapse intents, root element, dom tree, token scopes) —
+ * never component identity. Component names that collide with SwiftUI's own
+ * types are exported under an `Fsds` prefix via the reserved-type table
+ * below (grammar-level, the SwiftUI analog of Lit's `StackElement` rename).
+ *
+ * Out of scope: surfaces (Tooltip/Popover), compound parts, slot-projected
+ * composers (Card/Field), hand-edit preservation via @custom sections.
  */
 import type {
   ComponentIR,
@@ -27,25 +35,364 @@ import { collectCollapseIntents } from "../../../ir.js";
 
 const INDENT = "    ";
 
+/**
+ * Component type names reserved by SwiftUI itself. A generated type with
+ * one of these names would be ambiguous for any consumer importing both
+ * modules, so the target exports them with an `Fsds` prefix.
+ */
+const SWIFTUI_RESERVED_TYPES: ReadonlySet<string> = new Set([
+  "Button",
+  "Toggle",
+  "Slider",
+  "Picker",
+  "Label",
+  "Link",
+  "Menu",
+  "Table",
+  "List",
+  "Form",
+  "Section",
+  "Field",
+]);
+
+function swiftExportName(componentName: string): string {
+  return SWIFTUI_RESERVED_TYPES.has(componentName)
+    ? `Fsds${componentName}`
+    : componentName;
+}
+
 export function generateSwiftUIComponentSource(ir: ComponentIR): string {
   const collapseIntents = collectCollapseIntents(ir);
   const isNativeToggle = collapseIntents.has("native-toggle-affordance");
 
-  if (!isNativeToggle) {
-    throw new Error(
-      `generateSwiftUIComponentSource: only the native-toggle-affordance ` +
-        `collapse path is implemented (round 2 scope). Component "${ir.name}" ` +
-        `does not declare that intent; multi-part anatomy fallback is not yet ` +
-        `implemented.`,
-    );
+  if (isNativeToggle) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitToggleComponent(ir));
+    return sections.join("\n\n") + "\n";
   }
 
-  const sections: string[] = [];
-  sections.push(emitImports());
-  sections.push(emitTypes(ir));
-  sections.push(emitToggleComponent(ir));
+  if (isProjectedChildrenAction(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitActionComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
 
-  return sections.join("\n\n") + "\n";
+  throw new Error(
+    `generateSwiftUIComponentSource: no emission class matches ` +
+      `component "${ir.name}". Implemented classes: native-toggle-affordance ` +
+      `collapse, and the projected-children action root (root element button ` +
+      `with a single projected children region). Slot-projected composers, ` +
+      `compound parts, and surfaces are not yet implemented.`,
+  );
+}
+
+/**
+ * The projected-children action class: a native action affordance whose
+ * entire content is the consumer's projected children.
+ */
+function isProjectedChildrenAction(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.root.element !== "button") return false;
+  const children = ir.dom.children ?? [];
+  return (
+    children.length === 1 &&
+    children[0]!.tag === "children" &&
+    (children[0]!.children ?? []).length === 0
+  );
+}
+
+/** Slot-name suffixes the action path knows how to apply, and the chrome they drive. */
+const ACTION_SLOT_SUFFIXES = {
+  background: "color.background.default",
+  foreground: "color.foreground.default",
+  borderColor: "color.border.default",
+  borderWidth: "size.border",
+  radius: "size.radius",
+  blockPadding: "padding-block-start",
+  inlinePadding: "padding-inline-start",
+  minHeight: "min-height",
+} as const;
+
+function actionSlotPresent(ir: ComponentIR, suffix: string): boolean {
+  return ir.tokenScopes.some((scope) =>
+    scope.values.some((v) => v.name.endsWith(suffix)),
+  );
+}
+
+function emitActionComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const has = (suffix: string) => actionSlotPresent(ir, suffix);
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Token scope data for ${exportName} (ir.tokenScopes → RN normal ` +
+      `form: data consumed through FsdsTheme at render, never resolved ` +
+      `constants). A caseless enum namespace because generic types cannot ` +
+      `hold static stored properties.`,
+  );
+  lines.push(`enum ${ir.name}Tokens {`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  for (const scope of ir.tokenScopes) {
+    lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
+    for (const value of scope.values) {
+      const literalArg = value.rawValue
+        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
+        : "";
+      lines.push(
+        `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
+          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+      );
+    }
+    lines.push(`${INDENT}${INDENT}],`);
+  }
+  lines.push(`${INDENT}]`);
+  lines.push(`}`);
+  lines.push("");
+  lines.push(
+    `/// Emitted through the projected-children action path: interactive ` +
+      `button root with a single consumer content region.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}<Label: View>: View {`);
+  lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+  lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+  lines.push(`${INDENT}}`);
+
+  // Props
+  const variantAxes = Object.keys(ir.variants);
+  for (const axis of variantAxes) {
+    lines.push(`${INDENT}private let ${axis}: ${ir.name}${capitalize(axis)}`);
+  }
+  if (hasConventionalProp(ir, "disabled")) {
+    lines.push(`${INDENT}private let disabled: Bool`);
+  }
+  if (hasConventionalProp(ir, "loading")) {
+    lines.push(`${INDENT}private let loading: Bool`);
+  }
+  if (hasConventionalProp(ir, "ariaLabel")) {
+    lines.push(`${INDENT}private let accessibilityLabel: String?`);
+  }
+  if (hasConventionalProp(ir, "onClick")) {
+    lines.push(`${INDENT}private let onTap: (() -> Void)?`);
+  }
+  lines.push(`${INDENT}private let label: Label`);
+  lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  lines.push("");
+
+  // Initializer — defaults from contract prop defaults.
+  lines.push(`${INDENT}public init(`);
+  const params: string[] = [];
+  for (const axis of variantAxes) {
+    const def = findPropDefault(ir, axis);
+    params.push(
+      `${INDENT}${INDENT}${axis}: ${ir.name}${capitalize(axis)} = .${def},`,
+    );
+  }
+  if (hasConventionalProp(ir, "disabled")) {
+    params.push(`${INDENT}${INDENT}disabled: Bool = false,`);
+  }
+  if (hasConventionalProp(ir, "loading")) {
+    params.push(`${INDENT}${INDENT}loading: Bool = false,`);
+  }
+  if (hasConventionalProp(ir, "ariaLabel")) {
+    params.push(`${INDENT}${INDENT}accessibilityLabel: String? = nil,`);
+  }
+  if (hasConventionalProp(ir, "onClick")) {
+    params.push(`${INDENT}${INDENT}onTap: (() -> Void)? = nil,`);
+  }
+  params.push(`${INDENT}${INDENT}@ViewBuilder label: () -> Label`);
+  lines.push(...params);
+  lines.push(`${INDENT}) {`);
+  for (const axis of variantAxes) {
+    lines.push(`${INDENT}${INDENT}self.${axis} = ${axis}`);
+  }
+  if (hasConventionalProp(ir, "disabled")) {
+    lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  }
+  if (hasConventionalProp(ir, "loading")) {
+    lines.push(`${INDENT}${INDENT}self.loading = loading`);
+  }
+  if (hasConventionalProp(ir, "ariaLabel")) {
+    lines.push(`${INDENT}${INDENT}self.accessibilityLabel = accessibilityLabel`);
+  }
+  if (hasConventionalProp(ir, "onClick")) {
+    lines.push(`${INDENT}${INDENT}self.onTap = onTap`);
+  }
+  lines.push(`${INDENT}${INDENT}self.label = label()`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+
+  // Token resolution: root base + variant layers, theme-driven.
+  lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+  lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+  const layerList = [
+    "\"root\"",
+    ...variantAxes.map(
+      (axis) => `"variant_\\(${axis}.rawValue)"`,
+    ),
+  ];
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}layers: [${layerList.join(", ")}]`,
+  );
+  lines.push(`${INDENT}${INDENT})`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+
+  // Slot accessors (presence-driven).
+  lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+  lines.push(
+    `${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`,
+  );
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+  lines.push(
+    `${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`,
+  );
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  const accessors: string[] = [];
+  if (has(ACTION_SLOT_SUFFIXES.background)) {
+    accessors.push(
+      `${INDENT}private var background: Color { colorSlot("${ACTION_SLOT_SUFFIXES.background}") ?? .accentColor }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.foreground)) {
+    accessors.push(
+      `${INDENT}private var foreground: Color { colorSlot("${ACTION_SLOT_SUFFIXES.foreground}") ?? .primary }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.borderColor)) {
+    accessors.push(
+      `${INDENT}private var borderColor: Color { colorSlot("${ACTION_SLOT_SUFFIXES.borderColor}") ?? .clear }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.borderWidth)) {
+    accessors.push(
+      `${INDENT}private var borderWidth: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.borderWidth}") ?? 0 }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.radius)) {
+    accessors.push(
+      `${INDENT}private var radius: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.radius}") ?? 0 }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.blockPadding)) {
+    accessors.push(
+      `${INDENT}private var blockPadding: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.blockPadding}") ?? 0 }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.inlinePadding)) {
+    accessors.push(
+      `${INDENT}private var inlinePadding: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.inlinePadding}") ?? 0 }`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.minHeight)) {
+    accessors.push(
+      `${INDENT}private var minHeight: CGFloat { pxSlot("${ACTION_SLOT_SUFFIXES.minHeight}") ?? 0 }`,
+    );
+  }
+  lines.push(...accessors);
+  lines.push("");
+
+  // Label content: loading swaps the projected content for a progress
+  // affordance (the spinner part's decoration role realized natively).
+  if (hasConventionalProp(ir, "loading")) {
+    lines.push(`${INDENT}@ViewBuilder`);
+    lines.push(`${INDENT}private var labelContent: some View {`);
+    lines.push(`${INDENT}${INDENT}if loading {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}ProgressView().controlSize(.small)`);
+    lines.push(`${INDENT}${INDENT}} else {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}label`);
+    lines.push(`${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+  }
+
+  // Body.
+  lines.push(`${INDENT}public var body: some View {`);
+  const action = hasConventionalProp(ir, "onClick") ? "{ onTap?() }" : "{}";
+  const innerContent = hasConventionalProp(ir, "loading")
+    ? "labelContent"
+    : "label";
+  lines.push(`${INDENT}${INDENT}Button(action: ${action}) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${innerContent}`);
+  if (has(ACTION_SLOT_SUFFIXES.blockPadding)) {
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.inlinePadding)) {
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.minHeight)) {
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}${INDENT}.frame(minHeight: minHeight)`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.background)) {
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.background(background)`);
+  }
+  if (has(ACTION_SLOT_SUFFIXES.radius)) {
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`,
+    );
+  }
+  if (has(ACTION_SLOT_SUFFIXES.borderColor) && has(ACTION_SLOT_SUFFIXES.borderWidth)) {
+    const radiusExpr = has(ACTION_SLOT_SUFFIXES.radius) ? "radius" : "0";
+    lines.push(
+      `${INDENT}${INDENT}${INDENT}${INDENT}.overlay(` +
+        `RoundedRectangle(cornerRadius: ${radiusExpr}, style: .continuous)` +
+        `.stroke(borderColor, lineWidth: borderWidth))`,
+    );
+  }
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}.buttonStyle(.plain)`);
+  if (has(ACTION_SLOT_SUFFIXES.foreground)) {
+    lines.push(`${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  }
+  if (hasConventionalProp(ir, "disabled") && hasConventionalProp(ir, "loading")) {
+    lines.push(`${INDENT}${INDENT}.disabled(disabled || loading)`);
+  } else if (hasConventionalProp(ir, "disabled")) {
+    lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
+  }
+  if (hasConventionalProp(ir, "ariaLabel")) {
+    lines.push(`${INDENT}${INDENT}.accessibilityLabel(accessibilityLabel ?? "")`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+
+  return lines.join("\n");
+}
+
+function hasConventionalProp(ir: ComponentIR, name: string): boolean {
+  return ir.styledProps.some((p) => p.safeName === name);
+}
+
+function findPropDefault(ir: ComponentIR, name: string): string {
+  const prop = ir.styledProps.find((p) => p.safeName === name);
+  const authored = prop?.defaultExpr?.replace(/^["']|["']$/g, "");
+  const values = ir.variants[name];
+  if (authored && values?.includes(authored)) return authored;
+  return values?.[0] ?? "unknown";
+}
+
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function emitImports(): string {

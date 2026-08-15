@@ -2,16 +2,17 @@
 
 Generated SwiftUI realization of the FSDS component contracts. This is a
 SwiftPM package (not a pnpm workspace member): `Package.swift` and this README
-are hand-maintained; everything under `Sources/DsSwiftUI/Components/` and
-`Sources/DsSwiftUI/primitives/` is generated output and must not be
-hand-edited.
+are hand-maintained, as is the token runtime
+`Sources/DsSwiftUI/Tokens/FsdsTheme.swift`; everything under
+`Sources/DsSwiftUI/Components/` and `Sources/DsSwiftUI/primitives/` is
+generated output and must not be hand-edited.
 
 ## Regenerate
 
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=swiftui Switch
+pnpm run generate -- --target=swiftui Switch ToggleSwitch Button
 ```
 
 `swiftui` is an **explicit-only** target in this slice: it is not in
@@ -35,6 +36,8 @@ swift build --package-path packages/ds-swiftui
 | Controlled/uncontrolled channel semantics survive the projection | The `checked` channel lowers to `Binding<Bool>?` + `@State` + `onChange` with controlled-takes-precedence, matching React's `useControllableState` rule |
 | Size variants resolve from typed token facts | Yes — `ir.tokenFacts` (FEAT-MOBILE-IR-001), not CSS parsing; `sm`/`lg` fall through to `md` until those tokens are authored |
 | The Stack primitive lowers from `PrimitiveIR` like the web targets | Yes — axis (VStack/HStack) from `axisByVariant`, gated on `axisModes` only (native = neutral container, no imposed spacing); emitted via `emitPrimitives` with mutation-pinned gating |
+| Multi-part anatomy emits with theme-driven styling | Yes — the projected-children action path (root button + single content region) emits `FsdsButton`; styling comes from `ir.tokenScopes` shipped as data and resolved through the hand-authored `FsdsTheme` (RN normal form), layering root + variant_<size> + variant_<intent> |
+| SwiftUI type collisions are handled grammatically | Yes — a reserved-type table exports colliding names with an `Fsds` prefix (`Button` → `FsdsButton`), the SwiftUI analog of Lit's `StackElement` rename |
 
 ## Non-claims
 

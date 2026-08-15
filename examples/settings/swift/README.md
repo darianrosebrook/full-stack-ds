@@ -16,8 +16,10 @@ inspection, which no other non-web lane offers today.
 
 A macOS SwiftUI app can consume the generated DsSwiftUI package via
 `.package(path:)` and compose the settings spec's switch rows — laid out with
-the FSDS `Stack` primitive — from public exports, with controlled-channel
-state (`Binding` + `onChange`) surviving the package boundary.
+the FSDS `Stack` primitive — plus its primary/destructive action buttons
+(`FsdsButton`, styled from token scopes through `FsdsTheme`) from public
+exports, with controlled-channel state (`Binding` + `onChange`) surviving the
+package boundary.
 
 ## Falsifier
 
@@ -32,11 +34,11 @@ state (`Binding` + `onChange`) surviving the package boundary.
 
 ## Non-claims
 
-- **Partial realization.** Only `Switch` (and `ToggleSwitch`) plus the
-  `Stack` primitive are emitted for
-  swiftui today. Card, CardHeader/CardContent/CardFooter, Field, Input,
-  Button, Dialog, and Tooltip do not exist on this
-  target; those regions of the spec are composed from plain SwiftUI and
+- **Partial realization.** `Switch` (and `ToggleSwitch`), the `Stack`
+  primitive, and `FsdsButton` (the projected-children action path) are
+  emitted for swiftui today. Card, CardHeader/CardContent/CardFooter,
+  Field, Input, Dialog, and Tooltip do not exist on this target; those
+  regions of the spec are composed from plain SwiftUI and
   marked `NOT FSDS` in the app source. This lane does not claim parity with
   the react/vue lanes.
 - **Compile + manual run only.** CI compiles; it does not run the app, take
