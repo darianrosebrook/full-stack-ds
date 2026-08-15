@@ -71,3 +71,7 @@ evidence:
     status: pass
     evidence_ref: "full gate in worktree compound-rn-tabs pre-merge: pnpm run governed:rail (required mode) OK; pnpm test 2072/2072; pnpm run test:frameworks (RN suite 72/72); audit:behavior-realization + audit:a11y-realization PASS; git status byte-clean after full-target regen (only Tabs + primitives + emitter sources changed)"
     recorded_at: "2026-08-15T19:08:18.840Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "docs/current-implementation-snapshot.md 'Non-web generation (substrate)' row + packages/ds-codegen/src/validation/frameworks/react-native.ts knownGaps @ ea1f3f2b — named touch divergences (no keyboard/roving, static indicator, no orientation layout, unmountInactive=false mounted-but-suppressed)"
+    recorded_at: "2026-08-15T19:08:20.315Z"
