@@ -229,13 +229,13 @@ export const cardTokenScopes = {
       name: "card.elevation.resting",
       cssVar: "--fsds-card-elevation-resting",
       ref: "semantic.elevation.surface.raised",
-      fallback: "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)",
+      fallback: "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
     },
     "card.elevation.raised": {
       name: "card.elevation.raised",
       cssVar: "--fsds-card-elevation-raised",
       ref: "semantic.elevation.surface.floating",
-      fallback: "0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1)",
+      fallback: "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
     },
     "card.color.focus.ring": {
       name: "card.color.focus.ring",

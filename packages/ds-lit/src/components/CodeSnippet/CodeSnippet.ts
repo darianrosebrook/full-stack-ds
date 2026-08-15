@@ -43,7 +43,7 @@ export class CodeSnippetElement extends LitElement {
       --fsds-code-snippet-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-code-snippet-size-font-size-default: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-code-snippet-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
-      --fsds-code-snippet-elevation-kbd: var(--fsds-semantic-elevation-surface-raised, 0 1px 1px rgba(0,0,0,0.14));
+      --fsds-code-snippet-elevation-kbd: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
     }
 
     .code-snippet {
@@ -74,7 +74,7 @@ export class CodeSnippetElement extends LitElement {
     }
 
     .code-snippet--kbd {
-      box-shadow: var(--fsds-code-snippet-elevation-kbd, 0 1px 1px rgba(0,0,0,0.14));
+      box-shadow: var(--fsds-code-snippet-elevation-kbd, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
 

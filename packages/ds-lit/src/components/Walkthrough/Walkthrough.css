@@ -21,7 +21,7 @@
   border-style: solid;
   border-width: 1px;
   border-radius: var(--fsds-walkthrough-surface-radius, 16px);
-  box-shadow: var(--fsds-walkthrough-surface-shadow, 0 4px 24px rgba(0,0,0,0.12));
+  box-shadow: var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
   padding: var(--fsds-walkthrough-surface-padding, 32px);
 }
 

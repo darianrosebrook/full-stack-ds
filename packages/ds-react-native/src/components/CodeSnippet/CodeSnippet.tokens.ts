@@ -138,7 +138,7 @@ export const codeSnippetTokenScopes = {
       name: "code-snippet.elevation.kbd",
       cssVar: "--fsds-code-snippet-elevation-kbd",
       ref: "semantic.elevation.surface.raised",
-      fallback: "0 1px 1px rgba(0,0,0,0.14)",
+      fallback: "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
     },
   },
 } satisfies ComponentTokenScopes;

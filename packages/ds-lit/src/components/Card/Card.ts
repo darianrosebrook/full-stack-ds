@@ -61,8 +61,8 @@ export class CardElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -127,7 +127,7 @@ export class CardElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
       border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
@@ -144,12 +144,12 @@ export class CardElement extends LitElement {
 
     .card--interactive:hover {
       background-color: var(--fsds-card-color-background-hover, #d0d0d0);
-      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
     }
 
@@ -295,8 +295,8 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -361,7 +361,7 @@ export class CardHeaderElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
       border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
@@ -378,12 +378,12 @@ export class CardHeaderElement extends LitElement {
 
     .card--interactive:hover {
       background-color: var(--fsds-card-color-background-hover, #d0d0d0);
-      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
     }
 
@@ -511,8 +511,8 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -577,7 +577,7 @@ export class CardContentElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
       border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
@@ -594,12 +594,12 @@ export class CardContentElement extends LitElement {
 
     .card--interactive:hover {
       background-color: var(--fsds-card-color-background-hover, #d0d0d0);
-      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
     }
 
@@ -727,8 +727,8 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -793,7 +793,7 @@ export class CardFooterElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
       border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
@@ -810,12 +810,12 @@ export class CardFooterElement extends LitElement {
 
     .card--interactive:hover {
       background-color: var(--fsds-card-color-background-hover, #d0d0d0);
-      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
     }
 
@@ -943,8 +943,8 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -1009,7 +1009,7 @@ export class CardDescriptionElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
       border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
@@ -1026,12 +1026,12 @@ export class CardDescriptionElement extends LitElement {
 
     .card--interactive:hover {
       background-color: var(--fsds-card-color-background-hover, #d0d0d0);
-      box-shadow: var(--fsds-card-elevation-raised, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
 
     .card--interactive:active {
-      box-shadow: var(--fsds-card-elevation-resting, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
     }
 

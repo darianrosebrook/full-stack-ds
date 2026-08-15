@@ -51,7 +51,7 @@ export class CommandElement extends LitElement {
       --fsds-command-spacing-dialog-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
-      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
       --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
     }
@@ -98,7 +98,7 @@ export class CommandElement extends LitElement {
       border-style: solid;
       border-width: var(--fsds-command-border-width, 1px);
       border-radius: var(--fsds-command-border-radius, 6px);
-      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-command-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -367,7 +367,7 @@ export class CommandListElement extends LitElement {
       --fsds-command-spacing-dialog-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
-      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
       --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
     }
@@ -414,7 +414,7 @@ export class CommandListElement extends LitElement {
       border-style: solid;
       border-width: var(--fsds-command-border-width, 1px);
       border-radius: var(--fsds-command-border-radius, 6px);
-      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-command-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -588,7 +588,7 @@ export class CommandGroupElement extends LitElement {
       --fsds-command-spacing-dialog-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
-      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
       --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
     }
@@ -635,7 +635,7 @@ export class CommandGroupElement extends LitElement {
       border-style: solid;
       border-width: var(--fsds-command-border-width, 1px);
       border-radius: var(--fsds-command-border-radius, 6px);
-      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-command-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;
@@ -809,7 +809,7 @@ export class CommandItemElement extends LitElement {
       --fsds-command-spacing-dialog-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
-      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
       --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
     }
@@ -856,7 +856,7 @@ export class CommandItemElement extends LitElement {
       border-style: solid;
       border-width: var(--fsds-command-border-width, 1px);
       border-radius: var(--fsds-command-border-radius, 6px);
-      box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-command-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       overflow: hidden;
       pointer-events: auto;
       box-sizing: border-box;

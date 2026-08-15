@@ -41,7 +41,7 @@ export class SwitchElement extends LitElement {
       --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #b8b8b8);
       --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0, 0, 0, 0.1));
+      --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #0566fe);
       --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
       --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
@@ -121,7 +121,7 @@ export class SwitchElement extends LitElement {
     .switch__thumb {
       transition: translate var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing), background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing);
       background-color: var(--fsds-switch-color-thumb-background-default, #ffffff);
-      box-shadow: var(--fsds-switch-color-thumb-shadow-default, 0 1px 2px rgba(0, 0, 0, 0.1));
+      box-shadow: var(--fsds-switch-color-thumb-shadow-default, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       width: var(--fsds-switch-size-md-thumb-size, 16px);
       height: var(--fsds-switch-size-md-thumb-height, 16px);
       top: var(--fsds-switch-size-md-track-padding, 1px);

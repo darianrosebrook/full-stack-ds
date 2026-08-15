@@ -56,7 +56,7 @@ export class CalendarElement extends LitElement {
       --fsds-calendar-typography-weekday-size: var(--fsds-semantic-typography-caption-02, 12px);
       --fsds-calendar-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-calendar-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-      --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-surface-overlay, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
+      --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-surface-overlay, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
     }
 
     .calendar {
@@ -80,7 +80,7 @@ export class CalendarElement extends LitElement {
       border-style: solid;
       padding: var(--fsds-calendar-size-padding-default, 16px);
       border-radius: var(--fsds-calendar-size-radius-default, 6px);
-      box-shadow: var(--fsds-calendar-elevation-default, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-calendar-elevation-default, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
     }
 
     .calendar__header {
@@ -275,7 +275,7 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-calendar-typography-weekday-size: var(--fsds-semantic-typography-caption-02, 12px);
       --fsds-calendar-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-calendar-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-      --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-surface-overlay, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
+      --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-surface-overlay, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
     }
 
     .calendar {
@@ -299,7 +299,7 @@ export class CalendarHeaderElement extends LitElement {
       border-style: solid;
       padding: var(--fsds-calendar-size-padding-default, 16px);
       border-radius: var(--fsds-calendar-size-radius-default, 6px);
-      box-shadow: var(--fsds-calendar-elevation-default, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
+      box-shadow: var(--fsds-calendar-elevation-default, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
     }
 
     .calendar__header {

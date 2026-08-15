@@ -52,7 +52,7 @@ export class SheetElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -95,7 +95,7 @@ export class SheetElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;
@@ -320,7 +320,7 @@ export class SheetContentElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -363,7 +363,7 @@ export class SheetContentElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;
@@ -511,7 +511,7 @@ export class SheetHeaderElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -554,7 +554,7 @@ export class SheetHeaderElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;
@@ -702,7 +702,7 @@ export class SheetTitleElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -745,7 +745,7 @@ export class SheetTitleElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;
@@ -893,7 +893,7 @@ export class SheetDescriptionElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -936,7 +936,7 @@ export class SheetDescriptionElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;
@@ -1084,7 +1084,7 @@ export class SheetBodyElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -1127,7 +1127,7 @@ export class SheetBodyElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;
@@ -1275,7 +1275,7 @@ export class SheetFooterElement extends LitElement {
       --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-sheet-text-size-title: var(--fsds-semantic-typography-heading-06, 14px);
       --fsds-sheet-text-weight-title: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -1318,7 +1318,7 @@ export class SheetFooterElement extends LitElement {
       border-color: var(--fsds-sheet-color-border, #b8b8b8);
       border-style: solid;
       border-width: var(--fsds-sheet-border-width, 1px);
-      box-shadow: var(--fsds-sheet-shadow, 0 4px 24px rgba(0,0,0,0.12));
+      box-shadow: var(--fsds-sheet-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       max-height: 100vh;
       width: var(--fsds-sheet-size-width, 400px);
       pointer-events: auto;

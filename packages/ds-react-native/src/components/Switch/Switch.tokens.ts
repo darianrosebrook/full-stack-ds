@@ -116,7 +116,7 @@ export const switchTokenScopes = {
       name: "switch.color.thumb.shadow.default",
       cssVar: "--fsds-switch-color-thumb-shadow-default",
       ref: "semantic.elevation.surface.raised",
-      fallback: "0 1px 2px rgba(0, 0, 0, 0.1)",
+      fallback: "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
     },
     "switch.color.input.outline.focus": {
       name: "switch.color.input.outline.focus",

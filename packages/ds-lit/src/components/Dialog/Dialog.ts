@@ -51,7 +51,7 @@ export class DialogElement extends LitElement {
       --fsds-dialog-size-full-width: 100vw;
       --fsds-dialog-size-full-height: 100vh;
       --fsds-dialog-size-close-button-size: var(--fsds-core-spacing-size-08, 32px);
-      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       --fsds-dialog-spacing-header-padding-top: var(--fsds-core-spacing-size-06, 16px);
       --fsds-dialog-spacing-body-padding-right: var(--fsds-core-spacing-size-07, 24px);
       --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
@@ -113,7 +113,7 @@ export class DialogElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-dialog-size-radius-default, 16px);
-      box-shadow: var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       width: var(--fsds-dialog-size-md-width, 500px);
       max-width: var(--fsds-dialog-size-md-max-width, 90vw);
       max-height: 90vh;
@@ -326,7 +326,7 @@ export class DialogHeaderElement extends LitElement {
       --fsds-dialog-size-full-width: 100vw;
       --fsds-dialog-size-full-height: 100vh;
       --fsds-dialog-size-close-button-size: var(--fsds-core-spacing-size-08, 32px);
-      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       --fsds-dialog-spacing-header-padding-top: var(--fsds-core-spacing-size-06, 16px);
       --fsds-dialog-spacing-body-padding-right: var(--fsds-core-spacing-size-07, 24px);
       --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
@@ -388,7 +388,7 @@ export class DialogHeaderElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-dialog-size-radius-default, 16px);
-      box-shadow: var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       width: var(--fsds-dialog-size-md-width, 500px);
       max-width: var(--fsds-dialog-size-md-max-width, 90vw);
       max-height: 90vh;
@@ -519,7 +519,7 @@ export class DialogTitleElement extends LitElement {
       --fsds-dialog-size-full-width: 100vw;
       --fsds-dialog-size-full-height: 100vh;
       --fsds-dialog-size-close-button-size: var(--fsds-core-spacing-size-08, 32px);
-      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       --fsds-dialog-spacing-header-padding-top: var(--fsds-core-spacing-size-06, 16px);
       --fsds-dialog-spacing-body-padding-right: var(--fsds-core-spacing-size-07, 24px);
       --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
@@ -581,7 +581,7 @@ export class DialogTitleElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-dialog-size-radius-default, 16px);
-      box-shadow: var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       width: var(--fsds-dialog-size-md-width, 500px);
       max-width: var(--fsds-dialog-size-md-max-width, 90vw);
       max-height: 90vh;
@@ -712,7 +712,7 @@ export class DialogBodyElement extends LitElement {
       --fsds-dialog-size-full-width: 100vw;
       --fsds-dialog-size-full-height: 100vh;
       --fsds-dialog-size-close-button-size: var(--fsds-core-spacing-size-08, 32px);
-      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       --fsds-dialog-spacing-header-padding-top: var(--fsds-core-spacing-size-06, 16px);
       --fsds-dialog-spacing-body-padding-right: var(--fsds-core-spacing-size-07, 24px);
       --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
@@ -774,7 +774,7 @@ export class DialogBodyElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-dialog-size-radius-default, 16px);
-      box-shadow: var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       width: var(--fsds-dialog-size-md-width, 500px);
       max-width: var(--fsds-dialog-size-md-max-width, 90vw);
       max-height: 90vh;
@@ -905,7 +905,7 @@ export class DialogFooterElement extends LitElement {
       --fsds-dialog-size-full-width: 100vw;
       --fsds-dialog-size-full-height: 100vh;
       --fsds-dialog-size-close-button-size: var(--fsds-core-spacing-size-08, 32px);
-      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-dialog, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       --fsds-dialog-spacing-header-padding-top: var(--fsds-core-spacing-size-06, 16px);
       --fsds-dialog-spacing-body-padding-right: var(--fsds-core-spacing-size-07, 24px);
       --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
@@ -967,7 +967,7 @@ export class DialogFooterElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       border-radius: var(--fsds-dialog-size-radius-default, 16px);
-      box-shadow: var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+      box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
       width: var(--fsds-dialog-size-md-width, 500px);
       max-width: var(--fsds-dialog-size-md-max-width, 90vw);
       max-height: 90vh;

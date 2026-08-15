@@ -167,7 +167,7 @@ export const commandTokenScopes = {
       name: "command.shadow",
       cssVar: "--fsds-command-shadow",
       ref: "semantic.elevation.surface.floating",
-      fallback: "0 4px 24px rgba(0,0,0,0.12)",
+      fallback: "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
     },
     "command.opacity.disabled": {
       name: "command.opacity.disabled",

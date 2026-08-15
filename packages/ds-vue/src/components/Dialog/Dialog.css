@@ -38,7 +38,7 @@
   border-style: solid;
   border-width: 1px;
   border-radius: var(--fsds-dialog-size-radius-default, 16px);
-  box-shadow: var(--fsds-dialog-elevation-default, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15));
+  box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
   width: var(--fsds-dialog-size-md-width, 500px);
   max-width: var(--fsds-dialog-size-md-max-width, 90vw);
   max-height: 90vh;

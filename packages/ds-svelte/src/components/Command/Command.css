@@ -43,7 +43,7 @@
   border-style: solid;
   border-width: var(--fsds-command-border-width, 1px);
   border-radius: var(--fsds-command-border-radius, 6px);
-  box-shadow: var(--fsds-command-shadow, 0 4px 24px rgba(0,0,0,0.12));
+  box-shadow: var(--fsds-command-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
   overflow: hidden;
   pointer-events: auto;
   box-sizing: border-box;

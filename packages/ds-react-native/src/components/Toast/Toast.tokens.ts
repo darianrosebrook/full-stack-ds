@@ -103,7 +103,7 @@ export const toastTokenScopes = {
       name: "toast.surface.shadow",
       cssVar: "--fsds-toast-surface-shadow",
       ref: "semantic.elevation.surface.overlay",
-      fallback: "0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)",
+      fallback: "0px 4px 6px #0000000d, 0px 10px 15px #0000001a",
     },
     "toast.color.default": {
       name: "toast.color.default",

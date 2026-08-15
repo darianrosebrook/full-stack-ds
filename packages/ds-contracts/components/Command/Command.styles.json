@@ -139,7 +139,7 @@
     },
     "box-shadow": {
       "resolvesTo": "command.shadow",
-      "fallback": "0 4px 24px rgba(0,0,0,0.12)"
+      "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a"
     },
     "overflow": {
       "literal": "hidden",
