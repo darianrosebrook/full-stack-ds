@@ -13,12 +13,12 @@
       },
       "secondary": {
         "$type": "color",
-        "$value": "{color.palette.neutral.600}",
+        "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.600}",
+          "fsds.light": "{color.palette.neutral.700}",
           "fsds.dark": "{color.palette.neutral.300}"
         },
-        "$description": "Secondary foreground color"
+        "$description": "Secondary foreground color. Light darkened neutral.600 -> neutral.700 (FIX-CONTRAST-DEBT-01): neutral.600 measured 4.38:1 on background.secondary (neutral.100), under AA 4.5:1."
       },
       "tertiary": {
         "$type": "color",
@@ -52,9 +52,9 @@
         "$value": "{color.palette.neutral.700}",
         "$extensions": {
           "fsds.light": "{color.palette.neutral.700}",
-          "fsds.dark": "{color.palette.neutral.300}"
+          "fsds.dark": "{color.palette.neutral.200}"
         },
-        "$description": "Hover foreground color"
+        "$description": "Hover foreground color. Dark brightened neutral.300 -> neutral.200 (FIX-CONTRAST-DEBT-01): neutral.300 measured 3.60:1 on background.hover dark (neutral.700), under AA 4.5:1. Mirrors the light direction — hover strengthens the text."
       },
       "link": {
         "$type": "color",

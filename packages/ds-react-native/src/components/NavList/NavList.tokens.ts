@@ -80,7 +80,7 @@ export const navListTokenScopes = {
       name: "nav-list.color.foreground.default",
       cssVar: "--fsds-nav-list-color-foreground-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "nav-list.color.foreground.hover": {
       name: "nav-list.color.foreground.hover",

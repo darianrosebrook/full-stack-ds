@@ -55,13 +55,13 @@ enum DialogTokens {
             "dialog.typography.title.lineHeight": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-typography-title-line-height", name: "dialog.typography.title.lineHeight", fallback: .string("1")),
         ],
         "part_backdrop": [
-            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .string("#000000")),
+            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .string("#00000066")),
         ],
         "part_body": [
-            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#5c5b5c")),
+            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#474647")),
         ],
         "part_closeButton": [
-            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#5c5b5c")),
+            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#474647")),
         ],
         "hover": [
             "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .string("#b8b8b8")),

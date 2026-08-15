@@ -55,7 +55,7 @@ enum CardTokens {
             "card.color.badge.error.background": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-error-background", name: "card.color.badge.error.background", fallback: .string("#fac2c2")),
             "card.color.badge.error.foreground": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-error-foreground", name: "card.color.badge.error.foreground", fallback: .string("#900909")),
             "card.color.badge.neutral.background": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-neutral-background", name: "card.color.badge.neutral.background", fallback: .string("#d0d0d0")),
-            "card.color.badge.neutral.foreground": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-neutral-foreground", name: "card.color.badge.neutral.foreground", fallback: .string("#5c5b5c")),
+            "card.color.badge.neutral.foreground": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-neutral-foreground", name: "card.color.badge.neutral.foreground", fallback: .string("#474647")),
             "card.color.badge.accent.background": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-accent-background", name: "card.color.badge.accent.background", fallback: .string("#d92d2e")),
             "card.color.badge.accent.foreground": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-badge-accent-foreground", name: "card.color.badge.accent.foreground", fallback: .string("#ffffff")),
             "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", fallback: .string("#d0d0d0")),
@@ -85,13 +85,13 @@ enum CardTokens {
             "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", fallback: .string("#8b4b00")),
         ],
         "part_description": [
-            "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", fallback: .string("#5c5b5c")),
+            "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", fallback: .string("#474647")),
         ],
         "part_link": [
             "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", fallback: .string("#d92d2e")),
         ],
         "part_note": [
-            "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", fallback: .string("#5c5b5c")),
+            "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", fallback: .string("#474647")),
         ],
     ]
 }

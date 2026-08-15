@@ -11,7 +11,7 @@
   },
   "stat.color.foreground.label": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "stat.color.foreground.trend.up": {
@@ -26,7 +26,7 @@
   },
   "stat.color.foreground.trend.neutral": {
     "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#5c5b5c",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "stat.size.value.sm": {

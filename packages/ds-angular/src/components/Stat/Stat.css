@@ -30,7 +30,7 @@
 }
 
 .stat--neutral {
-  color: var(--fsds-stat-color-foreground-trend-neutral, #5c5b5c);
+  color: var(--fsds-stat-color-foreground-trend-neutral, #474647);
 }
 
 .stat--sm {

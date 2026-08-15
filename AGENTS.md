@@ -189,7 +189,7 @@ Read `docs/specifications/admission-rail.md`, `docs/specifications/governed-ci.m
 
 ### Token graph
 
-`composed.tokens.json` and `resolved.tokens.json` are gitignored regenerable scratch — every CI/pre-push run starts with `pnpm -F @full-stack-ds/tokens build` before running `generate:check`, because the semantic check loads the composed graph to verify contract `resolvesTo` paths. Without that build, every contract reports `token graph not built` DRIFT.
+`composed.tokens.json` is gitignored regenerable scratch; `resolved.tokens.json` and `tokens.css` are COMMITTED outputs, drift-gated by `tokens:build:check` (the contrast validators — curated and component-derived — read `resolved.tokens.json`). Every CI/pre-push run still starts with `pnpm -F @full-stack-ds/tokens build` before running `generate:check`, because the semantic check loads the composed graph to verify contract `resolvesTo` paths. Without that build, every contract reports `token graph not built` DRIFT.
 
 Brand override files do **not** participate in the main token build's ref validation (they layer separately). `tokens:check-brand-refs` is the gate that catches unresolved `{ref}`s in brand overrides — without it, a typo like `{color.palette.cobalt.500}` silently no-ops at runtime.
 

@@ -35,7 +35,7 @@ export class NavListElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
@@ -79,7 +79,7 @@ export class NavListElement extends LitElement {
 
     .nav-list__item {
       display: block;
-      color: var(--fsds-nav-list-color-foreground-default, #5c5b5c);
+      color: var(--fsds-nav-list-color-foreground-default, #474647);
       padding-block: var(--fsds-nav-list-size-padding-block, 2px);
       padding-inline: var(--fsds-nav-list-size-padding-inline, 8px);
       border-radius: var(--fsds-nav-list-size-radius-default, 6px);
@@ -143,7 +143,7 @@ export class NavListListElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
@@ -187,7 +187,7 @@ export class NavListListElement extends LitElement {
 
     .nav-list__item {
       display: block;
-      color: var(--fsds-nav-list-color-foreground-default, #5c5b5c);
+      color: var(--fsds-nav-list-color-foreground-default, #474647);
       padding-block: var(--fsds-nav-list-size-padding-block, 2px);
       padding-inline: var(--fsds-nav-list-size-padding-inline, 8px);
       border-radius: var(--fsds-nav-list-size-radius-default, 6px);
@@ -231,7 +231,7 @@ export class NavListItemElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
@@ -275,7 +275,7 @@ export class NavListItemElement extends LitElement {
 
     .nav-list__item {
       display: block;
-      color: var(--fsds-nav-list-color-foreground-default, #5c5b5c);
+      color: var(--fsds-nav-list-color-foreground-default, #474647);
       padding-block: var(--fsds-nav-list-size-padding-block, 2px);
       padding-inline: var(--fsds-nav-list-size-padding-inline, 8px);
       border-radius: var(--fsds-nav-list-size-radius-default, 6px);

@@ -103,7 +103,7 @@ export const selectTokenScopes = {
       name: "select.color.icon.default",
       cssVar: "--fsds-select-color-icon-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "select.color.placeholder.default": {
       name: "select.color.placeholder.default",

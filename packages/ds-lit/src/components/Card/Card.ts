@@ -56,7 +56,7 @@ export class CardElement extends LitElement {
       --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
       --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
       --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
@@ -93,7 +93,7 @@ export class CardElement extends LitElement {
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card__link {
@@ -101,7 +101,7 @@ export class CardElement extends LitElement {
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card {
@@ -290,7 +290,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
       --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
       --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
@@ -327,7 +327,7 @@ export class CardHeaderElement extends LitElement {
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card__link {
@@ -335,7 +335,7 @@ export class CardHeaderElement extends LitElement {
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card {
@@ -506,7 +506,7 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
       --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
       --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
@@ -543,7 +543,7 @@ export class CardContentElement extends LitElement {
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card__link {
@@ -551,7 +551,7 @@ export class CardContentElement extends LitElement {
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card {
@@ -722,7 +722,7 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
       --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
       --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
@@ -759,7 +759,7 @@ export class CardFooterElement extends LitElement {
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card__link {
@@ -767,7 +767,7 @@ export class CardFooterElement extends LitElement {
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card {
@@ -938,7 +938,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fac2c2);
       --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #900909);
       --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
@@ -975,7 +975,7 @@ export class CardDescriptionElement extends LitElement {
     }
 
     .card__description {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card__link {
@@ -983,7 +983,7 @@ export class CardDescriptionElement extends LitElement {
     }
 
     .card__note {
-      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .card {

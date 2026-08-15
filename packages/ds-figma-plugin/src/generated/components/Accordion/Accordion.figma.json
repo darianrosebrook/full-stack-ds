@@ -257,7 +257,7 @@
           "--fsds-box-model-max-height": "none",
           "--fsds-accordion-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #d0d0d0)",
           "--fsds-accordion-color-text": "var(--fsds-semantic-color-foreground-primary, #141414)",
-          "--fsds-accordion-color-text-secondary": "var(--fsds-semantic-color-foreground-secondary, #5c5b5c)",
+          "--fsds-accordion-color-text-secondary": "var(--fsds-semantic-color-foreground-secondary, #474647)",
           "--fsds-accordion-color-icon": "var(--fsds-semantic-color-foreground-tertiary, #727272)",
           "--fsds-accordion-border-width": "var(--fsds-semantic-shape-control-border-default-width, 1px)",
           "--fsds-accordion-border-color": "var(--fsds-semantic-color-border-light, #b8b8b8)",
@@ -275,7 +275,7 @@
           "--fsds-accordion-focus-color": "var(--fsds-semantic-color-border-accent, #d92d2e)",
           "--fsds-accordion-focus-offset": "var(--fsds-core-spacing-size-01, 1px)",
           "--fsds-accordion-opacity-disabled": "var(--fsds-semantic-interaction-disabled-opacity, 0.5)",
-          "--fsds-accordion-color-text-hover": "var(--fsds-semantic-interaction-text-hover, #5c5b5c)",
+          "--fsds-accordion-color-text-hover": "var(--fsds-semantic-interaction-text-hover, #474647)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -334,7 +334,7 @@
         "selector": ".accordion__trigger:hover:not([aria-disabled=\"true\"])",
         "declarations": {
           "background-color": "var(--fsds-accordion-color-background-hover, #d0d0d0)",
-          "color": "var(--fsds-accordion-color-text-hover, #5c5b5c)"
+          "color": "var(--fsds-accordion-color-text-hover, #474647)"
         }
       },
       {
@@ -376,7 +376,7 @@
         "selector": ".accordion__contentInner",
         "declarations": {
           "padding": "var(--fsds-accordion-spacing-padding-y, 8px)",
-          "color": "var(--fsds-accordion-color-text-secondary, #5c5b5c)",
+          "color": "var(--fsds-accordion-color-text-secondary, #474647)",
           "font-size": "var(--fsds-accordion-text-size-content, 14px)",
           "line-height": "var(--fsds-accordion-text-line-height-content, 1.8)"
         }

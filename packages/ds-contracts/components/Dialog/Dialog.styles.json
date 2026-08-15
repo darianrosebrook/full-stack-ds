@@ -66,7 +66,7 @@
     },
     "dialog.color.background.default": {
       "resolvesTo": "semantic.color.overlay.scrim",
-      "fallback": "#000000"
+      "fallback": "#00000066"
     }
   },
   "modal": {
@@ -260,7 +260,7 @@
     },
     "dialog.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "footer": {
@@ -388,7 +388,7 @@
     },
     "dialog.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   ".dialog__closeButton:hover": {

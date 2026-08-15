@@ -4,7 +4,12 @@
     "text": {
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.neutral.600}"
+        "$value": "{color.palette.neutral.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Hover text on neutral hover surfaces. Theme-aware: the previous unthemed neutral.600 measured 1.92:1 on the dark hover surface (FIX-CONTRAST-DEBT-01)."
       },
       "active": {
         "$type": "color",

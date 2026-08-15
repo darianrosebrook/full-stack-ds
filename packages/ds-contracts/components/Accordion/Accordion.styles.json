@@ -152,7 +152,7 @@
     },
     "color": {
       "resolvesTo": "accordion.color.textHover",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   ".accordion__trigger:focus-visible": {
@@ -248,7 +248,7 @@
     },
     "color": {
       "resolvesTo": "accordion.color.textSecondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "font-size": {
       "resolvesTo": "accordion.text.sizeContent",

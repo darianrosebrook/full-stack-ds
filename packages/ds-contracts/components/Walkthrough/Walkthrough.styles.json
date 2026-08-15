@@ -106,7 +106,7 @@
     },
     "color": {
       "resolvesTo": "walkthrough.description.color",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "line-height": {
       "literal": "1.5",
@@ -178,7 +178,7 @@
     },
     "color": {
       "resolvesTo": "walkthrough.button.secondary.color",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "cursor": {
       "literal": "pointer",
@@ -202,7 +202,7 @@
   "prev": {
     "background-color": {
       "resolvesTo": "walkthrough.button.secondary.bg",
-      "fallback": "#000000"
+      "fallback": "#00000000"
     },
     "border-color": {
       "resolvesTo": "walkthrough.button.secondary.border",
@@ -226,7 +226,7 @@
     },
     "color": {
       "resolvesTo": "walkthrough.button.secondary.color",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "cursor": {
       "literal": "pointer",
@@ -338,7 +338,7 @@
   "counter": {
     "color": {
       "resolvesTo": "walkthrough.description.color",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "font-size": {
       "resolvesTo": "walkthrough.description.fontSize",

@@ -47,7 +47,7 @@
   "--neutral": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.neutral",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "--sm": {

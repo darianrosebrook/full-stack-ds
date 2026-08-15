@@ -13,7 +13,7 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-blockquote-color-foreground-primary, #5c5b5c);
+  color: var(--fsds-blockquote-color-foreground-primary, #474647);
   background-color: var(--fsds-blockquote-color-background-default, #d0d0d0);
   border-color: var(--fsds-blockquote-color-border-default, #d92d2e);
   border-style: solid;

@@ -86,7 +86,7 @@ export const statTokenScopes = {
       name: "stat.color.foreground.label",
       cssVar: "--fsds-stat-color-foreground-label",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "stat.color.foreground.trend.up": {
       name: "stat.color.foreground.trend.up",
@@ -104,7 +104,7 @@ export const statTokenScopes = {
       name: "stat.color.foreground.trend.neutral",
       cssVar: "--fsds-stat-color-foreground-trend-neutral",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "stat.size.value.sm": {
       name: "stat.size.value.sm",

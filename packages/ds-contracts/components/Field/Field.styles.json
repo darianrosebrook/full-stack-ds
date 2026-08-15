@@ -40,7 +40,7 @@
     },
     "color": {
       "resolvesTo": "field.label.color",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "header": {
@@ -260,7 +260,7 @@
     },
     "field.color.fg": {
       "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     }
   },
   "--valid": {

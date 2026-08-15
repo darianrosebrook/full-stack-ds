@@ -169,7 +169,7 @@ export const fieldTokenScopes = {
       name: "field.color.validating-text",
       cssVar: "--fsds-field-color-validating-text",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "field.color.valid-text": {
       name: "field.color.valid-text",
@@ -193,7 +193,7 @@ export const fieldTokenScopes = {
       name: "field.label.color",
       cssVar: "--fsds-field-label-color",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "field.focus.ring.width": {
       name: "field.focus.ring.width",
@@ -239,7 +239,7 @@ export const fieldTokenScopes = {
       name: "field.color.fg",
       cssVar: "--fsds-field-color-fg",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
   },
   "variant_valid": {

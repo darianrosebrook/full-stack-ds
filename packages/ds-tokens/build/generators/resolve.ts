@@ -6,7 +6,8 @@
  *
  * Output schema:
  *   - Each leaf retains its `$type` and `$description`.
- *   - `$value` is replaced with the resolved literal.
+ *   - `$value` is replaced with the resolved literal (colors with
+ *     `alpha` < 1 serialize as 8-digit hex — see `colorToHex`).
  *   - For tokens declaring `$extensions.fsds.light` / `fsds.dark`, both
  *     theme variants resolve and the output has `$value.light` and
  *     `$value.dark` keys alongside the canonical `$value` (which equals
@@ -46,6 +47,14 @@ function isLeaf(node: unknown): node is DtcgLeaf {
 /**
  * Convert a DTCG color value (object with colorSpace + components, or
  * literal hex string) into a hex string. Returns null for unknown shapes.
+ *
+ * Alpha rule — SAME rule as `colorValueToCSS` in generateCSSTokens.mjs:
+ * when `alpha` is present and < 1, append the two-digit alpha hex (8-digit
+ * form). Opaque tokens keep the 6-digit form. resolved.tokens.json and
+ * tokens.css must never disagree about opacity: before this rule existed
+ * the resolver dropped alpha, so `core.color.mode.transparent` resolved to
+ * OPAQUE `#000000` here while the CSS correctly emitted `#00000000`
+ * (FIX-CONTRAST-DEBT-01).
  */
 function colorToHex(value: unknown): string | null {
   if (typeof value === "string") {
@@ -58,14 +67,20 @@ function colorToHex(value: unknown): string | null {
     "colorSpace" in (value as Record<string, unknown>) &&
     "components" in (value as Record<string, unknown>)
   ) {
-    const cv = value as { colorSpace: string; components: number[] };
+    const cv = value as {
+      colorSpace: string;
+      components: number[];
+      alpha?: number;
+    };
     if (cv.colorSpace !== "srgb") return null;
     const [r, g, b] = cv.components;
     const hex = (n: number) =>
       Math.round(n * 255)
         .toString(16)
         .padStart(2, "0");
-    return `#${hex(r)}${hex(g)}${hex(b)}`;
+    const base = `#${hex(r)}${hex(g)}${hex(b)}`;
+    const hasAlpha = cv.alpha !== undefined && cv.alpha < 1;
+    return hasAlpha ? base + hex(cv.alpha as number) : base;
   }
   return null;
 }

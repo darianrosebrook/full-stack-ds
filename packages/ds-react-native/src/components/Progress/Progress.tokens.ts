@@ -79,7 +79,7 @@ export const progressTokenScopes = {
       name: "progress.color.text.default",
       cssVar: "--fsds-progress-color-text-default",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "progress.spacing.gap": {
       name: "progress.spacing.gap",

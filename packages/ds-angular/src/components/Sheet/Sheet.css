@@ -66,7 +66,7 @@
 
 .sheet__description {
   margin: 0;
-  color: var(--fsds-sheet-color-text-description, #5c5b5c);
+  color: var(--fsds-sheet-color-text-description, #474647);
   font-size: var(--fsds-sheet-text-size, 16px);
 }
 
@@ -100,7 +100,7 @@
   background-color: transparent;
   border: 0;
   border-radius: 9999px;
-  color: var(--fsds-sheet-color-text-description, #5c5b5c);
+  color: var(--fsds-sheet-color-text-description, #474647);
   cursor: pointer;
 }
 

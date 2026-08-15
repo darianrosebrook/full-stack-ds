@@ -20,7 +20,7 @@
   white-space: nowrap;
   border-style: solid;
   background-color: var(--fsds-status-color-background-default, #d0d0d0);
-  color: var(--fsds-status-color-foreground-primary, #5c5b5c);
+  color: var(--fsds-status-color-foreground-primary, #474647);
   border-color: var(--fsds-status-color-border-default, #d0d0d0);
   border-width: var(--fsds-status-size-border-default, 1px);
   border-radius: var(--fsds-status-size-radius-default, 9999px);
@@ -39,7 +39,7 @@
 
 .status__label {
   display: inline-block;
-  color: var(--fsds-status-color-foreground-primary, #5c5b5c);
+  color: var(--fsds-status-color-foreground-primary, #474647);
 }
 /* @generated:end */
 

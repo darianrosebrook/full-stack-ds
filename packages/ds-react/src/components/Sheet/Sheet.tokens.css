@@ -6,7 +6,7 @@
   --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
   --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-sheet-color-text-title: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+  --fsds-sheet-color-text-description: var(--fsds-semantic-color-foreground-secondary, #474647);
   --fsds-sheet-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
   --fsds-sheet-border-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
   --fsds-sheet-size-width: 400px;

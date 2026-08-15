@@ -134,7 +134,7 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.description.color",
       cssVar: "--fsds-walkthrough-description-color",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "walkthrough.description.marginTop": {
       name: "walkthrough.description.marginTop",
@@ -200,13 +200,13 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.button.secondary.bg",
       cssVar: "--fsds-walkthrough-button-secondary-bg",
       ref: "core.color.mode.transparent",
-      fallback: "#000000",
+      fallback: "#00000000",
     },
     "walkthrough.button.secondary.color": {
       name: "walkthrough.button.secondary.color",
       cssVar: "--fsds-walkthrough-button-secondary-color",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "walkthrough.button.secondary.border": {
       name: "walkthrough.button.secondary.border",

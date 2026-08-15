@@ -214,7 +214,7 @@
     },
     "color": {
       "resolvesTo": "sheet.color.textDescription",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "font-size": {
       "resolvesTo": "sheet.text.size",
@@ -348,7 +348,7 @@
     },
     "color": {
       "resolvesTo": "sheet.color.textDescription",
-      "fallback": "#5c5b5c"
+      "fallback": "#474647"
     },
     "cursor": {
       "literal": "pointer",

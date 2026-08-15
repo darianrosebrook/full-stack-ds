@@ -37,7 +37,7 @@ export class CalendarElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -101,7 +101,7 @@ export class CalendarElement extends LitElement {
       border: none;
       border-radius: var(--fsds-calendar-size-radius-day, 4px);
       cursor: pointer;
-      color: var(--fsds-calendar-color-foreground-muted, #5c5b5c);
+      color: var(--fsds-calendar-color-foreground-muted, #474647);
       font-size: var(--fsds-calendar-typography-caption-size, 16px);
       line-height: 1;
     }
@@ -256,7 +256,7 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
@@ -320,7 +320,7 @@ export class CalendarHeaderElement extends LitElement {
       border: none;
       border-radius: var(--fsds-calendar-size-radius-day, 4px);
       cursor: pointer;
-      color: var(--fsds-calendar-color-foreground-muted, #5c5b5c);
+      color: var(--fsds-calendar-color-foreground-muted, #474647);
       font-size: var(--fsds-calendar-typography-caption-size, 16px);
       line-height: 1;
     }

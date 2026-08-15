@@ -22,7 +22,7 @@
   display: inline-block;
   font-size: var(--fsds-field-label-font-size, 14px);
   font-weight: 500;
-  color: var(--fsds-field-label-color, #5c5b5c);
+  color: var(--fsds-field-label-color, #474647);
 }
 
 .field__header {

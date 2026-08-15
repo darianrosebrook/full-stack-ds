@@ -92,7 +92,7 @@ export const accordionTokenScopes = {
       name: "accordion.color.textSecondary",
       cssVar: "--fsds-accordion-color-text-secondary",
       ref: "semantic.color.foreground.secondary",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
     "accordion.color.icon": {
       name: "accordion.color.icon",
@@ -200,7 +200,7 @@ export const accordionTokenScopes = {
       name: "accordion.color.textHover",
       cssVar: "--fsds-accordion-color-text-hover",
       ref: "semantic.interaction.text.hover",
-      fallback: "#5c5b5c",
+      fallback: "#474647",
     },
   },
 } satisfies ComponentTokenScopes;

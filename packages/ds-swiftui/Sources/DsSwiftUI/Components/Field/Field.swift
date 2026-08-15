@@ -44,11 +44,11 @@ enum FieldTokens {
             "field.color.invalid-text": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-invalid-text", name: "field.color.invalid-text", fallback: .string("#d92d2e")),
             "field.color.valid-border": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-valid-border", name: "field.color.valid-border", fallback: .string("#3a6614")),
             "field.color.validating-border": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-validating-border", name: "field.color.validating-border", fallback: .string("#d92d2e")),
-            "field.color.validating-text": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-validating-text", name: "field.color.validating-text", fallback: .string("#5c5b5c")),
+            "field.color.validating-text": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-validating-text", name: "field.color.validating-text", fallback: .string("#474647")),
             "field.color.valid-text": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-valid-text", name: "field.color.valid-text", fallback: .string("#497f21")),
             "field.spacing.indicator": FsdsComponentTokenDefinition(cssVar: "--fsds-field-spacing-indicator", name: "field.spacing.indicator", fallback: .string("4px")),
             "field.label.fontSize": FsdsComponentTokenDefinition(cssVar: "--fsds-field-label-font-size", name: "field.label.fontSize", fallback: .string("14px")),
-            "field.label.color": FsdsComponentTokenDefinition(cssVar: "--fsds-field-label-color", name: "field.label.color", fallback: .string("#5c5b5c")),
+            "field.label.color": FsdsComponentTokenDefinition(cssVar: "--fsds-field-label-color", name: "field.label.color", fallback: .string("#474647")),
             "field.focus.ring.width": FsdsComponentTokenDefinition(cssVar: "--fsds-field-focus-ring-width", name: "field.focus.ring.width", fallback: .string("2px")),
             "field.focus.ring.color": FsdsComponentTokenDefinition(cssVar: "--fsds-field-focus-ring-color", name: "field.focus.ring.color", fallback: .string("#0566fe")),
             "field.focus.ring.style": FsdsComponentTokenDefinition(cssVar: "--fsds-field-focus-ring-style", name: "field.focus.ring.style", fallback: .string("solid")),
@@ -59,7 +59,7 @@ enum FieldTokens {
         ],
         "variant_validating": [
             "field.color.border": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-border", name: "field.color.border", fallback: .string("#d92d2e")),
-            "field.color.fg": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-fg", name: "field.color.fg", fallback: .string("#5c5b5c")),
+            "field.color.fg": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-fg", name: "field.color.fg", fallback: .string("#474647")),
         ],
         "variant_valid": [
             "field.color.border": FsdsComponentTokenDefinition(cssVar: "--fsds-field-color-border", name: "field.color.border", fallback: .string("#3a6614")),

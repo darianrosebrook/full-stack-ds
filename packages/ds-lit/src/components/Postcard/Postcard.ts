@@ -59,16 +59,16 @@ export class PostcardElement extends LitElement {
     }
 
     .postcard__handle {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__timestamp {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__stat {
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard {
@@ -245,16 +245,16 @@ export class PostcardHeaderElement extends LitElement {
     }
 
     .postcard__handle {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__timestamp {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__stat {
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard {
@@ -396,16 +396,16 @@ export class PostcardContentElement extends LitElement {
     }
 
     .postcard__handle {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__timestamp {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__stat {
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard {
@@ -547,16 +547,16 @@ export class PostcardFooterElement extends LitElement {
     }
 
     .postcard__handle {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__timestamp {
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard__stat {
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #5c5b5c);
+      --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
     }
 
     .postcard {
