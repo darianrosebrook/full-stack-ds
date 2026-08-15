@@ -26,7 +26,7 @@ invariants:
   - 'No contract or schema change — the Tabs contract already carries every compound-state fact this slice lowers.'
   - 'The RN emitter branch gates on the same isCompoundStateContainer IR fact the web emitters consume; no component-name special-casing enters the emitter.'
   - 'ds-react-native must not depend on ds-react — createCompoundContext is ported source, not an import.'
-  - 'The ported primitive joins the RN emitter-source set so the emission manifest does not under-claim provenance.'
+  - 'The ported primitive is committed substrate under ds-react-native/src/primitives (the same provenance tier as stack.tsx and the ds-react seed hooks), consumed by generated code and covered by the RN package typecheck/test gates; it must not import from ds-react.'
   - 'Generated trees for every component other than Tabs remain byte-identical after regeneration.'
   - 'Platform divergences (touch keyboard navigation, indicator animation, orientation layout, unmountInactive=false visual suppression) are emitter-owned, recorded as knownGaps, never pushed into the contract.'
 acceptance:
@@ -37,7 +37,7 @@ acceptance:
   - id: A2
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
-    then: 'createCompoundContext is ported into the ds-react-native primitives via the RN emitter-source set, with no ds-react dependency, and the emission manifest covers the new primitive'
+    then: 'createCompoundContext is ported into the ds-react-native primitives as committed substrate beside stack.tsx (mirroring the ds-react seed pattern — primitives sit outside the emission manifest in both packages), with no ds-react dependency, and rail coverage flows through the RN package typecheck and test gates that consume it'
   - id: A3
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
