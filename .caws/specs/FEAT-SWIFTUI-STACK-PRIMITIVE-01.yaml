@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: pnpm run generate -- --target=swiftui Switch ToggleSwitch emits Sources/DsSwiftUI/primitives/Stack.swift (PRIMITIVE log line); swift build --package-path packages/ds-swiftui exit 0
     recorded_at: "2026-08-15T01:59:59.877Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "primitive-source.ts derives all facts from ir.layout.{axisByVariant,displayByMode,gap} + ir.props defaults; unit test pins VStack/HStack arms, axisModes-only gating, gap token doc reference"
+    recorded_at: "2026-08-15T02:00:00.893Z"
