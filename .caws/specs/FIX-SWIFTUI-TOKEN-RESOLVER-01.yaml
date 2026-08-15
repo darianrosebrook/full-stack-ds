@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "swift test --package-path packages/ds-swiftui: 6/6 pass; mutation-falsified live — reverting one resolver to the trap form fails 2 tests (fallback-only + override), restored fix passes"
     recorded_at: "2026-08-15T18:59:10.152Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "ci.yml native-compile-rail-swift job gains 'ds-swiftui token runtime tests' step (swift test) after the example compile; smoke passes untouched"
+    recorded_at: "2026-08-15T18:59:12.722Z"
