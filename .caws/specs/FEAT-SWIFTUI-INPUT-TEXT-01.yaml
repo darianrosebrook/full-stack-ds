@@ -1,0 +1,53 @@
+id: FEAT-SWIFTUI-INPUT-TEXT-01
+title: 'SwiftUI value-channel text control emission class; Input first'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-15T02:47:07.213Z'
+updated_at: '2026-08-15T02:47:07.213Z'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (text-control class + vocabulary input forms)'
+    - 'packages/ds-swiftui (generated Input + barrel)'
+    - 'examples/settings/swift (FSDS Input in Field control regions)'
+    - 'docs/current-implementation-snapshot.md + examples/README.md (claims)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-swiftui'
+    - 'examples/settings/swift'
+    - 'examples/README.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'The text-control class admits only: dom root tag input, exactly one string channel, no slots, no surface, no collapse intent. Everything else still throws.'
+  - 'The controllable-state projection is channel-driven (first string channel), never component-identity-driven; controlled takes precedence exactly like React useControllableState and the Switch lowering.'
+  - 'Chrome derives from ir.tokenScopes through FsdsTheme via the shared suffix vocabulary; unrealized web props are omitted from the API and documented, never accepted-and-ignored.'
+acceptance:
+  - id: A1
+    given: 'Input (dom root input, single string value channel, no surface, no slots)'
+    when: 'generate -- --target=swiftui Input runs'
+    then: 'the text-control class emits a compiling Input and swift build exits 0 with prior outputs byte-stable'
+  - id: A2
+    given: 'the value channel'
+    when: 'the component emits'
+    then: 'the Switch-proven controllable-state projection applies — value: Binding<String>?, @State uncontrolled default, onChange — keyed on the IR string channel, with placeholder/disabled props realized (prompt, .disabled) and HTML-form props (type/required/name/invalid) omitted and documented'
+  - id: A3
+    given: 'ir.tokenScopes for Input'
+    when: 'rendered'
+    then: 'chrome is presence-driven through FsdsTheme with the vocabulary extended for input forms (color.bg.default, color.text.default), Button/Card/Field bytes unchanged'
+  - id: A4
+    given: 'the settings swift lane Profile section'
+    when: 'rebuilt'
+    then: 'both FsdsField control regions host FSDS Input bound to @State and the lane compiles'
+  - id: A5
+    given: 'the full worktree gate'
+    when: 'governed:rail, pnpm test, test:frameworks run'
+    then: 'all pass; the negative-control set keeps TextField and Dialog throwing'
+non_functional: {}
+contracts:
+  - name: 'swiftui-input-text'
+    type: contract-test
+    path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
