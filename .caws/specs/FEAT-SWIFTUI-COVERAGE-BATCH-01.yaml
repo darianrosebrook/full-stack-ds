@@ -1,0 +1,36 @@
+id: FEAT-SWIFTUI-COVERAGE-BATCH-01
+title: 'SwiftUI coverage batch: Details, Sheet, Label, Blockquote, Command (8→13 admitted)'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-15T17:39:36.696Z'
+updated_at: '2026-08-15T17:39:36.696Z'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (disclosure collapse + static-content class)'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.ts (sheet routing + search-channel projection)'
+    - 'packages/ds-swiftui + fsds.targets.json (five new admitted components)'
+    - 'docs/current-implementation-snapshot.md (coverage claims)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-swiftui'
+    - 'fsds.targets.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'Every new admission is IR-fact-driven: collapse intent for Details, root-tag+children-only for static content, surface kind for Sheet, second-channel presence for Command search — no component-identity branching anywhere.'
+  - 'Unrealized props (Details icon/variant styling depth, Blockquote cite, Label htmlFor/form, Sheet side/modal, Command filter/emptyMessage/label/shouldFilter) are omitted-and-documented, never accepted-and-ignored.'
+  - 'Prior 8 outputs byte-stable; explicit requests for still-unadmitted contracts keep failing loudly.'
+acceptance:
+  - id: A1
+    given: 'Details (native-disclosure intent, open boolean channel, summary string prop, content compound part)'
+    when: 'generated'
+    then: 'the collapse table maps native-disclosure to SwiftUI DisclosureGroup with the open channel projected and summary as the label — compiles via swift build'
+non_functional: {}
+contracts:
+  - name: 'swiftui-coverage-batch'
+    type: contract-test
+    path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
