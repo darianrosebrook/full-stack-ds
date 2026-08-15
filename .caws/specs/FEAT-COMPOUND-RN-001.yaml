@@ -21,7 +21,12 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'No contract or schema change — the Tabs contract already carries every compound-state fact this slice lowers.'
+  - 'The RN emitter branch gates on the same isCompoundStateContainer IR fact the web emitters consume; no component-name special-casing enters the emitter.'
+  - 'ds-react-native must not depend on ds-react — createCompoundContext is ported source, not an import.'
+  - 'The ported primitive joins the RN emitter-source set so the emission manifest does not under-claim provenance.'
+  - 'Generated trees for every component other than Tabs remain byte-identical after regeneration.'
+  - 'Platform divergences (touch keyboard navigation, indicator animation, orientation layout, unmountInactive=false visual suppression) are emitter-owned, recorded as knownGaps, never pushed into the contract.'
 acceptance:
   - id: A1
     given: 'the Tabs contract''s compound-state facts and the web-proven isCompoundStateContainer IR gate'
