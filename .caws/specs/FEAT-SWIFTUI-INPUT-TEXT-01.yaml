@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp Profile rows: FsdsField control regions host Input(value: $displayName/$email); example swift build exit 0"
     recorded_at: "2026-08-15T02:52:33.266Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2056/2056; test:frameworks 573+492+532+70; negative controls keep TextField+Dialog throwing"
+    recorded_at: "2026-08-15T02:52:34.155Z"
