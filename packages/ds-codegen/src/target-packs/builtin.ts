@@ -246,6 +246,57 @@ export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackMa
       ],
     },
   },
+  swiftui: {
+    schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
+    target: {
+      id: "swiftui",
+      family: "native-view",
+      label: "SwiftUI",
+      maturity: "experimental",
+    },
+    compatibility: {
+      codegenProtocol: "builtin-framework-emitter-v1",
+      componentIR: "ComponentIR@v1",
+      targetFamilyIR: "native-view@swiftui-collapse-only",
+    },
+    entrypoints: {
+      emitter: "packages/ds-codegen/src/frameworks/swift/swiftui/factory.ts",
+    },
+    outputs: {
+      componentsRoot: "Sources/DsSwiftUI/Components",
+      barrelFile: "Components.generated.swift",
+      fileKinds: ["component-source", "barrel"],
+    },
+    capabilities: {
+      components: true,
+      tests: false,
+      behavior: false,
+      compoundParts: false,
+      surface: false,
+      tokens: "native-theme-module",
+      customRegions: true,
+    },
+    permissions: SAFE_BUILTIN_PERMISSIONS,
+    admission: {
+      commands: [
+        {
+          check: "compile",
+          command: ["swift", "build", "--package-path", "packages/ds-swiftui"],
+          scope: {
+            packageRoot: "packages/ds-swiftui/",
+            extensions: [".swift"],
+            coverage: "not_selected",
+          },
+        },
+      ],
+      knownGaps: [
+        "Explicit-only target: selectable via --target=swiftui but not in fsds.targets.json, --target=all, governed:rail, or any CI drift diff. Default-rail admission is a later spec.",
+        "Only the native-collapse path is implemented (native-toggle-affordance: Switch, ToggleSwitch). Multi-part anatomy and anchored surfaces throw explicit not-implemented errors.",
+        "No XCTest target; no behavior files; no shared FsdsTheme token module — size values inline per component from typed token facts.",
+        "The declared swift-build admission command requires a macOS toolchain and is not executed by any rail lane yet.",
+      ],
+    },
+  },
 };
 
 export function getBuiltinTargetPackManifest(id: BuiltinTargetId): TargetPackManifestV1 {

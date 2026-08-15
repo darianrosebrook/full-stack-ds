@@ -99,6 +99,19 @@ function emitToggleComponent(ir: ComponentIR): string {
   }
 
   const sizeTypeName = findSizeTypeName(ir);
+  const sizeDefaultMember = sizeTypeName
+    ? findSizeDefaultMember(ir, sizeTypeName)
+    : undefined;
+  // Track geometry is emitted only when the contract authors width AND
+  // height token facts for at least one variant. Without authored facts the
+  // native Toggle keeps its intrinsic platform size — never a 0x0 frame.
+  const hasTrackGeometry =
+    sizeTypeName !== undefined &&
+    sizeDefValues(ir, sizeTypeName).some(
+      (v) =>
+        sizeValuePx(ir, v, "width") !== undefined &&
+        sizeValuePx(ir, v, "height") !== undefined,
+    );
 
   const lines: string[] = [];
   lines.push("// @generated:start component");
@@ -124,8 +137,8 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}checked: Binding<Bool>? = nil,`);
   lines.push(`${INDENT}${INDENT}defaultChecked: Bool = false,`);
   lines.push(`${INDENT}${INDENT}onChange: ((Bool) -> Void)? = nil,`);
-  if (sizeTypeName) {
-    lines.push(`${INDENT}${INDENT}size: ${sizeTypeName} = .md,`);
+  if (sizeTypeName && sizeDefaultMember) {
+    lines.push(`${INDENT}${INDENT}size: ${sizeTypeName} = .${sizeDefaultMember},`);
   }
   lines.push(`${INDENT}${INDENT}disabled: Bool = false,`);
   lines.push(`${INDENT}${INDENT}name: String? = nil,`);
@@ -184,18 +197,22 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(
     `${INDENT}${INDENT}.accessibilityValue(checked ? "on" : "off")`,
   );
-  lines.push(
-    `${INDENT}${INDENT}.frame(width: trackWidth, height: trackHeight)`,
-  );
+  if (hasTrackGeometry) {
+    lines.push(
+      `${INDENT}${INDENT}.frame(width: trackWidth, height: trackHeight)`,
+    );
+  }
   lines.push(`${INDENT}}`);
   lines.push("");
 
-  // Size accessors (gap 1a still pending: only md tokens exist; sm/lg
-  // fall through to md's value rather than guessing)
-  if (sizeTypeName) {
-    emitSizeAccessor(lines, "trackWidth", ir, sizeTypeName, "width");
+  // Size accessors — variants with no authored token fall through to the
+  // contract-declared default member's value so SwiftUI never ships a
+  // 0-sized track. Skipped entirely when no track geometry is authored
+  // (the native control's intrinsic size is the honest realization).
+  if (sizeTypeName && sizeDefaultMember && hasTrackGeometry) {
+    emitSizeAccessor(lines, "trackWidth", ir, sizeTypeName, sizeDefaultMember, "width");
     lines.push("");
-    emitSizeAccessor(lines, "trackHeight", ir, sizeTypeName, "height");
+    emitSizeAccessor(lines, "trackHeight", ir, sizeTypeName, sizeDefaultMember, "height");
   }
 
   lines.push(`}`);
@@ -209,6 +226,7 @@ function emitSizeAccessor(
   accessorName: string,
   ir: ComponentIR,
   sizeTypeName: string,
+  defaultMember: string,
   dimension: "width" | "height",
 ): void {
   const sizeDef = ir.definedTypes[sizeTypeName];
@@ -216,14 +234,14 @@ function emitSizeAccessor(
 
   // Per-variant size values come from typed token facts (FEAT-MOBILE-IR-001),
   // not from regexing CSS var() strings. A variant with no authored token
-  // falls through to md so SwiftUI never ships a 0-sized track.
-  const mdValue = sizeValuePx(ir, "md", dimension);
+  // falls through to the default member's value.
+  const defaultValue = sizeValuePx(ir, defaultMember, dimension);
 
   lines.push(`${INDENT}private var ${accessorName}: CGFloat {`);
   lines.push(`${INDENT}${INDENT}switch size {`);
   for (const value of sizeDef.values) {
     const variantPx = sizeValuePx(ir, value, dimension);
-    const px = variantPx ?? mdValue ?? 0;
+    const px = variantPx ?? defaultValue ?? 0;
     lines.push(`${INDENT}${INDENT}case .${value}: return ${px}`);
   }
   lines.push(`${INDENT}${INDENT}}`);
@@ -245,6 +263,39 @@ function findSizeTypeName(ir: ComponentIR): string | undefined {
   const expected = `${ir.name}Size`;
   if (ir.definedTypes[expected]?.kind === "union") return expected;
   return undefined;
+}
+
+/**
+ * Declared values of a union defined type (empty when absent).
+ */
+function sizeDefValues(ir: ComponentIR, sizeTypeName: string): string[] {
+  return ir.definedTypes[sizeTypeName]?.values ?? [];
+}
+
+/**
+ * The default member of the size union, derived from the contract's
+ * `props[].default` fact — never a hardcoded member name (ToggleSwitch's
+ * union is small/medium/large with default `medium`; Switch's is
+ * sm/md/lg with default `md`). Located by the prop's type ref, not by a
+ * prop-name literal. Fails loudly when the authored default is not a
+ * member of the union; falls back to the first member only when the
+ * contract authors no default at all.
+ */
+function findSizeDefaultMember(ir: ComponentIR, sizeTypeName: string): string {
+  const values = ir.definedTypes[sizeTypeName]?.values ?? [];
+  const prop = ir.styledProps.find((p) => p.typeRefs.includes(sizeTypeName));
+  const authored = prop?.defaultExpr?.replace(/^["']|["']$/g, "");
+  if (authored) {
+    if (!values.includes(authored)) {
+      throw new Error(
+        `generateSwiftUIComponentSource: prop "${prop?.name}" defaults to ` +
+          `"${authored}", which is not a member of ${sizeTypeName} ` +
+          `(${values.join(", ")}).`,
+      );
+    }
+    return authored;
+  }
+  return values[0]!;
 }
 
 /**

@@ -19,6 +19,7 @@ import { createLitEmitter } from "./frameworks/lit/factory.js";
 import { createReactNativeEmitter } from "./frameworks/react-native/factory.js";
 import { createReactEmitter } from "./frameworks/react/factory.js";
 import { createSvelteEmitter } from "./frameworks/svelte/factory.js";
+import { createSwiftUIEmitter } from "./frameworks/swift/swiftui/factory.js";
 import { createVueEmitter } from "./frameworks/vue/factory.js";
 import { readReactStackImportFromPrimitiveContract } from "./primitive-contract.js";
 import { getBuiltinTargetPackManifest } from "./target-packs/builtin.js";
@@ -251,6 +252,31 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     });
   }
 
+  // SwiftUI target — explicit-only native target (selectable via
+  // --target=swiftui; never in fsds.targets.json or --target=all until the
+  // emitter covers the corpus). No railFrameworkId: outside the admission
+  // rail entirely in this slice. The output root is a SwiftPM package
+  // (Package.swift marker), not a pnpm workspace package.
+  const swiftUIRoot = path.join(
+    opts.workspaceRoot,
+    "packages",
+    "ds-swiftui",
+    "Sources",
+    "DsSwiftUI",
+    "Components",
+  );
+  if (
+    configuredTargets.has("swiftui") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-swiftui"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
+      id: "swiftui",
+      emitter: createSwiftUIEmitter(),
+      componentsRoot: swiftUIRoot,
+      barrelFile: "Components.generated.swift",
+    });
+  }
+
   for (const target of configuredLocalTargets(loadedConfig.config)) {
     registerLocalTargetDeclaration(declarations, opts.workspaceRoot, target);
   }
@@ -325,6 +351,15 @@ function getDeclaration(
   return declaration;
 }
 
+/**
+ * A target package exists when it carries a workspace marker. pnpm packages
+ * mark with `package.json`; SwiftPM packages (non-pnpm output roots) mark
+ * with `Package.swift`. Existing pnpm target gating is unchanged — a package
+ * without either marker is still omitted from executable availability.
+ */
 function workspaceExists(packageRoot: string): boolean {
-  return fs.existsSync(path.join(packageRoot, "package.json"));
+  return (
+    fs.existsSync(path.join(packageRoot, "package.json")) ||
+    fs.existsSync(path.join(packageRoot, "Package.swift"))
+  );
 }

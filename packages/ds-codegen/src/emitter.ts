@@ -20,7 +20,8 @@ export type BuiltinTargetId =
   | "svelte"
   | "angular"
   | "figma"
-  | "react-native";
+  | "react-native"
+  | "swiftui";
 export type TargetId = string;
 
 /**
@@ -110,6 +111,7 @@ export const KNOWN_TARGETS: readonly BuiltinTargetId[] = [
   "angular",
   "figma",
   "react-native",
+  "swiftui",
 ];
 
 export function isBuiltinTargetId(value: string): value is BuiltinTargetId {
