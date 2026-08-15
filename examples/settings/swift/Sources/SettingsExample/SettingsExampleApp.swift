@@ -108,13 +108,14 @@ struct SettingsView: View {
     }
 
     private var dangerZoneSection: some View {
+        Group {
         Card {
             Text("Danger zone").font(.headline)
         } content: {
             Text("Permanently delete your account. This cannot be undone.")
-            // FSDS: destructive action through the multi-part FsdsButton.
-            // NOT FSDS: Dialog is not emitted for swiftui yet; a
-            // confirmation dialog stands in.
+            // FSDS: destructive action through the multi-part FsdsButton,
+            // opening the FSDS centered-modal surface Dialog. Native sheet
+            // dismissal (Esc/overlay click) drives onOpenChange.
             FsdsButton(
                 variant: .destructive,
                 onTap: { confirmOpen = true }
@@ -122,16 +123,22 @@ struct SettingsView: View {
                 Text("Delete account")
             }
         }
-        .confirmationDialog(
-            "Delete account?",
-            isPresented: $confirmOpen,
-            titleVisibility: .visible
-        ) {
-            Button("Confirm deletion", role: .destructive) {
-                print("account deleted (no-op)")
+        Dialog(
+            open: $confirmOpen,
+            title: { Text("Delete account?") },
+            bodyContent: { Text("This action cannot be undone.") },
+            footer: {
+                FsdsButton(
+                    variant: .destructive,
+                    onTap: {
+                        print("account deleted (no-op)")
+                        confirmOpen = false
+                    }
+                ) {
+                    Text("Confirm deletion")
+                }
             }
-        } message: {
-            Text("This action cannot be undone.")
+        )
         }
     }
 }

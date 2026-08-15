@@ -21,9 +21,12 @@ the FSDS `Stack` primitive — its primary/destructive action buttons
 section chrome (`Card`, the compound-part composer with header/content/
 footer/description regions), its
 form rows (`FsdsField`, the named-slot composer: label/control/help/
-error/validatingIndicator regions), and its text controls (`Input`, the
-value-channel text-control class: controlled Binding + @State + onChange
-through the Switch-proven projection) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
+error/validatingIndicator regions), its
+text controls (`Input`, the value-channel text-control class: controlled
+Binding + @State + onChange through the Switch-proven projection), and
+its confirmation modal (`Dialog`, the centered-modal surface class: a
+sheet whose native Esc/overlay dismissal drives the openness channel
+back through onOpenChange) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
 package boundary.
 
 ## Falsifier
@@ -45,11 +48,15 @@ package boundary.
   as region closures rather than separate subcomponent exports), and
   `FsdsField` (the named-slot composer), and `Input` (the value-channel
   text control, `value`/`defaultValue`/`onChange`/`placeholder`/`disabled`
-  realized) are emitted for swiftui today.
+  realized), and `Dialog` (the centered-modal surface; header/title/
+  bodyContent/footer regions — `body` renames for Swift's View collision —
+  with the openness channel projected and dismissal realized natively) are
+  emitted for swiftui today.
   The web Field's value-channel/control-association API is NOT part of
   the Swift surface — the consumer's control owns state (documented
   omission, not accepted-and-ignored). Input's HTML-form props (type/required/
-  name/invalid) are likewise omitted. Dialog and Tooltip do not
+  name/invalid) and Dialog's modal/dismissal-flag/focus props are likewise
+  omitted (native sheet behavior). Tooltip does not
   exist on this target; those regions of the spec are composed from plain SwiftUI and
   marked `NOT FSDS` in the app source. This lane does not claim parity with
   the react/vue lanes.
