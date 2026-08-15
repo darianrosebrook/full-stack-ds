@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "tokens:build:check exit 0: regenerated resolved.tokens.json + tokens.css committed and git diff --exit-code packages/ds-tokens/generated clean"
     recorded_at: "2026-08-15T03:43:46.859Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "in worktree: root vitest 165 files / 2057 tests pass; pnpm run typecheck clean; pnpm run lint 0 errors (21 pre-existing warnings unchanged); governed:rail exit 0 (generate:check 49/49 before emission, validate-cli Overall PASS). Note: tokens:check-usage:gate fails on PRE-EXISTING drift (26 palette stops unused since the 2026-06-27 baseline) — verified identical failure set on main-equivalent state, out of scope, gate not wired to CI/pre-push"
+    recorded_at: "2026-08-15T03:43:48.200Z"
