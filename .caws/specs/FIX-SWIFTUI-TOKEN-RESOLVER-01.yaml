@@ -53,3 +53,8 @@ contracts:
   - name: 'fsdstheme-resolver-regression'
     type: contract-test
     path: 'packages/ds-swiftui/Tests/DsSwiftUITests/FsdsThemeTests.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "FsdsTheme.swift: both resolvers stage the chain in a local before subscript assignment; the compiler's own warning on the trap form (left operand non-optional at outer depth) confirms the mechanism"
+    recorded_at: "2026-08-15T18:59:07.996Z"
