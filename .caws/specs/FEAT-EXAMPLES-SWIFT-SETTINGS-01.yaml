@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "examples/settings/swift/Sources/SettingsExample/SettingsExampleApp.swift: import DsSwiftUI only; NOT FSDS markers on unrealized regions; non-claims ledgered in examples/settings/swift/README.md"
     recorded_at: "2026-08-15T01:49:30.140Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: ".github/workflows/ci.yml native-compile-rail-swift job: new 'Settings example compile' step after the unchanged smoke positive/negative passes"
+    recorded_at: "2026-08-15T01:49:31.126Z"
