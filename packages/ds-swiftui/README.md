@@ -12,7 +12,7 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=swiftui Switch ToggleSwitch Button Card
+pnpm run generate -- --target=swiftui Switch ToggleSwitch Button Card Field
 ```
 
 `swiftui` is an **explicit-only** target in this slice: it is not in
@@ -39,6 +39,7 @@ swift build --package-path packages/ds-swiftui
 | Multi-part anatomy emits with theme-driven styling | Yes — the projected-children action path (root button + single content region) emits `FsdsButton`; styling comes from `ir.tokenScopes` shipped as data and resolved through the hand-authored `FsdsTheme` (RN normal form), layering root + variant_<size> + variant_<intent> |
 | SwiftUI type collisions are handled grammatically | Yes — a reserved-type table exports colliding names with an `Fsds` prefix (`Button` → `FsdsButton`), the SwiftUI analog of Lit's `StackElement` rename |
 | Compound-part composers emit as region closures | Yes — Card is one ViewBuilder region per compound part (header/content/footer/description), chrome presence-driven through FsdsTheme; axes without authored defaults are optional parameters whose layer applies only when set; keyword union members (`default`) are backtick-escaped |
+| Named-slot composers emit as region closures | Yes — Field is one ViewBuilder region per dom slot (label/control/help/error/validatingIndicator), gated on every dom leaf being a slot (TextField's component-instance leaf and Dialog's surface block stay out); the web value-channel API is omitted, not accepted-and-ignored |
 
 ## Non-claims
 

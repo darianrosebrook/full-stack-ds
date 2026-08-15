@@ -64,19 +64,22 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     expect(actual).toBe(expected);
   });
 
-  it("refuses to emit for contracts outside every emission class (Field)", () => {
-    // Field is a named-slot composer with a root dom tree and control
-    // association — not a collapse intent, not an action root, not a
-    // root-dom-less compound-part composer. The emitter must fail loud.
-    const contract = loadContract("Field") as Parameters<
-      typeof buildComponentIR
-    >[0];
-    const ir = buildComponentIR(contract);
+  it.each(["TextField", "Dialog", "Input"])(
+    "refuses to emit for contracts outside every emission class (%s)",
+    (name) => {
+      // TextField carries a component-instance leaf (fsds.Input), Dialog is
+      // a surface block with a dom tree, Input is a control root with no
+      // slots — none match an emission class. Fail loud, never approximate.
+      const contract = loadContract(name) as Parameters<
+        typeof buildComponentIR
+      >[0];
+      const ir = buildComponentIR(contract);
 
-    expect(() => generateSwiftUIComponentSource(ir)).toThrow(
-      /no emission class matches/,
-    );
-  });
+      expect(() => generateSwiftUIComponentSource(ir)).toThrow(
+        /no emission class matches/,
+      );
+    },
+  );
 });
 
 describe("generateSwiftUIComponentSource — projected-children action (Button)", () => {
@@ -215,5 +218,46 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
     // density defaults to the `default` member — a Swift keyword, escaped.
     expect(source).toContain("case `default`");
     expect(source).toContain("density: CardDensity = .`default`,");
+  });
+});
+
+describe("generateSwiftUIComponentSource — named-slot composer (Field)", () => {
+  function emitField(): string {
+    const contract = loadContract("Field") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("emits one ViewBuilder region per named slot in dom order", () => {
+    const source = emitField();
+    // `Field` is in the SwiftUI reserved-type table → exported as FsdsField.
+    expect(source).toMatch(
+      /public struct FsdsField<Label: View, Control: View, Help: View, Error: View, ValidatingIndicator: View>: View \{/,
+    );
+    expect(source).toContain("@ViewBuilder label: () -> Label = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder control: () -> Control = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder help: () -> Help = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder error: () -> Error = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder validatingIndicator: () -> ValidatingIndicator = { EmptyView() }");
+    // No trailing comma on the final region parameter.
+  });
+
+  it("realizes short-form chrome slots and layers the status axis", () => {
+    const source = emitField();
+    expect(source).toContain("enum FieldTokens {");
+    expect(source).toContain('fallback: .string("#ffffff")');
+    expect(source).toContain('colorSlot("color.bg") ?? .accentColor');
+    expect(source).toContain('pxSlot("radius") ?? 0');
+    expect(source).toContain('colorSlot("color.border") ?? .clear');
+    expect(source).toContain("status: FieldStatus? = nil,");
+    expect(source).toContain('status.map { "variant_\\($0.rawValue)" }');
+  });
+
+  it("omits the web value-channel API instead of accepting-and-ignoring it", () => {
+    const source = emitField();
+    expect(source).not.toContain("value:");
+    expect(source).not.toContain("onChange");
+    expect(source).not.toContain("validate:");
   });
 });

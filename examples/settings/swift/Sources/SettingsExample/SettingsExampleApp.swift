@@ -44,11 +44,19 @@ struct SettingsView: View {
         Card {
             Text("Profile").font(.headline)
         } content: {
-            // NOT FSDS: Field/Input are not emitted for swiftui yet.
-            LabeledContent("Display name") {
+            // FSDS: FsdsField (named-slot composer; `Field` is reserved by
+            // the SwiftUI table). NOT FSDS: Input is not emitted yet — the
+            // control region hosts a SwiftUI TextField, which owns state on
+            // this target (the web value-channel API is documented as a
+            // non-claim, not accepted-and-ignored).
+            FsdsField {
+                Text("Display name")
+            } control: {
                 TextField("Display name", text: $displayName)
             }
-            LabeledContent("Email") {
+            FsdsField {
+                Text("Email")
+            } control: {
                 TextField("Email", text: $email)
             }
         } footer: {

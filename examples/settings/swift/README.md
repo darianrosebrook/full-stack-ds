@@ -17,9 +17,11 @@ inspection, which no other non-web lane offers today.
 A macOS SwiftUI app can consume the generated DsSwiftUI package via
 `.package(path:)` and compose the settings spec's switch rows — laid out with
 the FSDS `Stack` primitive — its primary/destructive action buttons
-(`FsdsButton`, styled from token scopes through `FsdsTheme`), and its
+(`FsdsButton`, styled from token scopes through `FsdsTheme`), its
 section chrome (`Card`, the compound-part composer with header/content/
-footer/description regions) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
+footer/description regions), and its form rows (`FsdsField`, the
+named-slot composer: label/control/help/error/validatingIndicator
+regions; the control owns state on this target) from public exports, with controlled-channel state (`Binding` + `onChange`) surviving the
 package boundary.
 
 ## Falsifier
@@ -38,8 +40,11 @@ package boundary.
 - **Partial realization.** `Switch` (and `ToggleSwitch`), the `Stack`
   primitive, `FsdsButton` (the projected-children action path), and `Card`
   (the compound-part composer; header/content/footer/description realize
-  as region closures rather than separate subcomponent exports) are
-  emitted for swiftui today. Field, Input, Dialog, and Tooltip do not
+  as region closures rather than separate subcomponent exports), and
+  `FsdsField` (the named-slot composer) are emitted for swiftui today.
+  The web Field's value-channel/control-association API is NOT part of
+  the Swift surface — the consumer's control owns state (documented
+  omission, not accepted-and-ignored). Input, Dialog, and Tooltip do not
   exist on this target; those regions of the spec are composed from plain SwiftUI and
   marked `NOT FSDS` in the app source. This lane does not claim parity with
   the react/vue lanes.
