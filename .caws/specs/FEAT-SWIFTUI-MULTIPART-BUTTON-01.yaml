@@ -56,3 +56,8 @@ contracts:
   - name: 'swiftui-multipart-button'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm run generate -- --target=swiftui Switch ToggleSwitch Button emits all three + Stack primitive; swift build --package-path packages/ds-swiftui exit 0; Switch golden test byte-stable
+    recorded_at: "2026-08-15T02:19:26.449Z"
