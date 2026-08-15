@@ -3,7 +3,6 @@ title: 'SwiftUI value-channel text control emission class; Input first'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swift-input-text
 created_at: '2026-08-15T02:47:07.213Z'
 updated_at: '2026-08-15T02:47:07.213Z'
 blast_radius:
