@@ -37,6 +37,23 @@ const PATTERNS = {
   // surfaces in ds-react.
   resolvability:
     /^(packages\/ds-(react|tokens)\/|scripts\/token-resolvability-audit\/|scripts\/lib\/ledger-ratchet)/,
+  // behavior-realization rail (RAIL-BEHAVIOR-REALIZATION-AUDIT-01). Derives
+  // interactivity obligations from the LIVE contract corpus and asserts them in
+  // the five WEB generated trees (the audit's FRAMEWORKS list excludes
+  // react-native — so a react-native-only change must NOT fire this group). It
+  // imports the compiled codegen IR, so contracts, codegen, and the classified
+  // trees are inputs, alongside the audit's own scripts. Wired in lockstep with
+  // ci.yml by PREPUSH-LOCKSTEP-01 — previously only CI ran this audit.
+  behaviorAudit:
+    /^(packages\/ds-(contracts|codegen|react|vue|svelte|angular|lit)\/|scripts\/behavior-realization-audit\/)/,
+  // a11y-realization rail (RAIL-A11Y-REALIZATION-01). Same shape, but the
+  // family surface is iterated from the AdmissionDescriptor registry — all SIX
+  // admitted families INCLUDING react-native — and the known-gaps ledger lives
+  // in the audit's own directory, so an entry added or removed there moves a
+  // verdict too. Tokens move neither interactivity nor ARIA bytes, so
+  // ds-tokens is deliberately NOT an input (styling-audit precedent).
+  a11yAudit:
+    /^(packages\/ds-(contracts|codegen|react|vue|svelte|angular|lit|react-native)\/|scripts\/a11y-realization-audit\/)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -56,6 +73,8 @@ export function classify(files, opts = {}) {
   const iconography = full || has("iconography");
   const stylingAudits = full || has("stylingAudits");
   const resolvability = full || has("resolvability");
+  const behaviorAudit = full || has("behaviorAudit");
+  const a11yAudit = full || has("a11yAudit");
   const lintable = full || has("lintable");
   const typed = full || has("typed");
   const testable = full || has("testable");
@@ -84,6 +103,12 @@ export function classify(files, opts = {}) {
     // iconography ledger gate: separate emission model from the codegen rail,
     // so it has its own flag rather than riding genGroup.
     RUN_ICONOGRAPHY: iconography,
+    // realization audits wired in lockstep with ci.yml (PREPUSH-LOCKSTEP-01).
+    // Own flags rather than genGroup: each fires on that audit's EXACT input
+    // surface — behavior classifies five web trees, a11y all six admitted
+    // families — and a tokens-only change moves neither verdict.
+    RUN_BEHAVIOR_AUDIT: behaviorAudit,
+    RUN_A11Y_AUDIT: a11yAudit,
     // styling-realization ledgers: the gate of record for the dead-slot and
     // pseudo-state ratchets (RAIL-STYLING-REALIZATION-LEDGERS-01). Its own flag
     // rather than genGroup — it classifies committed generated output, so it is
