@@ -19,7 +19,10 @@ scope:
     - '.github/workflows/ci.yml'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The lane consumes the DsSwiftUI package only through its public product (import DsSwiftUI) via a local package path — no source-tree reaches into packages/ds-swiftui/Sources, no re-declaration of generated symbols, no private-path imports. A boundary leak is the falsification signal this lane exists to catch.'
+  - 'Regions of the framework-neutral settings spec that swiftui does not realize yet (Card, Field, Input, Button, Dialog, Tooltip, Stack primitive) are composed from plain SwiftUI primitives and are DOCUMENTED as non-claims in the lane README — the lane is honest partial realization, never a silent stand-in claiming parity with the react/vue lanes.'
+  - 'The lane is consumer-only: no changes to contracts, IR, emitters, or generated output. governed:rail and the committed trees are byte-identical before and after the slice.'
+  - 'The CI compile step reuses the existing macOS swift job; it must not weaken, skip, or reorder the smoke-lane positive/negative passes.'
 acceptance:
   - id: A1
     given: 'the committed generated ds-swiftui package and the new examples/settings/swift SwiftPM lane'
