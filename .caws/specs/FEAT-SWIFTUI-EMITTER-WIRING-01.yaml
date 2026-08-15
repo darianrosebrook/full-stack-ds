@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-EMITTER-WIRING-01
 title: 'Register swiftui as an explicit builtin target with a SwiftPM output package'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'swiftui registered as an explicit-only builtin target emitting Switch/ToggleSwitch into the ds-swiftui SwiftPM package; swift build green; rail untouched'
 created_at: '2026-08-15T01:27:10.623Z'
-updated_at: '2026-08-15T01:27:10.623Z'
+updated_at: '2026-08-15T01:42:07.125Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/emitter.ts (BuiltinTargetId/KNOWN_TARGETS widening)'
