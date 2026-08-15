@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: FsdsDivider (reserved table) with synthesized DividerOrientation inline enum + native Divider()/vertical rule; Spinner visual-only leaf → ProgressView with conditional label; both compile
     recorded_at: "2026-08-15T19:49:28.722Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Progress.swift: ProgressView(value: value / 100) — 0-100 range read from the contract's value prop description; nil → indeterminate ProgressView(); label via fsdsAccessibilityLabel"
+    recorded_at: "2026-08-15T19:49:31.015Z"
