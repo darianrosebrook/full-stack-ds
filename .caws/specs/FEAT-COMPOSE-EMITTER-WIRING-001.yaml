@@ -23,7 +23,13 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'No contract or schema change — the Switch/ToggleSwitch contracts already carry every native-toggle fact this slice lowers.'
+  - 'The native-collapse emitter branch gates on the same native-toggle IR fact the swift collapse path consumes; no component-name literals enter the emitter.'
+  - 'The emitted Kotlin compiles against the real org.jetbrains.compose (JVM) runtime artifacts — no hand-authored androidx stubs anywhere in the package.'
+  - 'Explicit-only admission: jetpack-compose never enters --target=all output beyond the allowlisted set, governed:rail, or CI drift diffs until a default-admission spec lands.'
+  - 'Generated trees for all other targets remain byte-identical.'
+  - 'The Android ladder is declared, not implied: JVM real-runtime compile (rung 1, this spec) → full Android SDK + Gradle compile lane (rung 2, reserved follow-up) → runtime admission, Robolectric or instrumented (rung 3, reserved follow-up); each rung''s non-claims are recorded in builtin knownGaps and the snapshot.'
+  - 'The golden''s line-67 ?? null-coalescing defect is corrected to the Kotlin elvis operator in emitted output; the golden stays the annotated prototype, never the shipped artifact.'
 acceptance:
   - id: A1
     given: 'the Switch/ToggleSwitch native-toggle contracts and the hand-authored golden Switch.compose.kt'
