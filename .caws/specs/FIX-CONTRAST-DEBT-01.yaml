@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "component-contrast-known-gaps.json burned to empty; generate:check passed 49/49 with the empty ledger — had any of the six pairs still reproduced, the ratchet would have DRIFTed the emptiness; each entry's removal was individually DRIFT-demanded before it happened"
     recorded_at: "2026-08-15T03:43:43.827Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "corpus-wide re-measure via deriveComponentContrastPairs over all 49 contracts: 132 pair/theme checks, 0 failing, 2 skipped (Walkthrough prev pair, transparent terminal by design); Accordion hover now 6.02 light / 4.98 dark, Select hover 4.68 both, secondary pair 6.02"
+    recorded_at: "2026-08-15T03:43:45.476Z"
