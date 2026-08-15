@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "config.test.ts: unique non-empty components accepted; duplicate (Duplicate component) and empty (non-empty string) rejected"
     recorded_at: "2026-08-15T03:15:58.764Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "governed:rail exit 0 with swiftui in the default set; no rail groups contributed (no railFrameworkId); rail verification green"
+    recorded_at: "2026-08-15T03:15:59.627Z"
