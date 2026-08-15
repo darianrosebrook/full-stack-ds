@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "SettingsExampleApp Danger zone: confirmationDialog stand-in replaced by Dialog(open:title:bodyContent:footer:) hosting FsdsButton; example swift build exit 0"
     recorded_at: "2026-08-15T03:02:23.541Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2059/2059 (164 files); test:frameworks 573+492+532+70"
+    recorded_at: "2026-08-15T03:02:24.422Z"
