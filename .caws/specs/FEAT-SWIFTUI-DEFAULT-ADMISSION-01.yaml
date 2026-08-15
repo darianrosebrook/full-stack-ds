@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: "generate -- --target=all logs 'ADMITTED 8/8' for swiftui; regenerated tree byte-stable (git clean after run; Dialog.swift types-section catch committed)"
     recorded_at: "2026-08-15T03:15:56.967Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "generate -- --target=swiftui Tabs bypasses the allowlist and throws generateSwiftUIComponentSource: no emission class matches component Tabs"
+    recorded_at: "2026-08-15T03:15:57.833Z"
