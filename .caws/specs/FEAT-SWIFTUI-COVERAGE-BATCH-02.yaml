@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "Progress.swift: ProgressView(value: value / 100) — 0-100 range read from the contract's value prop description; nil → indeterminate ProgressView(); label via fsdsAccessibilityLabel"
     recorded_at: "2026-08-15T19:49:31.015Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0 (ADMITTED 19/19 byte-stable); pnpm test 2076/2076; test:frameworks 573+492+532+72; swift test 6/6; example build exit 0; 35/35 swift emitter tests"
+    recorded_at: "2026-08-15T19:49:32.917Z"
