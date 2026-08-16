@@ -3,6 +3,7 @@ title: 'Fix conditional useId() emission in RN compound-selection components (ru
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: fix-rn-tabs-useid
 created_at: '2026-08-16T01:37:48.782Z'
 updated_at: '2026-08-16T01:37:48.782Z'
 blast_radius:
