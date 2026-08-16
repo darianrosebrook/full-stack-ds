@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: ".github/workflows/ci.yml native-compile-rail job: 'Settings example compile (consumer lane over ds-jetpack-compose)' step running examples/settings/compose/gradlew compileKotlin, with cache:gradle added to setup-java — the swift-lane precedent mirrored; closes the no-CI-lane-executes-the-Gradle-compile gap"
     recorded_at: "2026-08-16T23:10:14.771Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "examples/settings/compose/README.md claim + partial-realization ledger + runnable command; examples/README.md settings row gains compose/ lane; snapshot rung-1 sentence records the consumer lane; gates green in worktree (generate:check 49/49 after token bootstrap, root tests 2078/2078, diff scope had zero packages/ changes)"
+    recorded_at: "2026-08-16T23:10:16.006Z"
