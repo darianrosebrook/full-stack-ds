@@ -2,9 +2,11 @@ id: FEAT-EXAMPLES-COMPOSE-SETTINGS-001
 title: 'Compose settings example lane consuming the generated ds-jetpack-compose package'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose settings consumer lane compiled against the generated package via composite build, CI-wired as the kotlin rail''s settings-lane step'
 created_at: '2026-08-16T22:59:55.813Z'
-updated_at: '2026-08-16T22:59:55.813Z'
+updated_at: '2026-08-16T23:10:18.010Z'
 blast_radius:
   modules:
     - 'examples settings compose lane'
