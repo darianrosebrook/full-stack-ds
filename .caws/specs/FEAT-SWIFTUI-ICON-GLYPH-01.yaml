@@ -49,3 +49,8 @@ contracts:
   - name: 'swiftui-icon-glyph'
     type: contract-test
     path: 'packages/ds-swiftui/Tests/DsSwiftUITests/SVGPathTests.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "SVGPath.swift runtime + SVGPathTests: 3/3 spike tests pass in-package (real Alarm bounds, arc circle 16x16 center tolerance, relative/h/v exact)"
+    recorded_at: "2026-08-16T23:04:33.132Z"
