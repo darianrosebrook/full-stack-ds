@@ -5,7 +5,7 @@ mode: refactor
 lifecycle_state: active
 worktree: swift-controllable
 created_at: '2026-08-16T23:10:18.088Z'
-updated_at: '2026-08-16T23:10:18.088Z'
+updated_at: '2026-08-16T23:24:34.532Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Sources/DsSwiftUI/Presence/ControllableValue.swift (runtime substrate)'
@@ -19,6 +19,7 @@ scope:
     - 'packages/ds-swiftui'
     - 'fsds.targets.json'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-codegen/__golden__
   out: []
 invariants:
   - 'ControllableValue is generic over the channel''s valueType and parameterized only by IR facts (channel value/default/onChange prop names); no component identity anywhere in the substrate or helper.'
