@@ -116,6 +116,14 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isGlyphHost(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitGlyphHostComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (ir.root.effectiveRole === "progressbar") {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -577,6 +585,120 @@ function emitLeafComponent(ir: ComponentIR): string {
       lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(label)`);
     }
   }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/** A glyph host: some dom node carries the iconGlyph fact (Icon). */
+function isGlyphHost(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const stack = [ir.dom];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.iconGlyph) return true;
+    stack.push(...(node.children ?? []));
+  }
+  return false;
+}
+
+function domGlyph(ir: ComponentIR): NonNullable<ComponentIR["dom"]>["iconGlyph"] {
+  const stack = [ir.dom!];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.iconGlyph) return node.iconGlyph;
+    stack.push(...(node.children ?? []));
+  }
+  return undefined;
+}
+
+/**
+ * The glyph-host class: a component whose dom carries iconGlyph lowers to
+ * a registry lookup — the compositional glyph substrate. Size hints from
+ * the IR map the size prop to the rendered frame; decorative-by-default
+ * comes from the catalog semantics (accessibilityHidden), per the
+ * compositional-behavior direction this class exists to serve.
+ */
+function emitGlyphHostComponent(ir: ComponentIR): string {
+  const glyph = domGlyph(ir)!;
+  const nameProp = glyph.namePropName;
+  const sizeProp = glyph.sizePropName;
+  const hints = glyph.sizeHints;
+  const sizeType = ir.styledProps.find((p) => p.safeName === sizeProp)
+    ?.typeRefs.find((ref) => ir.definedTypes[ref]);
+  const defaultSize = sizeProp
+    ? findPropDefaultOrNull(ir, sizeProp) ?? Object.keys(hints ?? {})[0]
+    : null;
+
+  // Inline size unions (Icon has no named type) synthesize a local enum
+  // from the hint keys — the Divider inline-enum precedent.
+  const hintMembers = Object.keys(hints ?? {});
+  const synthesizedSizeType = !sizeType && hintMembers.length > 0
+    ? `${ir.name}Size`
+    : null;
+  const sizeTypeName = sizeType ?? synthesizedSizeType;
+  const hintsUsable = sizeTypeName !== null && defaultSize !== null;
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Emitted through the glyph-host path: the dom carries iconGlyph, ` +
+      `so this component is a registry lookup over the shared glyph ` +
+      `substrate — decorative-by-default per catalog semantics.`,
+  );
+  if (synthesizedSizeType) {
+    lines.push(`public enum ${synthesizedSizeType}: String, CaseIterable {`);
+    for (const member of hintMembers) {
+      lines.push(`${INDENT}case ${swiftCaseDecl(member)}`);
+    }
+    lines.push(`}`);
+    lines.push("");
+  }
+  const exportName = swiftExportName(ir.name);
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  lines.push(`${INDENT}private let ${nameProp}: String`);
+  if (sizeProp && hintsUsable) {
+    lines.push(`${INDENT}private let ${sizeProp}: ${sizeTypeName}`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [`${nameProp}: String,`];
+  if (sizeProp && hintsUsable) {
+    params.push(`${sizeProp}: ${sizeTypeName} = .${swiftCaseRef(defaultSize!)}`);
+  }
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.${nameProp} = ${nameProp}`);
+  if (sizeProp && hintsUsable) {
+    lines.push(`${INDENT}${INDENT}self.${sizeProp} = ${sizeProp}`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var glyphSize: CGFloat {`);
+  if (sizeProp && sizeTypeName && hints) {
+    lines.push(`${INDENT}${INDENT}switch ${sizeProp} {`);
+    for (const [member, px] of Object.entries(hints)) {
+      lines.push(`${INDENT}${INDENT}case .${swiftCaseRef(member)}: return ${px}`);
+    }
+    lines.push(`${INDENT}${INDENT}}`);
+  } else {
+    lines.push(`${INDENT}${INDENT}24`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}GlyphCatalog.glyph(named: ${nameProp}, size: glyphSize)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}.accessibilityHidden(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}GlyphCatalog.decorativeDefaults.contains(${nameProp})`);
+  lines.push(`${INDENT}${INDENT}${INDENT})`);
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");

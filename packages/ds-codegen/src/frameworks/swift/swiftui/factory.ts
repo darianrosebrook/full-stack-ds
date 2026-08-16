@@ -32,6 +32,7 @@ import type { ComponentIR } from "../../../ir.js";
 import type { PrimitiveIR } from "../../../primitive-contract.js";
 import { generateSwiftUIComponentSource } from "./component-source.js";
 import { generateSwiftUIPrimitiveFiles } from "./primitive-source.js";
+import { generateGlyphCatalogFile } from "./icon-glyph.js";
 import { generateSwiftUIHookSource } from "./hook-source.js";
 import { generateSwiftUIBarrel } from "./barrel.js";
 import {
@@ -97,9 +98,14 @@ export function createSwiftUIEmitter(): FrameworkEmitter {
 
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       // Written to the `primitives/` root (sibling of `Components/`) by the
-      // CLI's shared primitive pass; single-module SwiftPM target, so the
-      // primitive is visible to every component without imports.
-      return generateSwiftUIPrimitiveFiles(ir);
+      // CLI's shared substrate pass; single-module SwiftPM target, so the
+      // primitive is visible to every component without imports. The glyph
+      // catalog rides the same channel — a shared substrate (like
+      // FsdsTheme) that every iconGlyph surface composes.
+      return [
+        ...generateSwiftUIPrimitiveFiles(ir),
+        ...(generateGlyphCatalogFile() ? [generateGlyphCatalogFile()!] : []),
+      ];
     },
 
     discoverComponentIds(componentsRoot: string): string[] {

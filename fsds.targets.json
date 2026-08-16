@@ -67,7 +67,8 @@
         "Checkbox",
         "Divider",
         "Progress",
-        "Spinner"
+        "Spinner",
+        "Icon"
       ]
     },
     {
