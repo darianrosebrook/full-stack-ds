@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: "ControllableValueTests 6/6: controlled precedence, default+set, onChange-on-every-set, binding round-trip, controlled write-through, toggle"
     recorded_at: "2026-08-16T23:24:54.419Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Toast.swift: substrate field + 150ms dwell task from motion token scopes, presence-fact gated; toast emitter test pins zero bespoke state machine (not.toContain controlledOpen/setOpen); admitted 21"
+    recorded_at: "2026-08-16T23:24:56.508Z"
