@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run governed:rail passed; pnpm --target=react-native regeneration changed only packages/ds-react-native/src/components/Tabs/Tabs.tsx (git status in worktree); pnpm test 166/166 files; pnpm run test:frameworks green"
     recorded_at: "2026-08-16T01:42:55.720Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "mutation-falsified both directions: reverting the emitter via git stash fails both tests (2 failed); fixed emitter + stale committed bytes fails only the corpus-scan test; fixed emitter + regenerated tree passes 2/2"
+    recorded_at: "2026-08-16T01:42:56.640Z"
