@@ -3,7 +3,6 @@ title: 'SwiftUI glyph pipeline: SVGPath runtime, generated GlyphCatalog, Icon vi
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swift-icon-glyph
 created_at: '2026-08-16T22:55:42.705Z'
 updated_at: '2026-08-16T22:55:42.705Z'
 blast_radius:
