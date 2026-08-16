@@ -53,3 +53,7 @@ evidence:
     status: pass
     evidence_ref: "adaptivePick decision pinned by XCTest (light under aqua, dark under darkAqua); dynamic NSColor provider; swift test 8/8"
     recorded_at: "2026-08-16T01:49:28.140Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: absent graph degrades to .string (graphDarkFor null-guards; no crash)
+    recorded_at: "2026-08-16T01:49:29.047Z"
