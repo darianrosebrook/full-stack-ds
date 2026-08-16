@@ -272,9 +272,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
   lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
   lines.push(`${INDENT}}`);
-  lines.push(`${INDENT}private let controlledValue: Binding<String>?`);
-  lines.push(`${INDENT}@State private var uncontrolledValue: String`);
-  lines.push(`${INDENT}private let onChange: ((String) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var text: ControllableValue<String>`);
   if (hasProp("placeholder")) {
     lines.push(`${INDENT}private let placeholder: String?`);
   }
@@ -298,13 +296,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self.controlledValue = value`);
-  if (hasProp("defaultValue")) {
-    lines.push(`${INDENT}${INDENT}self._uncontrolledValue = State(initialValue: defaultValue)`);
-  } else {
-    lines.push(`${INDENT}${INDENT}self._uncontrolledValue = State(initialValue: "")`);
-  }
-  lines.push(`${INDENT}${INDENT}self.onChange = onChange`);
+  lines.push(`${INDENT}${INDENT}self._text = StateObject(wrappedValue: ControllableValue(controlled: value, defaultValue: defaultValue, onChange: onChange))`);
   if (hasProp("placeholder")) {
     lines.push(`${INDENT}${INDENT}self.placeholder = placeholder`);
   }
@@ -313,18 +305,6 @@ function emitTextControlComponent(ir: ComponentIR): string {
   }
   lines.push(`${INDENT}}`);
   lines.push("");
-  lines.push(`${INDENT}private var value: String {`);
-  lines.push(`${INDENT}${INDENT}controlledValue?.wrappedValue ?? uncontrolledValue`);
-  lines.push(`${INDENT}}`);
-  lines.push("");
-  lines.push(`${INDENT}private func setValue(_ next: String) {`);
-  lines.push(`${INDENT}${INDENT}if let binding = controlledValue {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-  lines.push(`${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledValue = next`);
-  lines.push(`${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}onChange?(next)`);
-  lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
   lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
@@ -351,12 +331,12 @@ function emitTextControlComponent(ir: ComponentIR): string {
   lines.push(...accessors);
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
-  const textFieldArgs = [`""`, `text: Binding(`, `${INDENT}${INDENT}get: { value },`, `${INDENT}${INDENT}set: { setValue($0) }`, `${INDENT})`];
+  const textFieldArgs = [`""`, `text: Binding(`, `${INDENT}${INDENT}get: { text.value },`, `${INDENT}${INDENT}set: { text.set($0) }`, `${INDENT})`];
   lines.push(`${INDENT}${INDENT}TextField(`);
   lines.push(`${INDENT}${INDENT}${INDENT}"",`);
   lines.push(`${INDENT}${INDENT}${INDENT}text: Binding(`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { value },`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { setValue($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { text.value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { text.set($0) }`);
   if (hasProp("placeholder")) {
     lines.push(`${INDENT}${INDENT}${INDENT}),`);
     lines.push(`${INDENT}${INDENT}${INDENT}prompt: placeholder.map(Text.init)`);
@@ -400,9 +380,7 @@ function emitBooleanControlComponent(ir: ComponentIR): string {
     );
   }
   lines.push(`public struct ${exportName}: View {`);
-  lines.push(`${INDENT}private let controlledChecked: Binding<Bool>?`);
-  lines.push(`${INDENT}@State private var uncontrolledChecked: Bool`);
-  lines.push(`${INDENT}private let onChange: ((Bool) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var checked: ControllableValue<Bool>`);
   if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
   lines.push("");
   lines.push(`${INDENT}public init(`);
@@ -411,29 +389,15 @@ function emitBooleanControlComponent(ir: ComponentIR): string {
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self.controlledChecked = checked`);
-  lines.push(`${INDENT}${INDENT}self._uncontrolledChecked = State(initialValue: defaultChecked)`);
-  lines.push(`${INDENT}${INDENT}self.onChange = onChange`);
+  lines.push(`${INDENT}${INDENT}self._checked = StateObject(wrappedValue: ControllableValue(controlled: checked, defaultValue: defaultChecked, onChange: onChange))`);
   if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
   lines.push(`${INDENT}}`);
   lines.push("");
-  lines.push(`${INDENT}private var isChecked: Bool {`);
-  lines.push(`${INDENT}${INDENT}controlledChecked?.wrappedValue ?? uncontrolledChecked`);
-  lines.push(`${INDENT}}`);
-  lines.push("");
-  lines.push(`${INDENT}private func setChecked(_ next: Bool) {`);
-  lines.push(`${INDENT}${INDENT}if let binding = controlledChecked {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-  lines.push(`${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledChecked = next`);
-  lines.push(`${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}onChange?(next)`);
-  lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}Toggle(isOn: Binding(`);
-  lines.push(`${INDENT}${INDENT}${INDENT}get: { isChecked },`);
-  lines.push(`${INDENT}${INDENT}${INDENT}set: { setChecked($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}get: { checked.value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}set: { checked.set($0) }`);
   lines.push(`${INDENT}${INDENT})) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}EmptyView()`);
   lines.push(`${INDENT}${INDENT}}`);
@@ -751,9 +715,7 @@ function emitDisclosureComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
   lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
   lines.push(`${INDENT}}`);
-  lines.push(`${INDENT}private let controlledOpen: Binding<Bool>?`);
-  lines.push(`${INDENT}@State private var uncontrolledOpen: Bool`);
-  lines.push(`${INDENT}private let onOpenChange: ((Bool) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var open: ControllableValue<Bool>`);
   if (hasSummary) lines.push(`${INDENT}private let summary: String?`);
   if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
   lines.push(`${INDENT}private let content: Content`);
@@ -767,31 +729,17 @@ function emitDisclosureComponent(ir: ComponentIR): string {
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self.controlledOpen = open`);
-  lines.push(`${INDENT}${INDENT}self._uncontrolledOpen = State(initialValue: defaultOpen)`);
-  lines.push(`${INDENT}${INDENT}self.onOpenChange = onOpenChange`);
+  lines.push(`${INDENT}${INDENT}self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))`);
   if (hasSummary) lines.push(`${INDENT}${INDENT}self.summary = summary`);
   if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
   lines.push(`${INDENT}${INDENT}self.content = content()`);
   lines.push(`${INDENT}}`);
   lines.push("");
-  lines.push(`${INDENT}private var isOpen: Bool {`);
-  lines.push(`${INDENT}${INDENT}controlledOpen?.wrappedValue ?? uncontrolledOpen`);
-  lines.push(`${INDENT}}`);
-  lines.push("");
-  lines.push(`${INDENT}private func setOpen(_ next: Bool) {`);
-  lines.push(`${INDENT}${INDENT}if let binding = controlledOpen {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-  lines.push(`${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledOpen = next`);
-  lines.push(`${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}onOpenChange?(next)`);
-  lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}DisclosureGroup(isExpanded: Binding(`);
-  lines.push(`${INDENT}${INDENT}${INDENT}get: { isOpen },`);
-  lines.push(`${INDENT}${INDENT}${INDENT}set: { setOpen($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}get: { open.value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}set: { open.set($0) }`);
   lines.push(`${INDENT}${INDENT})) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}content`);
   lines.push(`${INDENT}${INDENT}} label: {`);
@@ -1853,9 +1801,7 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(`public struct ${ir.name}: View {`);
 
   // Channel storage
-  lines.push(`${INDENT}private let controlledChecked: Binding<Bool>?`);
-  lines.push(`${INDENT}@State private var uncontrolledChecked: Bool`);
-  lines.push(`${INDENT}private let onChange: ((Bool) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var checked: ControllableValue<Bool>`);
 
   // Non-channel props (deterministic order matching golden)
   if (sizeTypeName) {
@@ -1880,11 +1826,7 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}value: String? = nil,`);
   lines.push(`${INDENT}${INDENT}accessibilityLabel: String? = nil`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self.controlledChecked = checked`);
-  lines.push(
-    `${INDENT}${INDENT}self._uncontrolledChecked = State(initialValue: defaultChecked)`,
-  );
-  lines.push(`${INDENT}${INDENT}self.onChange = onChange`);
+  lines.push(`${INDENT}${INDENT}self._checked = StateObject(wrappedValue: ControllableValue(controlled: checked, defaultValue: defaultChecked, onChange: onChange))`);
   if (sizeTypeName) {
     lines.push(`${INDENT}${INDENT}self.size = size`);
   }
@@ -1894,33 +1836,17 @@ function emitToggleComponent(ir: ComponentIR): string {
   lines.push(
     `${INDENT}${INDENT}self.accessibilityLabel = accessibilityLabel`,
   );
-  lines.push(`${INDENT}}`);
-  lines.push("");
 
-  // Channel read accessor
-  lines.push(`${INDENT}private var checked: Bool {`);
-  lines.push(
-    `${INDENT}${INDENT}controlledChecked?.wrappedValue ?? uncontrolledChecked`,
-  );
   lines.push(`${INDENT}}`);
   lines.push("");
 
   // Channel write accessor
-  lines.push(`${INDENT}private func setChecked(_ next: Bool) {`);
-  lines.push(`${INDENT}${INDENT}if let binding = controlledChecked {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-  lines.push(`${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledChecked = next`);
-  lines.push(`${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}onChange?(next)`);
-  lines.push(`${INDENT}}`);
-  lines.push("");
 
   // Body: Toggle with .switch style
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}Toggle(isOn: Binding(`);
-  lines.push(`${INDENT}${INDENT}${INDENT}get: { checked },`);
-  lines.push(`${INDENT}${INDENT}${INDENT}set: { setChecked($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}get: { checked.value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}set: { checked.set($0) }`);
   lines.push(`${INDENT}${INDENT})) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}EmptyView()`);
   lines.push(`${INDENT}${INDENT}}`);
@@ -1930,7 +1856,7 @@ function emitToggleComponent(ir: ComponentIR): string {
     `${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`,
   );
   lines.push(
-    `${INDENT}${INDENT}.accessibilityValue(checked ? "on" : "off")`,
+    `${INDENT}${INDENT}.accessibilityValue(checked.value ? "on" : "off")`,
   );
   if (hasTrackGeometry) {
     lines.push(

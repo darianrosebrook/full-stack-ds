@@ -13,9 +13,7 @@ public enum CheckboxSize: String, CaseIterable {
 // @generated:start component
 /// Emitted through the boolean-channel control path: the checked channel projects through the controllable-state pattern onto a native checkbox Toggle.
 public struct Checkbox: View {
-    private let controlledChecked: Binding<Bool>?
-    @State private var uncontrolledChecked: Bool
-    private let onChange: ((Bool) -> Void)?
+    @StateObject private var checked: ControllableValue<Bool>
     private let disabled: Bool
 
     public init(
@@ -24,29 +22,15 @@ public struct Checkbox: View {
         onChange: ((Bool) -> Void)? = nil,
         disabled: Bool = false
     ) {
-        self.controlledChecked = checked
-        self._uncontrolledChecked = State(initialValue: defaultChecked)
-        self.onChange = onChange
+        self._checked = StateObject(wrappedValue: ControllableValue(controlled: checked, defaultValue: defaultChecked, onChange: onChange))
         self.disabled = disabled
     }
 
-    private var isChecked: Bool {
-        controlledChecked?.wrappedValue ?? uncontrolledChecked
-    }
-
-    private func setChecked(_ next: Bool) {
-        if let binding = controlledChecked {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledChecked = next
-        }
-        onChange?(next)
-    }
 
     public var body: some View {
         Toggle(isOn: Binding(
-            get: { isChecked },
-            set: { setChecked($0) }
+            get: { checked.value },
+            set: { checked.set($0) }
         )) {
             EmptyView()
         }

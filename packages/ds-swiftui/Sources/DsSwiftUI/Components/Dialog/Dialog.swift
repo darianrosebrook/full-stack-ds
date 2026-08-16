@@ -74,9 +74,7 @@ public struct Dialog<Header: View, Title: View, BodyContent: View, Footer: View>
     private var fsdsScopes: FsdsComponentTokenScopes {
         DialogTokens.scopes
     }
-    private let controlledOpen: Binding<Bool>?
-    @State private var uncontrolledOpen: Bool
-    private let onOpenChange: ((Bool) -> Void)?
+    @StateObject private var open: ControllableValue<Bool>
     private let header: Header
     private let title: Title
     private let bodyContent: BodyContent
@@ -92,27 +90,13 @@ public struct Dialog<Header: View, Title: View, BodyContent: View, Footer: View>
         @ViewBuilder bodyContent: () -> BodyContent = { EmptyView() },
         @ViewBuilder footer: () -> Footer = { EmptyView() }
     ) {
-        self.controlledOpen = open
-        self._uncontrolledOpen = State(initialValue: defaultOpen)
-        self.onOpenChange = onOpenChange
+        self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
         self.header = header()
         self.title = title()
         self.bodyContent = bodyContent()
         self.footer = footer()
     }
 
-    private var isOpen: Bool {
-        controlledOpen?.wrappedValue ?? uncontrolledOpen
-    }
-
-    private func setOpen(_ next: Bool) {
-        if let binding = controlledOpen {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledOpen = next
-        }
-        onOpenChange?(next)
-    }
 
     private var layered: [String: FsdsTokenValue?] {
         resolveFsdsLayeredTokens(
@@ -157,8 +141,8 @@ public struct Dialog<Header: View, Title: View, BodyContent: View, Footer: View>
     public var body: some View {
         EmptyView()
             .sheet(isPresented: Binding(
-                get: { isOpen },
-                set: { setOpen($0) }
+                get: { open.value },
+                set: { open.set($0) }
             )) {
                 panel
             }

@@ -73,9 +73,7 @@ public struct Details<Content: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         DetailsTokens.scopes
     }
-    private let controlledOpen: Binding<Bool>?
-    @State private var uncontrolledOpen: Bool
-    private let onOpenChange: ((Bool) -> Void)?
+    @StateObject private var open: ControllableValue<Bool>
     private let summary: String?
     private let disabled: Bool
     private let content: Content
@@ -89,31 +87,17 @@ public struct Details<Content: View>: View {
         disabled: Bool = false,
         @ViewBuilder content: () -> Content
     ) {
-        self.controlledOpen = open
-        self._uncontrolledOpen = State(initialValue: defaultOpen)
-        self.onOpenChange = onOpenChange
+        self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
         self.summary = summary
         self.disabled = disabled
         self.content = content()
     }
 
-    private var isOpen: Bool {
-        controlledOpen?.wrappedValue ?? uncontrolledOpen
-    }
-
-    private func setOpen(_ next: Bool) {
-        if let binding = controlledOpen {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledOpen = next
-        }
-        onOpenChange?(next)
-    }
 
     public var body: some View {
         DisclosureGroup(isExpanded: Binding(
-            get: { isOpen },
-            set: { setOpen($0) }
+            get: { open.value },
+            set: { open.set($0) }
         )) {
             content
         } label: {

@@ -59,9 +59,7 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
     private var fsdsScopes: FsdsComponentTokenScopes {
         SheetTokens.scopes
     }
-    private let controlledOpen: Binding<Bool>?
-    @State private var uncontrolledOpen: Bool
-    private let onOpenChange: ((Bool) -> Void)?
+    @StateObject private var open: ControllableValue<Bool>
     private let content: Content
     private let header: Header
     private let title: Title
@@ -81,9 +79,7 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
         @ViewBuilder bodyContent: () -> BodyContent = { EmptyView() },
         @ViewBuilder footer: () -> Footer = { EmptyView() }
     ) {
-        self.controlledOpen = open
-        self._uncontrolledOpen = State(initialValue: defaultOpen)
-        self.onOpenChange = onOpenChange
+        self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
         self.content = content()
         self.header = header()
         self.title = title()
@@ -92,18 +88,6 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
         self.footer = footer()
     }
 
-    private var isOpen: Bool {
-        controlledOpen?.wrappedValue ?? uncontrolledOpen
-    }
-
-    private func setOpen(_ next: Bool) {
-        if let binding = controlledOpen {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledOpen = next
-        }
-        onOpenChange?(next)
-    }
 
     private var layered: [String: FsdsTokenValue?] {
         resolveFsdsLayeredTokens(
@@ -146,8 +130,8 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
     public var body: some View {
         EmptyView()
             .sheet(isPresented: Binding(
-                get: { isOpen },
-                set: { setOpen($0) }
+                get: { open.value },
+                set: { open.set($0) }
             )) {
                 panel
             }

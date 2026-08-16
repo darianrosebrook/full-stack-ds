@@ -59,9 +59,7 @@ public struct Input: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         InputTokens.scopes
     }
-    private let controlledValue: Binding<String>?
-    @State private var uncontrolledValue: String
-    private let onChange: ((String) -> Void)?
+    @StateObject private var text: ControllableValue<String>
     private let placeholder: String?
     private let disabled: Bool
     @Environment(\.fsdsTheme) private var fsdsTheme
@@ -73,25 +71,11 @@ public struct Input: View {
         placeholder: String? = nil,
         disabled: Bool = false
     ) {
-        self.controlledValue = value
-        self._uncontrolledValue = State(initialValue: defaultValue)
-        self.onChange = onChange
+        self._text = StateObject(wrappedValue: ControllableValue(controlled: value, defaultValue: defaultValue, onChange: onChange))
         self.placeholder = placeholder
         self.disabled = disabled
     }
 
-    private var value: String {
-        controlledValue?.wrappedValue ?? uncontrolledValue
-    }
-
-    private func setValue(_ next: String) {
-        if let binding = controlledValue {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledValue = next
-        }
-        onChange?(next)
-    }
 
     private var layered: [String: FsdsTokenValue?] {
         resolveFsdsLayeredTokens(
@@ -119,8 +103,8 @@ public struct Input: View {
         TextField(
             "",
             text: Binding(
-                get: { value },
-                set: { setValue($0) }
+                get: { text.value },
+                set: { text.set($0) }
             ),
             prompt: placeholder.map(Text.init)
         )
