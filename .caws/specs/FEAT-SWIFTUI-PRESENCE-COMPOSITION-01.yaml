@@ -50,3 +50,8 @@ contracts:
   - name: 'swiftui-controllable-value'
     type: contract-test
     path: 'packages/ds-swiftui/Tests/DsSwiftUITests/ControllableValueTests.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "grep: zero controlledOpen/controlledChecked/controlledValue/controlledSearch/uncontrolled identifiers in the generated tree; 9 components emit @StateObject ControllableValue fields (Switch, ToggleSwitch, Checkbox, Input, Details, Dialog, Sheet, Command, Tooltip)"
+    recorded_at: "2026-08-16T23:24:52.587Z"
