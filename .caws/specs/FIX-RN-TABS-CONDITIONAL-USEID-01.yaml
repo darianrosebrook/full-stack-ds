@@ -43,3 +43,8 @@ contracts:
   - name: 'rn-compound-useid-order'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/rn-unconditional-useid.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "packages/ds-react-native/src/components/Tabs/Tabs.tsx:82-83 — const generatedIdBase = useId().replace(/:/g, \"\"); const resolvedIdBase = idBase ?? generatedIdBase; no ?? useId( remains; pinned by rn-unconditional-useid.test.ts test 1 (vitest, 2/2 pass)"
+    recorded_at: "2026-08-16T01:42:53.795Z"
