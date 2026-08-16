@@ -55,6 +55,7 @@
     "typecheck:svelte": "pnpm --filter @full-stack-ds/svelte run typecheck",
     "typecheck:react-native": "pnpm --filter @full-stack-ds/react-native run typecheck",
     "typecheck:example:react-native": "pnpm --filter @full-stack-ds/example-settings-react-native run typecheck",
+    "typecheck:example:compose": "./examples/settings/compose/gradlew -p examples/settings/compose compileKotlin --no-daemon",
     "typecheck:all": "pnpm run typecheck && pnpm run typecheck:vue && pnpm run typecheck:angular && pnpm run typecheck:lit && pnpm run typecheck:svelte && pnpm run typecheck:react-native",
     "build:react": "pnpm --filter @full-stack-ds/react run build",
     "lint": "eslint .",
