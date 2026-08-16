@@ -67,3 +67,7 @@ evidence:
     status: pass
     evidence_ref: "before/after recorded in commit message: 8 components × 7 projection occurrences (56) eliminated; Switch golden refreshed to substrate emission"
     recorded_at: "2026-08-16T23:24:57.813Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2080/2080; test:frameworks 72 passed; swift test 19/19; swift build + example build exit 0; ADMITTED 21/21 byte-stable"
+    recorded_at: "2026-08-16T23:24:58.900Z"
