@@ -53,3 +53,7 @@ evidence:
     status: pass
     evidence_ref: "examples/settings/compose/src/main/kotlin/com/fullstackds/examples/settings/SettingsApp.kt @ eecfcd52: PreferencesSection realizes both spec rows through the generated Switch (controlled checked/onChange, defaults false/true, tooltip hint via public contentDescription prop); ProfileSection/DangerZoneSection/ConfirmDeleteDialog carry NOT FSDS markers; README ledger table maps every spec region to FSDS/NOT FSDS"
     recorded_at: "2026-08-16T23:10:12.215Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "./gradlew compileKotlin BUILD SUCCESSFUL exit 0 (also via root script typecheck:example:compose); gradle dependencies shows 'ds-jetpack-compose:library -> project :ds-jetpack-compose:library' (composite substitution); disassembled example bytecode contains exactly 2 invokestatic sites to com/fullstackds/components/switch/SwitchKt.Switch with the full generated signature (Boolean,Z,Function1,SwitchSize,Z,String,String,String,Modifier,Composer,II)"
+    recorded_at: "2026-08-16T23:10:13.402Z"
