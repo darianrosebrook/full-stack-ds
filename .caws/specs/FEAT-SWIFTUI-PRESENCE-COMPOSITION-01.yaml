@@ -63,3 +63,7 @@ evidence:
     status: pass
     evidence_ref: "Toast.swift: substrate field + 150ms dwell task from motion token scopes, presence-fact gated; toast emitter test pins zero bespoke state machine (not.toContain controlledOpen/setOpen); admitted 21"
     recorded_at: "2026-08-16T23:24:56.508Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "before/after recorded in commit message: 8 components × 7 projection occurrences (56) eliminated; Switch golden refreshed to substrate emission"
+    recorded_at: "2026-08-16T23:24:57.813Z"
