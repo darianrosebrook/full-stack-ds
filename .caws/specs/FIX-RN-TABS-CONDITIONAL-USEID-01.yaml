@@ -2,9 +2,11 @@ id: FIX-RN-TABS-CONDITIONAL-USEID-01
 title: 'Fix conditional useId() emission in RN compound-selection components (rules-of-hooks)'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'RN compound-selection useId staged unconditionally (rules-of-hooks clean); regeneration touched only Tabs.tsx; mutation-falsified regression test added'
 created_at: '2026-08-16T01:37:48.782Z'
-updated_at: '2026-08-16T01:37:48.782Z'
+updated_at: '2026-08-16T01:43:01.607Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/react-native/component-source.ts (compound-selection idBase emission)'
