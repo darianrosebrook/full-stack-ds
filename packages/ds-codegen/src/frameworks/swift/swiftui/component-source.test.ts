@@ -201,7 +201,7 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
   it("realizes chrome presence-driven with the status accent bar", () => {
     const source = emitCard();
     expect(source).toContain("enum CardTokens {");
-    expect(source).toContain('fallback: .string("#ffffff")');
+    expect(source).toContain('.adaptive(light: "#ffffff", dark:');
     expect(source).toContain(
       "Rectangle().fill(statusAccent).frame(width: statusAccentWidth)",
     );
@@ -246,7 +246,7 @@ describe("generateSwiftUIComponentSource — named-slot composer (Field)", () =>
   it("realizes short-form chrome slots and layers the status axis", () => {
     const source = emitField();
     expect(source).toContain("enum FieldTokens {");
-    expect(source).toContain('fallback: .string("#ffffff")');
+    expect(source).toContain('.adaptive(light: "#ffffff", dark:');
     expect(source).toContain('colorSlot("color.bg") ?? .accentColor');
     expect(source).toContain('pxSlot("radius") ?? 0');
     expect(source).toContain('colorSlot("color.border") ?? .clear');
