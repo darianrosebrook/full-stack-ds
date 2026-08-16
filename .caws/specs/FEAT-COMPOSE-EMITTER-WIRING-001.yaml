@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "no railFrameworkId in registry binding; full-corpus --target=all (360 groups) left diff scope at exactly the 7 slice files + new package (swiftui/react/vue/svelte/angular/lit/react-native byte-identical); emission manifest framework counts {six rail frameworks: 49 each, jetpack-compose: 0}; probe: explicit Button request throws 'only the native-toggle collapse path is implemented for Button'"
     recorded_at: "2026-08-16T22:21:36.026Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "full gate in worktree 15:16-15:18: governed:rail required-mode (per-file sha256 verification) OK; pnpm test 2072/2072 (165 files); test:frameworks all suites (RN tail 72/72); audit:behavior-realization 'all derived obligations realized'; audit:a11y-realization PASS ledger-balanced; git status 0-dirty after gate; post-merge-of-main sanity: generate:check 49/49 + swiftui regen byte-identical"
+    recorded_at: "2026-08-16T22:21:44.053Z"
