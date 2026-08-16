@@ -48,3 +48,8 @@ contracts:
   - name: 'settings-spec'
     type: behavior
     path: 'examples/settings/spec.md'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "examples/settings/compose/src/main/kotlin/com/fullstackds/examples/settings/SettingsApp.kt @ eecfcd52: PreferencesSection realizes both spec rows through the generated Switch (controlled checked/onChange, defaults false/true, tooltip hint via public contentDescription prop); ProfileSection/DangerZoneSection/ConfirmDeleteDialog carry NOT FSDS markers; README ledger table maps every spec region to FSDS/NOT FSDS"
+    recorded_at: "2026-08-16T23:10:12.215Z"
