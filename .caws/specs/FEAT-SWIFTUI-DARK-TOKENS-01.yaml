@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: absent graph degrades to .string (graphDarkFor null-guards; no crash)
     recorded_at: "2026-08-16T01:49:29.047Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: rail exit 0; pnpm test 2078/2078 after expectation refresh; swift test 8/8; package+example build; Switch golden stable
+    recorded_at: "2026-08-16T01:49:29.962Z"
