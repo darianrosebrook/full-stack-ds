@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-DARK-TOKENS-01
 title: 'Dark-mode token resolution: adaptive light/dark pairs from the resolved graph'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Dark-mode landed: adaptive light/dark pairs baked from the resolved graph with a dynamic NSColor provider; dark windows stop glowing white'
 created_at: '2026-08-16T01:37:25.448Z'
-updated_at: '2026-08-16T01:37:25.448Z'
+updated_at: '2026-08-16T01:49:30.871Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui (graph lookup + adaptive emission; contractsRoot threading through factory/component-source/surface-emit)'
