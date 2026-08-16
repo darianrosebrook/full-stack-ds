@@ -32,6 +32,8 @@ import type {
   TokenFactIR,
 } from "../../../ir.js";
 import { collectCollapseIntents } from "../../../ir.js";
+import nodeFs from "node:fs";
+import nodePath from "node:path";
 
 const INDENT = "    ";
 
@@ -53,6 +55,7 @@ const SWIFTUI_RESERVED_TYPES: ReadonlySet<string> = new Set([
   "Form",
   "Section",
   "Field",
+  "Divider",
 ]);
 
 export function swiftExportName(componentName: string): string {
@@ -97,11 +100,34 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isTextValueControl(ir) && soleValueChannel(ir)!.valueType === "boolean") {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitBooleanControlComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (isTextValueControl(ir)) {
     const sections: string[] = [];
     sections.push(emitImports());
     sections.push(emitTypes(ir));
     sections.push(emitTextControlComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (ir.root.effectiveRole === "progressbar") {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitProgressComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isBareRuleLeaf(ir) || isVisualOnlyLeaf(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitLeafComponent(ir));
     return sections.join("\n\n") + "\n";
   }
 
@@ -161,10 +187,19 @@ function isTextValueControl(ir: ComponentIR): boolean {
   if (!ir.dom || ir.dom.tag !== "input") return false;
   if (ir.surface != null) return false;
   if ((ir.dom.children ?? []).length > 0) return false;
-  const stringChannels = ir.behavior.normalizedChannels.filter(
-    (c) => c.valueType === "string",
+  return soleValueChannel(ir) !== null;
+}
+
+/**
+ * The single scalar (string or boolean) channel of an input-root control,
+ * or null when the shape does not match. String lowers to TextField;
+ * boolean lowers to Toggle(.checkbox).
+ */
+function soleValueChannel(ir: ComponentIR): NormalizedChannelIR | null {
+  const scalar = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "string" || c.valueType === "boolean",
   );
-  return stringChannels.length === 1;
+  return scalar.length === 1 ? scalar[0]! : null;
 }
 
 /** The single string channel of a text control (gate guarantees it). */
@@ -196,9 +231,14 @@ function emitTextControlComponent(ir: ComponentIR): string {
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
@@ -326,6 +366,220 @@ function emitTextControlComponent(ir: ComponentIR): string {
   lines.push(`}`);
   lines.push("// @generated:end");
   void textFieldArgs;
+  return lines.join("\n");
+}
+
+/**
+ * The boolean-channel input control: input root whose scalar channel is a
+ * boolean (Checkbox) lowering to Toggle(.checkbox) with the controllable
+ * state projection. `indeterminate` has no SwiftUI Toggle equivalent and
+ * is omitted-and-documented.
+ */
+function emitBooleanControlComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Emitted through the boolean-channel control path: the checked ` +
+      `channel projects through the controllable-state pattern onto a ` +
+      `native checkbox Toggle.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  lines.push(`${INDENT}private let controlledChecked: Binding<Bool>?`);
+  lines.push(`${INDENT}@State private var uncontrolledChecked: Bool`);
+  lines.push(`${INDENT}private let onChange: ((Bool) -> Void)?`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = ["checked: Binding<Bool>? = nil,", "defaultChecked: Bool = false,", "onChange: ((Bool) -> Void)? = nil,"];
+  if (hasDisabled) params.push("disabled: Bool = false");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.controlledChecked = checked`);
+  lines.push(`${INDENT}${INDENT}self._uncontrolledChecked = State(initialValue: defaultChecked)`);
+  lines.push(`${INDENT}${INDENT}self.onChange = onChange`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var isChecked: Bool {`);
+  lines.push(`${INDENT}${INDENT}controlledChecked?.wrappedValue ?? uncontrolledChecked`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func setChecked(_ next: Bool) {`);
+  lines.push(`${INDENT}${INDENT}if let binding = controlledChecked {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
+  lines.push(`${INDENT}${INDENT}} else {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledChecked = next`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}onChange?(next)`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}Toggle(isOn: Binding(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}get: { isChecked },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}set: { setChecked($0) }`);
+  lines.push(`${INDENT}${INDENT})) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}EmptyView()`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}.toggleStyle(.checkbox)`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * The progressbar class: root semantics carry role=progressbar (Progress).
+ * The contract documents value as 0-100 with omission meaning
+ * indeterminate — the emission honors that range, never guessing a scale.
+ */
+function emitProgressComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const hasLabel = hasConventionalProp(ir, "label");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Emitted through the progressbar path: the contract's 0-100 value ` +
+      `prop drives a native progress indicator; nil renders indeterminate.`,
+  );
+  lines.push(`public struct ${exportName}: View {`);
+  lines.push(`${INDENT}private let value: Double?`);
+  if (hasLabel) lines.push(`${INDENT}private let label: String?`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = ["value: Double? = nil,"];
+  if (hasLabel) params.push("label: String? = nil");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.value = value`);
+  if (hasLabel) lines.push(`${INDENT}${INDENT}self.label = label`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}Group {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}if let value {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}ProgressView(value: value / 100)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}ProgressView()`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (hasLabel) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(label)`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/** A bare rule leaf: an hr root with no children and no channels (Divider). */
+function isBareRuleLeaf(ir: ComponentIR): boolean {
+  return (
+    !!ir.dom &&
+    ir.dom.tag === "hr" &&
+    (ir.dom.children ?? []).length === 0 &&
+    ir.behavior.normalizedChannels.length === 0 &&
+    ir.surface == null
+  );
+}
+
+/** A visual-only leaf: one childless span under a passive root (Spinner). */
+function isVisualOnlyLeaf(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  const children = ir.dom.children ?? [];
+  if (children.length !== 1) return false;
+  const child = children[0]!;
+  return child.tag === "span" && (child.children ?? []).length === 0;
+}
+
+function emitLeafComponent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const isRule = isBareRuleLeaf(ir);
+  const hasOrientation = hasConventionalProp(ir, "orientation");
+  const hasLabel = hasConventionalProp(ir, "label");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    isRule
+      ? `/// Emitted through the bare-rule leaf path (hr root).`
+      : `/// Emitted through the visual-only leaf path: a decorative ` +
+        `affordance realized natively.`,
+  );
+  // Inline enum props (DividerOrientation) lower to local Swift enums —
+  // the contract declares them inline rather than as named types.
+  const orientationProp = ir.styledProps.find(
+    (p) => p.safeName === "orientation",
+  );
+  const orientationEnumValues =
+    orientationProp &&
+    typeof orientationProp.propType === "object" &&
+    "kind" in orientationProp.propType &&
+    orientationProp.propType.kind === "enum"
+      ? (orientationProp.propType as { values: string[] }).values
+      : null;
+  if (orientationEnumValues) {
+    lines.push(`public enum ${ir.name}Orientation: String, CaseIterable {`);
+    for (const value of orientationEnumValues) {
+      lines.push(`${INDENT}case ${swiftCaseDecl(value)}`);
+    }
+    lines.push(`}`);
+    lines.push("");
+  }
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  if (hasOrientation) lines.push(`${INDENT}private let orientation: ${ir.name}Orientation?`);
+  if (hasLabel) lines.push(`${INDENT}private let label: String?`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [];
+  if (hasOrientation) params.push("orientation: " + ir.name + "Orientation? = nil");
+  if (hasLabel) params.push("label: String? = nil");
+  if (params.length === 0) {
+    lines.push(`${INDENT}) {`);
+  } else {
+    params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+    for (const param of params) lines.push(`${INDENT}${INDENT}${param},`);
+    lines[lines.length - 1] = lines[lines.length - 1]!.replace(/,$/, "");
+    lines.push(`${INDENT}) {`);
+  }
+  if (hasOrientation) lines.push(`${INDENT}${INDENT}self.orientation = orientation`);
+  if (hasLabel) lines.push(`${INDENT}${INDENT}self.label = label`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  if (isRule) {
+    lines.push(`${INDENT}${INDENT}if orientation == .vertical {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}Rectangle()`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.fill(.separator)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.frame(width: 1)`);
+    lines.push(`${INDENT}${INDENT}} else {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}Divider()`);
+    lines.push(`${INDENT}${INDENT}}`);
+  } else {
+    lines.push(`${INDENT}${INDENT}ProgressView()`);
+    if (hasLabel) {
+      lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(label)`);
+    }
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
   return lines.join("\n");
 }
 
@@ -670,9 +924,14 @@ function emitActionComponent(ir: ComponentIR): string {
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
@@ -1017,9 +1276,14 @@ function emitComposerComponent(
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
@@ -1273,8 +1537,82 @@ export function emitChromeAccessorLines(
   return accessors;
 }
 
+/**
+ * Lazily loaded resolved token graph (read-only). Theme-aware tokens carry
+ * $value {light, dark}; invariant tokens carry a plain string. Used ONLY
+ * to source dark values for adaptive pairs — the contract fallback stays
+ * the light authority. Absent graph → no adaptive pairs (documented
+ * degradation; CI/pre-push always build tokens before generation).
+ */
+let resolvedTokenGraph: Record<string, unknown> | null | undefined;
+
+function loadResolvedGraph(contractsRoot?: string): Record<string, unknown> | null {
+  if (resolvedTokenGraph !== undefined) return resolvedTokenGraph;
+  try {
+    // contractsRoot = <repo>/packages/ds-contracts when threaded; the
+    // codegen CLI and the vitest suite both run from the repo root, so
+    // process.cwd() is the equivalent fallback for unthreaded call sites.
+    const repoRoot = contractsRoot
+      ? nodePath.resolve(contractsRoot, "..", "..")
+      : process.cwd();
+    const graphPath = nodePath.resolve(
+      repoRoot,
+      "packages",
+      "ds-tokens",
+      "generated",
+      "resolved.tokens.json",
+    );
+    resolvedTokenGraph = JSON.parse(
+      nodeFs.readFileSync(graphPath, "utf8"),
+    ) as Record<string, unknown>;
+  } catch {
+    resolvedTokenGraph = null;
+  }
+  return resolvedTokenGraph;
+}
+
+/** Walk the graph along a dotted path; null when absent. */
+function graphValueAt(
+  graph: Record<string, unknown>,
+  resolvesTo: string,
+): unknown {
+  let node: unknown = graph;
+  for (const segment of resolvesTo.split(".")) {
+    if (typeof node !== "object" || node === null) return null;
+    node = (node as Record<string, unknown>)[segment];
+  }
+  return node;
+}
+
+/**
+ * The dark half of a theme-aware color token, when the slot resolves to
+ * one: $value must be {light, dark} with a hex dark. The light half is
+ * not taken from the graph — the contract fallback stays the light
+ * authority (the corpus's collapsed-to-light convention).
+ */
+function graphDarkFor(
+  value: { name: string; rawValue?: string; resolvesTo?: string },
+  contractsRoot?: string,
+): string | null {
+  // The component-local slot name does not exist in the graph; the
+  // resolvesTo path is the graph address.
+  if (!value.resolvesTo) return null;
+  if (!value.rawValue || !value.rawValue.startsWith("#")) return null;
+  const graph = loadResolvedGraph(contractsRoot);
+  if (!graph) return null;
+  const token = graphValueAt(graph, value.resolvesTo);
+  if (typeof token !== "object" || token === null) return null;
+  const tokenValue = (token as Record<string, unknown>).$value;
+  if (typeof tokenValue !== "object" || tokenValue === null) return null;
+  const dark = (tokenValue as Record<string, unknown>).dark;
+  return typeof dark === "string" && dark.startsWith("#") ? dark : null;
+}
+
 /** Generated token-scope-data lines shared by the component and surface emitters. */
-export function emitTokenScopesSection(ir: ComponentIR): string[] {
+export function emitTokenScopesSection(
+  ir: ComponentIR,
+  contractsRoot?: string,
+): string[] {
   const lines: string[] = [];
   lines.push(
     `/// Token scope data for ${swiftExportName(ir.name)} (ir.tokenScopes → RN normal ` +
@@ -1287,9 +1625,14 @@ export function emitTokenScopesSection(ir: ComponentIR): string[] {
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value, contractsRoot);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,

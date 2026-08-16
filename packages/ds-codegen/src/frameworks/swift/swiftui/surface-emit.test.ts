@@ -52,7 +52,7 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain("@ViewBuilder bodyContent: () -> BodyContent = { EmptyView() }");
     expect(componentFile).not.toContain("private let body: Body");
     // Chrome is presence-driven through FsdsTheme.
-    expect(componentFile).toContain('fallback: .string("#ffffff")');
+    expect(componentFile).toContain('.adaptive(light: "#ffffff", dark:');
     expect(componentFile).toContain(".clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))");
   });
 
@@ -79,7 +79,7 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain("case .auto: return .bottom");
     expect(componentFile).toContain("case .top: return .top");
     // Chrome is presence-driven through FsdsTheme.
-    expect(componentFile).toContain('fallback: .string("#141414")');
+    expect(componentFile).toContain('.adaptive(light: "#141414", dark:');
     // Dismissal flags are omitted, not accepted-and-ignored.
     expect(componentFile).not.toContain("closeOnEscape");
     expect(componentFile).not.toContain("closeOnBlur");
