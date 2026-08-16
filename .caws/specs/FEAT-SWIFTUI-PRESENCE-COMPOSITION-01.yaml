@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-PRESENCE-COMPOSITION-01
 title: 'Compositional controllable-value substrate: one state machine derived from channel facts; Toast as generative proof'
 risk_tier: 2
 mode: refactor
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'ControllableValue substrate landed: one state machine from channel facts, 56 duplicated projections eliminated, Toast emitted generatively; 21 of 49 admitted'
 created_at: '2026-08-16T23:10:18.088Z'
-updated_at: '2026-08-16T23:24:34.532Z'
+updated_at: '2026-08-16T23:25:00.085Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Sources/DsSwiftUI/Presence/ControllableValue.swift (runtime substrate)'
