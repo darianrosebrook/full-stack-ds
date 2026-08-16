@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: "./gradlew compileKotlin BUILD SUCCESSFUL exit 0 (also via root script typecheck:example:compose); gradle dependencies shows 'ds-jetpack-compose:library -> project :ds-jetpack-compose:library' (composite substitution); disassembled example bytecode contains exactly 2 invokestatic sites to com/fullstackds/components/switch/SwitchKt.Switch with the full generated signature (Boolean,Z,Function1,SwitchSize,Z,String,String,String,Modifier,Composer,II)"
     recorded_at: "2026-08-16T23:10:13.402Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: ".github/workflows/ci.yml native-compile-rail job: 'Settings example compile (consumer lane over ds-jetpack-compose)' step running examples/settings/compose/gradlew compileKotlin, with cache:gradle added to setup-java — the swift-lane precedent mirrored; closes the no-CI-lane-executes-the-Gradle-compile gap"
+    recorded_at: "2026-08-16T23:10:14.771Z"
