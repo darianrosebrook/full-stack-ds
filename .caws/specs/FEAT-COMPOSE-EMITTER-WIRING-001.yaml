@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "generate log 'ADMITTED 2/2 per fsds.targets.json allowlist' + GENERATED Switch/ToggleSwitch; emitted bytes at packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/{Switch/Switch.kt,ToggleSwitch/ToggleSwitch.kt,Components.generated.kt} @ 357853e7; Switch.kt:37 uses ?: (golden ?? corrected); per-contract derivation proven by ToggleSwitch's ariaLabel/ariaDescribedby passthroughs vs Switch's name/value"
     recorded_at: "2026-08-16T22:21:34.024Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "./gradlew :library:compileKotlin BUILD SUCCESSFUL exit 0; 6 JVM class artifacts incl. SwitchKt.class + SwitchKt$WhenMappings.class; javap signature Switch(Boolean, boolean, Function1<Boolean,Unit>, SwitchSize, boolean, String, String, String, androidx.compose.ui.Modifier, androidx.compose.runtime.Composer, int, int) proves the Compose transform ran against real artifacts; zero androidx stubs in tree; negative probe: reintroduced ?? at Switch.kt:37 → kotlinc 'Syntax error: Unexpected tokens' BUILD FAILED exit 1, restored → BUILD SUCCESSFUL"
+    recorded_at: "2026-08-16T22:21:35.066Z"
