@@ -56,3 +56,8 @@ contracts:
   - name: 'Switch'
     type: behavior
     path: 'packages/ds-contracts/components/Switch/Switch.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "generate log 'ADMITTED 2/2 per fsds.targets.json allowlist' + GENERATED Switch/ToggleSwitch; emitted bytes at packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/{Switch/Switch.kt,ToggleSwitch/ToggleSwitch.kt,Components.generated.kt} @ 357853e7; Switch.kt:37 uses ?: (golden ?? corrected); per-contract derivation proven by ToggleSwitch's ariaLabel/ariaDescribedby passthroughs vs Switch's name/value"
+    recorded_at: "2026-08-16T22:21:34.024Z"
