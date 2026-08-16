@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: "full gate in worktree 15:16-15:18: governed:rail required-mode (per-file sha256 verification) OK; pnpm test 2072/2072 (165 files); test:frameworks all suites (RN tail 72/72); audit:behavior-realization 'all derived obligations realized'; audit:a11y-realization PASS ledger-balanced; git status 0-dirty after gate; post-merge-of-main sanity: generate:check 49/49 + swiftui regen byte-identical"
     recorded_at: "2026-08-16T22:21:44.053Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "builtin manifest knownGaps (6 entries: explicit-only posture, collapse-only, rung ladder 1/3 with rungs 2+3 reserved, JVM-not-Android non-claims, no test target/theme module, network-bootstrap caveat); packages/ds-jetpack-compose/README.md ladder table; snapshot rows 46+64 @ 357853e7 (merged with the concurrent dark-tokens row edit)"
+    recorded_at: "2026-08-16T22:21:44.983Z"
