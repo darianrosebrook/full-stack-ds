@@ -21,7 +21,11 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The example consumes ONLY public exports of the generated package (com.fullstackds.components.*) via Gradle composite-build substitution — no reaching into the generating repo internals, no copied source.'
+  - 'No contract, schema, IR, or emitter change — this slice falsifies the existing package boundary; gaps it finds become findings, not workarounds.'
+  - 'The NOT FSDS partial-realization boundary stays visible in source comments and the README ledger, mirroring the swift lane convention.'
+  - 'CI wiring mirrors the swift example-lane precedent (CI-only job; the pnpm pre-push gate does not gain native compiler steps).'
+  - 'No generated tree under packages/* changes — examples are pure consumers.'
 acceptance:
   - id: A1
     given: 'the settings spec and the ds-jetpack-compose package emitting Switch/ToggleSwitch'
