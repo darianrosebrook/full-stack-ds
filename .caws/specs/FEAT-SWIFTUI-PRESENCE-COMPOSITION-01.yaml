@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "grep: zero controlledOpen/controlledChecked/controlledValue/controlledSearch/uncontrolled identifiers in the generated tree; 9 components emit @StateObject ControllableValue fields (Switch, ToggleSwitch, Checkbox, Input, Details, Dialog, Sheet, Command, Tooltip)"
     recorded_at: "2026-08-16T23:24:52.587Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "ControllableValueTests 6/6: controlled precedence, default+set, onChange-on-every-set, binding round-trip, controlled write-through, toggle"
+    recorded_at: "2026-08-16T23:24:54.419Z"
