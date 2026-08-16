@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: Glyph registry shared substrate (Alert/Status/Badge/Chip will compose it by iconGlyph facts); presence-projection duplication recorded as the next compositional extraction in the commit + research doc
     recorded_at: "2026-08-16T23:04:36.256Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2079/2079; test:frameworks 72 passed; swift test 13/13; swift build + example build exit 0; ADMITTED 20/20 byte-stable"
+    recorded_at: "2026-08-16T23:04:37.230Z"
