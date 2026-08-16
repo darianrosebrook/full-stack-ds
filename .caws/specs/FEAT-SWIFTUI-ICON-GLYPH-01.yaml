@@ -2,10 +2,11 @@ id: FEAT-SWIFTUI-ICON-GLYPH-01
 title: 'SwiftUI glyph pipeline: SVGPath runtime, generated GlyphCatalog, Icon via iconGlyph class'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: swift-icon-glyph
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Glyph pipeline landed: SVGPath runtime + generated GlyphCatalog substrate + Icon via the iconGlyph class; 20 of 49 admitted; Alert/Status/Badge/Chip unlocked'
 created_at: '2026-08-16T22:55:42.705Z'
-updated_at: '2026-08-16T22:55:42.705Z'
+updated_at: '2026-08-16T23:04:38.144Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Sources/DsSwiftUI/Glyphs (SVGPath runtime + generated GlyphCatalog)'
@@ -50,3 +51,24 @@ contracts:
   - name: 'swiftui-icon-glyph'
     type: contract-test
     path: 'packages/ds-swiftui/Tests/DsSwiftUITests/SVGPathTests.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "SVGPath.swift runtime + SVGPathTests: 3/3 spike tests pass in-package (real Alarm bounds, arc circle 16x16 center tolerance, relative/h/v exact)"
+    recorded_at: "2026-08-16T23:04:33.132Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "GlyphCatalog.swift generated from the 29-icon catalog via the shared-substrate channel; GlyphCatalogTests pin alarm 16+24 grids, viewBox 24, 3 paths, decorativeDefaults contains alarm"
+    recorded_at: "2026-08-16T23:04:34.215Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Icon.swift: GlyphCatalog.glyph(named:size:) lookup, sm/md/lg/xl hint switch (16/20/24/32), synthesized IconSize inline enum, accessibilityHidden via decorativeDefaults"
+    recorded_at: "2026-08-16T23:04:35.272Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: Glyph registry shared substrate (Alert/Status/Badge/Chip will compose it by iconGlyph facts); presence-projection duplication recorded as the next compositional extraction in the commit + research doc
+    recorded_at: "2026-08-16T23:04:36.256Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2079/2079; test:frameworks 72 passed; swift test 13/13; swift build + example build exit 0; ADMITTED 20/20 byte-stable"
+    recorded_at: "2026-08-16T23:04:37.230Z"

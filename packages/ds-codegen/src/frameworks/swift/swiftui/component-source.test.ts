@@ -371,3 +371,20 @@ describe("generateSwiftUIComponentSource — coverage batch 2", () => {
     expect(source).not.toContain("showAfterMs");
   });
 });
+
+describe("generateSwiftUIComponentSource — glyph host (Icon)", () => {
+  it("emits a registry lookup with size hints and decorative default", () => {
+    const contract = loadContract("Icon") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const source = generateSwiftUIComponentSource(buildComponentIR(contract));
+    expect(source).toContain("public struct Icon: View {");
+    expect(source).toContain("GlyphCatalog.glyph(named: name, size: glyphSize)");
+    expect(source).toContain("case .sm: return 16");
+    expect(source).toContain("case .md: return 20");
+    expect(source).toContain("case .lg: return 24");
+    expect(source).toContain("case .xl: return 32");
+    expect(source).toContain(".accessibilityHidden(");
+    expect(source).toContain("GlyphCatalog.decorativeDefaults.contains(name)");
+  });
+});

@@ -3,6 +3,7 @@ title: 'Compose settings example lane consuming the generated ds-jetpack-compose
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: compose-settings-example
 created_at: '2026-08-16T22:59:55.813Z'
 updated_at: '2026-08-16T22:59:55.813Z'
 blast_radius:
