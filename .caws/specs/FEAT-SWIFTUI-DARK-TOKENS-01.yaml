@@ -49,3 +49,7 @@ evidence:
     status: pass
     evidence_ref: Card/Input/Details/Dialog/Tooltip regenerated with adaptive pairs (Card 27); invariant+px tokens byte-identical; graph dark via resolvesTo only
     recorded_at: "2026-08-16T01:49:27.221Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "adaptivePick decision pinned by XCTest (light under aqua, dark under darkAqua); dynamic NSColor provider; swift test 8/8"
+    recorded_at: "2026-08-16T01:49:28.140Z"
