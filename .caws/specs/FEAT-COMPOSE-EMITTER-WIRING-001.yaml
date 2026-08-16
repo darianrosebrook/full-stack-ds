@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "./gradlew :library:compileKotlin BUILD SUCCESSFUL exit 0; 6 JVM class artifacts incl. SwitchKt.class + SwitchKt$WhenMappings.class; javap signature Switch(Boolean, boolean, Function1<Boolean,Unit>, SwitchSize, boolean, String, String, String, androidx.compose.ui.Modifier, androidx.compose.runtime.Composer, int, int) proves the Compose transform ran against real artifacts; zero androidx stubs in tree; negative probe: reintroduced ?? at Switch.kt:37 → kotlinc 'Syntax error: Unexpected tokens' BUILD FAILED exit 1, restored → BUILD SUCCESSFUL"
     recorded_at: "2026-08-16T22:21:35.066Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "no railFrameworkId in registry binding; full-corpus --target=all (360 groups) left diff scope at exactly the 7 slice files + new package (swiftui/react/vue/svelte/angular/lit/react-native byte-identical); emission manifest framework counts {six rail frameworks: 49 each, jetpack-compose: 0}; probe: explicit Button request throws 'only the native-toggle collapse path is implemented for Button'"
+    recorded_at: "2026-08-16T22:21:36.026Z"
