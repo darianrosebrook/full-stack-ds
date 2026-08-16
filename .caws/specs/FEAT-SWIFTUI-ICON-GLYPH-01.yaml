@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "GlyphCatalog.swift generated from the 29-icon catalog via the shared-substrate channel; GlyphCatalogTests pin alarm 16+24 grids, viewBox 24, 3 paths, decorativeDefaults contains alarm"
     recorded_at: "2026-08-16T23:04:34.215Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Icon.swift: GlyphCatalog.glyph(named:size:) lookup, sm/md/lg/xl hint switch (16/20/24/32), synthesized IconSize inline enum, accessibilityHidden via decorativeDefaults"
+    recorded_at: "2026-08-16T23:04:35.272Z"
