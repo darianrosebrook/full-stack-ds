@@ -69,6 +69,16 @@
         "Progress",
         "Spinner"
       ]
+    },
+    {
+      "id": "jetpack-compose",
+      "source": {
+        "kind": "builtin"
+      },
+      "components": [
+        "Switch",
+        "ToggleSwitch"
+      ]
     }
   ]
 }
