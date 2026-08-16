@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-ICON-GLYPH-01
 title: 'SwiftUI glyph pipeline: SVGPath runtime, generated GlyphCatalog, Icon via iconGlyph class'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Glyph pipeline landed: SVGPath runtime + generated GlyphCatalog substrate + Icon via the iconGlyph class; 20 of 49 admitted; Alert/Status/Badge/Chip unlocked'
 created_at: '2026-08-16T22:55:42.705Z'
-updated_at: '2026-08-16T22:55:42.705Z'
+updated_at: '2026-08-16T23:04:38.144Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Sources/DsSwiftUI/Glyphs (SVGPath runtime + generated GlyphCatalog)'
