@@ -31,9 +31,9 @@ enum DialogTokens {
             "box-model.height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-height", name: "box-model.height", literal: .string("auto")),
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("0")),
             "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
-            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .string("#ffffff")),
-            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#141414")),
-            "dialog.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-border-default", name: "dialog.color.border.default", fallback: .string("#d0d0d0")),
+            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .adaptive(light: "#ffffff", dark: "#000000")),
+            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .adaptive(light: "#141414", dark: "#fafafa")),
+            "dialog.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-border-default", name: "dialog.color.border.default", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
             "dialog.size.radius.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-size-radius-default", name: "dialog.size.radius.default", fallback: .string("16px")),
             "dialog.size.sm.width": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-size-sm-width", name: "dialog.size.sm.width", literal: .string("400px")),
             "dialog.size.sm.maxWidth": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-size-sm-max-width", name: "dialog.size.sm.maxWidth", literal: .string("90vw")),
@@ -58,13 +58,13 @@ enum DialogTokens {
             "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .string("#00000066")),
         ],
         "part_body": [
-            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#474647")),
+            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .adaptive(light: "#474647", dark: "#a0a0a1")),
         ],
         "part_closeButton": [
-            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .string("#474647")),
+            "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", fallback: .adaptive(light: "#474647", dark: "#a0a0a1")),
         ],
         "hover": [
-            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .string("#b8b8b8")),
+            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
         ],
     ]
 }

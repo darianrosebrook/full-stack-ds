@@ -32,6 +32,8 @@ import type {
   TokenFactIR,
 } from "../../../ir.js";
 import { collectCollapseIntents } from "../../../ir.js";
+import nodeFs from "node:fs";
+import nodePath from "node:path";
 
 const INDENT = "    ";
 
@@ -229,9 +231,14 @@ function emitTextControlComponent(ir: ComponentIR): string {
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
@@ -917,9 +924,14 @@ function emitActionComponent(ir: ComponentIR): string {
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
@@ -1264,9 +1276,14 @@ function emitComposerComponent(
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
@@ -1520,8 +1537,82 @@ export function emitChromeAccessorLines(
   return accessors;
 }
 
+/**
+ * Lazily loaded resolved token graph (read-only). Theme-aware tokens carry
+ * $value {light, dark}; invariant tokens carry a plain string. Used ONLY
+ * to source dark values for adaptive pairs — the contract fallback stays
+ * the light authority. Absent graph → no adaptive pairs (documented
+ * degradation; CI/pre-push always build tokens before generation).
+ */
+let resolvedTokenGraph: Record<string, unknown> | null | undefined;
+
+function loadResolvedGraph(contractsRoot?: string): Record<string, unknown> | null {
+  if (resolvedTokenGraph !== undefined) return resolvedTokenGraph;
+  try {
+    // contractsRoot = <repo>/packages/ds-contracts when threaded; the
+    // codegen CLI and the vitest suite both run from the repo root, so
+    // process.cwd() is the equivalent fallback for unthreaded call sites.
+    const repoRoot = contractsRoot
+      ? nodePath.resolve(contractsRoot, "..", "..")
+      : process.cwd();
+    const graphPath = nodePath.resolve(
+      repoRoot,
+      "packages",
+      "ds-tokens",
+      "generated",
+      "resolved.tokens.json",
+    );
+    resolvedTokenGraph = JSON.parse(
+      nodeFs.readFileSync(graphPath, "utf8"),
+    ) as Record<string, unknown>;
+  } catch {
+    resolvedTokenGraph = null;
+  }
+  return resolvedTokenGraph;
+}
+
+/** Walk the graph along a dotted path; null when absent. */
+function graphValueAt(
+  graph: Record<string, unknown>,
+  resolvesTo: string,
+): unknown {
+  let node: unknown = graph;
+  for (const segment of resolvesTo.split(".")) {
+    if (typeof node !== "object" || node === null) return null;
+    node = (node as Record<string, unknown>)[segment];
+  }
+  return node;
+}
+
+/**
+ * The dark half of a theme-aware color token, when the slot resolves to
+ * one: $value must be {light, dark} with a hex dark. The light half is
+ * not taken from the graph — the contract fallback stays the light
+ * authority (the corpus's collapsed-to-light convention).
+ */
+function graphDarkFor(
+  value: { name: string; rawValue?: string; resolvesTo?: string },
+  contractsRoot?: string,
+): string | null {
+  // The component-local slot name does not exist in the graph; the
+  // resolvesTo path is the graph address.
+  if (!value.resolvesTo) return null;
+  if (!value.rawValue || !value.rawValue.startsWith("#")) return null;
+  const graph = loadResolvedGraph(contractsRoot);
+  if (!graph) return null;
+  const token = graphValueAt(graph, value.resolvesTo);
+  if (typeof token !== "object" || token === null) return null;
+  const tokenValue = (token as Record<string, unknown>).$value;
+  if (typeof tokenValue !== "object" || tokenValue === null) return null;
+  const dark = (tokenValue as Record<string, unknown>).dark;
+  return typeof dark === "string" && dark.startsWith("#") ? dark : null;
+}
+
 /** Generated token-scope-data lines shared by the component and surface emitters. */
-export function emitTokenScopesSection(ir: ComponentIR): string[] {
+export function emitTokenScopesSection(
+  ir: ComponentIR,
+  contractsRoot?: string,
+): string[] {
   const lines: string[] = [];
   lines.push(
     `/// Token scope data for ${swiftExportName(ir.name)} (ir.tokenScopes → RN normal ` +
@@ -1534,9 +1625,14 @@ export function emitTokenScopesSection(ir: ComponentIR): string[] {
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
-      const literalArg = value.rawValue
-        ? `${value.isLiteral ? "literal" : "fallback"}: .string("${value.rawValue}")`
-        : "";
+      let literalArg = "";
+      if (value.rawValue) {
+        const kind = value.isLiteral ? "literal" : "fallback";
+        const dark = graphDarkFor(value, contractsRoot);
+        literalArg = dark
+          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
+          : `${kind}: .string("${value.rawValue}")`;
+      }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
           `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,

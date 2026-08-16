@@ -25,7 +25,7 @@ enum LabelTokens {
             "box-model.height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-height", name: "box-model.height", literal: .string("auto")),
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("0")),
             "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
-            "label.color.text.default": FsdsComponentTokenDefinition(cssVar: "--fsds-label-color-text-default", name: "label.color.text.default", fallback: .string("#141414")),
+            "label.color.text.default": FsdsComponentTokenDefinition(cssVar: "--fsds-label-color-text-default", name: "label.color.text.default", fallback: .adaptive(light: "#141414", dark: "#fafafa")),
             "label.typo.weight.default": FsdsComponentTokenDefinition(cssVar: "--fsds-label-typo-weight-default", name: "label.typo.weight.default", fallback: .string("500")),
             "label.typo.lineHeight.default": FsdsComponentTokenDefinition(cssVar: "--fsds-label-typo-line-height-default", name: "label.typo.lineHeight.default", fallback: .string("1.2")),
         ],

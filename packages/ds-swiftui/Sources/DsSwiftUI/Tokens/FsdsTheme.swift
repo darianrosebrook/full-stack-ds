@@ -12,6 +12,7 @@
 // this file only to widen the runtime (new accessors, theme surfaces).
 
 import SwiftUI
+import AppKit
 
 /// A token value as authored in the token graph: a number-with-unit or a
 /// bare string. Accessors parse target-usable forms; unparsable units
@@ -19,10 +20,15 @@ import SwiftUI
 public enum FsdsTokenValue: Sendable, Equatable {
     case number(Double)
     case string(String)
+    /// A theme-aware color pair baked at generation time from the resolved
+    /// token graph: light is the contract fallback (the corpus's
+    /// collapsed-to-light convention), dark is the graph's dark half.
+    case adaptive(light: String, dark: String)
 
     /// Leading-unitless double for px-like values ("8px" → 8).
     public var px: CGFloat? {
         switch self {
+        case .adaptive: return nil
         case .number(let n): return CGFloat(n)
         case .string(let s):
             guard
@@ -33,31 +39,72 @@ public enum FsdsTokenValue: Sendable, Equatable {
         }
     }
 
-    /// Hex color for #rgb / #rrggbb / #rrggbbaa values; nil otherwise.
+    /// Color for hex values; `.adaptive` returns a dynamic NSColor
+    /// provider color that resolves per appearance (dark under darkAqua).
     public var color: Color? {
-        guard case .string(let s) = self, s.hasPrefix("#") else { return nil }
+        switch self {
+        case .adaptive(let lightHex, let darkHex):
+            guard let dynamic = Self.adaptiveNSColor(light: lightHex, dark: darkHex)
+            else { return nil }
+            return Color(nsColor: dynamic)
+        case .string(let hex):
+            return Self.parseHexNSColor(hex).map(Color.init(nsColor:))
+        case .number:
+            return nil
+        }
+    }
+
+    /// The dynamic provider backing `.adaptive` colors — internal so the
+    /// XCTest regression suite can materialize it per appearance.
+    static func adaptiveNSColor(light: String, dark: String) -> NSColor? {
+        guard let lightColor = parseHexNSColor(light),
+              let darkColor = parseHexNSColor(dark)
+        else { return nil }
+        return NSColor(name: nil) { appearance in
+            Self.adaptivePick(appearance: appearance, light: lightColor, dark: darkColor)
+        }
+    }
+
+    /// The per-appearance decision the dynamic provider runs — pure and
+    /// headless-testable (dark under darkAqua, light otherwise).
+    static func adaptivePick(
+        appearance: NSAppearance,
+        light: NSColor,
+        dark: NSColor
+    ) -> NSColor {
+        appearance.bestMatch(from: [.darkAqua]) != nil ? dark : light
+    }
+
+    private static func parseHexNSColor(_ s: String) -> NSColor? {
+        guard s.hasPrefix("#") else { return nil }
         var hex: UInt64 = 0
         let digits = String(s.dropFirst())
         guard [3, 6, 8].contains(digits.count),
               Scanner(string: digits).scanHexInt64(&hex)
         else { return nil }
+        func color(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat) -> NSColor {
+            NSColor(red: r, green: g, blue: b, alpha: a)
+        }
         switch digits.count {
         case 3:
-            let r = CGFloat((hex >> 8) & 0xF) / 15
-            let g = CGFloat((hex >> 4) & 0xF) / 15
-            let b = CGFloat(hex & 0xF) / 15
-            return Color(red: r, green: g, blue: b)
+            return color(
+                CGFloat((hex >> 8) & 0xF) / 15,
+                CGFloat((hex >> 4) & 0xF) / 15,
+                CGFloat(hex & 0xF) / 15, 1
+            )
         case 6:
-            let r = CGFloat((hex >> 16) & 0xFF) / 255
-            let g = CGFloat((hex >> 8) & 0xFF) / 255
-            let b = CGFloat(hex & 0xFF) / 255
-            return Color(red: r, green: g, blue: b)
+            return color(
+                CGFloat((hex >> 16) & 0xFF) / 255,
+                CGFloat((hex >> 8) & 0xFF) / 255,
+                CGFloat(hex & 0xFF) / 255, 1
+            )
         default:
-            let r = CGFloat((hex >> 24) & 0xFF) / 255
-            let g = CGFloat((hex >> 16) & 0xFF) / 255
-            let b = CGFloat((hex >> 8) & 0xFF) / 255
-            let a = CGFloat(hex & 0xFF) / 255
-            return Color(red: r, green: g, blue: b, opacity: a)
+            return color(
+                CGFloat((hex >> 24) & 0xFF) / 255,
+                CGFloat((hex >> 16) & 0xFF) / 255,
+                CGFloat((hex >> 8) & 0xFF) / 255,
+                CGFloat(hex & 0xFF) / 255
+            )
         }
     }
 }

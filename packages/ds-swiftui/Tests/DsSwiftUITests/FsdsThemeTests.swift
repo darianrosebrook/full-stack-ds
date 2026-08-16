@@ -93,3 +93,30 @@ final class FsdsThemeTests: XCTestCase {
         XCTAssertEqual(flat(layered["box-model.padding-block-start"]), .string("8px"))
     }
 }
+
+final class FsdsAdaptiveColorTests: XCTestCase {
+    func testAdaptivePickResolvesDarkUnderDarkAquaAndLightOtherwise() {
+        // Headless decision-logic coverage; per-appearance rendering is
+        // verified visually through the deduper pilot's SettingsPreview.
+        let light = NSColor.red
+        let dark = NSColor.blue
+        XCTAssertEqual(
+            FsdsTokenValue.adaptivePick(
+                appearance: NSAppearance(named: .aqua)!, light: light, dark: dark
+            ),
+            light
+        )
+        XCTAssertEqual(
+            FsdsTokenValue.adaptivePick(
+                appearance: NSAppearance(named: .darkAqua)!, light: light, dark: dark
+            ),
+            dark
+        )
+    }
+
+    func testAdaptivePxIsNilAndStringColorStillParses() {
+        XCTAssertNil(FsdsTokenValue.adaptive(light: "#ffffff", dark: "#000000").px)
+        XCTAssertNotNil(FsdsTokenValue.string("#ffffff").color)
+        XCTAssertNil(FsdsTokenValue.adaptive(light: "not-hex", dark: "#000000").color)
+    }
+}
