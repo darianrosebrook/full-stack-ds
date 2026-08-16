@@ -12,9 +12,7 @@ public enum ToggleSwitchSize: String, CaseIterable {
 
 // @generated:start component
 public struct ToggleSwitch: View {
-    private let controlledChecked: Binding<Bool>?
-    @State private var uncontrolledChecked: Bool
-    private let onChange: ((Bool) -> Void)?
+    @StateObject private var checked: ControllableValue<Bool>
     private let size: ToggleSwitchSize
     private let disabled: Bool
     private let name: String?
@@ -31,9 +29,7 @@ public struct ToggleSwitch: View {
         value: String? = nil,
         accessibilityLabel: String? = nil
     ) {
-        self.controlledChecked = checked
-        self._uncontrolledChecked = State(initialValue: defaultChecked)
-        self.onChange = onChange
+        self._checked = StateObject(wrappedValue: ControllableValue(controlled: checked, defaultValue: defaultChecked, onChange: onChange))
         self.size = size
         self.disabled = disabled
         self.name = name
@@ -41,30 +37,17 @@ public struct ToggleSwitch: View {
         self.accessibilityLabel = accessibilityLabel
     }
 
-    private var checked: Bool {
-        controlledChecked?.wrappedValue ?? uncontrolledChecked
-    }
-
-    private func setChecked(_ next: Bool) {
-        if let binding = controlledChecked {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledChecked = next
-        }
-        onChange?(next)
-    }
-
     public var body: some View {
         Toggle(isOn: Binding(
-            get: { checked },
-            set: { setChecked($0) }
+            get: { checked.value },
+            set: { checked.set($0) }
         )) {
             EmptyView()
         }
         .toggleStyle(.switch)
         .disabled(disabled)
         .fsdsAccessibilityLabel(accessibilityLabel)
-        .accessibilityValue(checked ? "on" : "off")
+        .accessibilityValue(checked.value ? "on" : "off")
     }
 
 }

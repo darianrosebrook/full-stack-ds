@@ -12,7 +12,7 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=all   # emits the allowlisted set (20 components)
+pnpm run generate -- --target=all   # emits the allowlisted set (21 components)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission

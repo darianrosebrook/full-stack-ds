@@ -52,6 +52,14 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   if (ir.surface.kind === "tooltip") {
     return { componentFile: withTypes(emitAnchoredTooltip(ir)), behaviorFile: null };
   }
+  if (ir.surface.kind === "toast") {
+    // The generative proof of the compositional substrate: a NEW surface
+    // kind emits through the same ControllableValue channel with only a
+    // presentation row — ephemeral presence drives a dwell auto-dismiss
+    // task whose duration comes from the motion token scopes. Zero new
+    // state-machine code (FEAT-SWIFTUI-PRESENCE-COMPOSITION-01).
+    return { componentFile: withTypes(emitToastSurface(ir)), behaviorFile: null };
+  }
   // `sheet` shares the centered-modal presentation shape (openness
   // channel + compound content regions); macOS sheets are window-attached
   // and modal, so side/modal props are omitted-and-documented.
@@ -111,13 +119,9 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
   lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
   lines.push(`${INDENT}}`);
-  lines.push(`${INDENT}private let controlledOpen: Binding<Bool>?`);
-  lines.push(`${INDENT}@State private var uncontrolledOpen: Bool`);
-  lines.push(`${INDENT}private let onOpenChange: ((Bool) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var open: ControllableValue<Bool>`);
   if (searchChannel) {
-    lines.push(`${INDENT}private let controlledSearch: Binding<String>?`);
-    lines.push(`${INDENT}@State private var uncontrolledSearch: String`);
-    lines.push(`${INDENT}private let onSearchChange: ((String) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var search: ControllableValue<String>`);
   }
   for (const region of regions) {
     lines.push(`${INDENT}private let ${region}: ${swiftCase(capitalize(region))}`);
@@ -142,45 +146,17 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   }
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self.controlledOpen = open`);
-  lines.push(`${INDENT}${INDENT}self._uncontrolledOpen = State(initialValue: defaultOpen)`);
-  lines.push(`${INDENT}${INDENT}self.onOpenChange = onOpenChange`);
+  lines.push(`${INDENT}${INDENT}self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))`);
   if (searchChannel) {
-    lines.push(`${INDENT}${INDENT}self.controlledSearch = search`);
-    lines.push(`${INDENT}${INDENT}self._uncontrolledSearch = State(initialValue: defaultSearch)`);
-    lines.push(`${INDENT}${INDENT}self.onSearchChange = onSearchChange`);
+  lines.push(`${INDENT}${INDENT}self._search = StateObject(wrappedValue: ControllableValue(controlled: search, defaultValue: defaultSearch, onChange: onSearchChange))`);
   }
   for (const region of regions) {
     lines.push(`${INDENT}${INDENT}self.${region} = ${region}()`);
   }
   lines.push(`${INDENT}}`);
   lines.push("");
-  lines.push(`${INDENT}private var isOpen: Bool {`);
-  lines.push(`${INDENT}${INDENT}controlledOpen?.wrappedValue ?? uncontrolledOpen`);
-  lines.push(`${INDENT}}`);
-  lines.push("");
-  lines.push(`${INDENT}private func setOpen(_ next: Bool) {`);
-  lines.push(`${INDENT}${INDENT}if let binding = controlledOpen {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-  lines.push(`${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledOpen = next`);
-  lines.push(`${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}onOpenChange?(next)`);
-  lines.push(`${INDENT}}`);
   lines.push("");
   if (searchChannel) {
-    lines.push(`${INDENT}private var searchText: String {`);
-    lines.push(`${INDENT}${INDENT}controlledSearch?.wrappedValue ?? uncontrolledSearch`);
-    lines.push(`${INDENT}}`);
-    lines.push("");
-    lines.push(`${INDENT}private func setSearch(_ next: String) {`);
-    lines.push(`${INDENT}${INDENT}if let binding = controlledSearch {`);
-    lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-    lines.push(`${INDENT}${INDENT}} else {`);
-    lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledSearch = next`);
-    lines.push(`${INDENT}${INDENT}}`);
-    lines.push(`${INDENT}${INDENT}onSearchChange?(next)`);
-    lines.push(`${INDENT}}`);
     lines.push("");
   }
   lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
@@ -219,8 +195,8 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
     lines.push(`${INDENT}${INDENT}${INDENT}TextField(`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}"",`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}text: Binding(`);
-    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { searchText },`);
-    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { setSearch($0) }`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { search.value },`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { search.set($0) }`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}),`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}prompt: Text("${searchPlaceholder}")`);
     lines.push(`${INDENT}${INDENT}${INDENT})`);
@@ -249,8 +225,8 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}EmptyView()`);
   lines.push(`${INDENT}${INDENT}${INDENT}.sheet(isPresented: Binding(`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { isOpen },`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { setOpen($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { open.value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { open.set($0) }`);
   lines.push(`${INDENT}${INDENT}${INDENT})) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}panel`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
@@ -347,9 +323,7 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
   lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
   lines.push(`${INDENT}}`);
-  lines.push(`${INDENT}private let controlledOpen: Binding<Bool>?`);
-  lines.push(`${INDENT}@State private var uncontrolledOpen: Bool`);
-  lines.push(`${INDENT}private let onOpenChange: ((Bool) -> Void)?`);
+  lines.push(`${INDENT}@StateObject private var open: ControllableValue<Bool>`);
   if (placementValues.length > 0) {
     lines.push(`${INDENT}private let placement: ${placementType}`);
   }
@@ -376,9 +350,7 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   params.push("@ViewBuilder content: () -> Content = { EmptyView() }");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self.controlledOpen = open`);
-  lines.push(`${INDENT}${INDENT}self._uncontrolledOpen = State(initialValue: defaultOpen)`);
-  lines.push(`${INDENT}${INDENT}self.onOpenChange = onOpenChange`);
+  lines.push(`${INDENT}${INDENT}self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))`);
   if (placementValues.length > 0 && defaultPlacement) {
     lines.push(`${INDENT}${INDENT}self.placement = placement`);
   }
@@ -389,18 +361,6 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}self.content = content()`);
   lines.push(`${INDENT}}`);
   lines.push("");
-  lines.push(`${INDENT}private var isOpen: Bool {`);
-  lines.push(`${INDENT}${INDENT}controlledOpen?.wrappedValue ?? uncontrolledOpen`);
-  lines.push(`${INDENT}}`);
-  lines.push("");
-  lines.push(`${INDENT}private func setOpen(_ next: Bool) {`);
-  lines.push(`${INDENT}${INDENT}if let binding = controlledOpen {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}binding.wrappedValue = next`);
-  lines.push(`${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}uncontrolledOpen = next`);
-  lines.push(`${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}onOpenChange?(next)`);
-  lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
   lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
@@ -458,8 +418,8 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   } else {
     lines.push(`${INDENT}${INDENT}${INDENT}.popover(isPresented: Binding(`);
   }
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { isOpen },`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { setOpen($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { open.value },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { open.set($0) }`);
   if (placementValues.length > 0) {
     lines.push(`${INDENT}${INDENT}${INDENT}), arrowEdge: placementEdge) {`);
   } else {
@@ -468,7 +428,7 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}panel`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}${INDENT}.onHover { hovering in`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}if !disabled { setOpen(hovering) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}if !disabled { open.set(hovering) }`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}}`);
   if (placementValues.length > 0) {
@@ -486,6 +446,127 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   lines.push(`}`);
   lines.push("// @generated:end");
   return lines.join("\n") + "\n";
+}
+
+
+function emitToastSurface(ir: ComponentIR): string {
+  const chrome = resolveChrome(ir);
+  const regions = ir.compoundParts.map((part) => regionPropertyName(part.name));
+  // Dwell from the motion token scopes (presence budget): first ms-valued
+  // token under the root scope. Absence means no auto-dismiss.
+  const dwell = ir.tokenScopes
+    .find((scope) => scope.scope === "root")
+    ?.values.find((v) => /ms$/.test(v.rawValue ?? ""))
+    ?.rawValue?.replace(/ms$/, "");
+  const dwellMs = dwell ? Number(dwell) : null;
+  const ephemeral = ir.surface?.presence === "ephemeral";
+
+  const lines: string[] = [];
+  lines.push("// @generated:start imports");
+  lines.push("import SwiftUI");
+  lines.push("// @generated:end");
+  lines.push("");
+  lines.push("// @generated:start component");
+  lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the toast surface path: an overlay presentation ` +
+      `over the open channel (the shared ControllableValue substrate)` +
+      (ephemeral && dwellMs
+        ? `; ephemeral presence auto-dismisses after the dwell token (${dwellMs}ms).`
+        : `.`),
+  );
+  const toastGenerics = regions
+    .map((r) => `${swiftCase(capitalize(r))}: View`)
+    .join(", ");
+  lines.push(
+    `public struct Toast${toastGenerics ? `<${toastGenerics}>` : ""}: View {`,
+  );
+  lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+  lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+  lines.push(`${INDENT}}`);
+  lines.push(`${INDENT}@StateObject private var open: ControllableValue<Bool>`);
+  for (const region of regions) {
+    lines.push(`${INDENT}private let ${region}: ${swiftCase(capitalize(region))}`);
+  }
+  lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [
+    "open: Binding<Bool>? = nil,",
+    "defaultOpen: Bool = false,",
+    "onOpenChange: ((Bool) -> Void)? = nil,",
+  ];
+  regions.forEach((region, i) => {
+    params.push(
+      `@ViewBuilder ${region}: () -> ${swiftCase(capitalize(region))} = { EmptyView() }${i === regions.length - 1 ? "" : ","}`,
+    );
+  });
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))`);
+  for (const region of regions) {
+    lines.push(`${INDENT}${INDENT}self.${region} = ${region}()`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+  lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+  lines.push(`${INDENT}${INDENT})`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+  lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+  lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(
+    ...emitChromeAccessorLines(chrome, [
+      "background", "foreground", "borderColor", "radius",
+      "blockPadding", "inlinePadding", "gap", "minHeight",
+    ]),
+  );
+  lines.push("");
+  lines.push(`${INDENT}@ViewBuilder`);
+  lines.push(`${INDENT}private var panel: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`);
+  for (const region of regions) {
+    lines.push(`${INDENT}${INDENT}${INDENT}${region}`);
+  }
+  lines.push(`${INDENT}${INDENT}}`);
+  if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+  if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+  if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  if (chrome.radius) lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}ZStack(alignment: .topTrailing) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}Color.clear`);
+  lines.push(`${INDENT}${INDENT}${INDENT}if open.value {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}panel`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.transition(.move(edge: .top).combined(with: .opacity))`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (ephemeral && dwellMs) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.task(id: open.value) {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}if open.value {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}try? await Task.sleep(for: .milliseconds(${dwellMs}))`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}open.set(false)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
 }
 
 function capitalize(value: string): string {

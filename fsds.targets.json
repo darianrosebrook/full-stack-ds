@@ -68,7 +68,8 @@
         "Divider",
         "Progress",
         "Spinner",
-        "Icon"
+        "Icon",
+        "Toast"
       ]
     },
     {

@@ -273,12 +273,10 @@ describe("generateSwiftUIComponentSource — value-channel text control (Input)"
   it("projects the string channel through the controllable-state pattern", () => {
     const source = emitInput();
     expect(source).toContain("public struct Input: View {");
-    expect(source).toContain("private let controlledValue: Binding<String>?");
-    expect(source).toContain("@State private var uncontrolledValue: String");
-    expect(source).toContain("private let onChange: ((String) -> Void)?");
+    expect(source).toContain("@StateObject private var text: ControllableValue<String>");
     expect(source).toContain("value: Binding<String>? = nil");
-    expect(source).toContain("controlledValue?.wrappedValue ?? uncontrolledValue");
-    expect(source).toContain("onChange?(next)");
+    expect(source).toContain("@StateObject private var text: ControllableValue<String>");
+    expect(source).toContain("onChange: onChange))");
     expect(source).toContain("TextField(");
     expect(source).toContain("prompt: placeholder.map(Text.init)");
   });
@@ -311,7 +309,7 @@ describe("generateSwiftUIComponentSource — coverage batch (disclosure + static
     const source = emit("Details");
     expect(source).toContain("DisclosureGroup(isExpanded: Binding(");
     expect(source).toContain("summary: String? = nil");
-    expect(source).toContain("onOpenChange?(next)");
+    expect(source).toContain("ControllableValue(controlled: open");
     expect(source).toContain("Text(summary)");
   });
 
@@ -344,7 +342,7 @@ describe("generateSwiftUIComponentSource — coverage batch 2", () => {
     expect(source).toContain("public struct Checkbox: View {");
     expect(source).toContain(".toggleStyle(.checkbox)");
     expect(source).toContain("checked: Binding<Bool>? = nil");
-    expect(source).toContain("onChange?(next)");
+    expect(source).toContain("onChange: onChange))");
     expect(source).not.toContain("indeterminate:");
   });
 
