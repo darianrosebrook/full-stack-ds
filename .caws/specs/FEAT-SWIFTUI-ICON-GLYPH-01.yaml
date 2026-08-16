@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "Icon.swift: GlyphCatalog.glyph(named:size:) lookup, sm/md/lg/xl hint switch (16/20/24/32), synthesized IconSize inline enum, accessibilityHidden via decorativeDefaults"
     recorded_at: "2026-08-16T23:04:35.272Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: Glyph registry shared substrate (Alert/Status/Badge/Chip will compose it by iconGlyph facts); presence-projection duplication recorded as the next compositional extraction in the commit + research doc
+    recorded_at: "2026-08-16T23:04:36.256Z"
