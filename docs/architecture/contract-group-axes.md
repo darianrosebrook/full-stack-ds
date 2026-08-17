@@ -31,7 +31,16 @@ It answers: what kind of user-facing role does this component primarily serve?
 
 The category enum is intentionally pragmatic rather than ontologically pure. It mixes action, input, feedback, glyph, display, structure, and surface because those buckets are useful for design-system defaults, documentation grouping, token coverage profiles, and audits. It should not be treated as a complete semantic theory of UI.
 
-If ambiguity grows, category may later split into a functional axis and a morphology axis. Do not split prematurely; document non-purity and use the current enum where it is useful.
+**That split has since happened.** `morphology` is now its own OPTIONAL schema field (`packages/ds-contracts/component.contract.schema.json:48`), sibling to `category` rather than a subdivision of it:
+
+| Axis | Answers | Enum |
+|---|---|---|
+| `category` | what user-facing role does this serve? | action, input, feedback, glyph, display, structure, surface |
+| `morphology` | what geometry / default affordance does it have? | `fixed-square`, `content-inline`, `identity-inline`, `linear-meter`, `loading-block`, `replaced-media` |
+
+`morphology` selects a `StyleProfileIR` supplying box-model slot defaults plus root structural CSS, layered **between** the BoxModel primitive defaults and the component token sidecar — the sidecar still wins. When absent, the component keeps the legacy two-way primitive-under-sidecar merge, so adoption is incremental: 7 of 49 contracts declare it today.
+
+`category` therefore stays behavioral and is no longer asked to carry geometry. It remains intentionally pragmatic rather than ontologically pure, and should still not be read as a complete semantic theory of UI.
 
 ## Axis 3: Prop legitimacy
 

@@ -302,7 +302,7 @@ When the byte-compare gate in `STEP-05` surfaced 6 contract paths the new graph 
 ```
 src/<category>/{core,semantic}/*.tokens.json     ← author here (DTCG strict)
                   ↓ compose.ts
-                  ↓   - deep-merge 156 shards
+                  ↓   - deep-merge every core+semantic shard
                   ↓   - apply core. / semantic. prefix transform on cross-refs
                   ↓   - resolver fallback (no resolver.json present)
                   ↓
@@ -375,7 +375,8 @@ Both pools may `resolvesTo` paths in the global graph above — they extend the 
 ## Palette color ramps
 
 Every hue in `src/color/core/palette.tokens.json` (`brand.primary`, `neutral`, `red`,
-`orange`, `yellow`, `green`, `blue`, `teal`, `violet`) is a **10-stop ramp**: `50`, `100`,
+`orange`, `yellow`, `green`, `blue`, `teal`, `violet`, `pink`, `lime`, `emerald`, `cyan`,
+`indigo` — 14 in all) is a **10-stop ramp**: `50`, `100`,
 `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`. Stops are stored as DTCG sRGB
 component arrays (0–1).
 

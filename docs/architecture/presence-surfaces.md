@@ -60,6 +60,8 @@ These axes are **orthogonal**. All four combinations exist in the real world; th
 
 The classification governs controller selection, ARIA wiring, and dismissal policy. It does **not** govern public component names.
 
+**Realized vs reserved.** The table is the `kind` vocabulary, not a list of contracts. Six kinds are realized in the corpus today — `tooltip`, `popover`, `dialog` (×2), `sheet`, `toast`, and `coachmark` (Walkthrough). `menu` and `select` are **reserved vocabulary**: valid values with no contract declaring them yet, in the same sense as `fullscreen` below. Do not read a row here as evidence that a corresponding contract exists.
+
 ## Substrate vs surface
 
 The substrate is the runtime machinery: controllers, contexts, registration, lifecycle, positioning. The surface is the consumer's component import. Two surfaces may share a substrate (Dialog + ModalDialog both use `DialogSurfaceController`); one surface may compose multiple substrates (Combobox = Select × Listbox).
@@ -108,7 +110,7 @@ Each framework's `asChild` mechanism differs:
 | React | `cloneElement(child, { ref: mergedRef, ...handlerProps })` |
 | Vue | Slot with `useTemplateRef` for ref forwarding |
 | Svelte 5 | Element snippet + action-based registration |
-| Angular | Content projection with `@ContentChild` + a structural directive |
+| Angular | *(planned)* Content projection with `@ContentChild` + a structural directive — **not implemented**; `@ContentChild` appears nowhere in the Angular emitter. Trigger registration today is a plain `@Directive` class in `frameworks/angular/surface-emit.ts`. |
 | Lit | `<slot @slotchange>` with first-assigned-element adoption |
 
 **Default for Phase F implementations**: each part renders its own host element (`<button>` for trigger, `<div>` for content). `asChild` is an opt-in escape hatch on frameworks where it stabilizes first (React, Vue, Svelte). Lit and Angular may ship `asChild` later.
@@ -245,9 +247,9 @@ The existing top-level `focus` block on the same contract carries `trap: true`, 
 }
 ```
 
-## `SurfaceIR` sketch (paper)
+## `SurfaceIR` (implemented)
 
-Analogous to `BehaviorIR` and the planned `FloatingIR` it replaces. Lives in `packages/ds-codegen/src/ir.ts` once the schema lands:
+Analogous to `BehaviorIR`. **This shipped** — `SurfaceIR` is an exported interface at `packages/ds-codegen/src/ir.ts:1328`, constructed by `buildSurfaceIR()` and hung off `ComponentIR.surface` during `buildComponentIR`. The shape below is the real one; two fields (`selectorAnchor`, `openTriggers`) were added after the original sketch:
 
 ```ts
 export interface SurfaceIR {
@@ -255,6 +257,9 @@ export interface SurfaceIR {
   presence: "ephemeral" | "persistent";
   modality: "blocking" | "non-blocking";
   anchor?: { partName: string; relation: SurfaceAnchorRelation };
+  /** Selector-sourced anchor — mutually exclusive with `anchor`
+   * (validated fail-loud in buildSurfaceIR). */
+  selectorAnchor?: SurfaceSelectorAnchorIR;
   content?: { partName: string; interactive: boolean };
   positioning?: {
     strategy: "anchored" | "centered" | "viewport-edge" | "inline";
@@ -262,6 +267,10 @@ export interface SurfaceIR {
     collision?: "none" | "flip" | "shift" | "flip-shift";
   };
   dismissal: SurfaceDismissalMode[];
+  /** Anchor-element interactions that open the surface. Always an array.
+   * Anchored surfaces and tooltips must declare at least one trigger;
+   * non-anchored surfaces may omit. Validated fail-loud in buildSurfaceIR. */
+  openTriggers: ContractSurfaceOpenTrigger[];
   timing?: {
     openDelayProp?: string;
     closeDelayProp?: string;
@@ -292,8 +301,7 @@ The IR builder copies `contract.surface` into `SurfaceIR`, resolving the `anchor
 - ❌ `floating` as the family name.
 - ❌ `FloatingController` (and `FloatingRoot`, `FloatingTrigger`, `FloatingContent`) as architectural primitives. Geometry is subordinate.
 - ❌ `surface.focus` and `surface.portal` sub-blocks. The existing top-level `focus` and `portal` remain canonical.
-- ❌ Consolidating `Dialog.contract.json` and `Modal.contract.json` as part of Gap 4. The substrate consolidation is the goal; consumer-facing export names are out of scope.
-- ❌ Consolidating `Menu.contract.json` and `Dropdown.contract.json` similarly.
+- ❌ Renaming or merging consumer-facing contracts as part of Gap 4 — e.g. folding a hypothetical separate `Modal` into `Dialog`, or a `Dropdown` into `Menu`. The substrate consolidation is the goal; consumer-facing export names are out of scope. (These names are illustrative: the corpus has never contained `Modal`, `Menu`, or `Dropdown` contracts. `Dialog` already carries modal behavior via a `modal` variant plus `modality: "blocking"` in its own `surface` block.)
 - ❌ Hook-only / "headless" as the canonical public API. Compound consumer components remain the primary surface.
 
 ## What this enables
