@@ -52,3 +52,8 @@ contracts:
   - name: 'Switch'
     type: behavior
     path: 'packages/ds-contracts/components/Switch/Switch.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/toggle/FsdsToggle.kt @ edea78b3 — 190-line foundation-only substrate (grep: zero androidx.compose.material imports), FsdsToggleStyle with track/thumb/border/shadow/focus/press/disabled surface, Modifier.toggleable role Role.Switch + stateDescription semantics"
+    recorded_at: "2026-08-17T20:02:42.880Z"
