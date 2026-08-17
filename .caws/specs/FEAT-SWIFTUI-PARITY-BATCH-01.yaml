@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-PARITY-BATCH-01
 title: 'Parity batch 1: static/div-root content, prop-text, media, expandable, popover, skeleton, smoke harness (25→38)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Parity batch 1: 25-to-39 admitted with NSHostingController body-eval smoke coverage; 10 remain fail-loud'
 created_at: '2026-08-17T04:56:06.277Z'
-updated_at: '2026-08-17T04:56:06.277Z'
+updated_at: '2026-08-17T05:15:38.637Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui (class widenings + 4 new classes + popover row)'
