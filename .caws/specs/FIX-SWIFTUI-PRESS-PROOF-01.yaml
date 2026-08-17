@@ -39,3 +39,8 @@ contracts:
   - name: 'swiftui-press-proof'
     type: behavior
     path: 'packages/ds-swiftui/Tests/PressProofHarness/main.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "swift run PressProofHarness (real SwiftUI App loop): AX buttons discovered per phase, actuated via OS accessibility action; counters artifact: chip.onClick=1, chip.onDismiss=1, walkthrough steps [1.0]→2.0, onSkip=1, onComplete=1 — 'PRESS-PROOF: all counters match expectations' exit 0. CGEvent attempted first: keyWindow nil on this host (printed per phase), so HID had no routing target; AXPress is the OS interaction path that works (invariant amended with that finding)"
+    recorded_at: "2026-08-17T14:03:01.968Z"
