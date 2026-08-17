@@ -4,8 +4,8 @@ authority: spec
 status: implemented
 title: Governed CI and the rail operator workflow
 owner: "@darianrosebrook"
-updated: 2026-05-20
-verified_at_commit: 6ec2813
+updated: 2026-08-17
+verified_at_commit: b1d510f9
 governs:
   - package.json
   - .github/workflows/ci.yml
@@ -29,15 +29,17 @@ The operator surface is two npm scripts.
 The default invocation. Equivalent to:
 
 ```bash
-pnpm run generate -- --target=all \
+pnpm run generate:check \
+  && pnpm run generate -- --target=all \
   && node packages/ds-codegen/dist/validation/validate-cli.js \
        --require-artifact-manifest
 ```
 
-Two phases:
+Three phases:
 
-1. **Generate** all five Web DOM frameworks from contracts. Writes the v6 manifest at `packages/ds-codegen/.emission-manifest.json` as the last step.
-2. **Validate** in required mode. Refuses to pass unless every integrity invariant holds (see admission-rail.md's diagnostic-code reading guide).
+1. **Validate contracts** — schema shape plus cross-graph semantic checks, before anything is emitted. A contract that fails here never reaches the emitters, so the rail never admits bytes produced from an invalid graph.
+2. **Generate** every registered target from contracts. Writes the v6 manifest at `packages/ds-codegen/.emission-manifest.json` as the last step.
+3. **Validate** in required mode. Refuses to pass unless every integrity invariant holds (see admission-rail.md's diagnostic-code reading guide).
 
 Exit code 0 = the bytes on disk match the manifest's claims across all four evidence rungs (artifact, contract, emitter source, environment). Exit 1 = at least one rung drifted; stderr names the specific diagnostics with their codes and paths.
 
@@ -51,13 +53,14 @@ The output goes to two surfaces:
 Adds a reviewer projection scoped to the git range `origin/main...HEAD`:
 
 ```bash
-pnpm run generate -- --target=all \
+pnpm run generate:check \
+  && pnpm run generate -- --target=all \
   && node packages/ds-codegen/dist/validation/validate-cli.js \
        --require-artifact-manifest \
        --scope-to-git-range origin/main...HEAD
 ```
 
-Same two phases. Same exit code semantics. Same JSON canonical output. The addition is a `scopedProjection` field on the report and a "Changed artifact scope" section in the markdown, narrowing the highlighted evidence to the PR-relevant subset.
+Same three phases. Same exit code semantics. Same JSON canonical output. The addition is a `scopedProjection` field on the report and a "Changed artifact scope" section in the markdown, narrowing the highlighted evidence to the PR-relevant subset.
 
 **The rail still admits the FULL workspace in scoped mode.** This bears repeating in operator documentation: the scoped report is reviewer ergonomic, NOT a reduced gate. Operators tempted to "make CI faster" by scoping are misreading the surface; the rail's overall verdict is independent of the projection.
 
@@ -67,7 +70,8 @@ React Native is part of the default rail, and also has a targeted admission
 lane for RN-only iteration:
 
 ```bash
-pnpm run generate:react-native \
+pnpm run generate:check \
+  && pnpm run generate:react-native \
   && node packages/ds-codegen/dist/validation/validate-cli.js \
        --require-artifact-manifest \
        --framework=react-native
@@ -81,9 +85,16 @@ This admits the generated RN package through package typecheck, focused generate
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
+│ 0. pnpm run generate:check                                      │
+│    • Contract schema shape + cross-graph semantic checks,       │
+│      before any emission.                                       │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
 │ 1. pnpm run generate -- --target=all                            │
 │    • Build codegen (tsc).                                       │
-│    • Read all 53 contracts.                                     │
+│    • Read every loader-discovered contract.                     │
 │    • Build IR per contract.                                     │
 │    • For each framework, emit 5 file groups (source, hook,      │
 │      tests, css, etc.).                                         │
@@ -114,6 +125,7 @@ This admits the generated RN package through package typecheck, focused generate
 │      • svelte: svelte-check                                     │
 │      • angular: tsc + ngc strictTemplates                       │
 │      • lit: tsc + lit-analyzer                                  │
+│      • react-native: package typecheck + generated render tests │
 │                                                                 │
 │    Join manifest × command scopes → ArtifactAdmissionEntry per  │
 │    group. Build per-component admission index.                  │
@@ -150,7 +162,8 @@ The rail is wired into [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
       packages/ds-vue/src \
       packages/ds-svelte/src \
       packages/ds-angular/src \
-      packages/ds-lit/src
+      packages/ds-lit/src \
+      packages/ds-react-native/src
 ```
 
 ### What each step proves
@@ -337,7 +350,9 @@ When closing a PR, the closure note should cite specific rail evidence rather th
 
 ### Citing a clean run
 
-> Governed rail (`governed:rail`) passes at HEAD. Output integrity verified against 1024 files; contract integrity against 53 contracts; emitter integrity against 86 declared sources; environment under Node 22 + codegen 1.0.0 + lockfile sha256 `c2013f6b…`. No required-mode diagnostics. All five frameworks: status=pass.
+> Governed rail (`governed:rail`) passes at HEAD. Output integrity verified against `<N>` files; contract integrity against `<N>` contracts; emitter integrity against `<N>` declared sources; environment under Node 22 + codegen 1.0.0 + lockfile sha256 `<prefix…>`. No required-mode diagnostics. All six rail-admitted frameworks: status=pass.
+
+The `<N>` placeholders are deliberate: read them off *your* run's `RailReport`, never copy them from this doc. Every previous version of this recipe carried literal numbers, and every one of them went stale.
 
 ### Citing a scoped run
 
@@ -345,7 +360,7 @@ When closing a PR, the closure note should cite specific rail evidence rather th
 
 ### Citing a drift-and-fix
 
-> Initial run fired `RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH` on `packages/ds-contracts/Button.contract.json` — the contract was edited without a corresponding regenerate. Resolved with `pnpm run generate -- --target=all` and committed the resulting diff in `packages/ds-{react,vue,svelte,lit,angular}/src/components/Button`. Rerun passes.
+> Initial run fired `RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH` on `packages/ds-contracts/components/Button/Button.contract.json` — the contract was edited without a corresponding regenerate. Resolved with `pnpm run generate -- --target=all` and committed the resulting diff in `packages/ds-{react,vue,svelte,lit,angular}/src/components/Button`. Rerun passes.
 
 ### Citing a known-gap declaration
 

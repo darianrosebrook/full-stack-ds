@@ -4,8 +4,8 @@ authority: spec
 status: implemented
 title: Emission manifest schema
 owner: "@darianrosebrook"
-updated: 2026-06-11
-verified_at_commit: f8cbecb
+updated: 2026-08-17
+verified_at_commit: b1d510f9
 governs:
   - packages/ds-codegen/src/validation/types.ts
   - packages/ds-codegen/.emission-manifest.json
@@ -100,7 +100,7 @@ interface EmissionManifest {
 
 Every group records the contract file that produced it. The verifier emits `RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING` and `RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH`. Contract integrity is checked independently of output integrity: a contract edit without regenerate fires `CONTRACT_HASH_MISMATCH` but NOT `HASH_MISMATCH`, because the on-disk output bytes are still what was recorded.
 
-Contract dedupe: the verifier deduplicates contract diagnostics per contract path. The five framework groups for one component share one contract; if that contract drifts, one diagnostic surfaces with one path, not five.
+Contract dedupe: the verifier deduplicates contract diagnostics per contract path. The per-framework groups for one component all share one contract; if that contract drifts, one diagnostic surfaces with one path, not one per framework.
 
 **Rung-specific non-claim (contract provenance):** v3 binds each artifact group to a contract revision, and required mode rejects drift on either side of the source→artifact attribution. It does NOT prove the emitter is deterministic — generated output also depends on emitter source, package versions, runtime, and config, none of which are yet captured. The honest claim is "this group was produced from this contract revision," not "this output is reproducible from this contract alone."
 
@@ -303,7 +303,7 @@ These are the conditions `readManifestForVerification` checks before returning `
 - `groups` is an array.
 - `environment` is an object.
 - `emitterSourceSets` is an object.
-- All five `FrameworkId` keys exist under `emitterSourceSets`.
+- Every `FrameworkId` key exists under `emitterSourceSets` (six as of v6 — the registry in `validation/admission-descriptor.ts` is the authority, not this list).
 
 ### `groups[i]`
 

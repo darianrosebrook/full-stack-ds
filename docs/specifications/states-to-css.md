@@ -4,7 +4,8 @@ authority: spec
 status: active
 title: "Contract states → CSS selectors"
 owner: "@darianrosebrook"
-updated: 2026-05-14
+updated: 2026-08-17
+verified_at_commit: b1d510f9
 governs:
   - packages/ds-codegen/src/ir.ts
   - packages/ds-codegen/src/css.ts
@@ -23,8 +24,11 @@ A contract's `states` array declares **author intent**: the visual or interactio
 | `focus`, `focus-visible` | `.<prefix>:focus-visible` | Both map to `:focus-visible`; we never emit raw `:focus` |
 | `focus-within` | `.<prefix>:focus-within` | Pseudo-class |
 | `active` | `.<prefix>:active` | Pseudo-class |
+| `visited` | `.<prefix>:visited` | Pseudo-class |
 | `disabled` | `.<prefix>:disabled` | Pseudo-class |
+| `read-only` | `.<prefix>:read-only` | Pseudo-class |
 | `checked` | `.<prefix>:checked` | Pseudo-class |
+| `indeterminate` | `.<prefix>:indeterminate` | Pseudo-class |
 | `expanded` | `.<prefix>[aria-expanded="true"]` | ARIA attribute selector |
 | `pressed` | `.<prefix>[aria-pressed="true"]` | ARIA attribute selector |
 | `selected` | `.<prefix>[aria-selected="true"]` | ARIA attribute selector |
