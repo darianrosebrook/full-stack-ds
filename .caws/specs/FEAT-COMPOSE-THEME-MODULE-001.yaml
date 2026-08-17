@@ -21,7 +21,12 @@ scope:
     - 'examples/README.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Resolution semantics are the RN/Swift normal form exactly: theme.tokens[name] → literal → fallback; no Compose-specific reinterpretation.'
+  - 'Components consume scopes as DATA and resolve through LocalFsdsTheme — no baked hex/dp literals in generated component bodies except where the graph itself carries no slot (ledgered fallbacks).'
+  - 'The theme runtime is committed substrate beside the components root (the RN tokens/index.tsx and Swift FsdsTheme tier), not emitter output.'
+  - 'The colorScheme bridge maps graph semantic tokens to M3 roles through one fixed table — no per-component or per-app hand-picked colors.'
+  - 'No RN, Swift, web, or contract change; other targets regenerate byte-identical.'
+  - 'Mode (adaptive light/dark), brand, and density axes stay reserved follow-ups — this slice ships the carrier, the data, and the bridge only.'
 acceptance:
   - id: A1
     given: 'the token graph''s component scopes (incl. Switch''s 31 color slots) and the RN/Swift theme-runtime normal form'
