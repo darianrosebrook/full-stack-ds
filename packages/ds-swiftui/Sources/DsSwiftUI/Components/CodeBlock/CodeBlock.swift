@@ -15,6 +15,17 @@ public enum CodeBlockLanguage: String, CaseIterable {
     case tsx
     case typescript
 }
+public enum CodeBlockTokenType: String, CaseIterable {
+    case comment
+    case definition
+    case keyword
+    case plain
+    case property
+    case punctuation
+    case `static`
+    case string
+    case tag
+}
 // @generated:end
 
 // @generated:start component
@@ -44,6 +55,15 @@ enum CodeBlockTokens {
             "code-block.size.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-size-border-default", name: "code-block.size.border.default", fallback: .string("1px")),
             "code-block.size.fontSize.default": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-size-font-size-default", name: "code-block.size.fontSize.default", fallback: .string("0.875rem")),
             "code-block.typography.lineHeight.default": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-typography-line-height-default", name: "code-block.typography.lineHeight.default", fallback: .string("1.5")),
+            "code-block.token.color.plain": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-plain", name: "code-block.token.color.plain", fallback: .adaptive(light: "#141414", dark: "#141414")),
+            "code-block.token.color.comment": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-comment", name: "code-block.token.color.comment", fallback: .adaptive(light: "#727272", dark: "#727272")),
+            "code-block.token.color.keyword": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-keyword", name: "code-block.token.color.keyword", fallback: .adaptive(light: "#0566fe", dark: "#0566fe")),
+            "code-block.token.color.definition": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-definition", name: "code-block.token.color.definition", fallback: .adaptive(light: "#d92d2e", dark: "#d92d2e")),
+            "code-block.token.color.punctuation": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-punctuation", name: "code-block.token.color.punctuation", fallback: .adaptive(light: "#0566fe", dark: "#0566fe")),
+            "code-block.token.color.property": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-property", name: "code-block.token.color.property", fallback: .adaptive(light: "#ae5d00", dark: "#ae5d00")),
+            "code-block.token.color.static": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-static", name: "code-block.token.color.static", fallback: .adaptive(light: "#d92d2e", dark: "#d92d2e")),
+            "code-block.token.color.string": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-string", name: "code-block.token.color.string", fallback: .adaptive(light: "#900909", dark: "#900909")),
+            "code-block.token.color.tag": FsdsComponentTokenDefinition(cssVar: "--fsds-code-block-token-color-tag", name: "code-block.token.color.tag", fallback: .adaptive(light: "#d92d2e", dark: "#d92d2e")),
         ],
     ]
 }
