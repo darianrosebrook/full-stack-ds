@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "Gate: exactly one union channel + options array prop + passive dom; searchable/filterFn absent from API (test-pinned not.toContain)"
     recorded_at: "2026-08-17T04:06:06.980Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2082/2082; test:frameworks 72; swift test 22/22; swift build + example build exit 0; ADMITTED 22/22 byte-stable"
+    recorded_at: "2026-08-17T04:06:07.848Z"
