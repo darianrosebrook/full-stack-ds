@@ -415,3 +415,14 @@ jobs:
       # trap class that compile-only admission cannot see.
       - name: ds-swiftui token runtime tests
         run: swift test --package-path packages/ds-swiftui
+
+      # FIX-SWIFTUI-INTERACTION-TESTS-01. The parity fixture imports the
+      # gitignored ds-codegen dist — building it here makes a stale local
+      # build unable to produce a false divergence (the failure mode seen
+      # on 2026-08-16 when main's dist lagged the merged emitter).
+      - name: swift-react emission parity fixture (react vs swiftui)
+        run: |
+          cd packages/ds-codegen
+          npx tsc -p tsconfig.json
+          cd ../..
+          node scripts/swift-parity-diff.mjs
