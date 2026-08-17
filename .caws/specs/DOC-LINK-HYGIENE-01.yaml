@@ -5,7 +5,7 @@ mode: doc
 lifecycle_state: active
 worktree: doc-link-hygiene
 created_at: '2026-08-17T17:04:39.516Z'
-updated_at: '2026-08-17T17:04:39.516Z'
+updated_at: '2026-08-17T17:06:22.660Z'
 blast_radius:
   modules:
     - 'doc cross-references'
@@ -17,6 +17,7 @@ scope:
     - 'packages/ds-tokens/README.md'
     - 'packages/ds-tokens/build/w3c/README.md'
     - 'README.md'
+    - scripts/docs-link-check.mjs
   out: []
 invariants:
   - 'Every relative markdown link in a tracked doc resolves to an existing file'
