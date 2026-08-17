@@ -20,6 +20,7 @@ scope:
 invariants:
   - 'The harness must deliver real OS mouse events (CGEvent) into a real window — not invoke callbacks, not call AXPress, not touch the emitted views'' internals; the proof is the OS event → SwiftUI Button → onTap chain.'
   - 'Button locations are discovered from the view hierarchy render (fitting-size + known layout order), never from component identity; the harness composes the same public init APIs consumers use.'
+  - 'AMENDED 2026-08-17: CGEvent mouse delivery requires a keyable window; this session''s swift-run host returns keyWindow=nil after orderFrontRegardless+makeKeyAndOrderFront on every owned window (verified in-run, printed per phase). The OS interaction path that IS available is the accessibility action (AXPress on discovered AXButton elements) — OS-mediated, fires the same SwiftUI Button action, and never touches callbacks or view internals. The harness may actuate via AXPress with that evidence recorded; CGEvent remains the preferred path on hosts that grant key windows.'
 acceptance:
   - id: A1
     given: 'a swift-run executable harness hosting Chip and Walkthrough in a real key window with a running app event loop'
