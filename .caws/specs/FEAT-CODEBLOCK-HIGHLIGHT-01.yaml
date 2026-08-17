@@ -83,3 +83,7 @@ evidence:
     status: pass
     evidence_ref: "grep -c '\"CodeBlock\"' over packages/ds-codegen/src/frameworks/*/component-source.ts → 0 matches in every emitter; lowering is driven by isContentTransform/collectContentTransforms IR facts and the shipsContentTransformRuntime factory flag; Angular tree-scanners (treeUsesNgIf/NgFor) are transform-structural; generate:check semantic layer green (49/49)"
     recorded_at: "2026-08-17T05:45:07.423Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "injection suites in packages/ds-{react,vue,svelte,angular,lit}/src/primitives/highlight/__tests__/codeblock-highlight.test.{tsx,ts} at 607f51e9: HTML-shaped source (<img onerror>/<script>/<b>) renders zero img/script/b elements, textContent round-trips the source (trimmed for Vue/Angular template formatting whitespace), gate-off renders a single plain run, and token spans reassemble the source exactly — all green under pnpm run test:frameworks"
+    recorded_at: "2026-08-17T05:45:08.292Z"
