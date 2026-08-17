@@ -111,7 +111,7 @@ public struct Command<List: View, Group: View, Item: View>: View {
                     get: { search.value },
                     set: { search.set($0) }
                 ),
-                prompt: Text("Search...")
+                prompt: SwiftUI.Text("Search...")
             )
             list
             group

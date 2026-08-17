@@ -81,7 +81,7 @@ public struct CodeSnippet: View {
     @Environment(\.fsdsTheme) private var fsdsTheme
 
     public var body: some View {
-        Text(text)
+        SwiftUI.Text(text)
             .font(.system(.body, design: .monospaced))
             .padding(.vertical, blockPadding)
             .padding(.horizontal, inlinePadding)

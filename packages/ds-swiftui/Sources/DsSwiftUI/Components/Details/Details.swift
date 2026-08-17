@@ -102,7 +102,7 @@ public struct Details<Content: View>: View {
             content
         } label: {
             if let summary {
-                Text(summary)
+                SwiftUI.Text(summary)
             } else {
                 EmptyView()
             }

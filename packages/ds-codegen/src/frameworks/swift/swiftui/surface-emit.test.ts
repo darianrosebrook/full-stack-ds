@@ -56,10 +56,7 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain(".clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))");
   });
 
-  it("throws for unimplemented surfaces and surface-less components", () => {
-    expect(() => generateSwiftUISurfaceFiles(irFor("Walkthrough"))).toThrow(
-      /surface kind "coachmark" is not implemented/,
-    );
+  it("throws for surface-less components (all surface kinds now emit)", () => {
     expect(() => generateSwiftUISurfaceFiles(irFor("Button"))).toThrow(
       /declares no surface block/,
     );
@@ -100,7 +97,7 @@ describe("generateSwiftUISurfaceFiles — coverage batch (sheet + search channel
     const { componentFile } = generateSwiftUISurfaceFiles(irFor("Command"));
     expect(componentFile).toContain("search: Binding<String>? = nil");
     expect(componentFile).toContain("ControllableValue(controlled: search");
-    expect(componentFile).toContain('prompt: Text("Search...")');
+    expect(componentFile).toContain('prompt: SwiftUI.Text("Search...")');
     // Dialog carries no string channel → no search surface.
     const dialog = generateSwiftUISurfaceFiles(irFor("Dialog")).componentFile;
     expect(dialog).not.toContain("search: Binding<String>");
@@ -123,5 +120,15 @@ describe("generateSwiftUISurfaceFiles — toast (generative substrate proof)", (
     // No per-class projection survives.
     expect(componentFile).not.toContain("controlledOpen");
     expect(componentFile).not.toContain("setOpen(");
+  });
+});
+
+describe("generateSwiftUISurfaceFiles — coachmark (Walkthrough)", () => {
+  it("emits the step channel with prev/next and skip/complete", () => {
+    const { componentFile } = generateSwiftUISurfaceFiles(irFor("Walkthrough"));
+    expect(componentFile).toContain("@StateObject private var step: ControllableValue<Double>");
+    expect(componentFile).toContain("step.set(step.value + 1)");
+    expect(componentFile).toContain("onSkip?()");
+    expect(componentFile).toContain("onComplete?()");
   });
 });
