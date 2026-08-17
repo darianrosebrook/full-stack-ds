@@ -42,6 +42,7 @@ import { generateSvelteSurfaceTestFiles } from "./surface-tests.js";
 export function createSvelteEmitter(): FrameworkEmitter {
   return {
     id: "svelte",
+    shipsContentTransformRuntime: true,
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       // F-2C-2: Presence-surface family — emits the compound API as

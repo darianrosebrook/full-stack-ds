@@ -43,6 +43,7 @@ import { generateVueSurfaceTest } from "./surface-tests.js";
 export function createVueEmitter(): FrameworkEmitter {
   return {
     id: "vue",
+    shipsContentTransformRuntime: true,
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       // F-2C-1: Presence-surface family — emits the compound API as

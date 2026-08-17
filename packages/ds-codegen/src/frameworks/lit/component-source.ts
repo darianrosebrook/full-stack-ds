@@ -38,6 +38,8 @@ import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
   composeChannelUpdateExpression,
+  collectContentTransforms,
+  isContentTransform,
 } from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
 import {
@@ -1617,6 +1619,14 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (hasIconGlyph) {
     lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
   }
+  // content-transform: import the shared highlight tokenizer when the tree
+  // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
+  // driven by IR content-transform facts, never per-component name lore.
+  if (ir.dom && collectContentTransforms(ir.dom).length > 0) {
+    lines.push(
+      `import { tokenizeCode } from '../../primitives/highlight/tokenize.js';`,
+    );
+  }
   // Selector-anchored root portal (coachmark tour): the whole panel is
   // positioned against a page element resolved from the active step's
   // selector. Same primitive the anchored-presence content class uses
@@ -2584,10 +2594,43 @@ function renderLitDomNode(
   // Mutually exclusive with children — parseDomNode rejects the
   // combination. Inline (no newline) because most content bindings are
   // short value interpolations, not block elements.
+  //
+  // FEAT-CODEBLOCK-HIGHLIGHT-01: a content transform instead maps the
+  // shared tokenizer's stream to one `html` fragment per token — the
+  // token part's class plus a `data-token` kind attribute, with
+  // `${token.text}` interpolation (text-only children, so the source is
+  // never interpreted as markup; Lit renders the returned array
+  // natively). A declared gate degrades to the plain source expression.
   let contentInline: string | null = null;
   if (node.content) {
-    const contentExpr = renderLitContent(node.content, ctx);
-    if (contentExpr !== null) contentInline = contentExpr;
+    if (isContentTransform(node.content)) {
+      const transform = node.content;
+      const sourceExpr = appendPath(
+        litPropAccessor(transform.sourceProp, ctx),
+        transform.source.path,
+      );
+      const languageExpr = appendPath(
+        litPropAccessor(transform.languageProp, ctx),
+        transform.language.path,
+      );
+      const tokenClass = `${ctx.classRecipe}__${transform.tokenPart}`;
+      const tokenMap =
+        `tokenizeCode(${sourceExpr}, ${languageExpr})` +
+        `.map((token, tokenIndex) => html\`<span class=\${'${tokenClass}'} ` +
+        `data-token=\${token.kind}>\${token.text}</span>\`)`;
+      if (transform.gate !== undefined) {
+        const gateExpr = appendPath(
+          litPropAccessor(transform.gateProp ?? transform.gate.prop, ctx),
+          transform.gate.path,
+        );
+        contentInline = `\${${gateExpr} ? ${tokenMap} : ${sourceExpr}}`;
+      } else {
+        contentInline = `\${${tokenMap}}`;
+      }
+    } else {
+      const contentExpr = renderLitContent(node.content, ctx);
+      if (contentExpr !== null) contentInline = contentExpr;
+    }
   }
 
   // componentRef: render the referenced custom element by its registered name

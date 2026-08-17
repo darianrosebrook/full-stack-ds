@@ -7,7 +7,7 @@ import type {
   NormalizedDismissalTriggerIR,
   ResolvedPropIR,
 } from "../../ir.js";
-import { collectCollapseIntents, composeChannelUpdateExpression } from "../../ir.js";
+import { collectCollapseIntents, composeChannelUpdateExpression, isContentTransform } from "../../ir.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   rnAnchoredSurface,
@@ -780,7 +780,15 @@ function collectNodeRuntimeUsage(
   const component = rnComponentForNode(node);
   if (node.ifProp) collectGuardRuntimeUsage(node.ifProp, ir, usage);
   if (node.iteration) collectBindingRuntimeUsage(node.iteration.source, ir, usage);
-  if (node.content) collectBindingRuntimeUsage(node.content, ir, usage);
+  // FEAT-CODEBLOCK-HIGHLIGHT-01: a content transform degrades to plain
+  // text on React Native (no DOM spans) — only the source binding is read.
+  if (node.content) {
+    collectBindingRuntimeUsage(
+      isContentTransform(node.content) ? node.content.source : node.content,
+      ir,
+      usage,
+    );
+  }
   for (const binding of node.cssVarBindings) {
     collectBindingRuntimeUsage(binding.value, ir, usage);
   }
@@ -1528,8 +1536,14 @@ function emitNodeChildren(node: DomNodeIR, ir: ComponentIR, depth: number): stri
   const textStyleExpr = node === ir.dom ? rootTextStyleExpression(ir) : null;
   const textStyleProp = textStyleExpr ? ` style={${textStyleExpr}}` : "";
   if (node.content) {
+    // FEAT-CODEBLOCK-HIGHLIGHT-01: a content transform degrades to plain
+    // text on React Native — RNText renders the source binding verbatim;
+    // there are no DOM spans to realize token parts.
+    const contentBinding = isContentTransform(node.content)
+      ? node.content.source
+      : node.content;
     return [
-      `${INDENT.repeat(depth)}<RNText${rnComponentForNode(node) === "RNText" ? "" : textStyleProp}>{${bindingExpr(node.content, ir)}}</RNText>`,
+      `${INDENT.repeat(depth)}<RNText${rnComponentForNode(node) === "RNText" ? "" : textStyleProp}>{${bindingExpr(contentBinding, ir)}}</RNText>`,
     ];
   }
   const lines: string[] = [];

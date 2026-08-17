@@ -35,6 +35,8 @@ import {
   nativeTableAttrsFor,
   canonicalTsType,
   composeChannelUpdateExpression,
+  collectContentTransforms,
+  isContentTransform,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1430,6 +1432,14 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   if (iconGlyphNodes.length > 0) {
     importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
   }
+  // content-transform: import the shared highlight tokenizer when the tree
+  // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
+  // driven by IR content-transform facts, never per-component name lore.
+  if (collectContentTransforms(ir.dom).length > 0) {
+    importLines.push(
+      `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
+    );
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = generateTypeAliases(ir);
@@ -1863,7 +1873,36 @@ function renderSvelteDomNode(
   // canonical inner-content binding. Surface it through the same
   // textContentExpr slot the legacy textContent path uses.
   if (node.content) {
-    textContentExpr = renderSvelteTextChildExpression(node.content, ctx);
+    if (isContentTransform(node.content)) {
+      // FEAT-CODEBLOCK-HIGHLIGHT-01: one span per token via {#each} over the
+      // shared pure tokenizer; the gate prop (when declared) degrades to a
+      // single plain text run of the source binding.
+      const transform = node.content;
+      const sourceExpr = appendPath(
+        sveltePropAccessor(transform.sourceProp, ctx),
+        transform.source.path,
+      );
+      const languageExpr = appendPath(
+        sveltePropAccessor(transform.languageProp, ctx),
+        transform.language.path,
+      );
+      const each =
+        `{#each tokenizeCode(${sourceExpr}, ${languageExpr}) as token, tokenIndex}` +
+        `<span class="${ctx.classRecipe}__${transform.tokenPart}" ` +
+        `data-token={token.kind}>{token.text}</span>` +
+        `{/each}`;
+      if (transform.gate !== undefined) {
+        const gateExpr = appendPath(
+          sveltePropAccessor(transform.gateProp ?? "", ctx),
+          transform.gate.path,
+        );
+        textContentExpr = `{#if ${gateExpr}}${each}{:else}{${sourceExpr}}{/if}`;
+      } else {
+        textContentExpr = each;
+      }
+    } else {
+      textContentExpr = renderSvelteTextChildExpression(node.content, ctx);
+    }
   }
 
   // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Svelte 5's

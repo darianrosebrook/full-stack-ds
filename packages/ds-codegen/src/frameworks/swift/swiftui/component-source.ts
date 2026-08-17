@@ -27,11 +27,13 @@
  * composers (Card/Field), hand-edit preservation via @custom sections.
  */
 import type {
+  BindingExpression,
   ComponentIR,
+  DomNodeIR,
   NormalizedChannelIR,
   TokenFactIR,
 } from "../../../ir.js";
-import { collectCollapseIntents } from "../../../ir.js";
+import { collectCollapseIntents, isContentTransform } from "../../../ir.js";
 import { swiftLiteral } from "./icon-glyph.js";
 import nodeFs from "node:fs";
 import nodePath from "node:path";
@@ -1378,7 +1380,7 @@ function emitCountFieldGroup(ir: ComponentIR): string {
     'defaultValue: String = "",',
     "onChange: ((String) -> Void)? = nil,",
   ];
-  if (hasLength) params.push(`length: Int = ${lengthDefault.replace(/\"/g, '"')},`);
+  if (hasLength) params.push(`length: Int = ${lengthDefault.replace(/"/g, '"')},`);
   if (hasDisabled) params.push("disabled: Bool = false,");
   if (hasOnComplete) params.push("onComplete: ((String) -> Void)? = nil");
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
@@ -1454,6 +1456,18 @@ function emitCountFieldGroup(ir: ComponentIR): string {
 }
 
 /**
+ * FEAT-CODEBLOCK-HIGHLIGHT-01: SwiftUI does not realize content
+ * transforms — a transform degrades to its source prop binding (plain
+ * monospaced text), matching the non-web degradation doctrine.
+ */
+function contentOrTransformSource(
+  content: DomNodeIR["content"],
+): BindingExpression | undefined {
+  if (content === undefined) return undefined;
+  return isContentTransform(content) ? content.source : content;
+}
+
+/**
  * Prop-text leaf: the root (or its code part) renders a string prop as
  * its entire content (CodeSnippet: text, CodeBlock: code).
  */
@@ -1461,19 +1475,20 @@ function isPropTextLeaf(ir: ComponentIR): boolean {
   if (!ir.dom || ir.surface != null) return false;
   if (ir.behavior.normalizedChannels.length > 0) return false;
   if ((ir.dom.children ?? []).length > 0) {
-    // CodeBlock shape: pre > code with content binding.
+    // CodeBlock shape: pre > code with content binding (or a highlight
+    // content transform, degrading to its source prop here).
     const codeChild = (ir.dom.children ?? []).find((c) => c.part === "code");
     if (!codeChild || (codeChild.children ?? []).length > 0) return false;
-    return codeChild.content?.kind === "prop";
+    return contentOrTransformSource(codeChild.content)?.kind === "prop";
   }
-  return ir.dom.content?.kind === "prop";
+  return contentOrTransformSource(ir.dom.content)?.kind === "prop";
 }
 
 function propTextPropName(ir: ComponentIR): string | null {
-  const direct = ir.dom?.content;
+  const direct = contentOrTransformSource(ir.dom?.content);
   if (direct?.kind === "prop" && "prop" in direct) return direct.prop;
   const codeChild = (ir.dom?.children ?? []).find((c) => c.part === "code");
-  const nested = codeChild?.content;
+  const nested = contentOrTransformSource(codeChild?.content);
   if (nested?.kind === "prop" && "prop" in nested) return nested.prop;
   return null;
 }
@@ -1797,7 +1812,7 @@ function emitExpandableContent(ir: ComponentIR): string {
     "onExpandedChange: ((Bool) -> Void)? = nil,",
   ];
   if (hasExpandable) params.push("expandable: Bool = true,");
-  if (hasLines) params.push(`${linesProp}: Int = ${linesDefault.replace(/\"/g, '"')},`);
+  if (hasLines) params.push(`${linesProp}: Int = ${linesDefault.replace(/"/g, '"')},`);
   params.push("@ViewBuilder content: () -> Content");
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);

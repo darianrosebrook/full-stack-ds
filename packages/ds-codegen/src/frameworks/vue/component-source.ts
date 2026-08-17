@@ -34,6 +34,8 @@ import {
   nativeTableAttrsFor,
   canonicalTsType,
   composeChannelUpdateExpression,
+  collectContentTransforms,
+  isContentTransform,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1598,6 +1600,14 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   if (iconGlyphNodes.length > 0) {
     importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
   }
+  // content-transform: import the shared highlight tokenizer when the tree
+  // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
+  // driven by IR content-transform facts, never per-component name lore.
+  if (collectContentTransforms(ir.dom).length > 0) {
+    importLines.push(
+      `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
+    );
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");
@@ -2070,8 +2080,38 @@ function renderVueDomNode(
   // canonical inner-content binding. Lower via the same Vue
   // interpolation path the legacy textContent uses.
   if (node.content) {
-    const interpolated = renderVueTextContent(node.content, ctx);
-    if (interpolated !== null) textChildren.push(interpolated);
+    if (isContentTransform(node.content)) {
+      // FEAT-CODEBLOCK-HIGHLIGHT-01: one span per token via v-for over the
+      // shared pure tokenizer; the gate prop (when declared) degrades to a
+      // single plain interpolation of the source binding.
+      const transform = node.content;
+      const sourceExpr = appendPath(
+        vuePropAccessor(transform.sourceProp, ctx),
+        transform.source.path,
+      );
+      const languageExpr = appendPath(
+        vuePropAccessor(transform.languageProp, ctx),
+        transform.language.path,
+      );
+      const span =
+        `<span v-for="(token, tokenIndex) in tokenizeCode(${sourceExpr}, ${languageExpr})" ` +
+        `:key="tokenIndex" class="${ctx.classRecipe}__${transform.tokenPart}" ` +
+        `:data-token="token.kind">{{ token.text }}</span>`;
+      if (transform.gate !== undefined) {
+        const gateExpr = appendPath(
+          vuePropAccessor(transform.gateProp ?? "", ctx),
+          transform.gate.path,
+        );
+        textChildren.push(
+          `<template v-if="${gateExpr}">${span}</template><template v-else>{{ ${sourceExpr} }}</template>`,
+        );
+      } else {
+        textChildren.push(span);
+      }
+    } else {
+      const interpolated = renderVueTextContent(node.content, ctx);
+      if (interpolated !== null) textChildren.push(interpolated);
+    }
   }
 
   // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Vue's

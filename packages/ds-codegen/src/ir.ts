@@ -22,6 +22,7 @@ import type {
   ContractDismissalTrigger,
   ContractDomNode,
   ContractEventPayloadField,
+  ContractContentTransform,
   ContractEventSignature,
   ContractFocus,
   ContractForm,
@@ -364,6 +365,14 @@ export type BindingExpression =
     };
 
 /**
+ * The `prop`-kind member of `BindingExpression`. Directives that admit only
+ * bare prop references (content-transform inputs, `iconGlyph` fields) are
+ * typed with this extraction so accessing `.prop`/`.path` needs no further
+ * narrowing — the parser already guarantees the kind at construction time.
+ */
+export type PropBindingExpression = Extract<BindingExpression, { kind: "prop" }>;
+
+/**
  * Closed set of named channel-update operations
  * (FEAT-CHANNEL-UPDATE-OPERATIONS-01). Each has fixed semantics documented
  * on the `BindingExpression` doctrine comment above and is admitted only
@@ -444,6 +453,76 @@ export interface IconGlyphIR {
    * size prop's value is used as a pixel number directly.
    */
   sizeHints: Record<string, number> | undefined;
+}
+
+/**
+ * Content-transform directive on a DomNodeIR (FEAT-CODEBLOCK-HIGHLIGHT-01).
+ * Resolved from the object form of the contract's `anatomy.dom[].content`
+ * field. The node's inner content is PRODUCED by the named transform
+ * applied to a source prop — it is not the projection of a binding.
+ *
+ * One transform is admitted today:
+ *
+ *   - `highlight` — splits the source string into syntax tokens with the
+ *     shared pure tokenizer (emitted byte-identical into every web
+ *     framework package at `primitives/highlight/tokenize.ts`) and renders
+ *     one span per token carrying the `tokenPart` part class plus a
+ *     `data-token="<kind>"` attribute. Token spans hold TEXT children only,
+ *     so the source is never interpreted as markup. When `gate` is present
+ *     and falsy the node degrades to a single plain text run of the source
+ *     binding. Targets that do not realize the transform (non-web) degrade
+ *     to plain rendering of the source binding.
+ *
+ * Emitters lower this fact generically — branching on the host component's
+ * name is forbidden (the no-component-name-lore doctrine). Adding a second
+ * transform requires extending the contract schema's closed set, this IR
+ * type, and every emitter's lowering.
+ */
+export interface ContentTransformIR {
+  /** Transform name; closed set (schema-enforced). */
+  transform: "highlight";
+  /** Always `{ kind: "prop" }`; the string prop carrying the literal source text. */
+  source: PropBindingExpression;
+  /** Extracted prop name (mirror of `source.prop`) for fast emitter access. */
+  sourceProp: string;
+  /** Always `{ kind: "prop" }`; the string prop carrying the declared language. */
+  language: PropBindingExpression;
+  /** Extracted prop name (mirror of `language.prop`). */
+  languageProp: string;
+  /**
+   * Always `{ kind: "prop" }` when present; the boolean prop enabling the
+   * transform. Undefined means the transform is unconditional.
+   */
+  gate: PropBindingExpression | undefined;
+  /** Extracted prop name (mirror of `gate.prop`). */
+  gateProp: string | undefined;
+  /** anatomy.parts entry realized as one span per token (tag `span`, multiple). */
+  tokenPart: string;
+}
+
+/** Type guard separating the transform fact from a plain content binding. */
+export function isContentTransform(
+  content: BindingExpression | ContentTransformIR | undefined,
+): content is ContentTransformIR {
+  return content !== undefined && (content as ContentTransformIR).transform === "highlight";
+}
+
+/**
+ * Collect every content-transform fact in a dom tree (depth-first,
+ * document order). Emitters use this to decide whether the shared
+ * transform runtime must be imported — a component-level fact derived
+ * from the tree, never from a component-name literal.
+ */
+export function collectContentTransforms(
+  node: DomNodeIR | undefined,
+): ContentTransformIR[] {
+  const found: ContentTransformIR[] = [];
+  const walk = (current: DomNodeIR): void => {
+    if (isContentTransform(current.content)) found.push(current.content);
+    for (const child of current.children) walk(child);
+  };
+  if (node) walk(node);
+  return found;
 }
 
 /**
@@ -631,12 +710,16 @@ export interface DomNodeIR {
    */
   events: Record<string, BindingExpression>;
   /**
-   * Single inner-content binding. When set, the element renders the
-   * resolved value as its content (interpolation/expression, not a
-   * `children`-prop attribute). Mutually exclusive with `children` on
-   * the same node — `parseDomNode` rejects nodes that set both.
+   * Single inner-content binding, or a content-transform directive. When a
+   * binding, the element renders the resolved value as its content
+   * (interpolation/expression, not a `children`-prop attribute). When a
+   * transform, the element's content is PRODUCED by the named transform
+   * applied to the source prop (see `ContentTransformIR`) — emitters lower
+   * the fact generically and never branch on the host component's name.
+   * Mutually exclusive with `children` on the same node — `parseDomNode`
+   * rejects nodes that set both.
    */
-  content: BindingExpression | undefined;
+  content: BindingExpression | ContentTransformIR | undefined;
   children: DomNodeIR[];
   /** Prop guard. `"children"` is special: renders only when consumer-provided children exist. */
   ifProp: string | undefined;
@@ -1539,6 +1622,10 @@ export function buildComponentIR(
       styledProps,
       contract.name,
       cssPrefix,
+      contract.anatomy !== undefined && !Array.isArray(contract.anatomy)
+        ? contract.anatomy.details ?? {}
+        : {},
+      contract.types ?? {},
     );
     // ARCH-COMPOSER-SLOT-PROJECTION-001: a named-slot name and a designed-prop
     // name occupy disjoint namespaces. Svelte projects both into one `$props()`
@@ -1746,6 +1833,8 @@ function validateDomBindings(
   styledProps: ResolvedPropIR[],
   componentName: string,
   cssPrefix: string,
+  anatomyDetails: Record<string, ContractPartDetails>,
+  componentTypes: Record<string, ContractTypeDef>,
 ): void {
   const knownChannels = new Set(channels.map((c) => c.name));
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
@@ -1774,6 +1863,9 @@ function validateDomBindings(
     componentName,
     cssPrefix,
     channelValueTypes,
+    [],
+    anatomyDetails,
+    componentTypes,
   );
 }
 
@@ -1832,6 +1924,8 @@ function validateDomNode(
   cssPrefix: string,
   channelValueTypes: Map<string, string>,
   enclosingIterations: IterationIR[] = [],
+  anatomyDetails: Record<string, ContractPartDetails> = {},
+  componentTypes: Record<string, ContractTypeDef> = {},
 ): void {
   // Iteration source must resolve in the OUTER scope (the iteration
   // variables it defines are not yet visible to itself). Validate it
@@ -1902,6 +1996,66 @@ function validateDomNode(
           `enum values to pixels instead.`,
         );
       }
+    }
+  }
+
+  // Content-transform directives (FEAT-CODEBLOCK-HIGHLIGHT-01): every input
+  // binding must resolve against the prop surface with the type the
+  // transform consumes, and tokenPart must name an anatomy part realized as
+  // a repeatable span.
+  if (isContentTransform(node.content)) {
+    const transform = node.content;
+    const requireProp = (propName: string, field: string): string => {
+      if (!knownProps.has(propName)) {
+        throw new Error(
+          `[${componentName}] DOM content.${field} references unknown prop ` +
+          `'${propName}' (known: [${[...knownProps].join(", ")}])`,
+        );
+      }
+      return (propTypes.get(propName) ?? "").trim();
+    };
+    const sourceType = requireProp(transform.sourceProp, "source");
+    if (sourceType !== "string") {
+      throw new Error(
+        `[${componentName}] DOM content.source requires prop ` +
+        `'${transform.sourceProp}' to be typed 'string' (the literal source ` +
+        `text); got '${sourceType}'.`,
+      );
+    }
+    const languageType = requireProp(transform.languageProp, "language");
+    const languageTypeDef = componentTypes[languageType];
+    const languageIsStringUnion =
+      languageTypeDef !== undefined && languageTypeDef.kind === "union";
+    if (languageType !== "string" && !languageIsStringUnion) {
+      throw new Error(
+        `[${componentName}] DOM content.language requires prop ` +
+        `'${transform.languageProp}' to be typed 'string' or a string-union ` +
+        `type declared in contract.types; got '${languageType}'.`,
+      );
+    }
+    if (transform.gate !== undefined && transform.gateProp !== undefined) {
+      const gateType = requireProp(transform.gateProp, "gate");
+      if (gateType !== "boolean") {
+        throw new Error(
+          `[${componentName}] DOM content.gate requires prop ` +
+          `'${transform.gateProp}' to be typed 'boolean'; got '${gateType}'.`,
+        );
+      }
+    }
+    const partDetail = anatomyDetails[transform.tokenPart];
+    if (!partDetail) {
+      throw new Error(
+        `[${componentName}] DOM content.tokenPart references unknown anatomy ` +
+        `part '${transform.tokenPart}' (known: ` +
+        `[${Object.keys(anatomyDetails).join(", ")}])`,
+      );
+    }
+    if (partDetail.tag !== "span" || partDetail.multiple !== true) {
+      throw new Error(
+        `[${componentName}] DOM content.tokenPart '${transform.tokenPart}' ` +
+        `must be an anatomy part with tag "span" and multiple: true — one ` +
+        `span is realized per token.`,
+      );
     }
   }
 
@@ -2007,14 +2161,35 @@ function validateDomNode(
     );
   }
   if (node.content !== undefined) {
-    validateBindingAgainstScope(
-      node.content,
-      `content`,
-      knownChannels,
-      knownProps,
-      enclosingIteration,
-      componentName,
-    );
+    if (isContentTransform(node.content)) {
+      const transform = node.content;
+      const transformInputs: [string, BindingExpression][] = [
+        ["source", transform.source],
+        ["language", transform.language],
+      ];
+      if (transform.gate !== undefined) {
+        transformInputs.push(["gate", transform.gate]);
+      }
+      for (const [field, binding] of transformInputs) {
+        validateBindingAgainstScope(
+          binding,
+          `content.${field}`,
+          knownChannels,
+          knownProps,
+          enclosingIteration,
+          componentName,
+        );
+      }
+    } else {
+      validateBindingAgainstScope(
+        node.content,
+        `content`,
+        knownChannels,
+        knownProps,
+        enclosingIteration,
+        componentName,
+      );
+    }
   }
   // `if: "<name>"` must resolve to a declared prop, a channel name, a
   // channel's value-prop, or the special literal "children". The React
@@ -2073,6 +2248,8 @@ function validateDomNode(
       cssPrefix,
       channelValueTypes,
       activeIterations,
+      anatomyDetails,
+      componentTypes,
     );
   }
 }
@@ -2609,7 +2786,7 @@ function promoteIterationLocalsInTree(
     for (const [evt, binding] of Object.entries(node.events)) {
       node.events[evt] = promoteIterationLocals(binding, active);
     }
-    if (node.content !== undefined) {
+    if (node.content !== undefined && !isContentTransform(node.content)) {
       node.content = promoteIterationLocals(node.content, active);
     }
     for (const css of node.cssVarBindings) {
@@ -2762,8 +2939,7 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     }
   }
   const children = (node.children ?? []).map(parseDomNode);
-  const content =
-    node.content !== undefined ? parseBindingExpression(node.content) : undefined;
+  const content = parseContentDirective(node.content, node);
   if (content !== undefined && children.length > 0) {
     throw new Error(
       `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
@@ -2823,6 +2999,78 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     iconGlyph,
     generatedIdSlug: undefined,
     idRefAttrs: [],
+  };
+}
+
+/**
+ * Parse a `content` directive on a contract DOM node. The string form is a
+ * plain binding expression; the object form is a content-transform directive
+ * (FEAT-CODEBLOCK-HIGHLIGHT-01) resolved into `ContentTransformIR`.
+ *
+ * Structural rules enforced here: the transform name is in the closed set;
+ * `source`/`language`/`gate` are bare `prop:` bindings (no paths, no
+ * channels, no literals — the transform consumes declared prop values
+ * only); `highlight` REQUIRES `language` and `tokenPart`. Prop
+ * existence/type validation and the tokenPart anatomy check are deferred to
+ * `validateDomNode` where the prop surface and anatomy are available.
+ */
+function parseContentDirective(
+  content: string | ContractContentTransform | undefined,
+  node: ContractDomNode,
+): BindingExpression | ContentTransformIR | undefined {
+  if (content === undefined) return undefined;
+  if (typeof content === "string") return parseBindingExpression(content);
+  const where = `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}")`;
+  if (content.transform !== "highlight") {
+    throw new Error(
+      `${where}: content.transform "${content.transform}" is not admitted. ` +
+        `The transform set is closed; "highlight" is the only transform today.`,
+    );
+  }
+  const parseTransformBinding = (
+    expr: string | undefined,
+    field: string,
+    required: boolean,
+  ): PropBindingExpression => {
+    if (expr === undefined) {
+      if (required) {
+        throw new Error(
+          `${where}: content-transform "highlight" requires \`${field}\`.`,
+        );
+      }
+      throw new Error(`${where}: unreachable`);
+    }
+    const binding = parseBindingExpression(expr);
+    if (binding.kind !== "prop" || binding.path !== undefined) {
+      throw new Error(
+        `${where}: content.${field} must be a bare prop binding ` +
+          `("prop:<name>"); got "${expr}". Channels, literals, and paths ` +
+          `are not admitted as content-transform inputs.`,
+      );
+    }
+    return binding;
+  };
+  const source = parseTransformBinding(content.source, "source", true);
+  const language = parseTransformBinding(content.language, "language", true);
+  const gate =
+    content.gate !== undefined
+      ? parseTransformBinding(content.gate, "gate", false)
+      : undefined;
+  if (!content.tokenPart) {
+    throw new Error(
+      `${where}: content-transform "highlight" requires \`tokenPart\` ` +
+        `naming the anatomy part realized as one span per token.`,
+    );
+  }
+  return {
+    transform: "highlight",
+    source,
+    sourceProp: source.prop,
+    language,
+    languageProp: language.prop,
+    gate,
+    gateProp: gate?.prop,
+    tokenPart: content.tokenPart,
   };
 }
 

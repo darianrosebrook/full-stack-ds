@@ -7,7 +7,8 @@
   "anatomy": {
     "parts": [
       "root",
-      "code"
+      "code",
+      "token"
     ],
     "details": {
       "root": {
@@ -17,8 +18,14 @@
       },
       "code": {
         "tag": "code",
-        "description": "Literal source text rendered as text, not interpreted markup.",
+        "description": "Literal source text rendered through the highlight content transform: one token span per syntax token when the highlight gate is enabled, a single plain text run otherwise. Never interpreted markup.",
         "role": "content"
+      },
+      "token": {
+        "tag": "span",
+        "description": "Single syntax-token span produced by the highlight transform. Carries the token's literal text and a data-token kind attribute from the CodeBlockTokenType vocabulary; text-only by construction.",
+        "role": "content",
+        "multiple": true
       }
     },
     "dom": {
@@ -37,7 +44,13 @@
           "bindings": {
             "data-language": "prop:language"
           },
-          "content": "prop:code"
+          "content": {
+            "transform": "highlight",
+            "source": "prop:code",
+            "language": "prop:language",
+            "gate": "prop:highlight",
+            "tokenPart": "token"
+          }
         }
       ]
     }
@@ -54,8 +67,14 @@
         {
           "name": "language",
           "propType": { "kind": "ref", "to": "CodeBlockLanguage" },
-          "description": "Declared language for styling, documentation, and downstream syntax-highlighting adapters.",
+          "description": "Declared language driving the highlight content transform's tokenizer, and retained for documentation and downstream adapters.",
           "required": true
+        },
+        {
+          "name": "highlight",
+          "propType": { "kind": "boolean" },
+          "description": "Gate for the highlight content transform. When true (default) the source is rendered as one span per syntax token; when false it is rendered as a single plain text run.",
+          "default": true
         }
       ]
     },
@@ -77,6 +96,20 @@
         "plaintext",
         "tsx",
         "typescript"
+      ]
+    },
+    "CodeBlockTokenType": {
+      "kind": "union",
+      "values": [
+        "comment",
+        "definition",
+        "keyword",
+        "plain",
+        "property",
+        "punctuation",
+        "static",
+        "string",
+        "tag"
       ]
     }
   },
@@ -119,6 +152,7 @@
       "Use code for the literal source string; do not pass pre-rendered HTML",
       "Set language to the closest supported language enum value",
       "Use plaintext when the content has no meaningful syntax language",
+      "Set highlight to false to render the source as a single plain text run without token spans",
       "Use CodeSnippet for inline code, keyboard keys, or sample output"
     ],
     "children": {

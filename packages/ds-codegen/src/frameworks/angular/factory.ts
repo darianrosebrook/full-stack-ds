@@ -39,6 +39,7 @@ import { generateAngularSurfaceTest } from "./surface-tests.js";
 export function createAngularEmitter(): FrameworkEmitter {
   return {
     id: "angular",
+    shipsContentTransformRuntime: true,
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       // F-2C-4: Presence-surface family. Emits five files (root,

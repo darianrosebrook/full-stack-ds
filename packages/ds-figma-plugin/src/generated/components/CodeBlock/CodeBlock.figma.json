@@ -23,6 +23,14 @@
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
+    },
+    {
+      "name": "token",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
     }
   ],
   "props": [
@@ -40,8 +48,17 @@
       "safeName": "language",
       "type": "CodeBlockLanguage",
       "required": true,
-      "description": "Declared language for styling, documentation, and downstream syntax-highlighting adapters.",
+      "description": "Declared language driving the highlight content transform's tokenizer, and retained for documentation and downstream adapters.",
       "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "highlight",
+      "safeName": "highlight",
+      "type": "boolean",
+      "required": false,
+      "description": "Gate for the highlight content transform. When true (default) the source is rendered as one span per syntax token; when false it is rendered as a single plain text run.",
+      "defaultExpr": "true",
       "nodeKind": null
     }
   ],
@@ -96,6 +113,15 @@
           "--fsds-code-block-size-border-default": "var(--fsds-semantic-shape-control-border-default-width, 1px)",
           "--fsds-code-block-size-font-size-default": "var(--fsds-core-typography-ramp-3, 0.875rem)",
           "--fsds-code-block-typography-line-height-default": "var(--fsds-semantic-typography-line-height-body, 1.5)",
+          "--fsds-code-block-token-color-plain": "var(--fsds-semantic-color-foreground-syntax-plain, #141414)",
+          "--fsds-code-block-token-color-comment": "var(--fsds-semantic-color-foreground-syntax-comment-color, #727272)",
+          "--fsds-code-block-token-color-keyword": "var(--fsds-semantic-color-foreground-syntax-keyword, #0566fe)",
+          "--fsds-code-block-token-color-definition": "var(--fsds-semantic-color-foreground-syntax-definition, #d92d2e)",
+          "--fsds-code-block-token-color-punctuation": "var(--fsds-semantic-color-foreground-syntax-punctuation, #0566fe)",
+          "--fsds-code-block-token-color-property": "var(--fsds-semantic-color-foreground-syntax-property, #ae5d00)",
+          "--fsds-code-block-token-color-static": "var(--fsds-semantic-color-foreground-syntax-static, #d92d2e)",
+          "--fsds-code-block-token-color-string": "var(--fsds-semantic-color-foreground-syntax-string, #900909)",
+          "--fsds-code-block-token-color-tag": "var(--fsds-semantic-color-foreground-syntax-tag, #d92d2e)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -129,6 +155,60 @@
           "display": "block",
           "font-family": "inherit",
           "font-size": "inherit"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"plain\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-plain, #141414)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"comment\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-comment, #727272)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"keyword\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-keyword, #0566fe)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"definition\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-definition, #d92d2e)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"punctuation\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-punctuation, #0566fe)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"property\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-property, #ae5d00)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"static\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-static, #d92d2e)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"string\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-string, #900909)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"tag\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-tag, #d92d2e)"
         }
       }
     ],

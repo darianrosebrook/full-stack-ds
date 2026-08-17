@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { tokenizeCode } from '../../primitives/highlight/tokenize.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
@@ -43,6 +44,15 @@ export class CodeBlockElement extends LitElement {
       --fsds-code-block-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-code-block-size-font-size-default: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-code-block-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-code-block-token-color-plain: var(--fsds-semantic-color-foreground-syntax-plain, #141414);
+      --fsds-code-block-token-color-comment: var(--fsds-semantic-color-foreground-syntax-comment-color, #727272);
+      --fsds-code-block-token-color-keyword: var(--fsds-semantic-color-foreground-syntax-keyword, #0566fe);
+      --fsds-code-block-token-color-definition: var(--fsds-semantic-color-foreground-syntax-definition, #d92d2e);
+      --fsds-code-block-token-color-punctuation: var(--fsds-semantic-color-foreground-syntax-punctuation, #0566fe);
+      --fsds-code-block-token-color-property: var(--fsds-semantic-color-foreground-syntax-property, #ae5d00);
+      --fsds-code-block-token-color-static: var(--fsds-semantic-color-foreground-syntax-static, #d92d2e);
+      --fsds-code-block-token-color-string: var(--fsds-semantic-color-foreground-syntax-string, #900909);
+      --fsds-code-block-token-color-tag: var(--fsds-semantic-color-foreground-syntax-tag, #d92d2e);
     }
 
     .code-block {
@@ -78,10 +88,47 @@ export class CodeBlockElement extends LitElement {
       font-family: inherit;
       font-size: inherit;
     }
+
+    .code-block__token[data-token="plain"] {
+      color: var(--fsds-code-block-token-color-plain, #141414);
+    }
+
+    .code-block__token[data-token="comment"] {
+      color: var(--fsds-code-block-token-color-comment, #727272);
+    }
+
+    .code-block__token[data-token="keyword"] {
+      color: var(--fsds-code-block-token-color-keyword, #0566fe);
+    }
+
+    .code-block__token[data-token="definition"] {
+      color: var(--fsds-code-block-token-color-definition, #d92d2e);
+    }
+
+    .code-block__token[data-token="punctuation"] {
+      color: var(--fsds-code-block-token-color-punctuation, #0566fe);
+    }
+
+    .code-block__token[data-token="property"] {
+      color: var(--fsds-code-block-token-color-property, #ae5d00);
+    }
+
+    .code-block__token[data-token="static"] {
+      color: var(--fsds-code-block-token-color-static, #d92d2e);
+    }
+
+    .code-block__token[data-token="string"] {
+      color: var(--fsds-code-block-token-color-string, #900909);
+    }
+
+    .code-block__token[data-token="tag"] {
+      color: var(--fsds-code-block-token-color-tag, #d92d2e);
+    }
   `;
 
   @property({ type: String }) code!: string;
   @property({ type: String }) language!: CodeBlockLanguage;
+  @property({ type: Boolean }) highlight?: boolean = true;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -96,7 +143,7 @@ export class CodeBlockElement extends LitElement {
 
   override render() {
     return html`<pre class="${this.computeClasses()}" data-language=${ifDefined(this.language)}>
-  <code class=${'code-block__code'} spellcheck="false" data-language=${ifDefined(this.language)}>${this.code}</code>
+  <code class=${'code-block__code'} spellcheck="false" data-language=${ifDefined(this.language)}>${(this.highlight ?? true) ? tokenizeCode(this.code, this.language).map((token, tokenIndex) => html`<span class=${'code-block__token'} data-token=${token.kind}>${token.text}</span>`) : this.code}</code>
 </pre>`;
   }
 }
