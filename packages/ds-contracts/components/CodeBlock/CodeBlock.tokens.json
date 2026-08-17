@@ -71,32 +71,32 @@
   },
   "code-block.token.color.comment": {
     "resolvesTo": "semantic.color.foreground.syntax.comment.color",
-    "fallback": "#727272",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "code-block.token.color.keyword": {
     "resolvesTo": "semantic.color.foreground.syntax.keyword",
-    "fallback": "#0566fe",
+    "fallback": "#013ab0",
     "layer": "semantic"
   },
   "code-block.token.color.definition": {
     "resolvesTo": "semantic.color.foreground.syntax.definition",
-    "fallback": "#d92d2e",
+    "fallback": "#900909",
     "layer": "semantic"
   },
   "code-block.token.color.punctuation": {
     "resolvesTo": "semantic.color.foreground.syntax.punctuation",
-    "fallback": "#0566fe",
+    "fallback": "#013ab0",
     "layer": "semantic"
   },
   "code-block.token.color.property": {
     "resolvesTo": "semantic.color.foreground.syntax.property",
-    "fallback": "#ae5d00",
+    "fallback": "#6c3a00",
     "layer": "semantic"
   },
   "code-block.token.color.static": {
     "resolvesTo": "semantic.color.foreground.syntax.static",
-    "fallback": "#d92d2e",
+    "fallback": "#900909",
     "layer": "semantic"
   },
   "code-block.token.color.string": {
@@ -106,7 +106,7 @@
   },
   "code-block.token.color.tag": {
     "resolvesTo": "semantic.color.foreground.syntax.tag",
-    "fallback": "#d92d2e",
+    "fallback": "#900909",
     "layer": "semantic"
   }
 }

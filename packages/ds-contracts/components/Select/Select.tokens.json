@@ -50,8 +50,8 @@
     "layer": "semantic"
   },
   "select.color.placeholder.default": {
-    "resolvesTo": "semantic.color.foreground.placeholder",
-    "fallback": "#888889",
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#474647",
     "layer": "semantic"
   },
   "select.size.padding.default": {

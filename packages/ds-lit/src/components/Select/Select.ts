@@ -41,7 +41,7 @@ export class SelectElement extends LitElement {
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-select-color-icon-default: var(--fsds-semantic-color-foreground-secondary, #474647);
-      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-placeholder, #888889);
+      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-select-size-padding-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-select-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-select-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
@@ -182,7 +182,7 @@ export class SelectElement extends LitElement {
     .select__emptyState {
       text-align: center;
       padding: var(--fsds-select-size-padding-default, 4px);
-      color: var(--fsds-select-color-placeholder-default, #888889);
+      color: var(--fsds-select-color-placeholder-default, #474647);
     }
 
     .select__trigger:focus-visible:not([aria-disabled="true"]) {
@@ -301,7 +301,7 @@ export class SelectTriggerElement extends LitElement {
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-select-color-icon-default: var(--fsds-semantic-color-foreground-secondary, #474647);
-      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-placeholder, #888889);
+      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-select-size-padding-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-select-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-select-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
@@ -442,7 +442,7 @@ export class SelectTriggerElement extends LitElement {
     .select__emptyState {
       text-align: center;
       padding: var(--fsds-select-size-padding-default, 4px);
-      color: var(--fsds-select-color-placeholder-default, #888889);
+      color: var(--fsds-select-color-placeholder-default, #474647);
     }
 
     .select__trigger:focus-visible:not([aria-disabled="true"]) {
@@ -499,7 +499,7 @@ export class SelectContentElement extends LitElement {
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-select-color-icon-default: var(--fsds-semantic-color-foreground-secondary, #474647);
-      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-placeholder, #888889);
+      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-select-size-padding-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-select-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-select-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
@@ -640,7 +640,7 @@ export class SelectContentElement extends LitElement {
     .select__emptyState {
       text-align: center;
       padding: var(--fsds-select-size-padding-default, 4px);
-      color: var(--fsds-select-color-placeholder-default, #888889);
+      color: var(--fsds-select-color-placeholder-default, #474647);
     }
 
     .select__trigger:focus-visible:not([aria-disabled="true"]) {
@@ -697,7 +697,7 @@ export class SelectOptionElement extends LitElement {
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-select-color-icon-default: var(--fsds-semantic-color-foreground-secondary, #474647);
-      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-placeholder, #888889);
+      --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-select-size-padding-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-select-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-select-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
@@ -838,7 +838,7 @@ export class SelectOptionElement extends LitElement {
     .select__emptyState {
       text-align: center;
       padding: var(--fsds-select-size-padding-default, 4px);
-      color: var(--fsds-select-color-placeholder-default, #888889);
+      color: var(--fsds-select-color-placeholder-default, #474647);
     }
 
     .select__trigger:focus-visible:not([aria-disabled="true"]) {

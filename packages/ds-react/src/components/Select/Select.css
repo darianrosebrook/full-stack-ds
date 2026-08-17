@@ -96,7 +96,7 @@
 .select__emptyState {
   text-align: center;
   padding: var(--fsds-select-size-padding-default, 4px);
-  color: var(--fsds-select-color-placeholder-default, #888889);
+  color: var(--fsds-select-color-placeholder-default, #474647);
 }
 
 .select__trigger:focus-visible:not([aria-disabled="true"]) {

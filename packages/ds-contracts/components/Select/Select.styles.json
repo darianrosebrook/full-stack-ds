@@ -334,7 +334,7 @@
     },
     "color": {
       "resolvesTo": "select.color.placeholder.default",
-      "fallback": "#888889"
+      "fallback": "#474647"
     }
   },
   ".select__trigger:focus-visible": {
