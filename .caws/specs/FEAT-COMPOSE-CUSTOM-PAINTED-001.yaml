@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-CUSTOM-PAINTED-001
 title: 'Custom-painted Compose toggle: foundation-only substrate owned by the design system'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose toggle family custom-painted on a foundation-only owned substrate, replacing the slot-capped Material wrapper'
 created_at: '2026-08-17T19:53:12.679Z'
-updated_at: '2026-08-17T19:53:12.679Z'
+updated_at: '2026-08-17T20:02:47.739Z'
 blast_radius:
   modules:
     - 'ds-jetpack-compose toggle substrate'
