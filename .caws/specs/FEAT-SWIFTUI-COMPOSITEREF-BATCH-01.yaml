@@ -53,3 +53,7 @@ evidence:
     status: pass
     evidence_ref: "Chip.swift: FsdsButton pair — onTap onClick / onTap onDismiss, dismiss gated by if-dismissible, xmark glyph; first same-module componentRef lowering"
     recorded_at: "2026-08-17T05:32:22.225Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: ComponentSmokeTests 41-factory table + completeness assertion; Executed 25 tests 0 failures incl. TextField/Chip body evaluation
+    recorded_at: "2026-08-17T05:32:23.105Z"
