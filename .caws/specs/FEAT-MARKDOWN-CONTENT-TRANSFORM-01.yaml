@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "five idiomatic lowerings verified per package (React JSX helpers; Lit html`` helpers with TemplateResult returns; Vue defineComponent+Fragment over h() array children; Svelte recursive snippets; Angular companion fsds-markdown-block/mark renderers, ngc-clean incl. typed union getters); RN/SwiftUI degrade via shared contentBindingOrTransformSource; figma omits; CLI emits markdown.ts byte-identical per web package (cmp-verified pattern; rail artifact-join PASS)"
     recorded_at: "2026-08-17T20:43:52.880Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Markdown contract realizes the transform (corpus 50, counts re-derived via docs:check-claims:fix); per-package identity+injection suites 6/6 in all five frameworks; e2e:rail 94 passed incl. 10 Markdown facts (golden tree shape + literal-HTML + href degradation, all five frameworks via the config bus); generate:check 50/50 + governed:rail Overall: PASS + committed regeneration (clean post-rail tree)"
+    recorded_at: "2026-08-17T20:44:09.954Z"
