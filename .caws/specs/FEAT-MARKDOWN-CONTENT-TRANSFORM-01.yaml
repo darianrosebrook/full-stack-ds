@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "Markdown contract realizes the transform (corpus 50, counts re-derived via docs:check-claims:fix); per-package identity+injection suites 6/6 in all five frameworks; e2e:rail 94 passed incl. 10 Markdown facts (golden tree shape + literal-HTML + href degradation, all five frameworks via the config bus); generate:check 50/50 + governed:rail Overall: PASS + committed regeneration (clean post-rail tree)"
     recorded_at: "2026-08-17T20:44:09.954Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "snapshot 'Content transforms (markdown — the second-transform proof)' row records claim strength + honest v1 non-claims (no tables/images/nested lists/raw HTML/highlight-chaining); successor ledger updated post-merge"
+    recorded_at: "2026-08-17T20:44:10.829Z"
