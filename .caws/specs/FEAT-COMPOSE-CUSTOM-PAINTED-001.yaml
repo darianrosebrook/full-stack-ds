@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: generated Switch.kt/ToggleSwitch.kt resolve 8 color vals + border + focus + press-duration + min tap-target + PaddingValues from scope data through LocalFsdsTheme (suffix-grammar lookups); color vals always nullable-emitted so absent slots (ToggleSwitch carries no color slots) fall to ledgered constants
     recorded_at: "2026-08-17T20:02:43.805Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "grep material3 in both generated components: 0; library + lane compileKotlin exit 0; material3 dep retained only in library/build.gradle.kts for the tokens bridge; full-corpus --target=all diff scope confined to the slice (other targets byte-identical)"
+    recorded_at: "2026-08-17T20:02:45.080Z"
