@@ -3,7 +3,6 @@ title: 'Snapshot ledger re-sweep: reconcile 9 drifted rows against live code'
 risk_tier: 3
 mode: doc
 lifecycle_state: active
-worktree: doc-snapshot-resweep
 created_at: '2026-08-17T21:22:06.843Z'
 updated_at: '2026-08-17T21:22:06.843Z'
 blast_radius:
