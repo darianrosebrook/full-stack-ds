@@ -44,3 +44,8 @@ evidence:
     evidence_ref: "governed-ci.md YAML snippet now lists all six trees, byte-matching .github/workflows/ci.yml:163-171 (react, vue, svelte, angular, lit, react-native)"
     recorded_at: "2026-08-17T16:50:06.489Z"
     artifact_path: .github/workflows/ci.yml
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "states-to-css.md mapping table now has 13 keys across 12 rows, matching DERIVABLE_STATE_TO_PSEUDO at packages/ds-codegen/src/ir.ts:5240-5256 exactly; added visited, read-only, indeterminate"
+    recorded_at: "2026-08-17T16:50:18.684Z"
+    artifact_path: packages/ds-codegen/src/ir.ts
