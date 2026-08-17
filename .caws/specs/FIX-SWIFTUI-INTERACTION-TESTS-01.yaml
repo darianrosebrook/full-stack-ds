@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: ".github/workflows/ci.yml native-compile-rail-swift job: new 'swift-react emission parity fixture' step runs tsc -p tsconfig.json then node scripts/swift-parity-diff.mjs after the swift test step — dist built in-job, stale-build false divergence closed"
     recorded_at: "2026-08-17T06:06:04.502Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2115/2115; frameworks 72; swift test 29 tests 0 failures (4 visible AX skips); parity 49/49/0 exit 0; example build green"
+    recorded_at: "2026-08-17T06:06:05.384Z"
