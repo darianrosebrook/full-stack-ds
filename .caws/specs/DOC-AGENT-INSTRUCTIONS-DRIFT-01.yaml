@@ -1,0 +1,36 @@
+id: DOC-AGENT-INSTRUCTIONS-DRIFT-01
+title: 'Reconcile CLAUDE.md + AGENTS.md with live CLI, rail admission, and gate surfaces'
+risk_tier: 3
+mode: doc
+lifecycle_state: active
+created_at: '2026-08-17T15:39:43.111Z'
+updated_at: '2026-08-17T15:43:13.241Z'
+blast_radius:
+  modules:
+    - 'agent-instruction docs'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'AGENTS.md'
+  out: []
+  support:
+    - CLAUDE.md
+invariants:
+  - 'Every command quoted in CLAUDE.md/AGENTS.md is accepted by the live CLI it names'
+  - 'No non-claim in either file contradicts a rail/registry fact verifiable in code'
+acceptance:
+  - id: A1
+    given: 'an agent follows the CAWS evidence step verbatim'
+    when: 'it runs the quoted command'
+    then: 'the CLI accepts it rather than refusing --type ac'
+  - id: A2
+    given: 'an agent reads the token-graph section'
+    when: 'it decides whether to commit resolved.tokens.json'
+    then: 'the doc states the file is tracked'
+  - id: A3
+    given: 'an agent reads the non-claims list'
+    when: 'it asks whether react-native is rail-admitted or Angular runtime is covered'
+    then: 'the doc matches admission-descriptor.ts and runtime-rail.spec.ts'
+non_functional: {}
+contracts: []

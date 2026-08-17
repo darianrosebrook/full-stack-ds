@@ -3,6 +3,7 @@ title: 'Component-contrast gate: inheritance-aware color×background pairing'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: contrast-ancestry
 created_at: '2026-08-17T15:33:40.303Z'
 updated_at: '2026-08-17T15:33:40.303Z'
 blast_radius:
