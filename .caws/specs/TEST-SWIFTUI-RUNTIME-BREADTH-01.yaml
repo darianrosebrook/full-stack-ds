@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "swift run --package-path packages/ds-swiftui PressProofHarness → exit 0, 'PRESS-PROOF: all counters match expectations'; artifacts: switch.onChange [true, false] + bindingFinal false; select.onSelectionChange [\"b\"] + bindingFinal \"b\" (AXMenuButton trigger, proximity-filtered option press); calendar.onChange exactly 1 via AXIncrementor; dialog.uncontrolled visible at mount true; dialog.plainProbe presented false (environmental, probe-evidenced); structural census [AXGroup:1, AXStaticText:5] zero pressables; 4 LIMITATION lines printed (otp AXValue, keyboard, after-mount sheet flips, structural trio)"
     recorded_at: "2026-08-17T17:10:47.903Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "swift test --package-path packages/ds-swiftui --filter TokenPaintTests → Executed 4 tests, 0 failures: Card background pixel == resolved.tokens.json semantic.color.background.primary light (#ffffff) under aqua AND dark (#000000) under darkAqua (adaptive flip; modes-differ guard included), FsdsButton == semantic.color.action.background.primary.default (#0566fe); expectations parsed from the committed graph file, never hand-copied"
+    recorded_at: "2026-08-17T17:10:49.179Z"
