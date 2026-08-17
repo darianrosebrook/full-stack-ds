@@ -27,3 +27,10 @@ acceptance:
     then: 'it says closure is not evidence rather than treating closed as proven'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Doc now separates durably-evidenced (5 test files, 59 tests passing via pnpm exec vitest run packages/ds-figma-plugin/src) from the live-canvas work, whose only artifact is tmp/figma-live-batch-evidence.json (gitignored, 2026-05-27) and which no gate re-derives"
+    recorded_at: "2026-08-17T21:14:59.084Z"
+    command: pnpm exec vitest run packages/ds-figma-plugin/src
+    exit_code: 0
