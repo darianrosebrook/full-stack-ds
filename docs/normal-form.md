@@ -4,7 +4,8 @@ authority: architecture
 status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
-updated: 2026-06-11
+updated: 2026-08-18
+verified_at_commit: 2b9f302e
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -24,7 +25,7 @@ The claim, stated plainly:
 
 > Compositional systems — systems where higher-order artifacts are assembled from lower-order ones under shared constraints — converge on a single architectural shape. That shape can be written down. Systems that conform to it compose cleanly across heterogeneous targets, regenerate safely, and survive transfer to new substrates. Systems that resist it accumulate a predictable family of symptoms — shadow files, stubbed-out implementations, force-pushes around quality gates, runtime drift between layers, irreproducible builds — that no amount of after-the-fact tooling fully fixes.
 
-The constraint of "<!-- component-count -->49 components, 1 primitive, 5 frameworks" exists to test this claim. Five frameworks is not a feature; it is the falsification surface. If the same contract can drive React (function components with hooks), Vue (reactive composables), Svelte (compiler-driven runes), Angular (signals with dependency injection), and Lit (web components with reactive controllers) without leaking implementation detail into any of them — and without the contract growing per-framework escape hatches — then the contract is at the right level of abstraction. If it cannot, the contract is wrong, and the wrongness will be visible as friction in exactly one of those five outputs.
+The constraint of "<!-- component-count -->49 components, 1 rendered primitive, 5 Web DOM frameworks" exists to test this claim. Five frameworks is not a feature; it is the falsification surface. If the same contract can drive React (function components with hooks), Vue (reactive composables), Svelte (compiler-driven runes), Angular (signals with dependency injection), and Lit (web components with reactive controllers) without leaking implementation detail into any of them — and without the contract growing per-framework escape hatches — then the contract is at the right level of abstraction. If it cannot, the contract is wrong, and the wrongness will be visible as friction in exactly one of those five outputs.
 
 This document names the architectural shape, identifies the load-bearing pieces of this codebase that encode it, and states the falsification conditions. It is intended for readers who want to evaluate the architecture as a claim, not just use the codegen.
 
@@ -33,7 +34,7 @@ This document names the architectural shape, identifies the load-bearing pieces 
 This document argues from one concrete codebase. The current evidence is:
 
 - <!-- component-count -->49 component contracts generated through one primitive. (Count is loader-derived — `contracts-fs.ts` walks `components/*/<Name>.contract.json`; do not hand-maintain this number, re-derive it.)
-- Five framework emitters consuming a shared IR.
+- Five Web DOM framework emitters consuming a shared IR, plus a sixth on a different substrate (React Native) consuming the same IR and admitted by the same rail.
 - Boundary checks in the IR that fail on unresolved contract references.
 - Regeneration semantics that preserve custom regions while rewriting generated regions.
 - An A2UI projection that exposes consumer-facing capability without renderer internals.
@@ -90,11 +91,15 @@ The number of primitives is part of the claim. One is not a magic number — two
 
 ### 4. Multiple realization targets, each idiomatic, each derived from the IR with zero contract interpretation in target code
 
-The five framework emitters under `packages/ds-codegen/src/frameworks/<framework>/` each consume the IR and produce framework-idiomatic source. "Idiomatic" is the operative word: the React output uses hooks, the Vue output uses composables, the Svelte output uses `.svelte.ts` rune-based stores, the Angular output uses signals with standalone components, the Lit output uses reactive controllers on `LitElement`. These are structurally opposed paradigms — immutable virtual-DOM with hooks vs. mutable shadow-DOM with controllers — and the contract abstraction spans both.
+The five Web DOM framework emitters under `packages/ds-codegen/src/frameworks/<framework>/` each consume the IR and produce framework-idiomatic source. "Idiomatic" is the operative word: the React output uses hooks, the Vue output uses composables, the Svelte output uses `.svelte.ts` rune-based stores, the Angular output uses signals with standalone components, the Lit output uses reactive controllers on `LitElement`. These are structurally opposed paradigms — immutable virtual-DOM with hooks vs. mutable shadow-DOM with controllers — and the contract abstraction spans both.
 
 Critically, zero contract interpretation happens in target code. The React emitter does not know that `behavior.channels` exists; it knows only that the IR has `normalizedChannels` with a `callbackKind` already inferred. A target emitter that finds itself reading raw contract fields is a signal that the IR is missing a derivation, not that the target needs a new escape hatch.
 
-The cost of adding the sixth framework is roughly the cost of writing one emitter that consumes a stable IR — at least, that is the prediction the IR/emitter split is meant to underwrite. Whether the prediction holds for a sixth target is a question the architecture is set up to be checked against, not one the current five frameworks settle on their own.
+The prediction the IR/emitter split underwrites is that adding a sixth target costs roughly one emitter against a stable IR. That prediction has now been tested, and the honest result is **partially confirmed**.
+
+React Native is the sixth emitter (`frameworks/react-native/`, rail-admitted alongside the five web targets — see `packages/ds-codegen/src/validation/admission-descriptor.ts`). It consumes the same IR and required no per-component lore in the emitter. But it was **not** free: the IR had to grow substrate-aware facts to accommodate it and the other native targets — `tokenFacts`, `tokenScopes`, `BehaviorIR.normalizedChannels`, `SurfaceIR`, and the ARIA `RootSemanticsIR` projection all landed under `FEAT-MOBILE-IR-001`.
+
+That is the informative outcome. The split held in the direction it claims — the *emitter* stayed thin and the contract grew no per-framework escape hatches — while the IR absorbed the cost, which is exactly where this architecture says cost should land. A sixth target that had forced contract changes, or per-component branches in an emitter, would have falsified the claim. One that forces IR extension refines it: the IR is the substrate-neutrality boundary, and reaching a genuinely new substrate is what moves it.
 
 ### 5. Boundary linters that fail loud on references to non-existent contract entities
 
@@ -148,7 +153,7 @@ Both functions are short. Read together, they are where the architectural choice
 
 ## The cross-paradigm spread is the test
 
-The five frameworks were chosen for paradigm spread, not popularity. The contract must drive:
+The five Web DOM frameworks were chosen for paradigm spread, not popularity. The contract must drive:
 
 - **React** — function components, hooks (`useEffect`, `useState`, `useCallback`), synthetic events, virtual DOM, immutable props, hooks-as-state.
 - **Vue 3** — single-file components, `<script setup>`, reactive composables, refs and reactives, template syntax with directives, value-shaped event handlers.

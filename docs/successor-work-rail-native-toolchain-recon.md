@@ -4,7 +4,7 @@ authority: reference
 status: active
 title: Admission-rail toolchain-polymorphism recon
 owner: "@darianrosebrook"
-updated: 2026-06-26
+updated: 2026-08-18
 spec: RAIL-NATIVE-TOOLCHAIN-RECON-01
 verified_at_commit: 6735f3cc
 ---
@@ -19,7 +19,9 @@ The single thing blocking all of the native targets is the same thing, and it is
 
 So the prerequisite for *all* the native targets is a rail that can verify non-TS output. This recon measures exactly where the rail is TS-only and proposes the shape that makes it toolchain-polymorphic — the same factory/dependency-injection inversion the emitter already uses, applied to admission.
 
-This document specifies the seam. It does **not** cut it. No rail code, no validation plan, no emitter, and no target registration changes in this slice (see `RAIL-NATIVE-TOOLCHAIN-RECON-01` non-claims).
+This document specified the seam; the slice it belongs to did **not** cut it (no rail code, no validation plan, no emitter, and no target registration changes — see `RAIL-NATIVE-TOOLCHAIN-RECON-01` non-claims).
+
+**The seam has since been cut.** Later slices landed `packages/ds-codegen/src/validation/admission-descriptor.ts` (self-declared per-target descriptors aggregated centrally) and `packages/ds-codegen/src/validation/native-compile-lane.ts` (a family-neutral runner), plus two CI native lanes — `native-compile-rail` (Kotlin/`kotlinc`) and `native-compile-rail-swift` (Swift/`swiftc`). Read this document for the *analysis* of where the rail was TS-coupled and why; read the code and `docs/specifications/admission-rail.md` for what the rail does now.
 
 ## How the inventory was produced
 
@@ -31,11 +33,20 @@ node scripts/rail-toolchain-coupling-audit.mjs --json     # machine output
 node scripts/rail-toolchain-coupling-audit.mjs --check     # self-consistency gate
 ```
 
-The `--check` gate asserts the recon premise still holds: exactly six rail-admitted `FrameworkId`s (react, vue, svelte, lit, angular, react-native), figma generate-admitted but rail-excluded, no native target admitted, and every site classified. If a later slice changes any of those, `--check` exits non-zero — so this recon's premise is itself falsifiable, not a snapshot in prose.
+The `--check` gate asserts the parts of the premise that are still meant to hold: exactly six rail-admitted `FrameworkId`s (react, vue, svelte, lit, angular, react-native) which self-declare their descriptors, figma generate-admitted but rail-excluded, the registry aggregating without authoring, consumers deriving from it, no native **framework** target admitted, and every site classified. It also now reports the admitted non-pnpm compile lanes rather than asserting there are none — the original "no native target admitted" clause was narrowed to "no native FRAMEWORK target admitted" when the Kotlin and Swift lanes landed, because a `RailTargetId` that admits no component is not a framework. If a later slice changes any of those, `--check` exits non-zero — so this recon's premise stays falsifiable rather than being a snapshot in prose.
 
 ## Measured result
 
-As of `verified_at_commit`, the audit reports **12 TS-toolchain-coupled, 4 language-agnostic, 1 already-polymorphic, 0 unclassified** admission sites.
+At the time of this recon (`verified_at_commit: 6735f3cc`), the audit reported **12 TS-toolchain-coupled, 4 language-agnostic, 1 already-polymorphic, 0 unclassified** admission sites. That was the baseline the recon argued from.
+
+Those numbers have since moved, because the seam described here was cut. Do not read the baseline as current — re-run the audit:
+
+```bash
+node scripts/rail-toolchain-coupling-audit.mjs          # human report
+node scripts/rail-toolchain-coupling-audit.mjs --json   # machine output
+```
+
+The classification also gained two buckets the original recon did not have — `descriptor-driven` (sites now deriving from the admission-descriptor registry) and `non-TS-toolchain-lane` (the Kotlin and Swift compile lanes) — so a six-way summary replaces the original four-way one.
 
 ### TS-toolchain-coupled (12) — what a Kotlin/Swift target cannot satisfy today
 
