@@ -35,3 +35,8 @@ contracts:
   - name: 'runtime-rail-codeblock'
     type: contract-test
     path: 'e2e/runtime-rail.spec.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e:rail at merge 894f28b1: all five frameworks render the golden typescript [data-token] kind sequence exactly (expected kinds loaded from golden-fixtures.json at runtime) with span text reassembling the source — 10/10 new facts green, 84 passed total"
+    recorded_at: "2026-08-17T18:59:31.973Z"
