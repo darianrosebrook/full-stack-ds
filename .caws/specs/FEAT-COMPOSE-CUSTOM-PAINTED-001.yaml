@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "grep material3 in both generated components: 0; library + lane compileKotlin exit 0; material3 dep retained only in library/build.gradle.kts for the tokens bridge; full-corpus --target=all diff scope confined to the slice (other targets byte-identical)"
     recorded_at: "2026-08-17T20:02:45.080Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "generate:check 49/49; root tests 2123/2124 with the single failure (rail-coverage CodeBlock projection) verified PRE-EXISTING on clean main via git-stash rerun — not this slice's regression; codegen build 0 TS errors"
+    recorded_at: "2026-08-17T20:02:46.031Z"
