@@ -49,3 +49,8 @@ contracts:
   - name: 'swiftui-final-five'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Shuttle.swift: @StateObject selection ControllableValue<[String]> + ForEach(selection.value, id: .self); compiled Build complete"
+    recorded_at: "2026-08-17T05:52:24.969Z"
