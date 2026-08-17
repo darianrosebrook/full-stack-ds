@@ -392,6 +392,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: pnpm
 
       - name: Show Swift compiler (preinstalled via Xcode)
         run: swiftc --version
@@ -419,10 +420,13 @@ jobs:
       # FIX-SWIFTUI-INTERACTION-TESTS-01. The parity fixture imports the
       # gitignored ds-codegen dist — building it here makes a stale local
       # build unable to produce a false divergence (the failure mode seen
-      # on 2026-08-16 when main's dist lagged the merged emitter).
+      # on 2026-08-16 when main's dist lagged the merged emitter). The
+      # workspace deps must be installed first: this job otherwise has no
+      # node_modules, and bare `npx tsc` fetches the wrong npm package
+      # (tsc@2.0.4) and fails before the fixture runs — the first CI
+      # execution of this step (run 32037467561).
       - name: swift-react emission parity fixture (react vs swiftui)
         run: |
-          cd packages/ds-codegen
-          npx tsc -p tsconfig.json
-          cd ../..
+          pnpm install --frozen-lockfile
+          pnpm -F @full-stack-ds/codegen run build
           node scripts/swift-parity-diff.mjs
