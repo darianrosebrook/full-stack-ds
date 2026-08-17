@@ -17,6 +17,9 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
+import com.fullstackds.tokens.LocalFsdsTheme
+import com.fullstackds.tokens.toFsdsColor
+import com.fullstackds.tokens.toFsdsDp
 
 /** Size axis lowered from the contract's SwitchSize type. */
 enum class SwitchSize { Sm, Md, Lg }
@@ -35,11 +38,28 @@ fun Switch(
 ) {
     var uncontrolledChecked by remember { mutableStateOf(defaultChecked) }
     val resolvedChecked = checked ?: uncontrolledChecked
+    val fsdsTheme = LocalFsdsTheme.current
+    val checkedTrackColor = fsdsTheme.resolve(switchTokenScopes["checked"]?.get("switch.color.track.background.default"))?.toFsdsColor()
+    val checkedThumbColor = fsdsTheme.resolve(switchTokenScopes["checked"]?.get("switch.color.thumb.background.default"))?.toFsdsColor()
+    val uncheckedTrackColor = fsdsTheme.resolve(switchTokenScopes["root"]?.get("switch.color.track.background.default"))?.toFsdsColor()
+    val uncheckedThumbColor = fsdsTheme.resolve(switchTokenScopes["root"]?.get("switch.color.thumb.background.default"))?.toFsdsColor()
+
 
     val (trackWidth, trackHeight) = when (size) {
         SwitchSize.Sm -> 36.dp to 18.dp
-        SwitchSize.Md -> 48.dp to 24.dp
+        SwitchSize.Md -> (fsdsTheme.resolve(switchTokenScopes["root"]?.get("switch.size.md.track.width"))?.toFsdsDp() ?: 48.dp) to (fsdsTheme.resolve(switchTokenScopes["root"]?.get("switch.size.md.track.height"))?.toFsdsDp() ?: 24.dp)
         SwitchSize.Lg -> 60.dp to 30.dp
+    }
+
+    val switchColors = if (checkedTrackColor != null && checkedThumbColor != null && uncheckedTrackColor != null && uncheckedThumbColor != null) {
+        SwitchDefaults.colors(
+            checkedTrackColor = checkedTrackColor,
+            checkedThumbColor = checkedThumbColor,
+            uncheckedTrackColor = uncheckedTrackColor,
+            uncheckedThumbColor = uncheckedThumbColor,
+        )
+    } else {
+        SwitchDefaults.colors()
     }
 
     M3Switch(
@@ -60,6 +80,6 @@ fun Switch(
                     stateDescription = if (resolvedChecked) "on" else "off"
                 }
             },
-        colors = SwitchDefaults.colors(),
+        colors = switchColors,
     )
 }

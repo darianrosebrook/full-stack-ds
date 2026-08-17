@@ -17,6 +17,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
+import com.fullstackds.tokens.LocalFsdsTheme
 
 /** Size axis lowered from the contract's ToggleSwitchSize type. */
 enum class ToggleSwitchSize { Small, Medium, Large }
@@ -35,6 +36,8 @@ fun ToggleSwitch(
 ) {
     var uncontrolledChecked by remember { mutableStateOf(defaultChecked) }
     val resolvedChecked = checked ?: uncontrolledChecked
+    val fsdsTheme = LocalFsdsTheme.current
+
 
     val (trackWidth, trackHeight) = when (size) {
         ToggleSwitchSize.Small -> 36.dp to 18.dp
