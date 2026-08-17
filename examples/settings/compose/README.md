@@ -43,6 +43,16 @@ ladder). Every other spec region is composed from plain Compose and marked
 - Compile (the CI admission): `./gradlew compileKotlin --no-daemon`
 - Run (local visual inspection): `./gradlew run`
 
+## Custom-painted toggles (FEAT-COMPOSE-CUSTOM-PAINTED-001)
+
+The FSDS switches are no longer Material 3 wrappers: the package ships a
+foundation-only `FsdsToggle` substrate that draws track, thumb, border,
+shadow, focus ring, press response, and disabled states from token scopes
+resolved through `LocalFsdsTheme` — the same ownership philosophy as the
+swift lane's composers. Ownership trade (ledgered, not hidden): interaction
+physics is ours now; CSS multi-shadow strings approximate to a single
+elevation; cubic-bezier easing strings are unparsable and ignored.
+
 ## Non-claims
 
 Compile-only consumer evidence on the JVM rung: no Android device or

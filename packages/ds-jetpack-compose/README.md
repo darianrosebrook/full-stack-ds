@@ -21,11 +21,25 @@ is `library/src/main/kotlin/com/fullstackds/components`.
 Compile: `./gradlew :library:compileKotlin --no-daemon` (first run
 bootstraps the Gradle distribution and Maven artifacts — network required).
 
+## Token runtime (FEAT-COMPOSE-THEME-MODULE-001)
+
+The package ships a hand-authored theme module,
+`com.fullstackds.tokens.FsdsTheme` (beside the generated components,
+mirroring the React Native normal form): a `LocalFsdsTheme` composition
+local, scope-data resolution `literal → theme.tokens[ref] → fallback`,
+dp/color accessors, a light-half semantic-defaults table derived from the
+token graph, and an `fsdsMaterialColorScheme()` Material 3 bridge. The
+emitter ships per-component scope data (`<Name>TokenScopes`), and the
+native-toggle path resolves its checked/unchecked track+thumb colors and
+default (md) dims through the theme — install
+`FsdsThemeProvider(FsdsSemanticDefaults.light)` plus the bridge to render
+graph colors (as the settings example lane does).
+
 ## Named non-claims (rung 1)
 
 JVM compilation is **not** Android compilation: no Android resource
 linking, no AGP validation, no Android Lint, no emulator/device execution,
 no runtime behavioral claims, and JVM artifacts are not Android-compiled
-artifacts. No generated test source set. No shared Compose theme/token
-module — size values are inline (md contract-token-shaped; sm/lg
-framework-grammar defaults pending token-graph coverage).
+artifacts. No generated test source set. Switch sm/lg track dims remain
+inline framework-grammar defaults pending token-graph coverage (md
+resolves through the theme).
