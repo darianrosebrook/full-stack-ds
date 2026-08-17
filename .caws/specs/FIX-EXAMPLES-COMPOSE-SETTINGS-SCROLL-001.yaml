@@ -28,3 +28,8 @@ acceptance:
     then: 'the 2026-08-16 manual runtime verification is ledgered in the lane README: confirmed behaviors (controlled toggle round-trip, state stability, stress resilience, keyboard traversal, console logging) and open findings routed to the reserved compose theme/token module work (M3 purple defaults, stock M3 chrome)'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "examples/settings/compose/src/main/kotlin/.../SettingsApp.kt @ 3a804dab — root Column wraps modifier.verticalScroll(rememberScrollState()); ./gradlew compileKotlin BUILD SUCCESSFUL exit 0 in worktree; runtime confirmation of the scroll behavior itself is a manual-rerun step (the fix mirrors the swift lane's ScrollView)"
+    recorded_at: "2026-08-17T04:36:56.313Z"
