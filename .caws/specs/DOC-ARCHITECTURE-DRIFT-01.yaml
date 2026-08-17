@@ -42,3 +42,9 @@ evidence:
     status: pass
     evidence_ref: "Modal/Menu/Dropdown contract filenames reworded as explicitly illustrative (none have ever existed in the corpus); Classification table now separates realized kinds from reserved vocabulary. Verified coachmark IS realized by Walkthrough, contradicting the audit report"
     recorded_at: "2026-08-17T19:00:35.063Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "box-model 47 -> gated component-count marker (docs-claims-check now 12 claims OK); tokens-architecture 156-shard count replaced with the derivation and the stale source comment at build/core/index.ts:69 fixed; palette hue list 9 -> all 14. tokens:validate 161/161 confirms the docs other shard number was correct"
+    recorded_at: "2026-08-17T19:00:47.056Z"
+    command: node scripts/docs-claims-check.mjs
+    exit_code: 0
