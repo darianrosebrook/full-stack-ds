@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "ComponentSmokeTests 49-factory table, completeness assertion 49, Executed 25 tests 0 failures incl. all 49 bodies through NSHostingController"
     recorded_at: "2026-08-17T05:52:27.637Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "scripts/swift-parity-diff.mjs run: 'corpus: 49 | react-emitting: 49 | swift-emitting: 49 | divergent 0' exit 0; full gates: typecheck 0, rail 0, pnpm test 2091/2091, frameworks 72, swift test 25/25, ADMITTED 49/49, example build green"
+    recorded_at: "2026-08-17T05:52:28.512Z"
