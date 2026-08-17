@@ -1,0 +1,54 @@
+{
+  "description": "Golden parse trees for FEAT-MARKDOWN-CONTENT-TRANSFORM-01. Every web framework package parser MUST produce these exact trees (cross-framework identity invariant). Generated from the canonical parser at packages/ds-codegen/src/markdown/markdown.ts — regenerate, audit, and freeze; never hand-edit trees.",
+  "cases": [
+    {
+      "name": "full document",
+      "source": "# Release notes\n\nVersion **2.0** ships _faster_ parsing and a `config` flag.\n\n- Deterministic output\n- SSR-safe parsing\n\n1. Parse blocks\n2. Parse marks\n\n> Backwards compatible,\n> always.\n\n```ts\nconst x = 1;\n```",
+      "expected": [
+        { "kind": "heading", "level": 1, "children": [ { "kind": "text", "text": "Release notes" } ] },
+        { "kind": "paragraph", "children": [
+          { "kind": "text", "text": "Version " },
+          { "kind": "strong", "children": [ { "kind": "text", "text": "2.0" } ] },
+          { "kind": "text", "text": " ships " },
+          { "kind": "emphasis", "children": [ { "kind": "text", "text": "faster" } ] },
+          { "kind": "text", "text": " parsing and a " },
+          { "kind": "code", "text": "config" },
+          { "kind": "text", "text": " flag." }
+        ] },
+        { "kind": "list", "ordered": false, "items": [
+          { "kind": "listItem", "children": [ { "kind": "text", "text": "Deterministic output" } ] },
+          { "kind": "listItem", "children": [ { "kind": "text", "text": "SSR-safe parsing" } ] }
+        ] },
+        { "kind": "list", "ordered": true, "items": [
+          { "kind": "listItem", "children": [ { "kind": "text", "text": "Parse blocks" } ] },
+          { "kind": "listItem", "children": [ { "kind": "text", "text": "Parse marks" } ] }
+        ] },
+        { "kind": "blockquote", "children": [ { "kind": "text", "text": "Backwards compatible, always." } ] },
+        { "kind": "codeBlock", "language": "ts", "text": "const x = 1;" }
+      ]
+    },
+    {
+      "name": "hostile input",
+      "source": "# <img src=x onerror=alert(1)>\n\nSee [the docs](javascript:alert(1)) and [the site](https://example.com).\n\n```html\n<script>alert(1)</script>\n```",
+      "expected": [
+        { "kind": "heading", "level": 1, "children": [ { "kind": "text", "text": "<img src=x onerror=alert(1)>" } ] },
+        { "kind": "paragraph", "children": [
+          { "kind": "text", "text": "See " },
+          { "kind": "link", "href": null, "children": [ { "kind": "text", "text": "the docs" } ] },
+          { "kind": "text", "text": " and " },
+          { "kind": "link", "href": "https://example.com", "children": [ { "kind": "text", "text": "the site" } ] },
+          { "kind": "text", "text": "." }
+        ] },
+        { "kind": "codeBlock", "language": "html", "text": "<script>alert(1)</script>" }
+      ]
+    },
+    {
+      "name": "edge degradation",
+      "source": "Unterminated **bold and _em\n\n```json\n{\"a\": 1}",
+      "expected": [
+        { "kind": "paragraph", "children": [ { "kind": "text", "text": "Unterminated **bold and _em" } ] },
+        { "kind": "codeBlock", "language": "json", "text": "{\"a\": 1}" }
+      ]
+    }
+  ]
+}
