@@ -46,3 +46,8 @@ non_functional: {}
 contracts:
   - name: 'component-contrast-validator'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "component-contrast.test.ts at merge 6501ebe1: 'derives an inherited pair for a color-only descendant block', 'same-block background wins over the ancestor background', 'conditional ancestor blocks never contribute inherited backgrounds', 'a transform-generated part inherits through its container node' — 27/27 green under pnpm test (2124 total)"
+    recorded_at: "2026-08-17T16:41:22.851Z"
