@@ -69,7 +69,8 @@
         "Progress",
         "Spinner",
         "Icon",
-        "Toast"
+        "Toast",
+        "Select"
       ]
     },
     {

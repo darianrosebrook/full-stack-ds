@@ -12,7 +12,7 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=all   # emits the allowlisted set (21 components)
+pnpm run generate -- --target=all   # emits the allowlisted set (22 components)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission
@@ -42,6 +42,7 @@ swift build --package-path packages/ds-swiftui
 | Multi-part anatomy emits with theme-driven styling | Yes — the projected-children action path (root button + single content region) emits `FsdsButton`; styling comes from `ir.tokenScopes` shipped as data and resolved through the hand-authored `FsdsTheme` (RN normal form), layering root + variant_<size> + variant_<intent> |
 | SwiftUI type collisions are handled grammatically | Yes — a reserved-type table exports colliding names with an `Fsds` prefix (`Button` → `FsdsButton`), the SwiftUI analog of Lit's `StackElement` rename |
 | Compound-part composers emit as region closures | Yes — Card is one ViewBuilder region per compound part (header/content/footer/description), chrome presence-driven through FsdsTheme; axes without authored defaults are optional parameters whose layer applies only when set; keyword union members (`default`) are backtick-escaped |
+| Selection semantics compose the controllable substrate | Yes — SelectionState holds single+multi ControllableValue projections behind the mode-gated apply() (replace vs toggleMembership); Select lowers through it with a contract-alias-derived option struct and Menu iteration |
 | Glyph pipeline renders the iconography catalog natively | Yes — hand-maintained SVGPath runtime (arc→cubic conversion, XCTest-pinned on real glyph bounds) + a generated GlyphCatalog substrate; Icon lowers through the iconGlyph class with size hints and catalog-driven decorative defaults; unknown names surface via accessibility, never silent |
 | Anchored tooltips emit with hover-driven open channel | Yes — Tooltip's trigger region hosts consumer content; onHover drives the controllable-state open channel into a popover with placement lowered through a grammar table (auto → platform default); anchored popovers still throw |
 | Centered-modal surfaces emit as sheets with the openness channel | Yes — Dialog presents a sheet whose native dismissal (Esc/overlay) drives setOpen(false) → onOpenChange; compound regions emit as closures (`body` renames to bodyContent for the View collision); anchored surfaces still throw |
