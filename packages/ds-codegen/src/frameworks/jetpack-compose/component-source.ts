@@ -184,22 +184,17 @@ export function generateJetpackComposeComponentSource(
   );
   lines.push(`package com.fullstackds.components.${segment}`);
   lines.push(``);
-  lines.push(`import androidx.compose.foundation.layout.size`);
-  lines.push(`import androidx.compose.material3.Switch as M3Switch`);
-  lines.push(`import androidx.compose.material3.SwitchDefaults`);
+  lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
   lines.push(`import androidx.compose.runtime.Composable`);
   lines.push(`import androidx.compose.runtime.getValue`);
   lines.push(`import androidx.compose.runtime.mutableStateOf`);
   lines.push(`import androidx.compose.runtime.remember`);
   lines.push(`import androidx.compose.runtime.setValue`);
   lines.push(`import androidx.compose.ui.Modifier`);
-  lines.push(`import androidx.compose.ui.semantics.Role`);
-  lines.push(`import androidx.compose.ui.semantics.role`);
-  lines.push(`import androidx.compose.ui.semantics.semantics`);
-  lines.push(`import androidx.compose.ui.semantics.stateDescription`);
-  lines.push(`import androidx.compose.ui.semantics.toggleableState`);
-  lines.push(`import androidx.compose.ui.state.ToggleableState`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
   lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import com.fullstackds.components.toggle.FsdsToggle`);
+  lines.push(`import com.fullstackds.components.toggle.FsdsToggleStyle`);
   // Theme-runtime imports land only when the component consumes token slots.
   const checkedTrackSlot = findTokenSlot(
     ir,
@@ -221,20 +216,74 @@ export function generateJetpackComposeComponentSource(
     "root",
     ".color.thumb.background.default",
   );
+  const disabledTrackSlot = findTokenSlot(
+    ir,
+    "disabled",
+    ".color.track.background.default",
+  );
+  const disabledThumbSlot = findTokenSlot(
+    ir,
+    "disabled",
+    ".color.thumb.background.default",
+  );
+  const trackBorderSlot = findTokenSlot(
+    ir,
+    "root",
+    ".color.track.border.default",
+  );
+  const focusSlot = findTokenSlot(ir, "root", ".color.input-outline-focus");
+  const pressDurationSlot = findTokenSlot(
+    ir,
+    "root",
+    ".motion.interaction.press.duration",
+  );
+  const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
+  const minHeightSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const paddingInlineStartSlot = findTokenSlot(
+    ir,
+    "root",
+    "box-model.padding-inline-start",
+  );
+  const paddingInlineEndSlot = findTokenSlot(
+    ir,
+    "root",
+    "box-model.padding-inline-end",
+  );
+  const paddingBlockStartSlot = findTokenSlot(
+    ir,
+    "root",
+    "box-model.padding-block-start",
+  );
+  const paddingBlockEndSlot = findTokenSlot(
+    ir,
+    "root",
+    "box-model.padding-block-end",
+  );
   const mdWidthSlot = findTokenSlot(ir, "root", ".size.md.track.width");
   const mdHeightSlot = findTokenSlot(ir, "root", ".size.md.track.height");
   const mdSizeValue = sizeDefault?.replace(/^"|"$/g, "") ?? null;
+  const anyColorSlot =
+    checkedTrackSlot || checkedThumbSlot || rootTrackSlot || rootThumbSlot ||
+    disabledTrackSlot || disabledThumbSlot || trackBorderSlot || focusSlot;
+  const anyDimSlot =
+    mdWidthSlot || mdHeightSlot || minWidthSlot || minHeightSlot ||
+    paddingInlineStartSlot || paddingInlineEndSlot || paddingBlockStartSlot ||
+    paddingBlockEndSlot;
   const consumesTokens =
-    Boolean(checkedTrackSlot) ||
-    Boolean(mdWidthSlot) ||
+    Boolean(anyColorSlot) ||
+    Boolean(anyDimSlot) ||
+    Boolean(pressDurationSlot) ||
     ir.tokenScopes.some((scope) => scope.values.length > 0);
   if (consumesTokens) {
     lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
-    if (checkedTrackSlot || rootTrackSlot || checkedThumbSlot || rootThumbSlot) {
+    if (anyColorSlot) {
       lines.push(`import com.fullstackds.tokens.toFsdsColor`);
     }
-    if (mdWidthSlot || mdHeightSlot) {
+    if (anyDimSlot) {
       lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    }
+    if (pressDurationSlot) {
+      lines.push(`import com.fullstackds.tokens.toFsdsMs`);
     }
   }
   lines.push(``);
@@ -274,24 +323,56 @@ export function generateJetpackComposeComponentSource(
   );
   if (consumesTokens) {
     lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
-    if (checkedTrackSlot) {
+    // Color vals always exist (nullable) so the style constructor stays
+    // uniform; absent slots resolve to null and ledgered constants apply.
+    const colorVal = (
+      valName: string,
+      slot: { name: string } | undefined,
+      scopeKey: string,
+    ) => {
+      if (slot) {
+        lines.push(
+          `    val ${valName} = fsdsTheme.resolve(${tokenConstName(ir)}[${JSON.stringify(scopeKey)}]?.get(${JSON.stringify(slot.name)}))?.toFsdsColor()`,
+        );
+      } else {
+        lines.push(`    val ${valName}: Color? = null`);
+      }
+    };
+    colorVal("checkedTrackColor", checkedTrackSlot, "checked");
+    colorVal("checkedThumbColor", checkedThumbSlot, "checked");
+    colorVal("uncheckedTrackColor", rootTrackSlot, "root");
+    colorVal("uncheckedThumbColor", rootThumbSlot, "root");
+    colorVal("disabledTrackColor", disabledTrackSlot, "disabled");
+    colorVal("disabledThumbColor", disabledThumbSlot, "disabled");
+    colorVal("trackBorderColor", trackBorderSlot, "root");
+    colorVal("focusRingColor", focusSlot, "root");
+    if (pressDurationSlot) {
       lines.push(
-        `    val checkedTrackColor = fsdsTheme.resolve(${tokenConstName(ir)}["checked"]?.get(${JSON.stringify(checkedTrackSlot.name)}))?.toFsdsColor()`,
+        `    val pressDurationMs = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(pressDurationSlot.name)}))?.toFsdsMs() ?: 100`,
       );
     }
-    if (checkedThumbSlot) {
+    if (minWidthSlot) {
       lines.push(
-        `    val checkedThumbColor = fsdsTheme.resolve(${tokenConstName(ir)}["checked"]?.get(${JSON.stringify(checkedThumbSlot.name)}))?.toFsdsColor()`,
+        `    val minTouchWidth = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(minWidthSlot.name)}))?.toFsdsDp() ?: 32.dp`,
       );
     }
-    if (rootTrackSlot) {
+    if (minHeightSlot) {
       lines.push(
-        `    val uncheckedTrackColor = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(rootTrackSlot.name)}))?.toFsdsColor()`,
+        `    val minTouchHeight = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(minHeightSlot.name)}))?.toFsdsDp() ?: 32.dp`,
       );
     }
-    if (rootThumbSlot) {
+    if (
+      paddingInlineStartSlot ||
+      paddingInlineEndSlot ||
+      paddingBlockStartSlot ||
+      paddingBlockEndSlot
+    ) {
+      const side = (slot: { name: string } | undefined) =>
+        slot
+          ? `fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(slot.name)}))?.toFsdsDp() ?: 0.dp`
+          : `0.dp`;
       lines.push(
-        `    val uncheckedThumbColor = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(rootThumbSlot.name)}))?.toFsdsColor()`,
+        `    val togglePadding = PaddingValues(start = ${side(paddingInlineStartSlot)}, end = ${side(paddingInlineEndSlot)}, top = ${side(paddingBlockStartSlot)}, bottom = ${side(paddingBlockEndSlot)})`,
       );
     }
     lines.push(``);
@@ -321,22 +402,59 @@ export function generateJetpackComposeComponentSource(
     lines.push(`    }`);
   }
   lines.push(``);
-  const allColorSlots =
-    checkedTrackSlot && checkedThumbSlot && rootTrackSlot && rootThumbSlot;
-  if (allColorSlots) {
-    lines.push(`    val switchColors = if (checkedTrackColor != null && checkedThumbColor != null && uncheckedTrackColor != null && uncheckedThumbColor != null) {`);
-    lines.push(`        SwitchDefaults.colors(`);
-    lines.push(`            checkedTrackColor = checkedTrackColor,`);
-    lines.push(`            checkedThumbColor = checkedThumbColor,`);
-    lines.push(`            uncheckedTrackColor = uncheckedTrackColor,`);
-    lines.push(`            uncheckedThumbColor = uncheckedThumbColor,`);
-    lines.push(`        )`);
-    lines.push(`    } else {`);
-    lines.push(`        SwitchDefaults.colors()`);
-    lines.push(`    }`);
-    lines.push(``);
+  // Custom-painted lowering (FEAT-COMPOSE-CUSTOM-PAINTED-001): the style is
+  // resolved from scope data through the theme and handed to the foundation-
+  // only substrate; dead-safe color constants mirror the slot fallbacks and
+  // fire only when a slot is absent from the graph.
+  lines.push(`    val toggleStyle = FsdsToggleStyle(`);
+  if (sizeEnumName) {
+    lines.push(`        trackWidth = trackWidth,`);
+    lines.push(`        trackHeight = trackHeight,`);
+  } else {
+    const [w, h] = SIZE_TRACK_DP.md ?? [48, 24];
+    lines.push(`        trackWidth = ${w}.dp,`);
+    lines.push(`        trackHeight = ${h}.dp,`);
   }
-  lines.push(`    M3Switch(`);
+  lines.push(
+    `        trackColorChecked = checkedTrackColor ?: Color(0xFFD92D2E),`,
+  );
+  lines.push(
+    `        trackColorUnchecked = uncheckedTrackColor ?: Color(0xFFB8B8B8),`,
+  );
+  lines.push(
+    `        trackColorDisabled = disabledTrackColor ?: uncheckedTrackColor ?: Color(0xFFB8B8B8),`,
+  );
+  lines.push(
+    `        thumbColorChecked = checkedThumbColor ?: Color(0xFFFFFFFF),`,
+  );
+  lines.push(
+    `        thumbColorUnchecked = uncheckedThumbColor ?: Color(0xFFFFFFFF),`,
+  );
+  lines.push(
+    `        thumbColorDisabled = disabledThumbColor ?: uncheckedThumbColor ?: Color(0xFFFFFFFF),`,
+  );
+  lines.push(`        trackBorderColor = trackBorderColor,`);
+  lines.push(`        focusRingColor = focusRingColor,`);
+  if (pressDurationSlot) {
+    lines.push(`        pressDurationMs = pressDurationMs,`);
+  }
+  if (minWidthSlot) {
+    lines.push(`        minTouchWidth = minTouchWidth,`);
+  }
+  if (minHeightSlot) {
+    lines.push(`        minTouchHeight = minTouchHeight,`);
+  }
+  if (
+    paddingInlineStartSlot ||
+    paddingInlineEndSlot ||
+    paddingBlockStartSlot ||
+    paddingBlockEndSlot
+  ) {
+    lines.push(`        padding = togglePadding,`);
+  }
+  lines.push(`    )`);
+  lines.push(``);
+  lines.push(`    FsdsToggle(`);
   lines.push(`        checked = resolved${pascalCase(valueProp)},`);
   lines.push(`        onCheckedChange = { next ->`);
   lines.push(`            if (${valueProp} == null) {`);
@@ -346,29 +464,12 @@ export function generateJetpackComposeComponentSource(
   lines.push(`            }`);
   lines.push(`            ${changeProp}?.invoke(next)`);
   lines.push(`        },`);
+  lines.push(`        style = toggleStyle,`);
   if (hasDisabled) {
     lines.push(`        enabled = enabled,`);
   }
-  lines.push(`        modifier = modifier`);
-  if (sizeEnumName) {
-    lines.push(`            .size(width = trackWidth, height = trackHeight)`);
-  }
-  lines.push(`            .semantics {`);
-  lines.push(`                role = Role.Switch`);
-  lines.push(
-    `                toggleableState = if (resolved${pascalCase(valueProp)}) ToggleableState.On else ToggleableState.Off`,
-  );
-  lines.push(`                if (contentDescription != null) {`);
-  lines.push(
-    `                    stateDescription = if (resolved${pascalCase(valueProp)}) "on" else "off"`,
-  );
-  lines.push(`                }`);
-  lines.push(`            },`);
-  lines.push(
-    allColorSlots
-      ? `        colors = switchColors,`
-      : `        colors = SwitchDefaults.colors(),`,
-  );
+  lines.push(`        contentDescription = contentDescription,`);
+  lines.push(`        modifier = modifier,`);
   lines.push(`    )`);
   lines.push(`}`);
   lines.push(``);
