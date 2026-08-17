@@ -33,3 +33,7 @@ evidence:
     status: pass
     evidence_ref: "examples/settings/compose/src/main/kotlin/.../SettingsApp.kt @ 3a804dab — root Column wraps modifier.verticalScroll(rememberScrollState()); ./gradlew compileKotlin BUILD SUCCESSFUL exit 0 in worktree; runtime confirmation of the scroll behavior itself is a manual-rerun step (the fix mirrors the swift lane's ScrollView)"
     recorded_at: "2026-08-17T04:36:56.313Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "examples/settings/compose/README.md 'Runtime verification findings (2026-08-16, manual run)' @ 3a804dab — 5 confirmed behaviors (incl. controlled toggle round-trip, stress resilience, state stability), finding 1 fixed-by-this-spec, findings 2+3 (M3 purple defaults / stock chrome) routed to the reserved compose theme/token module, expectation note for dark-mode"
+    recorded_at: "2026-08-17T04:36:57.297Z"
