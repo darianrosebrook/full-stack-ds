@@ -1,0 +1,42 @@
+id: RAIL-COMPONENT-CONTRAST-ANCESTRY-01
+title: 'Component-contrast gate: inheritance-aware color×background pairing'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-17T15:33:40.303Z'
+updated_at: '2026-08-17T15:33:40.303Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/validation/component-contrast.ts'
+    - 'packages/ds-codegen/src/validation/component-contrast.test.ts'
+    - 'packages/ds-codegen/src/validation/component-contrast-known-gaps.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a contract whose styles declare a background on an ancestor element block and a color-only descendant element block; when deriveComponentContrastPairs runs; then the descendant color pairs against the nearest declared ancestor background while same-block fg×bg pairing is unchanged'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the CodeBlock contract with nine token-kind color blocks; when the gate runs; then all nine token colors are derived against the code-block root background in both themes and every failing pair is ledgered in component-contrast-known-gaps.json naming this spec — no unledgered failures, no stale entries'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the full corpus under the wider lens; when pnpm run generate:check runs; then the gate passes with newly-derived failing pairs fixed or ledgered to an owning spec, preserving the two-directional ratchet'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a part scope that overlays only the descendant part; when the ancestor background resolves; then it comes from the base binding unless the scope also targets the ancestor block, and disabled blocks/scopes stay exempt'
+non_functional: {}
+contracts:
+  - name: 'component-contrast-validator'
+    type: behavior
