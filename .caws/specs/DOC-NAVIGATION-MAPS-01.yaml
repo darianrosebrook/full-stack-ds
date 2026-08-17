@@ -29,3 +29,8 @@ acceptance:
     then: 'the tree count and Angular coverage match'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: All 19 doc paths in both rewritten trees verified present via ls; docs/archive marked reserved because it does not exist; docs/successor-work.md removed (only the gitignored docs/internal copy exists). Both trees now agree with their files own inline links
+    recorded_at: "2026-08-17T19:05:34.463Z"
