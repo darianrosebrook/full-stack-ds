@@ -49,3 +49,45 @@ Compile-only consumer evidence on the JVM rung: no Android device or
 emulator, no runtime UI assertions, no screenshot baselines, and JVM
 artifacts are not Android artifacts. The `NOT FSDS` regions are fallbacks,
 not parity claims.
+
+## Runtime verification findings (2026-08-16, manual run)
+
+First execution of the lane (`./gradlew run`, ~22-minute session, clean
+exit 0, zero exceptions in the terminal; interaction log captured
+`settings: save profile` ×14 and `settings: delete account` ×1). This run
+is the first runtime tier the Compose target has ever had.
+
+**Confirmed working:**
+
+- Controlled toggle round-trip: both FSDS Switch rows flip, fill, and
+  persist state across repeated clicks — the controlled `checked`/`onChange`
+  hoisting holds at runtime (the exact bug class compilation cannot see).
+- Component interaction state is stable: no resetting of already-set state
+  when other components change or dialogs open/close.
+- Stress-resilient: rapid toggling, rapid dialog open/close, and rapid
+  delete-clicking produced no crash or error across the session.
+- Keyboard traversal (Tab / Shift-Tab) moves forward and backward across
+  all controls.
+- Form fields accept input and grow with content without viewport overflow.
+
+**Findings:**
+
+1. ~~Body did not scroll — content below the fold was unreachable when the
+   window was smaller than the content (had to enlarge the window to see
+   the danger zone).~~ **Fixed by `FIX-EXAMPLES-COMPOSE-SETTINGS-SCROLL-001`**
+   (root `Column` now wraps in `verticalScroll`, mirroring the swift lane's
+   `ScrollView`).
+2. **Open — colors diverge from the other lanes**: FSDS components render
+   Material 3 purple defaults (vs. e.g. the react lane's blue primary).
+   Root cause: the jetpack-compose package has no theme/token module yet —
+   the generated Switch falls back to `SwitchDefaults.colors()`, and the web
+   lanes' equivalent fidelity comes from `@full-stack-ds/*/styles.css`, swift
+   from its `FsdsTheme` runtime. This is the reserved compose-theme slice
+   (the rung-1 non-claim made visible); not to be worked around in the lane.
+3. **Open — stock Material chrome throughout**: the `NOT FSDS` regions are
+   plain material3 by design (ledgered above), and the FSDS regions' untokened
+   surfaces share that stock appearance for the same root cause as finding 2.
+
+**Expectation note**: the "Dark mode" switch updates local state only — it
+does not re-theme the app. Theming is out of scope in `../spec.md` (same
+behavior as the react lane).
