@@ -114,7 +114,7 @@ public struct OTP: View {
     public var body: some View {
         HStack(spacing: gap) {
             ForEach(0..<length, id: \.self) { index in
-                TextField("", text: Binding(
+                SwiftUI.TextField("", text: Binding(
                     get: { character(at: index) },
                     set: { setCharacter($0, at: index) }
                 ))

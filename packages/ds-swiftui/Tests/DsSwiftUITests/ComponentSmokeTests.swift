@@ -59,7 +59,9 @@ final class ComponentSmokeTests: XCTestCase {
         cases.append(("ShowMore", { AnyView(ShowMore { Text(Self.longText) }) }))
         cases.append(("Popover", { AnyView(Popover(trigger: { Text("tr") }, content: { Text("c") })) }))
         cases.append(("Skeleton", { AnyView(Skeleton()) }))
-        XCTAssertEqual(cases.count, 39, "factory table drifted from the allowlist")
+        cases.append(("TextField", { AnyView(TextField(value: .constant("x"), label: { Text("L") })) }))
+        cases.append(("Chip", { AnyView(Chip { Text("chip") }) }))
+        XCTAssertEqual(cases.count, 41, "factory table drifted from the allowlist")
         for (name, factory) in cases {
             evaluate(name, factory)
         }

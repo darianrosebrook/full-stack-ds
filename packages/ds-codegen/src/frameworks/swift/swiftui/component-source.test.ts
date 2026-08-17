@@ -64,12 +64,12 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     expect(actual).toBe(expected);
   });
 
-  it.each(["TextField", "Dialog"])(
+  it.each(["Accordion", "Dialog"])(
     "refuses to emit for contracts outside every emission class (%s)",
     (name) => {
-      // TextField carries a component-instance leaf (fsds.Input) and
-      // Dialog is a surface block with a dom tree — neither matches an
-      // emission class. Fail loud, never approximate.
+      // Accordion is a compound interactive group and Dialog is a surface
+      // block with a dom tree — neither matches an emission class yet.
+      // Fail loud, never approximate.
       const contract = loadContract(name) as Parameters<
         typeof buildComponentIR
       >[0];
@@ -440,10 +440,7 @@ describe("generateSwiftUIComponentSource — icon-decorated content (Alert, Badg
     expect(source).not.toContain("showStatusIcon");
   });
 
-  it("still refuses Chip (component-instance); Status admits via static content", () => {
-    expect(() => emit("Chip")).toThrow(/no emission class matches/);
-    // Status's icon part has no author-addressable icon prop, so it now
-    // emits through the widened static-content class (icon part omitted).
+  it("Status admits via static content (icon part has no author-addressable prop)", () => {
     expect(emit("Status")).toContain("public struct Status");
   });
 });
@@ -462,5 +459,37 @@ describe("generateSwiftUIComponentSource — count-iterated field group (OTP)", 
     expect(source).toContain("onComplete?(next)");
     expect(source).not.toContain("readOnly:");
     expect(source).not.toContain("mode:");
+  });
+});
+
+describe("generateSwiftUIComponentSource — compositeref batch (TextField, Chip)", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("emits TextField with slot regions over the controllable substrate", () => {
+    const source = emit("TextField");
+    expect(source).toContain(
+      "public struct TextField<LabelRegion: View, DescriptionRegion: View, ErrorRegion: View>: View {",
+    );
+    expect(source).toContain("@StateObject private var value: ControllableValue<String>");
+    expect(source).toContain("SwiftUI.TextField(\"\", text: value.binding())");
+    expect(source).toContain("@ViewBuilder label: () -> LabelRegion = { EmptyView() }");
+    expect(source).not.toContain("required:");
+    expect(source).not.toContain("ariaDescribedby:");
+  });
+
+  it("emits Chip as the dual FsdsButton composition", () => {
+    const source = emit("Chip");
+    expect(source).toContain("public struct Chip<Text: View, IconRegion: View>: View {");
+    expect(source).toContain("FsdsButton(");
+    expect(source).toContain("onTap: onClick");
+    expect(source).toContain("onTap: onDismiss");
+    expect(source).toContain("if dismissible {");
+    expect(source).toContain('SwiftUI.Image(systemName: "xmark")');
+    expect(source).not.toContain("ariaExpanded:");
   });
 });

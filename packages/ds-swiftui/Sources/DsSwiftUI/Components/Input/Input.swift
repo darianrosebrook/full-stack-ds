@@ -100,7 +100,7 @@ public struct Input: View {
     private var minHeight: CGFloat { pxSlot("min-height") ?? 0 }
 
     public var body: some View {
-        TextField(
+        SwiftUI.TextField(
             "",
             text: Binding(
                 get: { text.value },

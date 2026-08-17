@@ -87,7 +87,9 @@
         "Truncate",
         "ShowMore",
         "Popover",
-        "Skeleton"
+        "Skeleton",
+        "TextField",
+        "Chip"
       ]
     },
     {
