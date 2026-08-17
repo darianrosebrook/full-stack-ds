@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "Calendar.swift ControllableValue<Date?> + SwiftUI.DatePicker with coalescing Binding; Walkthrough.swift coachmark: step.set(step.value+1), onSkip?(), onComplete?(); locale absent test-pinned"
     recorded_at: "2026-08-17T05:52:26.773Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "ComponentSmokeTests 49-factory table, completeness assertion 49, Executed 25 tests 0 failures incl. all 49 bodies through NSHostingController"
+    recorded_at: "2026-08-17T05:52:27.637Z"
