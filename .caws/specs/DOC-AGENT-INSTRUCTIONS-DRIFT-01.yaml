@@ -39,3 +39,9 @@ evidence:
     status: pass
     evidence_ref: "This command itself: CLAUDE.md/AGENTS.md now document 'caws specs evidence <id> --ac <id> --status pass --evidence-ref', which the CLI accepts; the previously-documented 'caws evidence record --type ac' is refused by the CLI and redirects here"
     recorded_at: "2026-08-17T16:41:01.787Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "git ls-files packages/ds-tokens/generated/resolved.tokens.json returns the path (tracked); packages/ds-tokens/.gitignore ignores only generated/composed.tokens.json. Both docs now say resolved.tokens.json + tokens.css are COMMITTED and drift-gated by tokens:build:check"
+    recorded_at: "2026-08-17T16:41:14.176Z"
+    command: git ls-files packages/ds-tokens/generated/resolved.tokens.json
+    exit_code: 0
