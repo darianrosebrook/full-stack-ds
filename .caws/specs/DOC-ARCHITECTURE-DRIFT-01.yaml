@@ -33,3 +33,8 @@ acceptance:
     then: 'it matches or is replaced by a gated marker'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "presence-surfaces.md retitled SurfaceIR (implemented) citing ir.ts:1328 and adding selectorAnchor + openTriggers; contract-group-axes.md replaces the may-later-split speculation with the live two-axis table (schema field at component.contract.schema.json:48, 7 of 49 contracts declare it)"
+    recorded_at: "2026-08-17T19:00:31.880Z"
