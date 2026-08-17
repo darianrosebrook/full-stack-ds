@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "generate:check in the palette-repair worktree: 0 failing pairs for CodeBlock (all nine token kinds pass AA both themes: light steps ~6:1, dark steps ~5:1 on background.secondary) and all nine ledger entries fired the stale ratchet ('no longer reproduces') — removals were forced by the gate, not manual"
     recorded_at: "2026-08-17T18:51:45.689Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Select emptyState rebind (slot select.color.placeholder.default -> foreground.secondary, fallback #474647): the placeholder-on-primary pair is no longer derived; its ledger entry fired the stale ratchet; no other component derives a failing placeholder pair (0 unledgered failures corpus-wide)"
+    recorded_at: "2026-08-17T18:51:46.743Z"
