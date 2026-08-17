@@ -3,6 +3,7 @@ title: 'Compose settings lane body scroll + runtime-verification findings ledger
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: compose-settings-scroll
 created_at: '2026-08-17T04:33:05.219Z'
 updated_at: '2026-08-17T04:33:05.219Z'
 blast_radius:
