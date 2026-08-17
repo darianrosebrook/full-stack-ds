@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: ComponentSmokeTests 41-factory table + completeness assertion; Executed 25 tests 0 failures incl. TextField/Chip body evaluation
     recorded_at: "2026-08-17T05:32:23.105Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Post-merge worktree gates: typecheck 0, rail 0, pnpm test 2088/2088, frameworks 72, swift test 25/25, ADMITTED 41/41; live sweep fail-loud: Accordion Calendar Shuttle Tabs Walkthrough"
+    recorded_at: "2026-08-17T05:32:23.980Z"
