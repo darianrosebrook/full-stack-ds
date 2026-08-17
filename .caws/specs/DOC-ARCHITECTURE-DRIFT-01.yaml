@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "presence-surfaces.md retitled SurfaceIR (implemented) citing ir.ts:1328 and adding selectorAnchor + openTriggers; contract-group-axes.md replaces the may-later-split speculation with the live two-axis table (schema field at component.contract.schema.json:48, 7 of 49 contracts declare it)"
     recorded_at: "2026-08-17T19:00:31.880Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Modal/Menu/Dropdown contract filenames reworded as explicitly illustrative (none have ever existed in the corpus); Classification table now separates realized kinds from reserved vocabulary. Verified coachmark IS realized by Walkthrough, contradicting the audit report"
+    recorded_at: "2026-08-17T19:00:35.063Z"
