@@ -4,7 +4,7 @@ authority: architecture
 status: active
 title: Codegen Semantic Authority
 owner: "@darianrosebrook"
-updated: 2026-06-11
+updated: 2026-08-17
 governs:
   - packages/ds-codegen/src/ir.ts
   - packages/ds-codegen/src/test-plan.ts
@@ -152,6 +152,7 @@ This inventory was produced as part of CODEGEN-SEMANTIC-AUTHORITY-01. It documen
 | `channelValuePlaceholder(valueType)` | React test emitter | Channel `valueType` | Channel valueType |
 | `requiredProps` + `placeholderForPropType` | Test plan | Contract `prop.required` + `prop.type` + `definedTypes` | Prop type shape |
 | `defaultOpen` conditional emission | Svelte hook emitter | Channel `defaultValueProp` presence | Channel shape |
+| Content-transform lowering (`highlight` → one text-only span per token; declared gate → single plain run) + byte-identical shared-runtime emission | React + Vue + Svelte + Lit + Angular emitters (`isContentTransform` / `collectContentTransforms`); CLI runtime copy (`shipsContentTransformRuntime` flag); React-Native + SwiftUI prop-text degradation | IR `ContentTransformIR` (content directive; closed transform set, schema-enforced) | Content-transform directive — never a component name |
 
 ### Healthy but duplicated across substrates
 
