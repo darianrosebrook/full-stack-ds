@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/tokens/FsdsTheme.kt @ 2ae02ca2 — LocalFsdsTheme provider, FsdsTheme.resolve implementing literal → theme.tokens[ref] → fallback (RN resolveTokenValue mirrored exactly), toFsdsColor/toFsdsDp accessors, light semantic defaults with per-value graph provenance comments"
     recorded_at: "2026-08-17T05:22:51.879Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "generated SwitchTokens.kt (48 ComponentTokenDefinition slots) + Switch.kt resolving checked/unchecked track+thumb + Md dims via fsdsTheme.resolve — bytecode: 6× FsdsTheme.resolve, 4× toFsdsColor, 2× toFsdsDp in SwitchKt; full-corpus --target=all left RN/Swift/web byte-identical (diff scope confined to the slice)"
+    recorded_at: "2026-08-17T05:22:52.759Z"
