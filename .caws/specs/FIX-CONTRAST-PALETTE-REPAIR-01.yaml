@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "tokens:build:check (committed resolved.tokens.json + tokens.css match fresh build), tokens:check-contrast 44/44 curated pairs, governed:rail Overall: PASS with clean post-rail tree, pnpm test 2124/2124, all framework suites green (581/500+2/540/467/72), regenerate-all across web+RN+swift+figna committed byte-stable"
     recorded_at: "2026-08-17T18:51:58.113Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "generate:check exit 0: 49/49 contracts, 0 DRIFT, known-gaps ledger gaps:[] (burned to empty); FALLBACK_STALE forced the CodeBlock/Select cached-fallback refresh before the clean run"
+    recorded_at: "2026-08-17T18:51:59.000Z"
