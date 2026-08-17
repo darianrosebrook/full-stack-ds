@@ -1,0 +1,52 @@
+id: FIX-CONTRAST-PALETTE-REPAIR-01
+title: 'Palette repair: theme-aware syntax colors + Select emptyState secondary text'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-17T18:43:36.939Z'
+updated_at: '2026-08-17T18:43:36.939Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-tokens/src/color/semantic/foreground.tokens.json'
+    - 'packages/ds-tokens/generated'
+    - 'packages/ds-contracts/components/Select'
+    - 'packages/ds-codegen/src/validation/component-contrast-known-gaps.json'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-react-native/src'
+    - 'packages/ds-figma-plugin/src/generated'
+    - 'packages/ds-swiftui'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given theme-aware syntax palette values via fsds.light/fsds.dark ramp-step extensions; when generate:check derives the CodeBlock token pairs; then all nine pass WCAG AA 4.5:1 against background.secondary in both themes and the nine ledger entries go stale (removed under the ratchet)'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Select emptyState rebound to foreground.secondary; when the gate runs; then the placeholder-on-primary pair is no longer derived and its ledger entry is stale-removed with no other component newly deriving a failing placeholder pair'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given regenerated committed outputs; when tokens:build:check and tokens:check-contrast and governed:rail run; then all pass with committed bytes matching regeneration across the token sheet and every generated package tree'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the full corpus under the repaired palette; when generate:check runs; then the known-gaps ledger is empty again and 49/49 contracts pass with zero unledgered failures'
+non_functional: {}
+contracts:
+  - name: 'component-contrast-ledger'
+    type: behavior
+    path: 'packages/ds-codegen/src/validation/component-contrast-known-gaps.json'
