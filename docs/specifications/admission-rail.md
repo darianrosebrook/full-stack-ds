@@ -35,11 +35,11 @@ This document teaches the rail's claim. The diagnostic codes, the manifest, and 
 
 ## What problem this solves
 
-Six rail-admitted frameworks emit the whole loader-discovered contract corpus each, from a single contract source — several hundred artifact groups and well over a thousand generated files, plus contracts, plus the codegen itself. The question a reviewer or CI pipeline needs to answer about a PR that touches any of those is not "did the test suite pass." It's: **given the bytes checked in, can we honestly say where they came from and what looked at them?**
+All <!-- rail-admitted-target-count -->6 rail-admitted frameworks emit the whole loader-discovered contract corpus each, from a single contract source — several hundred artifact groups and well over a thousand generated files, plus contracts, plus the codegen itself. The question a reviewer or CI pipeline needs to answer about a PR that touches any of those is not "did the test suite pass." It's: **given the bytes checked in, can we honestly say where they came from and what looked at them?**
 
 Do not hand-carry those magnitudes — they move whenever the corpus or the admitted target set does. Derive them instead:
 
-- **Rail-admitted targets:** `packages/ds-codegen/src/validation/admission-descriptor.ts` is the registry and the sole authority (six today: react, vue, svelte, lit, angular, react-native; `figma` is generate-admitted but rail-excluded).
+- **Rail-admitted targets:** `packages/ds-codegen/src/validation/admission-descriptor.ts` is the registry and the sole authority (<!-- rail-admitted-target-count -->6 today: react, vue, svelte, lit, angular, react-native; `figma` is generate-admitted but rail-excluded).
 - **Corpus size:** the loader, `packages/ds-codegen/src/contracts-fs.ts`, which walks `components/*/<Name>.contract.json`.
 - **Groups and files:** read them off the last emission with
   `jq '{groups: (.groups | length), files: ([.groups[].files[]] | length)}' packages/ds-codegen/.emission-manifest.json`
