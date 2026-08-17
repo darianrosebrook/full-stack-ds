@@ -279,6 +279,7 @@ export class SelectElement extends LitElement {
 
 customElements.define('fsds-select', SelectElement);
 
+
 export class SelectTriggerElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

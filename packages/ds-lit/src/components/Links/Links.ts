@@ -151,6 +151,7 @@ export class LinksElement extends LitElement {
 }
 
 customElements.define('fsds-links', LinksElement);
+
 // @generated:end
 
 // @custom:start trailing

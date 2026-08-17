@@ -24,6 +24,7 @@ import Input from "./Input/Input.figma.json" with { type: "json" };
 import Label from "./Label/Label.figma.json" with { type: "json" };
 import Links from "./Links/Links.figma.json" with { type: "json" };
 import List from "./List/List.figma.json" with { type: "json" };
+import Markdown from "./Markdown/Markdown.figma.json" with { type: "json" };
 import NavList from "./NavList/NavList.figma.json" with { type: "json" };
 import OTP from "./OTP/OTP.figma.json" with { type: "json" };
 import Popover from "./Popover/Popover.figma.json" with { type: "json" };
@@ -75,6 +76,7 @@ export const figmaComponentRegistry = {
   "Label": Label,
   "Links": Links,
   "List": List,
+  "Markdown": Markdown,
   "NavList": NavList,
   "OTP": OTP,
   "Popover": Popover,

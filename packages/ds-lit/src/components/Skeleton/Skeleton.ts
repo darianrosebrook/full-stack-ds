@@ -240,6 +240,7 @@ export class SkeletonElement extends LitElement {
 }
 
 customElements.define('fsds-skeleton', SkeletonElement);
+
 // @generated:end
 
 // @custom:start trailing

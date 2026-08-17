@@ -131,6 +131,7 @@ export class ToggleSwitchElement extends LitElement {
 }
 
 customElements.define('fsds-toggle-switch', ToggleSwitchElement);
+
 // @generated:end
 
 // @custom:start trailing

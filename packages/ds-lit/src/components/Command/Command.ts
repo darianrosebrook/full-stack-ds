@@ -334,6 +334,7 @@ export class CommandElement extends LitElement {
 
 customElements.define('fsds-command', CommandElement);
 
+
 export class CommandListElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

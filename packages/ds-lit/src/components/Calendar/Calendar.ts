@@ -236,6 +236,7 @@ export class CalendarElement extends LitElement {
 
 customElements.define('fsds-calendar', CalendarElement);
 
+
 export class CalendarHeaderElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

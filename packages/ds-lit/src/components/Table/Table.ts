@@ -156,6 +156,7 @@ export class TableElement extends LitElement {
 }
 
 customElements.define('fsds-table', TableElement);
+
 // @generated:end
 
 // @custom:start trailing

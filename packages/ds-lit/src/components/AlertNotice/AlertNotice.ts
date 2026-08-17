@@ -222,6 +222,7 @@ export class AlertNoticeElement extends LitElement {
 
 customElements.define('fsds-alert-notice', AlertNoticeElement);
 
+
 export class AlertNoticeBodyElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

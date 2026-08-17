@@ -1943,6 +1943,12 @@ function validateSlotPropNamespaces(
   }
 }
 
+function countMarkdownTransforms(node: DomNodeIR | undefined): number {
+  if (!node) return 0;
+  const self = isMarkdownTransform(node.content) ? 1 : 0;
+  return self + node.children.reduce((sum, c) => sum + countMarkdownTransforms(c), 0);
+}
+
 function validateDomBindings(
   node: DomNodeIR,
   channels: NormalizedChannelIR[],
@@ -1952,6 +1958,13 @@ function validateDomBindings(
   anatomyDetails: Record<string, ContractPartDetails>,
   componentTypes: Record<string, ContractTypeDef>,
 ): void {
+  if (countMarkdownTransforms(node) > 1) {
+    throw new Error(
+      `[${componentName}] at most one markdown content transform per dom tree ` +
+      `is admitted in v1 — the emitter helper shapes (one renderer family ` +
+      `per file) assume a single transform.`,
+    );
+  }
   const knownChannels = new Set(channels.map((c) => c.name));
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
   const knownProps = new Set(styledProps.map((p) => p.name));

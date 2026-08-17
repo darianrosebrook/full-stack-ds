@@ -107,6 +107,7 @@ export class BreadcrumbsElement extends LitElement {
 
 customElements.define('fsds-breadcrumbs', BreadcrumbsElement);
 
+
 export class BreadcrumbsListElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

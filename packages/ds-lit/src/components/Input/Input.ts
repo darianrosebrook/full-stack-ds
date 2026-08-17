@@ -164,6 +164,7 @@ export class InputElement extends LitElement {
 }
 
 customElements.define('fsds-input', InputElement);
+
 // @generated:end
 
 // @custom:start trailing

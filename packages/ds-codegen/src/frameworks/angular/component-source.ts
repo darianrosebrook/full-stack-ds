@@ -2205,8 +2205,9 @@ function generateDomTreeComponent(ir: ComponentIR): string {
 
 /**
  * FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — Angular lowering of the markdown
- * transform: two standalone companion renderers with ATTRIBUTE selectors
- * (`[fsdsMarkdownMark]` / `[fsdsMarkdownBlock]`), the idiomatic Angular
+ * transform: two standalone companion renderers with element selectors
+ * (`fsds-markdown-mark` / `fsds-markdown-block` — transform-derived, not
+ * component-name lore), the idiomatic Angular
  * shape for mutually recursive template structures in one file. The mark
  * renderer is declared first (no class references); the block renderer
  * imports it by class; recursion inside templates goes through the
@@ -2221,50 +2222,80 @@ function generateAngularMarkdownCompanions(ir: ComponentIR): string[] {
   const m = transform.markParts;
   const mt = transform.markTags;
   const blockClass = (part: string): string => `${prefix}__${part}`;
-  const marksNgFor = `<ng-container fsdsMarkdownMark *ngFor="let mark of block.children" [mark]="mark"></ng-container>`;
-  const childMarksNgFor = `<ng-container fsdsMarkdownMark *ngFor="let child of mark.children" [mark]="child"></ng-container>`;
-  const itemsNgFor = `<ng-container fsdsMarkdownBlock *ngFor="let item of block.items" [block]="item"></ng-container>`;
+  const marksNgFor = `<fsds-markdown-mark *ngFor="let mark of blockChildren" [mark]="mark"></fsds-markdown-mark>`;
+  const childMarksNgFor = `<fsds-markdown-mark *ngFor="let child of markChildren" [mark]="child"></fsds-markdown-mark>`;
+  const itemsNgFor = `<fsds-markdown-block *ngFor="let item of blockItems" [block]="item"></fsds-markdown-block>`;
   return [
     ``,
     `@Component({`,
-    `  selector: "[fsdsMarkdownMark]",`,
+    `  selector: "fsds-markdown-mark",`,
     `  standalone: true,`,
     `  imports: [NgSwitch, NgSwitchCase, NgIf, NgFor],`,
     `  host: { "data-fsds-transform": "markdown-mark" },`,
     `  template: \`<ng-container [ngSwitch]="mark.kind">`,
-    `    <ng-container *ngSwitchCase="'text'">{{ mark.text }}</ng-container>`,
-    `    <${mt.code} *ngSwitchCase="'code'" class="${prefix}__${m.code}" data-mark-kind="code">{{ mark.text }}</${mt.code}>`,
+    `    <ng-container *ngSwitchCase="'text'">{{ markText }}</ng-container>`,
+    `    <${mt.code} *ngSwitchCase="'code'" class="${prefix}__${m.code}" data-mark-kind="code">{{ markText }}</${mt.code}>`,
     `    <${mt.emphasis} *ngSwitchCase="'emphasis'" class="${prefix}__${m.emphasis}" data-mark-kind="emphasis">${childMarksNgFor}</${mt.emphasis}>`,
     `    <${mt.strong} *ngSwitchCase="'strong'" class="${prefix}__${m.strong}" data-mark-kind="strong">${childMarksNgFor}</${mt.strong}>`,
     `    <ng-container *ngSwitchCase="'link'">`,
-    `      <${mt.link} *ngIf="mark.href !== null" class="${prefix}__${m.link}" data-mark-kind="link" [attr.href]="mark.href">${childMarksNgFor}</${mt.link}>`,
-    `      <ng-container *ngIf="mark.href === null">${childMarksNgFor}</ng-container>`,
+    `      <${mt.link} *ngIf="markHref !== null" class="${prefix}__${m.link}" data-mark-kind="link" [attr.href]="markHref">${childMarksNgFor}</${mt.link}>`,
+    `      <ng-container *ngIf="markHref === null">${childMarksNgFor}</ng-container>`,
     `    </ng-container>`,
     `  </ng-container>\`,`,
     `})`,
     `export class MarkdownMarkRendererComponent {`,
     `  @Input() mark!: MarkdownMark;`,
+    `  // ngSwitch does not narrow unions in templates (strict ngc); typed`,
+    `  // getters carry the payload once, centrally.`,
+    `  get markText(): string {`,
+    `    return (this.mark as { text?: string }).text ?? "";`,
+    `  }`,
+    `  get markChildren(): MarkdownMark[] {`,
+    `    return (this.mark as { children?: MarkdownMark[] }).children ?? [];`,
+    `  }`,
+    `  get markHref(): string | null {`,
+    `    return (this.mark as { href?: string | null }).href ?? null;`,
+    `  }`,
     `}`,
     ``,
     `@Component({`,
-    `  selector: "[fsdsMarkdownBlock]",`,
+    `  selector: "fsds-markdown-block",`,
     `  standalone: true,`,
     `  imports: [NgSwitch, NgSwitchCase, NgIf, NgFor, MarkdownMarkRendererComponent],`,
     `  host: { "data-fsds-transform": "markdown-block" },`,
     `  template: \`<ng-container [ngSwitch]="block.kind">`,
-    `    <${bt.heading} *ngSwitchCase="'heading'" class="${blockClass(b.heading)}" data-block-kind="heading" [attr.data-level]="block.level">${marksNgFor}</${bt.heading}>`,
+    `    <${bt.heading} *ngSwitchCase="'heading'" class="${blockClass(b.heading)}" data-block-kind="heading" [attr.data-level]="blockLevel">${marksNgFor}</${bt.heading}>`,
     `    <${bt.paragraph} *ngSwitchCase="'paragraph'" class="${blockClass(b.paragraph)}" data-block-kind="paragraph">${marksNgFor}</${bt.paragraph}>`,
     `    <ng-container *ngSwitchCase="'list'">`,
-    `      <${bt.orderedList} *ngIf="block.ordered" class="${blockClass(b.orderedList)}" data-block-kind="orderedList">${itemsNgFor}</${bt.orderedList}>`,
-    `      <${bt.unorderedList} *ngIf="!block.ordered" class="${blockClass(b.unorderedList)}" data-block-kind="unorderedList">${itemsNgFor}</${bt.unorderedList}>`,
+    `      <${bt.orderedList} *ngIf="blockOrdered" class="${blockClass(b.orderedList)}" data-block-kind="orderedList">${itemsNgFor}</${bt.orderedList}>`,
+    `      <${bt.unorderedList} *ngIf="!blockOrdered" class="${blockClass(b.unorderedList)}" data-block-kind="unorderedList">${itemsNgFor}</${bt.unorderedList}>`,
     `    </ng-container>`,
     `    <${bt.listItem} *ngSwitchCase="'listItem'" class="${blockClass(b.listItem)}" data-block-kind="listItem">${marksNgFor}</${bt.listItem}>`,
-    `    <${bt.codeBlock} *ngSwitchCase="'codeBlock'" class="${blockClass(b.codeBlock)}" data-block-kind="codeBlock" [attr.data-language]="block.language">{{ block.text }}</${bt.codeBlock}>`,
+    `    <${bt.codeBlock} *ngSwitchCase="'codeBlock'" class="${blockClass(b.codeBlock)}" data-block-kind="codeBlock" [attr.data-language]="blockLanguage">{{ blockText }}</${bt.codeBlock}>`,
     `    <${bt.blockquote} *ngSwitchCase="'blockquote'" class="${blockClass(b.blockquote)}" data-block-kind="blockquote">${marksNgFor}</${bt.blockquote}>`,
     `  </ng-container>\`,`,
     `})`,
     `export class MarkdownBlockRendererComponent {`,
     `  @Input() block!: MarkdownBlock;`,
+    `  // Same ngc-narrowing reason as the mark renderer's getters.`,
+    `  get blockText(): string {`,
+    `    return (this.block as { text?: string }).text ?? "";`,
+    `  }`,
+    `  get blockChildren(): MarkdownMark[] {`,
+    `    return (this.block as { children?: MarkdownMark[] }).children ?? [];`,
+    `  }`,
+    `  get blockItems(): MarkdownBlock[] {`,
+    `    return (this.block as { items?: MarkdownBlock[] }).items ?? [];`,
+    `  }`,
+    `  get blockLanguage(): string {`,
+    `    return (this.block as { language?: string }).language ?? "";`,
+    `  }`,
+    `  get blockLevel(): number {`,
+    `    return (this.block as { level?: number }).level ?? 1;`,
+    `  }`,
+    `  get blockOrdered(): boolean {`,
+    `    return (this.block as { ordered?: boolean }).ordered === true;`,
+    `  }`,
     `}`,
   ];
 }
@@ -2657,7 +2688,7 @@ function renderAngularDomNode(
       const transform = node.content;
       const sp = " ".repeat(indent + 2);
       const blocks =
-        `<ng-container fsdsMarkdownBlock *ngFor="let block of markdownBlocks" [block]="block"></ng-container>`;
+        `<fsds-markdown-block *ngFor="let block of markdownBlocks" [block]="block"></fsds-markdown-block>`;
       if (transform.gate !== undefined) {
         const gateExpr = defaultAwareAngularTemplatePropAccessor(
           transform.gateProp ?? transform.gate.prop,

@@ -229,6 +229,7 @@ export class SwitchElement extends LitElement {
 }
 
 customElements.define('fsds-switch', SwitchElement);
+
 // @generated:end
 
 // @custom:start trailing

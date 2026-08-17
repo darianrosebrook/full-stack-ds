@@ -115,6 +115,7 @@ export class StatElement extends LitElement {
 }
 
 customElements.define('fsds-stat', StatElement);
+
 // @generated:end
 
 // @custom:start trailing

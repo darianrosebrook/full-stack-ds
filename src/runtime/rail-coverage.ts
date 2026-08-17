@@ -80,6 +80,13 @@ export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
   { component: "Shuttle", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
   { component: "Walkthrough", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
   { component: "Select", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  // CodeBlock golden token-stream + gate-off facts (config-bus props, but
+  // asserted as the component's default-fact surface — no "non-default"
+  // prop override is named in the rail describe titles).
+  { component: "CodeBlock", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  // Markdown structural + literal-HTML facts (config-bus content prop,
+  // asserted as the default-fact surface like CodeBlock).
+  { component: "Markdown", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
   { component: "Truncate", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
     nonDefault: {
       props: ["lines"],

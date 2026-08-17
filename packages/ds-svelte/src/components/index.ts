@@ -46,6 +46,7 @@ export { default as Input } from "./Input/Input.svelte";
 export { default as Label } from "./Label/Label.svelte";
 export { default as Links } from "./Links/Links.svelte";
 export { default as List } from "./List/List.svelte";
+export { default as Markdown } from "./Markdown/Markdown.svelte";
 export { default as NavList } from "./NavList/NavList.svelte";
 export { default as NavListItem } from "./NavList/NavListItem.svelte";
 export { default as NavListList } from "./NavList/NavListList.svelte";

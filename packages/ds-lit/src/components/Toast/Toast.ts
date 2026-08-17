@@ -237,6 +237,7 @@ export class ToastElement extends LitElement {
 
 customElements.define('fsds-toast', ToastElement);
 
+
 export class ToastItemElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

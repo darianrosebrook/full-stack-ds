@@ -55,7 +55,12 @@ function parseRailSurface(source: string): {
     if (nd) {
       nonDefault.set(component, nd[1]);
     } else {
-      defaultComponents.push(component);
+      // Coverage is a set: several default describes for one component
+      // (e.g. CodeBlock's token-stream + gate-off blocks) still project
+      // one entry.
+      if (!defaultComponents.includes(component)) {
+        defaultComponents.push(component);
+      }
     }
   }
   return { defaultComponents, nonDefault };

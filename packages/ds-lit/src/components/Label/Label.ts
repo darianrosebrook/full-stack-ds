@@ -79,6 +79,7 @@ export class LabelElement extends LitElement {
 }
 
 customElements.define('fsds-label', LabelElement);
+
 // @generated:end
 
 // @custom:start trailing

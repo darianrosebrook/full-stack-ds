@@ -149,6 +149,7 @@ export class CodeBlockElement extends LitElement {
 }
 
 customElements.define('fsds-code-block', CodeBlockElement);
+
 // @generated:end
 
 // @custom:start trailing

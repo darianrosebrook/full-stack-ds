@@ -323,6 +323,7 @@ export class TextElement extends LitElement {
 }
 
 customElements.define('fsds-text', TextElement);
+
 // @generated:end
 
 // @custom:start trailing

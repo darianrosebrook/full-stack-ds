@@ -1,8 +1,8 @@
 {
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
-  "components": 49,
-  "slotsDeclared": 903,
-  "consumed": 789,
+  "components": 50,
+  "slotsDeclared": 906,
+  "consumed": 792,
   "inert": 114,
   "shadowed": 16,
   "dead": 98,
@@ -5268,6 +5268,34 @@
         {
           "slot": "list.spacing.lg",
           "cssVar": "--fsds-list-spacing-lg",
+          "source": "tokens",
+          "status": "consumed"
+        }
+      ]
+    },
+    {
+      "component": "Markdown",
+      "prefix": "markdown",
+      "total": 3,
+      "consumed": 3,
+      "shadowed": 0,
+      "dead": 0,
+      "slots": [
+        {
+          "slot": "markdown.color.foreground.default",
+          "cssVar": "--fsds-markdown-color-foreground-default",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "markdown.typography.fontSize.default",
+          "cssVar": "--fsds-markdown-typography-font-size-default",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "markdown.typography.lineHeight.default",
+          "cssVar": "--fsds-markdown-typography-line-height-default",
           "source": "tokens",
           "status": "consumed"
         }

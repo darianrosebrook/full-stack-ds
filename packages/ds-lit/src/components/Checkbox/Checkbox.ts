@@ -149,6 +149,7 @@ export class CheckboxElement extends LitElement {
 }
 
 customElements.define('fsds-checkbox', CheckboxElement);
+
 // @generated:end
 
 // @custom:start trailing
