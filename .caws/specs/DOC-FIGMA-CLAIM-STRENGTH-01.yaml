@@ -34,3 +34,7 @@ evidence:
     recorded_at: "2026-08-17T21:14:59.084Z"
     command: pnpm exec vitest run packages/ds-figma-plugin/src
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Verified all 8 FIGMA specs closed with zero AC evidence (61 criteria total: 7/12/8/9/9/8/5/3 via caws specs show). Doc states closure is not evidence and corrects the earlier falsified-by-spec-closure wording in place"
+    recorded_at: "2026-08-17T21:15:02.878Z"
