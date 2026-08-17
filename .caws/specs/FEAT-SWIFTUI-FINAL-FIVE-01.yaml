@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-FINAL-FIVE-01
 title: 'Final five: Shuttle, Accordion, Tabs, Calendar, Walkthrough (41→49) + parity diff fixture'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Full corpus admitted: 49 of 49 emit and compile; react-vs-swiftui parity fixture reports zero divergence; smoke harness at 49'
 created_at: '2026-08-17T05:34:33.387Z'
-updated_at: '2026-08-17T05:50:43.486Z'
+updated_at: '2026-08-17T05:52:29.487Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui (five class branches)'
