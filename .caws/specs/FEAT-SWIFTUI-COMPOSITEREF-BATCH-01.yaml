@@ -44,3 +44,8 @@ contracts:
   - name: 'swiftui-compositeref'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "TextField.swift: <LabelRegion/DescriptionRegion/ErrorRegion> generics, @StateObject ControllableValue<String>, SwiftUI.TextField(\"\", text: value.binding()); compiled 'Build complete!'"
+    recorded_at: "2026-08-17T05:32:09.712Z"
