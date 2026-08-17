@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import { tokenizeCode } from "../../primitives/highlight/tokenize.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,10 +19,11 @@ type CodeBlockLanguage = "bash" | "css" | "html" | "javascript" | "json" | "jsx"
 interface Props {
   code: string;
   language: CodeBlockLanguage;
+  highlight?: boolean;
   class?: string;
 }
 
-let { code, language, class: className }: Props = $props();
+let { code, language, highlight = true, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -40,5 +41,5 @@ const classes = $derived(
 </script>
 
 <pre class={classes} data-language={language} data-fsds-component="code-block">
-  <code class={'code-block__code'} spellcheck="false" data-language={language}>{code}</code>
+  <code class={'code-block__code'} spellcheck="false" data-language={language}>{#if highlight}{#each tokenizeCode(code, language) as token, tokenIndex}<span class="code-block__token" data-token={token.kind}>{token.text}</span>{/each}{:else}{code}{/if}</code>
 </pre>

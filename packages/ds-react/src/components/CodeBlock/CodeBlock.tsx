@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { tokenizeCode } from "../../primitives/highlight/tokenize";
 import "./CodeBlock.css";
 // @generated:end
 
@@ -10,6 +11,8 @@ import "./CodeBlock.css";
 
 // @generated:start types
 export type CodeBlockLanguage = "bash" | "css" | "html" | "javascript" | "json" | "jsx" | "markdown" | "plaintext" | "tsx" | "typescript";
+
+export type CodeBlockTokenType = "comment" | "definition" | "keyword" | "plain" | "property" | "punctuation" | "static" | "string" | "tag";
 // @generated:end
 
 // @custom:start types
@@ -20,6 +23,7 @@ export type CodeBlockLanguage = "bash" | "css" | "html" | "javascript" | "json" 
 export interface CodeBlockProps {
   code: string;
   language: CodeBlockLanguage;
+  highlight?: boolean;
   className?: string;
   "data-testid"?: string;
 }
@@ -35,6 +39,7 @@ export function CodeBlock({
   "data-testid": testId,
   code,
   language,
+  highlight = true,
   ...rest
 }: CodeBlockProps) {
   const classNames = [
@@ -47,7 +52,7 @@ export function CodeBlock({
   return (
   <Stack layout="native" as="pre" className={`${classNames}`} data-language={language} data-testid={testId} data-fsds-component="code-block" {...rest}>
     <code className="code-block__code" spellCheck="false" data-language={language}>
-      {code}
+      {highlight ? (tokenizeCode(code, language).map((token, tokenIndex) => (<span key={tokenIndex} className="code-block__token" data-token={token.kind}>{token.text}</span>))) : (code)}
     </code>
   </Stack>
   );

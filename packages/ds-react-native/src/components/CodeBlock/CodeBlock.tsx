@@ -8,12 +8,14 @@ import { createCodeBlockStyles } from "./CodeBlock.styles";
 
 // @generated:start types
 export type CodeBlockLanguage = "bash" | "css" | "html" | "javascript" | "json" | "jsx" | "markdown" | "plaintext" | "tsx" | "typescript";
+export type CodeBlockTokenType = "comment" | "definition" | "keyword" | "plain" | "property" | "punctuation" | "static" | "string" | "tag";
 // @generated:end
 
 // @generated:start props
 export interface CodeBlockProps {
   code: string;
   language: CodeBlockLanguage;
+  highlight?: boolean;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;

@@ -128,6 +128,60 @@ export const codeBlockTokenScopes = {
       ref: "semantic.typography.line.height.body",
       fallback: "1.5",
     },
+    "code-block.token.color.plain": {
+      name: "code-block.token.color.plain",
+      cssVar: "--fsds-code-block-token-color-plain",
+      ref: "semantic.color.foreground.syntax.plain",
+      fallback: "#141414",
+    },
+    "code-block.token.color.comment": {
+      name: "code-block.token.color.comment",
+      cssVar: "--fsds-code-block-token-color-comment",
+      ref: "semantic.color.foreground.syntax.comment.color",
+      fallback: "#727272",
+    },
+    "code-block.token.color.keyword": {
+      name: "code-block.token.color.keyword",
+      cssVar: "--fsds-code-block-token-color-keyword",
+      ref: "semantic.color.foreground.syntax.keyword",
+      fallback: "#0566fe",
+    },
+    "code-block.token.color.definition": {
+      name: "code-block.token.color.definition",
+      cssVar: "--fsds-code-block-token-color-definition",
+      ref: "semantic.color.foreground.syntax.definition",
+      fallback: "#d92d2e",
+    },
+    "code-block.token.color.punctuation": {
+      name: "code-block.token.color.punctuation",
+      cssVar: "--fsds-code-block-token-color-punctuation",
+      ref: "semantic.color.foreground.syntax.punctuation",
+      fallback: "#0566fe",
+    },
+    "code-block.token.color.property": {
+      name: "code-block.token.color.property",
+      cssVar: "--fsds-code-block-token-color-property",
+      ref: "semantic.color.foreground.syntax.property",
+      fallback: "#ae5d00",
+    },
+    "code-block.token.color.static": {
+      name: "code-block.token.color.static",
+      cssVar: "--fsds-code-block-token-color-static",
+      ref: "semantic.color.foreground.syntax.static",
+      fallback: "#d92d2e",
+    },
+    "code-block.token.color.string": {
+      name: "code-block.token.color.string",
+      cssVar: "--fsds-code-block-token-color-string",
+      ref: "semantic.color.foreground.syntax.string",
+      fallback: "#900909",
+    },
+    "code-block.token.color.tag": {
+      name: "code-block.token.color.tag",
+      cssVar: "--fsds-code-block-token-color-tag",
+      ref: "semantic.color.foreground.syntax.tag",
+      fallback: "#d92d2e",
+    },
   },
 } satisfies ComponentTokenScopes;
 
