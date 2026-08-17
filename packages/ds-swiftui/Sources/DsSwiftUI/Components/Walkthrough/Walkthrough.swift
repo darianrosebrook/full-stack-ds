@@ -64,6 +64,7 @@ public struct Walkthrough<TitleRegion: View, DescriptionRegion: View>: View {
         WalkthroughTokens.scopes
     }
     @StateObject private var step: ControllableValue<Double>
+    private let stepCount: Int
     private let onComplete: (() -> Void)?
     private let onSkip: (() -> Void)?
     private let title: TitleRegion
@@ -72,6 +73,7 @@ public struct Walkthrough<TitleRegion: View, DescriptionRegion: View>: View {
 
     public init(
         step: Double = 0,
+        stepCount: Int = 3,
         onStepChange: ((Double) -> Void)? = nil,
         onComplete: (() -> Void)? = nil,
         onSkip: (() -> Void)? = nil,
@@ -79,6 +81,7 @@ public struct Walkthrough<TitleRegion: View, DescriptionRegion: View>: View {
         @ViewBuilder description: () -> DescriptionRegion = { EmptyView() }
     ) {
         self._step = StateObject(wrappedValue: ControllableValue(controlled: nil, defaultValue: step, onChange: onStepChange))
+        self.stepCount = stepCount
         self.onComplete = onComplete
         self.onSkip = onSkip
         self.title = title()
@@ -114,11 +117,11 @@ public struct Walkthrough<TitleRegion: View, DescriptionRegion: View>: View {
                 Button("Skip") { onSkip?() }
                     .buttonStyle(.plain)
                 Spacer()
-                Button("Back") { step.set(max(0, step.value - 1)) }
+                Button("Back") { if step.value > 0 { step.set(step.value - 1) } }
                     .buttonStyle(.plain)
                 Button("Next") {
                     step.set(step.value + 1)
-                    if step.value >= 1 { onComplete?() }
+                    if Int(step.value) >= stepCount - 1 { onComplete?() }
                 }
                 .buttonStyle(.borderedProminent)
             }

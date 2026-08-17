@@ -605,6 +605,21 @@ function emitCoachmarkSurface(ir: ComponentIR): string {
     );
   }
   const hasOnComplete = hasConventionalPropEmit(ir, "onComplete");
+  // Step count from the contract's authored steps default (array length);
+  // completion is reaching the LAST index, not a hardcoded threshold.
+  const stepsProp = ir.styledProps.find((p) => p.safeName === "steps");
+  const authoredStepCount = Array.isArray(stepsProp?.defaultExpr)
+    ? (stepsProp!.defaultExpr as unknown[]).length
+    : typeof stepsProp?.defaultExpr === "string"
+      ? (() => {
+          try {
+            const parsed = JSON.parse(stepsProp!.defaultExpr as string) as unknown;
+            return Array.isArray(parsed) ? parsed.length : 3;
+          } catch {
+            return 3;
+          }
+        })()
+      : 3;
   const hasOnSkip = hasConventionalPropEmit(ir, "onSkip");
 
   const lines: string[] = [];
@@ -627,7 +642,8 @@ function emitCoachmarkSurface(ir: ComponentIR): string {
   lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
   lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
   lines.push(`${INDENT}}`);
-  lines.push(`${INDENT}@StateObject private var step: ControllableValue<Double>`);
+  lines.push(`${INDENT}@StateObject private var step: ControllableValue<Double>`)
+  lines.push(`${INDENT}private let stepCount: Int`);
   if (hasOnComplete) lines.push(`${INDENT}private let onComplete: (() -> Void)?`);
   if (hasOnSkip) lines.push(`${INDENT}private let onSkip: (() -> Void)?`);
   for (const slot of slots) {
@@ -638,6 +654,7 @@ function emitCoachmarkSurface(ir: ComponentIR): string {
   lines.push(`${INDENT}public init(`);
   const params = [
     "step: Double = 0,",
+    `stepCount: Int = ${authoredStepCount},`,
     "onStepChange: ((Double) -> Void)? = nil,",
   ];
   if (hasOnComplete) params.push("onComplete: (() -> Void)? = nil,");
@@ -648,7 +665,8 @@ function emitCoachmarkSurface(ir: ComponentIR): string {
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
-  lines.push(`${INDENT}${INDENT}self._step = StateObject(wrappedValue: ControllableValue(controlled: nil, defaultValue: step, onChange: onStepChange))`);
+  lines.push(`${INDENT}${INDENT}self._step = StateObject(wrappedValue: ControllableValue(controlled: nil, defaultValue: step, onChange: onStepChange))`)
+  lines.push(`${INDENT}${INDENT}self.stepCount = stepCount`);
   if (hasOnComplete) lines.push(`${INDENT}${INDENT}self.onComplete = onComplete`);
   if (hasOnSkip) lines.push(`${INDENT}${INDENT}self.onSkip = onSkip`);
   for (const slot of slots) lines.push(`${INDENT}${INDENT}self.${slot} = ${slot}()`);
@@ -686,11 +704,11 @@ function emitCoachmarkSurface(ir: ComponentIR): string {
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
   }
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Spacer()`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button("Back") { step.set(max(0, step.value - 1)) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button("Back") { if step.value > 0 { step.set(step.value - 1) } }`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button("Next") {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}step.set(step.value + 1)`);
-  if (hasOnComplete) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}if step.value >= 1 { onComplete?() }`);
+  if (hasOnComplete) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}if Int(step.value) >= stepCount - 1 { onComplete?() }`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.borderedProminent)`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
