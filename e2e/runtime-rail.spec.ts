@@ -47,6 +47,12 @@
  *               replacing the removed `daysShown` count). No default `days`, so
  *               the default preview renders ZERO cells; injecting an N-element
  *               `days` array renders N `[data-calendar-index]` nodes 0..N-1.
+ *   CodeBlock — highlight content transform (RUNTIME-RAIL-CODEBLOCK-
+ *               HIGHLIGHT-01): with code+language through the config bus,
+ *               the rendered `[data-token]` kind sequence equals the frozen
+ *               golden typescript stream and the span text reassembles the
+ *               source; with `highlight=false`, zero token spans render and
+ *               the code element round-trips the source as a plain run.
  *
  * Non-default props ARE now asserted for all five frameworks on ShowMore (maxLines),
  * Progress (value), and Truncate (lines): the preview route loads the default
@@ -66,6 +72,8 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 type Framework = "react" | "vue" | "svelte" | "lit" | "angular";
 
@@ -832,6 +840,115 @@ test.describe("Runtime rail — Truncate non-default lines", () => {
     });
   }
 });
+
+// ---------------------------------------------------------------------
+
+test.describe("Runtime rail — CodeBlock highlight (golden token stream)", () => {
+  // RUNTIME-RAIL-CODEBLOCK-HIGHLIGHT-01. The expected kind sequence is
+  // loaded from the frozen golden fixtures — the same cross-framework
+  // identity baseline the per-package tokenizer tests assert against —
+  // so this rail fact and the unit rails cannot drift apart.
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
+    test(`${framework}: token spans match the frozen golden typescript stream`, async ({ page }) => {
+      const golden = loadGoldenTypescriptCase();
+      await goto(page, framework, "CodeBlock", "code-block", {
+        code: golden.code,
+        language: golden.language,
+      });
+      const facts = await readCodeBlockTokenFacts(page, framework);
+      expect(facts.spanCount).toBe(golden.kinds.length);
+      expect(facts.kinds).toEqual(golden.kinds);
+      // Text-only span children reassemble the source exactly — the
+      // lossless round-trip invariant at runtime.
+      expect(facts.spanText).toBe(golden.code);
+    });
+  }
+});
+
+test.describe("Runtime rail — CodeBlock gate-off plain run", () => {
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
+    test(`${framework}: highlight=false degrades to a single plain text run`, async ({ page }) => {
+      const golden = loadGoldenTypescriptCase();
+      await goto(page, framework, "CodeBlock", "code-block", {
+        code: golden.code,
+        language: golden.language,
+        highlight: false,
+      });
+      const facts = await readCodeBlockTokenFacts(page, framework);
+      expect(facts.spanCount).toBe(0);
+      // Vue/Angular pretty-print their templates around the
+      // interpolation; the round-trip claim is the source characters,
+      // hence trim().
+      expect(facts.plainText.trim()).toBe(golden.code);
+    });
+  }
+});
+
+// ---------------------------------------------------------------------
+
+/**
+ * RUNTIME-RAIL-CODEBLOCK-HIGHLIGHT-01: the frozen golden typescript case
+ * from the canonical tokenizer's fixture file — the single identity
+ * baseline shared with the per-package tokenizer tests.
+ */
+function loadGoldenTypescriptCase(): {
+  language: string;
+  code: string;
+  kinds: string[];
+} {
+  const fixture = JSON.parse(
+    readFileSync(
+      join(
+        process.cwd(),
+        "packages",
+        "ds-codegen",
+        "src",
+        "highlight",
+        "golden-fixtures.json",
+      ),
+      "utf8",
+    ),
+  ) as {
+    cases: { language: string; code: string; expected: { kind: string; text: string }[] }[];
+  };
+  const ts = fixture.cases.find((c) => c.language === "typescript");
+  if (!ts) throw new Error("golden fixtures: typescript case missing");
+  return { language: ts.language, code: ts.code, kinds: ts.expected.map((t) => t.kind) };
+}
+
+/**
+ * Read CodeBlock's token-span facts from the mounted preview: the
+ * `data-token` kind sequence, the concatenated span text, the span
+ * count, and the whole `code` element's text (the gate-off plain run).
+ * Lit renders into a shadow root — same accessor pattern as
+ * `readInlineStyle`.
+ */
+async function readCodeBlockTokenFacts(
+  page: Page,
+  framework: Framework,
+): Promise<{
+  kinds: string[];
+  spanText: string;
+  spanCount: number;
+  plainText: string;
+}> {
+  return page.evaluate(
+    ({ host, isLit }) => {
+      const root: Document | ShadowRoot | null = isLit
+        ? (document.querySelector(host) as HTMLElement | null)?.shadowRoot ?? null
+        : document;
+      const code = root?.querySelector("code") ?? null;
+      const spans = code ? Array.from(code.querySelectorAll("[data-token]")) : [];
+      return {
+        kinds: spans.map((s) => s.getAttribute("data-token") ?? ""),
+        spanText: spans.map((s) => s.textContent ?? "").join(""),
+        spanCount: spans.length,
+        plainText: code?.textContent ?? "",
+      };
+    },
+    { host: `fsds-${kebab("CodeBlock")}`, isLit: framework === "lit" },
+  );
+}
 
 test.describe("Runtime rail — screenshots", () => {
   // Visual snapshots are intentionally narrow: one component × one
