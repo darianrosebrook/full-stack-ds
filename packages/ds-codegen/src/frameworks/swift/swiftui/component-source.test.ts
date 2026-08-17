@@ -445,3 +445,20 @@ describe("generateSwiftUIComponentSource — icon-decorated content (Alert, Badg
     expect(() => emit("Chip")).toThrow(/no emission class matches/);
   });
 });
+
+describe("generateSwiftUIComponentSource — count-iterated field group (OTP)", () => {
+  it("distributes the string channel over N fields with setCharAt semantics", () => {
+    const contract = loadContract("OTP") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const source = generateSwiftUIComponentSource(buildComponentIR(contract));
+    expect(source).toContain("public struct OTP: View {");
+    expect(source).toContain("@StateObject private var value: ControllableValue<String>");
+    expect(source).toContain("ForEach(0..<length");
+    expect(source).toContain("setCharacter($0, at: index)");
+    expect(source).toContain("payload[payload.count - 1]");
+    expect(source).toContain("onComplete?(next)");
+    expect(source).not.toContain("readOnly:");
+    expect(source).not.toContain("mode:");
+  });
+});
