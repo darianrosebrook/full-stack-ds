@@ -70,3 +70,7 @@ evidence:
     status: pass
     evidence_ref: "gradle :library:compileKotlin and lane compileKotlin both BUILD SUCCESSFUL exit 0; generate:check 49/49; pnpm test 2086/2086; git status 0-dirty after commits"
     recorded_at: "2026-08-17T05:22:54.547Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "snapshot row 46 theme-runtime sentence (merged with concurrent edits); lane README findings 2-3 resolved-by entries + reserved-rung note (mode/brand/density, per-part scopes)"
+    recorded_at: "2026-08-17T05:22:55.422Z"
