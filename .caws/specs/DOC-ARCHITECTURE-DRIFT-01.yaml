@@ -1,0 +1,35 @@
+id: DOC-ARCHITECTURE-DRIFT-01
+title: 'Reconcile architecture docs that under-claim shipped work'
+risk_tier: 3
+mode: doc
+lifecycle_state: active
+created_at: '2026-08-17T18:52:31.787Z'
+updated_at: '2026-08-17T18:52:31.787Z'
+blast_radius:
+  modules:
+    - 'architecture docs'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture'
+    - 'packages/ds-tokens/build/core/index.ts'
+  out: []
+invariants:
+  - 'No architecture doc labels an implemented surface as paper, sketch, or future work'
+  - 'No architecture doc cites a contract file that does not exist in the corpus'
+acceptance:
+  - id: A1
+    given: 'a reader looks up SurfaceIR or the morphology axis'
+    when: 'they read the architecture doc'
+    then: 'it says implemented and matches the real shape in code'
+  - id: A2
+    given: 'a reader follows a contract filename cited in presence-surfaces.md'
+    when: 'they look for it in the corpus'
+    then: 'every cited filename exists or is marked illustrative'
+  - id: A3
+    given: 'a reader reads a count in an architecture doc'
+    when: 'they compare it to the live source'
+    then: 'it matches or is replaced by a gated marker'
+non_functional: {}
+contracts: []
