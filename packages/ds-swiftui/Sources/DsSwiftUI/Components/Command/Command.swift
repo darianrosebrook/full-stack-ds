@@ -105,7 +105,7 @@ public struct Command<List: View, Group: View, Item: View>: View {
     @ViewBuilder
     private var panel: some View {
         VStack(spacing: gap) {
-            TextField(
+            SwiftUI.TextField(
                 "",
                 text: Binding(
                     get: { search.value },
