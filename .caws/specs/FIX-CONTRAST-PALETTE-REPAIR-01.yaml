@@ -51,3 +51,8 @@ contracts:
   - name: 'component-contrast-ledger'
     type: behavior
     path: 'packages/ds-codegen/src/validation/component-contrast-known-gaps.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "generate:check in the palette-repair worktree: 0 failing pairs for CodeBlock (all nine token kinds pass AA both themes: light steps ~6:1, dark steps ~5:1 on background.secondary) and all nine ledger entries fired the stale ratchet ('no longer reproduces') — removals were forced by the gate, not manual"
+    recorded_at: "2026-08-17T18:51:45.689Z"
