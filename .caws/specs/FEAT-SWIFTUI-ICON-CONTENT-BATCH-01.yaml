@@ -45,3 +45,9 @@ contracts:
   - name: 'swiftui-icon-content'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
+evidence:
+  - criterion_id: A1
+    status: waived
+    evidence_ref: "Corpus facts differed from the plan: Alert/Badge icon props are ReactNode (consumer regions emitted and compiling via swift build); Status deferred — no icon prop, state-driven glyph needs a status-to-glyph intent table (recorded follow-up); Chip excluded by the component-instance rule (test-pinned fail-loud)"
+    waiver_reason: "Corpus facts differed from the plan: Alert/Badge icon props are ReactNode (consumer regions emitted and compiling via swift build); Status deferred — no icon prop, state-driven glyph needs a status-to-glyph intent table (recorded follow-up); Chip excluded by the component-instance rule (test-pinned fail-loud)"
+    recorded_at: "2026-08-17T04:15:51.304Z"
