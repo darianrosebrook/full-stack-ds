@@ -44,3 +44,7 @@ evidence:
     status: pass
     evidence_ref: "gate-off facts: highlight=false via the fsds:config bus renders zero [data-token] spans in all five frameworks and the code element round-trips the source (trimmed for Vue/Angular template whitespace)"
     recorded_at: "2026-08-17T18:59:32.918Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run e2e:rail exit 0 (84 passed, 1 skipped screenshot baseline); assertions are OS-agnostic DOM facts; snapshot content-transform row upgraded to runtime-proven citing e2e/runtime-rail.spec.ts"
+    recorded_at: "2026-08-17T18:59:33.892Z"
