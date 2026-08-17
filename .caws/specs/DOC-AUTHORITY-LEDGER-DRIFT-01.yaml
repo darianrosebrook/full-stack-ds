@@ -34,3 +34,10 @@ acceptance:
     then: 'the doc''s numbers and seam-status match the script output'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: snapshot header now scopes the c5cda2c9 full-sweep claim to that sweep only and directs readers to per-row evidence; git log --oneline c5cda2c9..HEAD -- docs/current-implementation-snapshot.md shows 61 commits of row edits the old header wrongly vouched for
+    recorded_at: "2026-08-17T17:03:23.083Z"
+    command: git log --oneline c5cda2c9..HEAD -- docs/current-implementation-snapshot.md
+    exit_code: 0
