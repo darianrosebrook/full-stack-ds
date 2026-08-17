@@ -140,6 +140,14 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isCountIteratedFieldGroup(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitCountFieldGroup(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (ir.root.effectiveRole === "progressbar") {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -1000,6 +1008,152 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
     lines.push(`${INDENT}${INDENT}${INDENT}.overlay(RoundedRectangle(cornerRadius: ${radiusExpr}, style: .continuous).stroke(borderColor, lineWidth: borderWidth))`);
   }
   if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * The count-iterated field group: a passive root whose single string
+ * channel feeds N single-character inputs (OTP). The iteration fact
+ * (kind=count, source=prop) drives ForEach over field indices; the
+ * channel rides the ControllableValue substrate with setCharAt
+ * distribution (last character of a multi-char payload wins) and
+ * onComplete at length.
+ */
+function isCountIteratedFieldGroup(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div") return false;
+  const stringChannels = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "string",
+  );
+  if (stringChannels.length !== 1) return false;
+  if (ir.behavior.normalizedChannels.length !== 1) return false;
+  let hasCountField = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    const iteration = (node as { iteration?: { kind?: string } }).iteration;
+    if (node.tag === "input" && iteration?.kind === "count") hasCountField = true;
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  return hasCountField;
+}
+
+function emitCountFieldGroup(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const hasLength = hasConventionalProp(ir, "length");
+  const lengthDefault =
+    ir.styledProps.find((p) => p.safeName === "length")?.defaultExpr ?? "6";
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+  const hasOnComplete = hasConventionalProp(ir, "onComplete");
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the count-iterated field-group path: the string ` +
+      `channel distributes over N single-character fields (setCharAt ` +
+      `semantics — the last character of a multi-char payload wins); ` +
+      `onComplete fires when every field is filled.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}@StateObject private var value: ControllableValue<String>`);
+  if (hasLength) lines.push(`${INDENT}private let length: Int`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  if (hasOnComplete) lines.push(`${INDENT}private let onComplete: ((String) -> Void)?`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [
+    "value: Binding<String>? = nil,",
+    'defaultValue: String = "",',
+    "onChange: ((String) -> Void)? = nil,",
+  ];
+  if (hasLength) params.push(`length: Int = ${lengthDefault.replace(/\"/g, '"')},`);
+  if (hasDisabled) params.push("disabled: Bool = false,");
+  if (hasOnComplete) params.push("onComplete: ((String) -> Void)? = nil");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._value = StateObject(wrappedValue: ControllableValue(controlled: value, defaultValue: defaultValue, onChange: onChange))`);
+  if (hasLength) lines.push(`${INDENT}${INDENT}self.length = length`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  if (hasOnComplete) lines.push(`${INDENT}${INDENT}self.onComplete = onComplete`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func character(at index: Int) -> String {`);
+  lines.push(`${INDENT}${INDENT}guard index < value.value.count else { return "" }`);
+  lines.push(`${INDENT}${INDENT}return String(Array(value.value)[index])`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}/// setCharAt: write the payload's last character at the index, `);
+  lines.push(`${INDENT}/// padding with spaces so the index always exists.`);
+  lines.push(`${INDENT}private func setCharacter(_ raw: String, at index: Int) {`);
+  lines.push(`${INDENT}${INDENT}var chars = Array(value.value.padding(toLength: length${hasLength ? "" : " ?? 6"}, withPad: " ", startingAt: 0))`);
+  lines.push(`${INDENT}${INDENT}guard index < chars.count else { return }`);
+  lines.push(`${INDENT}${INDENT}let payload = raw.count > 0 ? Array(raw) : [" "]`);
+  lines.push(`${INDENT}${INDENT}chars[index] = payload[payload.count - 1]`);
+  lines.push(`${INDENT}${INDENT}let next = String(chars).trimmingCharacters(in: .whitespaces)`);
+  lines.push(`${INDENT}${INDENT}value.set(next)`);
+  if (hasOnComplete) {
+    lines.push(`${INDENT}${INDENT}if next.count == length {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}onComplete?(next)`);
+    lines.push(`${INDENT}${INDENT}}`);
+  }
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "borderWidth",
+        "radius", "blockPadding", "inlinePadding", "gap", "minHeight",
+      ]),
+    );
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}HStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}ForEach(0..<length, id: \\.self) { index in`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}TextField("", text: Binding(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { character(at: index) },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { setCharacter($0, at: index) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}))`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.frame(width: 32)`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.disabled(disabled)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");

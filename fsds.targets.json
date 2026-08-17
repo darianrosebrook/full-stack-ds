@@ -72,7 +72,8 @@
         "Toast",
         "Select",
         "Alert",
-        "Badge"
+        "Badge",
+        "OTP"
       ]
     },
     {
