@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "Truncate/ShowMore.swift: @StateObject expanded ControllableValue<Bool>, lineLimit(expanded.value ? nil : lines/maxLines), toggle Button; compiled"
     recorded_at: "2026-08-17T05:15:36.854Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "Popover.swift emitted (tooltip minus hover — 3-line splice verified by compile); Skeleton.swift chrome-only box; AlertNotice.swift admitted; ComponentSmokeTests.swift: 39-factory table + completeness assertion, 'Executed 25 tests, with 0 failures' via swift test; full gates: typecheck 0, rail 0, pnpm test 2086/2086, frameworks 72"
+    recorded_at: "2026-08-17T05:15:37.745Z"
