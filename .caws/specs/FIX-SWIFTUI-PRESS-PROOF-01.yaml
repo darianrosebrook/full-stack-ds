@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: swift-press-proof
 created_at: '2026-08-17T06:08:32.438Z'
-updated_at: '2026-08-17T06:08:32.438Z'
+updated_at: '2026-08-17T14:02:41.079Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Tests/PressProofHarness (new executable target + main.swift)'
@@ -16,6 +16,7 @@ scope:
   in:
     - 'packages/ds-swiftui'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-codegen
   out: []
 invariants:
   - 'The harness must deliver real OS mouse events (CGEvent) into a real window — not invoke callbacks, not call AXPress, not touch the emitted views'' internals; the proof is the OS event → SwiftUI Button → onTap chain.'
