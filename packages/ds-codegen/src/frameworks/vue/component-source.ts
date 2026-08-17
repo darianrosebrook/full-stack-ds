@@ -35,7 +35,8 @@ import {
   canonicalTsType,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  contentBindingOrTransformSource,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1603,7 +1604,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (collectContentTransforms(ir.dom).length > 0) {
+  if (collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     importLines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
     );
@@ -2080,7 +2081,7 @@ function renderVueDomNode(
   // canonical inner-content binding. Lower via the same Vue
   // interpolation path the legacy textContent uses.
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       // FEAT-CODEBLOCK-HIGHLIGHT-01: one span per token via v-for over the
       // shared pure tokenizer; the gate prop (when declared) degrades to a
       // single plain interpolation of the source binding.
@@ -2109,7 +2110,10 @@ function renderVueDomNode(
         textChildren.push(span);
       }
     } else {
-      const interpolated = renderVueTextContent(node.content, ctx);
+      const interpolated = renderVueTextContent(
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
       if (interpolated !== null) textChildren.push(interpolated);
     }
   }

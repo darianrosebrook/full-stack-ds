@@ -36,7 +36,8 @@ import {
   canonicalTsType,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  contentBindingOrTransformSource,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1435,7 +1436,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (collectContentTransforms(ir.dom).length > 0) {
+  if (collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     importLines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
     );
@@ -1873,7 +1874,7 @@ function renderSvelteDomNode(
   // canonical inner-content binding. Surface it through the same
   // textContentExpr slot the legacy textContent path uses.
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       // FEAT-CODEBLOCK-HIGHLIGHT-01: one span per token via {#each} over the
       // shared pure tokenizer; the gate prop (when declared) degrades to a
       // single plain text run of the source binding.
@@ -1901,7 +1902,10 @@ function renderSvelteDomNode(
         textContentExpr = each;
       }
     } else {
-      textContentExpr = renderSvelteTextChildExpression(node.content, ctx);
+      textContentExpr = renderSvelteTextChildExpression(
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
     }
   }
 

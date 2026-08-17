@@ -45,7 +45,8 @@ import {
   channelUpdateMethodName,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  contentBindingOrTransformSource,
 } from "../../ir.js";
 import {
   emitNonReactTypeAliases,
@@ -1301,7 +1302,7 @@ function treeUsesNgIf(node: DomNodeIR): boolean {
   if (node.iconGlyph) return true;
   // FEAT-CODEBLOCK-HIGHLIGHT-01: a gated content transform emits an
   // `*ngIf` pair (tokens vs plain source degradation).
-  if (isContentTransform(node.content) && node.content.gate !== undefined) {
+  if (isHighlightTransform(node.content) && node.content.gate !== undefined) {
     return true;
   }
   return node.children.some(treeUsesNgIf);
@@ -1317,7 +1318,7 @@ function treeUsesNgIf(node: DomNodeIR): boolean {
 function treeUsesNgFor(node: DomNodeIR): boolean {
   if (node.iteration) return true;
   if (node.iconGlyph) return true;
-  if (isContentTransform(node.content)) return true;
+  if (isHighlightTransform(node.content)) return true;
   return node.children.some(treeUsesNgFor);
 }
 
@@ -1465,7 +1466,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (ir.dom && collectContentTransforms(ir.dom).length > 0) {
+  if (ir.dom && collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     lines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
     );
@@ -1632,9 +1633,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const contentTransformGetters = new Map<DomNodeIR, string>();
   const contentTransformGetterLines: string[] = [];
   {
-    const transforms = collectContentTransforms(ir.dom);
+    const transforms = collectContentTransforms(ir.dom).filter(
+      (t): t is Extract<typeof t, { transform: "highlight" }> => t.transform === "highlight",
+    );
     const collectNodes = (node: DomNodeIR): void => {
-      if (isContentTransform(node.content)) {
+      if (isHighlightTransform(node.content)) {
         const transform = node.content;
         const index = transforms.indexOf(transform);
         const getterName =
@@ -2515,7 +2518,7 @@ function renderAngularDomNode(
   // degrades to a single plain interpolation of the source binding.
   const contentLines: string[] = [];
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       const transform = node.content;
       const sp = " ".repeat(indent + 2);
       const tokenGetter = ctx.contentTransformGetters?.get(node);
@@ -2550,7 +2553,10 @@ function renderAngularDomNode(
         contentLines.push(`${sp}${tokenSpan}`);
       }
     } else {
-      const contentExpr = renderAngularBindingValue(node.content, ctx);
+      const contentExpr = renderAngularBindingValue(
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
       if (contentExpr !== null) {
         contentLines.push(`${" ".repeat(indent + 2)}{{ ${contentExpr} }}`);
       }

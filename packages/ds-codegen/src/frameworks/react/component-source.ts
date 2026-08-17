@@ -29,7 +29,8 @@ import {
   nativeTableAttrsFor,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  contentBindingOrTransformSource,
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
@@ -229,7 +230,7 @@ export function generateReactComponentSource(
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (collectContentTransforms(ir.dom).length > 0) {
+  if (collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     importLines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize";`,
     );
@@ -2401,7 +2402,7 @@ function renderReactDomNode(
   // backward compatibility until parseDomNode drops the dual-pathway
   // retention.
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       // FEAT-CODEBLOCK-HIGHLIGHT-01: the content is produced by the shared
       // pure tokenizer — one span per token carrying the tokenPart class and
       // a data-token kind attribute, text children only. The gate prop (when
@@ -2426,7 +2427,11 @@ function renderReactDomNode(
         textChildren.push(`{${tokenMap}}`);
       }
     } else {
-      const contentExpr = renderReactBinding("textContent", node.content, ctx);
+      const contentExpr = renderReactBinding(
+        "textContent",
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
       if (contentExpr !== null) {
         textChildren.push(`{${contentExpr}}`);
       }

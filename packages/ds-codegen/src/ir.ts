@@ -478,7 +478,7 @@ export interface IconGlyphIR {
  * transform requires extending the contract schema's closed set, this IR
  * type, and every emitter's lowering.
  */
-export interface ContentTransformIR {
+export interface HighlightTransformIR {
   /** Transform name; closed set (schema-enforced). */
   transform: "highlight";
   /** Always `{ kind: "prop" }`; the string prop carrying the literal source text. */
@@ -500,16 +500,119 @@ export interface ContentTransformIR {
   tokenPart: string;
 }
 
-/** Type guard separating the transform fact from a plain content binding. */
+/**
+ * Markdown content-transform fact (FEAT-MARKDOWN-CONTENT-TRANSFORM-01).
+ * The node's content is the STRUCTURAL parse of the markdown source prop:
+ * block elements and inline marks realized from the anatomy parts named in
+ * `blockParts`/`markParts`. Closed vocabularies — every kind maps to a
+ * declared part whose tag matches the kind's DOM contract (enforced in
+ * `validateDomNode` via MARKDOWN_BLOCK_TAGS / MARKDOWN_MARK_TAGS). Text is
+ * literal by construction; unsafe link hrefs degrade to literal text at
+ * parse time. The second admitted transform is the grammar-generalization
+ * proof: no emitter branches on a component name to lower either fact.
+ */
+export interface MarkdownTransformIR {
+  transform: "markdown";
+  /** Always `{ kind: "prop" }`; the string prop carrying the markdown source. */
+  source: PropBindingExpression;
+  /** Extracted prop name (mirror of `source.prop`). */
+  sourceProp: string;
+  /** Boolean enabling prop when declared; undefined means unconditional. */
+  gate: PropBindingExpression | undefined;
+  /** Extracted prop name (mirror of `gate.prop`). */
+  gateProp: string | undefined;
+  /** Block vocabulary — closed kind set to anatomy part names. */
+  blockParts: MarkdownBlockParts;
+  /** Inline-mark vocabulary — closed kind set to anatomy part names. */
+  markParts: MarkdownMarkParts;
+}
+
+/** Closed block vocabulary of the markdown transform (schema-enforced keys). */
+export interface MarkdownBlockParts {
+  heading: string;
+  paragraph: string;
+  unorderedList: string;
+  orderedList: string;
+  listItem: string;
+  codeBlock: string;
+  blockquote: string;
+}
+
+/** Closed inline-mark vocabulary of the markdown transform. */
+export interface MarkdownMarkParts {
+  emphasis: string;
+  strong: string;
+  code: string;
+  link: string;
+}
+
+export type ContentTransformIR = HighlightTransformIR | MarkdownTransformIR;
+
+/**
+ * DOM contract of the markdown vocabularies: each kind's realized part must
+ * carry one of its admitted tags. Framework-neutral fact — the markdown DOM
+ * is part of the transform's contract, not per-emitter lore.
+ */
+export const MARKDOWN_BLOCK_TAGS: Readonly<
+  Record<keyof MarkdownBlockParts, readonly string[]>
+> = {
+  heading: ["h1", "h2", "h3", "h4", "h5", "h6"],
+  paragraph: ["p"],
+  unorderedList: ["ul"],
+  orderedList: ["ol"],
+  listItem: ["li"],
+  codeBlock: ["pre"],
+  blockquote: ["blockquote"],
+};
+
+export const MARKDOWN_MARK_TAGS: Readonly<
+  Record<keyof MarkdownMarkParts, readonly string[]>
+> = {
+  emphasis: ["em"],
+  strong: ["strong"],
+  code: ["code"],
+  link: ["a"],
+};
+
+/** Type guard separating any transform fact from a plain content binding. */
 export function isContentTransform(
   content: BindingExpression | ContentTransformIR | undefined,
 ): content is ContentTransformIR {
+  if (content === undefined) return false;
+  const transform = (content as ContentTransformIR).transform;
+  return transform === "highlight" || transform === "markdown";
+}
+
+/** Narrow to the highlight transform (the tokenizer-backed inline form). */
+export function isHighlightTransform(
+  content: BindingExpression | ContentTransformIR | undefined,
+): content is HighlightTransformIR {
   return content !== undefined && (content as ContentTransformIR).transform === "highlight";
+}
+
+/** Narrow to the markdown transform (the structural block form). */
+export function isMarkdownTransform(
+  content: BindingExpression | ContentTransformIR | undefined,
+): content is MarkdownTransformIR {
+  return content !== undefined && (content as ContentTransformIR).transform === "markdown";
+}
+
+/**
+ * The binding a target renders when it does not realize a content
+ * transform: the transform's source prop (plain text of the markdown or
+ * code source), or the binding itself when it is not a transform. Shared
+ * by every degrading target — one authority for the degradation rule.
+ */
+export function contentBindingOrTransformSource(
+  content: BindingExpression | ContentTransformIR | undefined,
+): BindingExpression | undefined {
+  if (content === undefined) return undefined;
+  return isContentTransform(content) ? content.source : content;
 }
 
 /**
  * Collect every content-transform fact in a dom tree (depth-first,
- * document order). Emitters use this to decide whether the shared
+ * document order). Emitters use this to decide whether a shared
  * transform runtime must be imported — a component-level fact derived
  * from the tree, never from a component-name literal.
  */
@@ -1999,10 +2102,11 @@ function validateDomNode(
     }
   }
 
-  // Content-transform directives (FEAT-CODEBLOCK-HIGHLIGHT-01): every input
-  // binding must resolve against the prop surface with the type the
-  // transform consumes, and tokenPart must name an anatomy part realized as
-  // a repeatable span.
+  // Content-transform directives (FEAT-CODEBLOCK-HIGHLIGHT-01,
+  // FEAT-MARKDOWN-CONTENT-TRANSFORM-01): every input binding must resolve
+  // against the prop surface with the type the transform consumes, and
+  // every vocabulary entry must name an anatomy part with the kind's
+  // DOM-contract tag.
   if (isContentTransform(node.content)) {
     const transform = node.content;
     const requireProp = (propName: string, field: string): string => {
@@ -2022,19 +2126,8 @@ function validateDomNode(
         `text); got '${sourceType}'.`,
       );
     }
-    const languageType = requireProp(transform.languageProp, "language");
-    const languageTypeDef = componentTypes[languageType];
-    const languageIsStringUnion =
-      languageTypeDef !== undefined && languageTypeDef.kind === "union";
-    if (languageType !== "string" && !languageIsStringUnion) {
-      throw new Error(
-        `[${componentName}] DOM content.language requires prop ` +
-        `'${transform.languageProp}' to be typed 'string' or a string-union ` +
-        `type declared in contract.types; got '${languageType}'.`,
-      );
-    }
     if (transform.gate !== undefined && transform.gateProp !== undefined) {
-      const gateType = requireProp(transform.gateProp, "gate");
+      const gateType = requireProp(transform.gateProp!, "gate");
       if (gateType !== "boolean") {
         throw new Error(
           `[${componentName}] DOM content.gate requires prop ` +
@@ -2042,20 +2135,80 @@ function validateDomNode(
         );
       }
     }
-    const partDetail = anatomyDetails[transform.tokenPart];
-    if (!partDetail) {
-      throw new Error(
-        `[${componentName}] DOM content.tokenPart references unknown anatomy ` +
-        `part '${transform.tokenPart}' (known: ` +
-        `[${Object.keys(anatomyDetails).join(", ")}])`,
+    const requireVocabularyPart = (
+      map: Record<string, string>,
+      tags: Readonly<Record<string, readonly string[]>>,
+      field: string,
+      requireMultiple: boolean,
+    ): void => {
+      for (const [kind, partName] of Object.entries(map)) {
+        const partDetail = anatomyDetails[partName];
+        if (!partDetail) {
+          throw new Error(
+            `[${componentName}] DOM content.${field}.${kind} references ` +
+            `unknown anatomy part '${partName}' (known: ` +
+            `[${Object.keys(anatomyDetails).join(", ")}])`,
+          );
+        }
+        const admitted = tags[kind] ?? [];
+        const declaredTag = partDetail.tag ?? "(none)";
+        if (!admitted.includes(declaredTag)) {
+          throw new Error(
+            `[${componentName}] DOM content.${field}.${kind} part ` +
+            `'${partName}' must declare one of tags [${admitted.join(", ")}] ` +
+            `— the markdown DOM contract is part of the transform grammar; ` +
+            `got '${declaredTag}'.`,
+          );
+        }
+        if (requireMultiple && partDetail.multiple !== true) {
+          throw new Error(
+            `[${componentName}] DOM content.${field}.${kind} part ` +
+            `'${partName}' must be marked multiple: true — marks repeat.`,
+          );
+        }
+      }
+    };
+
+    if (transform.transform === "markdown") {
+      requireVocabularyPart(
+        transform.blockParts as unknown as Record<string, string>,
+        MARKDOWN_BLOCK_TAGS,
+        "blockParts",
+        false,
       );
-    }
-    if (partDetail.tag !== "span" || partDetail.multiple !== true) {
-      throw new Error(
-        `[${componentName}] DOM content.tokenPart '${transform.tokenPart}' ` +
-        `must be an anatomy part with tag "span" and multiple: true — one ` +
-        `span is realized per token.`,
+      requireVocabularyPart(
+        transform.markParts as unknown as Record<string, string>,
+        MARKDOWN_MARK_TAGS,
+        "markParts",
+        true,
       );
+    } else {
+      const languageType = requireProp(transform.languageProp, "language");
+      const languageTypeDef = componentTypes[languageType];
+      const languageIsStringUnion =
+        languageTypeDef !== undefined && languageTypeDef.kind === "union";
+      if (languageType !== "string" && !languageIsStringUnion) {
+        throw new Error(
+          `[${componentName}] DOM content.language requires prop ` +
+          `'${transform.languageProp}' to be typed 'string' or a string-union ` +
+          `type declared in contract.types; got '${languageType}'.`,
+        );
+      }
+      const partDetail = anatomyDetails[transform.tokenPart];
+      if (!partDetail) {
+        throw new Error(
+          `[${componentName}] DOM content.tokenPart references unknown anatomy ` +
+          `part '${transform.tokenPart}' (known: ` +
+          `[${Object.keys(anatomyDetails).join(", ")}])`,
+        );
+      }
+      if (partDetail.tag !== "span" || partDetail.multiple !== true) {
+        throw new Error(
+          `[${componentName}] DOM content.tokenPart '${transform.tokenPart}' ` +
+          `must be an anatomy part with tag "span" and multiple: true — one ` +
+          `span is realized per token.`,
+        );
+      }
     }
   }
 
@@ -2165,8 +2318,10 @@ function validateDomNode(
       const transform = node.content;
       const transformInputs: [string, BindingExpression][] = [
         ["source", transform.source],
-        ["language", transform.language],
       ];
+      if (transform.transform === "highlight") {
+        transformInputs.push(["language", transform.language]);
+      }
       if (transform.gate !== undefined) {
         transformInputs.push(["gate", transform.gate]);
       }
@@ -3021,24 +3176,20 @@ function parseContentDirective(
   if (content === undefined) return undefined;
   if (typeof content === "string") return parseBindingExpression(content);
   const where = `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}")`;
-  if (content.transform !== "highlight") {
+  if (content.transform !== "highlight" && content.transform !== "markdown") {
     throw new Error(
-      `${where}: content.transform "${content.transform}" is not admitted. ` +
-        `The transform set is closed; "highlight" is the only transform today.`,
+      `${where}: content.transform "${(content as { transform: string }).transform}" is not admitted. ` +
+        `The transform set is closed; "highlight" and "markdown" are the admitted transforms.`,
     );
   }
   const parseTransformBinding = (
     expr: string | undefined,
     field: string,
-    required: boolean,
   ): PropBindingExpression => {
     if (expr === undefined) {
-      if (required) {
-        throw new Error(
-          `${where}: content-transform "highlight" requires \`${field}\`.`,
-        );
-      }
-      throw new Error(`${where}: unreachable`);
+      throw new Error(
+        `${where}: content-transform "${content.transform}" requires \`${field}\`.`,
+      );
     }
     const binding = parseBindingExpression(expr);
     if (binding.kind !== "prop" || binding.path !== undefined) {
@@ -3050,12 +3201,58 @@ function parseContentDirective(
     }
     return binding;
   };
-  const source = parseTransformBinding(content.source, "source", true);
-  const language = parseTransformBinding(content.language, "language", true);
+  const source = parseTransformBinding(content.source, "source");
   const gate =
     content.gate !== undefined
-      ? parseTransformBinding(content.gate, "gate", false)
+      ? parseTransformBinding(content.gate, "gate")
       : undefined;
+
+  if (content.transform === "markdown") {
+    const md = content;
+    const requirePartMap = <T extends Record<string, string | undefined>>(
+      map: T | undefined,
+      field: string,
+      keys: readonly string[],
+    ): Record<string, string> => {
+      if (map === undefined || typeof map !== "object") {
+        throw new Error(
+          `${where}: content-transform "markdown" requires \`${field}\` mapping every vocabulary kind to an anatomy part.`,
+        );
+      }
+      const out: Record<string, string> = {};
+      for (const key of keys) {
+        const part = map[key];
+        if (typeof part !== "string" || part.length === 0) {
+          throw new Error(
+            `${where}: content.${field}.${key} must name the anatomy part realized for "${key}".`,
+          );
+        }
+        out[key] = part;
+      }
+      return out;
+    };
+    const blockParts = requirePartMap(
+      md.blockParts as unknown as Record<string, string | undefined> | undefined,
+      "blockParts",
+      ["heading", "paragraph", "unorderedList", "orderedList", "listItem", "codeBlock", "blockquote"],
+    );
+    const markParts = requirePartMap(
+      md.markParts as unknown as Record<string, string | undefined> | undefined,
+      "markParts",
+      ["emphasis", "strong", "code", "link"],
+    );
+    return {
+      transform: "markdown",
+      source,
+      sourceProp: source.prop,
+      gate,
+      gateProp: gate?.prop,
+      blockParts: blockParts as unknown as MarkdownBlockParts,
+      markParts: markParts as unknown as MarkdownMarkParts,
+    };
+  }
+
+  const language = parseTransformBinding(content.language, "language");
   if (!content.tokenPart) {
     throw new Error(
       `${where}: content-transform "highlight" requires \`tokenPart\` ` +

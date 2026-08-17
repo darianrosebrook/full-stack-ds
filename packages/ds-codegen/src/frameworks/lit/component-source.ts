@@ -39,7 +39,8 @@ import {
   canonicalTsType,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  contentBindingOrTransformSource,
 } from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
 import {
@@ -1622,7 +1623,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (ir.dom && collectContentTransforms(ir.dom).length > 0) {
+  if (ir.dom && collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     lines.push(
       `import { tokenizeCode } from '../../primitives/highlight/tokenize.js';`,
     );
@@ -2603,7 +2604,7 @@ function renderLitDomNode(
   // natively). A declared gate degrades to the plain source expression.
   let contentInline: string | null = null;
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       const transform = node.content;
       const sourceExpr = appendPath(
         litPropAccessor(transform.sourceProp, ctx),
@@ -2628,7 +2629,10 @@ function renderLitDomNode(
         contentInline = `\${${tokenMap}}`;
       }
     } else {
-      const contentExpr = renderLitContent(node.content, ctx);
+      const contentExpr = renderLitContent(
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
       if (contentExpr !== null) contentInline = contentExpr;
     }
   }

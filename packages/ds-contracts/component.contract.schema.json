@@ -2,9 +2,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "component.contract.schema.json",
   "title": "Full-Stack DS Component Contract",
-  "description": "Defines the contract for a component: anatomy, props, tokens, a11y, behavior, and usage. Implementation-language-agnostic — any target that can read these fields can reconstruct the component.",
+  "description": "Defines the contract for a component: anatomy, props, tokens, a11y, behavior, and usage. Implementation-language-agnostic \u2014 any target that can read these fields can reconstruct the component.",
   "type": "object",
-  "required": ["name", "layer"],
+  "required": [
+    "name",
+    "layer"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -37,18 +40,38 @@
     },
     "layer": {
       "type": "string",
-      "enum": ["primitive", "compound", "composer", "assembly"],
+      "enum": [
+        "primitive",
+        "compound",
+        "composer",
+        "assembly"
+      ],
       "description": "Architecture layer per the component-complexity blueprint: 'primitive' (irreducible to the user, e.g. Button, Input, Icon), 'compound' (blessed bundle of primitives with ARIA wiring but no state orchestration, e.g. TextField, Card, Chip), 'composer' (orchestrates state, focus, dismissal, or multi-step interaction, e.g. Dialog, Popover, Field, Tabs), or 'assembly' (product flow; assemblies live in the app, not the system)."
     },
     "category": {
       "type": "string",
-      "enum": ["action", "input", "surface", "feedback", "glyph", "display", "structure"],
-      "description": "Behavioral family axis — documentation, grouping, and token-coverage. NOT a geometry axis: visual box-model defaults are driven by the separate 'morphology' field (docs/contract-group-axes.md). 'action' (button-like: Button, Switch), 'input' (form controls: Input, TextField, Select, Checkbox), 'surface' (containers: Card, Sheet, Dialog, Popover, Tooltip, Toast), 'feedback' (status: Alert, Progress, Skeleton, Status), 'glyph' (atomic visual: Icon, Avatar, Badge, ProfileFlag), 'display' (inline content / structural visual: Text, Label, Chip, Image, Links, Stat, Truncate, Divider), 'structure' (collection layout: Table, Tabs, Accordion, NavList, List, Breadcrumbs). Codegen does not consume this field."
+      "enum": [
+        "action",
+        "input",
+        "surface",
+        "feedback",
+        "glyph",
+        "display",
+        "structure"
+      ],
+      "description": "Behavioral family axis \u2014 documentation, grouping, and token-coverage. NOT a geometry axis: visual box-model defaults are driven by the separate 'morphology' field (docs/contract-group-axes.md). 'action' (button-like: Button, Switch), 'input' (form controls: Input, TextField, Select, Checkbox), 'surface' (containers: Card, Sheet, Dialog, Popover, Tooltip, Toast), 'feedback' (status: Alert, Progress, Skeleton, Status), 'glyph' (atomic visual: Icon, Avatar, Badge, ProfileFlag), 'display' (inline content / structural visual: Text, Label, Chip, Image, Links, Stat, Truncate, Divider), 'structure' (collection layout: Table, Tabs, Accordion, NavList, List, Breadcrumbs). Codegen does not consume this field."
     },
     "morphology": {
       "type": "string",
-      "enum": ["fixed-square", "content-inline", "identity-inline", "linear-meter", "loading-block", "replaced-media"],
-      "description": "OPTIONAL geometry / default-affordance axis (the morphology axis anticipated by docs/contract-group-axes.md). Selects a StyleProfileIR that supplies box-model slot defaults plus root structural CSS (display / box-sizing / flow), layered BETWEEN the BoxModel primitive defaults and the component token sidecar — the sidecar still wins. When absent, the component keeps the legacy two-way primitive-under-sidecar merge (unchanged behavior). Values: 'fixed-square' (true glyphs sized to a square extent: Icon, Avatar), 'content-inline' (inline labels that size to content with padding + min-height: Badge), 'identity-inline' (avatar + text identity row, content width: ProfileFlag), 'linear-meter' (full-width bar, explicit thickness, zero padding: Progress linear), 'loading-block' (content-shaped loading block that stretches with explicit min-height: Skeleton), 'replaced-media' (native replaced element — display block, max-width 100%, height auto: Image)."
+      "enum": [
+        "fixed-square",
+        "content-inline",
+        "identity-inline",
+        "linear-meter",
+        "loading-block",
+        "replaced-media"
+      ],
+      "description": "OPTIONAL geometry / default-affordance axis (the morphology axis anticipated by docs/contract-group-axes.md). Selects a StyleProfileIR that supplies box-model slot defaults plus root structural CSS (display / box-sizing / flow), layered BETWEEN the BoxModel primitive defaults and the component token sidecar \u2014 the sidecar still wins. When absent, the component keeps the legacy two-way primitive-under-sidecar merge (unchanged behavior). Values: 'fixed-square' (true glyphs sized to a square extent: Icon, Avatar), 'content-inline' (inline labels that size to content with padding + min-height: Badge), 'identity-inline' (avatar + text identity row, content width: ProfileFlag), 'linear-meter' (full-width bar, explicit thickness, zero padding: Progress linear), 'loading-block' (content-shaped loading block that stretches with explicit min-height: Skeleton), 'replaced-media' (native replaced element \u2014 display block, max-width 100%, height auto: Image)."
     },
     "cssPrefix": {
       "type": "string",
@@ -60,18 +83,24 @@
       "oneOf": [
         {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1,
           "description": "Simple list of anatomy part names (legacy)."
         },
         {
           "type": "object",
-          "required": ["parts"],
+          "required": [
+            "parts"
+          ],
           "additionalProperties": false,
           "properties": {
             "parts": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "minItems": 1,
               "description": "Ordered canonical list of anatomy part names."
             },
@@ -82,7 +111,9 @@
             "details": {
               "type": "object",
               "description": "Per-part metadata keyed by part name. Keys should appear in `parts`.",
-              "additionalProperties": { "$ref": "#/$defs/partDetails" }
+              "additionalProperties": {
+                "$ref": "#/$defs/partDetails"
+              }
             },
             "dom": {
               "$ref": "#/$defs/domNode",
@@ -100,12 +131,16 @@
         "designed": {
           "type": "object",
           "description": "Props the component intentionally exposes as part of its designed API. Every member must have a non-empty description.",
-          "required": ["members"],
+          "required": [
+            "members"
+          ],
           "additionalProperties": false,
           "properties": {
             "members": {
               "type": "array",
-              "items": { "$ref": "#/$defs/designedPropMember" }
+              "items": {
+                "$ref": "#/$defs/designedPropMember"
+              }
             }
           }
         },
@@ -120,7 +155,9 @@
             },
             "allowed": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "Explicit allowlist of forwarded attribute names. If absent, every attribute of the extended element is forwarded."
             }
           }
@@ -128,50 +165,70 @@
         "constrained": {
           "type": "object",
           "description": "Props that are valid only under specific conditions. Each member must describe its constraint.",
-          "required": ["members"],
+          "required": [
+            "members"
+          ],
           "additionalProperties": false,
           "properties": {
             "members": {
               "type": "array",
-              "items": { "$ref": "#/$defs/constrainedPropMember" }
+              "items": {
+                "$ref": "#/$defs/constrainedPropMember"
+              }
             }
           }
         },
         "restricted": {
           "type": "object",
           "description": "Props that must NOT be passed by consumers. Each member must describe why.",
-          "required": ["members"],
+          "required": [
+            "members"
+          ],
           "additionalProperties": false,
           "properties": {
             "members": {
               "type": "array",
-              "items": { "$ref": "#/$defs/designedPropMember" }
+              "items": {
+                "$ref": "#/$defs/designedPropMember"
+              }
             }
           }
         },
         "styled": {
-          "description": "Legacy surface — migrate to `designed` + `passthrough` when updating this contract.",
+          "description": "Legacy surface \u2014 migrate to `designed` + `passthrough` when updating this contract.",
           "type": "object",
-          "required": ["members"],
+          "required": [
+            "members"
+          ],
           "additionalProperties": false,
           "properties": {
-            "description": { "type": "string" },
+            "description": {
+              "type": "string"
+            },
             "members": {
               "type": "array",
-              "items": { "$ref": "#/$defs/propMember" }
+              "items": {
+                "$ref": "#/$defs/propMember"
+              }
             }
           }
         },
         "hook": {
           "description": "Props surfaced via a companion hook (e.g. useDialog). Migrate to `designed` when updating this contract.",
           "type": "object",
-          "required": ["members"],
+          "required": [
+            "members"
+          ],
           "additionalProperties": false,
           "properties": {
-            "description": { "type": "string" },
+            "description": {
+              "type": "string"
+            },
             "members": {
               "type": "array",
-              "items": { "$ref": "#/$defs/propMember" }
+              "items": {
+                "$ref": "#/$defs/propMember"
+              }
             }
           }
         }
@@ -180,7 +237,9 @@
     "channels": {
       "type": "object",
       "description": "Controlled/uncontrolled prop pairings. Each channel groups the props that together drive one piece of externally observable state.",
-      "additionalProperties": { "$ref": "#/$defs/controlledChannel" }
+      "additionalProperties": {
+        "$ref": "#/$defs/controlledChannel"
+      }
     },
     "types": {
       "type": "object",
@@ -198,20 +257,26 @@
       "description": "Variant dimensions keyed by prop name, each listing allowed values.",
       "additionalProperties": {
         "type": "array",
-        "items": { "type": "string" },
+        "items": {
+          "type": "string"
+        },
         "minItems": 1
       }
     },
     "states": {
       "type": "object",
-      "description": "Interaction/visual states as orthogonal dimensions (axes). Each dimension is a stackable axis whose values are (by default) mutually exclusive; dimensions compose. This is the sole authoring form — the legacy flat string[] branch has been removed.",
-      "required": ["dimensions"],
+      "description": "Interaction/visual states as orthogonal dimensions (axes). Each dimension is a stackable axis whose values are (by default) mutually exclusive; dimensions compose. This is the sole authoring form \u2014 the legacy flat string[] branch has been removed.",
+      "required": [
+        "dimensions"
+      ],
       "additionalProperties": false,
       "properties": {
         "dimensions": {
           "type": "object",
           "description": "Orthogonal state axes keyed by axis name (e.g. pointer/focus/availability/selection). By default each dimension is mutually exclusive (one active value at a time).",
-          "additionalProperties": { "$ref": "#/$defs/stateDimension" }
+          "additionalProperties": {
+            "$ref": "#/$defs/stateDimension"
+          }
         },
         "description": {
           "type": "string"
@@ -230,41 +295,70 @@
     },
     "events": {
       "type": "object",
-      "description": "Structured signatures for user-facing callbacks (onChange, onOpen, onClose, etc.). Keys are event names — not prop names — and may be emitted through one or more props listed in `emittedVia`.",
-      "additionalProperties": { "$ref": "#/$defs/eventSignature" }
+      "description": "Structured signatures for user-facing callbacks (onChange, onOpen, onClose, etc.). Keys are event names \u2014 not prop names \u2014 and may be emitted through one or more props listed in `emittedVia`.",
+      "additionalProperties": {
+        "$ref": "#/$defs/eventSignature"
+      }
     },
     "stateMachine": {
       "$ref": "#/$defs/stateMachine"
     },
-    "form": { "$ref": "#/$defs/formContract" },
-    "motion": { "$ref": "#/$defs/motionContract" },
-    "focus": { "$ref": "#/$defs/focusContract" },
-    "portal": { "$ref": "#/$defs/portalContract" },
-    "textOverflow": { "$ref": "#/$defs/textOverflowContract" },
+    "form": {
+      "$ref": "#/$defs/formContract"
+    },
+    "motion": {
+      "$ref": "#/$defs/motionContract"
+    },
+    "focus": {
+      "$ref": "#/$defs/focusContract"
+    },
+    "portal": {
+      "$ref": "#/$defs/portalContract"
+    },
+    "textOverflow": {
+      "$ref": "#/$defs/textOverflowContract"
+    },
     "dismissal": {
-      "description": "How a dismissable surface can be closed. Accepts either the structured form ({ triggers: [...] }) or a legacy flat array of event names — the flat form lets older portfolio contracts import unchanged.",
+      "description": "How a dismissable surface can be closed. Accepts either the structured form ({ triggers: [...] }) or a legacy flat array of event names \u2014 the flat form lets older portfolio contracts import unchanged.",
       "oneOf": [
         {
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["escape", "overlayClick", "outsideClick", "blur", "routeChange", "triggerReclick", "userDismiss", "selection"]
+            "enum": [
+              "escape",
+              "overlayClick",
+              "outsideClick",
+              "blur",
+              "routeChange",
+              "triggerReclick",
+              "userDismiss",
+              "selection"
+            ]
           },
           "description": "Legacy flat form: array of event names. Equivalent to { triggers: [{ event: <name> }, ...] }."
         },
-        { "$ref": "#/$defs/dismissalContract" }
+        {
+          "$ref": "#/$defs/dismissalContract"
+        }
       ]
     },
-    "surface": { "$ref": "#/$defs/surfaceContract" },
+    "surface": {
+      "$ref": "#/$defs/surfaceContract"
+    },
     "slots": {
       "type": "object",
-      "description": "Named slot anchors keyed by slot name. Each entry declares whether the slot is required and an optional CSS selector consumers or test harnesses can use to locate the slot in rendered output. Complements anatomy.details — anatomy describes the part's semantic role; slots describes its DOM anchor.",
+      "description": "Named slot anchors keyed by slot name. Each entry declares whether the slot is required and an optional CSS selector consumers or test harnesses can use to locate the slot in rendered output. Complements anatomy.details \u2014 anatomy describes the part's semantic role; slots describes its DOM anchor.",
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["required"],
+        "required": [
+          "required"
+        ],
         "properties": {
-          "required": { "type": "boolean" },
+          "required": {
+            "type": "boolean"
+          },
           "selector": {
             "type": "string",
             "description": "CSS selector that identifies the slot anchor in rendered DOM (e.g. \"[data-slot=\\\"trigger\\\"]\")."
@@ -276,11 +370,17 @@
       "type": "object",
       "description": "Server-side rendering and hydration contract. Tells the codegen and consumers whether the component must be wrapped in a client boundary.",
       "additionalProperties": false,
-      "required": ["hydrateOn"],
+      "required": [
+        "hydrateOn"
+      ],
       "properties": {
         "hydrateOn": {
           "type": "string",
-          "enum": ["interaction", "load", "none"],
+          "enum": [
+            "interaction",
+            "load",
+            "none"
+          ],
           "description": "When the component hydrates. \"interaction\" defers until first user interaction (lazy); \"load\" hydrates on initial page load; \"none\" is fully server-rendered with no client behavior."
         }
       }
@@ -299,10 +399,14 @@
     "relationships": {
       "type": "array",
       "description": "Cross-part wiring (ID references) that implementers must maintain so assistive tech works.",
-      "items": { "$ref": "#/$defs/relationship" }
+      "items": {
+        "$ref": "#/$defs/relationship"
+      }
     },
     "fieldAssociation": {
-      "enum": ["control"],
+      "enum": [
+        "control"
+      ],
       "description": "Declares this component a form control that consumes ambient field association (generated control id + aria-describedby) when slotted into a field composer's control region. The provider side is derived from relationships[] whose target part hosts a consumer slot."
     },
     "a11y": {
@@ -310,18 +414,26 @@
     },
     "a2ui": {
       "$ref": "#/$defs/a2uiContract",
-      "description": "Agent-facing authoring metadata. Keep lean — the runtime deriver pulls props, enum, default, events, form from the existing contract blocks."
+      "description": "Agent-facing authoring metadata. Keep lean \u2014 the runtime deriver pulls props, enum, default, events, form from the existing contract blocks."
     }
   },
   "$defs": {
     "domNode": {
       "type": "object",
       "oneOf": [
-        { "required": ["tag"] },
-        { "required": ["componentRef"] }
+        {
+          "required": [
+            "tag"
+          ]
+        },
+        {
+          "required": [
+            "componentRef"
+          ]
+        }
       ],
       "additionalProperties": false,
-      "description": "Single DOM node in a component's render tree. Framework emitters map this into idiomatic JSX/SFC/template/html output. A node declares EITHER a native `tag` OR a `componentRef` to another design-system component — never both.",
+      "description": "Single DOM node in a component's render tree. Framework emitters map this into idiomatic JSX/SFC/template/html output. A node declares EITHER a native `tag` OR a `componentRef` to another design-system component \u2014 never both.",
       "properties": {
         "tag": {
           "type": "string",
@@ -334,7 +446,7 @@
         },
         "name": {
           "type": "string",
-          "description": "Named-slot identifier — only meaningful when `tag === \"slot\"`. Maps to framework idioms: React `slots.<name>`, Vue/Lit `<slot name=\"<name>\">`, Svelte `{@render <name>?.()}`, Angular `<ng-content select=\"[slot=<name>]\">`. When absent, the slot is the default/unnamed slot.",
+          "description": "Named-slot identifier \u2014 only meaningful when `tag === \"slot\"`. Maps to framework idioms: React `slots.<name>`, Vue/Lit `<slot name=\"<name>\">`, Svelte `{@render <name>?.()}`, Angular `<ng-content select=\"[slot=<name>]\">`. When absent, the slot is the default/unnamed slot.",
           "pattern": "^[a-z][a-zA-Z0-9]*$"
         },
         "part": {
@@ -343,39 +455,51 @@
         },
         "attrs": {
           "type": "object",
-          "additionalProperties": { "type": "string" },
+          "additionalProperties": {
+            "type": "string"
+          },
           "description": "Static attribute values rendered verbatim (e.g. {\"type\": \"checkbox\", \"role\": \"switch\"})."
         },
         "bindings": {
           "type": "object",
-          "additionalProperties": { "type": "string" },
+          "additionalProperties": {
+            "type": "string"
+          },
           "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\". Event handlers belong under `events`; inner content under `content`; JS-only DOM properties (no HTML attribute equivalent, e.g. `indeterminate`) belong under `properties`. Legacy authoring with `bindings.onX` or `bindings.children`/`bindings.textContent` hard-fails at IR-build with a redirect message (IR-DOM-BINDING-CAPABILITY-01/4C removed the auto-translate path); `bindings.indeterminate` hard-fails the same way, redirecting to `properties.indeterminate`."
         },
         "properties": {
           "type": "object",
-          "additionalProperties": { "type": "string" },
-          "description": "DOM-property-only bindings — for facts that must be set via an imperative JS property assignment on the live element (e.g. `el.indeterminate = true`), never via an HTML attribute or template-attribute binding (`indeterminate` has no HTML attribute form at all; JSX/Vue/Svelte/Angular/Lit template-attribute syntax cannot express it). Values use the same binding-expression mini-language as `bindings`. Distinct from `bindings` because every attribute-binding lowering path (JSX prop, Vue `:attr`, Angular `[attr]`, Lit `?attr=`, Svelte `attr=`) writes an HTML attribute, which is the wrong mechanism for a property-only fact — each framework emitter instead applies this via its ref/lifecycle idiom (e.g. React `useRef`+`useEffect`)."
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "DOM-property-only bindings \u2014 for facts that must be set via an imperative JS property assignment on the live element (e.g. `el.indeterminate = true`), never via an HTML attribute or template-attribute binding (`indeterminate` has no HTML attribute form at all; JSX/Vue/Svelte/Angular/Lit template-attribute syntax cannot express it). Values use the same binding-expression mini-language as `bindings`. Distinct from `bindings` because every attribute-binding lowering path (JSX prop, Vue `:attr`, Angular `[attr]`, Lit `?attr=`, Svelte `attr=`) writes an HTML attribute, which is the wrong mechanism for a property-only fact \u2014 each framework emitter instead applies this via its ref/lifecycle idiom (e.g. React `useRef`+`useEffect`)."
         },
         "events": {
           "type": "object",
-          "additionalProperties": { "type": "string" },
-          "description": "Event handlers keyed by *unprefixed* event name (`click`, `input`, `change`, `keydown`, ...). Values use the same binding-expression mini-language as `bindings`, PLUS two event-position-only forms. (1) `channel:<name>.onChange(<arg>)` invokes that channel's setter WITH a per-item payload (FEAT-BINDING-CALL-WITH-ARG-01), e.g. `channel:selection.onChange(iter:item.value)` lowers to `() => setSelection(item.value)`. (2) `channel:<name>.onChange:<op>(<operand>, ...)` applies a NAMED update operation from a closed vocabulary that composes the channel's CURRENT value with the event payload / operands (FEAT-CHANNEL-UPDATE-OPERATIONS-01). Two operations exist: `setCharAt(<index>)` — string channel only — sets the character at `<index>` (an iteration local, e.g. `iter:index`) to the LAST character of the native input payload, preserving all other positions (witness: OTP `channel:value.onChange:setCharAt(iter:index)`; whole-paste distribution across fields is out of scope, a field takes only the last char); and `toggleMembership(<member>, <modeGate>)` — array-capable channel (a `T[]` arm, e.g. `string | string[]`) — where `<modeGate>` is a boolean prop that when false REPLACES (single-select) and when true toggles `<member>`'s membership in the selection array (witness: Select `channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)`; the mode dispatch is contract-authored via the prop, never a component-name literal in an emitter). For BOTH forms every operand is a closed, value-shaped payload only — `iter:item` / `iter:item.<path>` / `iter:index`, `prop:<name>` / `prop:<name>.<path>`, or `literal:<text>` — never another channel, predicate, conditional, or nested call (no arbitrary-expression escape hatch). The bare `channel:<name>.onChange` (no-arg) form is still legal and lowers to the framework's default DOM-event unwrap. Each framework emitter lowers to its idiom: React `onClick={...}`, Vue `@click=\"...\"`, Svelte `on:click={...}`, Angular `(click)=\"...\"`, Lit `@click=${...}`; the update-operation form composes the next value through the canonical channel setter (Angular via a synthesized method, since its template expressions forbid arrows/spread). Distinct from attribute bindings because Angular and Lit reject event-shaped attribute bindings; the call/operation forms are legal ONLY here (they produce a `() => …` handler, not a value)."
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Event handlers keyed by *unprefixed* event name (`click`, `input`, `change`, `keydown`, ...). Values use the same binding-expression mini-language as `bindings`, PLUS two event-position-only forms. (1) `channel:<name>.onChange(<arg>)` invokes that channel's setter WITH a per-item payload (FEAT-BINDING-CALL-WITH-ARG-01), e.g. `channel:selection.onChange(iter:item.value)` lowers to `() => setSelection(item.value)`. (2) `channel:<name>.onChange:<op>(<operand>, ...)` applies a NAMED update operation from a closed vocabulary that composes the channel's CURRENT value with the event payload / operands (FEAT-CHANNEL-UPDATE-OPERATIONS-01). Two operations exist: `setCharAt(<index>)` \u2014 string channel only \u2014 sets the character at `<index>` (an iteration local, e.g. `iter:index`) to the LAST character of the native input payload, preserving all other positions (witness: OTP `channel:value.onChange:setCharAt(iter:index)`; whole-paste distribution across fields is out of scope, a field takes only the last char); and `toggleMembership(<member>, <modeGate>)` \u2014 array-capable channel (a `T[]` arm, e.g. `string | string[]`) \u2014 where `<modeGate>` is a boolean prop that when false REPLACES (single-select) and when true toggles `<member>`'s membership in the selection array (witness: Select `channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)`; the mode dispatch is contract-authored via the prop, never a component-name literal in an emitter). For BOTH forms every operand is a closed, value-shaped payload only \u2014 `iter:item` / `iter:item.<path>` / `iter:index`, `prop:<name>` / `prop:<name>.<path>`, or `literal:<text>` \u2014 never another channel, predicate, conditional, or nested call (no arbitrary-expression escape hatch). The bare `channel:<name>.onChange` (no-arg) form is still legal and lowers to the framework's default DOM-event unwrap. Each framework emitter lowers to its idiom: React `onClick={...}`, Vue `@click=\"...\"`, Svelte `on:click={...}`, Angular `(click)=\"...\"`, Lit `@click=${...}`; the update-operation form composes the next value through the canonical channel setter (Angular via a synthesized method, since its template expressions forbid arrows/spread). Distinct from attribute bindings because Angular and Lit reject event-shaped attribute bindings; the call/operation forms are legal ONLY here (they produce a `() => \u2026` handler, not a value)."
         },
         "content": {
           "oneOf": [
             {
               "type": "string",
-              "description": "Single inner-content binding (one binding expression). Lowers to the framework's content-projection idiom (React `{prop}`, Vue/Angular `{{ prop }}`, Svelte `{prop}`, Lit `${this.prop}`). Mutually exclusive with `children` on the same node — wrap a content value in its own child if you need both."
+              "description": "Single inner-content binding (one binding expression). Lowers to the framework's content-projection idiom (React `{prop}`, Vue/Angular `{{ prop }}`, Svelte `{prop}`, Lit `${this.prop}`). Mutually exclusive with `children` on the same node \u2014 wrap a content value in its own child if you need both."
             },
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["transform", "source", "tokenPart"],
-              "description": "Content-transform directive: the node's inner content is produced by a named transform applied to a source prop binding, not by projecting the binding verbatim. The transform is an IR-level fact lowered generically by every emitter — no emitter may branch on the host component's name. One transform is admitted today: `highlight` splits the source string into syntax tokens via the shared pure tokenizer and renders one span per token (the `tokenPart` part class plus a `data-token=\"<kind>\"` attribute; token-kind vocabulary is declared by the component's types). Text-only by construction: token spans carry text children, so the source is never interpreted as markup. Targets that do not realize the transform degrade to plain rendering of the source binding.",
+              "required": [
+                "transform",
+                "source",
+                "tokenPart"
+              ],
+              "description": "Content-transform directive: the node's inner content is produced by a named transform applied to a source prop binding, not by projecting the binding verbatim. The transform is an IR-level fact lowered generically by every emitter \u2014 no emitter may branch on the host component's name. One transform is admitted today: `highlight` splits the source string into syntax tokens via the shared pure tokenizer and renders one span per token (the `tokenPart` part class plus a `data-token=\"<kind>\"` attribute; token-kind vocabulary is declared by the component's types). Text-only by construction: token spans carry text children, so the source is never interpreted as markup. Targets that do not realize the transform degrade to plain rendering of the source binding.",
               "properties": {
                 "transform": {
                   "const": "highlight",
-                  "description": "Transform name. Closed set — `highlight` is the only admitted transform today."
+                  "description": "Transform name. Closed set: highlight | markdown."
                 },
                 "source": {
                   "type": "string",
@@ -397,13 +521,115 @@
                   "description": "`highlight` only: `anatomy.parts` entry realized as one span per token. The part must exist, be `tag: \"span\"`, and be marked `multiple: true`."
                 }
               }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "transform",
+                "source",
+                "blockParts",
+                "markParts"
+              ],
+              "description": "Content-transform directive (markdown, FEAT-MARKDOWN-CONTENT-TRANSFORM-01): the node's inner content is the STRUCTURAL parse of the markdown source prop \u2014 block elements and inline marks realized from the anatomy parts named in blockParts/markParts. The grammar is closed: every block kind and mark kind must map to a declared anatomy part whose tag matches the kind's DOM contract (heading h1-h6, paragraph p, unorderedList ul, orderedList ol, listItem li, codeBlock pre, blockquote blockquote; marks emphasis em, strong strong, code code, link a \u2014 mark parts must be multiple: true). Text is literal by construction: raw HTML in the source never interprets, and link hrefs are protocol-sanitized at parse time. Targets that do not realize the transform degrade to plain rendering of the source binding. No emitter may branch on the host component's name.",
+              "properties": {
+                "transform": {
+                  "const": "markdown",
+                  "description": "Transform name. Closed set: highlight | markdown."
+                },
+                "source": {
+                  "type": "string",
+                  "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+                  "description": "Binding expression naming the string prop that carries the markdown source (e.g. \"prop:content\")."
+                },
+                "gate": {
+                  "type": "string",
+                  "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+                  "description": "Optional: binding expression naming the boolean prop that enables the transform. When falsy the node renders the source binding as a single plain text run."
+                },
+                "blockParts": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "heading",
+                    "paragraph",
+                    "unorderedList",
+                    "orderedList",
+                    "listItem",
+                    "codeBlock",
+                    "blockquote"
+                  ],
+                  "description": "Block vocabulary: every closed kind maps to an anatomy.parts entry. Total by construction \u2014 unmapped kinds cannot silently drop content.",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for heading blocks."
+                    },
+                    "paragraph": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for paragraph blocks."
+                    },
+                    "unorderedList": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for unorderedList blocks."
+                    },
+                    "orderedList": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for orderedList blocks."
+                    },
+                    "listItem": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for listItem blocks."
+                    },
+                    "codeBlock": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for codeBlock blocks."
+                    },
+                    "blockquote": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for blockquote blocks."
+                    }
+                  }
+                },
+                "markParts": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "emphasis",
+                    "strong",
+                    "code",
+                    "link"
+                  ],
+                  "description": "Inline-mark vocabulary: every closed kind maps to an anatomy.parts entry (tag span-family per the DOM contract, multiple: true). Text marks render as bare text.",
+                  "properties": {
+                    "emphasis": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for emphasis marks."
+                    },
+                    "strong": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for strong marks."
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for code marks."
+                    },
+                    "link": {
+                      "type": "string",
+                      "description": "anatomy.parts entry realized for link marks."
+                    }
+                  }
+                }
+              }
             }
           ],
-          "description": "Inner content: either a single binding expression (string form) or a content-transform directive (object form). Mutually exclusive with `children` on the same node — wrap a content value in its own child if you need both."
+          "description": "Inner content: either a single binding expression (string form) or a content-transform directive (object form). Mutually exclusive with `children` on the same node \u2014 wrap a content value in its own child if you need both."
         },
         "children": {
           "type": "array",
-          "items": { "$ref": "#/$defs/domNode" },
+          "items": {
+            "$ref": "#/$defs/domNode"
+          },
           "description": "Child nodes. Empty/absent for leaf elements. Mutually exclusive with `content` on the same node."
         },
         "if": {
@@ -413,8 +639,11 @@
         "iterate": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["source", "kind"],
-          "description": "Renders this node N times, driven by a prop. Note: index-keyed iteration only — not suitable for sortable/reorderable lists.",
+          "required": [
+            "source",
+            "kind"
+          ],
+          "description": "Renders this node N times, driven by a prop. Note: index-keyed iteration only \u2014 not suitable for sortable/reorderable lists.",
           "properties": {
             "source": {
               "type": "string",
@@ -423,7 +652,10 @@
             },
             "kind": {
               "type": "string",
-              "enum": ["count", "array"],
+              "enum": [
+                "count",
+                "array"
+              ],
               "description": "'count' renders N copies (source prop must be number-typed). 'array' renders one copy per item (source prop must be array-typed)."
             },
             "indexVar": {
@@ -458,7 +690,9 @@
         "iconGlyph": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["nameFrom"],
+          "required": [
+            "nameFrom"
+          ],
           "description": "Renders this `svg` node's viewBox and `<path>` children from the design-system icon catalog (`@full-stack-ds/iconography`), looked up at runtime by the bound name prop. The emitter stamps `data-fsds-icon=\"<resolved name>\"` on the svg and renders one `<path>` per glyph path record. Only valid on a `tag: \"svg\"` node; mutually exclusive with `children`, `content`, and `iterate`. When the lookup misses (unknown name), the svg is not rendered. Icon-name reference integrity for literal usages is enforced by generate:check against the built catalog.",
           "properties": {
             "nameFrom": {
@@ -473,9 +707,11 @@
             },
             "sizeHints": {
               "type": "object",
-              "additionalProperties": { "type": "number" },
+              "additionalProperties": {
+                "type": "number"
+              },
               "minProperties": 1,
-              "description": "Map from the size prop's enum values to pixel sizes (e.g. {\"sm\": 16, \"md\": 20, \"lg\": 24, \"xl\": 32}). Pixel values select the nearest authored glyph variant; they intentionally mirror the icon.size token scale — selection hints are contract semantics, rendered size still tracks these literal pixels."
+              "description": "Map from the size prop's enum values to pixel sizes (e.g. {\"sm\": 16, \"md\": 20, \"lg\": 24, \"xl\": 32}). Pixel values select the nearest authored glyph variant; they intentionally mirror the icon.size token scale \u2014 selection hints are contract semantics, rendered size still tracks these literal pixels."
             }
           }
         }
@@ -484,7 +720,11 @@
     "propMember": {
       "type": "object",
       "description": "A single prop exposed by the component.",
-      "required": ["name", "type", "description"],
+      "required": [
+        "name",
+        "type",
+        "description"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -501,23 +741,41 @@
         },
         "default": {
           "oneOf": [
-            { "type": "string" },
-            { "type": "number" },
-            { "type": "boolean" },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
             {
               "type": "array",
               "items": {
                 "oneOf": [
-                  { "type": "string" },
-                  { "type": "number" },
-                  { "type": "boolean" },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "object",
                     "additionalProperties": {
                       "oneOf": [
-                        { "type": "string" },
-                        { "type": "number" },
-                        { "type": "boolean" }
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        }
                       ]
                     }
                   }
@@ -525,7 +783,7 @@
               }
             }
           ],
-          "description": "Default value when the prop is omitted. Arrays of primitives are accepted for collection-typed props (e.g. `string[]`); the codegen emits them as JSON literals in the destructure (`= [\"a\", \"b\"]`). Object items inside arrays are accepted for typed-object collections (e.g. `WalkthroughStepSpec[]`), as long as every object field is primitive-shaped — the codegen JSON-stringifies the whole literal, so any JSON-serializable shape works mechanically."
+          "description": "Default value when the prop is omitted. Arrays of primitives are accepted for collection-typed props (e.g. `string[]`); the codegen emits them as JSON literals in the destructure (`= [\"a\", \"b\"]`). Object items inside arrays are accepted for typed-object collections (e.g. `WalkthroughStepSpec[]`), as long as every object field is primitive-shaped \u2014 the codegen JSON-stringifies the whole literal, so any JSON-serializable shape works mechanically."
         },
         "description": {
           "type": "string",
@@ -533,7 +791,10 @@
         },
         "nodeKind": {
           "type": "string",
-          "enum": ["node-ref", "icon-ref"],
+          "enum": [
+            "node-ref",
+            "icon-ref"
+          ],
           "description": "A2UI disambiguation hint for props whose TS type can't distinguish a nested component from a registered icon (`ReactNode`, `ReactElement`). When present, the A2UI deriver uses this as the prop's `accepts` value instead of guessing. Leave unset for non-node props."
         }
       }
@@ -541,49 +802,311 @@
     "propType": {
       "description": "Framework-neutral structured prop type (PropTypeIR). V1 (CODEGEN-PROP-TYPE-IR-PILOT-01): string/number/boolean/enum/node/ref. V2 (CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01, observed-corpus extension): callback/array/union/literal/void/promise. When present it supersedes the legacy TS-string `type` as the agnostic source the IR normalizes and emitters lower. There is deliberately NO inline anonymous-object kind: named object-ish types use {kind:ref} to a contract alias; a genuinely anonymous object type stays a declared residual (legacy `type`). See docs/a2ui-projection.md.",
       "oneOf": [
-        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "string" } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "number" } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "boolean" } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "values"], "properties": { "kind": { "const": "enum" }, "values": { "type": "array", "items": { "type": "string" }, "minItems": 1 } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "node" }, "of": { "enum": ["content", "icon"] } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "to"], "properties": { "kind": { "const": "ref" }, "to": { "type": "string", "minLength": 1 } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "params", "returns"], "properties": { "kind": { "const": "callback" }, "params": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["name", "type"], "properties": { "name": { "type": "string", "minLength": 1 }, "type": { "$ref": "#/$defs/propType" }, "optional": { "type": "boolean" } } } }, "returns": { "$ref": "#/$defs/propType" } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "items"], "properties": { "kind": { "const": "array" }, "items": { "$ref": "#/$defs/propType" } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "of"], "properties": { "kind": { "const": "union" }, "of": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/propType" } } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "value"], "properties": { "kind": { "const": "literal" }, "value": { "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" } ] } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "void" } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "of"], "properties": { "kind": { "const": "promise" }, "of": { "$ref": "#/$defs/propType" } } }
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "values"
+          ],
+          "properties": {
+            "kind": {
+              "const": "enum"
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "node"
+            },
+            "of": {
+              "enum": [
+                "content",
+                "icon"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "to"
+          ],
+          "properties": {
+            "kind": {
+              "const": "ref"
+            },
+            "to": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "params",
+            "returns"
+          ],
+          "properties": {
+            "kind": {
+              "const": "callback"
+            },
+            "params": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "$ref": "#/$defs/propType"
+                  },
+                  "optional": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "returns": {
+              "$ref": "#/$defs/propType"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "items"
+          ],
+          "properties": {
+            "kind": {
+              "const": "array"
+            },
+            "items": {
+              "$ref": "#/$defs/propType"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "of"
+          ],
+          "properties": {
+            "kind": {
+              "const": "union"
+            },
+            "of": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "$ref": "#/$defs/propType"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "literal"
+            },
+            "value": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "void"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "of"
+          ],
+          "properties": {
+            "kind": {
+              "const": "promise"
+            },
+            "of": {
+              "$ref": "#/$defs/propType"
+            }
+          }
+        }
       ]
     },
     "designedPropMember": {
       "type": "object",
       "description": "A prop in the `designed` or `restricted` bucket. `description` is required to be non-empty. Each member declares its type as EITHER a legacy TS-string `type` OR a structured framework-neutral `propType` (exactly one).",
-      "required": ["name", "description"],
-      "oneOf": [{ "required": ["type"] }, { "required": ["propType"] }],
+      "required": [
+        "name",
+        "description"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "required": [
+            "propType"
+          ]
+        }
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string" },
-        "type": { "type": "string" },
-        "propType": { "$ref": "#/$defs/propType" },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "propType": {
+          "$ref": "#/$defs/propType"
+        },
         "description": {
           "type": "string",
           "minLength": 1,
           "description": "Non-empty description of what this prop controls."
         },
-        "required": { "type": "boolean", "default": false },
+        "required": {
+          "type": "boolean",
+          "default": false
+        },
         "default": {
           "oneOf": [
-            { "type": "string" },
-            { "type": "number" },
-            { "type": "boolean" },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
             {
               "type": "array",
               "items": {
                 "oneOf": [
-                  { "type": "string" },
-                  { "type": "number" },
-                  { "type": "boolean" },
-                  { "type": "object", "additionalProperties": { "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" } ] } }
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    }
+                  }
                 ]
               }
             }
@@ -591,40 +1114,97 @@
         },
         "nodeKind": {
           "type": "string",
-          "enum": ["node-ref", "icon-ref"]
+          "enum": [
+            "node-ref",
+            "icon-ref"
+          ]
         }
       }
     },
     "constrainedPropMember": {
       "type": "object",
       "description": "A prop in the `constrained` bucket. Adds a required `constraint` field documenting the condition under which the prop is valid. Type is declared as EITHER a legacy TS-string `type` OR a structured `propType` (exactly one).",
-      "required": ["name", "description", "constraint"],
-      "oneOf": [{ "required": ["type"] }, { "required": ["propType"] }],
+      "required": [
+        "name",
+        "description",
+        "constraint"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "required": [
+            "propType"
+          ]
+        }
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string" },
-        "type": { "type": "string" },
-        "propType": { "$ref": "#/$defs/propType" },
-        "description": { "type": "string", "minLength": 1 },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "propType": {
+          "$ref": "#/$defs/propType"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
         "constraint": {
           "type": "string",
           "minLength": 1,
           "description": "Human-readable condition under which this prop is valid (e.g. 'only when asChild=true')."
         },
-        "required": { "type": "boolean", "default": false },
+        "required": {
+          "type": "boolean",
+          "default": false
+        },
         "default": {
           "oneOf": [
-            { "type": "string" },
-            { "type": "number" },
-            { "type": "boolean" },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
             {
               "type": "array",
               "items": {
                 "oneOf": [
-                  { "type": "string" },
-                  { "type": "number" },
-                  { "type": "boolean" },
-                  { "type": "object", "additionalProperties": { "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" } ] } }
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    }
+                  }
                 ]
               }
             }
@@ -635,7 +1215,9 @@
     "propGroup": {
       "type": "object",
       "description": "A named group of related props (e.g. styled component props, hook options).",
-      "required": ["members"],
+      "required": [
+        "members"
+      ],
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -644,7 +1226,9 @@
         },
         "members": {
           "type": "array",
-          "items": { "$ref": "#/$defs/propMember" },
+          "items": {
+            "$ref": "#/$defs/propMember"
+          },
           "description": "The props in this group."
         }
       }
@@ -652,7 +1236,10 @@
     "controlledChannel": {
       "type": "object",
       "description": "Declares a controlled/uncontrolled pairing. References existing prop names inside `props.*.members`; does not redefine them.",
-      "required": ["value", "onChange"],
+      "required": [
+        "value",
+        "onChange"
+      ],
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -681,7 +1268,10 @@
         },
         "callbackKind": {
           "type": "string",
-          "enum": ["value", "event"],
+          "enum": [
+            "value",
+            "event"
+          ],
           "description": "Shape of the change-handler callback. \"value\" (default) means the handler receives the channel's value as its first argument (e.g. (checked: boolean) => void). \"event\" means the handler receives a framework-native event object the consumer is expected to inspect (e.g. (e: ChangeEvent) => void). Declared explicitly so the IR does not have to infer this from React/DOM type-name heuristics."
         },
         "notes": {
@@ -697,17 +1287,25 @@
     "typeDef": {
       "type": "object",
       "description": "A named type used by one or more props.",
-      "required": ["kind"],
+      "required": [
+        "kind"
+      ],
       "additionalProperties": false,
       "properties": {
         "kind": {
           "type": "string",
-          "enum": ["union", "enum", "alias"],
+          "enum": [
+            "union",
+            "enum",
+            "alias"
+          ],
           "description": "What flavor of type this is."
         },
         "values": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Allowed values (required for union and enum kinds)."
         },
         "alias": {
@@ -724,25 +1322,35 @@
         "entities": {
           "type": "object",
           "description": "Named entities keyed by entity name.",
-          "additionalProperties": { "$ref": "#/$defs/entityDef" }
+          "additionalProperties": {
+            "$ref": "#/$defs/entityDef"
+          }
         },
         "semantics": {
           "type": "object",
           "description": "Prose notes about semantic behaviors over the data model (selection, filtering, ordering, identity).",
-          "additionalProperties": { "type": "string" }
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
     "entityDef": {
       "type": "object",
-      "required": ["fields"],
+      "required": [
+        "fields"
+      ],
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "fields": {
           "type": "object",
-          "description": "Field name → type expression. Append \"?\" to the name for optional fields (e.g. \"disabled?\").",
-          "additionalProperties": { "type": "string" }
+          "description": "Field name \u2192 type expression. Append \"?\" to the name for optional fields (e.g. \"disabled?\").",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
@@ -758,7 +1366,9 @@
       "description": "Metadata about a single anatomy part: what role it plays, whether it's focusable, whether it renders many times, etc.",
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "tag": {
           "type": "string",
           "description": "Native HTML tag this part is realized as. When set, the codegen uses this tag for the part's compound subcomponent (skipping Stack wrapping for tags in the table composition set) and for the root component's anatomy.dom node (when the part appears in that tree). If anatomy.dom also declares a tag for the same part, the two must agree. Mutually exclusive with `componentRef`."
@@ -790,8 +1400,15 @@
         },
         "focusable": {
           "oneOf": [
-            { "type": "boolean" },
-            { "type": "string", "enum": ["roving"] }
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "roving"
+              ]
+            }
           ],
           "description": "Whether this part receives DOM focus. \"roving\" means it participates in a roving-tabindex group."
         },
@@ -808,17 +1425,21 @@
           "additionalProperties": false,
           "description": "Static ARIA contract for this part.",
           "properties": {
-            "role": { "type": "string" },
+            "role": {
+              "type": "string"
+            },
             "attributes": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "ARIA attributes the implementation must set on this part (e.g. \"aria-expanded\", \"aria-selected\")."
             }
           }
         },
         "collapsibleTo": {
           "type": "string",
-          "description": "Declares that this part's purpose is fully served by a target's native primitive on platforms that ship one. Emitters consult a per-target intent-to-primitive table: targets with a mapping collapse the part into the native primitive; targets without one render the full multi-part anatomy. Web emitters ignore this field. The vocabulary is closed — add new intents in lockstep with the emitters that consume them.",
+          "description": "Declares that this part's purpose is fully served by a target's native primitive on platforms that ship one. Emitters consult a per-target intent-to-primitive table: targets with a mapping collapse the part into the native primitive; targets without one render the full multi-part anatomy. Web emitters ignore this field. The vocabulary is closed \u2014 add new intents in lockstep with the emitters that consume them.",
           "enum": [
             "native-toggle-affordance",
             "native-disclosure"
@@ -828,18 +1449,34 @@
     },
     "stateDimension": {
       "type": "object",
-      "required": ["category", "values"],
+      "required": [
+        "category",
+        "values"
+      ],
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "category": {
           "type": "string",
-          "enum": ["interaction", "availability", "selection", "validation", "data", "visibility", "motion", "presentation"],
-          "description": "Semantic domain of this state axis. Component-intrinsic only; app/session/system states stay external to the contract. Cardinality is derived from values.length (2 = boolean, 3+ = enum) — it is not authored."
+          "enum": [
+            "interaction",
+            "availability",
+            "selection",
+            "validation",
+            "data",
+            "visibility",
+            "motion",
+            "presentation"
+          ],
+          "description": "Semantic domain of this state axis. Component-intrinsic only; app/session/system states stay external to the contract. Cardinality is derived from values.length (2 = boolean, 3+ = enum) \u2014 it is not authored."
         },
         "values": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1,
           "description": "Allowed values on this dimension. The `initial` value is the base/absence value and is excluded from the derived flat selector projection."
         },
@@ -849,7 +1486,7 @@
         },
         "exclusive": {
           "type": "boolean",
-          "description": "Whether values on this dimension are mutually exclusive (intra-dimension). Defaults to true. Inter-dimension stackability is structural — dimensions always compose.",
+          "description": "Whether values on this dimension are mutually exclusive (intra-dimension). Defaults to true. Inter-dimension stackability is structural \u2014 dimensions always compose.",
           "default": true
         },
         "suppresses": {
@@ -861,13 +1498,24 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["interaction", "availability", "selection", "validation", "data", "visibility", "motion", "presentation"]
+                "enum": [
+                  "interaction",
+                  "availability",
+                  "selection",
+                  "validation",
+                  "data",
+                  "visibility",
+                  "motion",
+                  "presentation"
+                ]
               },
               "description": "Suppress dimensions whose category is listed here (the common case: availability suppresses interaction)."
             },
             "names": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "Suppress specific dimensions by axis name (escape hatch; prefer categories)."
             }
           }
@@ -875,7 +1523,9 @@
         "a11y": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["attribute"],
+          "required": [
+            "attribute"
+          ],
           "description": "ARIA projection for this dimension. Authored because semantic values (e.g. aria-checked=mixed) must not be fabricated by emitters.",
           "properties": {
             "attribute": {
@@ -885,27 +1535,45 @@
             "values": {
               "type": "object",
               "description": "Per-value ARIA attribute value mapping (e.g. { \"unchecked\": \"false\", \"checked\": \"true\", \"indeterminate\": \"mixed\" }).",
-              "additionalProperties": { "type": ["string", "boolean"] }
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "boolean"
+                ]
+              }
             }
           }
         },
         "derivesFrom": {
           "type": "object",
-          "description": "Optional value-level derivation override, keyed by dimension value. Each entry pins how that value lowers to a selector/attribute/channel/prop. Omit to use name-based derivation via the shared state→selector mapping.",
+          "description": "Optional value-level derivation override, keyed by dimension value. Each entry pins how that value lowers to a selector/attribute/channel/prop. Omit to use name-based derivation via the shared state\u2192selector mapping.",
           "additionalProperties": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "selector": { "type": "string" },
-              "attr": { "type": "string" },
-              "channel": { "type": "string" },
-              "prop": { "type": "string" }
+              "selector": {
+                "type": "string"
+              },
+              "attr": {
+                "type": "string"
+              },
+              "channel": {
+                "type": "string"
+              },
+              "prop": {
+                "type": "string"
+              }
             }
           }
         },
         "effect": {
           "type": "string",
-          "enum": ["restyle", "overlay", "metadata", "channel"],
+          "enum": [
+            "restyle",
+            "overlay",
+            "metadata",
+            "channel"
+          ],
           "description": "Neutral state-surface effect for the whole dimension. restyle = changes the component's visual treatment (needs a variant axis or styled state layer); overlay = an additive toggled layer representable as a boolean without changing the base style recipe; metadata = retained for documentation/tooling, not a control; channel = runtime/channel-driven, not a user-facing control. valueEffects overrides per value."
         },
         "valueEffects": {
@@ -913,7 +1581,12 @@
           "description": "Value-level effect override, keyed by dimension value. Overrides the dimension-level effect for that value (e.g. openness: open=overlay while opening/closing=channel).",
           "additionalProperties": {
             "type": "string",
-            "enum": ["restyle", "overlay", "metadata", "channel"]
+            "enum": [
+              "restyle",
+              "overlay",
+              "metadata",
+              "channel"
+            ]
           }
         }
       }
@@ -921,7 +1594,9 @@
     "formContract": {
       "type": "object",
       "description": "Declares how this component participates in HTML forms. Omit for non-form components; set `participates: false` to explicitly record that a component with form-like props does not serialize.",
-      "required": ["participates"],
+      "required": [
+        "participates"
+      ],
       "additionalProperties": false,
       "properties": {
         "participates": {
@@ -930,17 +1605,49 @@
         },
         "inputType": {
           "type": "string",
-          "enum": ["text", "number", "email", "password", "search", "tel", "url", "date", "time", "datetime-local", "month", "week", "color", "file", "checkbox", "radio", "select", "hidden", "combobox", "custom"],
+          "enum": [
+            "text",
+            "number",
+            "email",
+            "password",
+            "search",
+            "tel",
+            "url",
+            "date",
+            "time",
+            "datetime-local",
+            "month",
+            "week",
+            "color",
+            "file",
+            "checkbox",
+            "radio",
+            "select",
+            "hidden",
+            "combobox",
+            "custom"
+          ],
           "description": "Platform input type that backs this control."
         },
-        "name": { "$ref": "#/$defs/formPropRef", "description": "Prop driving the `name` attribute used as the FormData key." },
-        "formProp": { "$ref": "#/$defs/formPropRef", "description": "Prop that overrides the owning <form> id." },
+        "name": {
+          "$ref": "#/$defs/formPropRef",
+          "description": "Prop driving the `name` attribute used as the FormData key."
+        },
+        "formProp": {
+          "$ref": "#/$defs/formPropRef",
+          "description": "Prop that overrides the owning <form> id."
+        },
         "required": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["prop"],
+          "required": [
+            "prop"
+          ],
           "properties": {
-            "prop": { "type": "string", "description": "Prop that marks the field as required." },
+            "prop": {
+              "type": "string",
+              "description": "Prop that marks the field as required."
+            },
             "constraintValidation": {
               "type": "boolean",
               "description": "True if the component participates in HTML5 native validation."
@@ -950,7 +1657,10 @@
         "serialization": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["valueType", "valueSource"],
+          "required": [
+            "valueType",
+            "valueSource"
+          ],
           "properties": {
             "valueType": {
               "type": "string",
@@ -962,7 +1672,12 @@
             },
             "omitWhen": {
               "type": "string",
-              "enum": ["unchecked", "empty", "disabled", "never"],
+              "enum": [
+                "unchecked",
+                "empty",
+                "disabled",
+                "never"
+              ],
               "description": "Condition under which the control contributes no entry to FormData."
             },
             "multiple": {
@@ -977,19 +1692,36 @@
           "properties": {
             "model": {
               "type": "string",
-              "enum": ["native", "props", "hybrid"],
+              "enum": [
+                "native",
+                "props",
+                "hybrid"
+              ],
               "description": "\"native\": uses platform validationMessage/setCustomValidity. \"props\": validity driven purely by props. \"hybrid\": both, with props taking precedence when set."
             },
-            "invalidProp": { "type": "string", "description": "Prop that forces an invalid visual/AT state." },
-            "errorMessageProp": { "type": "string", "description": "Prop that carries the error text shown to users and AT." },
+            "invalidProp": {
+              "type": "string",
+              "description": "Prop that forces an invalid visual/AT state."
+            },
+            "errorMessageProp": {
+              "type": "string",
+              "description": "Prop that carries the error text shown to users and AT."
+            },
             "errorSurface": {
               "type": "string",
-              "enum": ["aria-describedby", "aria-errormessage", "live-region", "none"],
+              "enum": [
+                "aria-describedby",
+                "aria-errormessage",
+                "live-region",
+                "none"
+              ],
               "description": "How the error text is exposed to assistive tech."
             },
             "ariaAttributes": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "ARIA attributes the implementation must set on the focusable part to reflect validity."
             }
           }
@@ -1000,12 +1732,20 @@
           "properties": {
             "strategy": {
               "type": "string",
-              "enum": ["associated-label", "self-labeling", "wrapped-label"]
+              "enum": [
+                "associated-label",
+                "self-labeling",
+                "wrapped-label"
+              ]
             },
-            "required": { "type": "boolean" },
+            "required": {
+              "type": "boolean"
+            },
             "via": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             }
           }
         },
@@ -1013,10 +1753,14 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "autocomplete": { "type": "string" },
+            "autocomplete": {
+              "type": "string"
+            },
             "hints": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
@@ -1025,10 +1769,16 @@
     "formPropRef": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["prop"],
+      "required": [
+        "prop"
+      ],
       "properties": {
-        "prop": { "type": "string" },
-        "description": { "type": "string" }
+        "prop": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "motionContract": {
@@ -1036,15 +1786,24 @@
       "description": "Motion/animation contract. Durations and easings are authored as token references so they resolve through the cascade and honor brand overrides.",
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "transitions": {
           "type": "array",
-          "items": { "$ref": "#/$defs/motionTransition" },
+          "items": {
+            "$ref": "#/$defs/motionTransition"
+          },
           "description": "Named animated transitions this component performs."
         },
         "reducedMotion": {
           "type": "string",
-          "enum": ["respect", "disable", "reduce", "ignore"],
+          "enum": [
+            "respect",
+            "disable",
+            "reduce",
+            "ignore"
+          ],
           "description": "\"respect\": honor `prefers-reduced-motion`. \"disable\": always skip. \"reduce\": shorter variants. \"ignore\": do not adapt (strongly discouraged)."
         },
         "reducedMotionStrategy": {
@@ -1055,18 +1814,26 @@
     },
     "motionTransition": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string" },
-        "description": { "type": "string" },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
         "trigger": {
           "type": "string",
           "description": "Event or state transition that starts this animation."
         },
         "properties": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "CSS properties animated (e.g. \"opacity\", \"transform\", \"height\")."
         },
         "duration": {
@@ -1079,8 +1846,13 @@
         },
         "phase": {
           "type": "string",
-          "enum": ["enter", "exit", "move", "attention"],
-          "description": "Semantic phase — useful for reduced-motion heuristics."
+          "enum": [
+            "enter",
+            "exit",
+            "move",
+            "attention"
+          ],
+          "description": "Semantic phase \u2014 useful for reduced-motion heuristics."
         }
       }
     },
@@ -1089,15 +1861,27 @@
       "description": "How focus is managed inside and around the component.",
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "strategy": {
           "type": "string",
-          "enum": ["trap", "roving", "auto", "manual", "none"],
+          "enum": [
+            "trap",
+            "roving",
+            "auto",
+            "manual",
+            "none"
+          ],
           "description": "\"trap\": contain focus inside (dialogs). \"roving\": tabindex moves through siblings. \"auto\": component sets initial focus on mount/open. \"manual\": caller controls. \"none\": no managed focus."
         },
         "orientation": {
           "type": "string",
-          "enum": ["horizontal", "vertical", "both"]
+          "enum": [
+            "horizontal",
+            "vertical",
+            "both"
+          ]
         },
         "initialFocus": {
           "type": "string",
@@ -1122,40 +1906,72 @@
       "description": "Whether and how the component escapes its parent DOM container.",
       "additionalProperties": false,
       "properties": {
-        "enabled": { "type": "boolean" },
-        "defaultTarget": { "type": "string" },
-        "targetProp": { "type": "string" },
+        "enabled": {
+          "type": "boolean"
+        },
+        "defaultTarget": {
+          "type": "string"
+        },
+        "targetProp": {
+          "type": "string"
+        },
         "positioning": {
           "type": "string",
-          "enum": ["anchored", "centered", "fixed", "none"]
+          "enum": [
+            "anchored",
+            "centered",
+            "fixed",
+            "none"
+          ]
         },
         "layering": {
           "type": "string",
-          "enum": ["modal", "popover", "tooltip", "menu", "toast", "none"]
+          "enum": [
+            "modal",
+            "popover",
+            "tooltip",
+            "menu",
+            "toast",
+            "none"
+          ]
         },
-        "backdrop": { "type": "boolean" },
+        "backdrop": {
+          "type": "boolean"
+        },
         "collision": {
           "type": "string",
-          "enum": ["flip", "shift", "flip-shift", "none"]
+          "enum": [
+            "flip",
+            "shift",
+            "flip-shift",
+            "none"
+          ]
         }
       }
     },
     "textOverflowContract": {
       "type": "object",
-      "description": "Target-neutral text-overflow intent. Distinct from any DOM-realization mechanism (e.g. CSS line-clamp custom-property bindings authored on anatomy.dom nodes) — this block declares the semantic fact; DOM targets additionally lower it through the existing cssVariableBindings mechanism (both coexist).",
+      "description": "Target-neutral text-overflow intent. Distinct from any DOM-realization mechanism (e.g. CSS line-clamp custom-property bindings authored on anatomy.dom nodes) \u2014 this block declares the semantic fact; DOM targets additionally lower it through the existing cssVariableBindings mechanism (both coexist).",
       "additionalProperties": false,
-      "required": ["kind", "line"],
+      "required": [
+        "kind",
+        "line"
+      ],
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "kind": {
           "type": "string",
-          "enum": ["line-clamp"],
+          "enum": [
+            "line-clamp"
+          ],
           "description": "The overflow-intent family. Only \"line-clamp\" (multi-line clamp to a line count) is modeled today; single-line ellipsis, fade, scroll, and expandable overflow are distinct kinds reserved for future extension, not folded into this one."
         },
         "line": {
           "type": "string",
           "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
-          "description": "The prop supplying the line count, as \"prop:<name>\". Must be the SAME prop that any existing cssVariableBindings line-clamp realization already reads — this is a second declaration of an existing source, not a new authority over the value."
+          "description": "The prop supplying the line count, as \"prop:<name>\". Must be the SAME prop that any existing cssVariableBindings line-clamp realization already reads \u2014 this is a second declaration of an existing source, not a new authority over the value."
         }
       }
     },
@@ -1166,52 +1982,93 @@
       "properties": {
         "triggers": {
           "type": "array",
-          "items": { "$ref": "#/$defs/dismissalTrigger" }
+          "items": {
+            "$ref": "#/$defs/dismissalTrigger"
+          }
         }
       }
     },
     "dismissalTrigger": {
       "type": "object",
-      "required": ["event"],
+      "required": [
+        "event"
+      ],
       "additionalProperties": false,
       "properties": {
         "event": {
           "type": "string",
-          "enum": ["escape", "overlayClick", "outsideClick", "blur", "routeChange", "triggerReclick", "userDismiss", "selection"]
+          "enum": [
+            "escape",
+            "overlayClick",
+            "outsideClick",
+            "blur",
+            "routeChange",
+            "triggerReclick",
+            "userDismiss",
+            "selection"
+          ]
         },
-        "enabledBy": { "type": "string" },
-        "defaultEnabled": { "type": "boolean" },
-        "description": { "type": "string" }
+        "enabledBy": {
+          "type": "string"
+        },
+        "defaultEnabled": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "surfaceContract": {
       "type": "object",
-      "description": "Declares this component as a presence surface (see docs/presence-surfaces.md). Coordinates anatomy part roles with presence, modality, anchoring, positioning, and controller selection. Does NOT duplicate the existing portal, dismissal, or focus blocks — those remain the detailed policy knobs; surface is the semantic and controller-selection descriptor.",
+      "description": "Declares this component as a presence surface (see docs/presence-surfaces.md). Coordinates anatomy part roles with presence, modality, anchoring, positioning, and controller selection. Does NOT duplicate the existing portal, dismissal, or focus blocks \u2014 those remain the detailed policy knobs; surface is the semantic and controller-selection descriptor.",
       "additionalProperties": false,
-      "required": ["kind", "presence", "modality"],
+      "required": [
+        "kind",
+        "presence",
+        "modality"
+      ],
       "properties": {
         "kind": {
           "type": "string",
-          "enum": ["tooltip", "popover", "dialog", "menu", "select", "toast", "coachmark", "sheet"],
+          "enum": [
+            "tooltip",
+            "popover",
+            "dialog",
+            "menu",
+            "select",
+            "toast",
+            "coachmark",
+            "sheet"
+          ],
           "description": "Semantic presence-surface family. Selects the controller family (e.g. AnchoredSurfaceController for tooltip/popover/menu/select; DialogSurfaceController for dialog; ToastSurfaceController for toast)."
         },
         "presence": {
           "type": "string",
-          "enum": ["ephemeral", "persistent"],
+          "enum": [
+            "ephemeral",
+            "persistent"
+          ],
           "description": "Lifecycle expectation. Ephemeral surfaces close when their trigger condition expires or a timing budget elapses. Persistent surfaces remain until explicitly dismissed."
         },
         "modality": {
           "type": "string",
-          "enum": ["blocking", "non-blocking"],
+          "enum": [
+            "blocking",
+            "non-blocking"
+          ],
           "description": "Whether the surface blocks interaction with content outside itself. Blocking surfaces require focus trap, outside inertness, and overlay scrim (specifics live in the top-level focus and portal blocks)."
         },
         "anchor": {
-          "description": "Relationship to the element the surface is positioned against. Omit for unanchored surfaces (centered modal dialogs, viewport-edge toasts). Two source forms: a trigger anatomy part (popover/tooltip — the invoking element lives in the component's own tree), or a runtime CSS selector carried in a prop (coachmark/guided tour — the anchor is an arbitrary page element outside the component).",
+          "description": "Relationship to the element the surface is positioned against. Omit for unanchored surfaces (centered modal dialogs, viewport-edge toasts). Two source forms: a trigger anatomy part (popover/tooltip \u2014 the invoking element lives in the component's own tree), or a runtime CSS selector carried in a prop (coachmark/guided tour \u2014 the anchor is an arbitrary page element outside the component).",
           "oneOf": [
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["part", "relation"],
+              "required": [
+                "part",
+                "relation"
+              ],
               "properties": {
                 "part": {
                   "type": "string",
@@ -1219,7 +2076,13 @@
                 },
                 "relation": {
                   "type": "string",
-                  "enum": ["describedby", "controls-expanded", "labelledby", "activedescendant", "none"],
+                  "enum": [
+                    "describedby",
+                    "controls-expanded",
+                    "labelledby",
+                    "activedescendant",
+                    "none"
+                  ],
                   "description": "Semantic ARIA relation between the trigger element and the surface content."
                 }
               }
@@ -1227,12 +2090,18 @@
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["selector"],
+              "required": [
+                "selector"
+              ],
               "properties": {
                 "selector": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["prop", "path", "indexChannel"],
+                  "required": [
+                    "prop",
+                    "path",
+                    "indexChannel"
+                  ],
                   "properties": {
                     "prop": {
                       "type": "string",
@@ -1256,7 +2125,10 @@
           "type": "object",
           "description": "Surface content part.",
           "additionalProperties": false,
-          "required": ["part", "interactive"],
+          "required": [
+            "part",
+            "interactive"
+          ],
           "properties": {
             "part": {
               "type": "string",
@@ -1272,12 +2144,20 @@
           "type": "object",
           "description": "Placement strategy family. Detailed portal target/layering lives in the top-level portal block.",
           "additionalProperties": false,
-          "required": ["strategy"],
+          "required": [
+            "strategy"
+          ],
           "properties": {
             "strategy": {
               "type": "string",
-              "enum": ["anchored", "centered", "viewport-edge", "fullscreen", "inline"],
-              "description": "anchored: relative to the trigger element. centered: viewport-centered. viewport-edge: pinned to a viewport edge (toasts, side sheets). fullscreen: occupies the entire viewport (full-screen takeover; vocabulary reserved — no corpus contract uses it yet). inline: rendered in document flow (no portal)."
+              "enum": [
+                "anchored",
+                "centered",
+                "viewport-edge",
+                "fullscreen",
+                "inline"
+              ],
+              "description": "anchored: relative to the trigger element. centered: viewport-centered. viewport-edge: pinned to a viewport edge (toasts, side sheets). fullscreen: occupies the entire viewport (full-screen takeover; vocabulary reserved \u2014 no corpus contract uses it yet). inline: rendered in document flow (no portal)."
             },
             "placementProp": {
               "type": "string",
@@ -1285,7 +2165,12 @@
             },
             "collision": {
               "type": "string",
-              "enum": ["none", "flip", "shift", "flip-shift"],
+              "enum": [
+                "none",
+                "flip",
+                "shift",
+                "flip-shift"
+              ],
               "description": "Edge-avoidance behavior when anchored placement would overflow the viewport."
             }
           }
@@ -1295,7 +2180,14 @@
           "description": "Semantic dismissal modes expected for this surface. The existing top-level dismissal block carries prop-level enablement (e.g. closeOnEscape: boolean enabledBy). The two compose; they do not replace each other.",
           "items": {
             "type": "string",
-            "enum": ["escape", "outside-click", "blur", "pointer-leave", "close-button", "timeout"]
+            "enum": [
+              "escape",
+              "outside-click",
+              "blur",
+              "pointer-leave",
+              "close-button",
+              "timeout"
+            ]
           }
         },
         "openTriggers": {
@@ -1303,7 +2195,11 @@
           "description": "Interactions on the anchor element that open the surface. Required by IR validation when surface.kind === 'tooltip' or surface.positioning.strategy === 'anchored'; otherwise optional (e.g. toasts and centered dialogs do not have an anchor-driven open trigger).",
           "items": {
             "type": "string",
-            "enum": ["hover", "focus", "click"]
+            "enum": [
+              "hover",
+              "focus",
+              "click"
+            ]
           },
           "minItems": 1,
           "uniqueItems": true
@@ -1332,35 +2228,60 @@
     "eventSignature": {
       "type": "object",
       "description": "Describes the payload of a callback.",
-      "required": ["description"],
+      "required": [
+        "description"
+      ],
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "emittedVia": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "payload": {
           "type": "array",
-          "items": { "$ref": "#/$defs/eventPayloadField" }
+          "items": {
+            "$ref": "#/$defs/eventPayloadField"
+          }
         },
-        "returns": { "type": "string" },
-        "cancelable": { "type": "boolean" },
+        "returns": {
+          "type": "string"
+        },
+        "cancelable": {
+          "type": "boolean"
+        },
         "triggeredBy": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "eventPayloadField": {
       "type": "object",
-      "required": ["name", "type"],
+      "required": [
+        "name",
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string" },
-        "type": { "type": "string" },
-        "description": { "type": "string" },
-        "optional": { "type": "boolean" }
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean"
+        }
       }
     },
     "stateMachine": {
@@ -1368,52 +2289,96 @@
       "description": "Declarative state-transition model. References dimension values from `states.dimensions` using \"<dimension>=<value>\" syntax.",
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "transitions": {
           "type": "array",
-          "items": { "$ref": "#/$defs/stateTransition" }
+          "items": {
+            "$ref": "#/$defs/stateTransition"
+          }
         }
       }
     },
     "stateTransition": {
       "type": "object",
-      "required": ["event", "to"],
+      "required": [
+        "event",
+        "to"
+      ],
       "additionalProperties": false,
       "properties": {
-        "event": { "type": "string" },
+        "event": {
+          "type": "string"
+        },
         "from": {
           "description": "Source state(s). Accepts a single state name or an array of names for shared-target transitions (e.g. both 'hover' and 'focus' transitioning to 'visible' without duplicating entries).",
           "oneOf": [
-            { "type": "string" },
-            { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
           ]
         },
-        "to": { "type": "string" },
-        "guard": { "type": "string" },
-        "effect": { "type": "string" },
-        "description": { "type": "string" }
+        "to": {
+          "type": "string"
+        },
+        "guard": {
+          "type": "string"
+        },
+        "effect": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "relationship": {
       "type": "object",
       "description": "An ID-reference link between two anatomy parts, expressed so implementers know which ARIA attributes to wire.",
-      "required": ["from", "to", "attribute"],
+      "required": [
+        "from",
+        "to",
+        "attribute"
+      ],
       "additionalProperties": false,
       "properties": {
-        "from": { "type": "string" },
-        "to": { "type": "string" },
-        "attribute": { "type": "string" },
-        "when": { "type": "string" },
-        "description": { "type": "string" }
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "keyboardEntry": {
-      "description": "A keyboard interaction. Three forms accepted: (1) bare string (legacy); (2) structured ours: { key, action, when?, mode? }; (3) structured portfolio: { key, when, then } — portfolio contracts import unchanged. `then` is an alias for `action`; downstream consumers should treat them equivalently.",
+      "description": "A keyboard interaction. Three forms accepted: (1) bare string (legacy); (2) structured ours: { key, action, when?, mode? }; (3) structured portfolio: { key, when, then } \u2014 portfolio contracts import unchanged. `then` is an alias for `action`; downstream consumers should treat them equivalently.",
       "oneOf": [
-        { "type": "string" },
+        {
+          "type": "string"
+        },
         {
           "type": "object",
-          "required": ["key", "action"],
+          "required": [
+            "key",
+            "action"
+          ],
           "additionalProperties": false,
           "properties": {
             "key": {
@@ -1436,13 +2401,23 @@
         },
         {
           "type": "object",
-          "required": ["key", "when", "then"],
+          "required": [
+            "key",
+            "when",
+            "then"
+          ],
           "additionalProperties": false,
           "description": "Portfolio-shape keyboard entry. `then` is the action; treat as an alias for `action` in the structured-ours form.",
           "properties": {
-            "key": { "type": "string" },
-            "when": { "type": "string" },
-            "then": { "type": "string" }
+            "key": {
+              "type": "string"
+            },
+            "when": {
+              "type": "string"
+            },
+            "then": {
+              "type": "string"
+            }
           }
         }
       ]
@@ -1452,28 +2427,42 @@
       "description": "Accessibility contract for the component.",
       "additionalProperties": false,
       "properties": {
-        "role": { "type": "string" },
+        "role": {
+          "type": "string"
+        },
         "labeling": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "keyboard": {
           "type": "array",
-          "items": { "$ref": "#/$defs/keyboardEntry" }
+          "items": {
+            "$ref": "#/$defs/keyboardEntry"
+          }
         },
         "screenReader": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "roles": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "All ARIA roles when multiple are used. Use alongside `role` when the component takes more than one role across its anatomy."
         },
         "apgPattern": {
           "oneOf": [
-            { "type": "string" },
-            { "type": "null" }
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
           ],
           "description": "ARIA Authoring Practices Guide pattern name (e.g. \"accordion\", \"dialog\", \"combobox\"). Helps agent tooling and a11y review route to the correct interaction expectations. Nullable to make explicit absence distinguishable from forgotten field."
         },
@@ -1487,7 +2476,11 @@
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["role", "attr", "reason"],
+                "required": [
+                  "role",
+                  "attr",
+                  "reason"
+                ],
                 "properties": {
                   "role": {
                     "type": "string",
@@ -1512,7 +2505,9 @@
     "a2uiContract": {
       "type": "object",
       "description": "Slim, agent-facing authoring block. Only fields that can't be derived from other contract blocks live here.",
-      "required": ["category"],
+      "required": [
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
         "category": {
@@ -1533,7 +2528,9 @@
         },
         "usageHints": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Short imperative notes that improve agent selection and prop-filling."
         },
         "children": {
@@ -1541,14 +2538,26 @@
           "description": "Whether and how this component accepts child nodes in the A2UI adjacency list.",
           "additionalProperties": false,
           "properties": {
-            "allowed": { "type": "boolean" },
-            "slot": { "type": "string" },
+            "allowed": {
+              "type": "boolean"
+            },
+            "slot": {
+              "type": "string"
+            },
             "accepts": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
-            "min": { "type": "integer", "minimum": 0 },
-            "max": { "type": "integer", "minimum": 0 }
+            "min": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         }
       }
