@@ -3,7 +3,6 @@ title: 'Prove press→callback firing via a swift-run click harness'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: swift-press-proof
 created_at: '2026-08-17T06:08:32.438Z'
 updated_at: '2026-08-17T14:02:41.079Z'
 blast_radius:
