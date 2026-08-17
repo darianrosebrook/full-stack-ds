@@ -140,3 +140,10 @@ fun fsdsMaterialColorScheme(theme: FsdsTheme = FsdsTheme(FsdsSemanticDefaults.li
         outline = outline ?: Color(0xFFB8B8B8),
     )
 }
+
+/** Parse a duration token ("100" or "100ms") into milliseconds; null otherwise. */
+fun String?.toFsdsMs(): Int? {
+    if (this == null) return null
+    val match = Regex("^([0-9]+)ms?$").find(this.trim()) ?: return null
+    return match.groupValues[1].toIntOrNull()
+}
