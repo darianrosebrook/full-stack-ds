@@ -45,3 +45,9 @@ evidence:
     status: pass
     evidence_ref: Both miscited paths corrected to docs/internal/... and marked machine-local; all 41 remaining path references in the snapshot re-swept with ls and confirmed present
     recorded_at: "2026-08-17T17:03:26.880Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "recon doc now labels 12/4/1/0 a historical baseline and points at the script; its --check description matches the live gate output clause-for-clause (6 self-declaring FrameworkIds, figma rail-excluded, registry aggregates, consumers derive, 2 non-pnpm lanes, no native FRAMEWORK target)"
+    recorded_at: "2026-08-17T17:03:37.134Z"
+    command: node scripts/rail-toolchain-coupling-audit.mjs --check
+    exit_code: 0
