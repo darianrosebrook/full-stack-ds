@@ -1,0 +1,47 @@
+id: FEAT-SWIFTUI-ICON-CONTENT-BATCH-01
+title: 'Icon-decorated content class: Alert, Status, Badge via GlyphCatalog (22→25)'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-17T04:09:24.397Z'
+updated_at: '2026-08-17T04:09:24.397Z'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (icon-decorated content class)'
+    - 'packages/ds-swiftui + fsds.targets.json (three admitted components)'
+    - 'docs/current-implementation-snapshot.md (coverage claims)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-swiftui'
+    - 'fsds.targets.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'The class gates on IR facts only: passive root, an icon part paired with an icon string prop, one children leaf, no channels/surface; no component identity.'
+  - 'Glyph rendering composes GlyphCatalog (icon prop → registry lookup at a fixed content size); unknown names remain accessibility-surfaced by the registry.'
+  - 'Unrealized props (Alert dismiss family, Badge showStatusIcon, Status semantics depth) are omitted-and-documented, never accepted-and-ignored.'
+acceptance:
+  - id: A1
+    given: 'Alert, Status, Badge (passive div/span root, icon part + icon string prop, exactly one children region, no channels/surface)'
+    when: 'generated'
+    then: 'the icon-decorated content class emits each as HStack { GlyphCatalog.glyph(named: icon) ; content } with axes layering and presence-driven chrome; all compile via swift build'
+  - id: A2
+    given: 'the class gate'
+    when: 'Chip is considered'
+    then: 'it is excluded (component-instance Button leaf — the TextField precedent) and stays fail-loud; Alert''s dismiss machinery (onDismiss/dismissible/dismissLabel) omitted-and-documented v1'
+  - id: A3
+    given: 'the glyph substrate composition'
+    when: 'these emit'
+    then: 'glyph rendering goes through the shared GlyphCatalog registry with decorative-default semantics — no per-component glyph code'
+  - id: A4
+    given: 'the full worktree gate'
+    when: 'typecheck, governed:rail, pnpm test, test:frameworks, swift test, swift build run'
+    then: 'all pass; admitted 22→25; remaining corpus fails loudly'
+non_functional: {}
+contracts:
+  - name: 'swiftui-icon-content'
+    type: contract-test
+    path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts'
