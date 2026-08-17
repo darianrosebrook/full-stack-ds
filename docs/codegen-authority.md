@@ -7,12 +7,16 @@ owner: "@darianrosebrook"
 updated: 2026-08-17
 governs:
   - packages/ds-codegen/src/ir.ts
+  - packages/ds-codegen/src/semantics.ts
   - packages/ds-codegen/src/test-plan.ts
   - packages/ds-codegen/src/frameworks/react
   - packages/ds-codegen/src/frameworks/vue
   - packages/ds-codegen/src/frameworks/svelte
   - packages/ds-codegen/src/frameworks/lit
   - packages/ds-codegen/src/frameworks/angular
+  - packages/ds-codegen/src/frameworks/react-native
+  - packages/ds-codegen/src/frameworks/swift
+  - packages/ds-codegen/src/frameworks/jetpack-compose
   - packages/ds-codegen/src/validation
 ---
 
