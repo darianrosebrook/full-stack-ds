@@ -1216,7 +1216,7 @@ function emitInteractiveComposite(ir: ComponentIR): string {
   const isUnion = (channel.valueType ?? "").includes("|");
   // v1: union openness lowers to its multi member (string[] panel keys)
   const chanType = isUnion ? "[String]" : "String";
-  const fieldDefault = isUnion ? "[]" : '\"\"';
+  const fieldDefault = isUnion ? "[]" : '""';
   const hasDisabled = hasConventionalProp(ir, "disabled");
   const hasAria = hasConventionalProp(ir, "ariaLabel");
   const lines: string[] = [];
