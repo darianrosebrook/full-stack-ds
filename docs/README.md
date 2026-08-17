@@ -34,20 +34,39 @@ Some authority/status combinations require extra fields (`governs`, `verified_at
 ```
 docs/
   README.md                              # This file (exempt from frontmatter rules)
-  admission-rail.md                      # Generated artifact admission rail (concept)
-  manifest-schema.md                     # Emission manifest schema (reference)
-  governed-ci.md                         # Rail operator workflow + CI integration
+  current-implementation-snapshot.md     # Claim ledger — the freshness authority
   codegen-authority.md                   # Codegen layer authority doctrine
   normal-form.md                         # The seven properties of compositional systems
-  presence-surfaces.md                   # Tooltips/popovers/dialogs/menus family doctrine
-  states-to-css.md                       # Contract states → CSS selectors
-  tokens-architecture.md                 # Design token graph + cascade + drift gate
+  document_governance.md                 # Frontmatter + location rules (enforced advisory)
   specifications/
-    document_governance.md               # Frontmatter + location rules (enforced advisory)
-  archive/                               # Frozen historical docs (exempt)
+    admission-rail.md                    # Generated artifact admission rail (concept)
+    manifest-schema.md                   # Emission manifest schema (reference)
+    governed-ci.md                       # Rail operator workflow + CI integration
+    states-to-css.md                     # Contract states → CSS selectors
+    a2ui-projection.md                   # Agent-facing descriptor projection
+  architecture/
+    presence-surfaces.md                 # Tooltip/popover/dialog/sheet family doctrine
+    tokens-architecture.md               # Design token graph + cascade + drift gate
+    component-layering.md                # .css (structure) vs .tokens.css (realization)
+    composer-slot-projection.md          # Named-slot projection across targets
+    contract-group-axes.md               # layer / category / morphology / prop-bucket axes
+    consumer-projection-doctrine.md      # Boring consumer surface + override doctrine
+    component-evidence-pages.md          # Component docs as evidence pages
+    figma-plugin.md                      # Figma descriptor consumer (historical slice)
+    design/
+      box-model-primitive.md             # The 14-slot geometry pool
+      target-pack-registry.md            # Target-pack manifest + extension seam
+  dead-slot-audit/  pseudo-state-audit/  # Machine-generated ledgers — written by
+  state-suppression-audit/               #   `pnpm run audit:*`, never by hand
+  token-resolvability-audit/
+  archive/                               # Reserved: frozen historical docs, exempt from
+                                         #   frontmatter rules. Does not exist yet.
 
-docs/internal/                            # gitignored — per-contributor ephemera
+docs/internal/                           # gitignored — per-contributor ephemera
   <roadmaps, working notes, in-flight thinking>
 ```
+
+The four `*-audit/` matrices are regenerated output. Fix a wrong statement in one by editing its
+generator under `scripts/<name>-audit/`, not the markdown — a hand edit is overwritten on the next run.
 
 New top-level docs should pick the right subfolder by authority — e.g., `specifications/` for `authority: spec` reference material, `adrs/` for `authority: adr`. Create the folder if it does not exist. Do NOT create `roadmaps/` or `working/` under `docs/`; those authorities partition into `docs/internal/`.
