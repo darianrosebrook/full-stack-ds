@@ -88,5 +88,59 @@
         "web"
       ]
     }
+  },
+  ".code-block__token[data-token=\"plain\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.plain",
+      "fallback": "#141414"
+    }
+  },
+  ".code-block__token[data-token=\"comment\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.comment",
+      "fallback": "#727272"
+    }
+  },
+  ".code-block__token[data-token=\"keyword\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.keyword",
+      "fallback": "#0566fe"
+    }
+  },
+  ".code-block__token[data-token=\"definition\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.definition",
+      "fallback": "#d92d2e"
+    }
+  },
+  ".code-block__token[data-token=\"punctuation\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.punctuation",
+      "fallback": "#0566fe"
+    }
+  },
+  ".code-block__token[data-token=\"property\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.property",
+      "fallback": "#ae5d00"
+    }
+  },
+  ".code-block__token[data-token=\"static\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.static",
+      "fallback": "#d92d2e"
+    }
+  },
+  ".code-block__token[data-token=\"string\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.string",
+      "fallback": "#900909"
+    }
+  },
+  ".code-block__token[data-token=\"tag\"]": {
+    "color": {
+      "resolvesTo": "code-block.token.color.tag",
+      "fallback": "#d92d2e"
+    }
   }
 }

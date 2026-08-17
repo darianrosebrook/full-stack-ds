@@ -156,6 +156,60 @@
           "font-family": "inherit",
           "font-size": "inherit"
         }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"plain\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-plain, #141414)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"comment\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-comment, #727272)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"keyword\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-keyword, #0566fe)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"definition\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-definition, #d92d2e)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"punctuation\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-punctuation, #0566fe)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"property\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-property, #ae5d00)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"static\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-static, #d92d2e)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"string\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-string, #900909)"
+        }
+      },
+      {
+        "selector": ".code-block__token[data-token=\"tag\"]",
+        "declarations": {
+          "color": "var(--fsds-code-block-token-color-tag, #d92d2e)"
+        }
       }
     ],
     "keyframes": []

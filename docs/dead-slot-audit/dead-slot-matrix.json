@@ -1,8 +1,8 @@
 {
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
   "components": 49,
-  "slotsDeclared": 894,
-  "consumed": 780,
+  "slotsDeclared": 903,
+  "consumed": 789,
   "inert": 114,
   "shadowed": 16,
   "dead": 98,
@@ -3794,8 +3794,8 @@
     {
       "component": "CodeBlock",
       "prefix": "code-block",
-      "total": 13,
-      "consumed": 13,
+      "total": 22,
+      "consumed": 22,
       "shadowed": 0,
       "dead": 0,
       "slots": [
@@ -3874,6 +3874,60 @@
         {
           "slot": "code-block.typography.lineHeight.default",
           "cssVar": "--fsds-code-block-typography-line-height-default",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.plain",
+          "cssVar": "--fsds-code-block-token-color-plain",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.comment",
+          "cssVar": "--fsds-code-block-token-color-comment",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.keyword",
+          "cssVar": "--fsds-code-block-token-color-keyword",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.definition",
+          "cssVar": "--fsds-code-block-token-color-definition",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.punctuation",
+          "cssVar": "--fsds-code-block-token-color-punctuation",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.property",
+          "cssVar": "--fsds-code-block-token-color-property",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.static",
+          "cssVar": "--fsds-code-block-token-color-static",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.string",
+          "cssVar": "--fsds-code-block-token-color-string",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "code-block.token.color.tag",
+          "cssVar": "--fsds-code-block-token-color-tag",
           "source": "tokens",
           "status": "consumed"
         }
