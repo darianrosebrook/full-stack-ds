@@ -32,3 +32,10 @@ acceptance:
     then: 'every entry of DERIVABLE_STATE_TO_PSEUDO is present'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "jq -r '.scripts[\"governed:rail\"], .scripts[\"governed:rail:changed\"], .scripts[\"governed:rail:react-native\"]' package.json output matches the three Equivalent-to blocks verbatim, including the generate:check prefix"
+    recorded_at: "2026-08-17T16:50:02.523Z"
+    command: "jq -r '.scripts[\"governed:rail\"]' package.json"
+    exit_code: 0
