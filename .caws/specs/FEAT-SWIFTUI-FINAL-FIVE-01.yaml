@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "Shuttle.swift: @StateObject selection ControllableValue<[String]> + ForEach(selection.value, id: .self); compiled Build complete"
     recorded_at: "2026-08-17T05:52:24.969Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Accordion.swift ControllableValue<[String]> (union->multi v1) + Tabs.swift ControllableValue<String> activeTab; emitter tests pin both"
+    recorded_at: "2026-08-17T05:52:25.826Z"
