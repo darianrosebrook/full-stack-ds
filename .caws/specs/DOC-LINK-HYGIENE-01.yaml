@@ -42,3 +42,7 @@ evidence:
     recorded_at: "2026-08-17T17:13:30.558Z"
     command: "pnpm run docs:check-links"
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "packages/ds-tokens/README.md now marks docs/internal/tokens-workstream-plan.md machine-local and points at the landed docs/architecture/tokens-architecture.md; snapshot's two docs/internal citations were flagged in DOC-AUTHORITY-LEDGER-DRIFT-01"
+    recorded_at: "2026-08-17T17:13:34.136Z"
