@@ -372,4 +372,4 @@ The point of these recipes is to make closure-note authorship mechanical. The ra
 
 - [`docs/specifications/admission-rail.md`](./admission-rail.md) — the conceptual entry point. What the rail proves, the four evidence rungs, the doctrinal non-claims, the diagnostic-code reading guide.
 - [`docs/specifications/manifest-schema.md`](./manifest-schema.md) — the manifest's field-by-field reference and schema version history.
-- [`docs/codegen-authority.md`](./codegen-authority.md) — the authority split that frames the rail's "validation evidence, not generation policy" role.
+- [`docs/codegen-authority.md`](../codegen-authority.md) — the authority split that frames the rail's "validation evidence, not generation policy" role.

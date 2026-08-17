@@ -14,7 +14,7 @@ governs:
 # Composer Slot Projection
 
 > Companion to [`component-layering.md`](./component-layering.md) and
-> [`codegen-authority.md`](./codegen-authority.md). Names the canonical rule for how a
+> [`codegen-authority.md`](../codegen-authority.md). Names the canonical rule for how a
 > compound or composer projects content into named regions, and why content props and
 > content slots for the same region may not coexist.
 

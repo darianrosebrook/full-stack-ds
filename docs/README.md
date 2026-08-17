@@ -6,11 +6,11 @@ Project documentation for **Full Stack Design System**.
 
 Durable reference for a reader trying to understand the project — design rationale, architectural doctrine, contracts, ADRs, specs, reference material. Everything in this tree should still teach current reality six months from now.
 
-In-flight thinking, roadmaps, and working notes do NOT go here. They live in `docs/internal/` (gitignored, per-contributor). See [`specifications/document_governance.md`](specifications/document_governance.md) — "Location" section — for the authority→directory partition rule and the rationale (stale ephemeral content in a consumer-facing tree becomes a trust hazard).
+In-flight thinking, roadmaps, and working notes do NOT go here. They live in `docs/internal/` (gitignored, per-contributor). See [`document_governance.md`](./document_governance.md) — "Location" section — for the authority→directory partition rule and the rationale (stale ephemeral content in a consumer-facing tree becomes a trust hazard).
 
 ## Frontmatter is enforced
 
-Every `.md` file in this directory (except this `README.md` and anything under `archive/`) must start with a YAML frontmatter block. The contract is defined in [`specifications/document_governance.md`](specifications/document_governance.md), and the rule is enforced advisory-only by `.claude/hooks/doc-frontmatter-check.sh` on `Write`/`Edit`.
+Every `.md` file in this directory (except this `README.md` and anything under `archive/`) must start with a YAML frontmatter block. The contract is defined in [`document_governance.md`](./document_governance.md), and the rule is enforced advisory-only by `.claude/hooks/doc-frontmatter-check.sh` on `Write`/`Edit`.
 
 Minimum required fields:
 

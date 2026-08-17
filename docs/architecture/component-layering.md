@@ -16,7 +16,7 @@ governs:
 
 # Component Layering
 
-> Companion to [`ARCH-TOKENS-ARCHITECTURE-001`](./tokens-architecture.md), [`ARCH-BOX-MODEL-PRIMITIVE-001`](./box-model-primitive.md), [`SPEC-STATES-TO-CSS-001`](./states-to-css.md), and [`ARCH-CODEGEN-AUTHORITY-001`](./codegen-authority.md). Names the realized layering rule that determines what lives in `<Name>.css` vs `<Name>.tokens.css`, and the variant-redirection pattern that uses it.
+> Companion to [`ARCH-TOKENS-ARCHITECTURE-001`](./tokens-architecture.md), [`ARCH-BOX-MODEL-PRIMITIVE-001`](./design/box-model-primitive.md), [`SPEC-STATES-TO-CSS-001`](../specifications/states-to-css.md), and [`ARCH-CODEGEN-AUTHORITY-001`](../codegen-authority.md). Names the realized layering rule that determines what lives in `<Name>.css` vs `<Name>.tokens.css`, and the variant-redirection pattern that uses it.
 
 Every generated component emits two CSS files: `<Name>.css` and `<Name>.tokens.css`. The split between them is not just file organization — it carries an architectural rule that makes variants, states, density, and brand overrides compose through the cascade without compound selectors or per-variant slot names. This doc is the durable record for that rule.
 
@@ -314,9 +314,9 @@ Every action component's box-model padding shifts accordingly.
 ## Cross-references
 
 - [`docs/architecture/tokens-architecture.md`](./tokens-architecture.md) — the global token graph. Slot resolutions in `.tokens.css` walk up through this graph.
-- [`docs/architecture/design/box-model-primitive.md`](./box-model-primitive.md) — the closed slot pool every component inherits. The box-model slots follow the same layering rule as component-local slots.
-- [`docs/specifications/states-to-css.md`](./states-to-css.md) — the state→pseudo-class mapping. Defines which `styles.json` selector keys are eligible for the structural-state-rule emission described here.
-- [`docs/codegen-authority.md`](./codegen-authority.md) — codegen layer authority. The dot-count disambiguation rule (Decision 4) follows that doc's "rules branch on grammar, not on identity" principle.
+- [`docs/architecture/design/box-model-primitive.md`](./design/box-model-primitive.md) — the closed slot pool every component inherits. The box-model slots follow the same layering rule as component-local slots.
+- [`docs/specifications/states-to-css.md`](../specifications/states-to-css.md) — the state→pseudo-class mapping. Defines which `styles.json` selector keys are eligible for the structural-state-rule emission described here.
+- [`docs/codegen-authority.md`](../codegen-authority.md) — codegen layer authority. The dot-count disambiguation rule (Decision 4) follows that doc's "rules branch on grammar, not on identity" principle.
 
 ## When in doubt
 

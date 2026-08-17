@@ -58,6 +58,16 @@ jobs:
       - name: Check docs claims (corpus count drift)
         run: pnpm run docs:check-claims
 
+      # Doc cross-reference drift — every relative .md link in a TRACKED
+      # markdown file must resolve. The docs tree was reorganised into
+      # architecture/ + specifications/ + architecture/design/ without
+      # re-pointing sibling `./foo.md` links, leaving 20 dead links between
+      # the repo's own authority docs. Nothing walked doc links, so nothing
+      # caught it. Targets that git ignores (per-machine `caws init` output)
+      # are skipped, not failed.
+      - name: Check docs links (cross-reference drift)
+        run: pnpm run docs:check-links
+
       # Design tokens — DTCG validation. Catches malformed token JSON,
       # self-references, and unknown $type values in source token files
       # before the build composes them.

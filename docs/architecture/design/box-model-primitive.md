@@ -18,7 +18,7 @@ governs:
 
 # Box-Model Primitive Slot Pool
 
-> Companion to [`ARCH-TOKENS-ARCHITECTURE-001`](./tokens-architecture.md) and [`ARCH-CODEGEN-AUTHORITY-001`](./codegen-authority.md). Adds a closed slot surface that every component inherits as a stable, themable substrate for padding, gap, and intrinsic sizing.
+> Companion to [`ARCH-TOKENS-ARCHITECTURE-001`](../tokens-architecture.md) and [`ARCH-CODEGEN-AUTHORITY-001`](../../codegen-authority.md). Adds a closed slot surface that every component inherits as a stable, themable substrate for padding, gap, and intrinsic sizing.
 
 This document is the architectural record for the box-model primitive — the closed set of 14 CSS custom properties (`--fsds-box-model-*`) that every generated component declares on its root and reads as default `padding-*`, `gap`, `width/min-width/max-width`, `height/min-height/max-height` values. It exists for the same reason `tokens-architecture.md` exists: a contributor a year from now should be able to read one doc and know **why this surface exists, what guarantees it makes, and which decisions are load-bearing.**
 
@@ -315,11 +315,11 @@ If a future slot wants a value form the current regex rejects (e.g. `dvh` viewpo
 
 ## Cross-references
 
-- [`docs/architecture/component-layering.md`](./component-layering.md) — the `.css` (structure) vs `.tokens.css` (resolution) layering rule and the variant-redirection pattern. Box-model slots participate in this rule: their declarations land in `.tokens.css` while the longhand consumer reads (`padding-block-start: var(...)`) land in `.css` as part of every component's structural surface.
-- [`docs/architecture/tokens-architecture.md`](./tokens-architecture.md) — design-token graph architecture. The box-model primitive sits adjacent: it defines a slot pool, not new global tokens. Box-model slots may `resolvesTo` paths in the token graph, and the graph's `--fsds-` prefix convention applies (the box-model slots are `--fsds-box-model-*`).
-- [`docs/codegen-authority.md`](./codegen-authority.md) — codegen layer authority. Box-model auto-consumption is a universal emitter rule (applies to every component regardless of identity) and therefore does not violate the binding rule about component-name branches.
-- [`docs/specifications/admission-rail.md`](./admission-rail.md) — the rail's "evidence is inspectable, claims are bounded" philosophy applies here too. Box-model emission is byte-stable; the convergence validator (`validateContractEmittedCss`) catches drift between contract authoring and emitted artifact on the slot side.
-- [`docs/normal-form.md`](./normal-form.md) — the box-model primitive is one slot pool, not five. Property-2 (framework-neutral IR) is realized by handling box-model in `ir.ts` once; every framework picks it up via the existing CSS emit path.
+- [`docs/architecture/component-layering.md`](../component-layering.md) — the `.css` (structure) vs `.tokens.css` (resolution) layering rule and the variant-redirection pattern. Box-model slots participate in this rule: their declarations land in `.tokens.css` while the longhand consumer reads (`padding-block-start: var(...)`) land in `.css` as part of every component's structural surface.
+- [`docs/architecture/tokens-architecture.md`](../tokens-architecture.md) — design-token graph architecture. The box-model primitive sits adjacent: it defines a slot pool, not new global tokens. Box-model slots may `resolvesTo` paths in the token graph, and the graph's `--fsds-` prefix convention applies (the box-model slots are `--fsds-box-model-*`).
+- [`docs/codegen-authority.md`](../../codegen-authority.md) — codegen layer authority. Box-model auto-consumption is a universal emitter rule (applies to every component regardless of identity) and therefore does not violate the binding rule about component-name branches.
+- [`docs/specifications/admission-rail.md`](../../specifications/admission-rail.md) — the rail's "evidence is inspectable, claims are bounded" philosophy applies here too. Box-model emission is byte-stable; the convergence validator (`validateContractEmittedCss`) catches drift between contract authoring and emitted artifact on the slot side.
+- [`docs/normal-form.md`](../../normal-form.md) — the box-model primitive is one slot pool, not five. Property-2 (framework-neutral IR) is realized by handling box-model in `ir.ts` once; every framework picks it up via the existing CSS emit path.
 
 ## Future work
 

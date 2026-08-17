@@ -9,7 +9,7 @@ This package includes **two schema variants**:
 - **`w3c-schema-strict.json`** (default) - Strict DTCG 1.0 compliance, structured values only
 - **`w3c-schema-permissive.json`** - Extended schema with custom types and string value support
 
-See [SCHEMAS.md](./SCHEMAS.md) for detailed comparison and usage.
+
 
 ## Features
 
