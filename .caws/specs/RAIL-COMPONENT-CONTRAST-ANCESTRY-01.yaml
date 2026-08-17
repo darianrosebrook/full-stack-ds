@@ -2,9 +2,11 @@ id: RAIL-COMPONENT-CONTRAST-ANCESTRY-01
 title: 'Component-contrast gate: inheritance-aware color×background pairing'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Inheritance-aware contrast pairing landed: color-only blocks pair against the nearest unconditional ancestor background (anatomy.dom chains, transform containment, conditional-block exclusion); 10 newly-derived failing pairs ledgered pending palette repair; all gates green'
 created_at: '2026-08-17T15:33:40.303Z'
-updated_at: '2026-08-17T15:33:40.303Z'
+updated_at: '2026-08-17T16:41:44.696Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation: component-contrast validator gains an ancestry-aware pairing rule (color-only blocks pair against the nearest declared ancestor background) + tests'
