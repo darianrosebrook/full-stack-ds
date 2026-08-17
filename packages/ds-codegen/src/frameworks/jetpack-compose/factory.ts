@@ -1,43 +1,53 @@
 /**
- * Jetpack Compose FrameworkEmitter — scaffold only.
+ * Jetpack Compose FrameworkEmitter.
  *
  * Targets Jetpack Compose: each component emits a `.kt` file exporting a
- * top-level `@Composable fun ${Name}(...)`. Compound parts become sibling
- * composables in the same file. Behavior is composed inline via
- * `remember { ... }` + Compose effects (`LaunchedEffect`,
- * `DisposableEffect`), so the "hook" file maps to a separate `${Name}State.kt`
- * exposing a `remember${Name}State()` factory and a `${Name}State` class —
- * the Compose idiom for hoisted state.
+ * top-level `@Composable fun ${Name}(...)`. Compound parts would become
+ * sibling composables in the same file; behavior composes inline via
+ * `remember { ... }` + Compose effects.
  *
- * NOT YET REGISTERED: `"jetpack-compose"` is not a member of `TargetId`.
- * The factory casts its `id` so the object satisfies `FrameworkEmitter`
- * in isolation; wiring into the CLI requires widening `TargetId` and
- * `KNOWN_TARGETS` in `../../emitter.ts` and adding a binding in
- * `../../registry.ts`.
+ * Registered as an explicit-only builtin target (`--target=jetpack-compose`)
+ * in FEAT-COMPOSE-EMITTER-WIRING-001, the Compose twin of the SwiftUI
+ * registration: the emitter implements the native-collapse path only
+ * (Switch/ToggleSwitch via `native-toggle-affordance`); multi-part anatomy
+ * and anchored surfaces throw explicit not-implemented errors, so
+ * corpus-wide generation and default-rail admission stay out of scope until
+ * those paths exist.
+ *
+ * Deliberate emission gaps in this slice (mirroring the SwiftUI wiring):
+ *   - Tests return `[]`: the Gradle module has no test source set yet.
+ *     Generated tests arrive with a dedicated test target in a later slice.
+ *   - No behavior/state files: the controlled/uncontrolled channel pattern
+ *     lives inline in the composable (`remember { mutableStateOf(...) }`),
+ *     so no `remember${Name}State()` factory is emitted yet.
+ *   - discoverComponentIds returns [] until the components root exists on
+ *     disk in the consuming checkout (the CLI treats an empty package as
+ *     "nothing to preserve"; the barrel still records the emit list).
  */
+import fs from "node:fs";
+import path from "node:path";
 import type {
   EmitOptions,
   FrameworkEmitter,
   GeneratedFile,
-  TargetId,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
 import { generateJetpackComposeComponentSource } from "./component-source.js";
-import { generateJetpackComposeHookSource } from "./hook-source.js";
+import { generateJetpackComposeTokensFile } from "./component-source.js";
 import { generateJetpackComposeBarrel } from "./barrel.js";
-import { generateJetpackComposeTest } from "./tests.js";
 import {
   generateJetpackComposeSurfaceFiles,
   isSurfaceComponent,
 } from "./surface-emit.js";
-import { generateJetpackComposeSurfaceTest } from "./surface-tests.js";
 
 export function createJetpackComposeEmitter(): FrameworkEmitter {
   return {
-    id: "jetpack-compose" as TargetId,
+    id: "jetpack-compose",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       if (isSurfaceComponent(ir)) {
+        // Anchored surfaces are not implemented in this slice — the call
+        // throws the scaffold's explicit not-implemented error.
         const surfaceFiles = generateJetpackComposeSurfaceFiles(ir);
         return [
           {
@@ -48,65 +58,43 @@ export function createJetpackComposeEmitter(): FrameworkEmitter {
         ];
       }
       const source = generateJetpackComposeComponentSource(ir);
+      const tokensSource = generateJetpackComposeTokensFile(ir);
       return [
         {
           relativePath: `${ir.name}/${ir.name}.kt`,
           contents: source,
           preservable: true,
         },
-      ];
-    },
-
-    emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (isSurfaceComponent(ir)) {
-        return [
-          {
-            relativePath: `${ir.name}/test/${ir.name}Test.kt`,
-            contents: generateJetpackComposeSurfaceTest(ir),
-            preservable: true,
-          },
-        ];
-      }
-      return [
         {
-          relativePath: `${ir.name}/test/${ir.name}Test.kt`,
-          contents: generateJetpackComposeTest(ir),
+          relativePath: `${ir.name}/${ir.name}Tokens.kt`,
+          contents: tokensSource,
           preservable: true,
         },
       ];
     },
 
-    emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (isSurfaceComponent(ir)) {
-        const surfaceFiles = generateJetpackComposeSurfaceFiles(ir);
-        if (!surfaceFiles.stateFile) return [];
-        return [
-          {
-            relativePath: `${ir.name}/${ir.name}State.kt`,
-            contents: surfaceFiles.stateFile,
-            preservable: true,
-          },
-        ];
-      }
-      const source = generateJetpackComposeHookSource(ir);
-      if (!source) return [];
-      return [
-        {
-          relativePath: `${ir.name}/${ir.name}State.kt`,
-          contents: source,
-          preservable: true,
-        },
-      ];
+    emitTests(_ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      return [];
+    },
+
+    emitHook(_ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      return [];
     },
 
     emitBarrel(componentNames: string[], componentsRoot?: string): string {
       return generateJetpackComposeBarrel(componentNames, componentsRoot);
     },
 
-    discoverComponentIds(_componentsRoot: string): string[] {
-      // TODO: walk `${componentsRoot}/<Name>/<Name>.kt` once the
-      // workspace package exists.
-      return [];
+    discoverComponentIds(componentsRoot: string): string[] {
+      if (!fs.existsSync(componentsRoot)) return [];
+      return fs
+        .readdirSync(componentsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) =>
+          fs.existsSync(path.join(componentsRoot, name, `${name}.kt`)),
+        )
+        .sort();
     },
   };
 }

@@ -63,7 +63,41 @@
         "Label",
         "Blockquote",
         "Links",
-        "List"
+        "List",
+        "Checkbox",
+        "Divider",
+        "Progress",
+        "Spinner",
+        "Icon",
+        "Toast",
+        "Select",
+        "Alert",
+        "Badge",
+        "OTP",
+        "AlertNotice",
+        "Stat",
+        "ProfileFlag",
+        "Postcard",
+        "Breadcrumbs",
+        "NavList",
+        "CodeSnippet",
+        "CodeBlock",
+        "Image",
+        "Avatar",
+        "Truncate",
+        "ShowMore",
+        "Popover",
+        "Skeleton"
+      ]
+    },
+    {
+      "id": "jetpack-compose",
+      "source": {
+        "kind": "builtin"
+      },
+      "components": [
+        "Switch",
+        "ToggleSwitch"
       ]
     }
   ]

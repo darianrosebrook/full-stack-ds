@@ -37,13 +37,13 @@ enum DetailsTokens {
             "details.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-padding-default", name: "details.size.padding.default", fallback: .string("16px")),
             "details.size.radius.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-radius-default", name: "details.size.radius.default", fallback: .string("6px")),
             "details.size.icon": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-icon", name: "details.size.icon", fallback: .string("12px")),
-            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", fallback: .string("#ffffff")),
-            "details.color.background.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-hover", name: "details.color.background.hover", fallback: .string("#b8b8b8")),
-            "details.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-foreground-primary", name: "details.color.foreground.primary", fallback: .string("#141414")),
-            "details.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-default", name: "details.color.border.default", fallback: .string("#a0a0a1")),
-            "details.color.border.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-hover", name: "details.color.border.hover", fallback: .string("#888889")),
+            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", fallback: .adaptive(light: "#ffffff", dark: "#000000")),
+            "details.color.background.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-hover", name: "details.color.background.hover", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
+            "details.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-foreground-primary", name: "details.color.foreground.primary", fallback: .adaptive(light: "#141414", dark: "#fafafa")),
+            "details.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-default", name: "details.color.border.default", fallback: .adaptive(light: "#a0a0a1", dark: "#5c5b5c")),
+            "details.color.border.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-hover", name: "details.color.border.hover", fallback: .adaptive(light: "#888889", dark: "#727272")),
             "details.focus.ring.width": FsdsComponentTokenDefinition(cssVar: "--fsds-details-focus-ring-width", name: "details.focus.ring.width", fallback: .string("2px")),
-            "details.focus.ring.color": FsdsComponentTokenDefinition(cssVar: "--fsds-details-focus-ring-color", name: "details.focus.ring.color", fallback: .string("#d92d2e")),
+            "details.focus.ring.color": FsdsComponentTokenDefinition(cssVar: "--fsds-details-focus-ring-color", name: "details.focus.ring.color", fallback: .adaptive(light: "#d92d2e", dark: "#e55b5a")),
             "details.focus.ring.offset": FsdsComponentTokenDefinition(cssVar: "--fsds-details-focus-ring-offset", name: "details.focus.ring.offset", fallback: .string("2px")),
             "details.spacing.gap.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-spacing-gap-default", name: "details.spacing.gap.default", fallback: .string("2px")),
             "details.typography.lineHeight.body": FsdsComponentTokenDefinition(cssVar: "--fsds-details-typography-line-height-body", name: "details.typography.lineHeight.body", fallback: .string("1.5")),
@@ -54,7 +54,7 @@ enum DetailsTokens {
             "details.typography.fontSize.compact": FsdsComponentTokenDefinition(cssVar: "--fsds-details-typography-font-size-compact", name: "details.typography.fontSize.compact", fallback: .string("12px")),
         ],
         "hover": [
-            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", fallback: .string("#b8b8b8")),
+            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
         ],
         "variant_compact": [
             "details.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-padding-default", name: "details.size.padding.default", fallback: .string("8px")),
@@ -62,8 +62,8 @@ enum DetailsTokens {
         ],
         "variant_inline": [
             "details.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-padding-default", name: "details.size.padding.default", fallback: .string("24px")),
-            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", fallback: .string("#d0d0d0")),
-            "details.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-default", name: "details.color.border.default", fallback: .string("#d0d0d0")),
+            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "details.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-default", name: "details.color.border.default", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
         ],
     ]
 }
@@ -73,9 +73,7 @@ public struct Details<Content: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         DetailsTokens.scopes
     }
-    private let controlledOpen: Binding<Bool>?
-    @State private var uncontrolledOpen: Bool
-    private let onOpenChange: ((Bool) -> Void)?
+    @StateObject private var open: ControllableValue<Bool>
     private let summary: String?
     private let disabled: Bool
     private let content: Content
@@ -89,31 +87,17 @@ public struct Details<Content: View>: View {
         disabled: Bool = false,
         @ViewBuilder content: () -> Content
     ) {
-        self.controlledOpen = open
-        self._uncontrolledOpen = State(initialValue: defaultOpen)
-        self.onOpenChange = onOpenChange
+        self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
         self.summary = summary
         self.disabled = disabled
         self.content = content()
     }
 
-    private var isOpen: Bool {
-        controlledOpen?.wrappedValue ?? uncontrolledOpen
-    }
-
-    private func setOpen(_ next: Bool) {
-        if let binding = controlledOpen {
-            binding.wrappedValue = next
-        } else {
-            uncontrolledOpen = next
-        }
-        onOpenChange?(next)
-    }
 
     public var body: some View {
         DisclosureGroup(isExpanded: Binding(
-            get: { isOpen },
-            set: { setOpen($0) }
+            get: { open.value },
+            set: { open.set($0) }
         )) {
             content
         } label: {

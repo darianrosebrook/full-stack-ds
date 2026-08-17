@@ -15,6 +15,7 @@ import path from "node:path";
 import type { BuiltinTargetId, FrameworkEmitter, TargetId } from "./emitter.js";
 import { createAngularEmitter } from "./frameworks/angular/factory.js";
 import { createFigmaEmitter } from "./frameworks/figma/factory.js";
+import { createJetpackComposeEmitter } from "./frameworks/jetpack-compose/factory.js";
 import { createLitEmitter } from "./frameworks/lit/factory.js";
 import { createReactNativeEmitter } from "./frameworks/react-native/factory.js";
 import { createReactEmitter } from "./frameworks/react/factory.js";
@@ -293,6 +294,42 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     });
   }
 
+  // Jetpack Compose target — explicit-only native target (selectable via
+  // --target=jetpack-compose), the Compose twin of the SwiftUI registration:
+  // the emitter implements the native-collapse path only (Switch/ToggleSwitch
+  // via native-toggle-affordance) and throws on every other shape. No
+  // railFrameworkId: outside the admission rail entirely in this slice. The
+  // output root is a Gradle package (settings.gradle.kts marker), not a pnpm
+  // workspace package. Declared-admission ladder: JVM real-runtime compile
+  // here (rung 1 of 3); full Android SDK + Gradle compile lane (rung 2) and
+  // runtime admission (rung 3) are reserved follow-up specs.
+  const jetpackComposeRoot = path.join(
+    opts.workspaceRoot,
+    "packages",
+    "ds-jetpack-compose",
+    "library",
+    "src",
+    "main",
+    "kotlin",
+    "com",
+    "fullstackds",
+    "components",
+  );
+  if (
+    configuredTargets.has("jetpack-compose") &&
+    workspaceExists(
+      path.join(opts.workspaceRoot, "packages", "ds-jetpack-compose"),
+    )
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
+      id: "jetpack-compose",
+      emitter: createJetpackComposeEmitter(),
+      componentsRoot: jetpackComposeRoot,
+      barrelFile: "Components.generated.kt",
+      admittedComponents: declaredComponents("jetpack-compose"),
+    });
+  }
+
   for (const target of configuredLocalTargets(loadedConfig.config)) {
     registerLocalTargetDeclaration(declarations, opts.workspaceRoot, target);
   }
@@ -370,12 +407,14 @@ function getDeclaration(
 /**
  * A target package exists when it carries a workspace marker. pnpm packages
  * mark with `package.json`; SwiftPM packages (non-pnpm output roots) mark
- * with `Package.swift`. Existing pnpm target gating is unchanged — a package
- * without either marker is still omitted from executable availability.
+ * with `Package.swift`; Gradle packages mark with `settings.gradle.kts`.
+ * Existing pnpm target gating is unchanged — a package without any marker is
+ * still omitted from executable availability.
  */
 function workspaceExists(packageRoot: string): boolean {
   return (
     fs.existsSync(path.join(packageRoot, "package.json")) ||
-    fs.existsSync(path.join(packageRoot, "Package.swift"))
+    fs.existsSync(path.join(packageRoot, "Package.swift")) ||
+    fs.existsSync(path.join(packageRoot, "settings.gradle.kts"))
   );
 }

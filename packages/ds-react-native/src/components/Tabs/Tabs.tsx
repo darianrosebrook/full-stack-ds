@@ -79,7 +79,8 @@ export function Tabs({
   const unregisterTab = useCallback((value: string) => {
     setRegisteredTabs((tabs) => tabs.filter((tab) => tab !== value));
   }, []);
-  const resolvedIdBase = idBase ?? useId().replace(/:/g, "");
+  const generatedIdBase = useId().replace(/:/g, "");
+  const resolvedIdBase = idBase ?? generatedIdBase;
 
   return (
     <TabsContextProvider

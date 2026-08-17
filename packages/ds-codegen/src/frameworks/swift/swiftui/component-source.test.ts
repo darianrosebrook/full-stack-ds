@@ -201,7 +201,7 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
   it("realizes chrome presence-driven with the status accent bar", () => {
     const source = emitCard();
     expect(source).toContain("enum CardTokens {");
-    expect(source).toContain('fallback: .string("#ffffff")');
+    expect(source).toContain('.adaptive(light: "#ffffff", dark:');
     expect(source).toContain(
       "Rectangle().fill(statusAccent).frame(width: statusAccentWidth)",
     );
@@ -246,7 +246,7 @@ describe("generateSwiftUIComponentSource — named-slot composer (Field)", () =>
   it("realizes short-form chrome slots and layers the status axis", () => {
     const source = emitField();
     expect(source).toContain("enum FieldTokens {");
-    expect(source).toContain('fallback: .string("#ffffff")');
+    expect(source).toContain('.adaptive(light: "#ffffff", dark:');
     expect(source).toContain('colorSlot("color.bg") ?? .accentColor');
     expect(source).toContain('pxSlot("radius") ?? 0');
     expect(source).toContain('colorSlot("color.border") ?? .clear');
@@ -273,12 +273,10 @@ describe("generateSwiftUIComponentSource — value-channel text control (Input)"
   it("projects the string channel through the controllable-state pattern", () => {
     const source = emitInput();
     expect(source).toContain("public struct Input: View {");
-    expect(source).toContain("private let controlledValue: Binding<String>?");
-    expect(source).toContain("@State private var uncontrolledValue: String");
-    expect(source).toContain("private let onChange: ((String) -> Void)?");
+    expect(source).toContain("@StateObject private var text: ControllableValue<String>");
     expect(source).toContain("value: Binding<String>? = nil");
-    expect(source).toContain("controlledValue?.wrappedValue ?? uncontrolledValue");
-    expect(source).toContain("onChange?(next)");
+    expect(source).toContain("@StateObject private var text: ControllableValue<String>");
+    expect(source).toContain("onChange: onChange))");
     expect(source).toContain("TextField(");
     expect(source).toContain("prompt: placeholder.map(Text.init)");
   });
@@ -311,7 +309,7 @@ describe("generateSwiftUIComponentSource — coverage batch (disclosure + static
     const source = emit("Details");
     expect(source).toContain("DisclosureGroup(isExpanded: Binding(");
     expect(source).toContain("summary: String? = nil");
-    expect(source).toContain("onOpenChange?(next)");
+    expect(source).toContain("ControllableValue(controlled: open");
     expect(source).toContain("Text(summary)");
   });
 
@@ -328,5 +326,141 @@ describe("generateSwiftUIComponentSource — coverage batch (disclosure + static
   it("emits static content for Links and List (gate breadth)", () => {
     expect(emit("Links")).toContain("@ViewBuilder content: () -> Content");
     expect(emit("List")).toContain("@ViewBuilder content: () -> Content");
+  });
+});
+
+describe("generateSwiftUIComponentSource — coverage batch 2", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("lowers the boolean input channel to a checkbox Toggle (Checkbox)", () => {
+    const source = emit("Checkbox");
+    expect(source).toContain("public struct Checkbox: View {");
+    expect(source).toContain(".toggleStyle(.checkbox)");
+    expect(source).toContain("checked: Binding<Bool>? = nil");
+    expect(source).toContain("onChange: onChange))");
+    expect(source).not.toContain("indeterminate:");
+  });
+
+  it("lowers the bare hr rule to FsdsDivider with a local orientation enum", () => {
+    const source = emit("Divider");
+    expect(source).toContain("public struct FsdsDivider: View {");
+    expect(source).toContain("public enum DividerOrientation: String, CaseIterable {");
+    expect(source).toContain("orientation: DividerOrientation? = nil");
+    expect(source).toContain("Divider()");
+  });
+
+  it("lowers the progressbar role to ProgressView with contract 0-100 semantics", () => {
+    const source = emit("Progress");
+    expect(source).toContain("ProgressView(value: value / 100)");
+    expect(source).toContain("value: Double? = nil");
+    expect(source).toContain("ProgressView()");
+    expect(source).toContain(".fsdsAccessibilityLabel(label)");
+  });
+
+  it("lowers the visual-only leaf to a native spinner (Spinner)", () => {
+    const source = emit("Spinner");
+    expect(source).toContain("public struct Spinner: View {");
+    expect(source).toContain("ProgressView()");
+    expect(source).not.toContain("showAfterMs");
+  });
+});
+
+describe("generateSwiftUIComponentSource — glyph host (Icon)", () => {
+  it("emits a registry lookup with size hints and decorative default", () => {
+    const contract = loadContract("Icon") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const source = generateSwiftUIComponentSource(buildComponentIR(contract));
+    expect(source).toContain("public struct Icon: View {");
+    expect(source).toContain("GlyphCatalog.glyph(named: name, size: glyphSize)");
+    expect(source).toContain("case .sm: return 16");
+    expect(source).toContain("case .md: return 20");
+    expect(source).toContain("case .lg: return 24");
+    expect(source).toContain("case .xl: return 32");
+    expect(source).toContain(".accessibilityHidden(");
+    expect(source).toContain("GlyphCatalog.decorativeDefaults.contains(name)");
+  });
+});
+
+describe("generateSwiftUIComponentSource — selection control (Select)", () => {
+  function emitSelect(): string {
+    const contract = loadContract("Select") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("lowers the union channel to SelectionState with the mode gate", () => {
+    const source = emitSelect();
+    expect(source).toContain("public struct Select: View {");
+    expect(source).toContain("@StateObject private var selection: SelectionState");
+    expect(source).toContain("multiple: multiple,");
+    expect(source).toContain("selection.apply(option.value)");
+    expect(source).toContain("@StateObject private var open: ControllableValue<Bool>");
+    // searchable/filterFn omitted, never accepted-and-ignored.
+    expect(source).not.toContain("searchable");
+    expect(source).not.toContain("filterFn");
+  });
+
+  it("synthesizes the option struct from the contract alias", () => {
+    const source = emitSelect();
+    expect(source).toContain("public struct SelectOption: Identifiable {");
+    expect(source).toContain("public var id: String { value }");
+    expect(source).toContain("public let value: String");
+    expect(source).toContain("public let label: String");
+    expect(source).toContain("public let disabled: Bool?");
+  });
+});
+
+describe("generateSwiftUIComponentSource — icon-decorated content (Alert, Badge)", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("emits ReactNode icons as consumer regions (Alert)", () => {
+    const source = emit("Alert");
+    expect(source).toMatch(/public struct Alert<IconRegion: View, Content: View>: View \{/);
+    expect(source).toContain("@ViewBuilder icon: () -> IconRegion = { EmptyView() }");
+    expect(source).toContain("iconRegion");
+    // The dismiss component-instance is omitted, not wired.
+    expect(source).not.toContain("onDismiss");
+  });
+
+  it("emits Badge with axes and the icon region", () => {
+    const source = emit("Badge");
+    expect(source).toMatch(/public struct Badge<IconRegion: View, Content: View>: View \{/);
+    expect(source).not.toContain("showStatusIcon");
+  });
+
+  it("still refuses Chip (component-instance); Status admits via static content", () => {
+    expect(() => emit("Chip")).toThrow(/no emission class matches/);
+    // Status's icon part has no author-addressable icon prop, so it now
+    // emits through the widened static-content class (icon part omitted).
+    expect(emit("Status")).toContain("public struct Status");
+  });
+});
+
+describe("generateSwiftUIComponentSource — count-iterated field group (OTP)", () => {
+  it("distributes the string channel over N fields with setCharAt semantics", () => {
+    const contract = loadContract("OTP") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    const source = generateSwiftUIComponentSource(buildComponentIR(contract));
+    expect(source).toContain("public struct OTP: View {");
+    expect(source).toContain("@StateObject private var value: ControllableValue<String>");
+    expect(source).toContain("ForEach(0..<length");
+    expect(source).toContain("setCharacter($0, at: index)");
+    expect(source).toContain("payload[payload.count - 1]");
+    expect(source).toContain("onComplete?(next)");
+    expect(source).not.toContain("readOnly:");
+    expect(source).not.toContain("mode:");
   });
 });

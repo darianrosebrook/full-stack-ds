@@ -270,9 +270,13 @@ function emitCompoundSelectionComponent(ir: ComponentIR): string {
     `${INDENT}${INDENT}setRegisteredTabs((tabs) => tabs.filter((tab) => tab !== value));`,
   );
   lines.push(`${INDENT}}, []);`);
+  // Hook calls must be unconditional (react-hooks/rules-of-hooks): stage the
+  // generated id first, then coalesce the caller's idBase against it — the
+  // same shape the react emitter uses in hook-source.ts.
   lines.push(
-    `${INDENT}const resolvedIdBase = idBase ?? useId().replace(/:/g, "");`,
+    `${INDENT}const generatedIdBase = useId().replace(/:/g, "");`,
   );
+  lines.push(`${INDENT}const resolvedIdBase = idBase ?? generatedIdBase;`);
   lines.push(``);
   lines.push(`${INDENT}return (`);
   lines.push(`${INDENT}${INDENT}<${name}ContextProvider`);

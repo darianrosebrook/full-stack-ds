@@ -335,6 +335,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+          cache: gradle
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -356,6 +357,18 @@ jobs:
 
       - name: Compile-admission negative (invalid `??` Kotlin must fail to compile)
         run: node scripts/run-native-compile-lane.mjs --kotlinc /opt/kotlinc/bin/kotlinc --negative
+
+      # FEAT-EXAMPLES-COMPOSE-SETTINGS-001. Escalates this job past bare
+      # kotlinc fixtures: compiles the settings example lane's full Gradle
+      # graph — the generated packages/ds-jetpack-compose tree consumed via
+      # composite-build substitution, against the real Compose Multiplatform
+      # JVM runtime. The only CI surface proving the generated Kotlin
+      # package compiles when imported by a real consumer (the Compose twin
+      # of the swift job's settings-lane step). First run bootstraps the
+      # Gradle distribution + Maven artifacts; the setup-java gradle cache
+      # absorbs both across runs.
+      - name: Settings example compile (consumer lane over ds-jetpack-compose)
+        run: ./examples/settings/compose/gradlew -p examples/settings/compose compileKotlin --no-daemon
 
   native-compile-rail-swift:
     name: Native compile rail (Swift compile-admission smoke)
