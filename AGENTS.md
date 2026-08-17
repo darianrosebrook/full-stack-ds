@@ -6,7 +6,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 This is **not** primarily a design system — it is a falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof. One polymorphic primitive (`Stack`) plus JSON contracts drive code generation for the **five Web DOM** framework targets (React, Vue, Svelte, Angular, Lit), plus React Native, a Figma descriptor target, and the explicit-only native targets (SwiftUI, Jetpack Compose). If the same contract can drive all of them idiomatically without leaking framework details, the contract is at the right level of abstraction.
 
-The registered target set is authoritative in `fsds.targets.json` (nine builtin targets today); the **rail-admitted** subset is authoritative in `packages/ds-codegen/src/validation/admission-descriptor.ts` (six: the five web frameworks plus react-native). Never hand-count either from prose.
+The registered target set is authoritative in `fsds.targets.json` (<!-- registered-target-count -->9 builtin targets today); the **rail-admitted** subset is authoritative in `packages/ds-codegen/src/validation/admission-descriptor.ts` (<!-- rail-admitted-target-count -->6 — the five web frameworks plus react-native). Never hand-count either from prose; both numbers here are gated by `pnpm run docs:check-claims`.
 
 Read `docs/current-implementation-snapshot.md` first to know what is currently proven vs. only foundation. That document overrides older architecture docs when they disagree.
 
@@ -107,10 +107,26 @@ pnpm run audit:pseudo-state                    # Declared state styling vs. real
 pnpm run audit:state-suppression               # Declared suppression vs. honoured in CSS
 pnpm run audit:token-resolvability             # Token references that never resolve
 
-# Doc claims (the only mechanically-derived doc numbers)
-pnpm run docs:check-claims                     # Verifies <!-- component-count --> markers
-pnpm run docs:check-claims:fix                 # Rewrites them from the loader
+# Doc gates
+pnpm run docs:check-claims                     # Marked counts match their derived authority
+pnpm run docs:check-claims:fix                 # Rewrites stale marked counts in place
+pnpm run docs:check-links                      # Every relative .md link in a tracked doc resolves
 ```
+
+**Governed doc numbers.** Any count you write in prose will rot. Mark it instead, in ANY tracked
+markdown file, and `docs:check-claims` derives and enforces it:
+
+| Marker | Derived from |
+|---|---|
+| `<!-- component-count -->` | the contract loader's walk of `packages/ds-contracts/components/` |
+| `<!-- rail-admitted-target-count -->` | modules under `validation/frameworks/` that export an `AdmissionDescriptor` |
+| `<!-- registered-target-count -->` | the `targets` array in `fsds.targets.json` |
+| `<!-- icon-count -->` | directories under `packages/ds-iconography/icons/` |
+
+Usage is `<!-- marker -->N`. Only the integer immediately after a marker is checked, so unmarked
+numbers (hypotheticals, thresholds, historical baselines) are deliberately left alone. Add a row to
+`CLAIMS` in `scripts/docs-claims-check.mjs` to govern a new number — and prefer that over writing a
+bare count.
 
 ### Pre-push hook tracks CI, but is change-scoped — CI is authoritative
 
