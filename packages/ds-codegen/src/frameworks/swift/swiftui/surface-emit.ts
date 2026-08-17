@@ -52,6 +52,11 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   if (ir.surface.kind === "tooltip") {
     return { componentFile: withTypes(emitAnchoredTooltip(ir)), behaviorFile: null };
   }
+  if (ir.surface.kind === "popover") {
+    // Anchored like the tooltip but manual-open: the open channel rides
+    // the substrate with NO hover affordance (the web trigger wires it).
+    return { componentFile: withTypes(emitAnchoredPopover(ir)), behaviorFile: null };
+  }
   if (ir.surface.kind === "toast") {
     // The generative proof of the compositional substrate: a NEW surface
     // kind emits through the same ControllableValue channel with only a
@@ -566,6 +571,21 @@ function emitToastSurface(ir: ComponentIR): string {
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+
+function emitAnchoredPopover(ir: ComponentIR): string {
+  // The popover shares the anchored tooltip's shape; strip the hover
+  // driver (manual open only) from a tooltip-shaped emission. The hover
+  // block is three emitted lines (.onHover …, guard body, closing }) —
+  // remove all three by index so no orphan braces remain.
+  const tooltipShaped = emitAnchoredTooltip(ir);
+  const lines = tooltipShaped.split("\n");
+  const hoverIndex = lines.findIndex((line) => line.includes(".onHover"));
+  if (hoverIndex !== -1) {
+    lines.splice(hoverIndex, 3);
+  }
   return lines.join("\n");
 }
 
