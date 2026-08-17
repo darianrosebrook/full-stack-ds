@@ -3,7 +3,6 @@ title: 'Custom-painted Compose toggle: foundation-only substrate owned by the de
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-custom-painted
 created_at: '2026-08-17T19:53:12.679Z'
 updated_at: '2026-08-17T19:53:12.679Z'
 blast_radius:
