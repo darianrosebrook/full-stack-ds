@@ -2,9 +2,11 @@ id: DOC-ARCHITECTURE-DRIFT-01
 title: 'Reconcile architecture docs that under-claim shipped work'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Architecture docs reconciled: SurfaceIR and morphology recorded as shipped, nonexistent contract names removed, counts gated or derived, figma-plugin scoped historical'
 created_at: '2026-08-17T18:52:31.787Z'
-updated_at: '2026-08-17T18:52:31.787Z'
+updated_at: '2026-08-17T19:01:16.878Z'
 blast_radius:
   modules:
     - 'architecture docs'
