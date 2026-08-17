@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "CodeSnippet(text:)/CodeBlock(code:) emitted with monospaced Text + chrome; compiled in package build"
     recorded_at: "2026-08-17T05:15:34.850Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Image.swift: AsyncImage(url:) with phase image/error/ProgressView branches, fsdsAccessibilityLabel(alt); Avatar.swift: DsSwiftUI.Image(src:alt:) | Text(name) Group"
+    recorded_at: "2026-08-17T05:15:35.871Z"
