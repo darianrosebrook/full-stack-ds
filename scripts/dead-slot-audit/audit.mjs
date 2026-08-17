@@ -129,7 +129,7 @@ function declaredSlots(component) {
  * consume itself — the var() inside its own declaration block references a
  * DIFFERENT (semantic-tier) var, not the component slot.
  *
- * @returns {{ component: string, prefix: string, total: number, consumed: number, dead: number, slots: { slot: string, cssVar: string, status: "consumed"|"dead", source: string }[] }}
+ * @returns {{ component: string, prefix: string, total: number, consumed: number, shadowed: number, dead: number, slots: { slot: string, cssVar: string, status: "consumed"|"shadowed"|"dead", source: string }[] }}
  */
 export function classify(component) {
   const prefix = cssPrefix(component);
@@ -273,7 +273,7 @@ if (RUN_DIRECTLY) {
   md.push("# Dead-slot matrix");
   md.push("");
   md.push(
-    "`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).",
+    "`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.",
   );
   md.push("");
   md.push(
@@ -300,12 +300,26 @@ if (RUN_DIRECTLY) {
     md.push(`### ${c.component}  \`.${c.prefix}\``);
     md.push("");
     md.push(`declared: **${c.total}** · consumed: **${c.consumed}** · dead: **${c.dead}**`);
-    if (c.dead > 0) {
+    // Match the component filter above (`c.dead + c.shadowed > 0`). Gating on
+    // `c.dead > 0` alone listed shadowed-only components in the matrix but
+    // rendered no table for them, so 2 of the 16 inert-by-design slots were
+    // counted in the totals and then never shown.
+    if (c.dead + c.shadowed > 0) {
       md.push("");
       md.push("| slot | CSS var | status | source |");
       md.push("|---|---|---|---|");
       for (const s of c.slots) {
-        const mark = s.status === "consumed" ? "✓ consumed" : "✗ dead";
+        // Three statuses, three marks. A binary ternary here rendered
+        // `shadowed` as "✗ dead", so a component's table showed more dead
+        // rows than the `dead:` count above it (which subtracts shadowed) —
+        // the report contradicting itself, and inert-by-design slots reading
+        // as defects.
+        const mark =
+          s.status === "consumed"
+            ? "✓ consumed"
+            : s.status === "shadowed"
+              ? "◐ shadowed (inert by design)"
+              : "✗ dead";
         md.push(`| \`${s.slot}\` | \`${s.cssVar}\` | ${mark} | \`${s.source}\` |`);
       }
     }
