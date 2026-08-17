@@ -53,3 +53,8 @@ contracts:
   - name: 'Switch'
     type: behavior
     path: 'packages/ds-contracts/components/Switch/Switch.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/tokens/FsdsTheme.kt @ 2ae02ca2 — LocalFsdsTheme provider, FsdsTheme.resolve implementing literal → theme.tokens[ref] → fallback (RN resolveTokenValue mirrored exactly), toFsdsColor/toFsdsDp accessors, light semantic defaults with per-value graph provenance comments"
+    recorded_at: "2026-08-17T05:22:51.879Z"
