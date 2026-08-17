@@ -32,3 +32,8 @@ acceptance:
     then: 'the header records the new sweep point and which rows were verified'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 7bc5ab78: every ledger count re-derived from its cited source and made to agree — a11y 156 (grep spec field of known-gaps.json: COMPOSITE-KEYBOARD 140 + TABLE-SEMANTICS 10 + LABEL-ID-ASSOCIATION 6); dead-slot 50/906/792, 114 inert = 98 dead + 16 shadowed (dead-slot-matrix.json); dispositions review 66 / wire 19 / delete 10 / unconsumed-vocabulary 3 / shadowed 16 summing to 114 (known-dead.json); corpus 50 in three rows; behavior self-tests 31 restated as derived-not-frozen. docs:check-claims exit 0, 12/12 marked claims match derived values."
+    recorded_at: "2026-08-17T21:35:26.596Z"
