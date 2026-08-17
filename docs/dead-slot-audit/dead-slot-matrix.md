@@ -1,6 +1,6 @@
 # Dead-slot matrix
 
-`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. Advisory this slice — not a CI gate (mirrors `PSEUDO-STATE-STYLING-RAIL-01`'s posture).
+`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.
 
 Components: **49** · slots declared: **903** · consumed: **789** · **inert: 114** (defects: **98** · inert-by-design: **16**)
 
@@ -115,7 +115,7 @@ declared: **22** · consumed: **19** · dead: **2**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `accordion.color.background.hover` | `--fsds-accordion-color-background-hover` | ✓ consumed | `tokens` |
 | `accordion.color.text` | `--fsds-accordion-color-text` | ✓ consumed | `tokens` |
 | `accordion.color.textSecondary` | `--fsds-accordion-color-text-secondary` | ✓ consumed | `tokens` |
@@ -148,7 +148,7 @@ declared: **21** · consumed: **14** · dead: **6**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `alert.color.background.primary` | `--fsds-alert-color-background-primary` | ✓ consumed | `tokens` |
 | `alert.color.foreground.primary` | `--fsds-alert-color-foreground-primary` | ✓ consumed | `tokens` |
 | `alert.color.border.primary` | `--fsds-alert-color-border-primary` | ✓ consumed | `tokens` |
@@ -176,7 +176,7 @@ declared: **32** · consumed: **23** · dead: **8**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `alert-notice.color.background.primary` | `--fsds-alert-notice-color-background-primary` | ✗ dead | `tokens` |
 | `alert-notice.color.foreground.primary` | `--fsds-alert-notice-color-foreground-primary` | ✗ dead | `tokens` |
 | `alert-notice.color.background.info` | `--fsds-alert-notice-color-background-info` | ✓ consumed | `tokens` |
@@ -247,7 +247,7 @@ declared: **26** · consumed: **22** · dead: **3**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `box-model.min-height` | `--fsds-box-model-min-height` | ✓ consumed | `tokens` |
 | `box-model.min-width` | `--fsds-box-model-min-width` | ✓ consumed | `tokens` |
 | `button.color.background.default` | `--fsds-button-color-background-default` | ✓ consumed | `tokens` |
@@ -310,7 +310,7 @@ declared: **35** · consumed: **24** · dead: **10**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `box-model.min-width` | `--fsds-box-model-min-width` | ✓ consumed | `tokens` |
 | `card.color.background.default` | `--fsds-card-color-background-default` | ✓ consumed | `tokens` |
 | `card.color.background.hover` | `--fsds-card-color-background-hover` | ✓ consumed | `tokens` |
@@ -352,7 +352,7 @@ declared: **32** · consumed: **25** · dead: **5**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `chip.color.background.default` | `--fsds-chip-color-background-default` | ✓ consumed | `tokens` |
 | `chip.color.background.hover` | `--fsds-chip-color-background-hover` | ✓ consumed | `tokens` |
 | `chip.color.background.active` | `--fsds-chip-color-background-active` | ✗ dead | `tokens` |
@@ -380,7 +380,7 @@ declared: **32** · consumed: **25** · dead: **5**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `styles:.chip__action.button` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `styles:.chip__action.button` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `styles:.chip__action.button` |
-| `box-model.min-height` | `--fsds-box-model-min-height` | ✗ dead | `styles:.chip__action.button` |
+| `box-model.min-height` | `--fsds-box-model-min-height` | ◐ shadowed (inert by design) | `styles:.chip__action.button` |
 | `box-model.min-width` | `--fsds-box-model-min-width` | ✓ consumed | `styles:.chip__action.button` |
 | `box-model.width` | `--fsds-box-model-width` | ✓ consumed | `styles:.chip__dismiss.button` |
 | `box-model.height` | `--fsds-box-model-height` | ✓ consumed | `styles:.chip__dismiss.button` |
@@ -425,7 +425,7 @@ declared: **19** · consumed: **15** · dead: **3**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `details.size.padding.default` | `--fsds-details-size-padding-default` | ✓ consumed | `tokens` |
 | `details.size.radius.default` | `--fsds-details-size-radius-default` | ✓ consumed | `tokens` |
 | `details.size.icon` | `--fsds-details-size-icon` | ✓ consumed | `tokens` |
@@ -471,7 +471,7 @@ declared: **29** · consumed: **22** · dead: **6**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `box-model.min-height` | `--fsds-box-model-min-height` | ✓ consumed | `tokens` |
 | `field.gap.y` | `--fsds-field-gap-y` | ✓ consumed | `tokens` |
 | `field.gap.meta` | `--fsds-field-gap-meta` | ✓ consumed | `tokens` |
@@ -534,7 +534,7 @@ declared: **31** · consumed: **29** · dead: **1**
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
 | `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
-| `box-model.min-height` | `--fsds-box-model-min-height` | ✗ dead | `tokens` |
+| `box-model.min-height` | `--fsds-box-model-min-height` | ◐ shadowed (inert by design) | `tokens` |
 | `input.color.bg.default` | `--fsds-input-color-bg-default` | ✓ consumed | `tokens` |
 | `input.color.bg.disabled` | `--fsds-input-color-bg-disabled` | ✓ consumed | `tokens` |
 | `input.color.text.default` | `--fsds-input-color-text-default` | ✓ consumed | `tokens` |
@@ -575,6 +575,25 @@ declared: **4** · consumed: **3** · dead: **1**
 ### Links  `.links`
 
 declared: **16** · consumed: **15** · dead: **0**
+
+| slot | CSS var | status | source |
+|---|---|---|---|
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
+| `links.color.foreground.default` | `--fsds-links-color-foreground-default` | ✓ consumed | `tokens` |
+| `links.color.foreground.hover` | `--fsds-links-color-foreground-hover` | ✓ consumed | `tokens` |
+| `links.color.foreground.visited` | `--fsds-links-color-foreground-visited` | ✓ consumed | `tokens` |
+| `links.color.foreground.disabled` | `--fsds-links-color-foreground-disabled` | ✓ consumed | `tokens` |
+| `links.color.underline.default` | `--fsds-links-color-underline-default` | ✓ consumed | `tokens` |
+| `links.spacing.gap.default` | `--fsds-links-spacing-gap-default` | ✓ consumed | `tokens` |
+| `links.motion.duration.fast` | `--fsds-links-motion-duration-fast` | ✓ consumed | `tokens` |
+| `links.focus.ring.width` | `--fsds-links-focus-ring-width` | ✓ consumed | `tokens` |
+| `links.focus.ring.color` | `--fsds-links-focus-ring-color` | ✓ consumed | `tokens` |
+| `links.focus.ring.style` | `--fsds-links-focus-ring-style` | ✓ consumed | `tokens` |
+| `links.focus.ring.offset` | `--fsds-links-focus-ring-offset` | ✓ consumed | `tokens` |
+| `links.focus.ring.radius` | `--fsds-links-focus-ring-radius` | ✓ consumed | `tokens` |
+| `links.size.fontSize.small` | `--fsds-links-size-font-size-small` | ✓ consumed | `tokens` |
+| `links.size.fontSize.medium` | `--fsds-links-size-font-size-medium` | ✓ consumed | `tokens` |
+| `links.size.fontSize.large` | `--fsds-links-size-font-size-large` | ✓ consumed | `tokens` |
 
 ### List  `.list`
 
@@ -641,7 +660,7 @@ declared: **22** · consumed: **20** · dead: **1**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `box-model.min-width` | `--fsds-box-model-min-width` | ✓ consumed | `tokens` |
 | `postcard.color.background.default` | `--fsds-postcard-color-background-default` | ✓ consumed | `tokens` |
 | `postcard.color.background.hover` | `--fsds-postcard-color-background-hover` | ✓ consumed | `tokens` |
@@ -867,7 +886,7 @@ declared: **18** · consumed: **15** · dead: **2**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `tabs.spacing.gap` | `--fsds-tabs-spacing-gap` | ✓ consumed | `tokens` |
 | `tabs.spacing.padding` | `--fsds-tabs-spacing-padding` | ✓ consumed | `tokens` |
 | `tabs.spacing.pillPadding` | `--fsds-tabs-spacing-pill-padding` | ✓ consumed | `tokens` |
@@ -894,6 +913,46 @@ declared: **18** · consumed: **18** · dead: **0**
 
 declared: **37** · consumed: **36** · dead: **0**
 
+| slot | CSS var | status | source |
+|---|---|---|---|
+| `box-model.padding-block-start` | `--fsds-box-model-padding-block-start` | ✓ consumed | `tokens` |
+| `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
+| `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
+| `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
+| `box-model.min-height` | `--fsds-box-model-min-height` | ✓ consumed | `tokens` |
+| `text-field.spacing.gap` | `--fsds-text-field-spacing-gap` | ✓ consumed | `tokens` |
+| `text-field.field.padding-block` | `--fsds-text-field-field-padding-block` | ✓ consumed | `tokens` |
+| `text-field.field.padding-inline` | `--fsds-text-field-field-padding-inline` | ✓ consumed | `tokens` |
+| `text-field.field.min-height` | `--fsds-text-field-field-min-height` | ✓ consumed | `tokens` |
+| `text-field.border.width` | `--fsds-text-field-border-width` | ✓ consumed | `tokens` |
+| `text-field.border.radius` | `--fsds-text-field-border-radius` | ✓ consumed | `tokens` |
+| `text-field.color.input.background` | `--fsds-text-field-color-input-background` | ✓ consumed | `tokens` |
+| `text-field.color.input.text` | `--fsds-text-field-color-input-text` | ✓ consumed | `tokens` |
+| `text-field.color.input.placeholder` | `--fsds-text-field-color-input-placeholder` | ✓ consumed | `tokens` |
+| `text-field.color.input.border` | `--fsds-text-field-color-input-border` | ✓ consumed | `tokens` |
+| `text-field.color.input.borderHover` | `--fsds-text-field-color-input-border-hover` | ✓ consumed | `tokens` |
+| `text-field.color.input.backgroundDisabled` | `--fsds-text-field-color-input-background-disabled` | ✓ consumed | `tokens` |
+| `text-field.color.input.textDisabled` | `--fsds-text-field-color-input-text-disabled` | ✓ consumed | `tokens` |
+| `text-field.color.input.borderDisabled` | `--fsds-text-field-color-input-border-disabled` | ✓ consumed | `tokens` |
+| `text-field.color.input.borderError` | `--fsds-text-field-color-input-border-error` | ✓ consumed | `tokens` |
+| `text-field.color.error` | `--fsds-text-field-color-error` | ✓ consumed | `tokens` |
+| `text-field.color.supporting.text` | `--fsds-text-field-color-supporting-text` | ✓ consumed | `tokens` |
+| `text-field.typography.label.size` | `--fsds-text-field-typography-label-size` | ✓ consumed | `tokens` |
+| `text-field.typography.label.weight` | `--fsds-text-field-typography-label-weight` | ✓ consumed | `tokens` |
+| `text-field.typography.label.line-height` | `--fsds-text-field-typography-label-line-height` | ✓ consumed | `tokens` |
+| `text-field.typography.field.size` | `--fsds-text-field-typography-field-size` | ✓ consumed | `tokens` |
+| `text-field.typography.field.line-height` | `--fsds-text-field-typography-field-line-height` | ✓ consumed | `tokens` |
+| `text-field.typography.supporting.size` | `--fsds-text-field-typography-supporting-size` | ✓ consumed | `tokens` |
+| `text-field.typography.supporting.line-height` | `--fsds-text-field-typography-supporting-line-height` | ✓ consumed | `tokens` |
+| `text-field.opacity.disabled` | `--fsds-text-field-opacity-disabled` | ✓ consumed | `tokens` |
+| `text-field.focus.ring.width` | `--fsds-text-field-focus-ring-width` | ✓ consumed | `tokens` |
+| `text-field.focus.ring.color` | `--fsds-text-field-focus-ring-color` | ✓ consumed | `tokens` |
+| `text-field.focus.ring.style` | `--fsds-text-field-focus-ring-style` | ✓ consumed | `tokens` |
+| `text-field.focus.ring.offset` | `--fsds-text-field-focus-ring-offset` | ✓ consumed | `tokens` |
+| `text-field.motion.duration.fast` | `--fsds-text-field-motion-duration-fast` | ✓ consumed | `tokens` |
+| `text-field.motion.easing.standard` | `--fsds-text-field-motion-easing-standard` | ✓ consumed | `tokens` |
+
 ### Toast  `.toast`
 
 declared: **21** · consumed: **14** · dead: **6**
@@ -904,7 +963,7 @@ declared: **21** · consumed: **14** · dead: **6**
 | `box-model.padding-block-end` | `--fsds-box-model-padding-block-end` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-start` | `--fsds-box-model-padding-inline-start` | ✓ consumed | `tokens` |
 | `box-model.padding-inline-end` | `--fsds-box-model-padding-inline-end` | ✓ consumed | `tokens` |
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `box-model.min-width` | `--fsds-box-model-min-width` | ✓ consumed | `tokens` |
 | `toast.surface.bg` | `--fsds-toast-surface-bg` | ✓ consumed | `tokens` |
 | `toast.surface.border` | `--fsds-toast-surface-border` | ✓ consumed | `tokens` |
@@ -967,7 +1026,7 @@ declared: **24** · consumed: **22** · dead: **1**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✗ dead | `tokens` |
+| `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
 | `walkthrough.surface.bg` | `--fsds-walkthrough-surface-bg` | ✓ consumed | `tokens` |
 | `walkthrough.surface.border` | `--fsds-walkthrough-surface-border` | ✓ consumed | `tokens` |
 | `walkthrough.surface.radius` | `--fsds-walkthrough-surface-radius` | ✓ consumed | `tokens` |
