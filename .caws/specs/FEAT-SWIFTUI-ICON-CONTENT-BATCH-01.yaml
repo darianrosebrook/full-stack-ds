@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: "glyph registry branch keyed on the icon prop's declared type (string → GlyphCatalog; ReactNode → region) — IR fact, no component identity"
     recorded_at: "2026-08-17T04:15:53.133Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2085/2085; test:frameworks 72; swift test 22/22; swift build + example build exit 0; ADMITTED 24/24 byte-stable"
+    recorded_at: "2026-08-17T04:15:54.138Z"
