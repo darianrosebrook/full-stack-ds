@@ -66,7 +66,9 @@ const SRC_DIR = path.join(PACKAGE_ROOT, "src");
 const GENERATED_DIR = path.join(PACKAGE_ROOT, "generated");
 
 export const PATHS = {
-  // Source layout: 156 DTCG shards under src/<category>/{core,semantic}/<subtree>.tokens.json
+  // Source layout: DTCG shards under src/<category>/{core,semantic}/<subtree>.tokens.json.
+  // Deliberately uncounted — a hardcoded count here drifted to 156 while the real
+  // number moved, and docs/architecture/tokens-architecture.md copied it.
   srcDir: SRC_DIR,
   brandsDir: path.join(SRC_DIR, "brands"),
   densityDir: path.join(SRC_DIR, "density"),

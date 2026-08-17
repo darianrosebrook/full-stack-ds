@@ -7,7 +7,7 @@ owner: "@darianrosebrook"
 updated: 2026-06-11
 governs:
   - src/runtime/FrameworkPreview.tsx
-  - src/runtime/FrameworkPreview.tsx
+  - src/views/sections/EvidencePanel.tsx
   - packages/ds-contracts/a2ui/derive.ts
   - packages/ds-contracts/components/**/*.contract.json
 ---
