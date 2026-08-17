@@ -179,6 +179,179 @@ describe("deriveComponentContrastPairs", () => {
   it("returns no pairs for a contract without styles", () => {
     expect(deriveComponentContrastPairs(base({}))).toEqual([]);
   });
+
+  // -----------------------------------------------------------------------
+  // RAIL-COMPONENT-CONTRAST-ANCESTRY-01: inheritance-aware pairing.
+  // -----------------------------------------------------------------------
+
+  const DOM_TREE = {
+    tag: "div",
+    part: "root",
+    children: [{ tag: "div", part: "code" }],
+  };
+
+  function ancestryContract(
+    styles: Record<string, unknown>,
+    dom = DOM_TREE,
+  ): ComponentContract {
+    return base({
+      anatomy: { parts: ["root", "code"], dom },
+      tokens: {
+        "test.fg": { resolvesTo: "semantic.color.fg.good", fallback: "#141414" },
+        "test.bg": { resolvesTo: "semantic.color.bg.light", fallback: "#ffffff" },
+      },
+      styles,
+    } as Partial<ComponentContract>);
+  }
+
+  it("derives an inherited pair for a color-only descendant block", () => {
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract({
+        root: ROOT_BLOCK,
+        code: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+      }),
+    );
+    expect(pairs).toHaveLength(2);
+    const inherited = pairs.find((p) => p.block === "code");
+    expect(inherited).toBeDefined();
+    expect(inherited!.fg).toEqual({ kind: "global", path: "semantic.color.fg.good" });
+    // The descendant declares no background; the pair carries root's.
+    expect(inherited!.bg).toEqual({ kind: "global", path: "semantic.color.bg.light" });
+    expect(inherited!.scopes).toEqual(["(base)"]);
+  });
+
+  it("same-block background wins over the ancestor background", () => {
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract({
+        root: ROOT_BLOCK,
+        code: {
+          color: { resolvesTo: "test.fg", fallback: "#141414" },
+          "background-color": { literal: "#000000", platforms: ["web"] },
+        },
+      }),
+    );
+    const code = pairs.find((p) => p.block === "code");
+    expect(code).toBeDefined();
+    expect(code!.bg).toEqual({ kind: "hex", hex: "#000000" });
+  });
+
+  it("conditional ancestor blocks never contribute inherited backgrounds", () => {
+    // Accordion's chevron shape: the trigger declares no resting
+    // background-color (only the `background` shorthand, unmodeled), and
+    // the :hover overlay must not stand in for it.
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract({
+        root: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+        ".test__root:hover": {
+          "background-color": { resolvesTo: "test.bg", fallback: "#ffffff" },
+        },
+        code: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+      }),
+    );
+    expect(pairs).toEqual([]);
+  });
+
+  it("a transform-generated part inherits through its container node", () => {
+    const dom = {
+      tag: "pre",
+      part: "root",
+      children: [
+        {
+          tag: "code",
+          part: "code",
+          content: {
+            transform: "highlight",
+            source: "prop:code",
+            language: "prop:language",
+            tokenPart: "token",
+          },
+        },
+      ],
+    };
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract(
+        {
+          root: ROOT_BLOCK,
+          '.test__token[data-token="plain"]': {
+            color: { resolvesTo: "test.fg", fallback: "#141414" },
+          },
+        },
+        dom,
+      ),
+    );
+    const inherited = pairs.find(
+      (p) => p.block === '.test__token[data-token="plain"]',
+    );
+    expect(inherited).toBeDefined();
+    expect(inherited!.bg).toEqual({ kind: "global", path: "semantic.color.bg.light" });
+  });
+
+  it("root-scope slot redirections reach the ancestor background", () => {
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract({
+        root: ROOT_BLOCK,
+        code: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+        "--dark-bg": {
+          "test.bg": { resolvesTo: "semantic.color.bg.dark", fallback: "#000000" },
+        },
+      }),
+    );
+    const redirected = pairs.find(
+      (p) => p.block === "code" && p.scopes.includes("--dark-bg"),
+    );
+    expect(redirected).toBeDefined();
+    expect(redirected!.bg).toEqual({ kind: "global", path: "semantic.color.bg.dark" });
+  });
+
+  it("part scopes overlay the descendant fg but not the ancestor bg (A4)", () => {
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract({
+        root: ROOT_BLOCK,
+        code: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+        ".test__code": {
+          "test.fg": { resolvesTo: "semantic.color.fg.bad", fallback: "#777777" },
+        },
+      }),
+    );
+    const scoped = pairs.find(
+      (p) => p.block === "code" && p.scopes.includes(".test__code"),
+    );
+    expect(scoped).toBeDefined();
+    expect(scoped!.fg).toEqual({ kind: "global", path: "semantic.color.fg.bad" });
+    // The scope targets the code part only — root's background resolves
+    // from the base binding, not the scope overlay.
+    expect(scoped!.bg).toEqual({ kind: "global", path: "semantic.color.bg.light" });
+  });
+
+  it("skips disabled ancestor blocks when inheriting", () => {
+    const pairs = deriveComponentContrastPairs(
+      ancestryContract({
+        root: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+        disabled: {
+          "background-color": { resolvesTo: "test.bg", fallback: "#ffffff" },
+        },
+        code: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+      }),
+    );
+    expect(pairs).toEqual([]);
+  });
+
+  it("no anatomy.dom means no inheritance (legacy parts-only anatomy)", () => {
+    const contract = base({
+      anatomy: { parts: ["root", "code"] },
+      tokens: {
+        "test.fg": { resolvesTo: "semantic.color.fg.good", fallback: "#141414" },
+        "test.bg": { resolvesTo: "semantic.color.bg.light", fallback: "#ffffff" },
+      },
+      styles: {
+        root: ROOT_BLOCK,
+        code: { color: { resolvesTo: "test.fg", fallback: "#141414" } },
+      },
+    } as Partial<ComponentContract>);
+    expect(deriveComponentContrastPairs(contract).map((p) => p.block)).toEqual([
+      "root",
+    ]);
+  });
 });
 
 describe("validateComponentContrast", () => {
@@ -203,6 +376,45 @@ describe("validateComponentContrast", () => {
     expect(issues[0].message).toContain("light theme");
     expect(issues[0].message).toContain("semantic.color.fg.bad");
     expect(issues[0].message).toContain("4.5");
+  });
+
+  it("flags and ledger-suppresses an INHERITED failing pair (ancestry lens)", () => {
+    _resetResolvedTokensCacheForTests(TREE);
+    _resetKnownGapsCacheForTests([]);
+    const contract = base({
+      anatomy: {
+        parts: ["root", "code"],
+        dom: { tag: "div", part: "root", children: [{ tag: "div", part: "code" }] },
+      },
+      tokens: {
+        "test.fg": { resolvesTo: "semantic.color.fg.good", fallback: "#141414" },
+        "test.bad": { resolvesTo: "semantic.color.fg.bad", fallback: "#777777" },
+        "test.bg": { resolvesTo: "semantic.color.bg.light", fallback: "#ffffff" },
+      },
+      styles: {
+        root: ROOT_BLOCK,
+        code: { color: { resolvesTo: "test.bad", fallback: "#777777" } },
+      },
+    } as Partial<ComponentContract>);
+
+    // Unledgered: the inherited pair (code's fg on root's bg) is DRIFT,
+    // reported against the DESCENDANT block that declares the color.
+    const flagged = validateComponentContrast(contract);
+    expect(flagged).toHaveLength(1);
+    expect(flagged[0].pointer).toBe("/styles/code");
+    expect(flagged[0].message).toContain("semantic.color.fg.bad");
+    expect(flagged[0].message).toContain("semantic.color.bg.light");
+
+    // Ledgered by terminal identity: suppressed, not stale.
+    _resetKnownGapsCacheForTests([
+      {
+        component: "Test",
+        fg: "semantic.color.fg.bad",
+        bg: "semantic.color.bg.light",
+        spec: "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      },
+    ]);
+    expect(validateComponentContrast(contract)).toEqual([]);
   });
 
   it("suppresses ledgered failures", () => {

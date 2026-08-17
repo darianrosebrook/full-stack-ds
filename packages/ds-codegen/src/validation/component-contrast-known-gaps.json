@@ -1,4 +1,75 @@
 {
-  "$comment": "Component-derived contrast debt ledger, landed by RAIL-COMPONENT-CONTRAST-01. Two-directional ratchet: a failing pair NOT listed here fails generate:check, and an entry that no longer reproduces a failing pair fails as stale (delete it when fixed). fg/bg are terminal identities — a global token path or a literal hex — exactly as derived by component-contrast.ts. Entries match per (component, fg, bg) across themes, scopes, and blocks. This ledger can only shrink truthfully. BURNED TO EMPTY by FIX-CONTRAST-DEBT-01: resolver alpha preservation (core.color.mode.transparent resolves to #00000000), theme-aware semantic.interaction.text.hover, brightened foreground.hover dark, and darkened foreground.secondary light made all six original entries stop reproducing — the ratchet demanded each removal, which is the proof of the burn.",
-  "gaps": []
+  "$comment": "Component-derived contrast debt ledger, landed by RAIL-COMPONENT-CONTRAST-01. Two-directional ratchet: a failing pair NOT listed here fails generate:check, and an entry that no longer reproduces a failing pair fails as stale (delete it when fixed). fg/bg are terminal identities \u2014 a global token path or a literal hex \u2014 exactly as derived by component-contrast.ts. Entries match per (component, fg, bg) across themes, scopes, and blocks. This ledger can only shrink truthfully. BURNED TO EMPTY by FIX-CONTRAST-DEBT-01: resolver alpha preservation (core.color.mode.transparent resolves to #00000000), theme-aware semantic.interaction.text.hover, brightened foreground.hover dark, and darkened foreground.secondary light made all six original entries stop reproducing \u2014 the ratchet demanded each removal, which is the proof of the burn. REGROWN (truthfully) by RAIL-COMPONENT-CONTRAST-ANCESTRY-01: the inheritance-aware pairing lens derives pairs that were previously unmodeled (CodeBlock token-span palette, Select emptyState); the failing ones are ledgered here pending a palette-repair token-source slice. The ratchet still only shrinks per entry \u2014 each removal still requires its pair to stop failing.",
+  "gaps": [
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.plain",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.comment.color",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.keyword",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.definition",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.punctuation",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.property",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.static",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.string",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "CodeBlock",
+      "fg": "semantic.color.foreground.syntax.tag",
+      "bg": "semantic.color.background.secondary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01 (previously unmodeled: color-only token spans on the inherited root background). The syntax palette needs theme-aware repair against background.secondary \u2014 dark-theme ratios run 1.38\u20132.70:1. Palette repair is a dedicated token-source follow-up; not a regression of this spec."
+    },
+    {
+      "component": "Select",
+      "fg": "semantic.color.foreground.placeholder",
+      "bg": "semantic.color.background.primary",
+      "spec": "RAIL-COMPONENT-CONTRAST-ANCESTRY-01",
+      "note": "Newly derived by the ancestry lens of RAIL-COMPONENT-CONTRAST-ANCESTRY-01: the emptyState part renders placeholder-colored text on the inherited primary background and misses AA in both themes (3.54:1 light, 4.37:1 dark). Placeholder semantics vs AA is a token-source decision owned by a follow-up slice; not a regression of this spec."
+    }
+  ]
 }
