@@ -50,3 +50,8 @@ evidence:
     evidence_ref: "Harness landed and compiles (InteractionTests.swift in the swift-test lane) but headless swift test runners return an EMPTY accessibility tree — two mechanisms verified empirically (NSView accessibilityChildren; AXUIElement app tree with regular policy, key window, updateWindows, 0.25s settle). Press firing is therefore provable only under an AX-capable host (Xcode UI-test runner); the suite skips VISIBLY with that message rather than passing silently — 4 skipped in the 29-test run"
     waiver_reason: "Harness landed and compiles (InteractionTests.swift in the swift-test lane) but headless swift test runners return an EMPTY accessibility tree — two mechanisms verified empirically (NSView accessibilityChildren; AXUIElement app tree with regular policy, key window, updateWindows, 0.25s settle). Press firing is therefore provable only under an AX-capable host (Xcode UI-test runner); the suite skips VISIBLY with that message rather than passing silently — 4 skipped in the 29-test run"
     recorded_at: "2026-08-17T06:06:02.738Z"
+  - criterion_id: A2
+    status: waived
+    evidence_ref: "Same AX-tree limitation as A1 — the Walkthrough step/complete/skip assertions are coded (steps==[1.0], onComplete at threshold, skip exactly-once) but engage only under an AX-capable host"
+    waiver_reason: "Same AX-tree limitation as A1 — the Walkthrough step/complete/skip assertions are coded (steps==[1.0], onComplete at threshold, skip exactly-once) but engage only under an AX-capable host"
+    recorded_at: "2026-08-17T06:06:03.617Z"
