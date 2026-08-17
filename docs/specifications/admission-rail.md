@@ -4,10 +4,12 @@ authority: spec
 status: implemented
 title: Generated artifact admission rail
 owner: "@darianrosebrook"
-updated: 2026-05-20
-verified_at_commit: a11307c
+updated: 2026-08-17
+verified_at_commit: b1d510f9
 governs:
   - packages/ds-codegen/src/validation/types.ts
+  - packages/ds-codegen/src/validation/admission-descriptor.ts
+  - packages/ds-codegen/src/validation/native-compile-lane.ts
   - packages/ds-codegen/src/validation/required-mode.ts
   - packages/ds-codegen/src/validation/validate-cli.ts
   - packages/ds-codegen/src/validation/markdown-report.ts
@@ -20,6 +22,7 @@ governs:
   - packages/ds-codegen/src/validation/frameworks/svelte.ts
   - packages/ds-codegen/src/validation/frameworks/lit.ts
   - packages/ds-codegen/src/validation/frameworks/angular.ts
+  - packages/ds-codegen/src/validation/frameworks/react-native.ts
 ---
 
 # Generated artifact admission rail
@@ -32,7 +35,15 @@ This document teaches the rail's claim. The diagnostic codes, the manifest, and 
 
 ## What problem this solves
 
-Five frameworks emit 53 components each from a single contract source. That's 265 artifact groups, 1024 generated files, plus contracts, plus the codegen itself. The question a reviewer or CI pipeline needs to answer about a PR that touches any of those is not "did the test suite pass." It's: **given the bytes checked in, can we honestly say where they came from and what looked at them?**
+Six rail-admitted frameworks emit the whole loader-discovered contract corpus each, from a single contract source — several hundred artifact groups and well over a thousand generated files, plus contracts, plus the codegen itself. The question a reviewer or CI pipeline needs to answer about a PR that touches any of those is not "did the test suite pass." It's: **given the bytes checked in, can we honestly say where they came from and what looked at them?**
+
+Do not hand-carry those magnitudes — they move whenever the corpus or the admitted target set does. Derive them instead:
+
+- **Rail-admitted targets:** `packages/ds-codegen/src/validation/admission-descriptor.ts` is the registry and the sole authority (six today: react, vue, svelte, lit, angular, react-native; `figma` is generate-admitted but rail-excluded).
+- **Corpus size:** the loader, `packages/ds-codegen/src/contracts-fs.ts`, which walks `components/*/<Name>.contract.json`.
+- **Groups and files:** read them off the last emission with
+  `jq '{groups: (.groups | length), files: ([.groups[].files[]] | length)}' packages/ds-codegen/.emission-manifest.json`
+  (gitignored per-machine state — regenerate with `pnpm run generate -- --target=all` if absent).
 
 Without the rail, that question has no machine-readable answer. A reviewer can run `pnpm test` and see 1000+ passing tests, but they cannot tell whether the generated files match the contracts, whether the emitter has drifted since the artifacts were last regenerated, or whether the manifest the rail cites was written by the same Node/codegen/lockfile state as the verifier is running under.
 
@@ -48,7 +59,7 @@ The rail composes three records:
 
 1. **The emission manifest** (`packages/ds-codegen/.emission-manifest.json`, gitignored). Written by the codegen CLI at the end of every successful `generate` run. Records what the producer claims it emitted, the contract bytes that drove each group, the bounded emitter source set per framework, and the generate-time environment fingerprint. Schema is versioned; see [`docs/specifications/manifest-schema.md`](./manifest-schema.md) for the field-by-field reference.
 
-2. **Per-framework admission plans** (`packages/ds-codegen/src/validation/frameworks/*.ts`). Declare, per framework, which checks the rail will run (e.g. `tsc`, `ngc strictTemplates`, `lit-analyzer`), what they exercise, and which artifact paths each check's command-line scope binds to.
+2. **Per-framework admission plans** (`packages/ds-codegen/src/validation/frameworks/*.ts`). Declare, per framework, which checks the rail will run (e.g. `tsc`, `ngc strictTemplates`, `lit-analyzer`, and for react-native a package typecheck plus generated render tests), what they exercise, and which artifact paths each check's command-line scope binds to. Each plan is wrapped by an `AdmissionDescriptor` in its own module and aggregated by `validation/admission-descriptor.ts`, which is the single place the rail's target set, generated-tree roots, source extensions, and report ordering are declared — five formerly-parallel literals now derive from it.
 
 3. **Required-mode verifier** (`packages/ds-codegen/src/validation/required-mode.ts`). Joins the manifest against the on-disk state and emits typed `RailDiagnostic` records when integrity claims do not hold. Each diagnostic has a stable code (e.g. `RAIL_REQUIRE_MANIFEST_HASH_MISMATCH`), an operator-facing message naming the specific failure, and a list of affected paths where applicable.
 
@@ -67,6 +78,8 @@ These are global non-claims. They apply across all four current evidence rungs. 
 - **The rail does not prove semantic correctness.** Behavior tests in each framework workspace prove that the rendered interaction works. The rail proves that the artifacts are admissible by their framework's compiler/parser/linter. Both gates are required; neither subsumes the other. The rail is the admission half.
 
 - **Changed-artifact scope is a reporting projection, not a reduced admission mode.** When `--scope-to-git-range` is passed, the rail STILL admits the full workspace; the projection narrows what the markdown report highlights. A passing scoped report does not mean a smaller set of artifacts was checked. Operators who want to "make CI faster by scoping" are pointed at the wrong tool.
+
+- **"The admission rail" is not everything CI proves about generated code.** Two non-pnpm *native compile lanes* (Kotlin via `kotlinc`, Swift via `swiftc`) run as their own CI jobs — `native-compile-rail` and `native-compile-rail-swift` — driven by `packages/ds-codegen/src/validation/native-compile-lane.ts`. They are `RailTargetId`s, not `FrameworkId`s: they admit no component, are absent from the manifest, and sit outside the evidence ladder below. They exist to prove the rail can bind a compiler family that has no `tsc`/`vitest`, and they compile hand-authored example consumers rather than generated component trees. Do not read a green native lane as byte-provenance for emitted `.kt`/`.swift`.
 
 The rung-specific non-claims (e.g. "contract provenance does not prove emitter determinism," "emitter provenance does not prove the source set is complete by construction") live alongside their respective schema versions in [`docs/specifications/manifest-schema.md`](./manifest-schema.md). They are not repeated here so this document stays the conceptual entry surface rather than a reference manual.
 
@@ -232,7 +245,7 @@ The four evidence rungs taught here are how the rail *demonstrates* it owns evid
 
 When closing a PR that involves the rail, the closure note should cite specific evidence rather than "the rail passed":
 
-- Which rungs were exercised. ("Output integrity verified against 1024 files; contract integrity against 53 contracts; emitter integrity against 86 declared sources; environment under Node 22 + codegen 1.0.0 + lockfile sha256 c2013f6b…")
+- Which rungs were exercised, with the counts read off *your* `RailReport` rather than copied from this doc. ("Output integrity verified against `<N>` files; contract integrity against `<N>` contracts; emitter integrity against `<N>` declared sources; environment under Node 22 + codegen 1.0.0 + lockfile sha256 `<prefix…>`")
 - The scoped projection counts if the PR was scoped. ("3 matched artifact groups, 1 changed contract, 0 unmatched generated paths.")
 - Any diagnostic codes that fired and how they were resolved. ("`CONTRACT_HASH_MISMATCH` on Button.contract.json was the load-bearing signal that contract edits hadn't been regenerated; resolved by running `pnpm run generate -- --target=all` and recommitting.")
 - Any known gaps. ("Lit's `no-incompatible-type-binding` rule is disabled in `typecheck:templates`; declared in `knownGaps` and visible in the markdown report's `Known gaps` section.")
