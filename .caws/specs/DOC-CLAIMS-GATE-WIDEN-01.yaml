@@ -2,9 +2,11 @@ id: DOC-CLAIMS-GATE-WIDEN-01
 title: 'Widen the docs-claims gate: scan all tracked docs, derive target counts'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Claims gate now scans all tracked docs and derives rail-admitted, registered-target and icon counts; 6 to 11 governed claims'
 created_at: '2026-08-17T17:14:24.308Z'
-updated_at: '2026-08-17T17:14:24.308Z'
+updated_at: '2026-08-17T17:20:13.517Z'
 blast_radius:
   modules:
     - 'docs claim gate'
