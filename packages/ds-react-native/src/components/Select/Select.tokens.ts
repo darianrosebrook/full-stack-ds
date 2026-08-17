@@ -108,8 +108,8 @@ export const selectTokenScopes = {
     "select.color.placeholder.default": {
       name: "select.color.placeholder.default",
       cssVar: "--fsds-select-color-placeholder-default",
-      ref: "semantic.color.foreground.placeholder",
-      fallback: "#888889",
+      ref: "semantic.color.foreground.secondary",
+      fallback: "#474647",
     },
     "select.size.padding.default": {
       name: "select.size.padding.default",

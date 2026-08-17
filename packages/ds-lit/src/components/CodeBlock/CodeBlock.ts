@@ -45,14 +45,14 @@ export class CodeBlockElement extends LitElement {
       --fsds-code-block-size-font-size-default: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-code-block-typography-line-height-default: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-code-block-token-color-plain: var(--fsds-semantic-color-foreground-syntax-plain, #141414);
-      --fsds-code-block-token-color-comment: var(--fsds-semantic-color-foreground-syntax-comment-color, #727272);
-      --fsds-code-block-token-color-keyword: var(--fsds-semantic-color-foreground-syntax-keyword, #0566fe);
-      --fsds-code-block-token-color-definition: var(--fsds-semantic-color-foreground-syntax-definition, #d92d2e);
-      --fsds-code-block-token-color-punctuation: var(--fsds-semantic-color-foreground-syntax-punctuation, #0566fe);
-      --fsds-code-block-token-color-property: var(--fsds-semantic-color-foreground-syntax-property, #ae5d00);
-      --fsds-code-block-token-color-static: var(--fsds-semantic-color-foreground-syntax-static, #d92d2e);
+      --fsds-code-block-token-color-comment: var(--fsds-semantic-color-foreground-syntax-comment-color, #474647);
+      --fsds-code-block-token-color-keyword: var(--fsds-semantic-color-foreground-syntax-keyword, #013ab0);
+      --fsds-code-block-token-color-definition: var(--fsds-semantic-color-foreground-syntax-definition, #900909);
+      --fsds-code-block-token-color-punctuation: var(--fsds-semantic-color-foreground-syntax-punctuation, #013ab0);
+      --fsds-code-block-token-color-property: var(--fsds-semantic-color-foreground-syntax-property, #6c3a00);
+      --fsds-code-block-token-color-static: var(--fsds-semantic-color-foreground-syntax-static, #900909);
       --fsds-code-block-token-color-string: var(--fsds-semantic-color-foreground-syntax-string, #900909);
-      --fsds-code-block-token-color-tag: var(--fsds-semantic-color-foreground-syntax-tag, #d92d2e);
+      --fsds-code-block-token-color-tag: var(--fsds-semantic-color-foreground-syntax-tag, #900909);
     }
 
     .code-block {
@@ -94,27 +94,27 @@ export class CodeBlockElement extends LitElement {
     }
 
     .code-block__token[data-token="comment"] {
-      color: var(--fsds-code-block-token-color-comment, #727272);
+      color: var(--fsds-code-block-token-color-comment, #474647);
     }
 
     .code-block__token[data-token="keyword"] {
-      color: var(--fsds-code-block-token-color-keyword, #0566fe);
+      color: var(--fsds-code-block-token-color-keyword, #013ab0);
     }
 
     .code-block__token[data-token="definition"] {
-      color: var(--fsds-code-block-token-color-definition, #d92d2e);
+      color: var(--fsds-code-block-token-color-definition, #900909);
     }
 
     .code-block__token[data-token="punctuation"] {
-      color: var(--fsds-code-block-token-color-punctuation, #0566fe);
+      color: var(--fsds-code-block-token-color-punctuation, #013ab0);
     }
 
     .code-block__token[data-token="property"] {
-      color: var(--fsds-code-block-token-color-property, #ae5d00);
+      color: var(--fsds-code-block-token-color-property, #6c3a00);
     }
 
     .code-block__token[data-token="static"] {
-      color: var(--fsds-code-block-token-color-static, #d92d2e);
+      color: var(--fsds-code-block-token-color-static, #900909);
     }
 
     .code-block__token[data-token="string"] {
@@ -122,7 +122,7 @@ export class CodeBlockElement extends LitElement {
     }
 
     .code-block__token[data-token="tag"] {
-      color: var(--fsds-code-block-token-color-tag, #d92d2e);
+      color: var(--fsds-code-block-token-color-tag, #900909);
     }
   `;
 

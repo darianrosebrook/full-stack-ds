@@ -3110,76 +3110,76 @@
         "syntax": {
           "plain": {
             "$type": "color",
-            "$description": "Plain text in syntax highlighting",
+            "$description": "Plain text in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
               "light": "#141414",
-              "dark": "#141414"
+              "dark": "#fafafa"
             }
           },
           "comment": {
             "color": {
               "$type": "color",
-              "$description": "Comment color in syntax highlighting",
+              "$description": "Comment color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
               "$value": {
-                "light": "#727272",
-                "dark": "#727272"
+                "light": "#474647",
+                "dark": "#a0a0a1"
               }
             }
           },
           "keyword": {
             "$type": "color",
-            "$description": "Keyword color in syntax highlighting",
+            "$description": "Keyword color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
-              "light": "#0566fe",
-              "dark": "#0566fe"
+              "light": "#013ab0",
+              "dark": "#00a9fb"
             }
           },
           "definition": {
             "$type": "color",
-            "$description": "Definition color in syntax highlighting",
+            "$description": "Definition color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
-              "light": "#d92d2e",
-              "dark": "#d92d2e"
+              "light": "#900909",
+              "dark": "#ee8181"
             }
           },
           "punctuation": {
             "$type": "color",
-            "$description": "Punctuation color in syntax highlighting",
+            "$description": "Punctuation color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
-              "light": "#0566fe",
-              "dark": "#0566fe"
+              "light": "#013ab0",
+              "dark": "#00a9fb"
             }
           },
           "property": {
             "$type": "color",
-            "$description": "Property color in syntax highlighting",
+            "$description": "Property color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
-              "light": "#ae5d00",
-              "dark": "#ae5d00"
+              "light": "#6c3a00",
+              "dark": "#ec8802"
             }
           },
           "tag": {
             "$type": "color",
-            "$description": "Tag color in syntax highlighting",
+            "$description": "Tag color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
-              "light": "#d92d2e",
-              "dark": "#d92d2e"
+              "light": "#900909",
+              "dark": "#ee8181"
             }
           },
           "static": {
             "$type": "color",
-            "$description": "Static color in syntax highlighting",
+            "$description": "Static color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
-              "light": "#d92d2e",
-              "dark": "#d92d2e"
+              "light": "#900909",
+              "dark": "#ee8181"
             }
           },
           "string": {
             "$type": "color",
-            "$description": "Highlight color in syntax highlighting",
+            "$description": "Highlight color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark.",
             "$value": {
               "light": "#900909",
-              "dark": "#900909"
+              "dark": "#ee8181"
             }
           }
         },

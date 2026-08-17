@@ -54,7 +54,7 @@
           "fsds.light": "{color.palette.neutral.700}",
           "fsds.dark": "{color.palette.neutral.200}"
         },
-        "$description": "Hover foreground color. Dark brightened neutral.300 -> neutral.200 (FIX-CONTRAST-DEBT-01): neutral.300 measured 3.60:1 on background.hover dark (neutral.700), under AA 4.5:1. Mirrors the light direction — hover strengthens the text."
+        "$description": "Hover foreground color. Dark brightened neutral.300 -> neutral.200 (FIX-CONTRAST-DEBT-01): neutral.300 measured 3.60:1 on background.hover dark (neutral.700), under AA 4.5:1. Mirrors the light direction \u2014 hover strengthens the text."
       },
       "link": {
         "$type": "color",
@@ -189,83 +189,83 @@
           "$value": "{color.foreground.primary}",
           "$extensions": {
             "fsds.light": "{color.foreground.primary}",
-            "fsds.dark": "{color.foreground.primary}"
+            "fsds.dark": "{color.mode.light}"
           },
-          "$description": "Plain text in syntax highlighting"
+          "$description": "Plain text in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "comment": {
           "color": {
             "$type": "color",
-            "$value": "{color.foreground.tertiary}",
+            "$value": "{color.palette.neutral.700}",
             "$extensions": {
-              "fsds.light": "{color.foreground.tertiary}",
-              "fsds.dark": "{color.foreground.tertiary}"
+              "fsds.light": "{color.palette.neutral.700}",
+              "fsds.dark": "{color.palette.neutral.300}"
             },
-            "$description": "Comment color in syntax highlighting"
+            "$description": "Comment color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
           }
         },
         "keyword": {
           "$type": "color",
-          "$value": "{color.foreground.info}",
+          "$value": "{color.palette.blue.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.info}",
-            "fsds.dark": "{color.foreground.info}"
+            "fsds.light": "{color.palette.blue.700}",
+            "fsds.dark": "{color.palette.blue.300}"
           },
-          "$description": "Keyword color in syntax highlighting"
+          "$description": "Keyword color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "definition": {
           "$type": "color",
-          "$value": "{color.foreground.accent}",
+          "$value": "{color.palette.red.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.accent}",
-            "fsds.dark": "{color.foreground.accent}"
+            "fsds.light": "{color.palette.red.700}",
+            "fsds.dark": "{color.palette.red.300}"
           },
-          "$description": "Definition color in syntax highlighting"
+          "$description": "Definition color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "punctuation": {
           "$type": "color",
-          "$value": "{color.foreground.info}",
+          "$value": "{color.palette.blue.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.info}",
-            "fsds.dark": "{color.foreground.info}"
+            "fsds.light": "{color.palette.blue.700}",
+            "fsds.dark": "{color.palette.blue.300}"
           },
-          "$description": "Punctuation color in syntax highlighting"
+          "$description": "Punctuation color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "property": {
           "$type": "color",
-          "$value": "{color.foreground.warning}",
+          "$value": "{color.palette.orange.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.warning}",
-            "fsds.dark": "{color.foreground.warning}"
+            "fsds.light": "{color.palette.orange.700}",
+            "fsds.dark": "{color.palette.orange.300}"
           },
-          "$description": "Property color in syntax highlighting"
+          "$description": "Property color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "tag": {
           "$type": "color",
-          "$value": "{color.foreground.danger}",
+          "$value": "{color.palette.red.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.danger}",
-            "fsds.dark": "{color.foreground.danger}"
+            "fsds.light": "{color.palette.red.700}",
+            "fsds.dark": "{color.palette.red.300}"
           },
-          "$description": "Tag color in syntax highlighting"
+          "$description": "Tag color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "static": {
           "$type": "color",
-          "$value": "{color.foreground.accent}",
+          "$value": "{color.palette.red.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.accent}",
-            "fsds.dark": "{color.foreground.accent}"
+            "fsds.light": "{color.palette.red.700}",
+            "fsds.dark": "{color.palette.red.300}"
           },
-          "$description": "Static color in syntax highlighting"
+          "$description": "Static color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         },
         "string": {
           "$type": "color",
-          "$value": "{color.foreground.highlight}",
+          "$value": "{color.palette.red.700}",
           "$extensions": {
-            "fsds.light": "{color.foreground.highlight}",
-            "fsds.dark": "{color.foreground.highlight}"
+            "fsds.light": "{color.palette.red.700}",
+            "fsds.dark": "{color.palette.red.300}"
           },
-          "$description": "Highlight color in syntax highlighting"
+          "$description": "Highlight color in syntax highlighting Theme-aware for WCAG AA against background.secondary (neutral.100 light / neutral.800 dark) per FIX-CONTRAST-PALETTE-REPAIR-01: ramp step >=700 in light, <=300 in dark."
         }
       },
       "disabled": {
@@ -275,7 +275,7 @@
           "fsds.light": "{color.palette.neutral.500}",
           "fsds.dark": "{color.palette.neutral.400}"
         },
-        "$description": "Disabled foreground color. Bumped from neutral.300/500 to neutral.500/400 to meet 3:1 against background.disabled (neutral.200/700). WCAG SC 1.4.3 exempts disabled controls from contrast minimums, but unreadable disabled labels are usability debt — this satisfies AA_LARGE (3:1) so disabled state stays visibly de-emphasized without becoming invisible."
+        "$description": "Disabled foreground color. Bumped from neutral.300/500 to neutral.500/400 to meet 3:1 against background.disabled (neutral.200/700). WCAG SC 1.4.3 exempts disabled controls from contrast minimums, but unreadable disabled labels are usability debt \u2014 this satisfies AA_LARGE (3:1) so disabled state stays visibly de-emphasized without becoming invisible."
       },
       "placeholder": {
         "$type": "color",
@@ -293,7 +293,7 @@
           "fsds.light": "{color.mode.light}",
           "fsds.dark": "{color.mode.light}"
         },
-        "$description": "Inverse foreground color — the label color used INSIDE colored action surfaces (primary/danger buttons). The colored surface keeps its hue across light and dark themes, so the inverse label stays light in both. NOT the inverse of foreground.primary — use foreground.on-inverse for a surface painted background.inverse."
+        "$description": "Inverse foreground color \u2014 the label color used INSIDE colored action surfaces (primary/danger buttons). The colored surface keeps its hue across light and dark themes, so the inverse label stays light in both. NOT the inverse of foreground.primary \u2014 use foreground.on-inverse for a surface painted background.inverse."
       },
       "on-inverse": {
         "$type": "color",
@@ -302,7 +302,7 @@
           "fsds.light": "{color.mode.light}",
           "fsds.dark": "{color.mode.dark}"
         },
-        "$description": "Label color for a surface painted background.inverse (tooltips, inverted callouts). background.inverse flips per theme — mode.dark in light, mode.light in dark — so this flips the OPPOSITE way to stay readable. Pair the two together. Do NOT use foreground.inverse here: it is light in both themes, which renders light-on-light in dark mode."
+        "$description": "Label color for a surface painted background.inverse (tooltips, inverted callouts). background.inverse flips per theme \u2014 mode.dark in light, mode.light in dark \u2014 so this flips the OPPOSITE way to stay readable. Pair the two together. Do NOT use foreground.inverse here: it is light in both themes, which renders light-on-light in dark mode."
       }
     }
   }
