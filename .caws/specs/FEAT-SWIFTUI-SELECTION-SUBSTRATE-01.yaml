@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: "SelectionStateTests 3/3: single replace + isSelected, multi toggleMembership + change payloads, controlled write-through both modes"
     recorded_at: "2026-08-17T04:06:04.681Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Select.swift: @StateObject SelectionState with multiple mode gate, selection.apply(option.value) Menu item actions, ControllableValue open channel; SelectOption Identifiable struct synthesized from the contract alias; compiles (swift build exit 0)"
+    recorded_at: "2026-08-17T04:06:05.604Z"
