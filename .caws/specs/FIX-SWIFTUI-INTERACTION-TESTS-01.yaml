@@ -55,3 +55,7 @@ evidence:
     evidence_ref: "Same AX-tree limitation as A1 — the Walkthrough step/complete/skip assertions are coded (steps==[1.0], onComplete at threshold, skip exactly-once) but engage only under an AX-capable host"
     waiver_reason: "Same AX-tree limitation as A1 — the Walkthrough step/complete/skip assertions are coded (steps==[1.0], onComplete at threshold, skip exactly-once) but engage only under an AX-capable host"
     recorded_at: "2026-08-17T06:06:03.617Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: ".github/workflows/ci.yml native-compile-rail-swift job: new 'swift-react emission parity fixture' step runs tsc -p tsconfig.json then node scripts/swift-parity-diff.mjs after the swift test step — dist built in-job, stale-build false divergence closed"
+    recorded_at: "2026-08-17T06:06:04.502Z"
