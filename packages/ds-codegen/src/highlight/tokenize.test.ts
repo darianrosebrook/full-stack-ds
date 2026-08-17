@@ -211,4 +211,19 @@ describe("tokenizeCode", () => {
       ).toEqual(testCase.expected);
     }
   });
+
+  it("is total at the DOM boundary: omitted props coerce instead of throwing", () => {
+    // Generated components lower required props straight into the call;
+    // a consumer that omits one delivers undefined. The runtime coerces
+    // (empty source → no tokens; missing language → plain run) rather
+    // than throwing inside render, matching how template interpolation
+    // tolerated omitted props before the transform existed.
+    expect(tokenizeCode(undefined as unknown as string, "typescript")).toEqual([]);
+    expect(
+      tokenizeCode("const x = 1;", undefined as unknown as string),
+    ).toEqual([{ kind: "plain", text: "const x = 1;" }]);
+    expect(
+      tokenizeCode(null as unknown as string, null as unknown as string),
+    ).toEqual([]);
+  });
 });

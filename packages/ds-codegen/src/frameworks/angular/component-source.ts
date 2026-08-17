@@ -44,6 +44,8 @@ import {
   canonicalTsType,
   channelUpdateMethodName,
   composeChannelUpdateExpression,
+  collectContentTransforms,
+  isContentTransform,
 } from "../../ir.js";
 import {
   emitNonReactTypeAliases,
@@ -1297,6 +1299,11 @@ function treeHasChildrenGuard(node: DomNodeIR): boolean {
 function treeUsesNgIf(node: DomNodeIR): boolean {
   if (node.ifProp) return true;
   if (node.iconGlyph) return true;
+  // FEAT-CODEBLOCK-HIGHLIGHT-01: a gated content transform emits an
+  // `*ngIf` pair (tokens vs plain source degradation).
+  if (isContentTransform(node.content) && node.content.gate !== undefined) {
+    return true;
+  }
   return node.children.some(treeUsesNgIf);
 }
 
@@ -1304,10 +1311,13 @@ function treeUsesNgIf(node: DomNodeIR): boolean {
  *  iteration. Used to decide whether `NgFor` belongs in the
  *  standalone component's imports list.
  *  ICON-CATALOG-RUNTIME-DELIVERY-01: an `iconGlyph` node also emits a
- *  `*ngFor` loop over the resolved glyph's path records. */
+ *  `*ngFor` loop over the resolved glyph's path records.
+ *  FEAT-CODEBLOCK-HIGHLIGHT-01: a content transform emits a `*ngFor`
+ *  loop over the tokenizer getter's token stream. */
 function treeUsesNgFor(node: DomNodeIR): boolean {
   if (node.iteration) return true;
   if (node.iconGlyph) return true;
+  if (isContentTransform(node.content)) return true;
   return node.children.some(treeUsesNgFor);
 }
 
@@ -1451,6 +1461,14 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // Structural — driven by IR `iconGlyph` facts, never per-component lore.
   if (ir.dom && collectIconGlyphNodes(ir.dom).length > 0) {
     lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
+  // content-transform: import the shared highlight tokenizer when the tree
+  // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
+  // driven by IR content-transform facts, never per-component name lore.
+  if (ir.dom && collectContentTransforms(ir.dom).length > 0) {
+    lines.push(
+      `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
+    );
   }
   if (selectorAnchor) {
     lines.push(
@@ -1605,6 +1623,43 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     collect(ir.dom);
   }
 
+  // FEAT-CODEBLOCK-HIGHLIGHT-01: one class getter per content-transform
+  // node wraps the shared tokenizer for template iteration — Angular
+  // template expressions resolve against the component instance only,
+  // so an imported module function is not directly callable from the
+  // template. Getter names derive from the transform (document-order
+  // suffix keeps multiple transforms disjoint), never the component.
+  const contentTransformGetters = new Map<DomNodeIR, string>();
+  const contentTransformGetterLines: string[] = [];
+  {
+    const transforms = collectContentTransforms(ir.dom);
+    const collectNodes = (node: DomNodeIR): void => {
+      if (isContentTransform(node.content)) {
+        const transform = node.content;
+        const index = transforms.indexOf(transform);
+        const getterName =
+          index <= 0 ? "highlightTokens" : `highlightTokens${index}`;
+        contentTransformGetters.set(node, getterName);
+        const sourceExpr = appendPath(
+          defaultAwareAngularClassPropAccessor(transform.sourceProp, styledByName),
+          transform.source.path,
+        );
+        const languageExpr = appendPath(
+          defaultAwareAngularClassPropAccessor(transform.languageProp, styledByName),
+          transform.language.path,
+        );
+        contentTransformGetterLines.push(
+          ``,
+          `  get ${getterName}(): Array<{ kind: string; text: string }> {`,
+          `    return tokenizeCode(${sourceExpr}, ${languageExpr});`,
+          `  }`,
+        );
+      }
+      node.children.forEach(collectNodes);
+    };
+    collectNodes(ir.dom);
+  }
+
   const ctx: AngularRenderContext = {
     classRecipe: ir.classRecipe.base,
     channelByName,
@@ -1613,6 +1668,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     autoDismissPause: autoDismissActive,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
+    contentTransformGetters,
     fieldAssociationConsumer: assocConsumes,
     idRefGetters,
     rootSelectorAnchored: selectorAnchor !== null,
@@ -1799,6 +1855,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // idref attributes (plain getters, re-evaluated each CD pass — Angular
   // templates cannot reference `Boolean` for an inline filter).
   lines.push(...idRefGetterLines);
+
+  // FEAT-CODEBLOCK-HIGHLIGHT-01: content-transform getters wrapping the
+  // shared tokenizer (plain getters, same re-evaluation semantics as the
+  // idref getters above).
+  lines.push(...contentTransformGetterLines);
 
   // Helper handler methods. Named `handle<Name>Change` (NOT `on<Name>Change`)
   // to avoid colliding with the @Input() change-handler prop of the same
@@ -2209,6 +2270,17 @@ interface AngularRenderContext {
    * glyph nodes.
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphGetter: string; pxGetter: string | undefined }>;
+
+  /**
+   * Class-getter names for nodes carrying a content transform
+   * (FEAT-CODEBLOCK-HIGHLIGHT-01), keyed by node identity. Angular
+   * template expressions resolve against the component instance only,
+   * so the shared tokenizer must be wrapped in a class getter the
+   * template's `*ngFor` can iterate. Populated once at the root call
+   * from `collectContentTransforms`; empty when the tree has no
+   * content-transform nodes.
+   */
+  contentTransformGetters?: Map<DomNodeIR, string>;
   /**
    * Selector-anchored root panel (coachmark / guided tour): the root
    * element gets the fixed-position/data-placement host attrs driven by
@@ -2434,11 +2506,54 @@ function renderAngularDomNode(
   // IR-DOM-BINDING-CAPABILITY-01: content binding lowers to Angular's
   // `{{ expr }}` interpolation as the element's text content. Mutually
   // exclusive with children — parseDomNode rejects the combination.
+  //
+  // FEAT-CODEBLOCK-HIGHLIGHT-01: a content transform instead renders one
+  // `<span>` per token via `*ngFor` over the class getter wrapping the
+  // shared tokenizer — the token part's class plus a `data-token` kind
+  // attribute, with `{{ token.text }}` interpolation (text-only children,
+  // so the source is never interpreted as markup). A declared gate
+  // degrades to a single plain interpolation of the source binding.
   const contentLines: string[] = [];
   if (node.content) {
-    const contentExpr = renderAngularBindingValue(node.content, ctx);
-    if (contentExpr !== null) {
-      contentLines.push(`${" ".repeat(indent + 2)}{{ ${contentExpr} }}`);
+    if (isContentTransform(node.content)) {
+      const transform = node.content;
+      const sp = " ".repeat(indent + 2);
+      const tokenGetter = ctx.contentTransformGetters?.get(node);
+      if (!tokenGetter) {
+        throw new Error(
+          `renderAngularDomNode: no content-transform getter registered for ` +
+            `node (tag="${node.tag}", part="${node.part ?? "?"}")`,
+        );
+      }
+      const tokenClass = `${ctx.classRecipe}__${transform.tokenPart}`;
+      const tokenSpan =
+        `<span *ngFor="let token of ${tokenGetter}" ` +
+        `[ngClass]="'${tokenClass}'" ` +
+        `[attr.data-token]="token.kind">{{ token.text }}</span>`;
+      if (transform.gate !== undefined) {
+        const gateExpr = defaultAwareAngularTemplatePropAccessor(
+          transform.gateProp ?? transform.gate.prop,
+          ctx.styledByName,
+        );
+        const sourceExpr = appendPath(
+          defaultAwareAngularTemplatePropAccessor(
+            transform.sourceProp,
+            ctx.styledByName,
+          ),
+          transform.source.path,
+        );
+        contentLines.push(
+          `${sp}<ng-container *ngIf="${gateExpr}">${tokenSpan}</ng-container>`,
+          `${sp}<ng-container *ngIf="!(${gateExpr})">{{ ${sourceExpr} }}</ng-container>`,
+        );
+      } else {
+        contentLines.push(`${sp}${tokenSpan}`);
+      }
+    } else {
+      const contentExpr = renderAngularBindingValue(node.content, ctx);
+      if (contentExpr !== null) {
+        contentLines.push(`${" ".repeat(indent + 2)}{{ ${contentExpr} }}`);
+      }
     }
   }
 

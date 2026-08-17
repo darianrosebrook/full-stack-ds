@@ -41,6 +41,7 @@ export function createReactEmitter(
 
   return {
     id: "react",
+    shipsContentTransformRuntime: true,
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       const tsx = generateReactComponentSource(ir, stackImportRelative);

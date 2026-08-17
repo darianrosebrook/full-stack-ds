@@ -763,8 +763,19 @@ function tokenizeMarkdown(input: string, sink: TokenSink): void {
  * Tokenize a literal source string for the declared language. Pure and
  * deterministic; unknown languages degrade to a single plain run. The empty
  * input yields no tokens.
+ *
+ * The signature is `string`-typed, but the DOM boundary does not guarantee
+ * it: generated components lower required props straight into this call,
+ * and a consumer that omits one delivers `undefined` (template engines
+ * tolerate exactly that when interpolating). The runtime is therefore
+ * TOTAL at the boundary — `undefined`/`null` code coerces to the empty
+ * string (no tokens, matching how an omitted prop previously rendered
+ * empty), and a missing language falls into the unknown-language plain
+ * run — instead of throwing inside render.
  */
 export function tokenizeCode(code: string, language: string): HighlightToken[] {
+  const source = code ?? "";
+  const lang = language ?? "";
   const collected: HighlightToken[] = [];
   const sink: TokenSink = {
     push(kind, text) {
@@ -772,36 +783,36 @@ export function tokenizeCode(code: string, language: string): HighlightToken[] {
       collected.push({ kind, text });
     },
   };
-  switch (language) {
+  switch (lang) {
     case "javascript":
-      tokenizeJsFamily(code, sink, { jsx: false, typescript: false });
+      tokenizeJsFamily(source, sink, { jsx: false, typescript: false });
       break;
     case "jsx":
-      tokenizeJsFamily(code, sink, { jsx: true, typescript: false });
+      tokenizeJsFamily(source, sink, { jsx: true, typescript: false });
       break;
     case "typescript":
-      tokenizeJsFamily(code, sink, { jsx: false, typescript: true });
+      tokenizeJsFamily(source, sink, { jsx: false, typescript: true });
       break;
     case "tsx":
-      tokenizeJsFamily(code, sink, { jsx: true, typescript: true });
+      tokenizeJsFamily(source, sink, { jsx: true, typescript: true });
       break;
     case "json":
-      tokenizeJson(code, sink);
+      tokenizeJson(source, sink);
       break;
     case "css":
-      tokenizeCss(code, sink);
+      tokenizeCss(source, sink);
       break;
     case "html":
-      tokenizeHtml(code, sink);
+      tokenizeHtml(source, sink);
       break;
     case "bash":
-      tokenizeBash(code, sink);
+      tokenizeBash(source, sink);
       break;
     case "markdown":
-      tokenizeMarkdown(code, sink);
+      tokenizeMarkdown(source, sink);
       break;
     default:
-      if (code.length > 0) sink.push("plain", code);
+      if (source.length > 0) sink.push("plain", source);
       break;
   }
   const merged: HighlightToken[] = [];

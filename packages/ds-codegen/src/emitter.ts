@@ -84,6 +84,18 @@ export interface FrameworkEmitter {
   emitPrimitives?(ir: PrimitiveIR, opts: EmitOptions): GeneratedFile[];
 
   /**
+   * True when this target realizes IR content-transform facts (the web DOM
+   * targets) and therefore ships the shared transform runtime — the
+   * byte-identical `highlight/tokenize.ts` module — in its primitives root.
+   * Targets that degrade transforms to plain text (figma, react-native,
+   * non-web prototypes) omit it. The CLI writes the runtime once per build
+   * for every shipping target, mirroring `emitPrimitives` — unconditional
+   * emission keeps the five package copies identical by construction
+   * (FEAT-CODEBLOCK-HIGHLIGHT-01 invariant).
+   */
+  readonly shipsContentTransformRuntime?: boolean;
+
+  /**
    * Files representing the component's behavior hook/composable/service.
    * Optional — emitters that don't have a separate behavior unit (or
    * contracts without behavior fields) return `[]` or omit the method.

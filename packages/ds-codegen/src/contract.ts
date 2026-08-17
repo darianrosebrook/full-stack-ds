@@ -295,18 +295,22 @@ export interface ContractDomNode {
    */
   events?: Record<string, string>;
   /**
-   * Single inner-content binding. Emitters lower to the framework's
+   * Inner content: either a single binding-expression string or a
+   * content-transform directive (FEAT-CODEBLOCK-HIGHLIGHT-01). String form:
+   * emitters lower to the framework's
    * "render this value as the element's content" idiom:
    *   React  → `<span>{prop}</span>`
    *   Vue    → `<span>{{ prop }}</span>` (interpolation; safe for ReactNode-typed props that resolve to renderable values)
    *   Svelte → `<span>{prop}</span>`
    *   Angular→ `<span>{{ prop }}</span>`
    *   Lit    → `<span>${this.prop}</span>`
+   * Object form: the content is PRODUCED by the named transform applied to
+   * the source prop — see `ContractContentTransform` / `ContentTransformIR`.
    * Mutually exclusive with `children` on the same node: if you want a
    * prop's value to appear *between* other children, wrap it in its own
    * `tag: "span" content: "prop:..."` child.
    */
-  content?: string;
+  content?: string | ContractContentTransform;
   /**
    * Optional child nodes. Empty/absent for leaf elements. Mutually
    * exclusive with `content` on the same node — see `content` field.
@@ -380,6 +384,26 @@ export interface ContractDomNodeIterate {
   itemVar?: string;
   /** TypeScript type of each item. Required when kind=array. */
   itemType?: string;
+}
+
+/**
+ * Content-transform directive on a DOM node (FEAT-CODEBLOCK-HIGHLIGHT-01).
+ * Authored as the object form of `anatomy.dom[].content`; parsed into
+ * `ContentTransformIR` by the IR builder. The node's inner content is
+ * produced by the named transform applied to the source prop, never by
+ * projecting a binding verbatim.
+ */
+export interface ContractContentTransform {
+  /** Transform name; closed set — `"highlight"` is the only admitted value today. */
+  transform: 'highlight';
+  /** Binding naming the string prop carrying the literal source text, e.g. `"prop:code"`. */
+  source: string;
+  /** `highlight` only: binding naming the string prop carrying the declared language, e.g. `"prop:language"`. */
+  language?: string;
+  /** `highlight` only: binding naming the boolean prop gating the transform, e.g. `"prop:highlight"`. */
+  gate?: string;
+  /** `highlight` only: anatomy part realized as one span per token. */
+  tokenPart: string;
 }
 
 /**

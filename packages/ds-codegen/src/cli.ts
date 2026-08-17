@@ -778,6 +778,9 @@ function emitForTarget(
     } else if (binding.emitter.emitPrimitives) {
       writeWebPrimitives(binding);
     }
+    if (binding.emitter.shipsContentTransformRuntime) {
+      writeContentTransformRuntime(binding);
+    }
     writeBarrel(binding);
   }
 
@@ -1283,6 +1286,35 @@ function writeWebPrimitives(binding: TargetBinding): void {
       `\n  PRIMITIVE  ${path.relative(cwd, absolutePath)} (${ir.name})`,
     );
   }
+}
+
+/**
+ * Write the shared content-transform runtime — the canonical highlight
+ * tokenizer — byte-identical into a web target's primitives root
+ * (FEAT-CODEBLOCK-HIGHLIGHT-01). The single source of truth is
+ * `packages/ds-codegen/src/highlight/tokenize.ts`; `fs.copyFileSync`
+ * preserves its bytes exactly so every web framework package ships the
+ * same module (the cross-framework tokenizer identity invariant). Called
+ * once per web build for every shipping target — unconditional, mirroring
+ * `writeWebPrimitives` — so the five package copies can never drift apart
+ * when a partial component selection is generated.
+ */
+function writeContentTransformRuntime(binding: TargetBinding): void {
+  const sourcePath = path.join(
+    cwd,
+    "packages",
+    "ds-codegen",
+    "src",
+    "highlight",
+    "tokenize.ts",
+  );
+  const primitivesRoot = path.join(binding.componentsRoot, "..", "primitives");
+  const absolutePath = path.join(primitivesRoot, "highlight", "tokenize.ts");
+  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+  fs.copyFileSync(sourcePath, absolutePath);
+  console.log(
+    `\n  RUNTIME  ${path.relative(cwd, absolutePath)} (highlight tokenizer)`,
+  );
 }
 
 /**

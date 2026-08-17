@@ -33,6 +33,7 @@ import { generateLitSurfaceTest } from "./surface-tests.js";
 export function createLitEmitter(): FrameworkEmitter {
   return {
     id: "lit",
+    shipsContentTransformRuntime: true,
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       // F-2C-3: Presence-surface family — emits a single component

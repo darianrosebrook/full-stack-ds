@@ -28,6 +28,8 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   composeChannelUpdateExpression,
+  collectContentTransforms,
+  isContentTransform,
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
@@ -223,6 +225,14 @@ export function generateReactComponentSource(
   // Structural — driven by IR `iconGlyph` facts, never per-component lore.
   if (collectIconGlyphNodes(ir.dom).length > 0) {
     importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
+  // content-transform: import the shared highlight tokenizer when the tree
+  // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
+  // driven by IR content-transform facts, never per-component name lore.
+  if (collectContentTransforms(ir.dom).length > 0) {
+    importLines.push(
+      `import { tokenizeCode } from "../../primitives/highlight/tokenize";`,
+    );
   }
   if (needsAnchoredHooks) {
     importLines.push(
@@ -2391,9 +2401,35 @@ function renderReactDomNode(
   // backward compatibility until parseDomNode drops the dual-pathway
   // retention.
   if (node.content) {
-    const contentExpr = renderReactBinding("textContent", node.content, ctx);
-    if (contentExpr !== null) {
-      textChildren.push(`{${contentExpr}}`);
+    if (isContentTransform(node.content)) {
+      // FEAT-CODEBLOCK-HIGHLIGHT-01: the content is produced by the shared
+      // pure tokenizer — one span per token carrying the tokenPart class and
+      // a data-token kind attribute, text children only. The gate prop (when
+      // declared) falls back to a single plain run of the source binding.
+      const transform = node.content;
+      const sourceExpr =
+        renderReactBinding("textContent", transform.source, ctx) ??
+        transform.sourceProp;
+      const languageExpr =
+        renderReactBinding("textContent", transform.language, ctx) ??
+        transform.languageProp;
+      const tokenMap =
+        `tokenizeCode(${sourceExpr}, ${languageExpr}).map((token, tokenIndex) => ` +
+        `(<span key={tokenIndex} className="${ctx.classRecipe}__${transform.tokenPart}" ` +
+        `data-token={token.kind}>{token.text}</span>))`;
+      if (transform.gate !== undefined) {
+        const gateExpr =
+          renderReactBinding("textContent", transform.gate, ctx) ??
+          transform.gateProp;
+        textChildren.push(`{${gateExpr} ? (${tokenMap}) : (${sourceExpr})}`);
+      } else {
+        textChildren.push(`{${tokenMap}}`);
+      }
+    } else {
+      const contentExpr = renderReactBinding("textContent", node.content, ctx);
+      if (contentExpr !== null) {
+        textChildren.push(`{${contentExpr}}`);
+      }
     }
   }
 
