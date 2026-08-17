@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "generate:check 49/49; root tests 2123/2124 with the single failure (rail-coverage CodeBlock projection) verified PRE-EXISTING on clean main via git-stash rerun — not this slice's regression; codegen build 0 TS errors"
     recorded_at: "2026-08-17T20:02:46.031Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "snapshot row 46 ownership sentence (custom-painted, non-claims: hand-rolled physics, shadow approximation, unparsable easing); lane README 'Custom-painted toggles' section; visual parity confirmation = the pending manual lane rerun"
+    recorded_at: "2026-08-17T20:02:46.874Z"
