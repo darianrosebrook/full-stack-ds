@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-THEME-MODULE-001
 title: 'Compose theme module: token scopes as data, LocalFsdsTheme, and the Material colorScheme bridge'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose theme module: scope data through LocalFsdsTheme with RN-mirrored resolution and the Material bridge, installed in the settings lane'
 created_at: '2026-08-17T05:09:03.482Z'
-updated_at: '2026-08-17T05:09:03.482Z'
+updated_at: '2026-08-17T05:22:56.292Z'
 blast_radius:
   modules:
     - 'ds-jetpack-compose theme runtime'
