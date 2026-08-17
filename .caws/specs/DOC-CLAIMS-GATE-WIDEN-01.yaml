@@ -48,3 +48,8 @@ evidence:
     status: pass
     evidence_ref: "Falsification probe: marked values set to 42/77/99 produced exit 1 naming each file, claim, stated and derived value; --fix restored all three and re-run exited 0 with git diff showing no residue"
     recorded_at: "2026-08-17T17:19:43.801Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "deriveRailAdmittedTargetCount reads modules under validation/frameworks/ matching 'export const *AdmissionDescriptor' (6, figma correctly excluded since it declares none); deriveRegisteredTargetCount reads fsds.targets.json .targets.length (9). Neither is a constant"
+    recorded_at: "2026-08-17T17:19:58.371Z"
+    artifact_path: scripts/docs-claims-check.mjs
