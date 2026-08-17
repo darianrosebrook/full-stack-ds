@@ -2,9 +2,11 @@ id: DOC-AUTHORITY-LEDGER-DRIFT-01
 title: 'Reconcile the snapshot ledger, normal-form thesis, and native-toolchain recon with landed work'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Snapshot header scoped to its actual sweep, two gitignored paths corrected, sixth-emitter prediction recorded as partially confirmed, recon baseline relabelled'
 created_at: '2026-08-17T16:58:03.871Z'
-updated_at: '2026-08-17T16:58:03.871Z'
+updated_at: '2026-08-17T17:03:46.558Z'
 blast_radius:
   modules:
     - 'authority ledger docs'
