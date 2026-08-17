@@ -56,9 +56,9 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain(".clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))");
   });
 
-  it("throws for unimplemented anchored surfaces and surface-less components", () => {
-    expect(() => generateSwiftUISurfaceFiles(irFor("Popover"))).toThrow(
-      /surface kind "popover" is not implemented/,
+  it("throws for unimplemented surfaces and surface-less components", () => {
+    expect(() => generateSwiftUISurfaceFiles(irFor("Walkthrough"))).toThrow(
+      /surface kind "coachmark" is not implemented/,
     );
     expect(() => generateSwiftUISurfaceFiles(irFor("Button"))).toThrow(
       /declares no surface block/,

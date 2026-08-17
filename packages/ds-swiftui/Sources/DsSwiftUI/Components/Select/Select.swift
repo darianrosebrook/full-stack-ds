@@ -74,7 +74,7 @@ public struct Select: View {
                     selection.apply(option.value)
                 } label: {
                     if selection.isSelected(option.value) {
-                        Image(systemName: "checkmark")
+                        SwiftUI.Image(systemName: "checkmark")
                     }
                     Text(option.label)
                 }
@@ -83,7 +83,7 @@ public struct Select: View {
         } label: {
             HStack {
                 Text(triggerLabel)
-                Image(systemName: "chevron.up.and.down")
+                SwiftUI.Image(systemName: "chevron.up.and.down")
             }
         }
         .disabled(disabled)

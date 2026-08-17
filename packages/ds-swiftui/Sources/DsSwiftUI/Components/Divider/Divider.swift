@@ -2,6 +2,10 @@
 import SwiftUI
 // @generated:end
 
+// @generated:start types
+
+// @generated:end
+
 // @generated:start component
 /// Emitted through the bare-rule leaf path (hr root).
 public enum DividerOrientation: String, CaseIterable {

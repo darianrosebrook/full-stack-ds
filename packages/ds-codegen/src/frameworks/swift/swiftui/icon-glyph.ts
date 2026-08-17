@@ -170,7 +170,7 @@ export function generateGlyphCatalogFile(): GeneratedFile | null {
   };
 }
 
-/** Swift string literal with escaping for the d-path data. */
-function swiftLiteral(value: string): string {
+/** Swift string literal with escaping (quotes, backslashes). */
+export function swiftLiteral(value: string): string {
   return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
 }
