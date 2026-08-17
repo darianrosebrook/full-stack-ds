@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "Select emptyState rebind (slot select.color.placeholder.default -> foreground.secondary, fallback #474647): the placeholder-on-primary pair is no longer derived; its ledger entry fired the stale ratchet; no other component derives a failing placeholder pair (0 unledgered failures corpus-wide)"
     recorded_at: "2026-08-17T18:51:46.743Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "tokens:build:check (committed resolved.tokens.json + tokens.css match fresh build), tokens:check-contrast 44/44 curated pairs, governed:rail Overall: PASS with clean post-rail tree, pnpm test 2124/2124, all framework suites green (581/500+2/540/467/72), regenerate-all across web+RN+swift+figna committed byte-stable"
+    recorded_at: "2026-08-17T18:51:58.113Z"
