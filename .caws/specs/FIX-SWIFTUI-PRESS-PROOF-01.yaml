@@ -44,3 +44,7 @@ evidence:
     status: pass
     evidence_ref: "swift run PressProofHarness (real SwiftUI App loop): AX buttons discovered per phase, actuated via OS accessibility action; counters artifact: chip.onClick=1, chip.onDismiss=1, walkthrough steps [1.0]→2.0, onSkip=1, onComplete=1 — 'PRESS-PROOF: all counters match expectations' exit 0. CGEvent attempted first: keyWindow nil on this host (printed per phase), so HID had no routing target; AXPress is the OS interaction path that works (invariant amended with that finding)"
     recorded_at: "2026-08-17T14:03:01.968Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: Counter artifact matches every contract expectation exactly-once/gated; harness exits nonzero naming the failing counter (verified live when Back-at-0 and the hardcoded threshold failed BEFORE the emission fix — the failure lines are the mutation evidence)
+    recorded_at: "2026-08-17T14:03:02.924Z"
