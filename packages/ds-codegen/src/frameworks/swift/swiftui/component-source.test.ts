@@ -440,9 +440,11 @@ describe("generateSwiftUIComponentSource — icon-decorated content (Alert, Badg
     expect(source).not.toContain("showStatusIcon");
   });
 
-  it("still refuses Status (state-driven glyph) and Chip (component-instance)", () => {
-    expect(() => emit("Status")).toThrow(/no emission class matches/);
+  it("still refuses Chip (component-instance); Status admits via static content", () => {
     expect(() => emit("Chip")).toThrow(/no emission class matches/);
+    // Status's icon part has no author-addressable icon prop, so it now
+    // emits through the widened static-content class (icon part omitted).
+    expect(emit("Status")).toContain("public struct Status");
   });
 });
 

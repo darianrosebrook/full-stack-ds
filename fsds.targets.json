@@ -73,7 +73,21 @@
         "Select",
         "Alert",
         "Badge",
-        "OTP"
+        "OTP",
+        "AlertNotice",
+        "Stat",
+        "ProfileFlag",
+        "Postcard",
+        "Breadcrumbs",
+        "NavList",
+        "CodeSnippet",
+        "CodeBlock",
+        "Image",
+        "Avatar",
+        "Truncate",
+        "ShowMore",
+        "Popover",
+        "Skeleton"
       ]
     },
     {

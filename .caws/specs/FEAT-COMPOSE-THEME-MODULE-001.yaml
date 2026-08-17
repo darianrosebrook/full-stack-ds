@@ -3,6 +3,7 @@ title: 'Compose theme module: token scopes as data, LocalFsdsTheme, and the Mate
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: compose-theme-module
 created_at: '2026-08-17T05:09:03.482Z'
 updated_at: '2026-08-17T05:09:03.482Z'
 blast_radius:

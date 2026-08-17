@@ -32,6 +32,7 @@ import type {
   TokenFactIR,
 } from "../../../ir.js";
 import { collectCollapseIntents } from "../../../ir.js";
+import { swiftLiteral } from "./icon-glyph.js";
 import nodeFs from "node:fs";
 import nodePath from "node:path";
 
@@ -92,14 +93,6 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
-  if (isStaticContent(ir)) {
-    const sections: string[] = [];
-    sections.push(emitImports());
-    sections.push(emitTypes(ir));
-    sections.push(emitStaticContentComponent(ir));
-    return sections.join("\n\n") + "\n";
-  }
-
   if (isTextValueControl(ir) && soleValueChannel(ir)!.valueType === "boolean") {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -148,6 +141,38 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isPropTextLeaf(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitPropTextLeaf(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isMediaLeaf(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitMediaLeaf(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isSrcOrFallbackChild(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitSrcOrFallback(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isExpandableContent(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitExpandableContent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (ir.root.effectiveRole === "progressbar") {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -159,7 +184,16 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
   if (isBareRuleLeaf(ir) || isVisualOnlyLeaf(ir)) {
     const sections: string[] = [];
     sections.push(emitImports());
+    sections.push(emitTypes(ir));
     sections.push(emitLeafComponent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isStaticContent(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitStaticContentComponent(ir));
     return sections.join("\n\n") + "\n";
   }
 
@@ -268,8 +302,8 @@ function emitTextControlComponent(ir: ComponentIR): string {
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value);
         literalArg = dark
-          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
-          : `${kind}: .string("${value.rawValue}")`;
+          ? `${kind}: .adaptive(light: ${swiftLiteral(value.rawValue)}, dark: ${swiftLiteral(dark)})`
+          : `${kind}: .string(${swiftLiteral(value.rawValue)})`;
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
@@ -826,7 +860,7 @@ function emitSelectionControl(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}selection.apply(option.value)`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}} label: {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}if selection.isSelected(option.value) {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}Image(systemName: "checkmark")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Image(systemName: "checkmark")`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}Text(option.label)`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
@@ -835,7 +869,7 @@ function emitSelectionControl(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}} label: {`);
   lines.push(`${INDENT}${INDENT}${INDENT}HStack {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(triggerLabel)`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Image(systemName: "chevron.up.and.down")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Image(systemName: "chevron.up.and.down")`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}}`);
   if (hasDisabled) lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
@@ -1161,6 +1195,407 @@ function emitCountFieldGroup(ir: ComponentIR): string {
 }
 
 /**
+ * Prop-text leaf: the root (or its code part) renders a string prop as
+ * its entire content (CodeSnippet: text, CodeBlock: code).
+ */
+function isPropTextLeaf(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if ((ir.dom.children ?? []).length > 0) {
+    // CodeBlock shape: pre > code with content binding.
+    const codeChild = (ir.dom.children ?? []).find((c) => c.part === "code");
+    if (!codeChild || (codeChild.children ?? []).length > 0) return false;
+    return codeChild.content?.kind === "prop";
+  }
+  return ir.dom.content?.kind === "prop";
+}
+
+function propTextPropName(ir: ComponentIR): string | null {
+  const direct = ir.dom?.content;
+  if (direct?.kind === "prop" && "prop" in direct) return direct.prop;
+  const codeChild = (ir.dom?.children ?? []).find((c) => c.part === "code");
+  const nested = codeChild?.content;
+  if (nested?.kind === "prop" && "prop" in nested) return nested.prop;
+  return null;
+}
+
+function emitPropTextLeaf(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const textProp = propTextPropName(ir)!;
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the prop-text leaf path: the \`${textProp}\` prop ` +
+      `is the entire content, rendered as monospaced text.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}private let ${textProp}: String`);
+  lines.push("");
+  lines.push(`${INDENT}public init(${textProp}: String = "") {`);
+  lines.push(`${INDENT}${INDENT}self.${textProp} = ${textProp}`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "radius",
+        "blockPadding", "inlinePadding", "gap",
+      ]),
+    );
+    lines.push("");
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}Text(${textProp})`);
+  lines.push(`${INDENT}${INDENT}${INDENT}.font(.system(.body, design: .monospaced))`);
+  if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+  if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+  if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  if (chrome.radius) lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  void chrome;
+  return lines.join("\n");
+}
+
+/** Media leaf: an img root fed by src/alt props (Image). */
+function isMediaLeaf(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  return ir.dom.tag === "img" && (ir.dom.children ?? []).length === 0;
+}
+
+function emitMediaLeaf(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const hasAlt = hasConventionalProp(ir, "alt");
+  const hasWidth = hasConventionalProp(ir, "width");
+  const hasHeight = hasConventionalProp(ir, "height");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Emitted through the media-leaf path: src drives an AsyncImage; ` +
+      `alt lowers through the conditional a11y helper.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  lines.push(`${INDENT}private let src: String`);
+  if (hasAlt) lines.push(`${INDENT}private let alt: String?`);
+  if (hasWidth) lines.push(`${INDENT}private let width: CGFloat?`);
+  if (hasHeight) lines.push(`${INDENT}private let height: CGFloat?`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = ["src: String,"];
+  if (hasAlt) params.push("alt: String? = nil,");
+  if (hasWidth) params.push("width: CGFloat? = nil,");
+  if (hasHeight) params.push("height: CGFloat? = nil");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.src = src`);
+  if (hasAlt) lines.push(`${INDENT}${INDENT}self.alt = alt`);
+  if (hasWidth) lines.push(`${INDENT}${INDENT}self.width = width`);
+  if (hasHeight) lines.push(`${INDENT}${INDENT}self.height = height`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}AsyncImage(url: URL(string: src)) { phase in`);
+  lines.push(`${INDENT}${INDENT}${INDENT}if let image = phase.image {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}image.resizable().scaledToFit()`);
+  lines.push(`${INDENT}${INDENT}${INDENT}} else if phase.error != nil {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Image(systemName: "photo")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}ProgressView()`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (hasWidth || hasHeight) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.frame(`);
+    const frameArgs: string[] = [];
+    if (hasWidth) frameArgs.push("width: width");
+    if (hasHeight) frameArgs.push("height: height");
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${frameArgs.join(", ")}`);
+    lines.push(`${INDENT}${INDENT}${INDENT})`);
+  }
+  if (hasAlt) lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(alt)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * Src-or-fallback composition: a componentRef child gated by ifProp src,
+ * with a sibling name prop for the fallback (Avatar → Image | Text).
+ */
+function isSrcOrFallbackChild(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  let hasGatedImageRef = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if (
+      (node as { componentRef?: string }).componentRef === "Image" &&
+      node.ifProp === "src"
+    ) {
+      hasGatedImageRef = true;
+    }
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  return hasGatedImageRef && hasConventionalProp(ir, "src");
+}
+
+function emitSrcOrFallback(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const hasName = hasConventionalProp(ir, "name");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the src-or-fallback path: the owned Image ` +
+      `renders when src is set; the name prop is the fallback content.`,
+  );
+  lines.push(`public struct ${exportName}: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}private let src: String?`);
+  if (hasName) lines.push(`${INDENT}private let name: String?`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = ["src: String? = nil,"];
+  if (hasName) params.push("name: String? = nil");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.src = src`);
+  if (hasName) lines.push(`${INDENT}${INDENT}self.name = name`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "radius",
+        "blockPadding", "inlinePadding", "gap",
+      ]),
+    );
+    lines.push("");
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}Group {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}if let src {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}DsSwiftUI.Image(src: src${hasName ? ", alt: name" : ""})`);
+  lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(name ?? "")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}.frame(width: 40, height: 40)`);
+  if (chrome.radius) lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * Expandable content: an expanded boolean channel + a content region +
+ * line-count props (Truncate, ShowMore). Content lineLimits to the
+ * authored count unless expanded; a disclosure toggle appears when the
+ * contract authors one (expandable/trigger part).
+ */
+function isExpandableContent(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.dom.tag !== "div") return false;
+  const boolChannels = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "boolean" && c.name.startsWith("expand"),
+  );
+  if (boolChannels.length !== 1) return false;
+  let childrenLeaves = 0;
+  let hasInstance = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if ((node as { componentRef?: string }).componentRef) hasInstance = true;
+    const kids = node.children ?? [];
+    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
+    kids.forEach(walk);
+  };
+  walk(ir.dom);
+  return childrenLeaves === 1 && !hasInstance;
+}
+
+function emitExpandableContent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const channel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "boolean" && c.name.startsWith("expand"),
+  )!;
+  const hasLines = hasConventionalProp(ir, "lines") || hasConventionalProp(ir, "maxLines");
+  const linesProp = hasConventionalProp(ir, "lines") ? "lines" : "maxLines";
+  const linesDefault =
+    ir.styledProps.find((p) => p.safeName === linesProp)?.defaultExpr ?? "3";
+  const hasExpandable = hasConventionalProp(ir, "expandable");
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the expandable-content path: the expanded ` +
+      `channel (ControllableValue substrate) gates the line limit; the ` +
+      `disclosure toggle appears when the contract authors one.`,
+  );
+  const kids = countChildrenLeaves(ir);
+  lines.push(
+    `public struct ${exportName}<Content: View>: View {`,
+  );
+  if (kids === 0) {
+    // Decorative box: chrome only, no content region (Skeleton).
+    lines.push(`${INDENT}public init() {}`);
+    lines.push("");
+    lines.push(`${INDENT}public var body: some View {`);
+    lines.push(`${INDENT}${INDENT}RoundedRectangle(cornerRadius: ${chrome.radius ? "radius" : "8"}, style: .continuous)`);
+    if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.fill(background)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}.frame(height: ${chrome.minHeight ? "minHeight" : "12"})`);
+    lines.push(`${INDENT}}`);
+    lines.push(`}`);
+    lines.push("// @generated:end");
+    return lines.join("\n");
+  }
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}@StateObject private var expanded: ControllableValue<Bool>`);
+  if (hasExpandable) lines.push(`${INDENT}private let expandable: Bool`);
+  if (hasLines) lines.push(`${INDENT}private let ${linesProp}: Int`);
+  lines.push(`${INDENT}private let content: Content`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [
+    "expanded: Binding<Bool>? = nil,",
+    "defaultExpanded: Bool = false,",
+    "onExpandedChange: ((Bool) -> Void)? = nil,",
+  ];
+  if (hasExpandable) params.push("expandable: Bool = true,");
+  if (hasLines) params.push(`${linesProp}: Int = ${linesDefault.replace(/\"/g, '"')},`);
+  params.push("@ViewBuilder content: () -> Content");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._expanded = StateObject(wrappedValue: ControllableValue(controlled: expanded, defaultValue: defaultExpanded, onChange: onExpandedChange))`);
+  if (hasExpandable) lines.push(`${INDENT}${INDENT}self.expandable = expandable`);
+  if (hasLines) lines.push(`${INDENT}${INDENT}self.${linesProp} = ${linesProp}`);
+  lines.push(`${INDENT}${INDENT}self.content = content()`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "radius",
+        "blockPadding", "inlinePadding", "gap",
+      ]),
+    );
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: 4) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}content`);
+  if (hasLines) {
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.lineLimit(expanded.value ? nil : ${linesProp})`);
+  }
+  lines.push(`${INDENT}${INDENT}${INDENT}if ${hasExpandable ? "expandable" : "true"} {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button(expanded.value ? "Show less" : "Show more") {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}expanded.toggle()`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  void channel;
+  return lines.join("\n");
+}
+
+/**
  * The native-disclosure collapse class: contracts declaring the
  * `native-disclosure` intent (Details) collapse to SwiftUI
  * DisclosureGroup — the open channel projects through the controllable
@@ -1261,15 +1696,39 @@ function emitDisclosureComponent(ir: ComponentIR): string {
 function isStaticContent(ir: ComponentIR): boolean {
   if (!ir.dom || ir.surface != null) return false;
   if (ir.behavior.normalizedChannels.length > 0) return false;
-  if (ir.dom.tag === "div" || ir.dom.tag === "button" || ir.dom.tag === "input") {
-    return false;
+  if (ir.dom.tag === "button" || ir.dom.tag === "input") return false;
+  // Passive root of any tag; wrapper elements (nav>ol, article>div…) may
+  // sit above the single projected children leaf. Component-instance
+  // children still disqualify.
+  let childrenLeaves = 0;
+  let hasInstance = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if ((node as { componentRef?: string }).componentRef) hasInstance = true;
+    const kids = node.children ?? [];
+    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
+    kids.forEach(walk);
+  };
+  walk(ir.dom);
+  if (hasInstance) return false;
+  if (ir.dom.tag === "img") return false;
+  if (childrenLeaves === 1) return true;
+  // Decorative box: no children leaf at all, no content binding — a pure
+  // chrome surface (Skeleton).
+  if (childrenLeaves === 0 && !ir.dom.content && (ir.dom.children ?? []).length === 0) {
+    return true;
   }
-  const children = ir.dom.children ?? [];
-  return (
-    children.length === 1 &&
-    children[0]!.tag === "children" &&
-    (children[0]!.children ?? []).length === 0
-  );
+  return false;
+}
+
+function countChildrenLeaves(ir: ComponentIR): number {
+  let count = 0;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    const kids = node.children ?? [];
+    if (node.tag === "children" && kids.length === 0) count += 1;
+    kids.forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  return count;
 }
 
 function emitStaticContentComponent(ir: ComponentIR): string {
@@ -1316,7 +1775,11 @@ function emitStaticContentComponent(ir: ComponentIR): string {
       ? `${axis.prop}: ${axis.typeName} = .${swiftCaseRef(axis.defaultMember)},`
       : `${axis.prop}: ${axis.typeName}? = nil,`,
   );
-  params.push("@ViewBuilder content: () -> Content");
+  params.push(
+    countChildrenLeaves(ir) === 0
+      ? "@ViewBuilder content: () -> Content = { EmptyView() }"
+      : "@ViewBuilder content: () -> Content",
+  );
   params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
   for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
   lines.push(`${INDENT}) {`);
@@ -1490,8 +1953,8 @@ function emitActionComponent(ir: ComponentIR): string {
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value);
         literalArg = dark
-          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
-          : `${kind}: .string("${value.rawValue}")`;
+          ? `${kind}: .adaptive(light: ${swiftLiteral(value.rawValue)}, dark: ${swiftLiteral(dark)})`
+          : `${kind}: .string(${swiftLiteral(value.rawValue)})`;
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
@@ -1842,8 +2305,8 @@ function emitComposerComponent(
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value);
         literalArg = dark
-          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
-          : `${kind}: .string("${value.rawValue}")`;
+          ? `${kind}: .adaptive(light: ${swiftLiteral(value.rawValue)}, dark: ${swiftLiteral(dark)})`
+          : `${kind}: .string(${swiftLiteral(value.rawValue)})`;
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
@@ -2191,8 +2654,8 @@ export function emitTokenScopesSection(
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value, contractsRoot);
         literalArg = dark
-          ? `${kind}: .adaptive(light: "${value.rawValue}", dark: "${dark}")`
-          : `${kind}: .string("${value.rawValue}")`;
+          ? `${kind}: .adaptive(light: ${swiftLiteral(value.rawValue)}, dark: ${swiftLiteral(dark)})`
+          : `${kind}: .string(${swiftLiteral(value.rawValue)})`;
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
