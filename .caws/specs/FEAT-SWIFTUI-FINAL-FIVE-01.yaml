@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: swift-final-five
 created_at: '2026-08-17T05:34:33.387Z'
-updated_at: '2026-08-17T05:34:33.387Z'
+updated_at: '2026-08-17T05:50:43.486Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui (five class branches)'
@@ -19,6 +19,7 @@ scope:
     - 'packages/ds-swiftui'
     - 'fsds.targets.json'
     - 'docs/current-implementation-snapshot.md'
+    - scripts
   out: []
 invariants:
   - 'Every class gates on IR facts; unrealized props omitted-and-documented; the five admissions must leave the corpus sweep at zero fail-loud names.'
