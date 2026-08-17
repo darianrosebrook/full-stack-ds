@@ -3,7 +3,6 @@ title: 'CodeBlock syntax highlighting via contract-governed content transform'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: codeblock-highlight
 created_at: '2026-08-15T19:13:41.844Z'
 updated_at: '2026-08-17T05:43:25.064Z'
 blast_radius:
