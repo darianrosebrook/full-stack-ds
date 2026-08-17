@@ -70,7 +70,9 @@
         "Spinner",
         "Icon",
         "Toast",
-        "Select"
+        "Select",
+        "Alert",
+        "Badge"
       ]
     },
     {
