@@ -76,13 +76,13 @@ public struct Select: View {
                     if selection.isSelected(option.value) {
                         SwiftUI.Image(systemName: "checkmark")
                     }
-                    Text(option.label)
+                    SwiftUI.Text(option.label)
                 }
                 .disabled(option.disabled ?? false)
             }
         } label: {
             HStack {
-                Text(triggerLabel)
+                SwiftUI.Text(triggerLabel)
                 SwiftUI.Image(systemName: "chevron.up.and.down")
             }
         }

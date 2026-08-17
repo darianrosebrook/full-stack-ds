@@ -117,6 +117,30 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isDateGridSurface(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitDateGridSurface(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isArrayIteratedList(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitArrayIteratedList(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isInteractiveComposite(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitInteractiveComposite(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (isSelectionControl(ir)) {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -412,7 +436,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { text.set($0) }`);
   if (hasProp("placeholder")) {
     lines.push(`${INDENT}${INDENT}${INDENT}),`);
-    lines.push(`${INDENT}${INDENT}${INDENT}prompt: placeholder.map(Text.init)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}prompt: placeholder.map(SwiftUI.Text.init)`);
   } else {
     lines.push(`${INDENT}${INDENT}${INDENT})`);
   }
@@ -877,13 +901,13 @@ function emitSelectionControl(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}if selection.isSelected(option.value) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Image(systemName: "checkmark")`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}Text(option.label)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(option.label)`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.disabled(option.disabled ?? false)`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}} label: {`);
   lines.push(`${INDENT}${INDENT}${INDENT}HStack {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(triggerLabel)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(triggerLabel)`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Image(systemName: "chevron.up.and.down")`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}}`);
@@ -1060,6 +1084,272 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * Array-iterated list: a root whose single array-typed channel drives an
+ * iteration rendering iterationLocal spans (Shuttle). The channel rides
+ * ControllableValue<[String]>; ForEach realizes the iteration.
+ */
+function isArrayIteratedList(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const channels = ir.behavior.normalizedChannels;
+  if (channels.length !== 1) return false;
+  const vt = channels[0]!.valueType ?? "";
+  if (!vt.includes("[]")) return false;
+  if (vt.includes("Date")) return false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): boolean => {
+    const iteration = (node as { iteration?: { kind?: string } }).iteration;
+    if (iteration?.kind === "array") return true;
+    return (node.children ?? []).some(walk);
+  };
+  return walk(ir.dom);
+}
+
+function emitArrayIteratedList(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const channel = ir.behavior.normalizedChannels[0]!;
+  const hasAria = hasConventionalProp(ir, "ariaLabel");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the array-iterated list path: the ` +
+      `${channel.name} channel rides ControllableValue<[String]>; ForEach ` +
+      `renders each item.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(`/// SwiftUI reserves \`${ir.name}\`; exported as \`${exportName}\`.`);
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}@StateObject private var ${channel.name}: ControllableValue<[String]>`);
+  if (hasAria) lines.push(`${INDENT}private let accessibilityLabel: String?`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [`${channel.name}: Binding<[String]>? = nil,`, `default${swiftCase(capitalize(channel.name))}: [String] = [],`, `on${swiftCase(capitalize(channel.name))}Change: (([String]) -> Void)? = nil,`];
+  if (hasAria) params.push("accessibilityLabel: String? = nil");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._${channel.name} = StateObject(wrappedValue: ControllableValue(controlled: ${channel.name}, defaultValue: default${swiftCase(capitalize(channel.name))}, onChange: on${swiftCase(capitalize(channel.name))}Change))`);
+  if (hasAria) lines.push(`${INDENT}${INDENT}self.accessibilityLabel = accessibilityLabel`);
+  lines.push(`${INDENT}}`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push("");
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(...emitChromeAccessorLines(chrome, ["background","foreground","borderColor","radius","blockPadding","inlinePadding","gap"]));
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "4"}) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}ForEach(${channel.name}.value, id: \\.self) { item in`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(item)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (hasAria) lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
+  if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * Interactive composite: a single scalar channel (openness union or
+ * activeTab string) over a trigger/list + content/panel anatomy
+ * (Accordion, Tabs). Emits a header row driving the channel and a
+ * content region closure.
+ */
+function isInteractiveComposite(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.dom.tag !== "div") return false;
+  const channels = ir.behavior.normalizedChannels;
+  if (channels.length !== 1) return false;
+  const t = channels[0]!.valueType ?? "";
+  if (t.includes("Date")) return false;
+  const isScalar = t === "string" || t.includes("|");
+  if (!isScalar) return false;
+  // trigger/tab + content/panel part pair required
+  const parts = new Set<string>();
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if (node.part) parts.add(node.part);
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  const hasTrigger = parts.has("trigger") || parts.has("tab");
+  const hasContent = parts.has("content") || parts.has("panel");
+  return hasTrigger && hasContent;
+}
+
+function emitInteractiveComposite(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const channel = ir.behavior.normalizedChannels[0]!;
+  const isUnion = (channel.valueType ?? "").includes("|");
+  // v1: union openness lowers to its multi member (string[] panel keys)
+  const chanType = isUnion ? "[String]" : "String";
+  const fieldDefault = isUnion ? "[]" : '\"\"';
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+  const hasAria = hasConventionalProp(ir, "ariaLabel");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the interactive-composite path: the ` +
+      `${channel.name} channel gates content visibility (union channel ` +
+      `lowers to its multi member v1).`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(`/// SwiftUI reserves \`${ir.name}\`; exported as \`${exportName}\`.`);
+  }
+  lines.push(`public struct ${exportName}<Content: View>: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}@StateObject private var ${channel.name}: ControllableValue<${chanType}>`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  if (hasAria) lines.push(`${INDENT}private let accessibilityLabel: String?`);
+  lines.push(`${INDENT}private let content: Content`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [`${channel.name}: Binding<${chanType}>? = nil,`, `default${swiftCase(capitalize(channel.name))}: ${chanType} = ${fieldDefault},`, `on${swiftCase(capitalize(channel.name))}Change: ((${chanType}) -> Void)? = nil,`];
+  if (hasDisabled) params.push("disabled: Bool = false,");
+  if (hasAria) params.push("accessibilityLabel: String? = nil,");
+  params.push("@ViewBuilder content: () -> Content");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._${channel.name} = StateObject(wrappedValue: ControllableValue(controlled: ${channel.name}, defaultValue: default${swiftCase(capitalize(channel.name))}, onChange: on${swiftCase(capitalize(channel.name))}Change))`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  if (hasAria) lines.push(`${INDENT}${INDENT}self.accessibilityLabel = accessibilityLabel`);
+  lines.push(`${INDENT}${INDENT}self.content = content()`);
+  lines.push(`${INDENT}}`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push("");
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(...emitChromeAccessorLines(chrome, ["background","foreground","borderColor","radius","blockPadding","inlinePadding","gap"]));
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "4"}) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}content`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (hasAria) lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  void hasDisabled;
+  return lines.join("\n");
+}
+
+/**
+ * Date grid surface: a Date-union channel over a header/grid anatomy
+ * (Calendar). v1 emits the chrome shell with the channel present in the
+ * API; grid realization is a follow-up (mode/locale omitted-and-documented).
+ */
+function isDateGridSurface(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const channels = ir.behavior.normalizedChannels;
+  if (channels.length !== 1) return false;
+  return (channels[0]!.valueType ?? "").includes("Date");
+}
+
+function emitDateGridSurface(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the date-grid surface path: chrome shell over the ` +
+      `value channel; grid realization is a recorded follow-up.`,
+  );
+  lines.push(`public struct ${exportName}: View {`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}@StateObject private var value: ControllableValue<Date?>`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = ["value: Binding<Date?>? = nil,", "defaultValue: Date? = nil,", "onChange: ((Date?) -> Void)? = nil,"];
+  if (hasDisabled) params.push("disabled: Bool = false");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._value = StateObject(wrappedValue: ControllableValue(controlled: value, defaultValue: defaultValue, onChange: onChange))`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: 8) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}SwiftUI.DatePicker(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}"",`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}selection: Binding(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { value.value ?? Date() },`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { value.set($0) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT})`);
+  lines.push(`${INDENT}${INDENT}${INDENT})`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.disabled(disabled)`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  void chrome;
   return lines.join("\n");
 }
 
@@ -1536,7 +1826,7 @@ function emitPropTextLeaf(ir: ComponentIR): string {
     lines.push("");
   }
   lines.push(`${INDENT}public var body: some View {`);
-  lines.push(`${INDENT}${INDENT}Text(${textProp})`);
+  lines.push(`${INDENT}${INDENT}SwiftUI.Text(${textProp})`);
   lines.push(`${INDENT}${INDENT}${INDENT}.font(.system(.body, design: .monospaced))`);
   if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
   if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
@@ -1702,7 +1992,7 @@ function emitSrcOrFallback(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}if let src {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}DsSwiftUI.Image(src: src${hasName ? ", alt: name" : ""})`);
   lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(name ?? "")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(name ?? "")`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}${INDENT}.frame(width: 40, height: 40)`);
@@ -1930,7 +2220,7 @@ function emitDisclosureComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}} label: {`);
   if (hasSummary) {
     lines.push(`${INDENT}${INDENT}${INDENT}if let summary {`);
-    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(summary)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(summary)`);
     lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}EmptyView()`);
     lines.push(`${INDENT}${INDENT}${INDENT}}`);
@@ -2746,7 +3036,9 @@ const SWIFT_KEYWORDS: ReadonlySet<string> = new Set([
 ]);
 
 export function escapeSwiftKeyword(identifier: string): string {
-  return SWIFT_KEYWORDS.has(identifier) ? `\`${identifier}\`` : identifier;
+  if (SWIFT_KEYWORDS.has(identifier)) return `\`${identifier}\``;
+  if (/^[0-9]/.test(identifier)) return `\`${identifier}\``;
+  return identifier;
 }
 
 /** `in-progress` → `case inProgress = "in-progress"` (kebab values keep a raw value). */

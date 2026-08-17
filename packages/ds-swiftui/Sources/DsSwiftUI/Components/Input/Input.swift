@@ -106,7 +106,7 @@ public struct Input: View {
                 get: { text.value },
                 set: { text.set($0) }
             ),
-            prompt: placeholder.map(Text.init)
+            prompt: placeholder.map(SwiftUI.Text.init)
         )
             .padding(.vertical, blockPadding)
             .padding(.horizontal, inlinePadding)

@@ -86,7 +86,7 @@ public struct CodeBlock: View {
     @Environment(\.fsdsTheme) private var fsdsTheme
 
     public var body: some View {
-        Text(code)
+        SwiftUI.Text(code)
             .font(.system(.body, design: .monospaced))
             .padding(.vertical, blockPadding)
             .padding(.horizontal, inlinePadding)

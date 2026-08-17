@@ -64,22 +64,19 @@ describe("generateSwiftUIComponentSource — round 2 byte-identity (Switch)", ()
     expect(actual).toBe(expected);
   });
 
-  it.each(["Accordion", "Dialog"])(
-    "refuses to emit for contracts outside every emission class (%s)",
-    (name) => {
-      // Accordion is a compound interactive group and Dialog is a surface
-      // block with a dom tree — neither matches an emission class yet.
-      // Fail loud, never approximate.
-      const contract = loadContract(name) as Parameters<
-        typeof buildComponentIR
-      >[0];
-      const ir = buildComponentIR(contract);
-
-      expect(() => generateSwiftUIComponentSource(ir)).toThrow(
-        /no emission class matches/,
-      );
-    },
-  );
+  it("the component path still fails loud for unknown shapes (structural)", () => {
+    // With the full corpus admitted, the negative control is structural:
+    // a surface-less synthetic IR with no dom and no channels matches no
+    // class and must throw the explicit error.
+    const ir = buildComponentIR({
+      name: "Synthetic",
+      description: "test",
+      anatomy: { parts: ["root"], details: { root: { tag: "div" } } },
+    } as Parameters<typeof buildComponentIR>[0]);
+    expect(() => generateSwiftUIComponentSource(ir)).toThrow(
+      /no emission class matches/,
+    );
+  });
 });
 
 describe("generateSwiftUIComponentSource — projected-children action (Button)", () => {
@@ -278,7 +275,7 @@ describe("generateSwiftUIComponentSource — value-channel text control (Input)"
     expect(source).toContain("@StateObject private var text: ControllableValue<String>");
     expect(source).toContain("onChange: onChange))");
     expect(source).toContain("TextField(");
-    expect(source).toContain("prompt: placeholder.map(Text.init)");
+    expect(source).toContain("prompt: placeholder.map(SwiftUI.Text.init)");
   });
 
   it("omits HTML-form props instead of accepting-and-ignoring them", () => {
@@ -491,5 +488,34 @@ describe("generateSwiftUIComponentSource — compositeref batch (TextField, Chip
     expect(source).toContain("if dismissible {");
     expect(source).toContain('SwiftUI.Image(systemName: "xmark")');
     expect(source).not.toContain("ariaExpanded:");
+  });
+});
+
+describe("generateSwiftUIComponentSource — final five", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("emits Shuttle over the array-channel substrate", () => {
+    const source = emit("Shuttle");
+    expect(source).toContain("@StateObject private var selection: ControllableValue<[String]>");
+    expect(source).toContain("ForEach(selection.value, id: \\.self)");
+  });
+
+  it("emits Accordion and Tabs as interactive composites", () => {
+    const accordion = emit("Accordion");
+    expect(accordion).toContain("ControllableValue<[String]>");
+    const tabs = emit("Tabs");
+    expect(tabs).toContain("@StateObject private var activeTab: ControllableValue<String>");
+  });
+
+  it("emits Calendar on the Date channel", () => {
+    const source = emit("Calendar");
+    expect(source).toContain("@StateObject private var value: ControllableValue<Date?>");
+    expect(source).toContain("SwiftUI.DatePicker(");
+    expect(source).not.toContain("locale:");
   });
 });

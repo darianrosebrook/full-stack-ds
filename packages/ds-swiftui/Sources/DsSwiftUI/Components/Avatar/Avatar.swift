@@ -89,7 +89,7 @@ public struct Avatar: View {
             if let src {
                 DsSwiftUI.Image(src: src, alt: name)
             } else {
-                Text(name ?? "")
+                SwiftUI.Text(name ?? "")
             }
         }
             .frame(width: 40, height: 40)

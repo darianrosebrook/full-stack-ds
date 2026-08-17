@@ -57,6 +57,9 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
     // the substrate with NO hover affordance (the web trigger wires it).
     return { componentFile: withTypes(emitAnchoredPopover(ir)), behaviorFile: null };
   }
+  if (ir.surface.kind === "coachmark") {
+    return { componentFile: withTypes(emitCoachmarkSurface(ir)), behaviorFile: null };
+  }
   if (ir.surface.kind === "toast") {
     // The generative proof of the compositional substrate: a NEW surface
     // kind emits through the same ControllableValue channel with only a
@@ -203,7 +206,7 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { search.value },`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { search.set($0) }`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}),`);
-    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}prompt: Text("${searchPlaceholder}")`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}prompt: SwiftUI.Text("${searchPlaceholder}")`);
     lines.push(`${INDENT}${INDENT}${INDENT})`);
   }
   for (const region of regions) {
@@ -587,6 +590,134 @@ function emitAnchoredPopover(ir: ComponentIR): string {
     lines.splice(hoverIndex, 3);
   }
   return lines.join("\n");
+}
+
+
+function emitCoachmarkSurface(ir: ComponentIR): string {
+  const chrome = resolveChrome(ir);
+  const slots = domSlotNamesEmit(ir);
+  const stepChannel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "number",
+  );
+  if (!stepChannel) {
+    throw new Error(
+      `emitCoachmarkSurface: coachmark on \`${ir.name}\` declares no number step channel.`,
+    );
+  }
+  const hasOnComplete = hasConventionalPropEmit(ir, "onComplete");
+  const hasOnSkip = hasConventionalPropEmit(ir, "onSkip");
+
+  const lines: string[] = [];
+  lines.push("// @generated:start imports");
+  lines.push("import SwiftUI");
+  lines.push("// @generated:end");
+  lines.push("");
+  lines.push("// @generated:start component");
+  lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the coachmark surface path: an overlay panel on ` +
+      `the step channel with prev/next navigation and the contract's ` +
+      `completion/skip callbacks.`,
+  );
+  const generics = slots.map((slot) => `${swiftCase(capitalize(slot))}Region: View`);
+  lines.push(
+    `public struct ${swiftExportName(ir.name)}${generics.length ? "<" + generics.join(", ") + ">" : ""}: View {`,
+  );
+  lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+  lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+  lines.push(`${INDENT}}`);
+  lines.push(`${INDENT}@StateObject private var step: ControllableValue<Double>`);
+  if (hasOnComplete) lines.push(`${INDENT}private let onComplete: (() -> Void)?`);
+  if (hasOnSkip) lines.push(`${INDENT}private let onSkip: (() -> Void)?`);
+  for (const slot of slots) {
+    lines.push(`${INDENT}private let ${slot}: ${swiftCase(capitalize(slot))}Region`);
+  }
+  lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [
+    "step: Double = 0,",
+    "onStepChange: ((Double) -> Void)? = nil,",
+  ];
+  if (hasOnComplete) params.push("onComplete: (() -> Void)? = nil,");
+  if (hasOnSkip) params.push("onSkip: (() -> Void)? = nil,");
+  slots.forEach((slot) => {
+    params.push(`@ViewBuilder ${slot}: () -> ${swiftCase(capitalize(slot))}Region = { EmptyView() },`);
+  });
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._step = StateObject(wrappedValue: ControllableValue(controlled: nil, defaultValue: step, onChange: onStepChange))`);
+  if (hasOnComplete) lines.push(`${INDENT}${INDENT}self.onComplete = onComplete`);
+  if (hasOnSkip) lines.push(`${INDENT}${INDENT}self.onSkip = onSkip`);
+  for (const slot of slots) lines.push(`${INDENT}${INDENT}self.${slot} = ${slot}()`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+  lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+  lines.push(`${INDENT}${INDENT})`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+  lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+  lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(
+    ...emitChromeAccessorLines(chrome, [
+      "background", "foreground", "borderColor", "radius",
+      "blockPadding", "inlinePadding", "gap",
+    ]),
+  );
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "8"}) {`);
+  for (const slot of slots) lines.push(`${INDENT}${INDENT}${INDENT}${slot}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}HStack {`);
+  if (hasOnSkip) {
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button("Skip") { onSkip?() }`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
+  }
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Spacer()`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button("Back") { step.set(max(0, step.value - 1)) }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button("Next") {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}step.set(step.value + 1)`);
+  if (hasOnComplete) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}if step.value >= 1 { onComplete?() }`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.borderedProminent)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+  if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+  if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  if (chrome.radius) lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+function domSlotNamesEmit(ir: ComponentIR): string[] {
+  const out: string[] = [];
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    const slotName = (node as { slotName?: string }).slotName;
+    if (node.tag === "slot" && slotName) out.push(slotName);
+    (node.children ?? []).forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  return out;
+}
+
+function hasConventionalPropEmit(ir: ComponentIR, name: string): boolean {
+  return ir.styledProps.some((p) => p.safeName === name);
 }
 
 function capitalize(value: string): string {

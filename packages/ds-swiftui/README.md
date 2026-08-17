@@ -12,7 +12,7 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=all   # emits the allowlisted set (41 components)
+pnpm run generate -- --target=all   # emits the allowlisted set (the full 49-component corpus)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission
@@ -69,6 +69,14 @@ The first real-consumer pilot (deduper's settings window, branch
   nested in Card).
 - **Distribution**: path dependencies from sibling repos work, but the
   package cannot be consumed remotely while it lives in this monorepo.
+
+## Parity
+
+`node scripts/swift-parity-diff.mjs` generates every corpus contract
+through both the react and swiftui emitters and exits nonzero if any
+component emits for react but not swiftui. Current run: react 49 /
+swift 49 / divergent 0. This is emission-level API-surface parity —
+not visual, behavioral, or token-value parity.
 
 ## Non-claims
 
