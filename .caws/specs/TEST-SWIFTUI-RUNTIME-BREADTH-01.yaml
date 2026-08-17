@@ -3,7 +3,6 @@ title: 'Extend SwiftUI runtime proof across the interactive corpus and token pai
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swiftui-runtime-breadth
 created_at: '2026-08-17T16:41:12.801Z'
 updated_at: '2026-08-17T16:52:19.986Z'
 blast_radius:
