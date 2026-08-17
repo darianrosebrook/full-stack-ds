@@ -37,3 +37,10 @@ contracts:
   - name: 'docs-claims-derivation'
     type: behavior
     path: 'scripts/docs-claims-check.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "GOVERNED_DOCS replaced by git ls-files '*.md'; markers now live in AGENTS.md, docs/specifications/admission-rail.md and docs/current-implementation-snapshot.md, none of which were in the old one-file list. Governed claims 6 -> 11 across 4 files"
+    recorded_at: "2026-08-17T17:19:35.434Z"
+    command: "pnpm run docs:check-claims"
+    exit_code: 0
