@@ -2,9 +2,11 @@ id: FIX-SWIFTUI-PRESS-PROOF-01
 title: 'Prove press→callback firing via a swift-run click harness'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Press-to-callback proven via real-app AXPress harness with printed counters; two coachmark defects it exposed are fixed (Back-at-0 guard, stepCount threshold)'
 created_at: '2026-08-17T06:08:32.438Z'
-updated_at: '2026-08-17T14:02:41.079Z'
+updated_at: '2026-08-17T14:03:05.016Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Tests/PressProofHarness (new executable target + main.swift)'
