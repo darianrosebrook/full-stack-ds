@@ -15,7 +15,8 @@ scope:
     - 'examples/settings/compose'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Consumer-lane-only change: no contract, IR, emitter, or generated-tree edits; the scroll defect is in the example app, not the package.'
+  - 'Findings route forward, not around: the M3-default colors/chrome findings point at the reserved compose theme/token module work; no styling workarounds in the lane.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
