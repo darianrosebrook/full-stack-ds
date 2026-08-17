@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "generated SwitchTokens.kt (48 ComponentTokenDefinition slots) + Switch.kt resolving checked/unchecked track+thumb + Md dims via fsdsTheme.resolve — bytecode: 6× FsdsTheme.resolve, 4× toFsdsColor, 2× toFsdsDp in SwitchKt; full-corpus --target=all left RN/Swift/web byte-identical (diff scope confined to the slice)"
     recorded_at: "2026-08-17T05:22:52.759Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "fsdsMaterialColorScheme() bridge (one fixed graph-derived role table); lane Main.kt installs FsdsThemeProvider(FsdsSemanticDefaults.light) + MaterialTheme(colorScheme = fsdsMaterialColorScheme()) — bytecode: FsdsThemeProvider + fsdsMaterialColorScheme + FsdsSemanticDefaults.getLight in example classes; visual parity confirmation pending the manual rerun (lane README findings 2-3 marked resolved with mechanism)"
+    recorded_at: "2026-08-17T05:22:53.664Z"
