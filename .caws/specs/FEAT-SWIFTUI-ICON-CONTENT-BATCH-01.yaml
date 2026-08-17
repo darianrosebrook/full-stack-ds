@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "emitter tests: Alert/Badge emit with IconRegion ViewBuilder; Status and Chip throw /no emission class matches/; onDismiss/showStatusIcon absent from APIs"
     recorded_at: "2026-08-17T04:15:52.217Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "glyph registry branch keyed on the icon prop's declared type (string → GlyphCatalog; ReactNode → region) — IR fact, no component identity"
+    recorded_at: "2026-08-17T04:15:53.133Z"
