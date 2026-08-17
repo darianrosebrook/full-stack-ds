@@ -123,7 +123,7 @@ public struct Command<List: View, Group: View, Item: View>: View {
     }
 
     public var body: some View {
-        EmptyView()
+        SwiftUI.Color.clear.frame(width: 0, height: 0)
             .sheet(isPresented: Binding(
                 get: { open.value },
                 set: { open.set($0) }

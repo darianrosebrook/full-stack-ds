@@ -70,13 +70,51 @@ The first real-consumer pilot (deduper's settings window, branch
 - **Distribution**: path dependencies from sibling repos work, but the
   package cannot be consumed remotely while it lives in this monorepo.
 
+## Runtime proof (press-proof harness, TEST-SWIFTUI-RUNTIME-BREADTH-01)
+
+`swift run --package-path packages/ds-swiftui PressProofHarness` drives a
+real App through OS-mediated accessibility interactions and exits nonzero
+naming any failed counter. Current proven surface (press → channel):
+
+- **Chip** (action, dismiss), **Walkthrough** (steps, skip, complete threshold)
+- **Switch** — onChange `[true, false]`, binding syncs both ways
+- **Select** — AXMenuButton trigger → menu option press → selection `"b"`
+- **Calendar** — AXIncrementor step → onChange fires exactly once
+- **Dialog at mount** — `defaultOpen: true` presents its sheet
+
+Token painting is pixel-proven in `Tests/DsSwiftUITests/TokenPaintTests.swift`:
+sampled pixels equal values read from the committed resolved token graph —
+Card's background equals the graph's light value under aqua and its dark
+value under darkAqua (the adaptive flip), Button equals the single-value
+action-primary hex.
+
+The harness found and fixed one real emitter defect (sheets anchored on
+`EmptyView()` never present; the anchor is now a zero-size `Color.clear`,
+regenerated for Dialog/Sheet/Command). Structural finding: Tabs, Accordion,
+and Shuttle emissions expose **zero** pressable/editable AX elements — their
+channels exist but no control wires them yet (window-scoped census
+`[AXGroup:1, AXStaticText:5]`); behavioral parity for those three awaits
+emitter deepening.
+
+Host limitations (probe-evidenced, not component defects — each printed as
+a `LIMITATION:` artifact by the harness):
+
+- **After-mount sheet flips never present on this swift-run host** — a
+  plain-SwiftUI `Color.clear.sheet(isPresented:)` control fails identically,
+  which blocks proving the controlled-Dialog open/close cycle here.
+- **No key window is ever granted** — keyboard event synthesis has no
+  routing target; CGEvent mouse delivery has the same blocker.
+- **SwiftUI TextFields accept AXValue writes without routing them to
+  bindings** — OTP text-entry cannot be driven through AX on this host.
+
 ## Parity
 
 `node scripts/swift-parity-diff.mjs` generates every corpus contract
 through both the react and swiftui emitters and exits nonzero if any
 component emits for react but not swiftui. Current run: react 49 /
 swift 49 / divergent 0. This is emission-level API-surface parity —
-not visual, behavioral, or token-value parity.
+not visual or behavioral parity. (Token-value parity at the paint
+level is sample-proven by `TokenPaintTests` — see runtime proof above.)
 
 ## Non-claims
 
