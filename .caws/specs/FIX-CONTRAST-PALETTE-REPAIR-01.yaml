@@ -3,7 +3,6 @@ title: 'Palette repair: theme-aware syntax colors + Select emptyState secondary 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: palette-repair
 created_at: '2026-08-17T18:43:36.939Z'
 updated_at: '2026-08-17T18:46:55.397Z'
 blast_radius:
