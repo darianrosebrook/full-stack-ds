@@ -39,8 +39,18 @@
  *     3:1 proxy.
  *   - Fallback literals on `resolvesTo` entries are not checked; they
  *     render only when the token sheet is absent.
- *   - Color inherited across blocks (a title reading root's `color`)
- *     is not modeled; only same-block fg+bg declarations pair.
+ *   - FOREGROUND inherited across blocks (a title reading root's `color`
+ *     without declaring its own) is still not modeled — only declared
+ *     color declarations contribute fg. BACKGROUND inheritance IS
+ *     modeled (RAIL-COMPONENT-CONTRAST-ANCESTRY-01): an element block
+ *     that declares `color` without a same-block `background-color`
+ *     pairs against the nearest declared ANCESTOR background, because
+ *     that is what renders behind the text. Ancestry is mechanical —
+ *     the anatomy.dom parent chain, with a transform-generated part
+ *     (content.tokenPart) hanging off its container node — never a
+ *     component name. Sibling selector variants are not ancestors: a
+ *     background declared on one `[data-token=…]` block never pairs
+ *     another variant's text.
  *   - Blocks that mix slot redefinitions with CSS properties are read
  *     as scopes only; their own property declarations are ignored.
  *
@@ -335,6 +345,110 @@ function blockTargetsPart(blockKey: string, cssPrefix: string, part: string): bo
   );
 }
 
+// ---------------------------------------------------------------------------
+// Ancestry (RAIL-COMPONENT-CONTRAST-ANCESTRY-01).
+// ---------------------------------------------------------------------------
+
+interface DomNodeLike {
+  part?: string;
+  children?: DomNodeLike[];
+  content?: string | { tokenPart?: string };
+}
+
+/**
+ * Map each anatomy part to its ancestor-part chain, ordered NEAREST-FIRST
+ * (immediate parent, then grandparent, …, root). Derived mechanically from
+ * `anatomy.dom`. A transform-generated part (an object-form
+ * `content.tokenPart` — one span per token, never a dom node itself) hangs
+ * off its container node: the container's part is the generated part's
+ * parent. Parts absent from the dom tree have no entry — callers fall back
+ * to no inheritance for them rather than guessing an ancestor.
+ */
+function buildPartAncestry(
+  anatomy: ComponentContract["anatomy"],
+): Map<string, string[]> {
+  const chains = new Map<string, string[]>();
+  const dom =
+    anatomy && !Array.isArray(anatomy) && anatomy.dom && typeof anatomy.dom === "object"
+      ? (anatomy.dom as DomNodeLike)
+      : undefined;
+  if (!dom) return chains;
+  const walk = (node: DomNodeLike, ancestorsOutward: string[]): void => {
+    const part = typeof node.part === "string" ? node.part : null;
+    const here = part ? [...ancestorsOutward, part] : ancestorsOutward;
+    if (part) chains.set(part, here.slice(0, -1).reverse());
+    const content = node.content;
+    if (
+      part &&
+      content &&
+      typeof content === "object" &&
+      typeof content.tokenPart === "string"
+    ) {
+      // The generated spans render inside this node: nearest ancestor is
+      // the container part, then the container's ancestors.
+      chains.set(content.tokenPart, [...here].reverse());
+    }
+    for (const child of node.children ?? []) walk(child, here);
+  };
+  walk(dom, []);
+  return chains;
+}
+
+/**
+ * Resolve the background a color-only element block renders against: the
+ * nearest ancestor element block (per the part ancestry chain) that
+ * declares `background-color`. Scope overlays apply to an ancestor block
+ * only when the active scope targets it — a root scope overlays every
+ * block, a part scope (A4) only blocks of its own part — mirroring the
+ * custom-property-subtree rule the same-block pairing already follows.
+ * Disabled ancestor blocks are skipped like disabled pair blocks.
+ */
+function inheritedBackgroundTerminal(args: {
+  blockKey: string;
+  scopePart: string | null;
+  elementBlocks: Array<[string, Record<string, StyleEntry>]>;
+  cssPrefix: string;
+  slots: Record<string, StyleEntry>;
+  overrides: Record<string, StyleEntry>;
+  partNames: string[];
+  partAncestry: Map<string, string[]>;
+}): ContrastTerminal | null {
+  const target =
+    partScopeTarget(args.blockKey, args.cssPrefix, args.partNames) ?? "root";
+  const nearestFirst = args.partAncestry.get(target);
+  if (!nearestFirst) return null;
+  for (const ancestor of nearestFirst) {
+    for (const [otherKey, otherBlock] of args.elementBlocks) {
+      if (otherKey === args.blockKey) continue;
+      if (DISABLED_RE.test(otherKey)) continue;
+      // Conditional ancestor blocks (pseudo-state like `:hover`,
+      // attribute variants like `[data-open]`) are state overlays, not
+      // the resting background a descendant renders against — only an
+      // UNCONDITIONAL block on the ancestor part contributes. Accordion's
+      // chevron exposed this: its trigger declares no resting
+      // `background-color` (only the `background` shorthand, which the
+      // same-block rule has never modeled), and the hover overlay must
+      // not stand in for it.
+      if (/[:[]/.test(otherKey)) continue;
+      if (!blockTargetsPart(otherKey, args.cssPrefix, ancestor)) continue;
+      const overridesForAncestor =
+        args.scopePart && !blockTargetsPart(otherKey, args.cssPrefix, args.scopePart)
+          ? {}
+          : args.overrides;
+      const bg = declarationTerminal(
+        otherBlock["background-color"],
+        {
+          cssPrefix: args.cssPrefix,
+          slots: args.slots,
+          overrides: overridesForAncestor,
+        },
+      );
+      if (bg) return bg;
+    }
+  }
+  return null;
+}
+
 /**
  * Derive every fg × bg pair a contract's styles realize, across base
  * scope and every slot-redirecting scope. Pairs are deduplicated by
@@ -354,6 +468,7 @@ export function deriveComponentContrastPairs(
   const partNames: string[] = Array.isArray(anatomy)
     ? anatomy
     : (anatomy?.parts ?? []);
+  const partAncestry = buildPartAncestry(anatomy);
 
   const elementBlocks: Array<[string, Record<string, StyleEntry>]> = [];
   const scopeBlocks: Array<[string, Record<string, StyleEntry>]> = [];
@@ -383,8 +498,23 @@ export function deriveComponentContrastPairs(
 
       const ctx: ResolutionContext = { cssPrefix, slots, overrides };
       const fg = declarationTerminal(block["color"], ctx);
-      const bg = declarationTerminal(block["background-color"], ctx);
-      if (!fg || !bg) continue;
+      if (!fg) continue;
+      // Same-block background wins; a color-only block inherits the
+      // nearest declared ANCESTOR background (RAIL-COMPONENT-CONTRAST-
+      // ANCESTRY-01) — that is what renders behind the text.
+      const bg =
+        declarationTerminal(block["background-color"], ctx) ??
+        inheritedBackgroundTerminal({
+          blockKey,
+          scopePart,
+          elementBlocks,
+          cssPrefix,
+          slots,
+          overrides,
+          partNames,
+          partAncestry,
+        });
+      if (!bg) continue;
 
       const key = `${blockKey}|${terminalKey(fg)}|${terminalKey(bg)}`;
       const existing = byKey.get(key);
