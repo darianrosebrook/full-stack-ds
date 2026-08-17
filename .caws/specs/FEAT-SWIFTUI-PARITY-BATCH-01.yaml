@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: "Generated files Stat/ProfileFlag/Postcard/Breadcrumbs/NavList/Status.swift under Sources/DsSwiftUI/Components/ (39 dirs on disk); swift build 'Build complete!' exit 0"
     recorded_at: "2026-08-17T05:15:33.865Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "CodeSnippet(text:)/CodeBlock(code:) emitted with monospaced Text + chrome; compiled in package build"
+    recorded_at: "2026-08-17T05:15:34.850Z"
