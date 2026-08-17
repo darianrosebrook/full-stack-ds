@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -44,7 +46,10 @@ fun SettingsApp(modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("ada@example.com") }
 
     Column(
-        modifier = modifier,
+        // Body scroll (FIX-EXAMPLES-COMPOSE-SETTINGS-SCROLL-001): content
+        // below the fold must stay reachable when the window is smaller than
+        // the content — the swift lane's ScrollView, mirrored.
+        modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         ProfileSection( // NOT FSDS: Field/Input/Button not yet emitted on this target.
