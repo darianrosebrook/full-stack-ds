@@ -210,6 +210,7 @@ export class DetailsElement extends LitElement {
 
 customElements.define('fsds-details', DetailsElement);
 
+
 export class DetailsContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

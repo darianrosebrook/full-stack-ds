@@ -212,6 +212,7 @@ export class TextFieldElement extends LitElement {
 
 customElements.define('fsds-text-field', TextFieldElement);
 
+
 export class TextFieldDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

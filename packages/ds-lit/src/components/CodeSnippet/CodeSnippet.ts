@@ -105,6 +105,7 @@ export class CodeSnippetElement extends LitElement {
 }
 
 customElements.define('fsds-code-snippet', CodeSnippetElement);
+
 // @generated:end
 
 // @custom:start trailing

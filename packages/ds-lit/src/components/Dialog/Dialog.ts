@@ -293,6 +293,7 @@ export class DialogElement extends LitElement {
 
 customElements.define('fsds-dialog', DialogElement);
 
+
 export class DialogHeaderElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

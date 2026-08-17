@@ -135,6 +135,7 @@ export class AvatarElement extends LitElement {
 }
 
 customElements.define('fsds-avatar', AvatarElement);
+
 // @generated:end
 
 // @custom:start trailing

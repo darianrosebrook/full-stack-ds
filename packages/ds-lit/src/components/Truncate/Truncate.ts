@@ -125,6 +125,7 @@ export class TruncateElement extends LitElement {
 
 customElements.define('fsds-truncate', TruncateElement);
 
+
 export class TruncateContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

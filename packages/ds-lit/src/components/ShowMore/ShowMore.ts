@@ -126,6 +126,7 @@ export class ShowMoreElement extends LitElement {
 
 customElements.define('fsds-show-more', ShowMoreElement);
 
+
 export class ShowMoreContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

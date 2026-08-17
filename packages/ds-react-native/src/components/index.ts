@@ -48,6 +48,8 @@ export { Links } from "./Links/Links";
 export type { LinksProps } from "./Links/Links";
 export { List } from "./List/List";
 export type { ListProps } from "./List/List";
+export { Markdown } from "./Markdown/Markdown";
+export type { MarkdownProps } from "./Markdown/Markdown";
 export { NavList } from "./NavList/NavList";
 export type { NavListProps } from "./NavList/NavList";
 export { OTP } from "./OTP/OTP";

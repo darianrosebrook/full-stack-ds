@@ -194,6 +194,7 @@ export class BadgeElement extends LitElement {
 
 customElements.define('fsds-badge', BadgeElement);
 
+
 export class BadgeContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

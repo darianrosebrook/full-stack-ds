@@ -141,6 +141,7 @@ export class OTPElement extends LitElement {
 
 customElements.define('fsds-otp', OTPElement);
 
+
 export class OTPGroupElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

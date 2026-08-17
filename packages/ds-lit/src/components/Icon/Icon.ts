@@ -115,6 +115,7 @@ export class IconElement extends LitElement {
 }
 
 customElements.define('fsds-icon', IconElement);
+
 // @generated:end
 
 // @custom:start trailing

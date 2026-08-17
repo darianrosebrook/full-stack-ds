@@ -96,6 +96,7 @@ export class DividerElement extends LitElement {
 }
 
 customElements.define('fsds-divider', DividerElement);
+
 // @generated:end
 
 // @custom:start trailing

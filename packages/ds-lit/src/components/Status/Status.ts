@@ -142,6 +142,7 @@ export class StatusElement extends LitElement {
 }
 
 customElements.define('fsds-status', StatusElement);
+
 // @generated:end
 
 // @custom:start trailing

@@ -1,0 +1,17 @@
+{
+  "markdown.color.foreground.default": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "markdown.typography.fontSize.default": {
+    "resolvesTo": "core.typography.ramp.3",
+    "fallback": "0.875rem",
+    "layer": "core"
+  },
+  "markdown.typography.lineHeight.default": {
+    "resolvesTo": "semantic.typography.line.height.body",
+    "fallback": "1.5",
+    "layer": "semantic"
+  }
+}

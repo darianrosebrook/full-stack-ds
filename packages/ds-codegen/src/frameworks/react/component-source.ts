@@ -29,7 +29,9 @@ import {
   nativeTableAttrsFor,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  isMarkdownTransform,
+  contentBindingOrTransformSource,
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
@@ -229,7 +231,13 @@ export function generateReactComponentSource(
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (collectContentTransforms(ir.dom).length > 0) {
+  if (collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    importLines.push(
+      `import { parseMarkdown, type MarkdownBlock, type MarkdownMark } from "../../primitives/markdown/markdown";`,
+    );
+    importLines.push(`import { Fragment } from "react";`);
+  }
+  if (collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     importLines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize";`,
     );
@@ -265,6 +273,7 @@ export function generateReactComponentSource(
   importLines.push(`import "./${ir.name}.css";`);
   const importsBody = importLines.join("\n");
 
+  const markdownHelpersBody = generateReactMarkdownHelpers(ir);
   const blank = (): Section => ({ kind: "between", body: "" });
   const sections: Section[] = [
     { kind: "generated", id: "imports", body: importsBody },
@@ -277,7 +286,7 @@ export function generateReactComponentSource(
     blank(),
     { kind: "generated", id: "props", body: propsBody },
     blank(),
-    { kind: "generated", id: "subcomponents", body: subcomponentsBody },
+    { kind: "generated", id: "subcomponents", body: subcomponentsBody + markdownHelpersBody },
     blank(),
     { kind: "generated", id: "component", body: componentBody },
     blank(),
@@ -2337,6 +2346,108 @@ interface ReactRenderContext {
  * so output stays formatted; final line counts include each sub-tree's own
  * indentation.
  */
+/**
+ * FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — React lowering of the markdown
+ * transform: module-scope recursive render helpers. One transform per
+ * tree (validated upstream); every element tag, part class, and data
+ * attribute comes from the IR fact — never a component name.
+ */
+function generateReactMarkdownHelpers(ir: ComponentIR): string {
+  const transform = collectContentTransforms(ir.dom).find(isMarkdownTransform);
+  if (!transform) return "";
+  const prefix = ir.classRecipe.base;
+  const b = transform.blockParts;
+  const bt = transform.blockTags;
+  const m = transform.markParts;
+  const mt = transform.markTags;
+  const blockClass = (kind: string): string => `${prefix}__${kind}`;
+  return `
+function renderMarkdownBlocks(source: string): React.ReactNode[] {
+  return parseMarkdown(source ?? "").map((block, blockIndex) =>
+    renderMarkdownBlock(block, blockIndex),
+  );
+}
+
+function renderMarkdownBlock(block: MarkdownBlock, key: React.Key): React.ReactNode {
+  switch (block.kind) {
+    case "heading":
+      return (
+        <${bt.heading} key={key} className="${blockClass(b.heading)}" data-block-kind="heading" data-level={block.level}>
+          {block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}
+        </${bt.heading}>
+      );
+    case "paragraph":
+      return (
+        <${bt.paragraph} key={key} className="${blockClass(b.paragraph)}" data-block-kind="paragraph">
+          {block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}
+        </${bt.paragraph}>
+      );
+    case "list":
+      return block.ordered ? (
+        <${bt.orderedList} key={key} className="${blockClass(b.orderedList)}" data-block-kind="orderedList">
+          {block.items.map((item, itemIndex) => renderMarkdownBlock(item, itemIndex))}
+        </${bt.orderedList}>
+      ) : (
+        <${bt.unorderedList} key={key} className="${blockClass(b.unorderedList)}" data-block-kind="unorderedList">
+          {block.items.map((item, itemIndex) => renderMarkdownBlock(item, itemIndex))}
+        </${bt.unorderedList}>
+      );
+    case "listItem":
+      return (
+        <${bt.listItem} key={key} className="${blockClass(b.listItem)}" data-block-kind="listItem">
+          {block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}
+        </${bt.listItem}>
+      );
+    case "codeBlock":
+      return (
+        <${bt.codeBlock} key={key} className="${blockClass(b.codeBlock)}" data-block-kind="codeBlock" data-language={block.language}>
+          {block.text}
+        </${bt.codeBlock}>
+      );
+    case "blockquote":
+      return (
+        <${bt.blockquote} key={key} className="${blockClass(b.blockquote)}" data-block-kind="blockquote">
+          {block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}
+        </${bt.blockquote}>
+      );
+  }
+}
+
+function renderMarkdownMark(mark: MarkdownMark, key: React.Key): React.ReactNode {
+  switch (mark.kind) {
+    case "text":
+      return <Fragment key={key}>{mark.text}</Fragment>;
+    case "code":
+      return (
+        <${mt.code} key={key} className="${prefix}__${m.code}" data-mark-kind="code">{mark.text}</${mt.code}>
+      );
+    case "emphasis":
+      return (
+        <${mt.emphasis} key={key} className="${prefix}__${m.emphasis}" data-mark-kind="emphasis">
+          {mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}
+        </${mt.emphasis}>
+      );
+    case "strong":
+      return (
+        <${mt.strong} key={key} className="${prefix}__${m.strong}" data-mark-kind="strong">
+          {mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}
+        </${mt.strong}>
+      );
+    case "link":
+      return mark.href === null ? (
+        <Fragment key={key}>
+          {mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}
+        </Fragment>
+      ) : (
+        <${mt.link} key={key} className="${prefix}__${m.link}" data-mark-kind="link" href={mark.href}>
+          {mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}
+        </${mt.link}>
+      );
+  }
+}
+`;
+}
+
 function renderReactDomNode(
   node: DomNodeIR,
   ctx: ReactRenderContext,
@@ -2401,7 +2512,7 @@ function renderReactDomNode(
   // backward compatibility until parseDomNode drops the dual-pathway
   // retention.
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       // FEAT-CODEBLOCK-HIGHLIGHT-01: the content is produced by the shared
       // pure tokenizer — one span per token carrying the tokenPart class and
       // a data-token kind attribute, text children only. The gate prop (when
@@ -2425,8 +2536,30 @@ function renderReactDomNode(
       } else {
         textChildren.push(`{${tokenMap}}`);
       }
+    } else if (isMarkdownTransform(node.content)) {
+      // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the content is the structural
+      // parse of the markdown source — block elements and inline marks
+      // lowered by the module-scope render helpers below. A declared gate
+      // falls back to a single plain run of the source binding.
+      const transform = node.content;
+      const sourceExpr =
+        renderReactBinding("textContent", transform.source, ctx) ??
+        transform.sourceProp;
+      const tree = `renderMarkdownBlocks(${sourceExpr})`;
+      if (transform.gate !== undefined) {
+        const gateExpr =
+          renderReactBinding("textContent", transform.gate, ctx) ??
+          transform.gateProp;
+        textChildren.push(`{${gateExpr} ? (${tree}) : (${sourceExpr})}`);
+      } else {
+        textChildren.push(`{${tree}}`);
+      }
     } else {
-      const contentExpr = renderReactBinding("textContent", node.content, ctx);
+      const contentExpr = renderReactBinding(
+        "textContent",
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
       if (contentExpr !== null) {
         textChildren.push(`{${contentExpr}}`);
       }

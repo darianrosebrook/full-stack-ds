@@ -286,6 +286,7 @@ export class SheetElement extends LitElement {
 
 customElements.define('fsds-sheet', SheetElement);
 
+
 export class SheetContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }

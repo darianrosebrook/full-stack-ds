@@ -393,18 +393,58 @@ export interface ContractDomNodeIterate {
  * produced by the named transform applied to the source prop, never by
  * projecting a binding verbatim.
  */
-export interface ContractContentTransform {
-  /** Transform name; closed set — `"highlight"` is the only admitted value today. */
+/**
+ * Highlight transform: the source string splits into syntax tokens via the
+ * shared pure tokenizer; one span per token (the `tokenPart` part class plus
+ * a `data-token` kind attribute). Text-only by construction.
+ */
+export interface ContractHighlightTransform {
   transform: 'highlight';
   /** Binding naming the string prop carrying the literal source text, e.g. `"prop:code"`. */
   source: string;
-  /** `highlight` only: binding naming the string prop carrying the declared language, e.g. `"prop:language"`. */
+  /** Binding naming the string prop carrying the declared language, e.g. `"prop:language"`. */
   language?: string;
-  /** `highlight` only: binding naming the boolean prop gating the transform, e.g. `"prop:highlight"`. */
+  /** Binding naming the boolean prop gating the transform, e.g. `"prop:highlight"`. */
   gate?: string;
-  /** `highlight` only: anatomy part realized as one span per token. */
+  /** anatomy part realized as one span per token. */
   tokenPart: string;
 }
+
+/**
+ * Markdown transform (FEAT-MARKDOWN-CONTENT-TRANSFORM-01): the node's
+ * content is the structural parse of the markdown source prop. Closed
+ * vocabularies: every block kind and mark kind maps to a declared anatomy
+ * part whose tag matches the kind's DOM contract. Text is literal by
+ * construction; link hrefs are protocol-sanitized at parse time.
+ */
+export interface ContractMarkdownTransform {
+  transform: 'markdown';
+  /** Binding naming the string prop carrying the markdown source, e.g. `"prop:content"`. */
+  source: string;
+  /** Binding naming the boolean prop gating the transform. */
+  gate?: string;
+  /** Block vocabulary — kind to anatomy part. Total: every closed kind maps. */
+  blockParts: {
+    heading: string;
+    paragraph: string;
+    unorderedList: string;
+    orderedList: string;
+    listItem: string;
+    codeBlock: string;
+    blockquote: string;
+  };
+  /** Inline-mark vocabulary — kind to anatomy part (span-family tags, multiple). */
+  markParts: {
+    emphasis: string;
+    strong: string;
+    code: string;
+    link: string;
+  };
+}
+
+export type ContractContentTransform =
+  | ContractHighlightTransform
+  | ContractMarkdownTransform;
 
 /**
  * Resolution for a single slot in `<Name>.tokens.json` — either a graph-backed

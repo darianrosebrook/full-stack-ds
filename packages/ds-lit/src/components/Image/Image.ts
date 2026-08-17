@@ -155,6 +155,7 @@ export class ImageElement extends LitElement {
 }
 
 customElements.define('fsds-image', ImageElement);
+
 // @generated:end
 
 // @custom:start trailing

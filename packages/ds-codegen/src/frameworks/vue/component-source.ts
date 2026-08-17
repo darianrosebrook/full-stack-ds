@@ -35,7 +35,9 @@ import {
   canonicalTsType,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  isMarkdownTransform,
+  contentBindingOrTransformSource,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1603,10 +1605,16 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (collectContentTransforms(ir.dom).length > 0) {
+  if (collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     importLines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
     );
+  }
+  if (collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    importLines.push(
+      `import { parseMarkdown, type MarkdownBlock, type MarkdownMark } from "../../primitives/markdown/markdown.js";`,
+    );
+    importLines.push(`import { h, Fragment, defineComponent, type VNode } from "vue";`);
   }
   const importsBody = importLines.join("\n");
 
@@ -1652,6 +1660,13 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     );
   }
   const hookBody = hookLines.join("\n");
+
+  // FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — Vue lowering of the markdown
+  // transform: local render functions plus a functional tree component
+  // (the idiomatic Vue shape for recursive structures without extra
+  // files). Tags/classes/attrs come from the IR fact; the template
+  // mounts <MarkdownTree />.
+  const markdownHelpersBody = generateVueMarkdownHelpers(ir).join("\n");
 
   // Selector-anchored root panel: resolve the active element from the
   // indexed selector prop, then position the (teleported) root against it.
@@ -1883,6 +1898,16 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
           blank(),
         ]
       : []),
+    ...(markdownHelpersBody
+      ? [
+          {
+            kind: "generated" as const,
+            id: "markdownHelpers",
+            body: markdownHelpersBody,
+          },
+          blank(),
+        ]
+      : []),
     { kind: "generated", id: "classes", body: classesBody },
     blank(),
     ...(fieldAssocBody
@@ -2080,7 +2105,7 @@ function renderVueDomNode(
   // canonical inner-content binding. Lower via the same Vue
   // interpolation path the legacy textContent uses.
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       // FEAT-CODEBLOCK-HIGHLIGHT-01: one span per token via v-for over the
       // shared pure tokenizer; the gate prop (when declared) degrades to a
       // single plain interpolation of the source binding.
@@ -2108,8 +2133,32 @@ function renderVueDomNode(
       } else {
         textChildren.push(span);
       }
+    } else if (isMarkdownTransform(node.content)) {
+      // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the template mounts the local
+      // functional tree component; a declared gate falls back to the plain
+      // source interpolation.
+      const transform = node.content;
+      const sourceExpr = appendPath(
+        vuePropAccessor(transform.sourceProp, ctx),
+        transform.source.path,
+      );
+      if (transform.gate !== undefined) {
+        const gateExpr = appendPath(
+          vuePropAccessor(transform.gateProp ?? transform.gate.prop, ctx),
+          transform.gate.path,
+        );
+        textChildren.push(
+          `<template v-if="${gateExpr}"><MarkdownTree /></template>` +
+            `<template v-else>{{ ${sourceExpr} }}</template>`,
+        );
+      } else {
+        textChildren.push(`<MarkdownTree />`);
+      }
     } else {
-      const interpolated = renderVueTextContent(node.content, ctx);
+      const interpolated = renderVueTextContent(
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
       if (interpolated !== null) textChildren.push(interpolated);
     }
   }
@@ -2425,6 +2474,67 @@ function renderVueDomNode(
  * resolve against component props instead. Otherwise emit the
  * `props.X` accessor as today. IR-DOM-ITERATE-CAPABILITY-01.
  */
+/**
+ * FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — Vue lowering of the markdown
+ * transform: local render functions plus a functional tree component
+ * (`<MarkdownTree />` in the template — the idiomatic Vue shape for
+ * recursive structures without extra SFC files). One transform per tree
+ * (validated upstream); tags/classes/attrs come from the IR fact.
+ */
+function generateVueMarkdownHelpers(ir: ComponentIR): string[] {
+  const transform = collectContentTransforms(ir.dom).find(isMarkdownTransform);
+  if (!transform) return [];
+  const prefix = ir.classRecipe.base;
+  const b = transform.blockParts;
+  const bt = transform.blockTags;
+  const m = transform.markParts;
+  const mt = transform.markTags;
+  const blockClass = (part: string): string => `${prefix}__${part}`;
+  return [
+    `function renderMarkdownBlock(block: MarkdownBlock): VNode {`,
+    `  switch (block.kind) {`,
+    `    case "heading":`,
+    `      return h("${bt.heading}", { class: "${blockClass(b.heading)}", "data-block-kind": "heading", "data-block-kind-level": block.level }, block.children.map(renderMarkdownMark));`,
+    `    case "paragraph":`,
+    `      return h("${bt.paragraph}", { class: "${blockClass(b.paragraph)}", "data-block-kind": "paragraph" }, block.children.map(renderMarkdownMark));`,
+    `    case "list":`,
+    `      return block.ordered`,
+    `        ? h("${bt.orderedList}", { class: "${blockClass(b.orderedList)}", "data-block-kind": "orderedList" }, block.items.map(renderMarkdownBlock))`,
+    `        : h("${bt.unorderedList}", { class: "${blockClass(b.unorderedList)}", "data-block-kind": "unorderedList" }, block.items.map(renderMarkdownBlock));`,
+    `    case "listItem":`,
+    `      return h("${bt.listItem}", { class: "${blockClass(b.listItem)}", "data-block-kind": "listItem" }, block.children.map(renderMarkdownMark));`,
+    `    case "codeBlock":`,
+    `      return h("${bt.codeBlock}", { class: "${blockClass(b.codeBlock)}", "data-block-kind": "codeBlock", "data-language": block.language }, block.text);`,
+    `    case "blockquote":`,
+    `      return h("${bt.blockquote}", { class: "${blockClass(b.blockquote)}", "data-block-kind": "blockquote" }, block.children.map(renderMarkdownMark));`,
+    `  }`,
+    `}`,
+    ``,
+    `function renderMarkdownMark(mark: MarkdownMark): VNode {`,
+    `  switch (mark.kind) {`,
+    `    case "text":`,
+    `      return h("span", mark.text);`,
+    `    case "code":`,
+    `      return h("${mt.code}", { class: "${prefix}__${m.code}", "data-mark-kind": "code" }, mark.text);`,
+    `    case "emphasis":`,
+    `      return h("${mt.emphasis}", { class: "${prefix}__${m.emphasis}", "data-mark-kind": "emphasis" }, mark.children.map(renderMarkdownMark));`,
+    `    case "strong":`,
+    `      return h("${mt.strong}", { class: "${prefix}__${m.strong}", "data-mark-kind": "strong" }, mark.children.map(renderMarkdownMark));`,
+    `    case "link":`,
+    `      return mark.href === null`,
+    `        ? h("span", mark.children.map(renderMarkdownMark))`,
+    `        : h("${mt.link}", { class: "${prefix}__${m.link}", "data-mark-kind": "link", href: mark.href }, mark.children.map(renderMarkdownMark));`,
+    `  }`,
+    `}`,
+    ``,
+    `// A defineComponent-wrapped local component is the unambiguous Vue`,
+    `// shape for template-mounted recursive render trees.`,
+    `const MarkdownTree = defineComponent({`,
+    `  setup: () => () => h(Fragment, null, parseMarkdown(props.${propAccess(transform.sourceProp)} ?? "").map(renderMarkdownBlock)),`,
+    `});`,
+  ];
+}
+
 function vuePropAccessor(propName: string, ctx: VueRenderContext): string {
   // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals reach the
   // emitter as `iterationLocal`-kind bindings, never as `prop:`

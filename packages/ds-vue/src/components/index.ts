@@ -71,6 +71,8 @@ import "./Links/Links.css";
 export { default as Links } from "./Links/Links.vue";
 import "./List/List.css";
 export { default as List } from "./List/List.vue";
+import "./Markdown/Markdown.css";
+export { default as Markdown } from "./Markdown/Markdown.vue";
 import "./NavList/NavList.css";
 export { default as NavList } from "./NavList/NavList.vue";
 export { default as NavListItem } from "./NavList/NavListItem.vue";

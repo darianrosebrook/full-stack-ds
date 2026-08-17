@@ -36,7 +36,9 @@ import {
   canonicalTsType,
   composeChannelUpdateExpression,
   collectContentTransforms,
-  isContentTransform,
+  isHighlightTransform,
+  isMarkdownTransform,
+  contentBindingOrTransformSource,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1435,9 +1437,14 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   // content-transform: import the shared highlight tokenizer when the tree
   // carries a highlight fact (FEAT-CODEBLOCK-HIGHLIGHT-01). Structural —
   // driven by IR content-transform facts, never per-component name lore.
-  if (collectContentTransforms(ir.dom).length > 0) {
+  if (collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     importLines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
+    );
+  }
+  if (collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    importLines.push(
+      `import { parseMarkdown, type MarkdownBlock, type MarkdownMark } from "../../primitives/markdown/markdown.js";`,
     );
   }
   const importsBody = importLines.join("\n");
@@ -1648,6 +1655,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       : {}),
   };
   const templateInner = renderSvelteDomNode(ir.dom, ctx, 0);
+  const markdownSnippetsBody = generateSvelteMarkdownSnippets(ir);
 
   const blank = (): Section => ({ kind: "between", body: "" });
   const scriptSections: Section[] = [
@@ -1709,6 +1717,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     ``,
     templateInner,
     ``,
+    ...(markdownSnippetsBody ? [markdownSnippetsBody, ``] : []),
   ].join("\n");
 }
 
@@ -1873,7 +1882,7 @@ function renderSvelteDomNode(
   // canonical inner-content binding. Surface it through the same
   // textContentExpr slot the legacy textContent path uses.
   if (node.content) {
-    if (isContentTransform(node.content)) {
+    if (isHighlightTransform(node.content)) {
       // FEAT-CODEBLOCK-HIGHLIGHT-01: one span per token via {#each} over the
       // shared pure tokenizer; the gate prop (when declared) degrades to a
       // single plain text run of the source binding.
@@ -1900,8 +1909,32 @@ function renderSvelteDomNode(
       } else {
         textContentExpr = each;
       }
+    } else if (isMarkdownTransform(node.content)) {
+      // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the template iterates the
+      // structural parse and renders through the recursive file-level
+      // snippets; a declared gate falls back to the plain source run.
+      const transform = node.content;
+      const sourceExpr = appendPath(
+        sveltePropAccessor(transform.sourceProp, ctx),
+        transform.source.path,
+      );
+      const each =
+        `{#each parseMarkdown(${sourceExpr} ?? "") as block, blockIndex}` +
+        `{@render markdownBlock(block, blockIndex)}{/each}`;
+      if (transform.gate !== undefined) {
+        const gateExpr = appendPath(
+          sveltePropAccessor(transform.gateProp ?? transform.gate.prop, ctx),
+          transform.gate.path,
+        );
+        textContentExpr = `{#if ${gateExpr}}${each}{:else}{${sourceExpr}}{/if}`;
+      } else {
+        textContentExpr = each;
+      }
     } else {
-      textContentExpr = renderSvelteTextChildExpression(node.content, ctx);
+      textContentExpr = renderSvelteTextChildExpression(
+        contentBindingOrTransformSource(node.content)!,
+        ctx,
+      );
     }
   }
 
@@ -2223,6 +2256,69 @@ function formatSvelteAttrs(attrs: string[]): string {
  * names (`item`, `index`) `jsAccessorFor` is a no-op, so this check is
  * defensive against future renames. IR-DOM-ITERATE-CAPABILITY-01.
  */
+/**
+ * FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — Svelte lowering of the markdown
+ * transform: file-level recursive snippets (Svelte 5's idiom for
+ * recursive template structures). One transform per tree (validated
+ * upstream); tags/classes/attrs come from the IR fact. Snippets are
+ * hoisted, so mutual recursion between block and mark snippets compiles.
+ */
+function generateSvelteMarkdownSnippets(ir: ComponentIR): string {
+  const transform = collectContentTransforms(ir.dom).find(isMarkdownTransform);
+  if (!transform) return "";
+  const prefix = ir.classRecipe.base;
+  const b = transform.blockParts;
+  const bt = transform.blockTags;
+  const m = transform.markParts;
+  const mt = transform.markTags;
+  const blockClass = (part: string): string => `${prefix}__${part}`;
+  const markChildren = (): string =>
+    `{#each mark.children as child, childIndex}{@render markdownMark(child, childIndex)}{/each}`;
+  const blockMarks = (): string =>
+    `{#each block.children as mark, markIndex}{@render markdownMark(mark, markIndex)}{/each}`;
+  const blockItems = (): string =>
+    `{#each block.items as item, itemIndex}{@render markdownBlock(item, itemIndex)}{/each}`;
+  return [
+    `{#snippet markdownBlock(block: MarkdownBlock, blockIndex: number)}`,
+    `  {#if block.kind === "heading"}`,
+    `    <${bt.heading} class="${blockClass(b.heading)}" data-block-kind="heading" data-block-kind-level={block.level}>${blockMarks()}</${bt.heading}>`,
+    `  {:else if block.kind === "paragraph"}`,
+    `    <${bt.paragraph} class="${blockClass(b.paragraph)}" data-block-kind="paragraph">${blockMarks()}</${bt.paragraph}>`,
+    `  {:else if block.kind === "list"}`,
+    `    {#if block.ordered}`,
+    `      <${bt.orderedList} class="${blockClass(b.orderedList)}" data-block-kind="orderedList">${blockItems()}</${bt.orderedList}>`,
+    `    {:else}`,
+    `      <${bt.unorderedList} class="${blockClass(b.unorderedList)}" data-block-kind="unorderedList">${blockItems()}</${bt.unorderedList}>`,
+    `    {/if}`,
+    `  {:else if block.kind === "listItem"}`,
+    `    <${bt.listItem} class="${blockClass(b.listItem)}" data-block-kind="listItem">${blockMarks()}</${bt.listItem}>`,
+    `  {:else if block.kind === "codeBlock"}`,
+    `    <${bt.codeBlock} class="${blockClass(b.codeBlock)}" data-block-kind="codeBlock" data-language={block.language}>{block.text}</${bt.codeBlock}>`,
+    `  {:else if block.kind === "blockquote"}`,
+    `    <${bt.blockquote} class="${blockClass(b.blockquote)}" data-block-kind="blockquote">${blockMarks()}</${bt.blockquote}>`,
+    `  {/if}`,
+    `{/snippet}`,
+    ``,
+    `{#snippet markdownMark(mark: MarkdownMark, markIndex: number)}`,
+    `  {#if mark.kind === "text"}`,
+    `    {mark.text}`,
+    `  {:else if mark.kind === "code"}`,
+    `    <${mt.code} class="${prefix}__${m.code}" data-mark-kind="code">{mark.text}</${mt.code}>`,
+    `  {:else if mark.kind === "emphasis"}`,
+    `    <${mt.emphasis} class="${prefix}__${m.emphasis}" data-mark-kind="emphasis">${markChildren()}</${mt.emphasis}>`,
+    `  {:else if mark.kind === "strong"}`,
+    `    <${mt.strong} class="${prefix}__${m.strong}" data-mark-kind="strong">${markChildren()}</${mt.strong}>`,
+    `  {:else if mark.kind === "link"}`,
+    `    {#if mark.href === null}`,
+    `      <span>${markChildren()}</span>`,
+    `    {:else}`,
+    `      <${mt.link} class="${prefix}__${m.link}" data-mark-kind="link" href={mark.href}>${markChildren()}</${mt.link}>`,
+    `    {/if}`,
+    `  {/if}`,
+    `{/snippet}`,
+  ].join("\n");
+}
+
 function sveltePropAccessor(propName: string, ctx: SvelteRenderContext): string {
   // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals reach the
   // emitter as `iterationLocal`-kind bindings, never as `prop:`

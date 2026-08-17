@@ -156,6 +156,7 @@ export class BlockquoteElement extends LitElement {
 }
 
 customElements.define('fsds-blockquote', BlockquoteElement);
+
 // @generated:end
 
 // @custom:start trailing

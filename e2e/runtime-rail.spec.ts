@@ -950,6 +950,124 @@ async function readCodeBlockTokenFacts(
   );
 }
 
+// ---------------------------------------------------------------------
+
+test.describe("Runtime rail — Markdown structural render (golden tree)", () => {
+  // RUNTIME-RAIL facts for FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the DOM
+  // shape mirrors the frozen golden parse tree — block kinds and mark
+  // kinds in document order — across all five frameworks.
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
+    test(`${framework}: block and mark kind sequences match the golden tree`, async ({ page }) => {
+      const doc = loadMarkdownGoldenFullDoc();
+      await goto(page, framework, "Markdown", "markdown", {
+        content: doc.source,
+      });
+      const facts = await readMarkdownFacts(page, framework);
+      expect(facts.blockKinds).toEqual(doc.blockKinds);
+      expect(facts.markKinds).toEqual(doc.markKinds);
+    });
+  }
+});
+
+test.describe("Runtime rail — Markdown literal-HTML doctrine", () => {
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
+    test(`${framework}: hostile markup renders literally; unsafe hrefs degrade`, async ({ page }) => {
+      await goto(page, framework, "Markdown", "markdown", {
+        content:
+          "# <img src=x onerror=alert(1)>\n\nSee [docs](javascript:alert(1)) and [site](https://example.com).",
+      });
+      const facts = await readMarkdownFacts(page, framework);
+      expect(facts.imgCount).toBe(0);
+      expect(facts.scriptCount).toBe(0);
+      expect(facts.text).toContain("<img src=x onerror=alert(1)>");
+      expect(facts.hrefs).toEqual(["https://example.com"]);
+    });
+  }
+});
+
+/**
+ * FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the frozen golden full-document
+ * case — same identity-baseline doctrine as the CodeBlock rail facts.
+ */
+function loadMarkdownGoldenFullDoc(): {
+  source: string;
+  blockKinds: string[];
+  markKinds: string[];
+} {
+  const fixture = JSON.parse(
+    readFileSync(
+      join(process.cwd(), "packages", "ds-codegen", "src", "markdown", "fixtures.json"),
+      "utf8",
+    ),
+  ) as {
+    cases: { name: string; source: string; expected: unknown[] }[];
+  };
+  const full = fixture.cases.find((c) => c.name === "full document");
+  if (!full) throw new Error("markdown fixtures: full document case missing");
+  const blockKinds: string[] = [];
+  const markKinds: string[] = [];
+  const BLOCK_KINDS = ["heading", "paragraph", "list", "listItem", "codeBlock", "blockquote"];
+  const MARK_KINDS = ["emphasis", "strong", "code", "link"];
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      for (const child of node) visit(child);
+      return;
+    }
+    if (!node || typeof node !== "object") return;
+    const typed = node as Record<string, unknown>;
+    if (typeof typed.kind === "string") {
+      // The parser kind "list" realizes as unorderedList/orderedList in
+      // the DOM (data-block-kind carries the realized kind).
+      if (typed.kind === "list") {
+        blockKinds.push(typed.ordered === true ? "orderedList" : "unorderedList");
+      } else if (BLOCK_KINDS.includes(typed.kind)) {
+        blockKinds.push(typed.kind);
+      }
+      if (MARK_KINDS.includes(typed.kind)) markKinds.push(typed.kind);
+    }
+    if (Array.isArray(typed.children)) visit(typed.children);
+    if (Array.isArray(typed.items)) visit(typed.items);
+  };
+  visit(full.expected);
+  return { source: full.source, blockKinds, markKinds };
+}
+
+async function readMarkdownFacts(
+  page: Page,
+  framework: Framework,
+): Promise<{
+  blockKinds: string[];
+  markKinds: string[];
+  imgCount: number;
+  scriptCount: number;
+  hrefs: string[];
+  text: string;
+}> {
+  return page.evaluate(
+    ({ host, isLit }) => {
+      // Scope to the component's rendered tree — the page's own <script>
+      // tags are not the component's output.
+      const scope: ParentNode = isLit
+        ? (document.querySelector(host) as HTMLElement | null)?.shadowRoot ??
+          document
+        : (document.querySelector(".markdown") as HTMLElement | null) ?? document;
+      const blocks = Array.from(scope.querySelectorAll("[data-block-kind]"));
+      const marks = Array.from(scope.querySelectorAll("[data-mark-kind]"));
+      return {
+        blockKinds: blocks.map((el) => el.getAttribute("data-block-kind") ?? ""),
+        markKinds: marks.map((el) => el.getAttribute("data-mark-kind") ?? ""),
+        imgCount: scope.querySelectorAll("img").length,
+        scriptCount: scope.querySelectorAll("script").length,
+        hrefs: Array.from(scope.querySelectorAll("a")).map(
+          (el) => el.getAttribute("href") ?? "",
+        ),
+        text: scope.textContent ?? "",
+      };
+    },
+    { host: `fsds-${kebab("Markdown")}`, isLit: framework === "lit" },
+  );
+}
+
 test.describe("Runtime rail — screenshots", () => {
   // Visual snapshots are intentionally narrow: one component × one
   // framework. The existing `visual-regression.spec.ts` already covers

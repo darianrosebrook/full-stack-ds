@@ -93,6 +93,7 @@ export class ProfileFlagElement extends LitElement {
 }
 
 customElements.define('fsds-profile-flag', ProfileFlagElement);
+
 // @generated:end
 
 // @custom:start trailing

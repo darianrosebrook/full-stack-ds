@@ -228,6 +228,7 @@ export class ChipElement extends LitElement {
 }
 
 customElements.define('fsds-chip', ChipElement);
+
 // @generated:end
 
 // @custom:start trailing

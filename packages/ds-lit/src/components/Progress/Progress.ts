@@ -142,6 +142,7 @@ export class ProgressElement extends LitElement {
 }
 
 customElements.define('fsds-progress', ProgressElement);
+
 // @generated:end
 
 // @custom:start trailing

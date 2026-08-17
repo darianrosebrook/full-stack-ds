@@ -249,6 +249,7 @@ export class ButtonElement extends LitElement {
 }
 
 customElements.define('fsds-button', ButtonElement);
+
 // @generated:end
 
 // @custom:start trailing

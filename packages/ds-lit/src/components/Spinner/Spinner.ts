@@ -142,6 +142,7 @@ export class SpinnerElement extends LitElement {
 }
 
 customElements.define('fsds-spinner', SpinnerElement);
+
 // @generated:end
 
 // @custom:start trailing

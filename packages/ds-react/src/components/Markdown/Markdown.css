@@ -1,0 +1,28 @@
+@import "./Markdown.tokens.css";
+
+/* @generated:start styles */
+.markdown {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
+  color: var(--fsds-markdown-color-foreground-default, #141414);
+  font-size: var(--fsds-markdown-typography-font-size-default, 0.875rem);
+  line-height: var(--fsds-markdown-typography-line-height-default, 1.5);
+}
+
+.markdown__codeBlock {
+  white-space: pre;
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

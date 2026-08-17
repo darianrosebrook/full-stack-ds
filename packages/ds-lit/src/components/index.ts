@@ -23,6 +23,7 @@ export { InputElement } from "./Input/Input.js";
 export { LabelElement } from "./Label/Label.js";
 export { LinksElement } from "./Links/Links.js";
 export { ListElement } from "./List/List.js";
+export { MarkdownElement } from "./Markdown/Markdown.js";
 export { NavListElement, NavListItemElement, NavListListElement } from "./NavList/NavList.js";
 export { OTPElement, OTPGroupElement } from "./OTP/OTP.js";
 export { PopoverElement, PopoverContentElement, PopoverTriggerElement } from "./Popover/Popover.js";
