@@ -40,3 +40,8 @@ contracts:
   - name: 'swiftui-runtime-proof-breadth'
     type: behavior
     path: 'packages/ds-swiftui/Tests/PressProofHarness/main.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "swift run --package-path packages/ds-swiftui PressProofHarness → exit 0, 'PRESS-PROOF: all counters match expectations'; artifacts: switch.onChange [true, false] + bindingFinal false; select.onSelectionChange [\"b\"] + bindingFinal \"b\" (AXMenuButton trigger, proximity-filtered option press); calendar.onChange exactly 1 via AXIncrementor; dialog.uncontrolled visible at mount true; dialog.plainProbe presented false (environmental, probe-evidenced); structural census [AXGroup:1, AXStaticText:5] zero pressables; 4 LIMITATION lines printed (otp AXValue, keyboard, after-mount sheet flips, structural trio)"
+    recorded_at: "2026-08-17T17:10:47.903Z"
