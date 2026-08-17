@@ -52,3 +52,8 @@ contracts:
   - name: 'swiftui-parity-smoke'
     type: contract-test
     path: 'packages/ds-swiftui/Tests/DsSwiftUITests/ComponentSmokeTests.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Generated files Stat/ProfileFlag/Postcard/Breadcrumbs/NavList/Status.swift under Sources/DsSwiftUI/Components/ (39 dirs on disk); swift build 'Build complete!' exit 0"
+    recorded_at: "2026-08-17T05:15:33.865Z"
