@@ -45,3 +45,8 @@ evidence:
     recorded_at: "2026-08-17T16:41:14.176Z"
     command: git ls-files packages/ds-tokens/generated/resolved.tokens.json
     exit_code: 0
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "admission-descriptor.ts:44,95 registers reactNativeAdmissionDescriptor as the 6th rail-admitted target and its header names the six; e2e/runtime-rail.spec.ts:72 lists angular in FRAMEWORKS with only the Select callback-capture test skipped at :713-717. Both docs' non-claims now match"
+    recorded_at: "2026-08-17T16:41:18.282Z"
+    commit_sha: "731ed54"
