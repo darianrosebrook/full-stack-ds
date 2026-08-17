@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-SELECTION-SUBSTRATE-01
 title: 'Compositional selection substrate: SelectionState over the union channel; Select first'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'SelectionState substrate landed: union channel + mode gate + channelCall lowering; Select admitted; 22 of 49'
 created_at: '2026-08-17T03:58:18.816Z'
-updated_at: '2026-08-17T03:58:18.816Z'
+updated_at: '2026-08-17T04:06:08.725Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Sources/DsSwiftUI/Presence/SelectionState.swift (runtime substrate)'
