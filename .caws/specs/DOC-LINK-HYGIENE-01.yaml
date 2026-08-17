@@ -35,3 +35,10 @@ acceptance:
     then: 'the citing doc already told them it is machine-local'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run docs:check-links exits 0 on merged main: 66 relative .md links resolve, 3 skipped as machine-local. Falsification verified: injecting a link to a nonexistent file made it exit 1 naming docs/README.md:55"
+    recorded_at: "2026-08-17T17:13:30.558Z"
+    command: "pnpm run docs:check-links"
+    exit_code: 0
