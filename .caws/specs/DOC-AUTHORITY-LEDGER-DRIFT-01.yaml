@@ -41,3 +41,7 @@ evidence:
     recorded_at: "2026-08-17T17:03:23.083Z"
     command: git log --oneline c5cda2c9..HEAD -- docs/current-implementation-snapshot.md
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: Both miscited paths corrected to docs/internal/... and marked machine-local; all 41 remaining path references in the snapshot re-swept with ls and confirmed present
+    recorded_at: "2026-08-17T17:03:26.880Z"
