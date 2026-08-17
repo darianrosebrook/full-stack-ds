@@ -66,3 +66,8 @@ contracts:
   - name: 'component-contract-schema'
     type: schema
     path: 'packages/ds-contracts/component.contract.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 607f51e9: packages/ds-{react,vue,svelte,angular,lit}/src/components/CodeBlock render one text-only span per token with gate-off plain-run degradation (see generated sources); RN degrades to plain RNText, figma descriptor carries the code prop with no token realization; per-package render tests in src/primitives/highlight/__tests__ passed via pnpm run test:frameworks (581+500+540+467) and pnpm test (2110) at the pre-merge branch tip 62dfae74"
+    recorded_at: "2026-08-17T05:44:42.666Z"
