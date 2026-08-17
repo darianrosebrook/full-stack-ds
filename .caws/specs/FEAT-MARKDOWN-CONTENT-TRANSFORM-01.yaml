@@ -1,0 +1,60 @@
+id: FEAT-MARKDOWN-CONTENT-TRANSFORM-01
+title: 'Markdown content transform: block-level structural output grammar (the second-transform proof)'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-17T19:49:11.384Z'
+updated_at: '2026-08-17T19:49:11.384Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-contracts/components/Markdown'
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-react-native/src'
+    - 'packages/ds-figma-plugin/src/generated'
+    - 'packages/ds-swiftui'
+    - 'e2e/runtime-rail.spec.ts'
+    - 'docs/current-implementation-snapshot.md'
+    - 'src'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the schema admits a markdown transform with closed blockPart/markPart vocabularies; when the IR lowers and validates it; then every named part must exist in anatomy.details with a compatible tag (marks: span + multiple), source/gate must be bare prop bindings, and no emitter branches on a component name'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a canonical pure synchronous deterministic markdown parser over a closed v1 subset (headings, paragraphs, ordered and unordered single-level lists, fenced code blocks, blockquotes; inline emphasis, strong, code, links); when parsing hostile input; then raw HTML is never interpreted (literal text) and link hrefs are protocol-sanitized, with frozen golden fixtures and canonical unit tests'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the markdown IR fact; when emitters lower it; then all five web frameworks realize the tree (block elements from declared part tags with part classes + data-block-kind; marks as spans with data-mark-kind) while RN and SwiftUI degrade to plain text and figma omits; the parser is emitted byte-identical per web package'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a new Markdown component contract realizing the transform; when per-package identity and injection tests plus the Chromium rail facts run; then tree shape and literal-HTML rendering are proven in every framework and generate:check + governed:rail stay green with committed regeneration'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the landed slice; when docs update; then the snapshot records the grammar-generalization claim with honest v1 non-claims (no tables, images, nested lists, raw HTML; no highlight-chaining inside code blocks)'
+non_functional: {}
+contracts:
+  - name: 'content-transform-grammar'
+    type: schema
+    path: 'packages/ds-contracts/component.contract.schema.json'
+  - name: 'markdown-parser'
+    type: behavior
+    path: 'packages/ds-codegen/src/markdown/markdown.ts'
