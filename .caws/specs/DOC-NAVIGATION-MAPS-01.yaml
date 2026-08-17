@@ -2,9 +2,11 @@ id: DOC-NAVIGATION-MAPS-01
 title: 'Repair README and docs README structure trees that misstate doc locations'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'README and docs README structure trees rebuilt against the real tree; six-tree and Angular rail claims corrected; codegen-authority governs widened to native emitters'
 created_at: '2026-08-17T19:01:46.606Z'
-updated_at: '2026-08-17T19:01:46.606Z'
+updated_at: '2026-08-17T19:05:54.764Z'
 blast_radius:
   modules:
     - 'navigation maps'
