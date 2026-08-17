@@ -32,3 +32,10 @@ contracts:
   - name: 'dead-slot-report'
     type: behavior
     path: 'scripts/dead-slot-audit/audit.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Generated preamble now states the audit gates pre-push (.githooks/pre-push:242) and CI (ci.yml:234) and names all three exit-nonzero conditions incl. disposition drift; the false advisory claim is gone from the generator source so it cannot regenerate"
+    recorded_at: "2026-08-17T19:10:39.053Z"
+    command: "pnpm run audit:dead-slots"
+    exit_code: 0
