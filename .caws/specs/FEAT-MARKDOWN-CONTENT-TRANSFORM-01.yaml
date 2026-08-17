@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "19 canonical unit tests + frozen fixtures.json (full doc / hostile / edge): purity/determinism, closed v1 grammar, literal-HTML doctrine via collectMarkdownText, sanitizeHref matrix (javascript:/data:/vbscript:/unknown -> null; http/https/mailto/anchor/relative pass), unterminated-fence degradation, CRLF normalization"
     recorded_at: "2026-08-17T20:43:52.020Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "five idiomatic lowerings verified per package (React JSX helpers; Lit html`` helpers with TemplateResult returns; Vue defineComponent+Fragment over h() array children; Svelte recursive snippets; Angular companion fsds-markdown-block/mark renderers, ngc-clean incl. typed union getters); RN/SwiftUI degrade via shared contentBindingOrTransformSource; figma omits; CLI emits markdown.ts byte-identical per web package (cmp-verified pattern; rail artifact-join PASS)"
+    recorded_at: "2026-08-17T20:43:52.880Z"
