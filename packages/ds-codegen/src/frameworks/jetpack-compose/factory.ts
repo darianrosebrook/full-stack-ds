@@ -33,6 +33,7 @@ import type {
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
 import { generateJetpackComposeComponentSource } from "./component-source.js";
+import { generateJetpackComposeTokensFile } from "./component-source.js";
 import { generateJetpackComposeBarrel } from "./barrel.js";
 import {
   generateJetpackComposeSurfaceFiles,
@@ -57,10 +58,16 @@ export function createJetpackComposeEmitter(): FrameworkEmitter {
         ];
       }
       const source = generateJetpackComposeComponentSource(ir);
+      const tokensSource = generateJetpackComposeTokensFile(ir);
       return [
         {
           relativePath: `${ir.name}/${ir.name}.kt`,
           contents: source,
+          preservable: true,
+        },
+        {
+          relativePath: `${ir.name}/${ir.name}Tokens.kt`,
+          contents: tokensSource,
           preservable: true,
         },
       ];
