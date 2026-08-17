@@ -37,3 +37,7 @@ evidence:
     status: pass
     evidence_ref: "merge 7bc5ab78: every ledger count re-derived from its cited source and made to agree — a11y 156 (grep spec field of known-gaps.json: COMPOSITE-KEYBOARD 140 + TABLE-SEMANTICS 10 + LABEL-ID-ASSOCIATION 6); dead-slot 50/906/792, 114 inert = 98 dead + 16 shadowed (dead-slot-matrix.json); dispositions review 66 / wire 19 / delete 10 / unconsumed-vocabulary 3 / shadowed 16 summing to 114 (known-dead.json); corpus 50 in three rows; behavior self-tests 31 restated as derived-not-frozen. docs:check-claims exit 0, 12/12 marked claims match derived values."
     recorded_at: "2026-08-17T21:35:26.596Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "merge 7bc5ab78: three finished campaigns no longer read as pending. FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01 (closed, 0 entries in known-gaps.json) now says 'done — do not re-open'; the dead-slot repoint disposition is recorded empty, its 18 entries burned under FIX-DEAD-SLOT-VARIANT-REPOINT-02 (closed completed, -01 closed superseded) and removed from the burn-lane list; FIX-SWIFTUI-PRESS-PROOF-01 (closed) is now cited with what it proved, its blast_radius.modules having named this snapshot. Inverse also checked: the two open a11y lanes are flagged as having no spec YAML."
+    recorded_at: "2026-08-17T21:35:36.381Z"
