@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: codeblock-highlight
 created_at: '2026-08-15T19:13:41.844Z'
-updated_at: '2026-08-15T19:13:41.844Z'
+updated_at: '2026-08-17T05:39:25.772Z'
 blast_radius:
   modules:
     - 'ds-contracts: component.contract.schema.json (additive content-transform form) plus CodeBlock contract/tokens/styles/usage sidecars'
@@ -29,6 +29,7 @@ scope:
     - 'packages/ds-react-native/src/'
     - 'packages/ds-figma-plugin/src/generated/'
     - 'docs/current-implementation-snapshot.md'
+    - docs/dead-slot-audit/
   out: []
 invariants:
   - 'CodeBlock code stays text-only end-to-end: highlighting emits spans with text children and never interprets or injects HTML from the source string.'
