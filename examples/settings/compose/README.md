@@ -77,16 +77,21 @@ is the first runtime tier the Compose target has ever had.
    the danger zone).~~ **Fixed by `FIX-EXAMPLES-COMPOSE-SETTINGS-SCROLL-001`**
    (root `Column` now wraps in `verticalScroll`, mirroring the swift lane's
    `ScrollView`).
-2. **Open — colors diverge from the other lanes**: FSDS components render
-   Material 3 purple defaults (vs. e.g. the react lane's blue primary).
-   Root cause: the jetpack-compose package has no theme/token module yet —
-   the generated Switch falls back to `SwitchDefaults.colors()`, and the web
-   lanes' equivalent fidelity comes from `@full-stack-ds/*/styles.css`, swift
-   from its `FsdsTheme` runtime. This is the reserved compose-theme slice
-   (the rung-1 non-claim made visible); not to be worked around in the lane.
-3. **Open — stock Material chrome throughout**: the `NOT FSDS` regions are
-   plain material3 by design (ledgered above), and the FSDS regions' untokened
-   surfaces share that stock appearance for the same root cause as finding 2.
+2. ~~**Open — colors diverge from the other lanes**~~ **Resolved by
+   `FEAT-COMPOSE-THEME-MODULE-001`**: the package now ships a token runtime
+   (`com.fullstackds.tokens.FsdsTheme` — LocalFsdsTheme provider, scope-data
+   resolution `literal → theme.tokens[ref] → fallback` mirroring RN, light
+   semantic defaults from the graph) and the emitter ships per-component
+   scope data (`SwitchTokens.kt`, 48 slots); the generated Switch resolves
+   its checked/unchecked track+thumb colors and Md track dims through the
+   theme. The lane installs `FsdsThemeProvider(FsdsSemanticDefaults.light)` +
+   the `fsdsMaterialColorScheme()` Material bridge, so both FSDS switches
+   and NOT-FSDS chrome render graph colors. Remaining axes are reserved
+   rungs: dark/mode (adaptive pairs), brand, density.
+3. ~~**Open — stock Material chrome throughout**~~ **Same resolution as
+   finding 2**: the colorScheme bridge maps graph semantic tokens into the
+   Material roles the fallback chrome consumes (one fixed table; unmapped
+   roles keep Material defaults — e.g. error).
 
 **Expectation note**: the "Dark mode" switch updates local state only — it
 does not re-theme the app. Theming is out of scope in `../spec.md` (same
