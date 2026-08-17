@@ -39,3 +39,8 @@ evidence:
     recorded_at: "2026-08-17T16:50:02.523Z"
     command: "jq -r '.scripts[\"governed:rail\"]' package.json"
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "governed-ci.md YAML snippet now lists all six trees, byte-matching .github/workflows/ci.yml:163-171 (react, vue, svelte, angular, lit, react-native)"
+    recorded_at: "2026-08-17T16:50:06.489Z"
+    artifact_path: .github/workflows/ci.yml
