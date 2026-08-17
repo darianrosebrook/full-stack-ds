@@ -2,9 +2,11 @@ id: FEAT-MARKDOWN-CONTENT-TRANSFORM-01
 title: 'Markdown content transform: block-level structural output grammar (the second-transform proof)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Second content transform landed as the grammar-generalization proof: markdown block grammar + closed vocabularies, canonical sanitized parser emitted byte-identical, five idiomatic web lowerings, RN/Swift degradation, Markdown contract, identity+injection+runtime-rail proofs, all gates green'
 created_at: '2026-08-17T19:49:11.384Z'
-updated_at: '2026-08-17T20:43:23.493Z'
+updated_at: '2026-08-17T20:44:11.703Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
