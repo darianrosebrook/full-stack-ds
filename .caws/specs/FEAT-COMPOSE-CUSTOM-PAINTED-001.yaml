@@ -20,7 +20,12 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The rendering strategy (wrap platform control vs paint from anatomy) is emitter-owned platform idiom — no contract or IR change; the native-toggle-affordance intent is honored by painting on Compose exactly as web renders from styles.'
+  - 'The substrate is committed hand-authored Kotlin beside the components root (the createCompoundContext/FsdsTheme substrate tier), importing no androidx.compose.material symbols.'
+  - 'Style resolution flows scope-data → LocalFsdsTheme with the RN-mirrored literal → theme-of-ref → fallback chain; slot lookup by name suffix grammar, never by component name.'
+  - 'Semantics parity is non-negotiable: Modifier.toggleable with Role.Switch plus the stateDescription behavior the wrapper emitted before.'
+  - 'Other targets regenerate byte-identical; the material3 dependency stays only for the tokens bridge.'
+  - 'New non-claims are ledgered, not hidden: owned interaction physics, unparsable cubic-bezier easing strings, and any slot family the graph still lacks.'
 acceptance:
   - id: A1
     given: 'the Material 3 Switch wrapper exposing only ~6 of the toggle contract''s 48 token slots'
