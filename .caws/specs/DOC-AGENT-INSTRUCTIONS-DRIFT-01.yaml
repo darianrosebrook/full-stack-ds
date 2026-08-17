@@ -5,7 +5,7 @@ mode: doc
 lifecycle_state: active
 worktree: doc-agent-instructions
 created_at: '2026-08-17T15:39:43.111Z'
-updated_at: '2026-08-17T15:39:43.111Z'
+updated_at: '2026-08-17T15:43:13.241Z'
 blast_radius:
   modules:
     - 'agent-instruction docs'
@@ -13,9 +13,10 @@ blast_radius:
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'CLAUDE.md'
     - 'AGENTS.md'
   out: []
+  support:
+    - CLAUDE.md
 invariants:
   - 'Every command quoted in CLAUDE.md/AGENTS.md is accepted by the live CLI it names'
   - 'No non-claim in either file contradicts a rail/registry fact verifiable in code'
