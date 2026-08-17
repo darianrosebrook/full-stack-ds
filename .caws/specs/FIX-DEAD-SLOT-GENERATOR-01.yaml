@@ -39,3 +39,7 @@ evidence:
     recorded_at: "2026-08-17T19:10:39.053Z"
     command: "pnpm run audit:dead-slots"
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Regenerated report: 98 dead-marked rows and 16 shadowed-marked rows corpus-wide, exactly matching the stated totals (114 inert = 98 defects + 16 inert-by-design). Button: 3 dead rows vs stated dead 3. Previously shadowed rendered as dead and only 14 of 16 appeared at all"
+    recorded_at: "2026-08-17T19:10:42.597Z"
