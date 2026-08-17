@@ -416,3 +416,32 @@ describe("generateSwiftUIComponentSource — selection control (Select)", () => 
     expect(source).toContain("public let disabled: Bool?");
   });
 });
+
+describe("generateSwiftUIComponentSource — icon-decorated content (Alert, Badge)", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("emits ReactNode icons as consumer regions (Alert)", () => {
+    const source = emit("Alert");
+    expect(source).toMatch(/public struct Alert<IconRegion: View, Content: View>: View \{/);
+    expect(source).toContain("@ViewBuilder icon: () -> IconRegion = { EmptyView() }");
+    expect(source).toContain("iconRegion");
+    // The dismiss component-instance is omitted, not wired.
+    expect(source).not.toContain("onDismiss");
+  });
+
+  it("emits Badge with axes and the icon region", () => {
+    const source = emit("Badge");
+    expect(source).toMatch(/public struct Badge<IconRegion: View, Content: View>: View \{/);
+    expect(source).not.toContain("showStatusIcon");
+  });
+
+  it("still refuses Status (state-driven glyph) and Chip (component-instance)", () => {
+    expect(() => emit("Status")).toThrow(/no emission class matches/);
+    expect(() => emit("Chip")).toThrow(/no emission class matches/);
+  });
+});

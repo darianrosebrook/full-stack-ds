@@ -132,6 +132,14 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isIconDecoratedContent(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitIconDecoratedContent(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (ir.root.effectiveRole === "progressbar") {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -823,6 +831,175 @@ function emitSelectionControl(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}}`);
   if (hasDisabled) lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * The icon-decorated content class: a passive root whose anatomy pairs
+ * an icon part (fed by an `icon` string prop) with exactly one children
+ * region — Alert, Status, Badge. Glyph rendering composes the shared
+ * GlyphCatalog registry; Chip is excluded by the component-instance leaf
+ * rule (the TextField precedent).
+ */
+function isIconDecoratedContent(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div" && ir.root.element !== "span") return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  // The icon must be author-addressable: a string prop (registry lookup)
+  // or a ReactNode prop (consumer region). Status has neither — its glyph
+  // is state-driven and needs a status→glyph intent table (follow-up).
+  const hasIconProp = ir.styledProps.some(
+    (p) => p.safeName === "icon" && (p.type === "string" || p.type === "ReactNode"),
+  );
+  if (!hasIconProp) return false;
+  // exactly one children leaf, an icon part, and component-instance
+  // children only under a dismiss part (its omission is documented).
+  let childrenLeaves = 0;
+  let hasIconPart = false;
+  let strayInstance = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if (node.part === "icon") hasIconPart = true;
+    const isInstance = Boolean((node as { componentRef?: string }).componentRef);
+    const isDismissPart = node.part === "dismiss";
+    if (isInstance && !isDismissPart) strayInstance = true;
+    const kids = node.children ?? [];
+    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
+    kids.forEach(walk);
+  };
+  walk(ir.dom);
+  return childrenLeaves === 1 && hasIconPart && !strayInstance;
+}
+
+function emitIconDecoratedContent(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const axes = collectVariantAxes(ir);
+  const layerInfo = emitLayerExpressions(axes);
+  const layerArray = ['"root"', ...layerInfo.expressions];
+  const layersExpr = layerInfo.needsCompactMap
+    ? `[${layerArray.join(", ")}].compactMap { $0 }`
+    : `[${layerArray.join(", ")}]`;
+
+  // A string icon prop feeds the registry; a ReactNode icon prop is a
+  // consumer region (corpus fact, not component identity).
+  const iconIsRegistry = ir.styledProps.some(
+    (p) => p.safeName === "icon" && p.type === "string",
+  );
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the icon-decorated content path: the icon prop ` +
+      `feeds the shared GlyphCatalog registry; content is the consumer's ` +
+      `single region.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(
+    `public struct ${exportName}${iconIsRegistry ? "<Content: View>" : "<IconRegion: View, Content: View>"}: View {`,
+  );
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  if (iconIsRegistry) {
+    lines.push(`${INDENT}private let icon: String?`);
+  } else {
+    lines.push(`${INDENT}private let iconRegion: IconRegion`);
+  }
+  for (const axis of axes) {
+    lines.push(
+      `${INDENT}private let ${escapeSwiftKeyword(axis.prop)}: ${axis.typeName}${axis.defaultMember === null ? "?" : ""}`,
+    );
+  }
+  lines.push(`${INDENT}private let content: Content`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params: string[] = iconIsRegistry
+    ? ["icon: String? = nil,"]
+    : ["@ViewBuilder icon: () -> IconRegion = { EmptyView() },"];
+  for (const axis of axes) {
+    params.push(
+      axis.defaultMember !== null
+        ? `${escapeSwiftKeyword(axis.prop)}: ${axis.typeName} = .${swiftCaseRef(axis.defaultMember)},`
+        : `${escapeSwiftKeyword(axis.prop)}: ${axis.typeName}? = nil,`,
+    );
+  }
+  params.push("@ViewBuilder content: () -> Content");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  if (iconIsRegistry) {
+    lines.push(`${INDENT}${INDENT}self.icon = icon`);
+  } else {
+    lines.push(`${INDENT}${INDENT}self.iconRegion = icon()`);
+  }
+  for (const axis of axes) {
+    lines.push(
+      `${INDENT}${INDENT}self.${escapeSwiftKeyword(axis.prop)} = ${escapeSwiftKeyword(axis.prop)}`,
+    );
+  }
+  lines.push(`${INDENT}${INDENT}self.content = content()`);
+  lines.push(`${INDENT}}`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push("");
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ${layersExpr}`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "borderWidth",
+        "radius", "blockPadding", "inlinePadding", "gap", "minHeight",
+      ]),
+    );
+  }
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}HStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`);
+  if (iconIsRegistry) {
+    lines.push(`${INDENT}${INDENT}${INDENT}if let icon {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}GlyphCatalog.glyph(named: icon, size: 16)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  } else {
+    lines.push(`${INDENT}${INDENT}${INDENT}iconRegion`);
+  }
+  lines.push(`${INDENT}${INDENT}${INDENT}content`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
+  if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
+  if (chrome.background) lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+  if (chrome.radius) lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  if (chrome.borderColor && chrome.borderWidth) {
+    const radiusExpr = chrome.radius ? "radius" : "0";
+    lines.push(`${INDENT}${INDENT}${INDENT}.overlay(RoundedRectangle(cornerRadius: ${radiusExpr}, style: .continuous).stroke(borderColor, lineWidth: borderWidth))`);
+  }
+  if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");
