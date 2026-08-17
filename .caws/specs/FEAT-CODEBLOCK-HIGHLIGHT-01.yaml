@@ -2,9 +2,11 @@ id: FEAT-CODEBLOCK-HIGHLIGHT-01
 title: 'CodeBlock syntax highlighting via contract-governed content transform'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'CodeBlock syntax highlighting via contract-governed highlight content transform: IR fact lowered across all five web frameworks, byte-identical shared tokenizer emitted per package, golden-fixture identity + injection-safety tests, full rail green'
 created_at: '2026-08-15T19:13:41.844Z'
-updated_at: '2026-08-17T05:43:25.064Z'
+updated_at: '2026-08-17T05:45:18.405Z'
 blast_radius:
   modules:
     - 'ds-contracts: component.contract.schema.json (additive content-transform form) plus CodeBlock contract/tokens/styles/usage sidecars'
