@@ -3,6 +3,7 @@ title: 'Dead-slot audit generator: false advisory claim, undocumented failure mo
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: fix-dead-slot-gen
 created_at: '2026-08-17T19:06:06.334Z'
 updated_at: '2026-08-17T19:06:06.334Z'
 blast_radius:
