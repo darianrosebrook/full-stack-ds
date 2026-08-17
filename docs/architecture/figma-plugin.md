@@ -37,12 +37,40 @@ The Figma lane treats Figma as another realization target of the component contr
 > `live-materialize.ts`, `live-audit.ts`, `live-style.ts`, `live-token-resolve.ts`, `live-run.ts`,
 > `FigmaPluginApp.svelte` — are not described anywhere below.
 >
-> For current state, read the closed specs (`caws specs list | grep -i figma`) and the package source.
-> Two non-claims in the "Non-claims" section below are known to be falsified by
-> `FIGMA-LIVE-MATERIALIZATION-IDEMPOTENCY-01`; they are left in place rather than silently rewritten,
-> because re-characterizing what that slice proves is a claim-strength judgment that belongs with a
-> verification pass over its evidence, not with a docs-hygiene edit. Treat the non-claims below as
-> **historical**, not as current limits.
+> Treat the "Current claim" and non-claims below as **historical**, not as current limits.
+
+### What the Figma lane actually proves (verified 2026-08-18)
+
+A verification pass over the eight closed specs found that **shipped** and **proven** come apart
+sharply here. Both halves matter:
+
+**Durably evidenced.** `packages/ds-figma-plugin/src` carries five test files — `planner.test.ts`,
+`materialize-state.test.ts`, `live-materialize.test.ts`, `live-style.test.ts`, `plugin.test.ts` —
+totalling **59 tests, all passing** (`pnpm exec vitest run packages/ds-figma-plugin/src`). These
+exercise the descriptor → plan → materialize boundary, the state surface, style projection, and the
+plugin's UI/codegen wiring against a mocked Figma API. This is real, re-runnable proof of the
+plan-and-materialize logic.
+
+**NOT durably evidenced — read carefully.** All eight FIGMA-* specs closed with **zero acceptance-criterion
+evidence recorded between them — 61 criteria in total** (`caws specs show <ID>` reports the gap on each).
+Under this repo's own doctrine the evidence block is the closure authority, so *a closed figma spec
+establishes only that someone closed it.* In particular:
+
+- **Live canvas mutation and rerun idempotency were demonstrated, not durably proven.** A real run
+  against a live Figma document did happen, but its artifact is `tmp/figma-live-batch-evidence.json` —
+  **gitignored**, machine-local, dated 2026-05-27. It will not survive a clean checkout, no gate
+  re-derives it, and `FIGMA-LIVE-MATERIALIZATION-IDEMPOTENCY-01`'s nine criteria (including A8, digest
+  equality across two runs, and A9, "exact evidence is captured") carry no recorded evidence.
+- That spec's own **A6** bounds the slice regardless: "no token-style resolution, paint binding, or
+  final visual-parity claim lands — component properties and metadata only."
+
+So: do not cite a closed FIGMA spec as proof. Cite the test suite for the mocked path, and treat the
+live-canvas work as a demonstration awaiting a durable evidence chain. Re-establishing that chain
+(re-run, capture a tracked artifact, record the ACs) is the outstanding work.
+
+> **Correction.** An earlier revision of this banner said two of the non-claims below were "known to be
+> falsified by `FIGMA-LIVE-MATERIALIZATION-IDEMPOTENCY-01`." That overstated it: the spec's closure is
+> not evidence, so the honest status is *demonstrated once, not durably proven*.
 
 ## Current claim (as of the original slice)
 
@@ -77,8 +105,8 @@ The Figma validation plan is declared in `packages/ds-codegen/src/validation/fra
 
 - Does not yet produce production-ready Figma component sets.
 - Does not yet map all contract prop types to Figma component properties.
-- ~~Does not yet prove regeneration/update idempotence in a live Figma file.~~ **Superseded** — `FIGMA-LIVE-MATERIALIZATION-IDEMPOTENCY-01` (closed) is titled "real `figma.*` adapter consuming the plan; idempotent reruns; plan-vs-live audit digest". Read that spec's evidence for what it actually establishes; do not cite this line as a current limit.
-- ~~Does not yet prove live Figma MCP tool availability or live canvas mutation.~~ **Partly superseded** — this conflated two claims. Live canvas mutation is addressed by the spec above (via a `LiveFigmaLike` adapter driven through chrome-devtools, not via the Figma MCP server). Whether the *Figma MCP tool surface* is available and exercised is a separate question this document does not answer.
+- ~~Does not yet prove regeneration/update idempotence in a live Figma file.~~ **Attempted, not durably proven.** `FIGMA-LIVE-MATERIALIZATION-IDEMPOTENCY-01` built the adapter and ran it, but closed with none of its nine criteria evidenced — including A8 (run-1 and run-2 digests must match) and A9 (capture exact evidence). The one recorded run lives in gitignored scratch. Idempotency is *implemented and mock-tested* (`live-materialize.test.ts`); it is not *proven on a live file* by anything a clean checkout can re-derive.
+- ~~Does not yet prove live Figma MCP tool availability or live canvas mutation.~~ **Split into two, with different answers.** *Live canvas mutation:* demonstrated once via a `LiveFigmaLike` adapter driven through chrome-devtools (not the Figma MCP server), with the same gitignored-artifact caveat above. *Figma MCP tool availability:* still entirely unproven — nothing in this repo exercises it.
 - Does not yet publish a Figma library or change team/file permissions.
 - Does not yet restore unrelated failing repository CI.
 - Does not yet complete first-class generated-artifact rail parity for `figma`; the Figma admission plan is declared, but the broader rail vocabulary/source-set migration remains a follow-up.
