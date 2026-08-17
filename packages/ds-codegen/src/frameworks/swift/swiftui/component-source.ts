@@ -143,6 +143,21 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isLabeledTextControl(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitLabeledTextControl(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
+  if (isDualActionChip(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitDualActionChip(ir));
+    return sections.join("\n\n") + "\n";
+  }
   if (isPropTextLeaf(ir)) {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -392,7 +407,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
   const textFieldArgs = [`""`, `text: Binding(`, `${INDENT}${INDENT}get: { text.value },`, `${INDENT}${INDENT}set: { text.set($0) }`, `${INDENT})`];
-  lines.push(`${INDENT}${INDENT}TextField(`);
+  lines.push(`${INDENT}${INDENT}SwiftUI.TextField(`);
   lines.push(`${INDENT}${INDENT}${INDENT}"",`);
   lines.push(`${INDENT}${INDENT}${INDENT}text: Binding(`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { text.value },`);
@@ -1051,6 +1066,250 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
 }
 
 /**
+ * Labeled text control: a div-rooted field part carrying the single
+ * string channel, with label/description/error slot regions around it
+ * (TextField). The channel rides ControllableValue<String>; the regions
+ * are consumer closures.
+ */
+function isLabeledTextControl(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.dom.tag !== "div") return false;
+  const strings = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "string",
+  );
+  if (strings.length !== 1 || ir.behavior.normalizedChannels.length !== 1) {
+    return false;
+  }
+  let hasInputPart = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if (node.tag === "input") hasInputPart = true;
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  return hasInputPart;
+}
+
+/** Named-slot region closures present in the dom (label/description/error). */
+function domSlotNames(ir: ComponentIR): string[] {
+  const out: string[] = [];
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    const slotName = (node as { slotName?: string }).slotName;
+    if (node.tag === "slot" && slotName) out.push(slotName);
+    (node.children ?? []).forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  return out;
+}
+
+function emitLabeledTextControl(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const chrome = resolveChrome(ir);
+  const slots = domSlotNames(ir);
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
+  lines.push("");
+  lines.push(
+    `/// Emitted through the labeled text-control path: the string channel ` +
+      `rides ControllableValue<String>; slot regions are consumer closures.`,
+  );
+  const generics = slots.map((slot) => `${swiftCase(capitalize(slot))}Region: View`);
+  lines.push(
+    `public struct ${exportName}${generics.length ? "<" + generics.join(", ") + ">" : ""}: View {`,
+  );
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}private var fsdsScopes: FsdsComponentTokenScopes {`);
+    lines.push(`${INDENT}${INDENT}${ir.name}Tokens.scopes`);
+    lines.push(`${INDENT}}`);
+  }
+  lines.push(`${INDENT}@StateObject private var value: ControllableValue<String>`);
+  for (const slot of slots) {
+    lines.push(`${INDENT}private let ${slot}: ${swiftCase(capitalize(slot))}Region`);
+  }
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push(`${INDENT}@Environment(\\.fsdsTheme) private var fsdsTheme`);
+  }
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [
+    "value: Binding<String>? = nil,",
+    'defaultValue: String = "",',
+    "onChange: ((String) -> Void)? = nil,",
+  ];
+  slots.forEach((slot) => {
+    params.push(
+      `@ViewBuilder ${slot}: () -> ${swiftCase(capitalize(slot))}Region = { EmptyView() },`,
+    );
+  });
+  if (hasDisabled) params.push("disabled: Bool = false");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self._value = StateObject(wrappedValue: ControllableValue(controlled: value, defaultValue: defaultValue, onChange: onChange))`);
+  for (const slot of slots) {
+    lines.push(`${INDENT}${INDENT}self.${slot} = ${slot}()`);
+  }
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  lines.push(`${INDENT}}`);
+  if (ir.tokenScopes.length > 0) {
+    lines.push("");
+    lines.push(`${INDENT}private var layered: [String: FsdsTokenValue?] {`);
+    lines.push(`${INDENT}${INDENT}resolveFsdsLayeredTokens(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsScopes,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}fsdsTheme,`);
+    lines.push(`${INDENT}${INDENT}${INDENT}layers: ["root"]`);
+    lines.push(`${INDENT}${INDENT})`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func colorSlot(_ suffix: String) -> Color? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.color`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+    lines.push(`${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`);
+    lines.push(`${INDENT}}`);
+    lines.push("");
+    lines.push(
+      ...emitChromeAccessorLines(chrome, [
+        "background", "foreground", "borderColor", "radius",
+        "blockPadding", "inlinePadding", "gap",
+      ]),
+    );
+    lines.push("");
+  }
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "4"}) {`);
+  if (slots.includes("label")) lines.push(`${INDENT}${INDENT}${INDENT}label`);
+  lines.push(`${INDENT}${INDENT}${INDENT}SwiftUI.TextField("", text: value.binding())`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.disabled(disabled)`);
+  if (slots.includes("description")) lines.push(`${INDENT}${INDENT}${INDENT}description`);
+  if (slots.includes("error")) lines.push(`${INDENT}${INDENT}${INDENT}error`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (chrome.foreground) lines.push(`${INDENT}${INDENT}${INDENT}.foregroundStyle(foreground)`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * Dual-action chip: a passive root holding exactly two componentRef
+ * Button parts — action (icon/text) and dismiss (gated by dismissible).
+ * Both lower through the generated FsdsButton (same-module composition).
+ */
+function isDualActionChip(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  const refs: { part?: string; ref?: string; ifProp?: string }[] = [];
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    const ref = (node as { componentRef?: string }).componentRef;
+    if (ref === "Button") {
+      refs.push({
+        part: node.part,
+        ref,
+        ifProp: (node as { ifProp?: string }).ifProp,
+      });
+    }
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  const parts = refs.map((r) => r.part).sort();
+  return (
+    refs.length === 2 &&
+    parts[0] === "action" &&
+    parts[1] === "dismiss" &&
+    hasConventionalProp(ir, "onClick") &&
+    hasConventionalProp(ir, "onDismiss")
+  );
+}
+
+function emitDualActionChip(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const hasVariant = Object.keys(ir.variants).includes("variant");
+  const variantType = ir.definedTypes[`${ir.name}Variant`] ? `${ir.name}Variant` : null;
+  const defaultVariant = variantType ? findPropDefaultOrNull(ir, "variant") : null;
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+  const hasIcon = hasConventionalProp(ir, "icon");
+  const hasDismissible = hasConventionalProp(ir, "dismissible");
+  const hasAriaLabel = hasConventionalProp(ir, "ariaLabel");
+  const variantArgs = hasVariant && variantType && defaultVariant
+    ? `variant: ${variantType} = .${swiftCaseRef(defaultVariant)},`
+    : "";
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  lines.push(
+    `/// Emitted through the dual-action chip path: the owned Button ` +
+      `components compose the action/dismiss pair (same-module FsdsButton).`,
+  );
+  const generics = ["Text: View"];
+  if (hasIcon) generics.push("IconRegion: View");
+  lines.push(`public struct ${exportName}<${generics.join(", ")}>: View {`);
+  if (variantArgs) lines.push(`${INDENT}private let variant: ${variantType}`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  if (hasDismissible) lines.push(`${INDENT}private let dismissible: Bool`);
+  lines.push(`${INDENT}private let onClick: (() -> Void)?`);
+  lines.push(`${INDENT}private let onDismiss: (() -> Void)?`);
+  if (hasAriaLabel) lines.push(`${INDENT}private let accessibilityLabel: String?`);
+  if (hasIcon) lines.push(`${INDENT}private let iconRegion: IconRegion`);
+  lines.push(`${INDENT}private let text: Text`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params: string[] = [];
+  if (variantArgs) params.push(variantArgs);
+  if (hasDisabled) params.push("disabled: Bool = false,");
+  if (hasDismissible) params.push("dismissible: Bool = false,");
+  params.push("onClick: (() -> Void)? = nil,");
+  params.push("onDismiss: (() -> Void)? = nil,");
+  if (hasAriaLabel) params.push("accessibilityLabel: String? = nil,");
+  if (hasIcon) params.push("@ViewBuilder icon: () -> IconRegion = { EmptyView() },");
+  params.push("@ViewBuilder text: () -> Text");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  if (variantArgs) lines.push(`${INDENT}${INDENT}self.variant = variant`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  if (hasDismissible) lines.push(`${INDENT}${INDENT}self.dismissible = dismissible`);
+  lines.push(`${INDENT}${INDENT}self.onClick = onClick`);
+  lines.push(`${INDENT}${INDENT}self.onDismiss = onDismiss`);
+  if (hasAriaLabel) lines.push(`${INDENT}${INDENT}self.accessibilityLabel = accessibilityLabel`);
+  if (hasIcon) lines.push(`${INDENT}${INDENT}self.iconRegion = icon()`);
+  lines.push(`${INDENT}${INDENT}self.text = text()`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}HStack(spacing: 4) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}FsdsButton(`);
+  if (variantArgs) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}variant: variant,`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}disabled: disabled,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}onTap: onClick`);
+  lines.push(`${INDENT}${INDENT}${INDENT}) {`);
+  if (hasIcon) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}iconRegion`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}text`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  if (hasAriaLabel) {
+    lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
+  }
+  lines.push(`${INDENT}${INDENT}${INDENT}if ${hasDismissible ? "dismissible" : "true"} {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}FsdsButton(`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}disabled: disabled,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}onTap: onDismiss`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Image(systemName: "xmark")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel("Dismiss")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
  * The count-iterated field group: a passive root whose single string
  * channel feeds N single-character inputs (OTP). The iteration fact
  * (kind=count, source=prop) drives ForEach over field indices; the
@@ -1182,7 +1441,7 @@ function emitCountFieldGroup(ir: ComponentIR): string {
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}HStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}ForEach(0..<length, id: \\.self) { index in`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}TextField("", text: Binding(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.TextField("", text: Binding(`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { character(at: index) },`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}set: { setCharacter($0, at: index) }`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}))`);

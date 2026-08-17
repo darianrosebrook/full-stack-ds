@@ -197,7 +197,7 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}private var panel: some View {`);
   lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "nil"}) {`);
   if (searchChannel) {
-    lines.push(`${INDENT}${INDENT}${INDENT}TextField(`);
+    lines.push(`${INDENT}${INDENT}${INDENT}SwiftUI.TextField(`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}"",`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}text: Binding(`);
     lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}get: { search.value },`);
