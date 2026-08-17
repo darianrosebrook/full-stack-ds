@@ -31,7 +31,9 @@ Brand variants are emitted as `@layer brand [data-brand="<name>"] { ... }`. Dens
 
 ## Plan
 
-The full-stack architectural stance, the seven-step rollout, and the falsification conditions are in `docs/internal/tokens-workstream-plan.md` (working) and will land at `docs/tokens-architecture.md` (architecture, doctrinal) when step 7 completes.
+The doctrinal architecture stance lives at [`docs/architecture/tokens-architecture.md`](../../docs/architecture/tokens-architecture.md).
+
+The original seven-step rollout plan and its falsification conditions are in `docs/internal/tokens-workstream-plan.md` — **machine-local** (`docs/internal/` is gitignored, per-contributor), so that path is absent in a fresh clone and is not a substitute for the architecture doc above.
 
 ## Relationship to other packages
 

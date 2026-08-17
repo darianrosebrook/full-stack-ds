@@ -14,7 +14,7 @@ This repository is not, primarily, a design system. It is a falsifiable claim ab
 
 That claim boundary has expanded. The current system also includes generated-artifact admission, token governance, target-pack registry scaffolding, Figma descriptor projection, runtime fact assertions, and partially derived component evidence pages. Those surfaces strengthen the architecture, but they do not turn the project into a proof of production adoption, complete accessibility adequacy, visual quality, live Figma publication, executable external target packs, or substrate-neutral UI semantics.
 
-The full normal-form claim, evidence status, and falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md). The consumer-facing stance — strict internal invariants, boring external affordances, and admitted override surfaces — is named in [`docs/consumer-projection-doctrine.md`](docs/consumer-projection-doctrine.md).
+The full normal-form claim, evidence status, and falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md). The consumer-facing stance — strict internal invariants, boring external affordances, and admitted override surfaces — is named in [`docs/architecture/consumer-projection-doctrine.md`](docs/architecture/consumer-projection-doctrine.md).
 
 ## What this is
 

@@ -163,7 +163,8 @@ else say "skip generate:check"; fi
 
 if [ "${RUN_DOCS_CLAIMS:-false}" = true ]; then
   say "docs:check-claims"; pnpm run docs:check-claims
-else say "skip docs:check-claims"; fi
+  say "docs:check-links"; pnpm run docs:check-links
+else say "skip docs:check-claims + docs:check-links"; fi
 
 # --- tests ---
 if [ "${RUN_TESTS:-false}" = true ]; then

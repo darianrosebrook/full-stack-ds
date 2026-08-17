@@ -71,4 +71,4 @@ the emitter produces:
 
 ## See also
 
-- [`docs/architecture/component-layering.md`](./component-layering.md) — defines WHERE state pseudo-class rules land (in `.css`, nested under the component root, reading state-specific slots) and how variant scopes compose with them via slot redirection.
+- [`docs/architecture/component-layering.md`](../architecture/component-layering.md) — defines WHERE state pseudo-class rules land (in `.css`, nested under the component root, reading state-specific slots) and how variant scopes compose with them via slot redirection.
