@@ -2,9 +2,11 @@ id: FIX-CONTRAST-PALETTE-REPAIR-01
 title: 'Palette repair: theme-aware syntax colors + Select emptyState secondary text'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Theme-aware syntax palette (ramp >=700 light / <=300 dark) + Select emptyState secondary rebind; all 10 ledgered pairs stopped reproducing and the stale ratchet forced the burn to empty; full gates green'
 created_at: '2026-08-17T18:43:36.939Z'
-updated_at: '2026-08-17T18:46:55.397Z'
+updated_at: '2026-08-17T18:51:59.944Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
