@@ -3,7 +3,6 @@ title: 'TextField + Chip: labeled text control and dual-action chip composition 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swift-compositeref
 created_at: '2026-08-17T05:18:05.720Z'
 updated_at: '2026-08-17T05:18:05.720Z'
 blast_radius:
