@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "Select.swift: @StateObject SelectionState with multiple mode gate, selection.apply(option.value) Menu item actions, ControllableValue open channel; SelectOption Identifiable struct synthesized from the contract alias; compiles (swift build exit 0)"
     recorded_at: "2026-08-17T04:06:05.604Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Gate: exactly one union channel + options array prop + passive dom; searchable/filterFn absent from API (test-pinned not.toContain)"
+    recorded_at: "2026-08-17T04:06:06.980Z"
