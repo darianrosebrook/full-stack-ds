@@ -231,7 +231,10 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
-  lines.push(`${INDENT}${INDENT}EmptyView()`);
+  // A presentation modifier needs a renderable anchor: on EmptyView the
+  // sheet never presents (defaultOpen probe, press-proof harness run
+  // 2026-08-17). A zero-size clear view anchors with no layout footprint.
+  lines.push(`${INDENT}${INDENT}SwiftUI.Color.clear.frame(width: 0, height: 0)`);
   lines.push(`${INDENT}${INDENT}${INDENT}.sheet(isPresented: Binding(`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}get: { open.value },`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}set: { open.set($0) }`);
