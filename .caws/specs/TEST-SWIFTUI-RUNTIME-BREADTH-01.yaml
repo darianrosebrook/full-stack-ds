@@ -2,9 +2,11 @@ id: TEST-SWIFTUI-RUNTIME-BREADTH-01
 title: 'Extend SwiftUI runtime proof across the interactive corpus and token painting'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Press-proof breadth proven (Switch/Select/Calendar/Dialog-at-mount), token painting pixel-proven vs resolved graph, EmptyView().sheet anchor defect found+fixed, structural trio census + host limitations ledgered'
 created_at: '2026-08-17T16:41:12.801Z'
-updated_at: '2026-08-17T16:52:19.986Z'
+updated_at: '2026-08-17T17:11:03.598Z'
 blast_radius:
   modules:
     - 'packages/ds-swiftui/Tests/PressProofHarness/main.swift (new interaction phases)'
