@@ -14,6 +14,14 @@ let package = Package(
         .testTarget(
             name: "DsSwiftUITests",
             dependencies: ["DsSwiftUI"]
+        ),
+        // Press-proof harness: a real AppKit app hosting generated
+        // components and delivering synthesized OS mouse clicks. Test-only
+        // executable; never admitted to the component allowlist.
+        .executableTarget(
+            name: "PressProofHarness",
+            dependencies: ["DsSwiftUI"],
+            path: "Tests/PressProofHarness"
         )
     ]
 )
