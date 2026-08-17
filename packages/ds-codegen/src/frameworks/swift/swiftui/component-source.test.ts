@@ -386,3 +386,33 @@ describe("generateSwiftUIComponentSource — glyph host (Icon)", () => {
     expect(source).toContain("GlyphCatalog.decorativeDefaults.contains(name)");
   });
 });
+
+describe("generateSwiftUIComponentSource — selection control (Select)", () => {
+  function emitSelect(): string {
+    const contract = loadContract("Select") as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  it("lowers the union channel to SelectionState with the mode gate", () => {
+    const source = emitSelect();
+    expect(source).toContain("public struct Select: View {");
+    expect(source).toContain("@StateObject private var selection: SelectionState");
+    expect(source).toContain("multiple: multiple,");
+    expect(source).toContain("selection.apply(option.value)");
+    expect(source).toContain("@StateObject private var open: ControllableValue<Bool>");
+    // searchable/filterFn omitted, never accepted-and-ignored.
+    expect(source).not.toContain("searchable");
+    expect(source).not.toContain("filterFn");
+  });
+
+  it("synthesizes the option struct from the contract alias", () => {
+    const source = emitSelect();
+    expect(source).toContain("public struct SelectOption: Identifiable {");
+    expect(source).toContain("public var id: String { value }");
+    expect(source).toContain("public let value: String");
+    expect(source).toContain("public let label: String");
+    expect(source).toContain("public let disabled: Bool?");
+  });
+});

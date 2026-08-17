@@ -124,6 +124,14 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
+  if (isSelectionControl(ir)) {
+    const sections: string[] = [];
+    sections.push(emitImports());
+    sections.push(emitTypes(ir));
+    sections.push(emitSelectionControl(ir));
+    return sections.join("\n\n") + "\n";
+  }
+
   if (ir.root.effectiveRole === "progressbar") {
     const sections: string[] = [];
     sections.push(emitImports());
@@ -663,6 +671,158 @@ function emitGlyphHostComponent(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}${INDENT}.accessibilityHidden(`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}GlyphCatalog.decorativeDefaults.contains(${nameProp})`);
   lines.push(`${INDENT}${INDENT}${INDENT})`);
+  lines.push(`${INDENT}}`);
+  lines.push(`}`);
+  lines.push("// @generated:end");
+  return lines.join("\n");
+}
+
+/**
+ * The selection-control class: a passive dom whose channel set carries
+ * exactly one union (string | string[]) selection channel plus an options
+ * array prop (Select). The union channel lowers to SelectionState — the
+ * mode-gated substrate — with ForEach(options) realizing iteration and
+ * the channelCall binding lowering to a Menu item action.
+ */
+function isSelectionControl(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div") return false;
+  const union = ir.behavior.normalizedChannels.filter(
+    (c) => (c.valueType ?? "").includes("|"),
+  );
+  if (union.length !== 1) return false;
+  return ir.styledProps.some(
+    (p) => p.safeName === "options" && typeof p.type === "string" && p.type.includes("[]"),
+  );
+}
+
+function emitSelectionControl(ir: ComponentIR): string {
+  const exportName = swiftExportName(ir.name);
+  const optionType = "SelectOption";
+  const hasMultiple = hasConventionalProp(ir, "multiple");
+  const hasDisabled = hasConventionalProp(ir, "disabled");
+  const hasSize = ir.definedTypes.SelectSize !== undefined;
+  const sizeType = "SelectSize";
+
+  // The options type is a contract alias ({ value: string; label: string;
+  // disabled?: boolean }) — lower it to an Identifiable Swift struct so
+  // ForEach can iterate it. Member names/types come from the alias.
+  const optionAlias = ir.definedTypes[optionType]?.alias ?? "";
+  const memberRe = /(\w+)\??:\s*([^;}]+)/g;
+  const members: { name: string; type: string; optional: boolean }[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = memberRe.exec(optionAlias)) !== null) {
+    members.push({
+      name: m[1]!,
+      type: m[2]!.trim(),
+      optional: m[0].includes("?:"),
+    });
+  }
+  const swiftTypeFor = (t: string): string =>
+    t === "string" ? "String" : t === "boolean" ? "Bool" : t;
+
+  const lines: string[] = [];
+  lines.push("// @generated:start component");
+  if (members.length > 0) {
+    lines.push(`public struct ${optionType}: Identifiable {`);
+    lines.push(`${INDENT}public var id: String { value }`);
+    for (const member of members) {
+      lines.push(
+        `${INDENT}public let ${member.name}: ${swiftTypeFor(member.type)}${member.optional ? "?" : ""}`,
+      );
+    }
+    lines.push(`${INDENT}public init(`);
+    const initParams = members.map(
+      (member) =>
+        `${member.name}: ${swiftTypeFor(member.type)}${member.optional ? "? = nil" : ""}`,
+    );
+    initParams[initParams.length - 1] = initParams[initParams.length - 1]!;
+    lines.push(initParams.map((p2) => `${INDENT}${INDENT}${p2}`).join(","));
+    lines.push(`${INDENT}) {`);
+    for (const member of members) {
+      lines.push(`${INDENT}${INDENT}self.${member.name} = ${member.name}`);
+    }
+    lines.push(`${INDENT}}`);
+    lines.push(`}`);
+    lines.push("");
+  }
+  lines.push(
+    `/// Emitted through the selection-control path: the union channel ` +
+      `lowers to SelectionState (mode-gated replace/toggle — the ` +
+      `channelUpdate grammar); Menu realizes the combobox substrate; ` +
+      `the channelCall binding is a Menu item action.`,
+  );
+  if (exportName !== ir.name) {
+    lines.push(
+      `/// SwiftUI reserves the \`${ir.name}\` type name; this target ` +
+        `exports it as \`${exportName}\`.`,
+    );
+  }
+  lines.push(`public struct ${exportName}: View {`);
+  lines.push(`${INDENT}private let options: [${optionType}]`);
+  lines.push(`${INDENT}@StateObject private var selection: SelectionState`);
+  lines.push(`${INDENT}@StateObject private var open: ControllableValue<Bool>`);
+  if (hasSize) lines.push(`${INDENT}private let size: ${sizeType}`);
+  if (hasDisabled) lines.push(`${INDENT}private let disabled: Bool`);
+  lines.push("");
+  lines.push(`${INDENT}public init(`);
+  const params = [
+    "options: [" + optionType + "] = [],",
+    "selection: Binding<String>? = nil,",
+    'defaultSelection: String = "",',
+    "multipleSelection: Binding<[String]>? = nil,",
+    "defaultMultipleSelection: [String] = [],",
+  ];
+  if (hasMultiple) params.push("multiple: Bool = false,");
+  params.push("onSelectionChange: ((Any) -> Void)? = nil,");
+  params.push("open: Binding<Bool>? = nil,");
+  params.push("defaultOpen: Bool = false,");
+  params.push("onOpenChange: ((Bool) -> Void)? = nil,");
+  if (hasSize) params.push("size: " + sizeType + " = .md,");
+  if (hasDisabled) params.push("disabled: Bool = false");
+  params[params.length - 1] = params[params.length - 1]!.replace(/,$/, "");
+  for (const param of params) lines.push(`${INDENT}${INDENT}${param}`);
+  lines.push(`${INDENT}) {`);
+  lines.push(`${INDENT}${INDENT}self.options = options`);
+  lines.push(`${INDENT}${INDENT}self._selection = StateObject(wrappedValue: SelectionState(`);
+  lines.push(`${INDENT}${INDENT}${INDENT}selection: selection,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}defaultSelection: defaultSelection,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}multipleSelection: multipleSelection,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}defaultMultipleSelection: defaultMultipleSelection,`);
+  lines.push(`${INDENT}${INDENT}${INDENT}multiple: ${hasMultiple ? "multiple" : "false"},`);
+  lines.push(`${INDENT}${INDENT}${INDENT}onSelectionChange: onSelectionChange`);
+  lines.push(`${INDENT}${INDENT}))`);
+  lines.push(`${INDENT}${INDENT}self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))`);
+  if (hasSize) lines.push(`${INDENT}${INDENT}self.size = size`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}self.disabled = disabled`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}private var triggerLabel: String {`);
+  lines.push(`${INDENT}${INDENT}selection.multiple`);
+  lines.push(`${INDENT}${INDENT}${INDENT}? options.filter { selection.isSelected($0.value) }.map(\\.label).joined(separator: ", ")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}: (options.first { selection.isSelected($0.value) }?.label ?? selection.single)`);
+  lines.push(`${INDENT}}`);
+  lines.push("");
+  lines.push(`${INDENT}public var body: some View {`);
+  lines.push(`${INDENT}${INDENT}Menu {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}ForEach(options) { option in`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}selection.apply(option.value)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}} label: {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}if selection.isSelected(option.value) {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}Image(systemName: "checkmark")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}Text(option.label)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.disabled(option.disabled ?? false)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}} label: {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}HStack {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Text(triggerLabel)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Image(systemName: "chevron.up.and.down")`);
+  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}}`);
+  if (hasDisabled) lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");
