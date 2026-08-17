@@ -1,0 +1,24 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "markdown.color.foreground.default",
+      "fallback": "#141414"
+    },
+    "font-size": {
+      "resolvesTo": "markdown.typography.fontSize.default",
+      "fallback": "0.875rem"
+    },
+    "line-height": {
+      "resolvesTo": "markdown.typography.lineHeight.default",
+      "fallback": "1.5"
+    }
+  },
+  "codeBlock": {
+    "white-space": {
+      "literal": "pre",
+      "platforms": [
+        "web"
+      ]
+    }
+  }
+}

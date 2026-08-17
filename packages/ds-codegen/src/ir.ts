@@ -525,6 +525,13 @@ export interface MarkdownTransformIR {
   blockParts: MarkdownBlockParts;
   /** Inline-mark vocabulary — closed kind set to anatomy part names. */
   markParts: MarkdownMarkParts;
+  /**
+   * Realized element tag per block kind, resolved from anatomy details at
+   * IR build — emitters consume IR facts only, never raw anatomy.
+   */
+  blockTags: Record<keyof MarkdownBlockParts, string>;
+  /** Realized element tag per mark kind, resolved from anatomy details. */
+  markTags: Record<keyof MarkdownMarkParts, string>;
 }
 
 /** Closed block vocabulary of the markdown transform (schema-enforced keys). */
@@ -1719,6 +1726,12 @@ export function buildComponentIR(
   const dom = buildDomTree(contract);
 
   if (dom) {
+    enrichMarkdownTagsInTree(
+      dom,
+      contract.anatomy !== undefined && !Array.isArray(contract.anatomy)
+        ? contract.anatomy.details ?? {}
+        : {},
+    );
     validateDomBindings(
       dom,
       behavior.normalizedChannels,
@@ -3249,6 +3262,19 @@ function parseContentDirective(
       gateProp: gate?.prop,
       blockParts: blockParts as unknown as MarkdownBlockParts,
       markParts: markParts as unknown as MarkdownMarkParts,
+      // Enriched from anatomy details once the tree is attached to its
+      // component (see enrichMarkdownTagsInTree); grammar-contract tags
+      // as the interim defaults so the object is always total.
+      blockTags: {
+        heading: "h2",
+        paragraph: "p",
+        unorderedList: "ul",
+        orderedList: "ol",
+        listItem: "li",
+        codeBlock: "pre",
+        blockquote: "blockquote",
+      },
+      markTags: { emphasis: "em", strong: "strong", code: "code", link: "a" },
     };
   }
 
@@ -3269,6 +3295,40 @@ function parseContentDirective(
     gateProp: gate?.prop,
     tokenPart: content.tokenPart,
   };
+}
+
+/**
+ * Resolve every markdown transform's tag tables from the component's
+ * anatomy details (part name -> declared tag). Runs once per IR build,
+ * before validation, so emitters consume only IR facts. Uses the
+ * grammar-contract tags when a part omits its tag (the validator rejects
+ * non-contract tags separately).
+ */
+function enrichMarkdownTagsInTree(
+  node: DomNodeIR | undefined,
+  anatomyDetails: Record<string, ContractPartDetails>,
+): void {
+  if (!node) return;
+  const content = node.content;
+  if (
+    content !== undefined &&
+    (content as ContentTransformIR).transform === "markdown"
+  ) {
+    const transform = content as MarkdownTransformIR;
+    for (const kind of Object.keys(transform.blockParts) as Array<
+      keyof MarkdownBlockParts
+    >) {
+      const tag = anatomyDetails[transform.blockParts[kind]]?.tag;
+      if (tag) transform.blockTags[kind] = tag;
+    }
+    for (const kind of Object.keys(transform.markParts) as Array<
+      keyof MarkdownMarkParts
+    >) {
+      const tag = anatomyDetails[transform.markParts[kind]]?.tag;
+      if (tag) transform.markTags[kind] = tag;
+    }
+  }
+  for (const child of node.children) enrichMarkdownTagsInTree(child, anatomyDetails);
 }
 
 /**

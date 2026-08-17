@@ -40,6 +40,7 @@ import {
   composeChannelUpdateExpression,
   collectContentTransforms,
   isHighlightTransform,
+  isMarkdownTransform,
   contentBindingOrTransformSource,
 } from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
@@ -1628,6 +1629,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
       `import { tokenizeCode } from '../../primitives/highlight/tokenize.js';`,
     );
   }
+  if (ir.dom && collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    lines.push(
+      `import { parseMarkdown, type MarkdownBlock, type MarkdownMark } from '../../primitives/markdown/markdown.js';`,
+    );
+    lines.push(`import { type TemplateResult } from 'lit';`);
+  }
   // Selector-anchored root portal (coachmark tour): the whole panel is
   // positioned against a page element resolved from the active step's
   // selector. Same primitive the anchored-presence content class uses
@@ -2124,7 +2131,67 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   lines.push(`}`);
   lines.push(``);
   lines.push(`customElements.define('${elementName}', ${className});`);
+  lines.push(generateLitMarkdownHelpers(ir));
   return lines.join("\n");
+}
+
+/**
+ * FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — Lit lowering of the markdown
+ * transform: module-scope recursive html`` render helpers. One transform
+ * per tree (validated upstream); tags/classes/attrs come from the IR.
+ */
+function generateLitMarkdownHelpers(ir: ComponentIR): string {
+  const transform = collectContentTransforms(ir.dom).find(isMarkdownTransform);
+  if (!transform) return "";
+  const prefix = ir.classRecipe.base;
+  const b = transform.blockParts;
+  const bt = transform.blockTags;
+  const m = transform.markParts;
+  const mt = transform.markTags;
+  const blockClass = (part: string): string => `${prefix}__${part}`;
+  return `
+function renderMarkdownBlocks(source: string): TemplateResult[] {
+  return parseMarkdown(source ?? "").map((block, blockIndex) =>
+    renderMarkdownBlock(block, blockIndex),
+  );
+}
+
+function renderMarkdownBlock(block: MarkdownBlock, key: number): TemplateResult {
+  switch (block.kind) {
+    case "heading":
+      return html\`<${bt.heading} class="${blockClass(b.heading)}" data-block-kind="heading" data-block-kind-level=\${block.level}>\${block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}</${bt.heading}>\`;
+    case "paragraph":
+      return html\`<${bt.paragraph} class="${blockClass(b.paragraph)}" data-block-kind="paragraph">\${block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}</${bt.paragraph}>\`;
+    case "list":
+      return block.ordered
+        ? html\`<${bt.orderedList} class="${blockClass(b.orderedList)}" data-block-kind="orderedList">\${block.items.map((item, itemIndex) => renderMarkdownBlock(item, itemIndex))}</${bt.orderedList}>\`
+        : html\`<${bt.unorderedList} class="${blockClass(b.unorderedList)}" data-block-kind="unorderedList">\${block.items.map((item, itemIndex) => renderMarkdownBlock(item, itemIndex))}</${bt.unorderedList}>\`;
+    case "listItem":
+      return html\`<${bt.listItem} class="${blockClass(b.listItem)}" data-block-kind="listItem">\${block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}</${bt.listItem}>\`;
+    case "codeBlock":
+      return html\`<${bt.codeBlock} class="${blockClass(b.codeBlock)}" data-block-kind="codeBlock" data-language=\${block.language}>\${block.text}</${bt.codeBlock}>\`;
+    case "blockquote":
+      return html\`<${bt.blockquote} class="${blockClass(b.blockquote)}" data-block-kind="blockquote">\${block.children.map((mark, markIndex) => renderMarkdownMark(mark, markIndex))}</${bt.blockquote}>\`;
+  }
+}
+
+function renderMarkdownMark(mark: MarkdownMark, key: number): TemplateResult {
+  switch (mark.kind) {
+    case "text":
+      return html\`\${mark.text}\`;
+    case "code":
+      return html\`<${mt.code} class="${prefix}__${m.code}" data-mark-kind="code">\${mark.text}</${mt.code}>\`;
+    case "emphasis":
+      return html\`<${mt.emphasis} class="${prefix}__${m.emphasis}" data-mark-kind="emphasis">\${mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}</${mt.emphasis}>\`;
+    case "strong":
+      return html\`<${mt.strong} class="${prefix}__${m.strong}" data-mark-kind="strong">\${mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}</${mt.strong}>\`;
+    case "link":
+      return mark.href === null
+        ? html\`\${mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}\`
+        : html\`<${mt.link} class="${prefix}__${m.link}" data-mark-kind="link" href=\${mark.href}>\${mark.children.map((child, childIndex) => renderMarkdownMark(child, childIndex))}</${mt.link}>\`;
+  }
+}
+`;
 }
 
 function generateLitDomTreePropertyDecl(
@@ -2627,6 +2694,25 @@ function renderLitDomNode(
         contentInline = `\${${gateExpr} ? ${tokenMap} : ${sourceExpr}}`;
       } else {
         contentInline = `\${${tokenMap}}`;
+      }
+    } else if (isMarkdownTransform(node.content)) {
+      // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the content is the structural
+      // parse of the markdown source, rendered by the module-scope html``
+      // helpers. A declared gate falls back to the plain source run.
+      const transform = node.content;
+      const sourceExpr = appendPath(
+        litPropAccessor(transform.sourceProp, ctx),
+        transform.source.path,
+      );
+      const treeCall = `renderMarkdownBlocks(${sourceExpr})`;
+      if (transform.gate !== undefined) {
+        const gateExpr = appendPath(
+          litPropAccessor(transform.gateProp ?? transform.gate.prop, ctx),
+          transform.gate.path,
+        );
+        contentInline = `\${${gateExpr} ? ${treeCall} : ${sourceExpr}}`;
+      } else {
+        contentInline = `\${${treeCall}}`;
       }
     } else {
       const contentExpr = renderLitContent(

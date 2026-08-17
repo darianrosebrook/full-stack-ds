@@ -1,0 +1,124 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Markdown",
+  "description": "Renders a markdown source string as structured content \u2014 headings, paragraphs, lists, fenced code blocks, blockquotes, and inline emphasis/strong/code/links \u2014 realized from the component's anatomy parts. Text is literal by construction: raw HTML in the source never interprets, and link hrefs are protocol-sanitized.",
+  "layer": "primitive",
+  "category": "display",
+  "props": {
+    "designed": {
+      "members": [
+        {
+          "name": "content",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "Markdown source text. The value is parsed by the shared pure markdown parser and rendered as text-only structural content; it is never treated as HTML.",
+          "required": true
+        }
+      ]
+    },
+    "passthrough": {
+      "extends": "div"
+    }
+  },
+  "anatomy": {
+    "parts": [
+      "root",
+      "heading",
+      "paragraph",
+      "unorderedList",
+      "orderedList",
+      "listItem",
+      "codeBlock",
+      "blockquote",
+      "emphasis",
+      "strong",
+      "code",
+      "link"
+    ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Structural container; the markdown tree renders inside it."
+      },
+      "heading": {
+        "tag": "h2",
+        "description": "Heading block (level carried by data-level; tag fixed per contract).",
+        "multiple": true
+      },
+      "paragraph": {
+        "tag": "p",
+        "multiple": true,
+        "description": "Paragraph block; soft-wrapped source lines join into one paragraph."
+      },
+      "unorderedList": {
+        "tag": "ul",
+        "multiple": true,
+        "description": "Bullet list block."
+      },
+      "orderedList": {
+        "tag": "ol",
+        "multiple": true,
+        "description": "Numbered list block."
+      },
+      "listItem": {
+        "tag": "li",
+        "multiple": true,
+        "description": "Single list entry; children are inline marks."
+      },
+      "codeBlock": {
+        "tag": "pre",
+        "multiple": true,
+        "description": "Fenced code block; literal text only (no nested parsing), language carried by data-language."
+      },
+      "blockquote": {
+        "tag": "blockquote",
+        "multiple": true,
+        "description": "Blockquote block; single-level, content parsed as one paragraph of marks."
+      },
+      "emphasis": {
+        "tag": "em",
+        "multiple": true,
+        "description": "Inline emphasis mark; children are marks."
+      },
+      "strong": {
+        "tag": "strong",
+        "multiple": true,
+        "description": "Inline strong mark."
+      },
+      "code": {
+        "tag": "code",
+        "multiple": true,
+        "description": "Inline code span; literal text only."
+      },
+      "link": {
+        "tag": "a",
+        "multiple": true,
+        "description": "Inline link; href is protocol-sanitized at parse time \u2014 unsafe targets degrade to literal child text."
+      }
+    },
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "content": {
+        "transform": "markdown",
+        "source": "prop:content",
+        "blockParts": {
+          "heading": "heading",
+          "paragraph": "paragraph",
+          "unorderedList": "unorderedList",
+          "orderedList": "orderedList",
+          "listItem": "listItem",
+          "codeBlock": "codeBlock",
+          "blockquote": "blockquote"
+        },
+        "markParts": {
+          "emphasis": "emphasis",
+          "strong": "strong",
+          "code": "code",
+          "link": "link"
+        }
+      }
+    }
+  }
+}

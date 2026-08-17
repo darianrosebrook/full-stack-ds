@@ -46,6 +46,7 @@ import {
   composeChannelUpdateExpression,
   collectContentTransforms,
   isHighlightTransform,
+  isMarkdownTransform,
   contentBindingOrTransformSource,
 } from "../../ir.js";
 import {
@@ -1426,6 +1427,11 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (usesNgIf) commonNames.push("NgIf");
   if (usesNgFor) commonNames.push("NgFor");
   if (usesNgSwitch) commonNames.push("NgSwitch", "NgSwitchCase");
+  // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the content ngFor + the companion
+  // renderers' template directives ride the same import line.
+  if (ir.dom && collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    commonNames.push("NgIf", "NgFor", "NgSwitch", "NgSwitchCase");
+  }
   const commonImports = commonNames.join(", ");
   const lines: string[] = [
     `import { ${coreNames.join(", ")} } from "@angular/core";`,
@@ -1469,6 +1475,13 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (ir.dom && collectContentTransforms(ir.dom).some((t) => t.transform === "highlight")) {
     lines.push(
       `import { tokenizeCode } from "../../primitives/highlight/tokenize.js";`,
+    );
+  }
+  // content-transform: the markdown runtime when the tree carries a
+  // markdown fact (FEAT-MARKDOWN-CONTENT-TRANSFORM-01). Structural.
+  if (ir.dom && collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    lines.push(
+      `import { parseMarkdown, type MarkdownBlock, type MarkdownMark } from "../../primitives/markdown/markdown.js";`,
     );
   }
   if (selectorAnchor) {
@@ -1688,7 +1701,14 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const usesNgIf = treeUsesNgIf(ir.dom);
   const usesNgFor = treeUsesNgFor(ir.dom);
   const usesCountIteration = treeUsesCountIteration(ir.dom);
+  const hasMarkdownTransform =
+    ir.dom !== undefined &&
+    collectContentTransforms(ir.dom).some(isMarkdownTransform);
   const decoratorImports = ["NgClass"];
+  if (hasMarkdownTransform) {
+    // Content ngFor over markdownBlocks + the companion renderers.
+    decoratorImports.push("NgFor", "MarkdownBlockRendererComponent");
+  }
   if (usesNgIf) decoratorImports.push("NgIf");
   if (usesNgFor) decoratorImports.push("NgFor");
   if (ir.root.polymorphicTagProp) {
@@ -1719,6 +1739,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(`let nextInstanceId = 0;`);
     lines.push(``);
   }
+  lines.push(...generateAngularMarkdownCompanions(ir));
   lines.push(`@Component({`);
   lines.push(`  selector: "fsds-${selector}",`);
   lines.push(`  standalone: true,`);
@@ -1766,6 +1787,17 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // arbitrary className passthrough). Declare it explicitly here since the
   // reserved set excludes it from the loop above.
   lines.push(`  @Input() class?: string;`);
+
+  // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the markdown tree as a class
+  // getter (plain getter, re-evaluated each CD pass — the Angular idiom
+  // for derived render data), consumed by the content ngFor.
+  if (ir.dom && collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
+    const mdTransform = collectContentTransforms(ir.dom).find(isMarkdownTransform)!;
+    lines.push(``);
+    lines.push(`  get markdownBlocks(): MarkdownBlock[] {`);
+    lines.push(`    return parseMarkdown(this.${mdTransform.sourceProp} ?? "");`);
+    lines.push(`  }`);
+  }
 
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 class members. The provider connects
   // a GETTER so the service reads current state (status switches help↔error)
@@ -2171,6 +2203,72 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * FEAT-MARKDOWN-CONTENT-TRANSFORM-01 — Angular lowering of the markdown
+ * transform: two standalone companion renderers with ATTRIBUTE selectors
+ * (`[fsdsMarkdownMark]` / `[fsdsMarkdownBlock]`), the idiomatic Angular
+ * shape for mutually recursive template structures in one file. The mark
+ * renderer is declared first (no class references); the block renderer
+ * imports it by class; recursion inside templates goes through the
+ * selectors, so no TDZ hazards. Tags/classes/attrs come from the IR.
+ */
+function generateAngularMarkdownCompanions(ir: ComponentIR): string[] {
+  const transform = collectContentTransforms(ir.dom).find(isMarkdownTransform);
+  if (!transform) return [];
+  const prefix = ir.classRecipe.base;
+  const b = transform.blockParts;
+  const bt = transform.blockTags;
+  const m = transform.markParts;
+  const mt = transform.markTags;
+  const blockClass = (part: string): string => `${prefix}__${part}`;
+  const marksNgFor = `<ng-container fsdsMarkdownMark *ngFor="let mark of block.children" [mark]="mark"></ng-container>`;
+  const childMarksNgFor = `<ng-container fsdsMarkdownMark *ngFor="let child of mark.children" [mark]="child"></ng-container>`;
+  const itemsNgFor = `<ng-container fsdsMarkdownBlock *ngFor="let item of block.items" [block]="item"></ng-container>`;
+  return [
+    ``,
+    `@Component({`,
+    `  selector: "[fsdsMarkdownMark]",`,
+    `  standalone: true,`,
+    `  imports: [NgSwitch, NgSwitchCase, NgIf, NgFor],`,
+    `  host: { "data-fsds-transform": "markdown-mark" },`,
+    `  template: \`<ng-container [ngSwitch]="mark.kind">`,
+    `    <ng-container *ngSwitchCase="'text'">{{ mark.text }}</ng-container>`,
+    `    <${mt.code} *ngSwitchCase="'code'" class="${prefix}__${m.code}" data-mark-kind="code">{{ mark.text }}</${mt.code}>`,
+    `    <${mt.emphasis} *ngSwitchCase="'emphasis'" class="${prefix}__${m.emphasis}" data-mark-kind="emphasis">${childMarksNgFor}</${mt.emphasis}>`,
+    `    <${mt.strong} *ngSwitchCase="'strong'" class="${prefix}__${m.strong}" data-mark-kind="strong">${childMarksNgFor}</${mt.strong}>`,
+    `    <ng-container *ngSwitchCase="'link'">`,
+    `      <${mt.link} *ngIf="mark.href !== null" class="${prefix}__${m.link}" data-mark-kind="link" [attr.href]="mark.href">${childMarksNgFor}</${mt.link}>`,
+    `      <ng-container *ngIf="mark.href === null">${childMarksNgFor}</ng-container>`,
+    `    </ng-container>`,
+    `  </ng-container>\`,`,
+    `})`,
+    `export class MarkdownMarkRendererComponent {`,
+    `  @Input() mark!: MarkdownMark;`,
+    `}`,
+    ``,
+    `@Component({`,
+    `  selector: "[fsdsMarkdownBlock]",`,
+    `  standalone: true,`,
+    `  imports: [NgSwitch, NgSwitchCase, NgIf, NgFor, MarkdownMarkRendererComponent],`,
+    `  host: { "data-fsds-transform": "markdown-block" },`,
+    `  template: \`<ng-container [ngSwitch]="block.kind">`,
+    `    <${bt.heading} *ngSwitchCase="'heading'" class="${blockClass(b.heading)}" data-block-kind="heading" [attr.data-level]="block.level">${marksNgFor}</${bt.heading}>`,
+    `    <${bt.paragraph} *ngSwitchCase="'paragraph'" class="${blockClass(b.paragraph)}" data-block-kind="paragraph">${marksNgFor}</${bt.paragraph}>`,
+    `    <ng-container *ngSwitchCase="'list'">`,
+    `      <${bt.orderedList} *ngIf="block.ordered" class="${blockClass(b.orderedList)}" data-block-kind="orderedList">${itemsNgFor}</${bt.orderedList}>`,
+    `      <${bt.unorderedList} *ngIf="!block.ordered" class="${blockClass(b.unorderedList)}" data-block-kind="unorderedList">${itemsNgFor}</${bt.unorderedList}>`,
+    `    </ng-container>`,
+    `    <${bt.listItem} *ngSwitchCase="'listItem'" class="${blockClass(b.listItem)}" data-block-kind="listItem">${marksNgFor}</${bt.listItem}>`,
+    `    <${bt.codeBlock} *ngSwitchCase="'codeBlock'" class="${blockClass(b.codeBlock)}" data-block-kind="codeBlock" [attr.data-language]="block.language">{{ block.text }}</${bt.codeBlock}>`,
+    `    <${bt.blockquote} *ngSwitchCase="'blockquote'" class="${blockClass(b.blockquote)}" data-block-kind="blockquote">${marksNgFor}</${bt.blockquote}>`,
+    `  </ng-container>\`,`,
+    `})`,
+    `export class MarkdownBlockRendererComponent {`,
+    `  @Input() block!: MarkdownBlock;`,
+    `}`,
+  ];
+}
+
 function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
   const { classRecipe } = ir;
   const channels = ir.behavior.normalizedChannels;
@@ -2551,6 +2649,33 @@ function renderAngularDomNode(
         );
       } else {
         contentLines.push(`${sp}${tokenSpan}`);
+      }
+    } else if (isMarkdownTransform(node.content)) {
+      // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the content iterates the class
+      // getter's structural parse through the companion block renderer; a
+      // declared gate falls back to the plain interpolation.
+      const transform = node.content;
+      const sp = " ".repeat(indent + 2);
+      const blocks =
+        `<ng-container fsdsMarkdownBlock *ngFor="let block of markdownBlocks" [block]="block"></ng-container>`;
+      if (transform.gate !== undefined) {
+        const gateExpr = defaultAwareAngularTemplatePropAccessor(
+          transform.gateProp ?? transform.gate.prop,
+          ctx.styledByName,
+        );
+        const sourceExpr = appendPath(
+          defaultAwareAngularTemplatePropAccessor(
+            transform.sourceProp,
+            ctx.styledByName,
+          ),
+          transform.source.path,
+        );
+        contentLines.push(
+          `${sp}<ng-container *ngIf="${gateExpr}">${blocks}</ng-container>`,
+          `${sp}<ng-container *ngIf="!(${gateExpr})">{{ ${sourceExpr} }}</ng-container>`,
+        );
+      } else {
+        contentLines.push(`${sp}${blocks}`);
       }
     } else {
       const contentExpr = renderAngularBindingValue(

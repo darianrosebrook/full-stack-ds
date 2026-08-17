@@ -1300,21 +1300,35 @@ function writeWebPrimitives(binding: TargetBinding): void {
  * when a partial component selection is generated.
  */
 function writeContentTransformRuntime(binding: TargetBinding): void {
-  const sourcePath = path.join(
-    cwd,
-    "packages",
-    "ds-codegen",
-    "src",
-    "highlight",
-    "tokenize.ts",
-  );
   const primitivesRoot = path.join(binding.componentsRoot, "..", "primitives");
-  const absolutePath = path.join(primitivesRoot, "highlight", "tokenize.ts");
-  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
-  fs.copyFileSync(sourcePath, absolutePath);
-  console.log(
-    `\n  RUNTIME  ${path.relative(cwd, absolutePath)} (highlight tokenizer)`,
-  );
+  const runtimes: Array<{ dir: string; file: string; label: string }> = [
+    {
+      dir: "highlight",
+      file: "tokenize.ts",
+      label: "highlight tokenizer",
+    },
+    {
+      dir: "markdown",
+      file: "markdown.ts",
+      label: "markdown parser",
+    },
+  ];
+  for (const runtime of runtimes) {
+    const sourcePath = path.join(
+      cwd,
+      "packages",
+      "ds-codegen",
+      "src",
+      runtime.dir,
+      runtime.file,
+    );
+    const absolutePath = path.join(primitivesRoot, runtime.dir, runtime.file);
+    fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+    fs.copyFileSync(sourcePath, absolutePath);
+    console.log(
+      `\n  RUNTIME  ${path.relative(cwd, absolutePath)} (${runtime.label})`,
+    );
+  }
 }
 
 /**
