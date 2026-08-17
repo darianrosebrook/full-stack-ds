@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "generate:check in the worktree derived all nine .code-block__token[data-token=*] colors against semantic.color.background.secondary in both themes; failing pairs ledgered in component-contrast-known-gaps.json (9 CodeBlock entries naming this spec, no unledgered failures, no stale entries — gate exit 0, 49/49 contracts)"
     recorded_at: "2026-08-17T16:41:23.865Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "corpus-wide: pnpm run generate:check exit 0 (49/49 contracts) in the contrast-ancestry worktree pre-merge and post-merge-of-main; the wider lens surfaced exactly 10 failing pairs corpus-wide (9 CodeBlock token palette + Select emptyState) — all ledgered naming this spec; the Accordion chevron pseudo-state artifact was fixed in the derivation, not ledgered; governed:rail Overall: PASS and pnpm test 2124/2124 in the worktree"
+    recorded_at: "2026-08-17T16:41:35.125Z"
