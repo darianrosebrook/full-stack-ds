@@ -3,7 +3,6 @@ title: 'Widen the docs-claims gate: scan all tracked docs, derive target counts'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: doc-claims-gate
 created_at: '2026-08-17T17:14:24.308Z'
 updated_at: '2026-08-17T17:14:24.308Z'
 blast_radius:
