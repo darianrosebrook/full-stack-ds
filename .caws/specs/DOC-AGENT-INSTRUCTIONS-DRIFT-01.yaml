@@ -34,3 +34,8 @@ acceptance:
     then: 'the doc matches admission-descriptor.ts and runtime-rail.spec.ts'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "This command itself: CLAUDE.md/AGENTS.md now document 'caws specs evidence <id> --ac <id> --status pass --evidence-ref', which the CLI accepts; the previously-documented 'caws evidence record --type ac' is refused by the CLI and redirects here"
+    recorded_at: "2026-08-17T16:41:01.787Z"
