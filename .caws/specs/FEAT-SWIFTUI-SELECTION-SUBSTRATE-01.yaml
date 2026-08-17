@@ -45,3 +45,8 @@ contracts:
   - name: 'swiftui-selection-state'
     type: contract-test
     path: 'packages/ds-swiftui/Tests/DsSwiftUITests/SelectionStateTests.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "SelectionStateTests 3/3: single replace + isSelected, multi toggleMembership + change payloads, controlled write-through both modes"
+    recorded_at: "2026-08-17T04:06:04.681Z"
