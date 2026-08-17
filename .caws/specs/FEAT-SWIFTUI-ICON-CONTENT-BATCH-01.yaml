@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-ICON-CONTENT-BATCH-01
 title: 'Icon-decorated content class: Alert, Status, Badge via GlyphCatalog (22→25)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Icon-decorated content class landed: Alert+Badge via icon regions (ReactNode fact), Status deferred to intent-table follow-up; 24 of 49'
 created_at: '2026-08-17T04:09:24.397Z'
-updated_at: '2026-08-17T04:09:24.397Z'
+updated_at: '2026-08-17T04:15:55.788Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (icon-decorated content class)'
