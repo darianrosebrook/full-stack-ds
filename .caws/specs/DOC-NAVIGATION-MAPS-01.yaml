@@ -34,3 +34,8 @@ evidence:
     status: pass
     evidence_ref: All 19 doc paths in both rewritten trees verified present via ls; docs/archive marked reserved because it does not exist; docs/successor-work.md removed (only the gitignored docs/internal copy exists). Both trees now agree with their files own inline links
     recorded_at: "2026-08-17T19:05:34.463Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "README five-tree claim corrected to six per ci.yml:163-171; Angular runtime-rail non-claim narrowed to the single skipped Select callback-capture test per e2e/runtime-rail.spec.ts:72 and :713-717"
+    recorded_at: "2026-08-17T19:05:37.887Z"
+    artifact_path: .github/workflows/ci.yml
