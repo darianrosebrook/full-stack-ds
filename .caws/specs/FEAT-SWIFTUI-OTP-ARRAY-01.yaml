@@ -40,3 +40,7 @@ evidence:
     status: pass
     evidence_ref: "OTP.swift: ControllableValue<String> substrate, ForEach(0..<length) TextFields, setCharacter with payload[payload.count-1] (setCharAt semantics), onComplete?(next) at length; swift build exit 0"
     recorded_at: "2026-08-17T04:21:30.902Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "worktree gates: typecheck 0; governed:rail exit 0; pnpm test 2086/2086; test:frameworks 72; swift test 22/22; swift build + example build exit 0; ADMITTED 25/25 byte-stable; mode/readOnly absent (test-pinned)"
+    recorded_at: "2026-08-17T04:21:31.886Z"
