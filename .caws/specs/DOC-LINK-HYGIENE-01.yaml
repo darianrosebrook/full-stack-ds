@@ -2,9 +2,11 @@ id: DOC-LINK-HYGIENE-01
 title: 'Repair broken relative doc links and unflagged gitignored pointers'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: '20 broken relative doc links repaired; docs:check-links gate added to CI and pre-push; machine-local pointers flagged'
 created_at: '2026-08-17T17:04:39.516Z'
-updated_at: '2026-08-17T17:09:57.535Z'
+updated_at: '2026-08-17T17:13:42.984Z'
 blast_radius:
   modules:
     - 'doc cross-references'
