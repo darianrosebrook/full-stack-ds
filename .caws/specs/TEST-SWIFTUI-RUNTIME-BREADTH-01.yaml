@@ -49,3 +49,7 @@ evidence:
     status: pass
     evidence_ref: "swift test --package-path packages/ds-swiftui --filter TokenPaintTests → Executed 4 tests, 0 failures: Card background pixel == resolved.tokens.json semantic.color.background.primary light (#ffffff) under aqua AND dark (#000000) under darkAqua (adaptive flip; modes-differ guard included), FsdsButton == semantic.color.action.background.primary.default (#0566fe); expectations parsed from the committed graph file, never hand-copied"
     recorded_at: "2026-08-17T17:10:49.179Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "worktree gates all exit 0: pnpm run governed:rail; node scripts/swift-parity-diff.mjs (react 49 / swift 49 / divergent 0); pnpm test 2124/2124; pnpm run test:frameworks vue 581 + lit 502 (2 skipped) + svelte 540 + angular 72; swift test 33 tests 0 failures (4 pre-existing headless skips); harness is a test-only executable target outside the component allowlist; emitter fix included (EmptyView().sheet → Color.clear anchor, uncontrolled probe flipped false→true across the fix)"
+    recorded_at: "2026-08-17T17:10:50.358Z"
