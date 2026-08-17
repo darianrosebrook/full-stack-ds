@@ -1,0 +1,37 @@
+id: RUNTIME-RAIL-CODEBLOCK-HIGHLIGHT-01
+title: 'Runtime rail: CodeBlock highlight facts across all five frameworks'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-17T18:56:05.797Z'
+updated_at: '2026-08-17T18:56:05.797Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'e2e/runtime-rail.spec.ts'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the preview mounts CodeBlock with code+language through the fsds:config bus; when the rail runs across react/vue/svelte/lit/angular; then the rendered [data-token] kind sequence equals the frozen golden typescript stream and the concatenated span text equals the source exactly'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given highlight=false through the same seam; when the rail runs across all five frameworks; then zero [data-token] spans render and the code element text round-trips the source'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the extended rail; when pnpm run e2e:rail executes; then all facts pass (OS-agnostic assertions, no screenshots in CI proof) and the snapshot row upgrades the highlight facts from test-proven to runtime-proven'
+non_functional: {}
+contracts:
+  - name: 'runtime-rail-codeblock'
+    type: contract-test
+    path: 'e2e/runtime-rail.spec.ts'
