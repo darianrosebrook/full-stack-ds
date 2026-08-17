@@ -51,3 +51,7 @@ evidence:
     evidence_ref: "Corpus facts differed from the plan: Alert/Badge icon props are ReactNode (consumer regions emitted and compiling via swift build); Status deferred — no icon prop, state-driven glyph needs a status-to-glyph intent table (recorded follow-up); Chip excluded by the component-instance rule (test-pinned fail-loud)"
     waiver_reason: "Corpus facts differed from the plan: Alert/Badge icon props are ReactNode (consumer regions emitted and compiling via swift build); Status deferred — no icon prop, state-driven glyph needs a status-to-glyph intent table (recorded follow-up); Chip excluded by the component-instance rule (test-pinned fail-loud)"
     recorded_at: "2026-08-17T04:15:51.304Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "emitter tests: Alert/Badge emit with IconRegion ViewBuilder; Status and Chip throw /no emission class matches/; onDismiss/showStatusIcon absent from APIs"
+    recorded_at: "2026-08-17T04:15:52.217Z"
