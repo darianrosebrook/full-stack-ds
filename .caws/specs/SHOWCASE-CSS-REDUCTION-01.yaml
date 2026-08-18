@@ -41,3 +41,7 @@ evidence:
     status: pass
     evidence_ref: "commit on showcase-css-cut: 12 dead rules removed (app.css 1930 -> 1866 lines); audit-derived list only; pnpm test 2187 green"
     recorded_at: "2026-08-18T04:23:00.803Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/consumption/css-hygiene.test.ts (4 green): dead-selector derivation + named DS-internals allowlist (caught table__* sticky chrome on first run, allowlisted with Table named) + phantom-allowlist check + negative control"
+    recorded_at: "2026-08-18T04:23:01.691Z"
