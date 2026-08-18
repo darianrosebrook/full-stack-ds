@@ -2,9 +2,11 @@ id: FIX-HOOK-PACK-DEDUPE-01
 title: 'Remove the superseded .claude hook duplicates and restore claim-oracle yaml resolution'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Removed the superseded .claude hook duplicates, restored claim-oracle yaml resolution, and repaired protected-paths coverage and exit code'
 created_at: '2026-08-18T16:13:05.341Z'
-updated_at: '2026-08-18T16:13:05.341Z'
+updated_at: '2026-08-18T16:29:22.982Z'
 blast_radius:
   modules:
     - 'remove: .claude/hooks 34 *.sh + classify_command.py + session_log_renderer.py + caws_dispatch/ + lib/ + package.json + node_modules (all superseded by .caws/hooks v39)'
