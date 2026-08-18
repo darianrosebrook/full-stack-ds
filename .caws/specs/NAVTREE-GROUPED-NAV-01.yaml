@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: navtree-grouped-nav
 created_at: '2026-08-18T01:14:37.692Z'
-updated_at: '2026-08-18T02:51:10.964Z'
+updated_at: '2026-08-18T02:53:10.053Z'
 blast_radius:
   modules:
     - 'ds-contracts'
@@ -39,6 +39,17 @@ scope:
     - docs/dead-slot-audit
     - docs/pseudo-state-audit
     - docs/token-resolvability-audit
+    - packages/ds-lit/src/components/Command/Command.ts
+    - packages/ds-lit/src/components/NavList/NavList.ts
+    - packages/ds-lit/src/components/Select/Select.ts
+    - packages/ds-lit/src/components/Shuttle/Shuttle.ts
+    - packages/ds-lit/src/components/Toast/Toast.ts
+    - packages/ds-react/src/components/index.ts
+    - packages/ds-vue/src/components/index.ts
+    - packages/ds-svelte/src/components/index.ts
+    - packages/ds-angular/src/components/index.ts
+    - packages/ds-lit/src/components/index.ts
+    - packages/ds-react-native/src/components/index.ts
   out: []
 invariants:
   - 'Heading interactivity is contract-governed: the heading renders as an anchor only when href is provided and as a static span otherwise (if / if:! dom guards) - no emitter special-casing for NavTree'
