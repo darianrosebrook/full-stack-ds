@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: ADR §10 classification table records every surface; golden fixtures classified structural-identity (§9 precedent names the regen mandate and its honest test-6 weakness); resolvability/contrast/realization ledgers untouched — git show 3ad92731 touches no correctness-gate code except comments
     recorded_at: "2026-08-18T03:00:48.723Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "docs:check-links 66/66 resolve; docs:check-claims 12/12; eslint clean; prepush-scope contract tests 36/36; selfcheck 8/8; AGENTS.md + snapshot row reflect report-only-until-RC"
+    recorded_at: "2026-08-18T03:00:49.895Z"
