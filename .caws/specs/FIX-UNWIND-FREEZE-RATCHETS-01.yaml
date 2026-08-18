@@ -7,7 +7,11 @@ created_at: '2026-08-18T04:25:03.174Z'
 updated_at: '2026-08-18T04:25:03.174Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'delete: scripts/token-consumption-audit/ and scripts/token-realization-audit/ (audit, selfcheck, seeded ledgers), packages/ds-tokens/build/runners/usage-scan.ts, both docs/ report dirs'
+    - 'revert wiring: root package.json scripts, ci.yml steps, .githooks/pre-push blocks, prepush-scope.mjs pattern+flag families and their contract tests'
+    - 'restore bytes: golden-fixtures.json + tokenize.test.ts CASES at abf1fed7~1; snapshot rows; AGENTS.md enumeration; mobile-parity-matrix.mjs cell note'
+    - 'edit: ADR-0001 section 1.1 — drop the realization-ledger carve-out that exempted the surface the ADR was written to prevent'
+    - 'explicitly untouched: resolvability, contrast, styling/behavior/a11y ledgers, .caws append-only lifecycle records'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -30,7 +34,10 @@ scope:
     - 'package.json'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Removing a gate must not damage a remaining one. scripts/prepush-scope.mjs must still declare every identifier its flags reference — the superseded attempt deleted `const resolvability` alongside the consumption binding, leaving a ReferenceError at line 101 that failed all 34 scope tests and would have broken pre-push for every agent in the repo.'
+  - 'Only population pins are removed. Correctness gates (resolvability, contrast, WCAG, styling/behavior/a11y realization ledgers, governed:rail) keep their exact inputs and verdicts.'
+  - 'No generated component artifact changes: golden fixtures were test-only inputs; governed:rail must end with a clean tree.'
+  - 'ADR-0001 stands as doctrine, but must not exempt the surface it was written to prevent — section 1.2 and section 2 classify the realization known-gaps ledger as a population pin, so section 1.1 may not simultaneously admit it as a structural freeze.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
