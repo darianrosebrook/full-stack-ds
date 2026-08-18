@@ -105,7 +105,7 @@ Components: **50** · slots declared: **906** · consumed: **792** · **inert: 1
 | Tooltip | `tooltip.size.padding.y` | `--fsds-tooltip-size-padding-y` | `review` | no rule matched: "y" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Truncate | `truncate.color.background.primary` | `--fsds-truncate-color-background-primary` | `review` | no rule matched: "primary" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Truncate | `truncate.color.foreground.linkHover` | `--fsds-truncate-color-foreground-link-hover` | `review` | no rule matched: "linkHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Walkthrough | `walkthrough.color.dots.active` | `--fsds-walkthrough-color-dots-active` | `review` | no rule matched: "active" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
+| Walkthrough | `walkthrough.dots.active` | `--fsds-walkthrough-dots-active` | `review` | no rule matched: "active" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 
 ## Full matrix (per component)
 
@@ -1031,27 +1031,27 @@ declared: **24** · consumed: **22** · dead: **1**
 | slot | CSS var | status | source |
 |---|---|---|---|
 | `box-model.gap` | `--fsds-box-model-gap` | ◐ shadowed (inert by design) | `tokens` |
-| `walkthrough.color.surface.background` | `--fsds-walkthrough-color-surface-background` | ✓ consumed | `tokens` |
-| `walkthrough.color.surface.border` | `--fsds-walkthrough-color-surface-border` | ✓ consumed | `tokens` |
-| `walkthrough.size.surface.radius` | `--fsds-walkthrough-size-surface-radius` | ✓ consumed | `tokens` |
-| `walkthrough.color.surface.shadow` | `--fsds-walkthrough-color-surface-shadow` | ✓ consumed | `tokens` |
-| `walkthrough.size.surface.padding` | `--fsds-walkthrough-size-surface-padding` | ✓ consumed | `tokens` |
-| `walkthrough.size.title.fontSize` | `--fsds-walkthrough-size-title-font-size` | ✓ consumed | `tokens` |
-| `walkthrough.typography.title.fontWeight` | `--fsds-walkthrough-typography-title-font-weight` | ✓ consumed | `tokens` |
-| `walkthrough.color.title.foreground` | `--fsds-walkthrough-color-title-foreground` | ✓ consumed | `tokens` |
-| `walkthrough.size.description.fontSize` | `--fsds-walkthrough-size-description-font-size` | ✓ consumed | `tokens` |
-| `walkthrough.color.description.foreground` | `--fsds-walkthrough-color-description-foreground` | ✓ consumed | `tokens` |
-| `walkthrough.spacing.description.marginTop` | `--fsds-walkthrough-spacing-description-margin-top` | ✓ consumed | `tokens` |
-| `walkthrough.spacing.controls.gap` | `--fsds-walkthrough-spacing-controls-gap` | ✓ consumed | `tokens` |
-| `walkthrough.spacing.controls.marginTop` | `--fsds-walkthrough-spacing-controls-margin-top` | ✓ consumed | `tokens` |
-| `walkthrough.size.dots.default` | `--fsds-walkthrough-size-dots-default` | ✓ consumed | `tokens` |
-| `walkthrough.spacing.dots.gap` | `--fsds-walkthrough-spacing-dots-gap` | ✓ consumed | `tokens` |
-| `walkthrough.color.dots.active` | `--fsds-walkthrough-color-dots-active` | ✗ dead | `tokens` |
-| `walkthrough.color.dots.idle` | `--fsds-walkthrough-color-dots-idle` | ✓ consumed | `tokens` |
-| `walkthrough.color.button.primary.background` | `--fsds-walkthrough-color-button-primary-background` | ✓ consumed | `tokens` |
-| `walkthrough.color.button.primary.foreground` | `--fsds-walkthrough-color-button-primary-foreground` | ✓ consumed | `tokens` |
-| `walkthrough.size.button.primary.radius` | `--fsds-walkthrough-size-button-primary-radius` | ✓ consumed | `tokens` |
-| `walkthrough.color.button.secondary.background` | `--fsds-walkthrough-color-button-secondary-background` | ✓ consumed | `tokens` |
-| `walkthrough.color.button.secondary.foreground` | `--fsds-walkthrough-color-button-secondary-foreground` | ✓ consumed | `tokens` |
-| `walkthrough.color.button.secondary.border` | `--fsds-walkthrough-color-button-secondary-border` | ✓ consumed | `tokens` |
+| `walkthrough.surface.bg` | `--fsds-walkthrough-surface-bg` | ✓ consumed | `tokens` |
+| `walkthrough.surface.border` | `--fsds-walkthrough-surface-border` | ✓ consumed | `tokens` |
+| `walkthrough.surface.radius` | `--fsds-walkthrough-surface-radius` | ✓ consumed | `tokens` |
+| `walkthrough.surface.shadow` | `--fsds-walkthrough-surface-shadow` | ✓ consumed | `tokens` |
+| `walkthrough.surface.padding` | `--fsds-walkthrough-surface-padding` | ✓ consumed | `tokens` |
+| `walkthrough.title.fontSize` | `--fsds-walkthrough-title-font-size` | ✓ consumed | `tokens` |
+| `walkthrough.title.fontWeight` | `--fsds-walkthrough-title-font-weight` | ✓ consumed | `tokens` |
+| `walkthrough.title.color` | `--fsds-walkthrough-title-color` | ✓ consumed | `tokens` |
+| `walkthrough.description.fontSize` | `--fsds-walkthrough-description-font-size` | ✓ consumed | `tokens` |
+| `walkthrough.description.color` | `--fsds-walkthrough-description-color` | ✓ consumed | `tokens` |
+| `walkthrough.description.marginTop` | `--fsds-walkthrough-description-margin-top` | ✓ consumed | `tokens` |
+| `walkthrough.controls.gap` | `--fsds-walkthrough-controls-gap` | ✓ consumed | `tokens` |
+| `walkthrough.controls.marginTop` | `--fsds-walkthrough-controls-margin-top` | ✓ consumed | `tokens` |
+| `walkthrough.dots.size` | `--fsds-walkthrough-dots-size` | ✓ consumed | `tokens` |
+| `walkthrough.dots.gap` | `--fsds-walkthrough-dots-gap` | ✓ consumed | `tokens` |
+| `walkthrough.dots.active` | `--fsds-walkthrough-dots-active` | ✗ dead | `tokens` |
+| `walkthrough.dots.idle` | `--fsds-walkthrough-dots-idle` | ✓ consumed | `tokens` |
+| `walkthrough.button.primary.bg` | `--fsds-walkthrough-button-primary-bg` | ✓ consumed | `tokens` |
+| `walkthrough.button.primary.color` | `--fsds-walkthrough-button-primary-color` | ✓ consumed | `tokens` |
+| `walkthrough.button.primary.radius` | `--fsds-walkthrough-button-primary-radius` | ✓ consumed | `tokens` |
+| `walkthrough.button.secondary.bg` | `--fsds-walkthrough-button-secondary-bg` | ✓ consumed | `tokens` |
+| `walkthrough.button.secondary.color` | `--fsds-walkthrough-button-secondary-color` | ✓ consumed | `tokens` |
+| `walkthrough.button.secondary.border` | `--fsds-walkthrough-button-secondary-border` | ✓ consumed | `tokens` |
 

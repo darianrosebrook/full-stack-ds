@@ -1,6 +1,6 @@
 {
   "spec": "RAIL-TOKEN-REFERENCE-RESOLVABILITY-01",
-  "declaredInGraph": 866,
+  "declaredInGraph": 876,
   "unresolvableReferences": 0,
   "distinctNames": 0,
   "findings": []

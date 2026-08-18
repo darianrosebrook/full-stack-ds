@@ -7,7 +7,10 @@ created_at: '2026-08-18T02:08:20.620Z'
 updated_at: '2026-08-18T02:08:20.620Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'scripts/token-consumption-audit: audit.mjs + selfcheck.mjs + seeded known-dead-namespaces.json ledger'
+    - 'packages/ds-tokens/build/runners: usage-scan.ts pure-JSON mode over analyzeTokenUsage (the single consumption authority)'
+    - 'wiring: root package.json script, .github/workflows/ci.yml step, scripts/prepush-scope.mjs family + .githooks/pre-push (PREPUSH-LOCKSTEP-01)'
+    - 'docs: consumption-matrix report dir, snapshot row, AGENTS.md audit-family enumeration'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -24,7 +27,10 @@ scope:
     - 'package.json'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Consumption authority is singular: the audit spawns the tokens package analyzeTokenUsage (via usage-scan.ts), never re-implements scanning — two divergent copies of a consumption definition is how a gate stops meaning the same thing as the baseline.'
+  - 'Core-layer tokens never report (base scope is vocabulary-by-doctrine per tokens-architecture); single-leaf semantic drift stays the usage count-floor ratchet jurisdiction — this rail owns namespace-level death only (>=2 tokens).'
+  - 'The ledger only shrinks truthfully (shared ledger-ratchet semantics); no machine re-seed command ships — post-introduction entries are hand-authored with owning spec + note.'
+  - 'Read-only over the graph: changes no token, contract, or generated artifact; writes only its own report directory and ledger.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
