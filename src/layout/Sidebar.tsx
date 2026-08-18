@@ -72,7 +72,7 @@ export function Sidebar({ bundle, route }: SidebarProps) {
           >
             <span>Tokens</span>
             <Badge variant="counter" size="sm">
-              {bundle.components.length}
+              {bundle.foundationTokens.length}
             </Badge>
           </a>
         </NavListItem>
@@ -144,9 +144,6 @@ export function Sidebar({ bundle, route }: SidebarProps) {
                     aria-current={activeComponent === c.name ? "page" : undefined}
                   >
                     <span>{c.name}</span>
-                    <Badge variant="counter" size="sm">
-                      {Object.keys(c.sources).length}/5
-                    </Badge>
                   </a>
                 </NavListItem>
               ))}
