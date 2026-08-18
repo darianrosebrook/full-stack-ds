@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "git diff --cached --stat 465c77b5~1 -- <the 8 swept paths> returned empty: restored tree byte-identical to the pre-reversion state across Button.kt/ButtonTokens.kt/FsdsButton.kt/Components.generated.kt, both component-source.ts emitters, SettingsApp.kt and fsds.targets.json"
     recorded_at: "2026-08-18T04:48:27.470Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run generate -- --target=jetpack-compose after the emitter restore reported 'ADMITTED 3/3 component(s)' with GENERATED Button/Switch/ToggleSwitch, and git diff was empty afterwards — codegen re-emits the restored bytes exactly, so the restore is reproducible output not a stale copy"
+    recorded_at: "2026-08-18T04:48:28.856Z"
