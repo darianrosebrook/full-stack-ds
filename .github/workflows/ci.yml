@@ -255,6 +255,15 @@ jobs:
       - name: Token-resolvability ledger (references that never resolve)
         run: pnpm run audit:token-resolvability
 
+      # Native token realization (FEAT-TOKEN-REALIZATION-AUDIT-001): every
+      # contract-declared token slot vs what react-native / swiftui /
+      # jetpack-compose realize through their per-component carriers. This is
+      # the parity burn-down scoreboard — new unledgered gaps and stale
+      # ledgered gaps both fail, so admission growth and carrier emission
+      # are visible, ratcheted decisions.
+      - name: Token-realization ledger (native carrier parity scoreboard)
+        run: pnpm run audit:token-realization
+
   runtime-rail:
     name: Runtime visual proof rail
     runs-on: ubuntu-latest

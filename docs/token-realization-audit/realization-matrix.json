@@ -1,0 +1,537 @@
+{
+  "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+  "corpusSize": 50,
+  "perTarget": [
+    {
+      "target": "react-native",
+      "admitted": 50,
+      "carriersPresent": 50,
+      "slotsRealized": 898,
+      "slotsDeclared": 898,
+      "gaps": {
+        "admission": 0,
+        "carrier": 0,
+        "slot": 0,
+        "orphan": 0
+      }
+    },
+    {
+      "target": "swiftui",
+      "admitted": 49,
+      "carriersPresent": 0,
+      "slotsRealized": 0,
+      "slotsDeclared": 895,
+      "gaps": {
+        "admission": 1,
+        "carrier": 49,
+        "slot": 0,
+        "orphan": 0
+      }
+    },
+    {
+      "target": "jetpack-compose",
+      "admitted": 2,
+      "carriersPresent": 2,
+      "slotsRealized": 57,
+      "slotsDeclared": 57,
+      "gaps": {
+        "admission": 48,
+        "carrier": 0,
+        "slot": 0,
+        "orphan": 0
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "target": "swiftui",
+      "component": "Accordion",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Alert",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "AlertNotice",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Avatar",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Badge",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Blockquote",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Breadcrumbs",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Button",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Calendar",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Card",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "CodeBlock",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "CodeSnippet",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Command",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Details",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Dialog",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Field",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Input",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Label",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Links",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "List",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Markdown",
+      "kind": "admission"
+    },
+    {
+      "target": "swiftui",
+      "component": "NavList",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "OTP",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Popover",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Postcard",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "ProfileFlag",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Sheet",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "ShowMore",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Shuttle",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Skeleton",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Stat",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Status",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Table",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Tabs",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Text",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "TextField",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Toast",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Tooltip",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Truncate",
+      "kind": "carrier"
+    },
+    {
+      "target": "swiftui",
+      "component": "Walkthrough",
+      "kind": "carrier"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Accordion",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Alert",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "AlertNotice",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Avatar",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Badge",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Blockquote",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Breadcrumbs",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Button",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Calendar",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Card",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Checkbox",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Chip",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "CodeBlock",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "CodeSnippet",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Command",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Details",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Dialog",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Divider",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Field",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Icon",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Image",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Input",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Label",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Links",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "List",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Markdown",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "NavList",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "OTP",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Popover",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Postcard",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "ProfileFlag",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Progress",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Select",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Sheet",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "ShowMore",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Shuttle",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Skeleton",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Spinner",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Stat",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Status",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Table",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Tabs",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Text",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "TextField",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Toast",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Tooltip",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Truncate",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Walkthrough",
+      "kind": "admission"
+    }
+  ]
+}
