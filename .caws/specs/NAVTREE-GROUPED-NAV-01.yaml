@@ -98,3 +98,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm test (172 files / 2171 tests) and pnpm run test:frameworks (vue 604, lit 522 incl NavTree, svelte 520, angular 563, react-native 74 — all passed) in worktree; pnpm run typecheck:all exit 0"
     recorded_at: "2026-08-18T02:58:51.756Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "pnpm run build exit 0; dev-server DOM verification: 5 NavTree branches render in sidebar with icon glyph (data-fsds-icon=check), 16px indent, 1px connector ::before/::after, and aria-current=page active row styling with 600 weight + selected state-layer wash"
+    recorded_at: "2026-08-18T02:58:52.758Z"
