@@ -1,0 +1,38 @@
+id: FIX-HOOK-PACK-UPGRADE-01
+title: 'Upgrade the CAWS hook pack v14 to v39 and wire the live surface to it'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-18T06:29:16.252Z'
+updated_at: '2026-08-18T06:29:16.252Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - '.caws/hooks'
+    - '.claude/hooks'
+    - '.claude/settings.json'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given caws init writes .caws/hooks while settings.json wires .claude/hooks so an upgrade would be a silent no-op; when the upgrade lands; then settings.json points every hook event at .caws/hooks/dispatch and the pack there is v39'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given local growth must not be lost; when the pack is overwritten; then doc-frontmatter-check.sh survives and is registered in the new dispatcher, and the two upstreamed local fixes (placeholder false-positive, oracle .cjs) are confirmed present in v39'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given hooks govern every tool call; when the rewire lands; then a PreToolUse guard demonstrably fires from the new path and caws doctor reports no drift'
+non_functional: {}
+contracts:
+  - name: 'caws-hook-dispatch'
+    type: behavior
+    path: '.caws/hooks/dispatch/pre_tool_use.sh'
