@@ -1,0 +1,296 @@
+{
+  "spec": "RAIL-TOKEN-CONSUMPTION-AUDIT-01",
+  "scannedTokens": 825,
+  "consumedTokens": 429,
+  "deadSemanticNamespaces": 29,
+  "deadTokensInFindings": 113,
+  "findings": [
+    {
+      "namespace": "semantic.action.size.large",
+      "tokenCount": 6,
+      "tokens": [
+        "semantic.action.size.large.gap",
+        "semantic.action.size.large.height",
+        "semantic.action.size.large.min-height",
+        "semantic.action.size.large.min-width",
+        "semantic.action.size.large.padding-block",
+        "semantic.action.size.large.padding-inline"
+      ]
+    },
+    {
+      "namespace": "semantic.color.action.border.primary",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.color.action.border.primary.default",
+        "semantic.color.action.border.primary.focus"
+      ]
+    },
+    {
+      "namespace": "semantic.color.data",
+      "tokenCount": 4,
+      "tokens": [
+        "semantic.color.data.trend.default",
+        "semantic.color.data.trend.down",
+        "semantic.color.data.trend.neutral",
+        "semantic.color.data.trend.up"
+      ]
+    },
+    {
+      "namespace": "semantic.color.feedback.background",
+      "tokenCount": 8,
+      "tokens": [
+        "semantic.color.feedback.background.danger.strong",
+        "semantic.color.feedback.background.danger.subtle",
+        "semantic.color.feedback.background.info.strong",
+        "semantic.color.feedback.background.info.subtle",
+        "semantic.color.feedback.background.success.strong",
+        "semantic.color.feedback.background.success.subtle",
+        "semantic.color.feedback.background.warning.strong",
+        "semantic.color.feedback.background.warning.subtle"
+      ]
+    },
+    {
+      "namespace": "semantic.color.feedback.foreground.info",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.color.feedback.foreground.info.default",
+        "semantic.color.feedback.foreground.info.onSubtle"
+      ]
+    },
+    {
+      "namespace": "semantic.color.feedback.foreground.warning",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.color.feedback.foreground.warning.default",
+        "semantic.color.feedback.foreground.warning.onSubtle"
+      ]
+    },
+    {
+      "namespace": "semantic.color.navigation",
+      "tokenCount": 7,
+      "tokens": [
+        "semantic.color.navigation.background.primary",
+        "semantic.color.navigation.background.secondary",
+        "semantic.color.navigation.border.primary",
+        "semantic.color.navigation.foreground.active",
+        "semantic.color.navigation.foreground.hover",
+        "semantic.color.navigation.foreground.primary",
+        "semantic.color.navigation.foreground.secondary"
+      ]
+    },
+    {
+      "namespace": "semantic.content",
+      "tokenCount": 5,
+      "tokens": [
+        "semantic.content.maxWidth.article",
+        "semantic.content.maxWidth.documentation",
+        "semantic.content.maxWidth.sidebar",
+        "semantic.content.spacing.paragraph",
+        "semantic.content.spacing.section"
+      ]
+    },
+    {
+      "namespace": "semantic.dimension",
+      "tokenCount": 7,
+      "tokens": [
+        "semantic.dimension.breakpoint.lg",
+        "semantic.dimension.breakpoint.md",
+        "semantic.dimension.breakpoint.sm",
+        "semantic.dimension.breakpoint.xl",
+        "semantic.dimension.minTarget",
+        "semantic.dimension.tapTarget.large",
+        "semantic.dimension.tapTarget.min"
+      ]
+    },
+    {
+      "namespace": "semantic.input.size.large",
+      "tokenCount": 5,
+      "tokens": [
+        "semantic.input.size.large.gap",
+        "semantic.input.size.large.height",
+        "semantic.input.size.large.min-height",
+        "semantic.input.size.large.padding-block",
+        "semantic.input.size.large.padding-inline"
+      ]
+    },
+    {
+      "namespace": "semantic.input.size.small",
+      "tokenCount": 5,
+      "tokens": [
+        "semantic.input.size.small.gap",
+        "semantic.input.size.small.height",
+        "semantic.input.size.small.min-height",
+        "semantic.input.size.small.padding-block",
+        "semantic.input.size.small.padding-inline"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.icon",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.motion.icon.scale.enter",
+        "semantic.motion.icon.scale.exit"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.interaction.enter",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.motion.interaction.enter.duration",
+        "semantic.motion.interaction.enter.easing"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.interaction.exit",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.motion.interaction.exit.duration",
+        "semantic.motion.interaction.exit.easing"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.interaction.focus",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.motion.interaction.focus.duration",
+        "semantic.motion.interaction.focus.easing"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.interaction.hover",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.motion.interaction.hover.duration",
+        "semantic.motion.interaction.hover.easing"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.interaction.modal",
+      "tokenCount": 4,
+      "tokens": [
+        "semantic.motion.interaction.modal.enter.duration",
+        "semantic.motion.interaction.modal.enter.easing",
+        "semantic.motion.interaction.modal.exit.duration",
+        "semantic.motion.interaction.modal.exit.easing"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.interaction.tooltip",
+      "tokenCount": 5,
+      "tokens": [
+        "semantic.motion.interaction.tooltip.enter.delay",
+        "semantic.motion.interaction.tooltip.enter.duration",
+        "semantic.motion.interaction.tooltip.enter.easing",
+        "semantic.motion.interaction.tooltip.exit.duration",
+        "semantic.motion.interaction.tooltip.exit.easing"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.keyframes",
+      "tokenCount": 4,
+      "tokens": [
+        "semantic.motion.keyframes.fadeIn",
+        "semantic.motion.keyframes.pulse",
+        "semantic.motion.keyframes.scaleIn",
+        "semantic.motion.keyframes.slideUp"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.opacity",
+      "tokenCount": 4,
+      "tokens": [
+        "semantic.motion.opacity.content.default",
+        "semantic.motion.opacity.content.fade",
+        "semantic.motion.opacity.overlay.heavy",
+        "semantic.motion.opacity.overlay.light"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.stagger",
+      "tokenCount": 3,
+      "tokens": [
+        "semantic.motion.stagger.card",
+        "semantic.motion.stagger.list",
+        "semantic.motion.stagger.section"
+      ]
+    },
+    {
+      "namespace": "semantic.motion.transition",
+      "tokenCount": 3,
+      "tokens": [
+        "semantic.motion.transition.scale.identity",
+        "semantic.motion.transition.scale.shrink",
+        "semantic.motion.transition.scale.zoom"
+      ]
+    },
+    {
+      "namespace": "semantic.opacity",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.opacity.disabled",
+        "semantic.opacity.overlay"
+      ]
+    },
+    {
+      "namespace": "semantic.spacing.margin",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.spacing.margin.component",
+        "semantic.spacing.margin.section"
+      ]
+    },
+    {
+      "namespace": "semantic.typography.body.default",
+      "tokenCount": 5,
+      "tokens": [
+        "semantic.typography.body.default.font.family",
+        "semantic.typography.body.default.font.size",
+        "semantic.typography.body.default.font.weight",
+        "semantic.typography.body.default.letter.spacing",
+        "semantic.typography.body.default.line.height"
+      ]
+    },
+    {
+      "namespace": "semantic.typography.link",
+      "tokenCount": 2,
+      "tokens": [
+        "semantic.typography.link.decoration.offset",
+        "semantic.typography.link.decoration.thickness"
+      ]
+    },
+    {
+      "namespace": "semantic.typography.meta",
+      "tokenCount": 8,
+      "tokens": [
+        "semantic.typography.meta.caption.font.family",
+        "semantic.typography.meta.caption.font.size",
+        "semantic.typography.meta.caption.font.weight",
+        "semantic.typography.meta.caption.line.height",
+        "semantic.typography.meta.legal.font.family",
+        "semantic.typography.meta.legal.font.size",
+        "semantic.typography.meta.legal.font.weight",
+        "semantic.typography.meta.legal.line.height"
+      ]
+    },
+    {
+      "namespace": "semantic.typography.oversize",
+      "tokenCount": 4,
+      "tokens": [
+        "semantic.typography.oversize.01",
+        "semantic.typography.oversize.02",
+        "semantic.typography.oversize.03",
+        "semantic.typography.oversize.04"
+      ]
+    },
+    {
+      "namespace": "semantic.typography.semanticFamily",
+      "tokenCount": 4,
+      "tokens": [
+        "semantic.typography.semanticFamily.body",
+        "semantic.typography.semanticFamily.heading",
+        "semantic.typography.semanticFamily.mono",
+        "semantic.typography.semanticFamily.serif"
+      ]
+    }
+  ]
+}

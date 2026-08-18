@@ -274,3 +274,26 @@ test("a docs-only push does NOT run the realization audits", () => {
   assert.equal(r.RUN_BEHAVIOR_AUDIT, false);
   assert.equal(r.RUN_A11Y_AUDIT, false);
 });
+
+test("token-consumption rail: fires on token graph, contracts, generated trees, and its own scripts", () => {
+  for (const f of [
+    "packages/ds-tokens/src/color/semantic/foreground.tokens.json",
+    "packages/ds-contracts/components/CodeBlock/CodeBlock.tokens.json",
+    "packages/ds-react/src/components/CodeBlock/CodeBlock.tokens.css",
+    "packages/ds-vue/src/components/CodeBlock/CodeBlock.css",
+    "scripts/token-consumption-audit/audit.mjs",
+    "scripts/token-consumption-audit/known-dead-namespaces.json",
+    "scripts/lib/ledger-ratchet.mjs",
+  ]) {
+    const r = classify([f]);
+    assert.equal(r.RUN_TOKEN_CONSUMPTION, true, f);
+    assert.equal(r.RUN_TOKEN_BUILD, true, f); // the scan reads the composed graph
+  }
+});
+
+test("token-consumption rail: NOT fired by docs or the resolvability audit's own scripts", () => {
+  const d = classify(["docs/some-doc.md", "docs/token-resolvability-audit/resolvability-matrix.md"]);
+  assert.equal(d.RUN_TOKEN_CONSUMPTION, false);
+  const r = classify(["scripts/token-resolvability-audit/audit.mjs"]);
+  assert.equal(r.RUN_TOKEN_CONSUMPTION, false);
+});

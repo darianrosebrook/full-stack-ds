@@ -256,6 +256,18 @@ if [ "${RUN_TOKEN_RESOLVABILITY:-false}" = true ]; then
   pnpm run audit:token-resolvability
 else say "skip token-resolvability ledger"; fi
 
+# Dead semantic namespace ledger (RAIL-TOKEN-CONSUMPTION-AUDIT-01): the
+# consumption-direction sibling of resolvability. Restores the lost-consumer
+# signal its spec recorded as dropped — at namespace granularity (maximal
+# fully-dead semantic subtrees, >=2 tokens) under the stricter per-token
+# ledger ratchet rather than the count floor that absorbed the stale
+# color.syntax duplicate. Needs the composed graph (consumption is scanned by
+# the tokens package's usage authority), so it runs after the token build.
+if [ "${RUN_TOKEN_CONSUMPTION:-false}" = true ]; then
+  echo ""; say "audit:token-consumption"
+  pnpm run audit:token-consumption
+else say "skip token-consumption ledger"; fi
+
 # Native token realization (FEAT-TOKEN-REALIZATION-AUDIT-001): the parity
 # burn-down scoreboard for react-native / swiftui / jetpack-compose carriers.
 # Two-directional ratchet — new unledgered gaps AND stale ledgered gaps both
