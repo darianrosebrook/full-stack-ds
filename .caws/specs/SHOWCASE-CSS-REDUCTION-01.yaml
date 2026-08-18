@@ -36,3 +36,8 @@ contracts:
   - name: 'no-dead-selectors'
     type: behavior
     path: 'src/consumption/css-hygiene.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "commit on showcase-css-cut: 12 dead rules removed (app.css 1930 -> 1866 lines); audit-derived list only; pnpm test 2187 green"
+    recorded_at: "2026-08-18T04:23:00.803Z"
