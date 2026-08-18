@@ -3,6 +3,7 @@ title: 'Freeze golden token streams for all ten declared CodeBlock languages'
 risk_tier: 1
 mode: feature
 lifecycle_state: active
+worktree: golden-coverage
 created_at: '2026-08-18T00:51:17.449Z'
 updated_at: '2026-08-18T00:51:17.449Z'
 blast_radius:
