@@ -1,15 +1,4 @@
-import {
-  Card,
-  Stack,
-  Stat,
-  Chip,
-  Table,
-  TableBody,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-  TableCell,
-} from "@full-stack-ds/react";
+import { Card, Chip, CodeSnippet, Details, Stack, Stat, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
 import type { Bundle, TargetCensus } from "../types/data";
 import { buildHref } from "../router";
 
@@ -149,7 +138,7 @@ export function Home({ bundle }: HomeProps) {
         The constraint exists to test an architectural claim about compositional
         systems generally — read it on the{" "}
         <a href={buildHref({ kind: "architecture" })}>Architecture</a> page. The
-        numbers below are censused from the <code>packages/</code> tree at build
+        numbers below are censused from the <CodeSnippet text="packages/" /> tree at build
         time, so they always reflect what is actually here.
       </p>
 
@@ -206,10 +195,9 @@ export function Home({ bundle }: HomeProps) {
           <h2 className="section-title">Parity matrix</h2>
           <span className="section-meta">which target ships which component</span>
         </Stack>
-        <details>
-          <summary className="muted" style={{ cursor: "pointer" }}>
-            Show the {componentCount} × {matrixCols.length} targets × components matrix
-          </summary>
+        <Details
+          summary={`Show the ${componentCount} × ${matrixCols.length} targets × components matrix`}
+        >
           <div style={{ overflowX: "auto", marginTop: "var(--fsds-core-spacing-size-05)" }}>
             <Table ariaLabel={`Parity matrix — ${componentCount} components × ${matrixCols.length} targets`}>
               <TableHead>
@@ -246,7 +234,7 @@ export function Home({ bundle }: HomeProps) {
               </TableBody>
             </Table>
           </div>
-        </details>
+        </Details>
       </section>
 
       <section className="section">

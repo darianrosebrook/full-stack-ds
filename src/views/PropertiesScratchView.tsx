@@ -8,6 +8,7 @@
 // a design surface, not a shipped feature, until the panel is approved.
 
 import { useMemo, useState } from "react";
+import { Label, Select } from "@full-stack-ds/react";
 import { bundle } from "../types/bundle";
 import { FrameworkPreview } from "../runtime/FrameworkPreview";
 import { PropertiesPanel } from "../components/properties-panel/PropertiesPanel";
@@ -84,18 +85,16 @@ export function PropertiesScratchView() {
       <div className="fsds-scratch">
         <div className="fsds-scratch__stage">
           <div className="fsds-scratch__picker">
-            <label htmlFor="fsds-scratch-component">Component</label>
-            <select
+            <Label htmlFor="fsds-scratch-component">Component</Label>
+            <Select
               id="fsds-scratch-component"
+              options={seed.map((c) => ({ value: c.name, label: c.name }))}
               value={activeName}
-              onChange={(e) => setActiveName(e.target.value)}
-            >
-              {seed.map((c) => (
-                <option key={c.name} value={c.name}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+              onChange={(next) => setActiveName(next as string)}
+              open={false}
+              onOpenChange={() => {}}
+              className="fsds-scratch__select"
+            />
           </div>
           <div className="fsds-scratch__preview">
             {reactSource?.component ? (

@@ -1,5 +1,5 @@
 import type { ComponentBundle } from "../types/data";
-import { Stack } from "@full-stack-ds/react";
+import { Breadcrumbs, Stack } from "@full-stack-ds/react";
 import { ComponentViewTabs } from "./ComponentViewTabs";
 import { TokensTable } from "./sections/TokensTable";
 
@@ -16,6 +16,13 @@ export function ComponentTokensView({ component }: ComponentTokensViewProps) {
       <p className="page-eyebrow">
         {(component.contract.layer ?? "component").toUpperCase()}
       </p>
+      <Breadcrumbs ariaLabel="Component context">
+        <li>
+          <a href="#/">Components</a>
+        </li>
+        <li>{component.contract.layer}</li>
+        <li aria-current="page">{component.name}</li>
+      </Breadcrumbs>
       <h1 className="page-title">{component.name}</h1>
       <p className="page-lede">
         Component token facts declared by {component.name}.tokens.json and

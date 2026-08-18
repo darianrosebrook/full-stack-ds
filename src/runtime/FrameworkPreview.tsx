@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Stack } from "@full-stack-ds/react";
+import { Alert, Icon, Skeleton, Spinner, Stack } from "@full-stack-ds/react";
 import type { Framework, SourceFile } from "../types/data";
 import { buildAngularShell } from "./shells/angular";
 import { REACT_PREVIEW_URL_PREFIX } from "./react-preview/constants";
@@ -195,7 +195,7 @@ export function FrameworkPreview({
     : "allow-scripts";
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ position: "relative", width: "100%" }}>
       <iframe
         ref={iframeRef}
         className="preview-iframe"
@@ -208,24 +208,28 @@ export function FrameworkPreview({
         title={`${framework} preview · ${componentName}`}
         style={{ height, pointerEvents: interactive ? "auto" : "none" }}
       />
-      {(status !== "ready" || errMsg) && (
-        <Stack
-          variant="horizontal"
-          className={`preview-status stack-gap-05${status === "error" ? " preview-status--error" : ""}`}
-          role={status === "error" ? "alert" : undefined}
-        >
-          {status === "loading" && (
-            <>
-              <span className="spinner" />
-              Booting {framework}…
-            </>
-          )}
-          {status === "error" && (
-            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {errMsg ?? "Preview failed"}
-            </span>
-          )}
+      {/* Blank-iframe placeholder while the preview boots; the iframe stays
+       * mounted so the ready-handshake and runtime-rail assertions hold. */}
+      {status === "loading" && (
+        <div style={{ position: "absolute", inset: 0 }} aria-hidden>
+          <Skeleton variant="block" style={{ width: "100%", height: "100%" }} />
+        </div>
+      )}
+      {status === "loading" && (
+        <Stack variant="horizontal" className="preview-status stack-gap-05">
+          <Spinner size="sm" ariaHidden />
+          Booting {framework}…
         </Stack>
+      )}
+      {status === "error" && (
+        <Alert
+          intent="danger"
+          level="inline"
+          className="preview-status--error"
+          icon={<Icon name="TriangleAlert" size="sm" />}
+        >
+          {errMsg ?? "Preview failed"}
+        </Alert>
       )}
     </div>
   );

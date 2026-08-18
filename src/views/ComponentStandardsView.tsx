@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTab, Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import { buildHref, type StandardsTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -1318,28 +1318,39 @@ it('has no accessibility violations', async () => {
 
       <h2>Common pitfalls</h2>
 
-      <h3>1. Missing labels</h3>
-      <CodeViewer
-        code={`// BAD
+      <Accordion type="single" collapsible aria-label="Usage pitfalls">
+        <AccordionItem>
+          <AccordionTrigger value="pitfall-1">1. Missing labels</AccordionTrigger>
+          <AccordionContent value="pitfall-1">
+            <CodeViewer
+              code={`// BAD
 <input type="text" />
 
 // GOOD
 <label htmlFor="email">Email</label>
 <input id="email" type="email" />`}
-      />
+            />
+          </AccordionContent>
+        </AccordionItem>
 
-      <h3>2. Keyboard traps</h3>
-      <CodeViewer
-        code={`// BAD: focus can't escape
+        <AccordionItem>
+          <AccordionTrigger value="pitfall-2">2. Keyboard traps</AccordionTrigger>
+          <AccordionContent value="pitfall-2">
+            <CodeViewer
+              code={`// BAD: focus can't escape
 <div onKeyDown={(e) => e.preventDefault()}>...</div>
 
 // GOOD: only handle keys you mean to handle
 <div onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}>...</div>`}
-      />
+            />
+          </AccordionContent>
+        </AccordionItem>
 
-      <h3>3. Insufficient color contrast</h3>
-      <CodeViewer
-        code={`// BAD: 1.2:1 contrast — invisible to many users
+        <AccordionItem>
+          <AccordionTrigger value="pitfall-3">3. Insufficient color contrast</AccordionTrigger>
+          <AccordionContent value="pitfall-3">
+            <CodeViewer
+              code={`// BAD: 1.2:1 contrast — invisible to many users
 .button { background: #ccc; color: #ddd; }
 
 // GOOD: drive from semantic tokens, not raw hex
@@ -1347,18 +1358,25 @@ it('has no accessibility violations', async () => {
   background: var(--semantic-color-background-accent);
   color:      var(--semantic-color-foreground-on-accent);
 }`}
-      />
+            />
+          </AccordionContent>
+        </AccordionItem>
 
-      <h3>4. Missing accessible names on icon-only controls</h3>
-      <CodeViewer
-        code={`// BAD: screen reader hears "button"
+        <AccordionItem>
+          <AccordionTrigger value="pitfall-4">4. Missing accessible names on icon-only controls</AccordionTrigger>
+          <AccordionContent value="pitfall-4">
+            <CodeViewer
+              code={`// BAD: screen reader hears "button"
 <button onClick={handleClose}><Icon name="close" /></button>
 
 // GOOD
 <button onClick={handleClose} aria-label="Close dialog">
   <Icon name="close" aria-hidden />
 </button>`}
-      />
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </article>
   );
 }

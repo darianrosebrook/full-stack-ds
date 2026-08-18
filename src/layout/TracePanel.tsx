@@ -1,4 +1,18 @@
-import { Chip, Button, Tabs, TabsList, TabsTab, TabsPanel } from "@full-stack-ds/react";
+import {
+  AlertNotice,
+  Button,
+  Chip,
+  CodeSnippet,
+  Icon,
+  ShowMore,
+  Stack,
+  Tabs,
+  TabsList,
+  TabsPanel,
+  TabsTab,
+  Tooltip,
+  Truncate,
+} from "@full-stack-ds/react";
 import type { ComponentBundle, FoundationToken } from "../types/data";
 import type { TraceSelection } from "../trace/types";
 import { JsonTreeViewer } from "../components/JsonTreeViewer";
@@ -31,7 +45,11 @@ export function TracePanel({
 }: TracePanelProps) {
   if (!component) {
     return (
-      <div className="trace-empty">Select a component to inspect its contract.</div>
+      <div className="trace-empty">
+        <AlertNotice status="info" level="inline" icon={<Icon name="Info" size="sm" />}>
+          Select a component to inspect its contract.
+        </AlertNotice>
+      </div>
     );
   }
 
@@ -63,20 +81,27 @@ export function TracePanel({
 
       <TabsPanel value="contract" className="trace-panel-body">
         {selection ? (
-          <div style={{ marginBottom: "var(--fsds-core-spacing-size-06)", fontSize: "var(--fsds-core-typography-ramp-2)" }}>
-            <Chip size="small" variant="selected" style={{ fontFamily: "var(--fsds-core-typography-font-family-mono)", marginBottom: "var(--fsds-core-spacing-size-05)" }}>
-              {selection.hit.kind}
-            </Chip>
-            <div style={{ color: "var(--fsds-semantic-color-foreground-primary)", marginBottom: "var(--fsds-core-spacing-size-04)" }}>
+          <Stack className="stack-gap-04" style={{ marginBottom: "var(--fsds-core-spacing-size-06)", fontSize: "var(--fsds-core-typography-ramp-2)" }}>
+            <Tooltip placement="bottom">
+              <Tooltip.Trigger asChild>
+                <Chip size="small" variant="selected" style={{ fontFamily: "var(--fsds-core-typography-font-family-mono)" }}>
+                  {selection.hit.kind}
+                </Chip>
+              </Tooltip.Trigger>
+              <Tooltip.Content>The contract field family this region was generated from</Tooltip.Content>
+            </Tooltip>
+            <ShowMore maxLines={2}>
               {selection.hit.explanation}
+            </ShowMore>
+            <Truncate lines={1} expandable>
+              <CodeSnippet as="code" text={selection.hit.contractPath} />
+            </Truncate>
+            <div>
+              <Button variant="ghost" size="small" onClick={onClear}>
+                Clear selection
+              </Button>
             </div>
-            <code style={{ display: "block", color: "var(--fsds-semantic-color-foreground-secondary)", fontSize: "var(--fsds-core-typography-ramp-2)", marginBottom: "var(--fsds-core-spacing-size-05)" }}>
-              {selection.hit.contractPath}
-            </code>
-            <Button variant="ghost" size="small" onClick={onClear}>
-              Clear selection
-            </Button>
-          </div>
+          </Stack>
         ) : (
           <p className="muted" style={{ fontSize: "var(--fsds-core-typography-ramp-2)", marginTop: 0 }}>
             Click any tagged region in the source on the Developer tab to highlight

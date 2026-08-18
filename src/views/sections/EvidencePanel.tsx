@@ -1,4 +1,4 @@
-import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
+import { Icon, Progress, ShowMore, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../../types/data";
 import { bundle } from "../../types/bundle";
 import {
@@ -73,7 +73,15 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
             {sourceByFramework.map(({ framework, present }) => (
               <TableRow key={framework}>
                 <TableCell>{framework}</TableCell>
-                <TableCell>{present ? "present" : "absent"}</TableCell>
+                <TableCell>
+                  {present ? (
+                    <>
+                      <Icon name="Check" size="sm" /> present
+                    </>
+                  ) : (
+                    "absent"
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -114,6 +122,17 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
                 })}
               </TableBody>
             </Table>
+            <Progress
+              value={
+                (ALL_FRAMEWORKS.filter((fw) => hasDefaultFact(railEntry, fw)).length /
+                  ALL_FRAMEWORKS.length) *
+                100
+              }
+              label="Rail-covered frameworks"
+              showValue
+              formatValue={(value) => `${Math.round(value)}%`}
+              style={{ marginTop: "var(--fsds-core-spacing-size-05)", maxWidth: 320 }}
+            />
             <p className="muted" style={{ marginTop: "var(--fsds-core-spacing-size-04)" }}>
               "Asserted" means <code>e2e/runtime-rail.spec.ts</code> asserts a
               contract fact for this component in that framework
@@ -135,7 +154,8 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
 
       <div className="subsection">
         <h3 className="subsection-title">Residuals &amp; non-claims</h3>
-        <ul className="residuals-list">
+        <ShowMore maxLines={14}>
+          <ul className="residuals-list">
           <li>
             <strong>Admission-rail status is not bound in-app.</strong> Whether
             these realizations passed the generated-artifact admission rail is
@@ -166,7 +186,8 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
             committed or reproducibly generated status artifact with a declared
             freshness model.
           </li>
-        </ul>
+          </ul>
+        </ShowMore>
       </div>
     </div>
   );

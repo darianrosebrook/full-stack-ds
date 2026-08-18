@@ -1,5 +1,5 @@
-import { useMemo, useRef, useEffect } from "react";
-import { Stack } from "@full-stack-ds/react";
+import { useMemo, useRef, useEffect, useState } from "react";
+import { Button, Stack, Toast, Tooltip } from "@full-stack-ds/react";
 import type { TraceHit } from "../trace/types";
 
 interface CodeViewerProps {
@@ -34,6 +34,17 @@ function segmentLine(line: string, lineHits: { hit: TraceHit; index: number; col
 
 export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitIndex }: CodeViewerProps) {
   const containerRef = useRef<HTMLPreElement>(null);
+  const [copied, setCopied] = useState(false);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // clipboard unavailable (permissions/older embeds) — the toast simply never fires
+    }
+  };
 
   const lines = useMemo(() => {
     const raw = code.split("\n");
@@ -59,10 +70,24 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
     <div className="panel">
       {filename && (
         <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
-          <span>{filename}</span>
-          <span className="subtle">{code.split("\n").length} lines</span>
+          <Stack variant="horizontal" className="stack-gap-04" style={{ alignItems: "baseline" }}>
+            <span>{filename}</span>
+            <span className="subtle">{code.split("\n").length} lines</span>
+          </Stack>
+          <Button variant="ghost" size="small" ariaLabel="Copy code to clipboard" onClick={copyCode}>
+            Copy
+          </Button>
         </Stack>
       )}
+      <Toast
+        open={copied}
+        onOpenChange={setCopied}
+        title="Copied to clipboard"
+        variant="success"
+        duration={2500}
+      >
+        {filename ?? "Source"}
+      </Toast>
       <pre className="code-block" ref={containerRef} style={{ borderRadius: 0, border: "none" }}>
         <code>
           {lines.map(({ lineNumber, segments }) => (
@@ -84,26 +109,32 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
               <span style={{ flex: 1, minWidth: 0 }}>
                 {segments.map((seg, idx) =>
                   seg.hit ? (
-                    <button
-                      key={idx}
-                      type="button"
-                      data-hit-index={seg.hitIndex}
-                      onClick={() => onHitClick?.(seg.hit!)}
-                      title={`${seg.hit.kind} → ${seg.hit.contractPath}\n${seg.hit.explanation}`}
-                      style={{
-                        background:
-                          selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-background-accent)" : "var(--fsds-semantic-color-background-accent-subtle)",
-                        color: selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-foreground-on-color)" : "var(--fsds-semantic-color-foreground-accent)",
-                        border: "none",
-                        borderRadius: "var(--fsds-core-shape-radius-02)",
-                        padding: "0 2px",
-                        font: "inherit",
-                        cursor: "pointer",
-                        margin: "0 -1px",
-                      }}
-                    >
-                      {seg.text}
-                    </button>
+                    <Tooltip key={idx} placement="top">
+                      <Tooltip.Trigger asChild>
+                        <button
+                          type="button"
+                          data-hit-index={seg.hitIndex}
+                          onClick={() => onHitClick?.(seg.hit!)}
+                          style={{
+                            background:
+                              selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-background-accent)" : "var(--fsds-semantic-color-background-accent-subtle)",
+                            color: selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-foreground-on-color)" : "var(--fsds-semantic-color-foreground-accent)",
+                            border: "none",
+                            borderRadius: "var(--fsds-core-shape-radius-02)",
+                            padding: "0 2px",
+                            font: "inherit",
+                            cursor: "pointer",
+                            margin: "0 -1px",
+                          }}
+                        >
+                          {seg.text}
+                        </button>
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>
+                        <strong>{seg.hit.kind}</strong> → {seg.hit.contractPath}
+                        {seg.hit.explanation ? ` — ${seg.hit.explanation}` : ""}
+                      </Tooltip.Content>
+                    </Tooltip>
                   ) : (
                     <span key={idx}>{seg.text || "​"}</span>
                   ),

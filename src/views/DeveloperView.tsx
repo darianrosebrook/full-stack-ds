@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Stack, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Breadcrumbs, Checkbox, Stack, Status, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
 import { bundle } from "../types/bundle";
 import {
@@ -47,6 +47,7 @@ export function DeveloperView({
     [component],
   );
   const [framework, setFramework] = useState<Framework>(availableFrameworks[0] ?? "react");
+  const [interactivePreview, setInteractivePreview] = useState(true);
 
   const source = component.sources[framework];
   const componentFile = source?.component;
@@ -87,6 +88,13 @@ export function DeveloperView({
   return (
     <div className="page">
       <p className="page-eyebrow">{(component.contract.layer ?? "component").toUpperCase()}</p>
+      <Breadcrumbs ariaLabel="Component context">
+        <li>
+          <a href="#/">Components</a>
+        </li>
+        <li>{component.contract.layer}</li>
+        <li aria-current="page">{component.name}</li>
+      </Breadcrumbs>
       <h1 className="page-title">{component.name}</h1>
       <p className="page-lede">
         Inspect the source for {component.name} across every emitted framework.
@@ -140,9 +148,7 @@ export function DeveloperView({
           return (
             <span key={t.key}>
               {i > 0 ? " · " : ""}
-              <span className={present ? "" : "subtle"}>
-                {t.label} {present ? "✓" : "—"}
-              </span>
+              <Status status={present ? "success" : "error"}>{t.label}</Status>
             </span>
           );
         })}
@@ -161,7 +167,15 @@ export function DeveloperView({
             <div className="panel">
               <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
                 <span>{framework}</span>
-                <span className="subtle">demo harness</span>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: "var(--fsds-core-spacing-size-04)", fontSize: "var(--fsds-core-typography-ramp-2)", cursor: "pointer" }}>
+                  <Checkbox
+                    size="sm"
+                    checked={interactivePreview}
+                    onChange={setInteractivePreview}
+                    name="preview-interactive"
+                  />
+                  Interactive preview
+                </label>
               </Stack>
               <div className="preview-frame">
                 <FrameworkPreview
@@ -169,6 +183,7 @@ export function DeveloperView({
                   framework={framework}
                   componentName={component.name}
                   componentSource={componentFile}
+                  interactive={interactivePreview}
                   css={cssFile}
                   tokensCss={bundle.tokensCss}
                   demo={demo}

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
+import { AlertNotice, Icon, Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import {
   deriveA2UIDescriptor,
   type A2UIDescriptor,
@@ -49,10 +49,12 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
 
   if (!result.ok) {
     return (
-      <div className="muted" style={{ padding: "var(--fsds-core-spacing-size-06)" }}>
-        No A2UI descriptor authored for {contract.name}. This contract declares
-        no <code>a2ui.category</code>, so the agent-facing projection is
-        unavailable.
+      <div style={{ padding: "var(--fsds-core-spacing-size-06)" }}>
+        <AlertNotice status="info" level="inline" icon={<Icon name="Info" size="sm" />}>
+          No A2UI descriptor authored for {contract.name}. This contract declares
+          no <code>a2ui.category</code>, so the agent-facing projection is
+          unavailable.
+        </AlertNotice>
       </div>
     );
   }
