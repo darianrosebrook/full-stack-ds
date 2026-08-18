@@ -39,3 +39,8 @@ contracts:
   - name: 'component.tokens sidecar'
     type: schema
     path: 'packages/ds-contracts/component.tokens.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run audit:token-realization → selfcheck 9/9 + [token-realization] findings=98 (ledgered=98) unledgered=0 stale=0 PASS; matrix docs/token-realization-audit/realization-matrix.md (RN 898/898, swift 0/895 + 49 carrier gaps, compose 57/57 + 48 admission); live negative probes: removing a ledger entry → FAIL unledgered=1, adding bogus entry → FAIL stale=1, restored → PASS; prepush-scope node --test 34/34; pnpm test 2163/2163; docs:check-claims 12/12"
+    recorded_at: "2026-08-18T01:34:55.980Z"
