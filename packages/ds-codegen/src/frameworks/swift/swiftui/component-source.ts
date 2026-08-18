@@ -274,7 +274,8 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
  * The projected-children action class: a native action affordance whose
  * entire content is the consumer's projected children.
  */
-function isProjectedChildrenAction(ir: ComponentIR): boolean {
+/** Exported for cross-framework reuse (jetpack-compose action path) — the IR owns this fact. */
+export function isProjectedChildrenAction(ir: ComponentIR): boolean {
   if (!ir.dom || ir.root.element !== "button") return false;
   const children = ir.dom.children ?? [];
   return (
