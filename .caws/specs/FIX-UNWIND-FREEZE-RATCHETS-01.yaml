@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "diff -q against git show abf1fed7~1 reports IDENTICAL for both golden-fixtures.json and tokenize.test.ts; canonical suite vitest packages/ds-codegen/src/highlight = 16 passed (was 30 with the six added languages); per-package highlight suites back to 8 tests each: vue 598 passed / svelte 557 passed / lit 514 passed+2 skipped"
     recorded_at: "2026-08-18T04:38:50.052Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "ADR-0001 section 1.1 no longer lists 'every contract-declared-vs-realized obligation the realization ledgers gate'; replaced with an explicit paragraph explaining why a realization ledger is a population pin under section 1.2, plus a new section 9 anti-pattern 'Cross-slice contamination' and a corrected section 10 disposition table (both freeze ratchets now marked removed)"
+    recorded_at: "2026-08-18T04:38:51.487Z"
