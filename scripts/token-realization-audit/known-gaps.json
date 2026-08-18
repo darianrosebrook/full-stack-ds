@@ -1,0 +1,690 @@
+{
+  "gaps": [
+    {
+      "target": "swiftui",
+      "component": "Accordion",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Alert",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "AlertNotice",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Avatar",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Badge",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Blockquote",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Breadcrumbs",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Button",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Calendar",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Card",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "CodeBlock",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "CodeSnippet",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Command",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Details",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Dialog",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Field",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Input",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Label",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Links",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "List",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Markdown",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "Markdown is the one corpus component outside the swiftui allowlist; admitting it requires the Markdown lowering class first."
+    },
+    {
+      "target": "swiftui",
+      "component": "NavList",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "OTP",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Popover",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Postcard",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "ProfileFlag",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Sheet",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "ShowMore",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Shuttle",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Skeleton",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Stat",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Status",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Table",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Tabs",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Text",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "TextField",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Toast",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Tooltip",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Truncate",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "swiftui",
+      "component": "Walkthrough",
+      "kind": "carrier",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Accordion",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Alert",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "AlertNotice",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Avatar",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Badge",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Blockquote",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Breadcrumbs",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Button",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Calendar",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Card",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Checkbox",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Chip",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "CodeBlock",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "CodeSnippet",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Command",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Details",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Dialog",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Divider",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Field",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Icon",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Image",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Input",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Label",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Links",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "List",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Markdown",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "NavList",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "OTP",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Popover",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Postcard",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "ProfileFlag",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Progress",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Select",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Sheet",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "ShowMore",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Shuttle",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Skeleton",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Spinner",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Stat",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Status",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Table",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Tabs",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Text",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "TextField",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Toast",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Tooltip",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Truncate",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "Walkthrough",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    }
+  ]
+}
