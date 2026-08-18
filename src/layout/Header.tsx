@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Icon, Popover, Stack, Switch } from "@full-stack-ds/react";
+import { Button, Icon, Popover, Stack, Switch, Walkthrough } from "@full-stack-ds/react";
+import { AboutDialog } from "../components/AboutDialog";
 
 const BRAND_LABEL_OVERRIDES: Record<string, string> = {
   default: "Default",
@@ -55,7 +56,7 @@ function collectBrandsFromRules(rules: CSSRuleList, out: Set<string>) {
   }
 }
 
-export function Header() {
+export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
     const stored = localStorage.getItem("fsds-theme");
@@ -94,6 +95,15 @@ export function Header() {
 
   const isDark = theme === "dark";
 
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [tourStep, setTourStep] = useState(-1);
+  const tour = [
+    { anchor: ".brand", title: "The brand", description: "One contract drives every component on this site." },
+    { anchor: ".app-sidebar", title: "The corpus", description: "Every component, grouped by contract layer." },
+    { anchor: ".app-main", title: "The evidence", description: "Design, developer, and token views per component." },
+    { anchor: ".header-actions", title: "You are here", description: "Palette (Cmd+K), tour, about, and appearance." },
+  ];
+
   return (
     <header className="app-header">
       <Stack as="a" variant="horizontal" className="brand stack-gap-05" href="#/">
@@ -103,6 +113,33 @@ export function Header() {
       </Stack>
 
       <Stack variant="horizontal" className="header-actions stack-gap-05">
+        <Button
+          variant="ghost"
+          size="small"
+          className="icon-btn"
+          ariaLabel="Open command palette (Ctrl+K or Cmd+K)"
+          onClick={() => onOpenPalette?.()}
+        >
+          <Icon name="Search" size="sm" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="small"
+          className="icon-btn"
+          ariaLabel="Take a tour of the showcase"
+          onClick={() => setTourStep(0)}
+        >
+          <Icon name="Home" size="sm" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="small"
+          className="icon-btn"
+          ariaLabel="About this project"
+          onClick={() => setAboutOpen(true)}
+        >
+          <Icon name="Info" size="sm" />
+        </Button>
         <a
           className="icon-btn"
           href="https://github.com/darianrosebrook/full-stack-ds"
@@ -205,6 +242,21 @@ export function Header() {
           </Popover.Content>
         </Popover>
       </Stack>
+
+      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+      <Walkthrough
+        index={tourStep}
+        onStepChange={setTourStep}
+        onComplete={() => setTourStep(-1)}
+        onSkip={() => setTourStep(-1)}
+        label="Showcase tour"
+        storageKey="fsds-showcase-tour"
+        steps={tour}
+        slots={{
+          title: tour[tourStep]?.title,
+          description: tour[tourStep]?.description,
+        }}
+      />
     </header>
   );
 }

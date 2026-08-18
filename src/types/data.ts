@@ -309,6 +309,15 @@ export interface Census {
   presence: Record<string, string[]>;
 }
 
+export interface ActivityEvent {
+  id: string;
+  kind: "commit" | "spec";
+  title: string;
+  author: string;
+  timestamp: string;
+  stats: { commits: number; replies: number; reposts: number };
+}
+
 export interface Bundle {
   components: ComponentBundle[];
   primitives: PrimitiveBundle[];
@@ -321,5 +330,8 @@ export interface Bundle {
   /** Live build-time census of the packages tree. Optional so test fixtures
    * that build a minimal Bundle stay valid; the plugin always supplies it. */
   census?: Census;
+  /** Build-time activity feed (recent commits + CAWS spec events). Optional so
+   * minimal test fixtures stay valid; the plugin always supplies it. */
+  activity?: ActivityEvent[];
   generatedAt: number;
 }

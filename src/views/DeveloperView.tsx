@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { getPrefs } from "../prefs";
 import { Breadcrumbs, Checkbox, Stack, Status, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
 import { bundle } from "../types/bundle";
@@ -46,8 +47,11 @@ export function DeveloperView({
     () => FRAMEWORK_TABS.filter((t) => component.sources[t.key]?.component).map((t) => t.key),
     [component],
   );
-  const [framework, setFramework] = useState<Framework>(availableFrameworks[0] ?? "react");
-  const [interactivePreview, setInteractivePreview] = useState(true);
+  const [framework, setFramework] = useState<Framework>(() => {
+    const pref = getPrefs().defaultFramework as Framework;
+    return availableFrameworks.includes(pref) ? pref : (availableFrameworks[0] ?? "react");
+  });
+  const [interactivePreview, setInteractivePreview] = useState(() => getPrefs().interactivePreview);
 
   const source = component.sources[framework];
   const componentFile = source?.component;
