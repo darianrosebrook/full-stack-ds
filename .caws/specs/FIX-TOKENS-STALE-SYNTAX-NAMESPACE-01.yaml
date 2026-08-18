@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "worktree gates: tokens:validate 160/160, tokens:build:check pass, tokens:check-contrast 44/44 AA, tokens:check-brand-refs pass, tokens:check-usage:gate pass after sanctioned write-usage-baseline (413->396 unused, no regression), generate:check 50/50, governed:rail Overall: PASS with clean tree (zero component-tree diff), pnpm test 2154/2154, test:frameworks all green"
     recorded_at: "2026-08-18T00:48:29.353Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "repo-wide grep sweep: zero color.syntax.* consumers outside usage-baseline.json; merge diff touches exactly 4 files (deleted syntax.tokens.json, resolved.tokens.json, tokens.css, usage-baseline.json) — git show --stat dbc52b3a"
+    recorded_at: "2026-08-18T00:48:30.343Z"
