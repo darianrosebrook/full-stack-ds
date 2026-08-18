@@ -47,3 +47,8 @@ contracts:
   - name: 'caws-hook-dispatch'
     type: behavior
     path: '.caws/hooks/dispatch/pre_tool_use.sh'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "js-yaml declared as a root devDependency (package.json + pnpm-lock); pnpm install reports '+ js-yaml 4.1.1'; node -e require.resolve('js-yaml',{paths:['.caws/hooks/lib']}) resolves to node_modules/.pnpm/js-yaml@4.1.1/node_modules/js-yaml/index.js, so the oracle's lazy require now succeeds and the canonical scope.in claim check runs instead of silently degrading"
+    recorded_at: "2026-08-18T16:28:41.299Z"
