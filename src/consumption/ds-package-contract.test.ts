@@ -98,6 +98,7 @@ describe("@full-stack-ds/react published consumption contract", () => {
       "AccordionTrigger",
       "Alert",
       "AlertNotice",
+      "Avatar",
       "Badge",
       "Blockquote",
       "Breadcrumbs",
@@ -139,6 +140,7 @@ describe("@full-stack-ds/react published consumption contract", () => {
       "Toast",
       "Tooltip",
       "Truncate",
+      "Calendar",
     ];
     const absent = REQUIRED.filter((name) => mod[name] == null);
     expect(absent, `missing exports from dist: ${absent.join(", ")}`).toEqual(

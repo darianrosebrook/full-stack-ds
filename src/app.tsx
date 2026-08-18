@@ -1,4 +1,8 @@
 import { bundle } from "./types/bundle";
+import { SettingsView } from "./views/SettingsView";
+import { ActivityView } from "./views/ActivityView";
+import { CommandPalette, useCommandPaletteHotkey } from "./components/CommandPalette";
+import { usePrefs } from "./prefs";
 import { useMemo, useState } from "react";
 import { Header } from "./layout/Header";
 import { Sidebar } from "./layout/Sidebar";
@@ -75,17 +79,22 @@ export function App() {
     return bundle.primitives.find((p) => p.name === name) ?? null;
   }, [route]);
 
-  const showTrace = route.kind === "component";
+  const prefs = usePrefs();
+  const showTrace = route.kind === "component" && prefs.tracePanelVisible;
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  useCommandPaletteHotkey(() => setPaletteOpen(true));
 
   return (
     <div className={`app-shell${showTrace ? "" : " app-shell--no-trace"}`}>
-      <Header />
+      <Header onOpenPalette={() => setPaletteOpen(true)} />
       <Sidebar bundle={bundle} route={route} />
 
       <main className="app-main">
         {route.kind === "home" && <Home bundle={bundle} />}
         {route.kind === "architecture" && <ArchitectureView bundle={bundle} />}
         {route.kind === "tokens" && <TokensView bundle={bundle} />}
+        {route.kind === "settings" && <SettingsView />}
+        {route.kind === "activity" && <ActivityView bundle={bundle} />}
         {route.kind === "display-case" && <DisplayCaseView bundle={bundle} />}
         {route.kind === "tokens-philosophy" && (
           <TokensPhilosophyView tab={route.tab} />
@@ -149,6 +158,7 @@ export function App() {
           />
         </aside>
       )}
+          <CommandPalette bundle={bundle} open={paletteOpen} onOpenChange={setPaletteOpen} />
     </div>
   );
 }

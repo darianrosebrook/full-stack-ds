@@ -1,8 +1,10 @@
 import { readFile, readdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import path from "node:path";
 import type { Plugin } from "vite";
 import type {
+  ActivityEvent,
   BrandTokenSet,
   Census,
   ComponentBundle,
@@ -548,6 +550,7 @@ export async function buildBundle(rootDir: string) {
   ]);
 
   const census = await buildCensus(rootDir, components, foundationTokens.length);
+  const activity = buildActivity(rootDir);
 
   return {
     components,
@@ -557,8 +560,67 @@ export async function buildBundle(rootDir: string) {
     foundationTokens,
     brandTokens,
     census,
+    activity,
     generatedAt: Date.now(),
   };
+}
+
+/**
+ * Build-time activity feed: recent commits and CAWS spec events, newest
+ * first. Never throws - a shallow clone or missing git simply yields the
+ * spec-derived events alone. This is real repo data, not a fixture: the
+ * Activity view renders whatever actually happened.
+ */
+export function buildActivity(rootDir: string, limit = 24): ActivityEvent[] {
+  const events: ActivityEvent[] = [];
+
+  try {
+    const specsDir = path.join(rootDir, ".caws", "specs");
+    for (const file of readdirSync(specsDir)) {
+      if (!file.endsWith(".yaml")) continue;
+      const raw = readFileSync(path.join(specsDir, file), "utf8");
+      const id = file.replace(/\.yaml$/, "");
+      const title = raw.match(/^title:\s*['"]?([^'"\n]+)['"]?\s*$/m)?.[1] ?? id;
+      const updated = raw.match(/^updated_at:\s*['"]?([^'"\n]+)['"]?\s*$/m)?.[1];
+      const ts = updated ? Date.parse(updated) : NaN;
+      if (Number.isNaN(ts)) continue;
+      events.push({
+        id: `spec:${id}`,
+        kind: "spec",
+        title,
+        author: "caws",
+        timestamp: new Date(ts).toISOString(),
+        stats: { commits: 1, replies: 0, reposts: 0 },
+      });
+    }
+  } catch {
+    // no specs dir - spec events skipped
+  }
+
+  try {
+    const git = execSync(
+      `git log --no-decorate -n ${limit} --date=iso-strict --pretty=format:%H%x1f%ad%x1f%an%x1f%s`,
+      { cwd: rootDir, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim();
+    for (const line of git.split("\n")) {
+      const [hash, date, author, subject] = line.split("\x1f");
+      if (!hash || !date) continue;
+      events.push({
+        id: `commit:${hash}`,
+        kind: "commit",
+        title: subject ?? "",
+        author: author ?? "unknown",
+        timestamp: new Date(date).toISOString(),
+        stats: { commits: 1, replies: 0, reposts: 0 },
+      });
+    }
+  } catch {
+    // git unavailable (or not a repo) - commit events skipped
+  }
+
+  return events
+    .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+    .slice(0, limit);
 }
 
 export default function fsdsDataPlugin(): Plugin {
