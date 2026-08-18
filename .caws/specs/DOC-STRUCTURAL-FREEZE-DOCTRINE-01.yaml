@@ -7,7 +7,9 @@ created_at: '2026-08-18T02:57:07.051Z'
 updated_at: '2026-08-18T02:57:07.051Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'docs/architecture/adr: ADR-0001 structural freeze doctrine (new tree, first ADR)'
+    - 'gate posture: token-consumption audit demoted report-only-until-RC (ci.yml, .githooks/pre-push, ledger comments); no correctness-class gate touched'
+    - 'docs: AGENTS.md, current-implementation-snapshot.md row, successor ledger'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -20,7 +22,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'No gate is weakened to dodge a failing check: the token-consumption audit is green (29/29 ledgered, 0 stale) at demotion time; this is owner-directed reclassification of its admissibility class, not evasion.'
+  - 'Correctness-class gates (golden stream identity, resolvability, WCAG contrast, realization ledgers) keep their blocking posture pre-RC — the doctrine separates classes, it does not disarm the rail.'
+  - 'The demoted audit keeps manual exit-code semantics and its committed ledger so the RC flip is a one-line wiring change over a live tool, not a rebuild.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
