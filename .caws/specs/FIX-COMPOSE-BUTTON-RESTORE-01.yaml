@@ -2,9 +2,11 @@ id: FIX-COMPOSE-BUTTON-RESTORE-01
 title: 'Restore the Compose Button admission reverted by a stray staged index in 465c77b5'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Restored the Compose Button admission swept away by a stray staged index in 465c77b5; proven reproducible from codegen'
 created_at: '2026-08-18T04:44:38.863Z'
-updated_at: '2026-08-18T04:44:38.863Z'
+updated_at: '2026-08-18T04:48:49.820Z'
 blast_radius:
   modules:
     - 'restore: packages/ds-jetpack-compose Button.kt/ButtonTokens.kt/FsdsButton.kt/Components.generated.kt (764 lines)'
