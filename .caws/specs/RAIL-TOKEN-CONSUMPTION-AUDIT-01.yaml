@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "audit.mjs spawns analyzeTokenUsage via usage-scan.ts (sole consumption authority); deadSubtrees reports maximal fully-dead semantic subtrees >=2 tokens; selfcheck 8/8 (partial-consumption splitting, maximal nesting collapse, singleton exclusion, core exclusion, dead-layer root)"
     recorded_at: "2026-08-18T02:29:53.416Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run audit:token-consumption: findings=29 (ledgered=29) unledgered=0 stale=0 PASS; seeded ledger covers 113 dead tokens, every entry spec'd+noted; selfcheck pins the ratchet bite both directions AND the historical color.syntax split-brain shape as unledgered"
+    recorded_at: "2026-08-18T02:29:54.353Z"
