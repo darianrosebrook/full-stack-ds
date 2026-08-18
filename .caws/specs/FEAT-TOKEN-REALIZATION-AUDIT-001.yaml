@@ -2,9 +2,11 @@ id: FEAT-TOKEN-REALIZATION-AUDIT-001
 title: 'Token-realization audit rail: per-contract slot obligations vs native carrier realization, two-directional ratchet'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Native token-realization scoreboard live: 98-entry ratcheted ledger, CI and pre-push wired, first measurement recorded'
 created_at: '2026-08-18T01:06:57.797Z'
-updated_at: '2026-08-18T01:32:15.565Z'
+updated_at: '2026-08-18T01:34:56.972Z'
 blast_radius:
   modules:
     - 'scripts/token-realization-audit + scripts/lib/ledger-ratchet (new audit family)'
