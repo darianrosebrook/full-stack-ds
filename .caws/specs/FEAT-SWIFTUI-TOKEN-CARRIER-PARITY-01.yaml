@@ -3,7 +3,6 @@ title: 'Swift token carriers measured where they live + ref arm completes the re
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swift-token-carriers
 created_at: '2026-08-18T02:09:44.054Z'
 updated_at: '2026-08-18T02:11:22.672Z'
 blast_radius:
