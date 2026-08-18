@@ -3,7 +3,6 @@ title: 'Stack primitive adopted as the showcase layout primitive'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: showcase-stack-layout
 created_at: '2026-08-18T02:09:27.317Z'
 updated_at: '2026-08-18T02:09:27.317Z'
 blast_radius:
