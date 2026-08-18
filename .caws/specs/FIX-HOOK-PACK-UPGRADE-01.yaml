@@ -36,3 +36,8 @@ contracts:
   - name: 'caws-hook-dispatch'
     type: behavior
     path: '.caws/hooks/dispatch/pre_tool_use.sh'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "settings.json now routes PreToolUse/PostToolUse/SessionStart/Stop/PreCompact to .caws/hooks/dispatch/* with the canonical CAWS_AGENT_SURFACE + CAWS_PROJECT_DIR prefix matching settings.json.example; grep of hook_pack_version across dispatch/pre_tool_use.sh, block-dangerous.sh and scope-guard.sh reports 39 (was 14 in the shadow tree and 1/16 on the live tree)"
+    recorded_at: "2026-08-18T06:33:48.443Z"
