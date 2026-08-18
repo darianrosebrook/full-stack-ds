@@ -82,6 +82,17 @@ FILE_PATH="$HOOK_FILE_PATH"
 
 _hooks_prefix_match() {
   # Returns 0 (true) if FILE_PATH is under any vendor hooks dir.
+  #
+  # LOCAL GROWTH (FIX-HOOK-PACK-DEDUPE-01): the shared pack installs its
+  # EXECUTABLE guards to .caws/hooks/, while CAWS_VENDOR_DIR is .claude for
+  # this surface — so the vendor-dir clauses below now match a directory
+  # holding only CLAUDE.md/README.md, which the *.md branch then admits.
+  # Left as-is this hook is a no-op for claude-code: every live guard under
+  # .caws/hooks/ was agent-writable (verified — a Write to
+  # .caws/hooks/.protected-probe succeeded before this clause existed).
+  # Cover the shared hooks dir too, so protection follows the scripts.
+  [[ "$FILE_PATH" == */.caws/hooks/* ]] || \
+  [[ "$FILE_PATH" == ".caws/hooks/"* ]] || \
   [[ "$FILE_PATH" == */"${CAWS_VENDOR_DIR}"/hooks/* ]] || \
   [[ "$FILE_PATH" == "${CAWS_VENDOR_DIR}/hooks/"* ]]
 }
@@ -109,7 +120,15 @@ if _hooks_prefix_match; then
       if command -v guard_reprieve_hint >/dev/null 2>&1; then
         guard_reprieve_hint protected-paths.sh >&2
       fi
-      exit 1
+      # LOCAL GROWTH (FIX-HOOK-PACK-DEDUPE-01): exit 2, not 1. This branch says
+      # "Fail closed" and prints BLOCKED, but Claude Code treats ONLY exit 2 as
+      # a block — exit 1 is a non-blocking error, so the tool call proceeds.
+      # Verified empirically: a Write to .caws/hooks/.protected-probe succeeded
+      # while the dispatcher returned 1 for that exact path. The strike-state
+      # branch below already uses 2; this one was inconsistent with both its own
+      # message and its sibling. Reprieve via `caws reprieve grant` when a
+      # deliberate hook edit is needed.
+      exit 2
       ;;
   esac
 fi
