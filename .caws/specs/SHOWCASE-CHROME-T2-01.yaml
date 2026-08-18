@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "#/settings + #/activity routed (router.tsx kinds + buildHref), Header gains palette/tour/about triggers (Header.test green unmodified - onOpenPalette optional); surfaces reachable via Header buttons + palette without Sidebar"
     recorded_at: "2026-08-18T04:18:35.096Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: src/prefs.ts localStorage store (get/set/reset/usePrefs via useSyncExternalStore); DeveloperView initialises framework + interactivePreview from prefs; app.tsx gates trace panel on prefs.tracePanelVisible; Settings Toast confirms on every change
+    recorded_at: "2026-08-18T04:18:35.947Z"
