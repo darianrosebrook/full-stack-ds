@@ -2,9 +2,11 @@ id: SHOWCASE-STACK-LAYOUT-01
 title: 'Stack primitive adopted as the showcase layout primitive'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Showcase flex-axis layout now rides the DS Stack primitive with token-backed gap utilities and a regression guard; census diff absorbed as first commit'
 created_at: '2026-08-18T02:09:27.317Z'
-updated_at: '2026-08-18T02:09:27.317Z'
+updated_at: '2026-08-18T03:00:38.688Z'
 blast_radius:
   modules:
     - 'src/ showcase app: views/sections/layout markup adopts Stack for flex-axis layout; app.css loses the absorbed layout rules'
