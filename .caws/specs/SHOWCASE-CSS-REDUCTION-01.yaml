@@ -3,7 +3,6 @@ title: 'Cut dead showcase CSS and pin a no-dead-selectors guard'
 risk_tier: 2
 mode: refactor
 lifecycle_state: active
-worktree: showcase-css-cut
 created_at: '2026-08-18T04:20:44.075Z'
 updated_at: '2026-08-18T04:20:44.075Z'
 blast_radius:
