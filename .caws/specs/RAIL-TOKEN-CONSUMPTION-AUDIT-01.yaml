@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run audit:token-consumption: findings=29 (ledgered=29) unledgered=0 stale=0 PASS; seeded ledger covers 113 dead tokens, every entry spec'd+noted; selfcheck pins the ratchet bite both directions AND the historical color.syntax split-brain shape as unledgered"
     recorded_at: "2026-08-18T02:29:54.353Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "root package.json audit:token-consumption; ci.yml Token-consumption ledger step after token-resolvability; prepush-scope.mjs RUN_TOKEN_CONSUMPTION (also feeds RUN_TOKEN_BUILD) with contract tests 36/36 including ledger-edit fires / docs does not; .githooks/pre-push block mirrors resolvability"
+    recorded_at: "2026-08-18T02:29:55.310Z"
