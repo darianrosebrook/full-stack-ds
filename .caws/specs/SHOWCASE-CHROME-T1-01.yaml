@@ -42,3 +42,8 @@ contracts:
   - name: 'chrome-coverage-ratchet'
     type: behavior
     path: 'src/consumption/chrome-coverage.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "commit 01007868 + pnpm test (174 files / 2179 tests green) + browser smoke on :5201 — Accordion triggers wired on #/standards/accessibility, Skeleton/Spinner/Alert in FrameworkPreview with .preview-status--error preserved (0 errors), Breadcrumbs end-crumb 'Badge', Home Details disclosure, scratch Label+Select single-label wiring, Status dots + Interactive-preview checkbox on #/component/Badge/developer"
+    recorded_at: "2026-08-18T03:48:54.074Z"
