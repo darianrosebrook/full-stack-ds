@@ -3,6 +3,7 @@ title: 'Dead semantic token namespace audit — the consumption-direction ratche
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: token-consumption-audit
 created_at: '2026-08-18T02:08:20.620Z'
 updated_at: '2026-08-18T02:08:20.620Z'
 blast_radius:
