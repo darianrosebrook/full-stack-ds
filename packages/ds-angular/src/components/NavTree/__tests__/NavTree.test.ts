@@ -1,0 +1,43 @@
+// @generated:start imports
+import { describe, expect, it, beforeEach, jest } from "@jest/globals";
+import { TestBed } from "@angular/core/testing";
+import { NavTreeComponent } from "../NavTree.component";
+// @generated:end
+
+// @generated:start tests
+describe("NavTree — unit", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [NavTreeComponent] });
+  });
+
+  it("creates the component", () => {
+    const fixture = TestBed.createComponent(NavTreeComponent);
+    expect(fixture.componentInstance).toBeInstanceOf(NavTreeComponent);
+  });
+
+  it("applies the base CSS class", () => {
+    const fixture = TestBed.createComponent(NavTreeComponent);
+    expect(classTokens(fixture.componentInstance)).toContain("nav-tree");
+  });
+
+  it("applies iconSize=sm variant class", () => {
+    const fixture = TestBed.createComponent(NavTreeComponent);
+    fixture.componentInstance.iconSize = "sm";
+    expect(classTokens(fixture.componentInstance)).toContain("nav-tree--sm");
+  });
+
+  it("applies iconSize=md variant class", () => {
+    const fixture = TestBed.createComponent(NavTreeComponent);
+    fixture.componentInstance.iconSize = "md";
+    expect(classTokens(fixture.componentInstance)).toContain("nav-tree--md");
+  });
+});
+
+function classTokens(component: { classes: () => string }): string[] {
+  return component.classes().split(/\s+/).filter(Boolean);
+}
+// @generated:end
+
+// @custom:start tests
+
+// @custom:end

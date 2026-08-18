@@ -1,0 +1,135 @@
+@import "./NavTree.tokens.css";
+
+/* @generated:start styles */
+.nav-tree {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
+  display: block;
+  margin-block-end: var(--fsds-nav-tree-size-margin-group, 8px);
+}
+
+.nav-tree__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-nav-tree-size-gap-heading, 4px);
+  font-size: var(--fsds-nav-tree-size-font-size-heading, 10px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fsds-nav-tree-color-foreground-heading, #474647);
+}
+
+.nav-tree__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.nav-tree__headingLink {
+  color: var(--fsds-nav-tree-color-foreground-heading, #474647);
+  text-decoration: none;
+  padding-block: var(--fsds-nav-tree-size-padding-block, 2px);
+  padding-inline: var(--fsds-nav-tree-size-padding-inline, 8px);
+  border-radius: var(--fsds-nav-tree-size-radius-default, 6px);
+  transition-property: background-color, color;
+  transition-duration: 120ms;
+}
+
+.nav-tree__headingLabel {
+  padding-block: var(--fsds-nav-tree-size-padding-block, 2px);
+  padding-inline: var(--fsds-nav-tree-size-padding-inline, 8px);
+  border-radius: var(--fsds-nav-tree-size-radius-default, 6px);
+}
+
+.nav-tree__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-nav-tree-size-gap-item, 1px);
+  list-style: none;
+  margin-block: 0;
+  padding-block: 0;
+  padding-inline-start: var(--fsds-nav-tree-size-indent, 16px);
+  padding-inline-end: 0;
+}
+
+.nav-tree__item {
+  position: relative;
+  display: block;
+  color: var(--fsds-nav-tree-color-foreground-default, #474647);
+  font-size: var(--fsds-nav-tree-size-font-size-item, 14px);
+}
+
+.nav-tree__item::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--fsds-nav-tree-size-indent, 16px));
+  top: 0;
+  bottom: 0;
+  border-inline-start: 1px solid var(--fsds-nav-tree-color-connector, #d0d0d0);
+}
+
+.nav-tree__item::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--fsds-nav-tree-size-indent, 16px));
+  top: 50%;
+  width: calc(var(--fsds-nav-tree-size-indent, 16px) - var(--fsds-nav-tree-size-gap-heading, 4px));
+  border-block-start: 1px solid var(--fsds-nav-tree-color-connector, #d0d0d0);
+}
+
+.nav-tree__item:last-child::before {
+  bottom: 50%;
+}
+
+.nav-tree__item > * {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fsds-nav-tree-size-gap-heading, 4px);
+  color: inherit;
+  text-decoration: none;
+  padding-block: var(--fsds-nav-tree-size-padding-block, 2px);
+  border-radius: var(--fsds-nav-tree-size-radius-default, 6px);
+  transition-property: background-color, color;
+  transition-duration: 120ms;
+}
+
+.nav-tree__item > *:hover {
+  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent);
+  color: var(--fsds-nav-tree-color-foreground-hover, #141414);
+}
+
+.nav-tree__item > *:focus-visible {
+  outline: 2px solid var(--fsds-nav-tree-color-outline-focus, #d92d2e);
+  outline-offset: 1px;
+}
+
+.nav-tree__item > *[aria-current="page"] {
+  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-selected, 0.08) * 100%), transparent);
+  color: var(--fsds-nav-tree-color-foreground-current, #141414);
+  font-weight: 600;
+}
+
+.nav-tree__headingLink:hover {
+  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent);
+  color: var(--fsds-nav-tree-color-foreground-heading-hover, #141414);
+}
+
+.nav-tree__headingLink:focus-visible {
+  outline: 2px solid var(--fsds-nav-tree-color-outline-focus, #d92d2e);
+  outline-offset: 1px;
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

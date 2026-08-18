@@ -25,6 +25,7 @@ export { LinksComponent } from "./Links/Links.component.js";
 export { ListComponent } from "./List/List.component.js";
 export { MarkdownComponent, MarkdownBlockRendererComponent, MarkdownMarkRendererComponent } from "./Markdown/Markdown.component.js";
 export { NavListComponent, NavListItemComponent, NavListListComponent } from "./NavList/NavList.component.js";
+export { NavTreeComponent, NavTreeItemComponent, NavTreeListComponent } from "./NavTree/NavTree.component.js";
 export { OTPComponent, OTPGroupComponent } from "./OTP/OTP.component.js";
 export { PopoverComponent } from "./Popover/Popover.component.js";
 export { PostcardComponent, PostcardContentComponent, PostcardFooterComponent, PostcardHeaderComponent } from "./Postcard/Postcard.component.js";

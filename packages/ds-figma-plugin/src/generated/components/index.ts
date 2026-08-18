@@ -26,6 +26,7 @@ import Links from "./Links/Links.figma.json" with { type: "json" };
 import List from "./List/List.figma.json" with { type: "json" };
 import Markdown from "./Markdown/Markdown.figma.json" with { type: "json" };
 import NavList from "./NavList/NavList.figma.json" with { type: "json" };
+import NavTree from "./NavTree/NavTree.figma.json" with { type: "json" };
 import OTP from "./OTP/OTP.figma.json" with { type: "json" };
 import Popover from "./Popover/Popover.figma.json" with { type: "json" };
 import Postcard from "./Postcard/Postcard.figma.json" with { type: "json" };
@@ -78,6 +79,7 @@ export const figmaComponentRegistry = {
   "List": List,
   "Markdown": Markdown,
   "NavList": NavList,
+  "NavTree": NavTree,
   "OTP": OTP,
   "Popover": Popover,
   "Postcard": Postcard,

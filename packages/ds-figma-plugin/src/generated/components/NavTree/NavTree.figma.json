@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "NavTree",
+    "cssPrefix": "nav-tree",
+    "rootElement": "div",
+    "effectiveRole": "listitem"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "li",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "heading",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "icon",
+      "semanticElement": "span",
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "headingLink",
+      "semanticElement": null,
+      "nativeTag": "a",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "headingLabel",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "list",
+      "semanticElement": "ul",
+      "nativeTag": "ul",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": "horizontal"
+    },
+    {
+      "name": "item",
+      "semanticElement": "li",
+      "nativeTag": "li",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "label",
+      "safeName": "label",
+      "type": "string",
+      "required": true,
+      "description": "Heading text for the group. Rendered inside the heading link when href is provided, otherwise inside the static heading label.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "href",
+      "safeName": "href",
+      "type": "string",
+      "required": false,
+      "description": "When provided, the heading renders as a navigable <a> to this destination; when absent, the heading renders as a static label.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "icon",
+      "safeName": "icon",
+      "type": "string",
+      "required": false,
+      "description": "Canonical icon name resolved against the @full-stack-ds/iconography catalog (e.g. \"home\"). An unknown name renders no glyph.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "iconSize",
+      "safeName": "iconSize",
+      "type": "NavTreeIconSize",
+      "required": false,
+      "description": "Rendered size of the heading glyph.",
+      "defaultExpr": "\"sm\"",
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "iconSize": [
+      "sm",
+      "md"
+    ]
+  },
+  "states": {
+    "flat": [
+      "hover",
+      "focus"
+    ],
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      }
+    }
+  },
+  "classRecipe": {
+    "base": "nav-tree",
+    "valueModifiers": [
+      {
+        "propName": "iconSize",
+        "safeName": "iconSize",
+        "defaultExpr": "\"sm\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "listitem",
+    "effectiveRole": "listitem",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".nav-tree",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "0",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-nav-tree-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #474647)",
+          "--fsds-nav-tree-color-foreground-hover": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-nav-tree-color-foreground-current": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-nav-tree-color-foreground-heading": "var(--fsds-semantic-color-foreground-secondary, #474647)",
+          "--fsds-nav-tree-color-foreground-heading-hover": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-nav-tree-color-connector": "var(--fsds-semantic-color-border-subtle, #d0d0d0)",
+          "--fsds-nav-tree-color-outline-focus": "var(--fsds-semantic-color-border-accent, #d92d2e)",
+          "--fsds-nav-tree-size-indent": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-nav-tree-size-margin-group": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-nav-tree-size-padding-block": "var(--fsds-core-spacing-size-02, 2px)",
+          "--fsds-nav-tree-size-padding-inline": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-nav-tree-size-font-size-heading": "var(--fsds-semantic-typography-caption-03, 10px)",
+          "--fsds-nav-tree-size-font-size-item": "var(--fsds-semantic-typography-body-03, 14px)",
+          "--fsds-nav-tree-size-radius-default": "var(--fsds-semantic-shape-control-radius-default, 6px)",
+          "--fsds-nav-tree-size-gap-heading": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-nav-tree-size-gap-item": "var(--fsds-core-spacing-size-01, 1px)",
+          "--fsds-nav-tree-state-layer-hover": "var(--fsds-semantic-interaction-state-layer-hover, 0.04)",
+          "--fsds-nav-tree-state-layer-selected": "var(--fsds-semantic-interaction-state-layer-selected, 0.08)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "block",
+          "margin-block-end": "var(--fsds-nav-tree-size-margin-group, 8px)"
+        }
+      },
+      {
+        "selector": ".nav-tree__heading",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "gap": "var(--fsds-nav-tree-size-gap-heading, 4px)",
+          "font-size": "var(--fsds-nav-tree-size-font-size-heading, 10px)",
+          "font-weight": "600",
+          "text-transform": "uppercase",
+          "letter-spacing": "0.04em",
+          "color": "var(--fsds-nav-tree-color-foreground-heading, #474647)"
+        }
+      },
+      {
+        "selector": ".nav-tree__icon",
+        "declarations": {
+          "display": "inline-flex",
+          "flex-shrink": "0",
+          "color": "inherit"
+        }
+      },
+      {
+        "selector": ".nav-tree__headingLink",
+        "declarations": {
+          "color": "var(--fsds-nav-tree-color-foreground-heading, #474647)",
+          "text-decoration": "none",
+          "padding-block": "var(--fsds-nav-tree-size-padding-block, 2px)",
+          "padding-inline": "var(--fsds-nav-tree-size-padding-inline, 8px)",
+          "border-radius": "var(--fsds-nav-tree-size-radius-default, 6px)",
+          "transition-property": "background-color, color",
+          "transition-duration": "120ms"
+        }
+      },
+      {
+        "selector": ".nav-tree__headingLabel",
+        "declarations": {
+          "padding-block": "var(--fsds-nav-tree-size-padding-block, 2px)",
+          "padding-inline": "var(--fsds-nav-tree-size-padding-inline, 8px)",
+          "border-radius": "var(--fsds-nav-tree-size-radius-default, 6px)"
+        }
+      },
+      {
+        "selector": ".nav-tree__list",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-nav-tree-size-gap-item, 1px)",
+          "list-style": "none",
+          "margin-block": "0",
+          "padding-block": "0",
+          "padding-inline-start": "var(--fsds-nav-tree-size-indent, 16px)",
+          "padding-inline-end": "0"
+        }
+      },
+      {
+        "selector": ".nav-tree__item",
+        "declarations": {
+          "position": "relative",
+          "display": "block",
+          "color": "var(--fsds-nav-tree-color-foreground-default, #474647)",
+          "font-size": "var(--fsds-nav-tree-size-font-size-item, 14px)"
+        }
+      },
+      {
+        "selector": ".nav-tree__item::before",
+        "declarations": {
+          "content": "\"\"",
+          "position": "absolute",
+          "inset-inline-start": "calc(-1 * var(--fsds-nav-tree-size-indent, 16px))",
+          "top": "0",
+          "bottom": "0",
+          "border-inline-start": "1px solid var(--fsds-nav-tree-color-connector, #d0d0d0)"
+        }
+      },
+      {
+        "selector": ".nav-tree__item::after",
+        "declarations": {
+          "content": "\"\"",
+          "position": "absolute",
+          "inset-inline-start": "calc(-1 * var(--fsds-nav-tree-size-indent, 16px))",
+          "top": "50%",
+          "width": "calc(var(--fsds-nav-tree-size-indent, 16px) - var(--fsds-nav-tree-size-gap-heading, 4px))",
+          "border-block-start": "1px solid var(--fsds-nav-tree-color-connector, #d0d0d0)"
+        }
+      },
+      {
+        "selector": ".nav-tree__item:last-child::before",
+        "declarations": {
+          "bottom": "50%"
+        }
+      },
+      {
+        "selector": ".nav-tree__item > *",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "space-between",
+          "gap": "var(--fsds-nav-tree-size-gap-heading, 4px)",
+          "color": "inherit",
+          "text-decoration": "none",
+          "padding-block": "var(--fsds-nav-tree-size-padding-block, 2px)",
+          "border-radius": "var(--fsds-nav-tree-size-radius-default, 6px)",
+          "transition-property": "background-color, color",
+          "transition-duration": "120ms"
+        }
+      },
+      {
+        "selector": ".nav-tree__item > *:hover",
+        "declarations": {
+          "background-color": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent)",
+          "color": "var(--fsds-nav-tree-color-foreground-hover, #141414)"
+        }
+      },
+      {
+        "selector": ".nav-tree__item > *:focus-visible",
+        "declarations": {
+          "outline": "2px solid var(--fsds-nav-tree-color-outline-focus, #d92d2e)",
+          "outline-offset": "1px"
+        }
+      },
+      {
+        "selector": ".nav-tree__item > *[aria-current=\"page\"]",
+        "declarations": {
+          "background-color": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-selected, 0.08) * 100%), transparent)",
+          "color": "var(--fsds-nav-tree-color-foreground-current, #141414)",
+          "font-weight": "600"
+        }
+      },
+      {
+        "selector": ".nav-tree__headingLink:hover",
+        "declarations": {
+          "background-color": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent)",
+          "color": "var(--fsds-nav-tree-color-foreground-heading-hover, #141414)"
+        }
+      },
+      {
+        "selector": ".nav-tree__headingLink:focus-visible",
+        "declarations": {
+          "outline": "2px solid var(--fsds-nav-tree-color-outline-focus, #d92d2e)",
+          "outline-offset": "1px"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "NavTree itself is not focusable. The heading link and the consumer's row anchors are native links that receive native tab focus."
+    },
+    "portal": {
+      "enabled": false
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "NavTree / Documentation",
+    "componentSetName": "NavTree",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}
