@@ -1,13 +1,6 @@
 {
   "gaps": [
     {
-      "target": "swiftui",
-      "component": "Markdown",
-      "kind": "admission",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "Markdown is the one corpus component outside the swiftui allowlist; admitting it requires the Markdown lowering class first."
-    },
-    {
       "target": "jetpack-compose",
       "component": "Accordion",
       "kind": "admission",
@@ -195,6 +188,13 @@
       "kind": "admission",
       "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
       "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "NavTree",
+      "kind": "admission",
+      "spec": "SHOWCASE-STACK-LAYOUT-01",
+      "note": "NavTree landed in the web corpus only; jetpack-compose is an explicit-only target whose allowlist grows per coverage slice \u2014 admitting NavTree is deferred to a future native-coverage slice."
     },
     {
       "target": "jetpack-compose",
@@ -854,6 +854,20 @@
       "slot": "image.radius.full",
       "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
       "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Markdown",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "Markdown is the one corpus component outside the swiftui allowlist; admitting it requires the Markdown lowering class first."
+    },
+    {
+      "target": "swiftui",
+      "component": "NavTree",
+      "kind": "admission",
+      "spec": "SHOWCASE-STACK-LAYOUT-01",
+      "note": "NavTree landed in the web corpus only; swiftui is an explicit-only target whose allowlist grows per coverage slice \u2014 admitting NavTree is deferred to a future native-coverage slice."
     },
     {
       "target": "swiftui",
