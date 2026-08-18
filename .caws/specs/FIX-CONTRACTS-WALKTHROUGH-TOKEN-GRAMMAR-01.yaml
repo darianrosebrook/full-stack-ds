@@ -2,9 +2,11 @@ id: FIX-CONTRACTS-WALKTHROUGH-TOKEN-GRAMMAR-01
 title: 'Normalize Walkthrough token slots to the corpus grammar (color/size/spacing/typography axes)'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Walkthrough''s 23 non-box-model slots renamed onto corpus grammar axes; all gates and audits green; no old-name survivors'
 created_at: '2026-08-18T01:52:17.135Z'
-updated_at: '2026-08-18T02:04:34.823Z'
+updated_at: '2026-08-18T02:04:57.738Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components/Walkthrough (tokens + styles sidecars)'
