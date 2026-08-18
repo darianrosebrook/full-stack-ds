@@ -34,3 +34,8 @@ contracts:
   - name: 'FsdsComponentTokenDefinition resolution chain'
     type: behavior
     path: 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "corrected audit: swiftui 49/49 carriers, 732/895 slots, 163 ledgered in two disposition classes, ratchet 212/212 PASS; ref arm: swift build exit 0 + FsdsTokenRefResolutionTests 4/4 (semantic-ref override reaches slot, slot-name precedence preserved, fallback intact, unrelated refs don't leak) + full swift suite 37 tests 0 failures (TokenPaintTests still green over re-emitted files); emitter assertion toMatch(/ref: \"semantic\\./) in component-source.test.ts; governed:rail exit 0; pnpm test 2163/2163; typecheck + selfcheck 9/9; snapshot false-claim corrected in place"
+    recorded_at: "2026-08-18T02:27:25.794Z"
