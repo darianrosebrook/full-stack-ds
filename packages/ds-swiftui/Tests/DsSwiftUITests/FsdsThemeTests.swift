@@ -163,3 +163,97 @@ final class FsdsTokenRefResolutionTests: XCTestCase {
         XCTAssertEqual(resolved, .string("#b8b8b8"))
     }
 }
+
+// FEAT-SWIFTUI-SEMANTIC-DEFAULTS-01: the defaults table is proven against
+// the committed graph EXHAUSTIVELY (every entry, not a sample), and a real
+// component slot is proven to reach the graph value through the ref arm.
+final class FsdsSemanticDefaultsTests: XCTestCase {
+    private func loadGraph(file: StaticString = #filePath) throws -> [String: Any] {
+        let testsDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let packageRoot = testsDir.deletingLastPathComponent().deletingLastPathComponent()
+        let url = packageRoot.deletingLastPathComponent()
+            .appendingPathComponent("ds-tokens/generated/resolved.tokens.json")
+        let data = try Data(contentsOf: url)
+        return try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+    }
+
+    /// Raw `$value` node — a scalar or a mode-bearing {light, dark} dict.
+    private func graphRawValue(_ dotted: String, graph: [String: Any]) throws -> Any {
+        var node: Any = graph
+        for segment in dotted.split(separator: ".") {
+            node = try XCTUnwrap((node as? [String: Any])?[String(segment)], "missing segment '\(segment)' in \(dotted)")
+        }
+        let dict = try XCTUnwrap(node as? [String: Any], "\(dotted) is not a group")
+        return try XCTUnwrap(dict["$value"], "\(dotted) has no $value")
+    }
+
+    /// The light-mode string of a `$value`, whichever shape it takes.
+    private func graphLightString(_ dotted: String, graph: [String: Any]) throws -> String {
+        let raw = try graphRawValue(dotted, graph: graph)
+        if let s = raw as? String { return s }
+        if let modes = raw as? [String: Any] {
+            return try XCTUnwrap(modes["light"] as? String, "\(dotted) has no light half")
+        }
+        return String(describing: raw)
+    }
+
+    func testEveryDefaultsEntryEqualsItsGraphValue() throws {
+        let graph = try loadGraph()
+        XCTAssertEqual(FsdsSemanticDefaults.light.count, 168)
+        for (ref, token) in FsdsSemanticDefaults.light {
+            let raw = try graphRawValue(ref, graph: graph)
+            switch token {
+            case .string(let value):
+                if let s = raw as? String {
+                    XCTAssertEqual(value, s, "table drift for \(ref)")
+                } else if let modes = raw as? [String: Any], let light = modes["light"] as? String {
+                    XCTAssertEqual(value, light, "scalar table entry vs mode-bearing graph token \(ref)")
+                } else {
+                    XCTFail("shape mismatch for \(ref)")
+                }
+            case .adaptive(let light, let dark):
+                let modes = try XCTUnwrap(raw as? [String: Any], "adaptive entry for scalar graph token \(ref)")
+                XCTAssertEqual(light, modes["light"] as? String, "light drift for \(ref)")
+                XCTAssertEqual(dark, modes["dark"] as? String, "dark drift for \(ref)")
+            case .number(let value):
+                if let n = raw as? Double {
+                    XCTAssertEqual(value, n, "number drift for \(ref)")
+                } else if let n = raw as? Int {
+                    XCTAssertEqual(value, Double(n), "number drift for \(ref)")
+                } else if let s = raw as? String, let n = Double(s) {
+                    XCTAssertEqual(value, n, "number drift for \(ref)")
+                } else {
+                    XCTFail("shape mismatch for \(ref)")
+                }
+            }
+        }
+    }
+
+    func testComponentSlotReachesGraphValueThroughRefArm() throws {
+        // Card's default background slot refs semantic.color.background.primary;
+        // with the defaults theme installed, resolution must return the graph
+        // value through the ref arm. (Sidecar fallbacks mirror graph values by
+        // design; the decisive arm-order proof lives in the ref-arm tests above.)
+        let theme = FsdsTheme(tokens: FsdsSemanticDefaults.light)
+        let resolved = resolveFsdsComponentTokens(CardTokens.scopes, theme)
+        let slot = resolved["root"]?["card.color.background.default"] ?? nil
+        let expectedLight = try graphLightString("semantic.color.background.primary", graph: try loadGraph())
+        let slotLight: String
+        switch slot {
+        case .some(.string(let s)): slotLight = s
+        case .some(.adaptive(let l, _)): slotLight = l
+        default: XCTFail("slot resolved nil or non-color"); return
+        }
+        XCTAssertEqual(slotLight, expectedLight)
+    }
+
+    func testDefaultsThemeStillYieldsToSlotNameOverride() {
+        var tokens = FsdsSemanticDefaults.light
+        tokens["card.color.background.default"] = .string("#000001")
+        let resolved = resolveFsdsComponentTokens(CardTokens.scopes, FsdsTheme(tokens: tokens))
+        XCTAssertEqual(
+            resolved["root"]?["card.color.background.default"] ?? nil,
+            .string("#000001")
+        )
+    }
+}

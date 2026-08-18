@@ -15,6 +15,10 @@ struct SettingsExampleApp: App {
     var body: some Scene {
         WindowGroup {
             SettingsView()
+                // Graph-derived semantic defaults: component slots resolve
+                // through the ref arm, so FSDS components paint graph colors
+                // and respond to theme overrides (FEAT-SWIFTUI-SEMANTIC-DEFAULTS-01).
+                .environment(\.fsdsTheme, FsdsTheme(tokens: FsdsSemanticDefaults.light))
         }
     }
 }
