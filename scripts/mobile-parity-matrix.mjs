@@ -283,7 +283,7 @@ function buildRow(target, admitted) {
         derivable: false,
         value: UNMEASURED,
         evidence: isNative
-          ? `typed token FACTS available in IR (FEAT-MOBILE-IR-001, closed); native realization (Swift Color/CGFloat, Kotlin Color/Dp, RN style surfaces) not measured here`
+          ? `per-component carrier realization now MEASURED by scripts/token-realization-audit/audit.mjs (FEAT-TOKEN-REALIZATION-AUDIT-001) — see docs/token-realization-audit/realization-matrix.md; this matrix leaves the cell unmeasured rather than duplicating that rail's denominator`
           : `web token output verified via tokens:* gates + rail diff; depth not scored by this script`,
       },
       behaviorController: {
