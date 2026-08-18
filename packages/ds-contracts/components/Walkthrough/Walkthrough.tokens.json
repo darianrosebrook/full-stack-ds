@@ -4,117 +4,117 @@
     "fallback": "16px",
     "layer": "semantic"
   },
-  "walkthrough.surface.bg": {
+  "walkthrough.color.surface.background": {
     "resolvesTo": "semantic.color.background.secondary",
     "fallback": "#d0d0d0",
     "layer": "semantic"
   },
-  "walkthrough.surface.border": {
+  "walkthrough.color.surface.border": {
     "resolvesTo": "semantic.color.border.subtle",
     "fallback": "#d0d0d0",
     "layer": "semantic"
   },
-  "walkthrough.surface.radius": {
+  "walkthrough.size.surface.radius": {
     "resolvesTo": "semantic.shape.radius.large",
     "fallback": "16px",
     "layer": "semantic"
   },
-  "walkthrough.surface.shadow": {
+  "walkthrough.color.surface.shadow": {
     "resolvesTo": "semantic.elevation.surface.floating",
     "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
     "layer": "semantic"
   },
-  "walkthrough.surface.padding": {
+  "walkthrough.size.surface.padding": {
     "resolvesTo": "core.spacing.size.08",
     "fallback": "32px",
     "layer": "core"
   },
-  "walkthrough.title.fontSize": {
+  "walkthrough.size.title.fontSize": {
     "resolvesTo": "semantic.typography.heading.03",
     "fallback": "20px",
     "layer": "semantic"
   },
-  "walkthrough.title.fontWeight": {
+  "walkthrough.typography.title.fontWeight": {
     "resolvesTo": "semantic.typography.font.weight.bold",
     "fallback": "700",
     "layer": "semantic"
   },
-  "walkthrough.title.color": {
+  "walkthrough.color.title.foreground": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "walkthrough.description.fontSize": {
+  "walkthrough.size.description.fontSize": {
     "resolvesTo": "semantic.typography.body.02",
     "fallback": "16px",
     "layer": "semantic"
   },
-  "walkthrough.description.color": {
+  "walkthrough.color.description.foreground": {
     "resolvesTo": "semantic.color.foreground.secondary",
     "fallback": "#474647",
     "layer": "semantic"
   },
-  "walkthrough.description.marginTop": {
+  "walkthrough.spacing.description.marginTop": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",
     "layer": "core"
   },
-  "walkthrough.controls.gap": {
+  "walkthrough.spacing.controls.gap": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
     "layer": "core"
   },
-  "walkthrough.controls.marginTop": {
+  "walkthrough.spacing.controls.marginTop": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",
     "layer": "core"
   },
-  "walkthrough.dots.size": {
+  "walkthrough.size.dots.default": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",
     "layer": "core"
   },
-  "walkthrough.dots.gap": {
+  "walkthrough.spacing.dots.gap": {
     "resolvesTo": "core.spacing.size.03",
     "fallback": "4px",
     "layer": "core"
   },
-  "walkthrough.dots.active": {
+  "walkthrough.color.dots.active": {
     "resolvesTo": "semantic.color.action.background.primary.default",
     "fallback": "#0566fe",
     "layer": "semantic"
   },
-  "walkthrough.dots.idle": {
+  "walkthrough.color.dots.idle": {
     "resolvesTo": "semantic.color.border.subtle",
     "fallback": "#d0d0d0",
     "layer": "semantic"
   },
-  "walkthrough.button.primary.bg": {
+  "walkthrough.color.button.primary.background": {
     "resolvesTo": "semantic.color.action.background.primary.default",
     "fallback": "#0566fe",
     "layer": "semantic"
   },
-  "walkthrough.button.primary.color": {
+  "walkthrough.color.button.primary.foreground": {
     "resolvesTo": "semantic.color.action.foreground.primary.default",
     "fallback": "#ffffff",
     "layer": "semantic"
   },
-  "walkthrough.button.primary.radius": {
+  "walkthrough.size.button.primary.radius": {
     "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "6px",
     "layer": "semantic"
   },
-  "walkthrough.button.secondary.bg": {
+  "walkthrough.color.button.secondary.background": {
     "resolvesTo": "core.color.mode.transparent",
     "fallback": "#00000000",
     "layer": "core"
   },
-  "walkthrough.button.secondary.color": {
+  "walkthrough.color.button.secondary.foreground": {
     "resolvesTo": "semantic.color.foreground.secondary",
     "fallback": "#474647",
     "layer": "semantic"
   },
-  "walkthrough.button.secondary.border": {
+  "walkthrough.color.button.secondary.border": {
     "resolvesTo": "semantic.color.border.subtle",
     "fallback": "#d0d0d0",
     "layer": "semantic"

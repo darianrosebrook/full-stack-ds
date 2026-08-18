@@ -1,5 +1,5 @@
 {
-  "$comment": "Inert-slot ledger (RAIL-STYLING-REALIZATION-LEDGERS-01, accounting corrected by FIX-DEAD-SLOT-INERT-ACCOUNTING-01). Tracks every slot NO RULE READS — setting such a custom property has no effect, so it advertises a control with no wire behind it. `status: shadowed` entries are inert BY DESIGN (an author root rule deliberately overrides the box-model primitive) and are not defects, but they remain ledgered: an entry leaves only by becoming consumed or by having its declaration deleted, never by being declared acceptable. A declared-but-unread slot is NOT an override escape hatch — the hatch requires a consumer rule. Two-directional ratchet: the audit fails if any dead slot is missing here (unledgered) or if any entry no longer reproduces (stale). Entries may only be REMOVED by proving the slot consumed or by deleting the declaration — never by loosening the scan. In particular, do NOT widen consumption scanning to <C>.tokens.css: a slot redefinition is not a consumption, and admitting it would mass-false-green the entire re-point class. `disposition` and `note` are computed by scripts/dead-slot-audit/disposition.mjs; `review` means no rule matched and the entry needs human adjudication, NOT that it is safe to delete.",
+  "$comment": "Inert-slot ledger (RAIL-STYLING-REALIZATION-LEDGERS-01, accounting corrected by FIX-DEAD-SLOT-INERT-ACCOUNTING-01). Tracks every slot NO RULE READS \u2014 setting such a custom property has no effect, so it advertises a control with no wire behind it. `status: shadowed` entries are inert BY DESIGN (an author root rule deliberately overrides the box-model primitive) and are not defects, but they remain ledgered: an entry leaves only by becoming consumed or by having its declaration deleted, never by being declared acceptable. A declared-but-unread slot is NOT an override escape hatch \u2014 the hatch requires a consumer rule. Two-directional ratchet: the audit fails if any dead slot is missing here (unledgered) or if any entry no longer reproduces (stale). Entries may only be REMOVED by proving the slot consumed or by deleting the declaration \u2014 never by loosening the scan. In particular, do NOT widen consumption scanning to <C>.tokens.css: a slot redefinition is not a consumption, and admitting it would mass-false-green the entire re-point class. `disposition` and `note` are computed by scripts/dead-slot-audit/disposition.mjs; `review` means no rule matched and the entry needs human adjudication, NOT that it is safe to delete.",
   "gaps": [
     {
       "component": "Accordion",
@@ -7,7 +7,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Accordion",
@@ -15,7 +15,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"paddingX\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"paddingX\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Accordion",
@@ -31,7 +31,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Alert",
@@ -55,7 +55,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Alert",
@@ -63,7 +63,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Alert",
@@ -71,7 +71,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Alert",
@@ -87,7 +87,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "AlertNotice",
@@ -95,7 +95,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "AlertNotice",
@@ -103,7 +103,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "AlertNotice",
@@ -127,7 +127,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "AlertNotice",
@@ -135,7 +135,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "AlertNotice",
@@ -143,7 +143,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "AlertNotice",
@@ -159,7 +159,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"inverse\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"inverse\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Button",
@@ -175,7 +175,7 @@
       "status": "dead",
       "disposition": "unconsumed-vocabulary",
       "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
-      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
+      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it \u2014 a parallel vocabulary whose consumer reads a different slot family"
     },
     {
       "component": "Button",
@@ -183,7 +183,7 @@
       "status": "dead",
       "disposition": "unconsumed-vocabulary",
       "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
-      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
+      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it \u2014 a parallel vocabulary whose consumer reads a different slot family"
     },
     {
       "component": "Button",
@@ -191,7 +191,7 @@
       "status": "dead",
       "disposition": "unconsumed-vocabulary",
       "spec": "FIX-DEAD-SLOT-DUPLICATE-VOCABULARY-01",
-      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it — a parallel vocabulary whose consumer reads a different slot family"
+      "note": "styles[\"--medium\"] redefines this slot per axis value, but no rule reads it \u2014 a parallel vocabulary whose consumer reads a different slot family"
     },
     {
       "component": "Calendar",
@@ -199,7 +199,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Calendar",
@@ -207,7 +207,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"background\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"background\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Calendar",
@@ -215,7 +215,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Card",
@@ -335,7 +335,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Chip",
@@ -343,7 +343,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Chip",
@@ -351,7 +351,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"style\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"style\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Chip",
@@ -359,7 +359,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Command",
@@ -383,7 +383,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"page\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"page\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Details",
@@ -391,7 +391,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"body\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"body\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Details",
@@ -407,7 +407,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Field",
@@ -423,7 +423,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"borderBold\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"borderBold\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Field",
@@ -431,7 +431,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"valid-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"valid-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Field",
@@ -439,7 +439,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"validating-border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"validating-border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Field",
@@ -447,7 +447,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"validating-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"validating-text\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Field",
@@ -455,7 +455,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Field",
@@ -463,7 +463,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"indicator\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"indicator\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Image",
@@ -471,7 +471,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"icon\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"icon\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Image",
@@ -479,7 +479,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Input",
@@ -519,7 +519,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"current\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"current\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "NavList",
@@ -551,7 +551,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"groupLabel\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"groupLabel\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "NavList",
@@ -559,7 +559,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"item\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"item\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "NavList",
@@ -567,7 +567,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"group\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"group\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "OTP",
@@ -591,7 +591,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "ProfileFlag",
@@ -615,7 +615,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"isOpen\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"isOpen\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Sheet",
@@ -623,7 +623,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"backgroundHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"backgroundHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Sheet",
@@ -631,7 +631,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Sheet",
@@ -639,7 +639,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "ShowMore",
@@ -647,7 +647,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"accent\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "ShowMore",
@@ -663,7 +663,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"imageOverlay\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"imageOverlay\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Shuttle",
@@ -679,7 +679,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"static\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"static\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Skeleton",
@@ -687,7 +687,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"full\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Skeleton",
@@ -695,7 +695,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"lg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"lg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Skeleton",
@@ -703,7 +703,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"sm\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"sm\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Stat",
@@ -711,7 +711,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Stat",
@@ -719,7 +719,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"gap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"gap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Stat",
@@ -727,7 +727,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Stat",
@@ -735,7 +735,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"label\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Table",
@@ -743,7 +743,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"textMuted\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"textMuted\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Table",
@@ -751,7 +751,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"color\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Table",
@@ -759,7 +759,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Table",
@@ -767,7 +767,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"width\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Table",
@@ -775,7 +775,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"cellHeight\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"cellHeight\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Table",
@@ -783,7 +783,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"sortGap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"sortGap\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Tabs",
@@ -807,7 +807,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "TextField",
@@ -839,7 +839,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"bg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"bg\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Toast",
@@ -847,7 +847,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"border\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Toast",
@@ -855,7 +855,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"enter\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"enter\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Toast",
@@ -863,7 +863,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"leave\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"leave\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Toast",
@@ -871,7 +871,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"auto-dismiss\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"auto-dismiss\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Tooltip",
@@ -879,7 +879,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"y\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Truncate",
@@ -887,7 +887,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"primary\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Truncate",
@@ -895,7 +895,7 @@
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"linkHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"linkHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication"
     },
     {
       "component": "Walkthrough",
@@ -907,11 +907,11 @@
     },
     {
       "component": "Walkthrough",
-      "slot": "walkthrough.dots.active",
+      "slot": "walkthrough.color.dots.active",
       "status": "dead",
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
-      "note": "no rule matched: \"active\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+      "note": "no rule matched: \"active\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render \u2014 needs human adjudication | slot renamed to corpus grammar (FIX-CONTRACTS-WALKTHROUGH-TOKEN-GRAMMAR-01); disposition unchanged"
     }
   ]
 }

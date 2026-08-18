@@ -19,11 +19,11 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "walkthrough.surface.bg",
+      "resolvesTo": "walkthrough.color.surface.background",
       "fallback": "#d0d0d0"
     },
     "border-color": {
-      "resolvesTo": "walkthrough.surface.border",
+      "resolvesTo": "walkthrough.color.surface.border",
       "fallback": "#d0d0d0"
     },
     "border-style": {
@@ -39,19 +39,19 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "walkthrough.surface.radius",
+      "resolvesTo": "walkthrough.size.surface.radius",
       "fallback": "16px"
     },
     "box-shadow": {
-      "resolvesTo": "walkthrough.surface.shadow",
+      "resolvesTo": "walkthrough.color.surface.shadow",
       "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a"
     },
     "padding": {
-      "resolvesTo": "walkthrough.surface.padding",
+      "resolvesTo": "walkthrough.size.surface.padding",
       "fallback": "32px"
     },
     "gap": {
-      "resolvesTo": "walkthrough.dots.gap",
+      "resolvesTo": "walkthrough.spacing.dots.gap",
       "fallback": "4px"
     }
   },
@@ -69,7 +69,7 @@
       ]
     },
     "gap": {
-      "resolvesTo": "walkthrough.description.marginTop",
+      "resolvesTo": "walkthrough.spacing.description.marginTop",
       "fallback": "8px"
     }
   },
@@ -81,15 +81,15 @@
       ]
     },
     "font-size": {
-      "resolvesTo": "walkthrough.title.fontSize",
+      "resolvesTo": "walkthrough.size.title.fontSize",
       "fallback": "20px"
     },
     "font-weight": {
-      "resolvesTo": "walkthrough.title.fontWeight",
+      "resolvesTo": "walkthrough.typography.title.fontWeight",
       "fallback": "700"
     },
     "color": {
-      "resolvesTo": "walkthrough.title.color",
+      "resolvesTo": "walkthrough.color.title.foreground",
       "fallback": "#141414"
     }
   },
@@ -101,11 +101,11 @@
       ]
     },
     "font-size": {
-      "resolvesTo": "walkthrough.description.fontSize",
+      "resolvesTo": "walkthrough.size.description.fontSize",
       "fallback": "16px"
     },
     "color": {
-      "resolvesTo": "walkthrough.description.color",
+      "resolvesTo": "walkthrough.color.description.foreground",
       "fallback": "#474647"
     },
     "line-height": {
@@ -135,15 +135,15 @@
       ]
     },
     "gap": {
-      "resolvesTo": "walkthrough.controls.gap",
+      "resolvesTo": "walkthrough.spacing.controls.gap",
       "fallback": "12px"
     },
     "margin-top": {
-      "resolvesTo": "walkthrough.controls.marginTop",
+      "resolvesTo": "walkthrough.spacing.controls.marginTop",
       "fallback": "16px"
     },
     "border-top-color": {
-      "resolvesTo": "walkthrough.surface.border",
+      "resolvesTo": "walkthrough.color.surface.border",
       "fallback": "#d0d0d0"
     },
     "border-top-style": {
@@ -159,7 +159,7 @@
       ]
     },
     "padding-top": {
-      "resolvesTo": "walkthrough.controls.marginTop",
+      "resolvesTo": "walkthrough.spacing.controls.marginTop",
       "fallback": "16px"
     }
   },
@@ -177,7 +177,7 @@
       ]
     },
     "color": {
-      "resolvesTo": "walkthrough.button.secondary.color",
+      "resolvesTo": "walkthrough.color.button.secondary.foreground",
       "fallback": "#474647"
     },
     "cursor": {
@@ -201,11 +201,11 @@
   },
   "prev": {
     "background-color": {
-      "resolvesTo": "walkthrough.button.secondary.bg",
+      "resolvesTo": "walkthrough.color.button.secondary.background",
       "fallback": "#00000000"
     },
     "border-color": {
-      "resolvesTo": "walkthrough.button.secondary.border",
+      "resolvesTo": "walkthrough.color.button.secondary.border",
       "fallback": "#d0d0d0"
     },
     "border-style": {
@@ -221,11 +221,11 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "walkthrough.button.primary.radius",
+      "resolvesTo": "walkthrough.size.button.primary.radius",
       "fallback": "6px"
     },
     "color": {
-      "resolvesTo": "walkthrough.button.secondary.color",
+      "resolvesTo": "walkthrough.color.button.secondary.foreground",
       "fallback": "#474647"
     },
     "cursor": {
@@ -237,7 +237,7 @@
   },
   "next": {
     "background-color": {
-      "resolvesTo": "walkthrough.button.primary.bg",
+      "resolvesTo": "walkthrough.color.button.primary.background",
       "fallback": "#0566fe"
     },
     "border": {
@@ -247,11 +247,11 @@
       ]
     },
     "border-radius": {
-      "resolvesTo": "walkthrough.button.primary.radius",
+      "resolvesTo": "walkthrough.size.button.primary.radius",
       "fallback": "6px"
     },
     "color": {
-      "resolvesTo": "walkthrough.button.primary.color",
+      "resolvesTo": "walkthrough.color.button.primary.foreground",
       "fallback": "#ffffff"
     },
     "cursor": {
@@ -287,7 +287,7 @@
       ]
     },
     "gap": {
-      "resolvesTo": "walkthrough.dots.gap",
+      "resolvesTo": "walkthrough.spacing.dots.gap",
       "fallback": "4px"
     }
   },
@@ -299,11 +299,11 @@
       ]
     },
     "width": {
-      "resolvesTo": "walkthrough.dots.size",
+      "resolvesTo": "walkthrough.size.dots.default",
       "fallback": "8px"
     },
     "height": {
-      "resolvesTo": "walkthrough.dots.size",
+      "resolvesTo": "walkthrough.size.dots.default",
       "fallback": "8px"
     },
     "border-radius": {
@@ -313,7 +313,7 @@
       ]
     },
     "background-color": {
-      "resolvesTo": "walkthrough.dots.idle",
+      "resolvesTo": "walkthrough.color.dots.idle",
       "fallback": "#d0d0d0"
     },
     "border": {
@@ -337,11 +337,11 @@
   },
   "counter": {
     "color": {
-      "resolvesTo": "walkthrough.description.color",
+      "resolvesTo": "walkthrough.color.description.foreground",
       "fallback": "#474647"
     },
     "font-size": {
-      "resolvesTo": "walkthrough.description.fontSize",
+      "resolvesTo": "walkthrough.size.description.fontSize",
       "fallback": "16px"
     }
   }
