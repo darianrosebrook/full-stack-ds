@@ -2,9 +2,11 @@ id: SHOWCASE-CHROME-T2-01
 title: 'Product-tail DS families land as real showcase surfaces'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Product-tail families land as real surfaces (palette/Settings/Activity/About/tour); full-corpus ratchet with three documented emitter blockers (Command/Shuttle/Text)'
 created_at: '2026-08-18T03:51:21.835Z'
-updated_at: '2026-08-18T03:51:21.835Z'
+updated_at: '2026-08-18T04:18:43.793Z'
 blast_radius:
   modules:
     - 'src/ showcase: new Settings/Activity views, About dialog, Command palette, Walkthrough tour, Header triggers, router+app wiring'
