@@ -3,6 +3,7 @@ title: 'Normalize Walkthrough token slots to the corpus grammar (color/size/spac
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: walkthrough-token-grammar
 created_at: '2026-08-18T01:52:17.135Z'
 updated_at: '2026-08-18T01:54:18.981Z'
 blast_radius:
