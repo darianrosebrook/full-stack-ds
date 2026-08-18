@@ -1,0 +1,28 @@
+id: FIX-CODEGEN-PRESERVABLE-MARKER-INVARIANT-01
+title: 'Preservable generated files must carry @generated markers (fail loudly, not skip silently)'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-18T00:47:59.313Z'
+updated_at: '2026-08-18T00:47:59.313Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/cli.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'an emitter marks a GeneratedFile preservable'
+    when: 'its generated contents contain no @generated markers'
+    then: 'the CLI fails loudly with a typed error instead of silently skipping regeneration on every subsequent run'
+non_functional: {}
+contracts:
+  - name: 'GeneratedFile.preservable'
+    type: behavior
+    path: 'packages/ds-codegen/src/emitter.ts'
