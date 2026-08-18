@@ -1,0 +1,45 @@
+id: FIX-COMPOSE-BUTTON-RESTORE-01
+title: 'Restore the Compose Button admission reverted by a stray staged index in 465c77b5'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-18T04:44:38.863Z'
+updated_at: '2026-08-18T04:44:38.863Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-jetpack-compose'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose'
+    - 'packages/ds-codegen/src/frameworks/swift'
+    - 'examples/settings/compose'
+    - 'fsds.targets.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given 465c77b5 swept a staged reversion of FEAT-COMPOSE-BUTTON-ADMISSION-01 into a caws spec-create commit; when the restore lands; then Button.kt, ButtonTokens.kt, FsdsButton.kt, Components.generated.kt, the jetpack-compose and swiftui component-source.ts emitter paths, SettingsApp.kt and the fsds.targets.json compose allowlist are byte-identical to 465c77b5~1'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given generated Kotlin must be reproducible from the contract rather than restored by hand; when generate --target=jetpack-compose runs after the emitter restore; then it re-emits the restored Button bytes with no diff, proving the restore matches what codegen produces rather than a stale snapshot'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the snapshot records compose admission counts; when the restore lands; then the compose admission backlog reads 47 with the Button admission prose restored, and docs:check-claims passes'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given SwiftUI and Compose sit outside the rail drift diff so no local gate covers them; when gates run; then generate:check, governed:rail, root and framework suites, lint and docs:check-claims are green, and the Kotlin compile lane is explicitly recorded as CI-only proof not verified locally'
+non_functional: {}
+contracts:
+  - name: 'Button'
+    type: behavior
+    path: 'packages/ds-contracts/components/Button/Button.contract.json'
