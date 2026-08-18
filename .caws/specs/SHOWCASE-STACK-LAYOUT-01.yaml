@@ -47,3 +47,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/consumption/stack-layout.test.ts (A1/A2 green: Stack imported across 15 surfaces, zero inline axis-flex); computed-style probe on dev server confirmed identical geometry (brand row 12px/center, section-header 16px/baseline/between, anatomy-key column 12px, display-case-header row 24px, semantic HEADER/DL tags preserved via Stack as)"
     recorded_at: "2026-08-18T03:00:24.778Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "stack-layout.test.ts A3/A4: stack-gap-00..07 utilities remap --fsds-semantic-spacing-gap-stack to core sizes; .section-header/.brand/.panel-toolbar/.preview-status/.tokens-controls/.anatomy-key/.display-case-header carry no display:flex (5 rules fully deleted, 81 layout lines removed from app.css); .fw-tabs/.fw-tab DS-host rules left intact"
+    recorded_at: "2026-08-18T03:00:26.325Z"
