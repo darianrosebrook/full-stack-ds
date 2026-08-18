@@ -106,7 +106,7 @@ pnpm run audit:dead-slots                      # Declared slots vs. consumed slo
 pnpm run audit:pseudo-state                    # Declared state styling vs. realized CSS
 pnpm run audit:state-suppression               # Declared suppression vs. honoured in CSS
 pnpm run audit:token-resolvability             # Token references that never resolve
-pnpm run audit:token-consumption            # Dead semantic namespaces — the lost-consumer signal restored
+pnpm run audit:token-consumption            # Dead semantic namespaces — REPORT-ONLY until RC (ADR-0001 structural freeze doctrine)
 
 # Doc gates
 pnpm run docs:check-claims                     # Marked counts match their derived authority
@@ -131,7 +131,7 @@ bare count.
 
 ### Pre-push hook tracks CI, but is change-scoped — CI is authoritative
 
-`.githooks/pre-push` runs the same gate families as `.github/workflows/ci.yml` — install, lint, typecheck, the token gates, `generate:check`, `docs:check-claims`, tests, `governed:rail`, the iconography ledger, and the seven derived-obligation audits. Activate per-clone with `git config core.hooksPath .githooks` (the `prepare` script attempts this automatically).
+`.githooks/pre-push` runs the same gate families as `.github/workflows/ci.yml` — install, lint, typecheck, the token gates, `generate:check`, `docs:check-claims`, tests, `governed:rail`, the iconography ledger, and the seven derived-obligation audits (one of which, `audit:token-consumption`, is report-only until a declared release candidate per `docs/architecture/adr/0001-structural-freeze-doctrine.md`). Activate per-clone with `git config core.hooksPath .githooks` (the `prepare` script attempts this automatically).
 
 It is **not** a step-for-step mirror. `scripts/prepush-scope.mjs` derives a per-push flag set from the changed paths and the hook skips families whose inputs did not change (`PREPUSH_FULL=1` forces the full sequence). The hook's own header states it "can over-skip relative to CI but never silently skips a step whose input changed; CI is authoritative." So a green pre-push means *the lanes your change touched* passed — it is not a proof that CI will pass. Do not `--no-verify` to dodge gate failures — fix the underlying issue.
 

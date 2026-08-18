@@ -1,5 +1,5 @@
 {
-  "$comment": "Known dead semantic token namespaces (RAIL-TOKEN-CONSUMPTION-AUDIT-01). Machine-seeded once at introduction; no re-seed command ships. Post-introduction entries are hand-authored and must name the owning spec. The two-directional ratchet fails on unledgered findings AND on stale entries, so this list only shrinks truthfully.",
+  "$comment": "Known dead semantic token namespaces (RAIL-TOKEN-CONSUMPTION-AUDIT-01). REPORT-ONLY UNTIL RELEASE CANDIDATE per ADR-0001 (structural freeze doctrine): this ledger does not block pre-RC \u2014 unconsumed vocabulary is inventory, not debt, and deleting it to satisfy a gate is the void-hazard the doctrine prohibits. Machine-seeded once at audit introduction; at the declared RC boundary the ledger is re-derived ONCE (the sanctioned wholesale refresh), becomes the blocking baseline, and thereafter only shrinks truthfully: unledgered dead namespaces fail, stale entries fail, and every post-RC entry must name an owning spec with a reason whose keep-path is cheaper than deletion.",
   "gaps": [
     {
       "namespace": "semantic.action.size.large",
