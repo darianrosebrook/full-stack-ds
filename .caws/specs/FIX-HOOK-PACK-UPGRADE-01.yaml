@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "doc-frontmatter-check.sh copied to .caws/hooks/ and uncommented at .caws/hooks/dispatch/post_tool_use.sh:118; the two local fixes verified already upstream in the v39 templates — shortcut-language-check.sh carries 3 matches for the placeholder false-positive fix, and all 14 oracle references in the templates use worktree-claim-oracle.cjs. .caws/hooks had only 2 commits, both CAWS-authored installs, so it carried no local growth to lose"
     recorded_at: "2026-08-18T06:33:50.592Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Direct invocation of .caws/hooks/dispatch/pre_tool_use.sh with a PreToolUse payload for 'git push --force origin main' returned decision:block exit 2 with the CAWS command-safety reason, proving the v39 handler chain loads and short-circuits from the new path. All 60 shell files under .caws/hooks parse (bash -n). caws init diff now reports one drifted entry, post_tool_use.sh at v39 vs template v39 — the intentional doc-frontmatter-check registration the pack preserves by design. NOT proven: firing through the harness itself, which requires a session restart to reload settings.json"
+    recorded_at: "2026-08-18T06:34:03.282Z"
