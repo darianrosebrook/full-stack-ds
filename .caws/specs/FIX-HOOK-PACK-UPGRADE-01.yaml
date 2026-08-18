@@ -41,3 +41,7 @@ evidence:
     status: pass
     evidence_ref: "settings.json now routes PreToolUse/PostToolUse/SessionStart/Stop/PreCompact to .caws/hooks/dispatch/* with the canonical CAWS_AGENT_SURFACE + CAWS_PROJECT_DIR prefix matching settings.json.example; grep of hook_pack_version across dispatch/pre_tool_use.sh, block-dangerous.sh and scope-guard.sh reports 39 (was 14 in the shadow tree and 1/16 on the live tree)"
     recorded_at: "2026-08-18T06:33:48.443Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "doc-frontmatter-check.sh copied to .caws/hooks/ and uncommented at .caws/hooks/dispatch/post_tool_use.sh:118; the two local fixes verified already upstream in the v39 templates — shortcut-language-check.sh carries 3 matches for the placeholder false-positive fix, and all 14 oracle references in the templates use worktree-claim-oracle.cjs. .caws/hooks had only 2 commits, both CAWS-authored installs, so it carried no local growth to lose"
+    recorded_at: "2026-08-18T06:33:50.592Z"
