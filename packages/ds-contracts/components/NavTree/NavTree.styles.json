@@ -1,0 +1,406 @@
+{
+  "root": {
+    "display": {
+      "literal": "block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "margin-block-end": {
+      "resolvesTo": "nav-tree.size.margin.group",
+      "fallback": "8px"
+    }
+  },
+  "heading": {
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "gap": {
+      "resolvesTo": "nav-tree.size.gap.heading",
+      "fallback": "4px"
+    },
+    "font-size": {
+      "resolvesTo": "nav-tree.size.fontSize.heading",
+      "fallback": "10px"
+    },
+    "font-weight": {
+      "literal": "600",
+      "platforms": [
+        "web"
+      ]
+    },
+    "text-transform": {
+      "literal": "uppercase",
+      "platforms": [
+        "web"
+      ]
+    },
+    "letter-spacing": {
+      "literal": "0.04em",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "nav-tree.color.foreground.heading",
+      "fallback": "#474647"
+    }
+  },
+  "icon": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-shrink": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "literal": "inherit",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "headingLink": {
+    "color": {
+      "resolvesTo": "nav-tree.color.foreground.heading",
+      "fallback": "#474647"
+    },
+    "text-decoration": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "padding-block": {
+      "resolvesTo": "nav-tree.size.padding.block",
+      "fallback": "2px"
+    },
+    "padding-inline": {
+      "resolvesTo": "nav-tree.size.padding.inline",
+      "fallback": "8px"
+    },
+    "border-radius": {
+      "resolvesTo": "nav-tree.size.radius.default",
+      "fallback": "6px"
+    },
+    "transition-property": {
+      "literal": "background-color, color",
+      "platforms": [
+        "web"
+      ]
+    },
+    "transition-duration": {
+      "literal": "120ms",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "headingLabel": {
+    "padding-block": {
+      "resolvesTo": "nav-tree.size.padding.block",
+      "fallback": "2px"
+    },
+    "padding-inline": {
+      "resolvesTo": "nav-tree.size.padding.inline",
+      "fallback": "8px"
+    },
+    "border-radius": {
+      "resolvesTo": "nav-tree.size.radius.default",
+      "fallback": "6px"
+    }
+  },
+  "list": {
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": [
+        "web"
+      ]
+    },
+    "gap": {
+      "resolvesTo": "nav-tree.size.gap.item",
+      "fallback": "1px"
+    },
+    "list-style": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "margin-block": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "padding-block": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "padding-inline-start": {
+      "resolvesTo": "nav-tree.size.indent",
+      "fallback": "16px"
+    },
+    "padding-inline-end": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "item": {
+    "position": {
+      "literal": "relative",
+      "platforms": [
+        "web"
+      ]
+    },
+    "display": {
+      "literal": "block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "nav-tree.color.foreground.default",
+      "fallback": "#474647"
+    },
+    "font-size": {
+      "resolvesTo": "nav-tree.size.fontSize.item",
+      "fallback": "14px"
+    }
+  },
+  ".nav-tree__item::before": {
+    "content": {
+      "literal": "\"\"",
+      "platforms": [
+        "web"
+      ]
+    },
+    "position": {
+      "literal": "absolute",
+      "platforms": [
+        "web"
+      ]
+    },
+    "inset-inline-start": {
+      "literal": "calc(-1 * var(--fsds-nav-tree-size-indent, 16px))",
+      "platforms": [
+        "web"
+      ]
+    },
+    "top": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "bottom": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-inline-start": {
+      "literal": "1px solid var(--fsds-nav-tree-color-connector, #d0d0d0)",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".nav-tree__item::after": {
+    "content": {
+      "literal": "\"\"",
+      "platforms": [
+        "web"
+      ]
+    },
+    "position": {
+      "literal": "absolute",
+      "platforms": [
+        "web"
+      ]
+    },
+    "inset-inline-start": {
+      "literal": "calc(-1 * var(--fsds-nav-tree-size-indent, 16px))",
+      "platforms": [
+        "web"
+      ]
+    },
+    "top": {
+      "literal": "50%",
+      "platforms": [
+        "web"
+      ]
+    },
+    "width": {
+      "literal": "calc(var(--fsds-nav-tree-size-indent, 16px) - var(--fsds-nav-tree-size-gap-heading, 4px))",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-block-start": {
+      "literal": "1px solid var(--fsds-nav-tree-color-connector, #d0d0d0)",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".nav-tree__item:last-child::before": {
+    "bottom": {
+      "literal": "50%",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".nav-tree__item > *": {
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "space-between",
+      "platforms": [
+        "web"
+      ]
+    },
+    "gap": {
+      "resolvesTo": "nav-tree.size.gap.heading",
+      "fallback": "4px"
+    },
+    "color": {
+      "literal": "inherit",
+      "platforms": [
+        "web"
+      ]
+    },
+    "text-decoration": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "padding-block": {
+      "resolvesTo": "nav-tree.size.padding.block",
+      "fallback": "2px"
+    },
+    "border-radius": {
+      "resolvesTo": "nav-tree.size.radius.default",
+      "fallback": "6px"
+    },
+    "transition-property": {
+      "literal": "background-color, color",
+      "platforms": [
+        "web"
+      ]
+    },
+    "transition-duration": {
+      "literal": "120ms",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".nav-tree__item > *:hover": {
+    "background-color": {
+      "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "nav-tree.color.foreground.hover",
+      "fallback": "#141414"
+    }
+  },
+  ".nav-tree__item > *:focus-visible": {
+    "outline": {
+      "literal": "2px solid var(--fsds-nav-tree-color-outline-focus, #d92d2e)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "outline-offset": {
+      "literal": "1px",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".nav-tree__item > *[aria-current=\"page\"]": {
+    "background-color": {
+      "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-selected, 0.08) * 100%), transparent)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "nav-tree.color.foreground.current",
+      "fallback": "#141414"
+    },
+    "font-weight": {
+      "literal": "600",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".nav-tree__headingLink:hover": {
+    "background-color": {
+      "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "nav-tree.color.foreground.headingHover",
+      "fallback": "#141414"
+    }
+  },
+  ".nav-tree__headingLink:focus-visible": {
+    "outline": {
+      "literal": "2px solid var(--fsds-nav-tree-color-outline-focus, #d92d2e)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "outline-offset": {
+      "literal": "1px",
+      "platforms": [
+        "web"
+      ]
+    }
+  }
+}
