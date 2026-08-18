@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "commit 28156af8 feat(showcase): build-time target census — the four spec-less files (Home.tsx, Sidebar.tsx, types/data.ts, vite-plugin-fsds-data.ts) applied as patch into the worktree as the first scoped commit; concurrently staged Walkthrough work untouched"
     recorded_at: "2026-08-18T03:00:27.775Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "src/consumption/stack-layout.test.ts negative control: INLINE_AXIS_FLEX bites on real flex markup, stays silent on doc-sample template literals and single-child inline-flex chips; full suite pnpm test = 172 files / 2168 tests green"
+    recorded_at: "2026-08-18T03:00:29.562Z"
