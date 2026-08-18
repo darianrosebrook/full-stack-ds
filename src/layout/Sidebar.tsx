@@ -1,5 +1,5 @@
-import { Fragment, useMemo, useState } from "react";
-import { NavList, NavListItem, Input, Badge } from "@full-stack-ds/react";
+import { useMemo, useState } from "react";
+import { NavList, NavListItem, NavTree, NavTreeItem, Input, Badge } from "@full-stack-ds/react";
 import type { Bundle, ComponentBundle } from "../types/data";
 import { buildHref, type Route } from "../router";
 
@@ -72,49 +72,43 @@ export function Sidebar({ bundle, route }: SidebarProps) {
           >
             <span>Tokens</span>
             <Badge variant="counter" size="sm">
-              {bundle.components.length}
+              {bundle.foundationTokens.length}
             </Badge>
           </a>
         </NavListItem>
 
-        <li className="sidebar-group">Standards</li>
-        <NavListItem className="sidebar-item-host">
-          <a
-            className={`sidebar-item${route.kind === "tokens-philosophy" ? " sidebar-item--active" : ""}`}
-            href={buildHref({ kind: "tokens-philosophy", tab: "overview" })}
-            aria-current={route.kind === "tokens-philosophy" ? "page" : undefined}
-          >
-            <span>Tokens philosophy</span>
-          </a>
-        </NavListItem>
-        <NavListItem className="sidebar-item-host">
-          <a
-            className={`sidebar-item${route.kind === "complexity" ? " sidebar-item--active" : ""}`}
-            href={buildHref({ kind: "complexity", tab: "overview" })}
-            aria-current={route.kind === "complexity" ? "page" : undefined}
-          >
-            <span>Component complexity</span>
-          </a>
-        </NavListItem>
-        <NavListItem className="sidebar-item-host">
-          <a
-            className={`sidebar-item${route.kind === "standards" ? " sidebar-item--active" : ""}`}
-            href={buildHref({ kind: "standards", tab: "overview" })}
-            aria-current={route.kind === "standards" ? "page" : undefined}
-          >
-            <span>Component standards</span>
-          </a>
-        </NavListItem>
+        <NavTree label="Standards" icon="check">
+          <NavTreeItem>
+            <a
+              href={buildHref({ kind: "tokens-philosophy", tab: "overview" })}
+              aria-current={route.kind === "tokens-philosophy" ? "page" : undefined}
+            >
+              <span>Tokens philosophy</span>
+            </a>
+          </NavTreeItem>
+          <NavTreeItem>
+            <a
+              href={buildHref({ kind: "complexity", tab: "overview" })}
+              aria-current={route.kind === "complexity" ? "page" : undefined}
+            >
+              <span>Component complexity</span>
+            </a>
+          </NavTreeItem>
+          <NavTreeItem>
+            <a
+              href={buildHref({ kind: "standards", tab: "overview" })}
+              aria-current={route.kind === "standards" ? "page" : undefined}
+            >
+              <span>Component standards</span>
+            </a>
+          </NavTreeItem>
+        </NavTree>
 
         {bundle.primitives.length > 0 && (
-          <>
-            <li className="sidebar-group">
-              Foundations
-            </li>
+          <NavTree label="Foundations" icon="baseline">
             {bundle.primitives.map((p) => (
-              <NavListItem key={p.name} className="sidebar-item-host">
+              <NavTreeItem key={p.name}>
                 <a
-                  className={`sidebar-item${activePrimitive === p.name ? " sidebar-item--active" : ""}`}
                   href={buildHref({ kind: "primitive", name: p.name })}
                   aria-current={activePrimitive === p.name ? "page" : undefined}
                 >
@@ -123,23 +117,19 @@ export function Sidebar({ bundle, route }: SidebarProps) {
                     primitive
                   </Badge>
                 </a>
-              </NavListItem>
+              </NavTreeItem>
             ))}
-          </>
+          </NavTree>
         )}
 
         {LAYER_ORDER.map((layer) => {
           const items = grouped.get(layer);
           if (!items || items.length === 0) return null;
           return (
-            <Fragment key={layer}>
-              <li className="sidebar-group">
-                {LAYER_LABEL[layer]}
-              </li>
+            <NavTree key={layer} label={LAYER_LABEL[layer]}>
               {items.map((c) => (
-                <NavListItem key={c.name} className="sidebar-item-host">
+                <NavTreeItem key={c.name}>
                   <a
-                    className={`sidebar-item${activeComponent === c.name ? " sidebar-item--active" : ""}`}
                     href={buildHref({ kind: "component", name: c.name, tab: "design" })}
                     aria-current={activeComponent === c.name ? "page" : undefined}
                   >
@@ -148,9 +138,9 @@ export function Sidebar({ bundle, route }: SidebarProps) {
                       {Object.keys(c.sources).length}/5
                     </Badge>
                   </a>
-                </NavListItem>
+                </NavTreeItem>
               ))}
-            </Fragment>
+            </NavTree>
           );
         })}
       </NavList>
