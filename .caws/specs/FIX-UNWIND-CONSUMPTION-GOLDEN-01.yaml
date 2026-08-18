@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: unwind-consumption-golden
 created_at: '2026-08-18T03:54:12.516Z'
-updated_at: '2026-08-18T03:54:12.516Z'
+updated_at: '2026-08-18T04:23:21.353Z'
 blast_radius:
   modules:
     - 'delete: scripts/token-consumption-audit/ (audit, selfcheck, seeded ledger), packages/ds-tokens/build/runners/usage-scan.ts, docs/token-consumption-audit/'
@@ -28,6 +28,10 @@ scope:
     - 'docs/current-implementation-snapshot.md'
     - 'AGENTS.md'
     - 'package.json'
+    - scripts/token-realization-audit
+    - docs/token-realization-audit
+    - docs/architecture/adr/0001-structural-freeze-doctrine.md
+    - scripts/mobile-parity-matrix.mjs
   out: []
 invariants:
   - 'Removal is complete: after the slice, the only references to either removed spec are ADR-0001 (owner-instructed to stand as history), .caws append-only lifecycle records, and the untracked successor ledger.'
