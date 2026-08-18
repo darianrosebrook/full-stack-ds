@@ -7,7 +7,8 @@ created_at: '2026-08-18T00:51:17.449Z'
 updated_at: '2026-08-18T00:51:17.449Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'ds-codegen: highlight golden-fixtures.json (six new frozen cases) and tokenize.test.ts CASES (same strings run through structural property tests)'
+    - 'ds-react/ds-vue/ds-svelte/ds-angular/ds-lit: highlight identity suites pick the new cases up automatically via the shared golden file — no package edits expected'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,7 +18,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Golden expected arrays are machine-generated from the canonical tokenizer, audited, then frozen — never hand-authored.'
+  - 'Fixtures freeze current behavior including imperfections; any future grammar upgrade must regenerate the goldens in the same commit that changes token streams.'
+  - 'The exact frozen strings also run through the canonical structural property tests: lossless round-trip, determinism, adjacent-same-kind merge, non-empty tokens, closed enum.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
