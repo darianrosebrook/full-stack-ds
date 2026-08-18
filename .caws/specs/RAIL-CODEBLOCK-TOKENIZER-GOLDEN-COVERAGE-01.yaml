@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "scoped suites: canonical+react 30/30, vue 14/14, svelte 14/14, lit 14/14, angular (jest) 14/14; full suites: root 2160/2160 (was 2154), vue 597, svelte 515+2skip, lit 556, angular+rn green — every suite grew by the six new golden cases via the shared fixture file with zero package edits"
     recorded_at: "2026-08-18T00:57:43.110Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "generate:check 50/50; governed:rail Overall: PASS with worktree tree dirty only in the three intended files (fixtures, canonical test, snapshot doc) — zero generated component bytes changed"
+    recorded_at: "2026-08-18T00:57:44.549Z"
