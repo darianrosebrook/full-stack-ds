@@ -2,9 +2,11 @@ id: RAIL-TOKEN-CONSUMPTION-AUDIT-01
 title: 'Dead semantic token namespace audit — the consumption-direction ratchet'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Seventh derived-obligation audit: dead semantic namespaces under a shrink-only ledger, consumption from the shared usage authority, wired CI+pre-push lockstep'
 created_at: '2026-08-18T02:08:20.620Z'
-updated_at: '2026-08-18T02:08:20.620Z'
+updated_at: '2026-08-18T02:29:57.143Z'
 blast_radius:
   modules:
     - 'scripts/token-consumption-audit: audit.mjs + selfcheck.mjs + seeded known-dead-namespaces.json ledger'
