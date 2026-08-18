@@ -1,0 +1,55 @@
+id: FIX-UNWIND-FREEZE-RATCHETS-01
+title: 'Remove both token freeze ratchets (consumption + realization) and the golden-coverage expansion'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-18T04:25:03.174Z'
+updated_at: '2026-08-18T04:25:03.174Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/token-consumption-audit'
+    - 'scripts/token-realization-audit'
+    - 'docs/token-consumption-audit'
+    - 'docs/token-realization-audit'
+    - 'scripts/prepush-scope.mjs'
+    - 'scripts/prepush-scope.test.mjs'
+    - 'scripts/mobile-parity-matrix.mjs'
+    - '.githooks/pre-push'
+    - '.github/workflows/ci.yml'
+    - 'packages/ds-tokens/build/runners/usage-scan.ts'
+    - 'packages/ds-codegen/src/highlight/golden-fixtures.json'
+    - 'packages/ds-codegen/src/highlight/tokenize.test.ts'
+    - 'docs/architecture/adr/0001-structural-freeze-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'AGENTS.md'
+    - 'package.json'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the consumption and realization ledgers are population pins that fail when development succeeds; when the removal lands; then no audit script, seeded ledger, report dir, package script, CI step, pre-push block, or prepush-scope family remains for either surface, and a repo-wide grep finds references only in ADR-0001 and append-only .caws lifecycle records'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the golden-coverage slice froze six languages beyond the original four; when the removal lands; then golden-fixtures.json and tokenize.test.ts are byte-identical to abf1fed7~1 and the five web highlight suites pass at their restored counts'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given ADR-0001 section 1.1 exempted the realization ledgers while sections 1.2 and 2 classify that same ledger as an inadmissible population pin; when the removal lands; then the section 1.1 carve-out is removed so the doctrine no longer exempts the surface it was written to prevent'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given removing gates must not damage the gates that remain; when prepush-scope.test.mjs and the full gate suite run; then classify resolves every referenced flag with no ReferenceError, all 34 scope tests pass, and resolvability, contrast, styling, behavior and a11y ledgers plus governed:rail are green with a clean tree'
+non_functional: {}
+contracts:
+  - name: 'CodeBlock'
+    type: behavior
+    path: 'packages/ds-contracts/components/CodeBlock/CodeBlock.contract.json'
