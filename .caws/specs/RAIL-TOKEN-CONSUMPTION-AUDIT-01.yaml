@@ -59,3 +59,8 @@ contracts:
   - name: 'token-consumption-scanner'
     type: behavior
     path: 'packages/ds-tokens/build/analytics/usageTracker.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "audit.mjs spawns analyzeTokenUsage via usage-scan.ts (sole consumption authority); deadSubtrees reports maximal fully-dead semantic subtrees >=2 tokens; selfcheck 8/8 (partial-consumption splitting, maximal nesting collapse, singleton exclusion, core exclusion, dead-layer root)"
+    recorded_at: "2026-08-18T02:29:53.416Z"
