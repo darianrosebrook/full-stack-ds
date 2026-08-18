@@ -1,13 +1,13 @@
 {
   "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-  "corpusSize": 50,
+  "corpusSize": 51,
   "perTarget": [
     {
       "target": "react-native",
-      "admitted": 50,
-      "carriersPresent": 50,
-      "slotsRealized": 898,
-      "slotsDeclared": 898,
+      "admitted": 51,
+      "carriersPresent": 51,
+      "slotsRealized": 916,
+      "slotsDeclared": 916,
       "gaps": {
         "admission": 0,
         "carrier": 0,
@@ -22,7 +22,7 @@
       "slotsRealized": 732,
       "slotsDeclared": 895,
       "gaps": {
-        "admission": 1,
+        "admission": 2,
         "carrier": 0,
         "slot": 163,
         "orphan": 0
@@ -30,10 +30,10 @@
     },
     {
       "target": "jetpack-compose",
-      "admitted": 2,
-      "carriersPresent": 2,
-      "slotsRealized": 57,
-      "slotsDeclared": 57,
+      "admitted": 3,
+      "carriersPresent": 3,
+      "slotsRealized": 83,
+      "slotsDeclared": 83,
       "gaps": {
         "admission": 48,
         "carrier": 0,
@@ -430,6 +430,11 @@
     {
       "target": "swiftui",
       "component": "Markdown",
+      "kind": "admission"
+    },
+    {
+      "target": "swiftui",
+      "component": "NavTree",
       "kind": "admission"
     },
     {
@@ -1063,11 +1068,6 @@
     },
     {
       "target": "jetpack-compose",
-      "component": "Button",
-      "kind": "admission"
-    },
-    {
-      "target": "jetpack-compose",
       "component": "Calendar",
       "kind": "admission"
     },
@@ -1159,6 +1159,11 @@
     {
       "target": "jetpack-compose",
       "component": "NavList",
+      "kind": "admission"
+    },
+    {
+      "target": "jetpack-compose",
+      "component": "NavTree",
       "kind": "admission"
     },
     {
