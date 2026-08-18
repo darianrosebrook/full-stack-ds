@@ -1,0 +1,55 @@
+id: RAIL-TOKEN-CONSUMPTION-AUDIT-01
+title: 'Dead semantic token namespace audit — the consumption-direction ratchet'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-18T02:08:20.620Z'
+updated_at: '2026-08-18T02:08:20.620Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/token-consumption-audit'
+    - 'scripts/prepush-scope.mjs'
+    - 'scripts/prepush-scope.test.mjs'
+    - '.githooks/pre-push'
+    - '.github/workflows/ci.yml'
+    - 'packages/ds-tokens/build/runners'
+    - 'docs/token-consumption-audit'
+    - 'docs/current-implementation-snapshot.md'
+    - 'AGENTS.md'
+    - 'package.json'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the usage baseline ratchet tolerates churn (a count floor cannot say WHICH item regressed, and one sanctioned re-baseline absorbs all drift — exactly how the stale color.syntax namespace survived); when the consumption audit runs; then it reports maximal fully-dead SEMANTIC subtrees with at least 2 tokens as named findings, derives consumption by spawning the same analyzeTokenUsage authority the baseline uses, and never reports core-layer tokens (vocabulary-by-doctrine)'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the shared two-directional ledger ratchet; when the audit is introduced; then every current finding is ledgered with owning spec and note (machine-seeded, hand-reviewed), zero stale entries, and selfcheck fixtures prove the bite: an unledgered dead namespace fails, a stale ledger entry fails, and the historical color.syntax split-brain shape (consumer re-pointed, namespace fully orphaned) reports as unledgered'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the audit family wiring contract; when the slice lands; then pnpm run audit:token-consumption runs from root, ci.yml runs it as its own step, and the pre-push scope script selects it on its exact input set (ds-tokens, ds-contracts, ds-react generated CSS, the audit scripts) — lockstep with ci.yml per PREPUSH-LOCKSTEP-01'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the full gate suite; when it runs in the worktree; then generate:check, governed:rail, root tests, and test:frameworks stay green and the audit itself passes with the seeded ledger'
+observability:
+  - 'The audit prints findings/ledgered/unledgered/stale counts and writes docs/token-consumption-audit/consumption-matrix.{json,md}; CI and pre-push surface the same verdict.'
+rollback:
+  - 'git revert the slice commits — the audit is read-only over the graph; no token, contract, or generated artifact changes to unwind.'
+non_functional:
+  security:
+    - 'Read-only scanning of repo files; the subprocess spawns only the workspace tsx runner; no network, no secrets.'
+contracts:
+  - name: 'token-consumption-scanner'
+    type: behavior
+    path: 'packages/ds-tokens/build/analytics/usageTracker.ts'
