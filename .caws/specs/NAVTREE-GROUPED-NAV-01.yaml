@@ -81,3 +81,8 @@ contracts:
   - name: 'navtree-contract'
     type: api
     path: 'packages/ds-contracts/components/NavTree/NavTree.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run generate:check — Validation: 51/51 component contract(s) passed (NavTree VALID; no DRIFT) in worktree after pnpm -F @full-stack-ds/tokens build"
+    recorded_at: "2026-08-18T02:58:31.055Z"
