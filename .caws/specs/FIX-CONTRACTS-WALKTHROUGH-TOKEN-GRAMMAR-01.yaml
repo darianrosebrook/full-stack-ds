@@ -42,3 +42,8 @@ contracts:
   - name: 'component.tokens sidecar'
     type: schema
     path: 'packages/ds-contracts/component.tokens.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run generate:check 50/50 after rename + regen (--target=all Walkthrough, 8 groups); grep across packages/docs/src/e2e/scripts finds zero surviving old-name references outside regenerated matrices; audit:dead-slots PASS after moving the dots.active disposition key; pseudo-state/state-suppression/token-resolvability/token-realization (98/98 unchanged) all PASS; tokens:check-usage:gate no regression; governed:rail exit 0; pnpm test 2163/2163; test:frameworks green"
+    recorded_at: "2026-08-18T02:04:56.762Z"
