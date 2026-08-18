@@ -2,9 +2,11 @@ id: FIX-UNWIND-FREEZE-RATCHETS-01
 title: 'Remove both token freeze ratchets (consumption + realization) and the golden-coverage expansion'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Removed both token freeze ratchets and the golden-coverage expansion; ADR-0001 no longer exempts the realization ledger it was written to prevent'
 created_at: '2026-08-18T04:25:03.174Z'
-updated_at: '2026-08-18T04:25:03.174Z'
+updated_at: '2026-08-18T04:39:08.617Z'
 blast_radius:
   modules:
     - 'delete: scripts/token-consumption-audit/ and scripts/token-realization-audit/ (audit, selfcheck, seeded ledgers), packages/ds-tokens/build/runners/usage-scan.ts, both docs/ report dirs'
