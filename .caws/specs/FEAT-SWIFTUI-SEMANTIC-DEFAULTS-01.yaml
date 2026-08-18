@@ -4,18 +4,25 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-08-18T02:35:48.441Z'
-updated_at: '2026-08-18T02:35:48.441Z'
+updated_at: '2026-08-18T02:36:05.902Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift (defaults table)'
+    - 'packages/ds-swiftui/Tests/DsSwiftUITests (full-coverage graph-equality + reach-through tests)'
+    - 'examples/settings/swift (install the defaults theme at the root)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
     - 'packages/ds-swiftui/Sources'
+    - packages/ds-swiftui/Tests
+    - examples/settings/swift
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Every entry of the defaults table equals its committed resolved.tokens.json $value — asserted exhaustively, not sampled.'
+  - 'Light-half only, mirroring the Compose table; the dark half is reserved for the mode-axis slice.'
+  - 'The table covers exactly the graph-resolvable refs the swift corpus emits; non-graph refs keep the literal/fallback path unchanged.'
 acceptance:
   - id: A1
     given: 'the ref arm in FsdsComponentTokenDefinition and 168 graph-resolvable semantic refs emitted across the swift corpus'
