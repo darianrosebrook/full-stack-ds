@@ -4,18 +4,21 @@ risk_tier: 2
 mode: fix
 lifecycle_state: active
 created_at: '2026-08-18T00:47:59.313Z'
-updated_at: '2026-08-18T00:47:59.313Z'
+updated_at: '2026-08-18T00:48:27.523Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen (CLI write path + jetpack-compose emitter)'
+    - 'packages/ds-jetpack-compose/library (regenerated component trees gain @generated region markers)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
     - 'packages/ds-codegen/src/cli.ts'
+    - packages/ds-codegen/src/frameworks/jetpack-compose/factory.ts
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'A GeneratedFile marked preservable whose contents contain no @generated:start/@generated:end markers makes generate fail with a typed error naming the file — never a silent skip on subsequent runs.'
+  - 'All jetpack-compose generated files carry @generated region markers, so regeneration merge-updates them byte-stably instead of skipping.'
 acceptance:
   - id: A1
     given: 'an emitter marks a GeneratedFile preservable'
