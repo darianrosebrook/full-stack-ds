@@ -18,12 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import com.fullstackds.components.button.Button
-import com.fullstackds.components.button.ButtonVariant
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +52,7 @@ fun SettingsApp(modifier: Modifier = Modifier) {
         modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        ProfileSection( // NOT FSDS: Field/Input not yet emitted on this target; Button is FSDS.
+        ProfileSection( // NOT FSDS: Field/Input/Button not yet emitted on this target.
             displayName = displayName,
             onDisplayNameChange = { displayName = it },
             email = email,
@@ -88,8 +88,8 @@ private fun ProfileSection(
                 onValueChange = onEmailChange,
                 label = { Text("Email") },
             )
-            Button(variant = ButtonVariant.Primary, onClick = { println("settings: save profile") }) {
-                Text("Save profile", color = contentColor)
+            Button(onClick = { println("settings: save profile") }) {
+                Text("Save profile")
             }
         }
     }
@@ -143,8 +143,8 @@ private fun DangerZoneSection() {
         Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text("Danger zone", style = MaterialTheme.typography.titleMedium)
             Text("Permanently delete your account. This cannot be undone.")
-            Button(variant = ButtonVariant.Destructive, onClick = { confirmOpen = true }) {
-                Text("Delete account", color = contentColor)
+            Button(onClick = { confirmOpen = true }) {
+                Text("Delete account")
             }
         }
     }
@@ -160,8 +160,8 @@ private fun DangerZoneSection() {
     }
 }
 
-// NOT FSDS shell: the AlertDialog chrome stays material3 until the compose
-// emitter grows the centered-modal surface class; its action buttons are FSDS.
+// NOT FSDS: the confirm dialog is plain material3 until the compose emitter
+// grows the centered-modal surface class (the swift lane's Dialog path).
 @Composable
 private fun ConfirmDeleteDialog(
     onDismiss: () -> Unit,
@@ -183,16 +183,13 @@ private fun ConfirmDeleteDialog(
             }
         },
         confirmButton = {
-            Button(
-                variant = ButtonVariant.Destructive,
-                disabled = confirmation != "DELETE",
+            TextButton(
                 onClick = onConfirm,
-            ) { Text("Delete", color = contentColor) }
+                enabled = confirmation == "DELETE",
+            ) { Text("Delete") }
         },
         dismissButton = {
-            Button(variant = ButtonVariant.Secondary, onClick = onDismiss) {
-                Text("Cancel", color = contentColor)
-            }
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         },
     )
 }

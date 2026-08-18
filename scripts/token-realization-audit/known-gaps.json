@@ -51,6 +51,13 @@
     },
     {
       "target": "jetpack-compose",
+      "component": "Button",
+      "kind": "admission",
+      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
+      "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "jetpack-compose",
       "component": "Calendar",
       "kind": "admission",
       "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
@@ -1653,20 +1660,6 @@
       "slot": "toggle-switch.focus.ring.offset",
       "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
       "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
-    },
-    {
-      "target": "swiftui",
-      "component": "NavTree",
-      "kind": "admission",
-      "spec": "FEAT-COMPOSE-BUTTON-ADMISSION-01",
-      "note": "NavTree landed concurrently (NAVTREE-GROUPED-NAV-01); swiftui admission pending its lowering class"
-    },
-    {
-      "target": "jetpack-compose",
-      "component": "NavTree",
-      "kind": "admission",
-      "spec": "FEAT-COMPOSE-BUTTON-ADMISSION-01",
-      "note": "NavTree landed concurrently (NAVTREE-GROUPED-NAV-01); compose admission pending its lowering class"
     }
   ]
 }
