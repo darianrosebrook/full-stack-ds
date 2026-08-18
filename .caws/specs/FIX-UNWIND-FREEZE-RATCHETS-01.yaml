@@ -3,7 +3,6 @@ title: 'Remove both token freeze ratchets (consumption + realization) and the go
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: unwind-freeze-ratchets
 created_at: '2026-08-18T04:25:03.174Z'
 updated_at: '2026-08-18T04:25:03.174Z'
 blast_radius:
