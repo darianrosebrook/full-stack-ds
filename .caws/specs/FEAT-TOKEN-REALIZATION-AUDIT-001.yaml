@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: token-realization-audit
 created_at: '2026-08-18T01:06:57.797Z'
-updated_at: '2026-08-18T01:07:46.406Z'
+updated_at: '2026-08-18T01:13:16.489Z'
 blast_radius:
   modules:
     - 'scripts/token-realization-audit + scripts/lib/ledger-ratchet (new audit family)'
@@ -21,6 +21,7 @@ scope:
     - scripts/prepush-scope.mjs
     - docs/token-realization-audit
     - scripts/mobile-parity-matrix.mjs
+    - .githooks/pre-push
   out: []
 invariants:
   - 'The audit derives its denominator from the contracts-fs corpus walk and tokens sidecars, never from a hardcoded component list.'
