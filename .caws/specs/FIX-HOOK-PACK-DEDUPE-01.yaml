@@ -1,0 +1,44 @@
+id: FIX-HOOK-PACK-DEDUPE-01
+title: 'Remove the superseded .claude hook duplicates and restore claim-oracle yaml resolution'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-18T16:13:05.341Z'
+updated_at: '2026-08-18T16:13:05.341Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - '.claude/hooks'
+    - '.caws/hooks'
+    - 'package.json'
+    - 'pnpm-lock.yaml'
+    - 'CLAUDE.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the claim oracle moved to .caws/hooks/lib where js-yaml is unresolvable so the canonical scope.in claim check silently degrades; when js-yaml is declared at the repo root; then require(''js-yaml'') resolves from .caws/hooks/lib upward and the oracle performs the canonical claim check rather than skipping it'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given .claude/hooks holds 34 shell scripts, 2 python files, caws_dispatch and lib that settings.json no longer sources; when the duplicates are removed; then .claude/hooks retains exactly state, CLAUDE.md, README.md and the js-yaml provisioning is gone, and no removed path is referenced by .caws/hooks or settings.json'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given CLAUDE.md documents the hook surface at the old path; when the docs are corrected; then the hooks section names .caws/hooks, the settings wiring, and the state directory accurately, and every path it cites exists'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given removing guard scripts must not disarm the guards; when the removal lands; then the PreToolUse chain still blocks a known-refused command and caws doctor reports no new findings'
+non_functional: {}
+contracts:
+  - name: 'caws-hook-dispatch'
+    type: behavior
+    path: '.caws/hooks/dispatch/pre_tool_use.sh'
