@@ -47,3 +47,8 @@ contracts:
   - name: 'CodeBlock'
     type: behavior
     path: 'packages/ds-contracts/components/CodeBlock/CodeBlock.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "token build diff proof: resolved graph loses exactly 9 semantic.color.syntax.* paths (0 added, 0 changed values); grep fsds-semantic-color-syntax- tokens.css == 0; foreground-syntax CSS lines byte-identical to pre-removal build (diff of grep'd lines: IDENTICAL)"
+    recorded_at: "2026-08-18T00:48:28.403Z"
