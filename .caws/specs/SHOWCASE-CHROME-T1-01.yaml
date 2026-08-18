@@ -2,9 +2,11 @@ id: SHOWCASE-CHROME-T1-01
 title: 'Core DS chrome adoption across existing showcase surfaces'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: '34 DS families adopted as static app chrome behind a chrome-coverage ratchet; Text/Field deferred with documented blockers'
 created_at: '2026-08-18T03:01:23.073Z'
-updated_at: '2026-08-18T03:01:23.073Z'
+updated_at: '2026-08-18T03:49:05.249Z'
 blast_radius:
   modules:
     - 'src/ showcase: Header/TracePanel/CodeViewer/FrameworkPreview/views/sections adopt ~25 DS families as real chrome'
