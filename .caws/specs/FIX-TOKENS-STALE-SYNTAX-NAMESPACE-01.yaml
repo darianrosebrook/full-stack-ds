@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "token build diff proof: resolved graph loses exactly 9 semantic.color.syntax.* paths (0 added, 0 changed values); grep fsds-semantic-color-syntax- tokens.css == 0; foreground-syntax CSS lines byte-identical to pre-removal build (diff of grep'd lines: IDENTICAL)"
     recorded_at: "2026-08-18T00:48:28.403Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "worktree gates: tokens:validate 160/160, tokens:build:check pass, tokens:check-contrast 44/44 AA, tokens:check-brand-refs pass, tokens:check-usage:gate pass after sanctioned write-usage-baseline (413->396 unused, no regression), generate:check 50/50, governed:rail Overall: PASS with clean tree (zero component-tree diff), pnpm test 2154/2154, test:frameworks all green"
+    recorded_at: "2026-08-18T00:48:29.353Z"
