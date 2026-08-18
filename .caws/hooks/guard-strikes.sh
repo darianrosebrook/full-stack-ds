@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,16
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Shared progressive strike handling for CAWS pre-write guard hooks.
 #
 # STRIKE-STATE KEYING (matches CLAUDE.md "Scope-guard strike state"):
@@ -30,7 +34,7 @@
 #   1. Switch into the right CAWS worktree.
 #   2. Bring the target file into the active spec's scope.in (if it legitimately
 #      belongs there), then ask the user to reset your strikes by running:
-#        bash ${CAWS_VENDOR_DIR}/hooks/reset-strikes.sh --current
+#        bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-strikes.sh --current
 #      or the equivalent narrower reset (see --help).
 #   3. Ask the user to resolve the conflict explicitly.
 # Never edit guard-strikes-*.json files by hand — use reset-strikes.sh so the

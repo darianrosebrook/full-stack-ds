@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 4,8,13
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 #
 # CAWS Worktree Write Guard (shared).
 #
@@ -63,6 +67,24 @@ fi
 caws_source_lib emit.sh 2>/dev/null || true
 # shellcheck source=lib/guard-message.sh
 [[ -f "$SCRIPT_DIR/lib/guard-message.sh" ]] && source "$SCRIPT_DIR/lib/guard-message.sh"
+# shellcheck source=lib/session-id.sh
+# CAWS-SESSION-RESOLVER-GUARD-DIVERGENCE-001 (A1/A2): resolve the operating
+# session id through the SAME env-var precedence the TS resolver uses, not only
+# HOOK_SESSION_ID (which does not propagate into agent-Bash). Best-effort source
+# — a missing helper degrades to the legacy HOOK_SESSION_ID-only path, never a
+# hard block.
+[[ -f "$SCRIPT_DIR/lib/session-id.sh" ]] && source "$SCRIPT_DIR/lib/session-id.sh"
+
+# CAWS_ORACLE_SESSION_ID: the fully-resolved operating identity. Falls back to
+# HOOK_SESSION_ID when the helper is absent (back-compat). This is what the
+# oracle compares against the worktree's stamped owner — matching the resolver
+# chain the stamper used, so owner-self recognition works across all harnesses.
+if declare -F resolve_caws_session_id_with_payload >/dev/null 2>&1; then
+  CAWS_ORACLE_SESSION_ID="$(resolve_caws_session_id_with_payload "${HOOK_SESSION_ID:-}")"
+else
+  CAWS_ORACLE_SESSION_ID="${HOOK_SESSION_ID:-}"
+fi
+export CAWS_ORACLE_SESSION_ID
 
 # WORKTREE-ISOLATION-HARDENING-001 (Fix 1+2): the shared ownership oracle.
 CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.cjs"
@@ -143,29 +165,30 @@ if [[ -n "$CANONICAL_ROOT" ]]; then
 fi
 
 # Always-allowed paths bypass enforcement.
-# FLAG: The agent-state home directory arm ($HOME/${CAWS_VENDOR_DIR}/) cannot
-# be expressed as a bash case pattern because case patterns cannot expand shell
-# variables. It is matched via [[ == ]] below after the case block returns.
+# CAWS-GUARD-ALLOWLIST-SYNC-001: the unconditional-allow path set lives in the
+# shared lib/write-allowlist.sh so worktree-write-guard and bash-write-guard
+# return the SAME allow verdict for the SAME path. The one arm that MUST stay
+# inline is .caws/worktrees/* PAYLOAD — that is ownership-adjudicated (routed
+# through the oracle), not unconditionally allowed, and it must run BEFORE the
+# allowlist so a payload path is not swept up by the .caws/* allow arm.
 if [[ -n "$FILE_PATH" ]]; then
   case "$FILE_PATH" in
     /*) FILE_PATH_FOR_ALLOWLIST="$(_realpath "$FILE_PATH")" ;;
     *)  FILE_PATH_FOR_ALLOWLIST="$FILE_PATH" ;;
   esac
 
-  # Agent-state home dir: must use [[ ]] because case cannot expand CAWS_VENDOR_DIR.
-  if [[ "$FILE_PATH_FOR_ALLOWLIST" == "${HOME:-}/${CAWS_VENDOR_DIR}/"* ]]; then
-    exit 0
-  fi
-
+  # WORKTREE-ISOLATION-HARDENING-001 (Fix 1+2): .caws/worktrees/<name>/<rest>
+  # is worktree PAYLOAD — route through ownership oracle FIRST. This arm is
+  # intentionally NOT in the shared allowlist (payload is ownership-checked,
+  # never unconditionally allowed) and must precede the allowlist delegation
+  # so it wins over the .caws/* allow arm.
   case "$FILE_PATH_FOR_ALLOWLIST" in
-    # WORKTREE-ISOLATION-HARDENING-001 (Fix 1+2): .caws/worktrees/<name>/<rest>
-    # is worktree PAYLOAD — route through ownership oracle FIRST.
     "$PROJECT_DIR"/.caws/worktrees/*|.caws/worktrees/*)
       if [[ -f "$CAWS_CLAIM_ORACLE" ]] && command -v node >/dev/null 2>&1; then
         _ORACLE_OUT="$(CAWS_ORACLE_PROJECT_DIR="$PROJECT_DIR" \
           CAWS_ORACLE_CURRENT_BRANCH="" \
           CAWS_ORACLE_REL_PATH="$FILE_PATH_FOR_ALLOWLIST" \
-          CAWS_ORACLE_SESSION_ID="${HOOK_SESSION_ID:-}" \
+          CAWS_ORACLE_SESSION_ID="$CAWS_ORACLE_SESSION_ID" \
           node "$CAWS_CLAIM_ORACLE" 2>&1 || true)"
         _ORACLE_FIRST="${_ORACLE_OUT%%$'\n'*}"
         case "${_ORACLE_FIRST%%:*}" in
@@ -197,8 +220,8 @@ if [[ -n "$FILE_PATH" ]]; then
             echo "[$_WG_ID] BLOCKED: this is a write into worktree '$_OWN_WT''s payload (.caws/worktrees/$_OWN_WT/...), which is owned by a DIFFERENT session." >&2
             echo "  A worktree's files are owned by the session that created/claimed it; another session must not mutate them directly." >&2
             echo "  This is a CAWS governance decision." >&2
-            echo "  To work in worktree '$_OWN_WT', your SESSION must be rooted there (caws claim '$_OWN_WT' --takeover if you intend to take ownership), not writing into its path from a foreign session." >&2
-            echo "  Do NOT edit ${CAWS_VENDOR_DIR}/hooks/ or guard state to bypass this." >&2
+            echo "  To work in worktree '$_OWN_WT', your SESSION must be rooted there, not writing into its path from a foreign session. 'caws claim' has NO worktree-name argument — it reads the current directory, so cd first: cd .caws/worktrees/$_OWN_WT && caws claim --takeover" >&2
+            echo "  Do NOT edit ${CAWS_HOOKS_DIR:-.caws/hooks}/ or guard state to bypass this." >&2
             exit 2 ;;
           block_claimed)
             _WG_ID="CAWS worktree-write-guard"
@@ -229,22 +252,30 @@ if [[ -n "$FILE_PATH" ]]; then
         esac
       fi
       exit 0 ;;
-    "$PROJECT_DIR"/.caws/*|.caws/*) exit 0 ;;
-    "$PROJECT_DIR"/.gitignore|.gitignore) exit 0 ;;
-    "$PROJECT_DIR"/.tmp/*|.tmp/*) exit 0 ;;
-    "$PROJECT_DIR"/tmp/*|tmp/*) exit 0 ;;
-    "$PROJECT_DIR"/.archive/*|.archive/*) exit 0 ;;
-    "$PROJECT_DIR"/.githooks/*|.githooks/*) exit 0 ;;
-    "$PROJECT_DIR"/.github/*|.github/*) exit 0 ;;
-    "$PROJECT_DIR"/docs/*|docs/*) exit 0 ;;
-    "$PROJECT_DIR"/CLAUDE.md|CLAUDE.md) exit 0 ;;
   esac
 
-  # vendor-dir hooks allowlist: case patterns cannot expand variables, so match
-  # via [[ == ]] with CAWS_VENDOR_DIR.
-  if [[ "$FILE_PATH_FOR_ALLOWLIST" == "$PROJECT_DIR/${CAWS_VENDOR_DIR}/"* ]] || \
-     [[ "$FILE_PATH_FOR_ALLOWLIST" == "${CAWS_VENDOR_DIR}/"* ]]; then
-    exit 0
+  # Shared unconditional allowlist (lib/write-allowlist.sh). Returns 0 if the
+  # path is unconditionally allowed (docs/*, .caws/* minus payload, .tmp/*,
+  # .github/*, vendor dir, instruction files, agent-home dir). Payload already
+  # returned above.
+  #
+  # CAWS-GUARD-SCOPE-PRIORITY-001: the allowlist NO LONGER exits unconditionally.
+  # A scope.in claim overrides the allowlist — a path claimed by an active
+  # worktree is owned, not unconditionally allowed. So we record the allowlist
+  # verdict as a flag and let the path fall through to the scope-contention
+  # check in the base-branch section. There, a CLAIMED allowlisted path blocks
+  # (scope.in wins); a CLEAR or UNDETERMINED allowlisted path exits 0 (the
+  # allowlist permits when unclaimed, and a toolchain fault must not block).
+  # The early exits below (no worktrees.json, no node, inside worktree,
+  # registered worktree, WT_COUNT 0) all exit 0, so an allowlisted path is
+  # still allowed in those contexts — scope.in only overrides on the base
+  # branch where cross-worktree contention is the concern.
+  # shellcheck source=lib/write-allowlist.sh
+  [[ -f "$SCRIPT_DIR/lib/write-allowlist.sh" ]] && source "$SCRIPT_DIR/lib/write-allowlist.sh"
+  if declare -F caws_is_write_allowlisted >/dev/null 2>&1; then
+    if caws_is_write_allowlisted "$FILE_PATH_FOR_ALLOWLIST" "$PROJECT_DIR"; then
+      _PATH_ALLOWLISTED=1
+    fi
   fi
 fi
 
@@ -383,6 +414,27 @@ if [[ -n "$FILE_PATH" ]] && [[ "$WT_COUNT" -gt 0 ]] 2>/dev/null; then
   fi
 fi
 
+# CAWS-GUARD-SCOPE-PRIORITY-001: an allowlisted path is permitted ONLY when no
+# worktree's scope.in claims it. If the scope-contention check above reported
+# the path as CLAIMED, the allowlist defers — scope.in is authoritative, so a
+# claimed docs/** or .caws/** path blocks here exactly like a claimed src/**
+# path would. If contention is CLEAR (no claim) or UNKNOWN (toolchain fault),
+# the allowlist admits (coordination edits still work; a fault must not block).
+# Non-allowlisted paths fall through to the risk-prompt logic below.
+if [[ "${_PATH_ALLOWLISTED:-0}" == "1" ]]; then
+  case "${SPEC_CONTENTION_CHECK:-unknown:scope-check-skipped}" in
+    claimed:*)
+      # scope.in wins — fall through to the claimed:* block below which blocks
+      # with the worktree/pattern detail. Do NOT exit 0 here.
+      ;;
+    *)
+      # clear, unknown:* (toolchain fault), or scope-check-skipped (WT_COUNT==0
+      # path that bypassed the scope section). Allow via the allowlist.
+      exit 0
+      ;;
+  esac
+fi
+
 if [[ -z "${REL_PATH:-}" ]]; then
   REL_PATH="${FILE_PATH_FOR_ALLOWLIST:-$FILE_PATH}"
   if [[ -n "$REL_PATH" ]] && [[ "$REL_PATH" == "$PROJECT_DIR"/* ]]; then
@@ -478,7 +530,7 @@ case "${SPEC_CONTENTION_CHECK:-}" in
     else
       echo "To make this edit, your SESSION must be operating in the owning worktree (caws worktree list)." >&2
     fi
-    echo "Do NOT edit ${CAWS_VENDOR_DIR}/hooks/ or guard state to bypass this." >&2
+    echo "Do NOT edit ${CAWS_HOOKS_DIR:-.caws/hooks}/ or guard state to bypass this." >&2
     exit 2
     ;;
 esac
@@ -491,7 +543,7 @@ if _guard_no_ask; then
   echo "[worktree-write-guard.sh] BLOCKED: $_RISK_REASON" >&2
   echo "" >&2
   echo "(ask-incapable harness: CAWS_GUARD_NO_ASK=$CAWS_GUARD_NO_ASK or emit_ask unavailable — falling back to a hard block so the write is not silently allowed.)" >&2
-  echo "Do NOT edit ${CAWS_VENDOR_DIR}/hooks/ or guard state to bypass this. Ask the user if a base-branch edit is genuinely needed." >&2
+  echo "Do NOT edit ${CAWS_HOOKS_DIR:-.caws/hooks}/ or guard state to bypass this. Ask the user if a base-branch edit is genuinely needed." >&2
   exit 2
 fi
 

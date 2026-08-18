@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,11,12,16
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 #
 # CAWS Scope Guard Hook (v11-shape).
 # Validates file edits against scope boundaries from per-feature specs under .caws/specs/.
@@ -83,7 +87,7 @@ emit_scope_progression() {
   # otherwise it falls back to a placeholdered form.
   local spec_id="${2:-}"
 
-  local _id _hint _note
+  local _id _hint _note _reprieve
   if command -v guard_identity >/dev/null 2>&1; then
     _id="$(guard_identity scope-guard)"
     _hint="$(guard_amend_scope_hint "$spec_id" "$REL_PATH")"
@@ -93,18 +97,48 @@ emit_scope_progression() {
     _hint="caws specs amend-scope ${spec_id:-<spec-id>} --add $REL_PATH"
     _note="This is a CAWS governance decision, not a harness prompt."
   fi
+  if command -v guard_reprieve_hint >/dev/null 2>&1; then
+    _reprieve="$(guard_reprieve_hint scope-guard.sh)"
+  else
+    _reprieve='Session-scoped escape for THIS guard (one session, expires): caws reprieve grant --current --handlers scope-guard.sh --reason "<why>" --approved-by "<approver>" --expires-at "<iso-ts>". Not to be confused with caws waiver create, which exempts GATE violations at policy-run time and never lifts a hook guard.'
+  fi
 
   local widen="If this path SHOULD be in scope, widen the bound spec: $_hint"
-  local fix_options="Fix options: (1) edit a file already in scope, (2) $widen, (3) ask the user."
-  local hard_block_guidance="If prior strikes from earlier edits are cornering this session and the scope is now correct, ask the user to run: bash ${CAWS_VENDOR_DIR}/hooks/reset-strikes.sh --current (or --session <uuid>) to clear stale strike state. Verify the worktree binding: the spec must declare 'worktree: <name>' and .caws/worktrees.json must map that same worktree name to the correct 'specId' (v10) or 'spec_id' (v11). On CAWS v11.0 the worktree lifecycle CLI is not yet restored; on v11.1+ use 'caws worktree bind'. Do not edit ${CAWS_VENDOR_DIR}/hooks/, ${CAWS_VENDOR_DIR}/logs/guard-strikes-*.json, or other guard state to bypass this check."
+
+  # Remediation must be conditional on the ACTUAL cause, not a fixed menu.
+  #
+  # When no spec id was passed, the caller is in union mode — no spec is bound
+  # to this checkout. The path may already be in a spec's scope.in and the edit
+  # STILL refuses, because scope fit is not write authority. Telling that agent
+  # to `amend-scope` sends it to widen a scope that needed no widening; it burns
+  # a turn and teaches a wrong model of the system. The correct first move is to
+  # create or enter the bound worktree.
+  local fix_options
+  if [[ -z "$spec_id" ]]; then
+    fix_options="Fix options: (1) create or enter the worktree bound to the spec that owns this path — no spec is bound to THIS checkout, so scope is being checked in union mode over every active spec, and a path already listed in its spec's scope.in still refuses here (path fit is not write authority); list candidates with 'caws specs list --status active' and enter via 'cd .caws/worktrees/<name>' or create with 'caws worktree create <name> --spec <id>', (2) edit a file already in scope, (3) ask the user."
+  else
+    fix_options="Fix options: (1) edit a file already in scope, (2) $widen, (3) ask the user."
+  fi
+
+  # Print the resolved session id rather than a '<uuid>' placeholder: the guard
+  # already knows it (it just keyed the strike file by it), and the human being
+  # handed this command has no other obvious way to look it up.
+  local _reset_cmd="bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-strikes.sh"
+  if [[ -n "$SESSION_ID" ]]; then
+    _reset_cmd="$_reset_cmd --session $SESSION_ID"
+  else
+    _reset_cmd="$_reset_cmd --current"
+  fi
+
+  local hard_block_guidance="If prior strikes from earlier edits are cornering this session and the scope is now correct, ask the user to run: $_reset_cmd to clear stale strike state. Verify the worktree binding: the spec must declare 'worktree: <name>' and .caws/worktrees.json must map that same worktree name to the correct 'spec_id'. Repair a one-sided binding with 'caws worktree bind <name> --spec <id>'. Do not edit ${CAWS_HOOKS_DIR:-.caws/hooks}/, ${CAWS_LOG_DIR:-${CAWS_VENDOR_DIR}/logs}/guard-strikes-*.json, or other guard state to bypass this check."
 
   guard_enforce_progressive_strikes \
     "$SESSION_ID" \
     "scope_guard" \
     "$WORK_DIR" \
     "$_id strike 1 of 3 for '$REL_PATH'. $_note This edit proceeds, but a second out-of-scope edit will require user approval. $detail $widen" \
-    "$_id strike 2 of 3 for '$REL_PATH'. $_note Blocked — asking the user for approval. $detail $fix_options" \
-    "$_id strike 3 of 3 for '$REL_PATH'. $_note Hard-blocked until scope is corrected. $detail $fix_options $hard_block_guidance"
+    "$_id strike 2 of 3 for '$REL_PATH'. $_note Blocked — asking the user for approval. $detail $fix_options $_reprieve" \
+    "$_id strike 3 of 3 for '$REL_PATH'. $_note Hard-blocked until scope is corrected. $detail $fix_options $hard_block_guidance $_reprieve"
 }
 
 resolve_worktree_root() {
@@ -252,10 +286,15 @@ _scope_env_block() {
   local msg="$1"
   local _id="CAWS scope-guard"
   command -v guard_identity >/dev/null 2>&1 && _id="$(guard_identity scope-guard)"
+  # Fail-closed infra blocks still name the session-scoped escape: a session
+  # wedged by missing infrastructure needs the same sanctioned off-ramp as a
+  # scope refusal, or it starts inventing one.
+  local _reprieve='Session-scoped escape for THIS guard (one session, expires): caws reprieve grant --current --handlers scope-guard.sh --reason "<why>" --approved-by "<approver>" --expires-at "<iso-ts>".'
+  command -v guard_reprieve_hint >/dev/null 2>&1 && _reprieve="$(guard_reprieve_hint scope-guard.sh)"
   if command -v emit_block >/dev/null 2>&1; then
-    emit_block "$_id: $msg"
+    emit_block "$_id: $msg $_reprieve"
   else
-    printf '%s\n' "$_id: $msg" >&2
+    printf '%s\n' "$_id: $msg $_reprieve" >&2
   fi
 }
 

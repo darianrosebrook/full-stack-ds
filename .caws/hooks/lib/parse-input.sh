@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,16
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Shared hook input parser for CAWS hooks.
 #
 # Handlers source this file and call `parse_hook_input` to get HOOK_* env
@@ -136,6 +140,12 @@ for k, v in fields.items():
   # (the resolver refuses literal "unknown" anyway). Non-fatal on any
   # error — the hook must never block on this cache write.
   _write_durable_session_envelope
+  # CAWS-AGENT-PID-SESSION-CORRELATION-001: write/refresh the agent-PID
+  # correlation record so canonical-checkout CLI invocations (which carry no
+  # session-id env var and resolve to an ambiguous envelope set) can recover
+  # their session id keyed by their own agent process's PID. Sibling to the
+  # envelope write; same non-fatal posture.
+  _write_agent_pid_record
 }
 
 # CAWS-SESSION-ID-DURABLE-HOOK-ENVELOPE-001
@@ -200,6 +210,16 @@ except Exception:
 
   # Atomic write: temp file + rename. tmpfile is in the same dir to
   # guarantee same-filesystem rename atomicity.
+  #
+  # CAWS-RESOLVER-PLATFORM-FROM-ENVELOPE-001: the payload now carries a
+  # `platform` field sourced from CAWS_PLATFORM_FLAG (exported per surface by
+  # agent-surface.sh: claude-code/codex/opencode/zcode/cursor/windsurf). The
+  # resolver reads this instead of hardcoding 'claude-code', so a non-Claude
+  # session's lease/status display reflects its true harness. Defaults to
+  # 'claude-code' when CAWS_PLATFORM_FLAG is unset (back-compat for wirings
+  # that have not yet sourced agent-surface.sh, and for legacy envelopes
+  # which the resolver also falls back on).
+  local platform="${CAWS_PLATFORM_FLAG:-claude-code}"
   local tmpfile="$envelope_dir/.session-envelope.tmp.$$"
   python3 -c '
 import json, sys
@@ -209,11 +229,12 @@ payload = {
     "created_at": sys.argv[3],
     "last_seen_at": sys.argv[4],
     "hook_event": sys.argv[5],
+    "platform": sys.argv[6],
 }
-with open(sys.argv[6], "w") as f:
+with open(sys.argv[7], "w") as f:
     json.dump(payload, f)
     f.write("\n")
-' "$sid" "$repo_root" "$created_at" "$now" "${HOOK_EVENT_NAME:-unknown}" "$tmpfile" 2>/dev/null || {
+' "$sid" "$repo_root" "$created_at" "$now" "${HOOK_EVENT_NAME:-unknown}" "$platform" "$tmpfile" 2>/dev/null || {
     rm -f "$tmpfile" 2>/dev/null
     return 0
   }
@@ -252,6 +273,123 @@ with open(sys.argv[4], "w") as f:
   }
   mv -f "$pointer_tmp" "$pointer_path" 2>/dev/null || {
     rm -f "$pointer_tmp" 2>/dev/null
+    return 0
+  }
+  return 0
+}
+
+# CAWS-AGENT-PID-SESSION-CORRELATION-001
+# Write/refresh `<repo_root>/.caws/sessions/agent-pid-<agentPid>.json`.
+# Called from parse_hook_input right after _write_durable_session_envelope.
+# Idempotent; preserves created_at across refreshes; updates last_seen_at.
+#
+# This is the WRITE side of the agent-PID correlation bridge: the hook knows
+# the session id (HOOK_SESSION_ID, from the payload) and can find the agent
+# process PID (resolve_agent_pid_with_start, from lib/agent-pid.sh, matched
+# against CAWS_AGENT_PROCESS_NAMES set by agent-surface.sh). The resolver READ
+# side (lib/agent-pid.sh read_session_id_from_agent_pid, consumed by
+# session-id.sh and resolve-session.ts) keys by the same PID — which the
+# agent's own caws/Bash process shares as a stable ancestor.
+#
+# All failures are silently swallowed; hooks MUST NOT block on this cache.
+# No-ops gracefully when: session id missing/unknown, agent-pid.sh is not
+# sourced (resolve_agent_pid_with_start undefined), no agent ancestor is found
+# (unknown surface — CAWS_AGENT_PROCESS_NAMES empty), or git is unavailable.
+_write_agent_pid_record() {
+  local sid="${HOOK_SESSION_ID:-}"
+  if [[ -z "$sid" || "$sid" == "unknown" ]]; then
+    return 0
+  fi
+
+  # The agent-PID resolver is in lib/agent-pid.sh, which may not be sourced by
+  # every handler that calls parse_hook_input. Best-effort source from the
+  # same lib dir as this file; a missing/unsourceable copy degrades to a
+  # silent no-op (the envelope + caller-pointer bridges still cover the
+  # env-var-carrying case).
+  if ! declare -F resolve_agent_pid_with_start >/dev/null 2>&1; then
+    local _self="${BASH_SOURCE[0]:-}"
+    [[ -n "$_self" ]] && source "$(dirname "$_self")/agent-pid.sh" 2>/dev/null || true
+  fi
+  if ! declare -F resolve_agent_pid_with_start >/dev/null 2>&1; then
+    return 0
+  fi
+
+  local names="${CAWS_AGENT_PROCESS_NAMES:-}"
+  [[ -z "$names" ]] && return 0
+
+  local agent_pid start_epoch
+  # The read-group MUST tolerate EOF (CAWS-DEFECT-HOOK-AGENT-PID-FAILOPEN-01):
+  # when no ancestor matches (bats/CI/plain terminal — names non-empty but no
+  # agent process), the resolver prints nothing and the second read fails. An
+  # unguarded failure here aborts the whole guard under `set -euo pipefail`
+  # with exit 1 and zero output — the exact silent death this function's
+  # "all failures silently swallowed" contract forbids.
+  {
+    read -r agent_pid
+    read -r start_epoch
+  } < <(resolve_agent_pid_with_start "$names") || true
+  [[ -z "$agent_pid" ]] && return 0
+
+  # Canonical repo root (same resolution as _write_durable_session_envelope).
+  local cwd="${HOOK_CWD:-$PWD}"
+  local repo_root common
+  common=$(cd "$cwd" 2>/dev/null && git rev-parse --git-common-dir 2>/dev/null) || return 0
+  [[ -z "$common" ]] && return 0
+  case "$common" in
+    /*) : ;;
+    *)  common="$cwd/$common" ;;
+  esac
+  repo_root=$(cd "$common/.." 2>/dev/null && pwd -P) || return 0
+  [[ -z "$repo_root" || ! -d "$repo_root/.caws" ]] && return 0
+
+  local sessions_dir="$repo_root/.caws/sessions"
+  local record_path="$sessions_dir/agent-pid-${agent_pid}.json"
+  mkdir -p "$sessions_dir" 2>/dev/null || return 0
+
+  # Preserve created_at across refreshes; update last_seen_at.
+  local now created_at
+  now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  created_at="$now"
+  if [[ -f "$record_path" ]]; then
+    local existing_created
+    existing_created=$(python3 -c '
+import json, sys
+try:
+    with open(sys.argv[1]) as f:
+        d = json.load(f)
+    v = d.get("created_at")
+    if isinstance(v, str) and v:
+        print(v)
+except Exception:
+    pass
+' "$record_path" 2>/dev/null)
+    if [[ -n "$existing_created" ]]; then
+      created_at="$existing_created"
+    fi
+  fi
+
+  local tmpfile="$sessions_dir/.agent-pid-${agent_pid}.tmp.$$"
+  python3 -c '
+import json, sys
+payload = {
+    "agent_pid": int(sys.argv[1]),
+    "session_id": sys.argv[2],
+    "surface": sys.argv[3],
+    "repo_root": sys.argv[4],
+    "created_at": sys.argv[5],
+    "last_seen_at": sys.argv[6],
+    "started_at": sys.argv[7] if sys.argv[7] else None,
+}
+with open(sys.argv[8], "w") as f:
+    json.dump(payload, f)
+    f.write("\n")
+' "$agent_pid" "$sid" "${CAWS_PLATFORM_FLAG:-claude-code}" "$repo_root" \
+    "$created_at" "$now" "${start_epoch:-}" "$tmpfile" 2>/dev/null || {
+    rm -f "$tmpfile" 2>/dev/null
+    return 0
+  }
+  mv -f "$tmpfile" "$record_path" 2>/dev/null || {
+    rm -f "$tmpfile" 2>/dev/null
     return 0
   }
   return 0

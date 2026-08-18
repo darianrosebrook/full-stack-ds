@@ -1,10 +1,18 @@
 <!--
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 18
+# hook_pack_version: 22
 # caws_min_major: 11
 # lineage_refs: 8,11,16,17,19,22,23,24,27
-# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 -->
 
 # CAWS Claude Code Hook Pack — Inventory
@@ -14,9 +22,18 @@ doctrine** (managed-file rules, spec-authoring traps, v10/v11 state model,
 `settings.json` wiring) see [`CLAUDE.md`](./CLAUDE.md) in this directory —
 that file is authoritative for behavior; this README is the at-a-glance map.
 
-These are CAWS-managed files. **Do not hand-edit them.** Update the pack with
-`caws init --agent-surface claude-code`. Hand-editing a managed file turns it
-into an unmanaged snowflake the installer will then refuse to touch.
+These are CAWS-managed files — a **starting point, not an end state**. CAWS owns
+the WHY/WHAT (why each guard exists, what it enforces); your repo owns the HOW
+(thresholds, env tuning, repo-specific checks). **Editing these hooks to grow
+your governance is expected and welcome.** The one edit that is out of bounds is
+editing a hook to *bypass or weaken a guard* to dodge a block — that crosses
+into the WHY/WHAT CAWS owns. Your grown edits are preserved: as long as a hook
+keeps its `CAWS-MANAGED-HOOK` header, `caws init` classifies it as drift and
+**refuses to overwrite it** — re-run with `--adopt` to keep yours, `--overwrite`
+to preview the replacement diff (nothing is written), or `--overwrite --force` to
+pull the upstream baseline. (Editing a marked hook does not make
+it unmanaged; only deleting the header does.) See [`CLAUDE.md`](./CLAUDE.md)
+§ *This pack is a starting point* for the full stance.
 
 ## How the pack runs
 
@@ -118,6 +135,8 @@ These are invoked by a human at the terminal, never by the agent:
 1. Read the block message — it names the guard and the remediation.
 2. Do not bypass by deleting/editing hook files or using `--no-verify`.
 3. If the scope is wrong, widen it with `caws specs amend-scope <id> --add <path>`.
-4. If strikes are stale after a legitimate scope fix, ask the user to run
-   `bash .claude/hooks/reset-strikes.sh --current`.
+4. If strikes are stale after a legitimate scope fix, ask the user to run the
+   `bash .caws/hooks/reset-strikes.sh --session <id>` command the guard printed.
+   The reset scripts live in `.caws/hooks/` (shared across surfaces), not in the
+   vendor dir — `.claude/` holds this adapter's settings and logs, not scripts.
 5. See [`CLAUDE.md`](./CLAUDE.md) for the full doctrine.

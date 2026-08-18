@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 22,26
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 #
 # Quiet merge hook: suppress verbose output AND fix CWD safety
 #
@@ -69,10 +73,20 @@ PROJECT_DIR="$(resolve_canonical_dir "${CAWS_PROJECT_DIR:-.}")"
 # Match: caws worktree merge|destroy <name> [options]
 # Skip if already piped/redirected (user already handling output)
 if echo "$COMMAND" | grep -qE 'caws\s+worktree\s+(merge|destroy)\b' && ! echo "$COMMAND" | grep -qE '[|>]'; then
+  # Surfaces without an updatedInput contract (kimi-code: none documented)
+  # cannot rewrite the command — pass it through unrewritten. quiet-merge is
+  # an output-quieting optimization, not a guard; skipping it loses nothing.
+  if [[ "${CAWS_SUPPORTS_UPDATED_INPUT:-1}" != "1" ]]; then
+    exit 0
+  fi
   # Always prepend cd to repo root for CWD safety (critical for subagents
   # whose CWD is inside the worktree being destroyed)
   QUIET_CMD="cd \"$PROJECT_DIR\" && $COMMAND 2>/dev/null | tail -3; echo '---'; git log --oneline -1"
-  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","updatedInput":{"command":%s}}}' "$(printf '%s' "$QUIET_CMD" | jq -Rs .)"
+  # Hosts that enforce the updatedInput contract (observed live: "PreToolUse
+  # hook returned updatedInput without permissionDecision:allow") reject a
+  # rewrite that carries no explicit decision. The rewrite is an allow-with-
+  # modification by construction, so say so.
+  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow","permissionDecisionReason":"quiet-merge: rewrite merge/destroy for CWD safety and output quieting","updatedInput":{"command":%s}}}' "$(printf '%s' "$QUIET_CMD" | jq -Rs .)"
   exit 0
 fi
 

@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 10
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Session Logger — lean structured session capture.
 #
 # Canonical artifacts:
@@ -22,11 +26,13 @@
 # — gitignored, provenance-adjacent — NOT repo-root tmp/, which is user-owned
 # scratch that bloats and gets committed.)
 #
-# FLAG (session transcript discovery): resolve_transcript uses
-# $HOME/${CAWS_VENDOR_DIR}/projects/ which is the claude-code-specific
-# transcript store path. Other surfaces may store transcripts differently;
-# an adapter can override resolve_transcript or wire a different TRANSCRIPT_PATH
-# source. The session output (session.json etc.) is surface-neutral.
+# Transcript discovery: resolve_transcript tries the payload's
+# transcript_path first, then surface-specific stores — the claude-code
+# $HOME/${CAWS_VENDOR_DIR}/projects/<slug>/<sid>.jsonl layout, qwen's
+# projects/<slug>/chats/ subdir (CAWS-SESSION-LOG-QWEN-001), and kimi's
+# session_index.jsonl -> agents/main/wire.jsonl lookup
+# (CAWS-SESSION-LOG-KIMI-001). The session output (turn-NNN.json files) is
+# surface-neutral.
 
 set -euo pipefail
 
@@ -77,26 +83,6 @@ resolve_transcript() {
     return
   fi
 
-  # opencode keeps no flat-file transcript at all (history lives in
-  # ~/.local/share/opencode/opencode.db, message+part tables keyed by session
-  # id) so the .jsonl-glob fallback below can never hit for it. Reconstruct a
-  # Claude-Code-shaped .jsonl from the DB into a gitignored cache and treat
-  # that the same as a native transcript.
-  if [[ "${CAWS_AGENT_SURFACE:-}" == "opencode" ]]; then
-    local oc_db oc_cache_dir oc_cache
-    oc_db="$HOME/.local/share/opencode/opencode.db"
-    if [[ -f "$oc_db" ]]; then
-      oc_cache_dir="${CAWS_ROOT}/.caws/sessions/.opencode-cache"
-      mkdir -p "$oc_cache_dir"
-      oc_cache="${oc_cache_dir}/${SESSION_ID}.jsonl"
-      if python3 "$SCRIPT_DIR/lib/opencode-transcript.py" "$oc_db" "$SESSION_ID" "$oc_cache" 2>/dev/null \
-        && [[ -s "$oc_cache" ]]; then
-        printf '%s\n' "$oc_cache"
-        return
-      fi
-    fi
-  fi
-
   local slug candidate
   slug=$(echo "$CWD" | sed 's|/|-|g; s|^-||')
 
@@ -114,6 +100,41 @@ resolve_transcript() {
   if [[ -f "$candidate" ]]; then
     printf '%s\n' "$candidate"
     return
+  fi
+
+  # Qwen Code keeps durable transcripts under a chats/ subdir of the project
+  # store (CAWS-SESSION-LOG-QWEN-001, verified 0.21.4):
+  # ~/.qwen/projects/<slug>/chats/<session-id>.jsonl. The payload's
+  # $TRANSCRIPT_PATH usually names it already; this fallback covers hook
+  # fires whose payload lacks the path.
+  candidate="$HOME/${CAWS_VENDOR_DIR}/projects/${slug}/chats/${SESSION_ID}.jsonl"
+  if [[ -f "$candidate" ]]; then
+    printf '%s\n' "$candidate"
+    return
+  fi
+
+  candidate="$HOME/${CAWS_VENDOR_DIR}/projects/-${slug}/chats/${SESSION_ID}.jsonl"
+  if [[ -f "$candidate" ]]; then
+    printf '%s\n' "$candidate"
+    return
+  fi
+
+  # Kimi Code keeps durable transcripts as per-session wire logs:
+  # ~/.kimi-code/session_index.jsonl maps sessionId -> sessionDir, and the
+  # transcript is <sessionDir>/agents/main/wire.jsonl
+  # (CAWS-SESSION-LOG-KIMI-001, wire protocol 1.4 verified against kimi-code
+  # 0.31.x). Kimi's hook payload carries no transcript_path, so this index
+  # lookup is the primary resolution path on that surface. Harmless on other
+  # surfaces: session_index.jsonl exists only under .kimi-code.
+  local index_file session_dir
+  index_file="$HOME/${CAWS_VENDOR_DIR}/session_index.jsonl"
+  if [[ -f "$index_file" ]]; then
+    session_dir=$(jq -r --arg sid "$SESSION_ID" \
+      'select(.sessionId == $sid) | .sessionDir' "$index_file" 2>/dev/null | tail -n 1)
+    if [[ -n "$session_dir" ]] && [[ -f "$session_dir/agents/main/wire.jsonl" ]]; then
+      printf '%s\n' "$session_dir/agents/main/wire.jsonl"
+      return
+    fi
   fi
 
   printf '\n'
@@ -202,14 +223,21 @@ is_plan_file_path() {
 
   [[ -n "$file_path" ]] || return 1
 
+  # Vendor-neutral CAWS plan dir (always matched, any surface).
   case "$file_path" in
-    "$HOME"/.claude/plans/*.md|*/.claude/plans/*.md|*/.caws/plans/*.md)
-      return 0
-      ;;
-    *)
-      return 1
-      ;;
+    */.caws/plans/*.md) return 0 ;;
   esac
+
+  # Harness plan dir: $HOME/<vendor>/plans/ or <vendor>/plans/ — derived from
+  # CAWS_VENDOR_DIR because case patterns cannot expand shell variables.
+  # (CAWS-WORKTREE-WRITE-GUARD-VENDOR-GENERALIZE-001: was hardcoded .claude/.)
+  # NOTE on quoting: the glob metacharacters (* and the leading */ for the
+  # relative form) MUST sit OUTSIDE the double quotes, or bash treats them as
+  # literals and the match silently fails. Only ${HOME}/${CAWS_VENDOR_DIR} are
+  # quoted (they're path values, not patterns).
+  [[ $file_path == ${HOME:-}/${CAWS_VENDOR_DIR}/plans/*.md ]] && return 0
+  [[ $file_path == */${CAWS_VENDOR_DIR}/plans/*.md ]] && return 0
+  return 1
 }
 
 handle_post_tool_use() {
@@ -217,12 +245,16 @@ handle_post_tool_use() {
   tool_name="$HOOK_TOOL_NAME"
   file_path="${HOOK_FILE_PATH:-}"
   case "$tool_name" in
-    Write|Edit)
+    Write|Edit|write_file|edit)
+      # qwen-code runtime tool ids reach this hook unnormalized (the shared
+      # parse-input.sh is sourced directly above, not via caws_source_lib),
+      # so the qwen names are matched alongside the canonical ones
+      # (CAWS-SESSION-LOG-QWEN-001).
       if is_plan_file_path "$file_path"; then
         render_session_output "$(resolve_transcript)"
       fi
       ;;
-    ExitPlanMode)
+    ExitPlanMode|exit_plan_mode)
       render_session_output "$(resolve_transcript)"
       ;;
     *)

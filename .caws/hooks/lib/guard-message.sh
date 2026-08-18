@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,11,12,16,17
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Shared guard-message legibility helpers (HOOK-GUARD-LEGIBILITY-001).
 #
 # WHY THIS EXISTS. The caws-firsttime-probe run-003 proved every write/exec
@@ -43,6 +47,14 @@
 #   guard_not_harness_note
 #       Echo a one-line disambiguation reminding the reader this is CAWS
 #       governance, not an agent-harness permission prompt.
+#
+#   guard_reprieve_hint <handler-script>
+#       Echo the sanctioned session-scoped escape for a blocked hook guard,
+#       with its literal grant command and mandatory flags, AND the one-line
+#       distinction from caws waiver create — the two exception paths live at
+#       different enforcement layers (hook dispatch vs policy-run) and are
+#       routinely confused by an agent that has never read the docs
+#       (CAWS-AGENT-CONCEPT-DISCOVERABILITY-001).
 
 # Guard against double-sourcing.
 if [[ -n "${_CAWS_GUARD_MESSAGE_SH_LOADED:-}" ]]; then
@@ -84,4 +96,15 @@ guard_not_harness_note() {
   else
     printf 'This is a CAWS governance decision, not an agent harness prompt.'
   fi
+}
+
+# guard_reprieve_hint <handler-script>
+#   The sanctioned session-scoped escape, printed at the point of block so an
+#   agent that has never opened the docs learns it exists. Names the literal
+#   grant command with its mandatory flags and distinguishes it from a waiver:
+#   a reprieve skips one hook guard for one session until expiry; a waiver
+#   filters GATE violations at policy-run time and never lifts a hook guard.
+guard_reprieve_hint() {
+  local handler="${1:-<handler>.sh}"
+  printf 'Session-scoped escape for THIS guard (one session, expires): caws reprieve grant --current --handlers %s --reason "<why>" --approved-by "<approver>" --expires-at "<iso-ts>". Not to be confused with caws waiver create, which exempts GATE violations at policy-run time and never lifts a hook guard.' "$handler"
 }

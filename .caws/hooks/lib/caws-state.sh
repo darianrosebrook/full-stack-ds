@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,16
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Shared CAWS state-resolution helpers for CAWS hooks.
 #
 # Source this file from any hook that needs to:
@@ -136,6 +140,49 @@ resolve_canonical_dir() {
     return 0
   fi
   printf '%s\n' "$start"
+}
+
+# caws_canonical_state_dir <start-dir> <vendor-dir>
+#   Resolve the CANONICAL hook-state directory: walk git-common-dir from
+#   <start-dir> to the canonical (main) checkout root, then return
+#   <canonical-root>/<vendor-dir>/hooks/state. This is the shared landing spot
+#   for the canonical-root walk that lib/reprieve.sh previously inlined and
+#   that reset-danger-latch.sh needs so its search anchors at the same root the
+#   latch writer (block-dangerous.sh, CAWS_PROJECT_DIR git-root-normalized by
+#   HOOK-PROJECT-DIR-ROOT-NOT-CWD-01) writes to.
+#
+#   Semantics intentionally match lib/reprieve.sh's caws_reprieve_state_dir walk
+#   (the battle-tested one), NOT resolve_canonical_dir's stricter variant:
+#     - no .caws/ existence requirement at the candidate;
+#     - a relative common-dir (".git" in the canonical checkout itself) is
+#       resolved to absolute before the parent is taken, via pwd -P;
+#     - fail-open: on git-absent / not-a-repo / walk failure, return
+#       <start-dir>/<vendor-dir>/hooks/state (never empty, never block).
+#
+#   CAWS-LATCH-CANONICAL-STATE-DIR-001. The guard-strike subsystem is
+#   deliberately NOT migrated onto this helper -- its out-of-tree placement is an
+#   intentional safety invariant (CAWS-GUARD-STRIKE-FILE-OUT-OF-TREE-001).
+caws_canonical_state_dir() {
+  local start="${1:-.}"
+  local vendor_dir="${2:-${CAWS_VENDOR_DIR:-.claude}}"
+  local project_dir="$start"
+  if command -v git >/dev/null 2>&1; then
+    local common
+    common="$(cd "$start" 2>/dev/null && git rev-parse --git-common-dir 2>/dev/null)" || common=""
+    if [[ -n "$common" ]]; then
+      case "$common" in
+        /*) : ;;
+        *)  common="$start/$common" ;;
+      esac
+      local canon_root
+      canon_root="$(cd "$common/.." 2>/dev/null && pwd -P)" || canon_root=""
+      if [[ -n "$canon_root" ]]; then
+        project_dir="$canon_root"
+      fi
+    fi
+  fi
+  printf '%s/%s/hooks/state
+' "$project_dir" "$vendor_dir"
 }
 
 extract_worktree_name() {

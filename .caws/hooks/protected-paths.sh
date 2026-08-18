@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,16,23
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 #
 # CAWS Protected Paths Guard
 #
@@ -55,6 +59,10 @@ else
   exit 2
 fi
 parse_hook_input
+# Shared legibility helpers (identity prefix + escape-hatch naming) — same
+# fail-soft pattern scope-guard.sh uses: absence degrades the message, never
+# the enforcement.
+[[ -f "$SCRIPT_DIR/lib/guard-message.sh" ]] && source "$SCRIPT_DIR/lib/guard-message.sh"
 
 case "$HOOK_TOOL_NAME" in
   Write|Edit) ;;
@@ -98,6 +106,9 @@ if _hooks_prefix_match; then
       # *.cjs, lib/, caws_dispatch/, or an unrecognized extension). Fail closed.
       echo "BLOCKED: $FILE_PATH is protected." >&2
       echo "Ask the user for permission before editing CAWS hook scripts." >&2
+      if command -v guard_reprieve_hint >/dev/null 2>&1; then
+        guard_reprieve_hint protected-paths.sh >&2
+      fi
       exit 1
       ;;
   esac
@@ -107,9 +118,12 @@ if _strikes_match; then
   echo "BLOCKED: $FILE_PATH is protected guard state." >&2
   echo "Do not edit strike counters by hand to bypass enforcement." >&2
   echo "If the scope was legitimately corrected and prior strikes are stale, ask the user to run:" >&2
-  echo "  bash ${CAWS_VENDOR_DIR}/hooks/reset-strikes.sh --current" >&2
+  echo "  bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-strikes.sh --current" >&2
   echo "(or --session <uuid> / --worktree <name> / --all --confirm; resets are logged)." >&2
   echo "Otherwise switch into the correct worktree, update the active CAWS spec scope, or ask the user for direction." >&2
+  if command -v guard_reprieve_hint >/dev/null 2>&1; then
+    guard_reprieve_hint protected-paths.sh >&2
+  fi
   exit 2
 fi
 

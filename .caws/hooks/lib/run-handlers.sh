@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,16
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Shared handler-dispatch loop for CAWS hook dispatchers.
 #
 # Source this file from a dispatcher script, then call:
@@ -109,6 +113,22 @@ run_handlers() {
     parse_hook_input || return 0
   fi
 
+  # CAWS-GUARD-REPRIEVE-SESSION-SCOPED-001: resolve the operating session id ONCE
+  # so the per-handler reprieve consult gets the boundary-crossing identity (not
+  # just raw HOOK_SESSION_ID, which does not propagate into agent-Bash). Best-effort:
+  # a missing lib degrades to HOOK_SESSION_ID, and the reprieve check itself is
+  # guarded by declare -F so a missing reprieve.sh is a no-op. Never blocks.
+  local _rh_session_id="${HOOK_SESSION_ID:-}"
+  if [[ -f "${HOOKS_DIR}/lib/session-id.sh" ]]; then
+    # shellcheck source=lib/session-id.sh
+    source "${HOOKS_DIR}/lib/session-id.sh" 2>/dev/null || true
+    if declare -F resolve_caws_session_id_with_payload >/dev/null 2>&1; then
+      _rh_session_id="$(resolve_caws_session_id_with_payload "${HOOK_SESSION_ID:-}")"
+    fi
+  fi
+  # Best-effort source the reprieve lib so the loop check is available.
+  [[ -f "${HOOKS_DIR}/lib/reprieve.sh" ]] && source "${HOOKS_DIR}/lib/reprieve.sh" 2>/dev/null || true
+
   # Accept both surface-neutral (CAWS_HOOK_*) and legacy (CLAUDE_HOOK_*)
   # env var names for dry-run / timing so that existing consumer configs
   # that set CLAUDE_HOOK_DRY_RUN keep working during the migration period.
@@ -145,6 +165,19 @@ run_handlers() {
 
     local handler_path="${HOOKS_DIR}/${handler}"
     if [[ ! -x "$handler_path" ]]; then
+      continue
+    fi
+
+    # CAWS-GUARD-REPRIEVE-SESSION-SCOPED-001: per-session guard reprieve. If the
+    # operating session has an active (non-expired) reprieve that names this
+    # handler, SKIP invocation entirely. Guarded by declare -F so a missing
+    # reprieve.sh is a no-op (every guard runs as today). The skip is LOGGED to
+    # stderr so the audit trail shows when/why a guard was skipped — a silent
+    # skip is forbidden by the spec's observability invariant.
+    if declare -F caws_is_handler_reprieved >/dev/null 2>&1 && \
+       caws_is_handler_reprieved "$handler" "$_rh_session_id"; then
+      printf '[reprieve] %s skipped for session %s (expires %s)\n' \
+        "$handler" "$_rh_session_id" "${CAWS_REPRIEVE_EXPIRES_AT:-?}" >&2
       continue
     fi
 

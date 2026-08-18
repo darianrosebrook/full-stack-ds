@@ -1,14 +1,18 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 14
+# hook_pack_version: 39
 # caws_min_major: 11
 # lineage_refs: 8,16
-# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
-#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
-#   with --adopt to keep yours, or --overwrite to pull this upstream template).
-#   CAWS owns the failure-class invariant (the why/what you must not silently
-#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
+# edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
+#   to your repo: tune thresholds, add checks, remove what does not fit. Your edits
+#   are preserved: caws init treats a changed hook as intended growth and will not
+#   clobber it — it shows a diff and asks (--adopt keeps yours; --overwrite --force
+#   takes the upstream template). The CAWS-MANAGED-HOOK marker above is only how caws
+#   init finds hooks it can offer updates for; it is NOT a keep-out sign. CAWS owns the
+#   failure-class invariant (the why/what a guard protects); you own the how. The one
+#   edit to avoid: gutting a guard to dodge a block instead of fixing the cause. Grow
+#   everything else freely.
 # Shared hook-output envelope emitters (surface-neutral default).
 #
 # This is the shared/default version of emit.sh, derived from the Claude Code
@@ -40,8 +44,13 @@
 #       (the harness honors `decision: block` regardless, but the pack
 #       convention is to follow with `exit 2`).
 #
-#   emit_ask <reason>
-#       Print the PreToolUse permission-ask envelope.
+#   emit_ask <reason> [event]
+#       Print the permission-ask envelope. <event> defaults to "PreToolUse";
+#       pass "PostToolUse" from PostToolUse hooks. The harness validates
+#       hookSpecificOutput.hookEventName against the actual hook event and
+#       rejects a mismatch ("expected PostToolUse but got PreToolUse"), so
+#       callers that emit ask from a non-PreToolUse event must pass the
+#       correct event name.
 #       NOTE: surfaces where "ask" is not supported (e.g. Codex) install
 #       a vendor override that maps this to "deny". See codex adapter.
 #
@@ -85,17 +94,18 @@ emit_block() {
 
 emit_ask() {
   local reason="${1:-}"
+  local event="${2:-PreToolUse}"
   if command -v jq >/dev/null 2>&1; then
-    jq -n --arg msg "$reason" '{
+    jq -n --arg msg "$reason" --arg ev "$event" '{
       hookSpecificOutput: {
-        hookEventName: "PreToolUse",
+        hookEventName: $ev,
         permissionDecision: "ask",
         permissionDecisionReason: $msg
       }
     }'
   else
-    printf '{ "hookSpecificOutput": { "hookEventName": "PreToolUse", "permissionDecision": "ask", "permissionDecisionReason": "%s" } }\n' \
-      "$(_emit_json_escape "$reason")"
+    printf '{ "hookSpecificOutput": { "hookEventName": "%s", "permissionDecision": "ask", "permissionDecisionReason": "%s" } }\n' \
+      "$(_emit_json_escape "$event")" "$(_emit_json_escape "$reason")"
   fi
 }
 
