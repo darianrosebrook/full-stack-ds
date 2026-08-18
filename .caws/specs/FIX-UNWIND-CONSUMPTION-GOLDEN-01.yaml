@@ -3,6 +3,7 @@ title: 'Remove RAIL-TOKEN-CONSUMPTION-AUDIT-01 and RAIL-CODEBLOCK-TOKENIZER-GOLD
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: unwind-consumption-golden
 created_at: '2026-08-18T03:54:12.516Z'
 updated_at: '2026-08-18T03:54:12.516Z'
 blast_radius:
