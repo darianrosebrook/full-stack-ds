@@ -4,18 +4,25 @@ risk_tier: 1
 mode: fix
 lifecycle_state: active
 created_at: '2026-08-18T00:42:59.072Z'
-updated_at: '2026-08-18T00:42:59.072Z'
+updated_at: '2026-08-18T00:43:32.776Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'ds-tokens: semantic token source (delete stale syntax.tokens.json) and committed generated outputs (resolved.tokens.json, tokens.css) plus usage-baseline.json re-derivation'
+    - 'no component package changes expected: contracts and generated component trees must show zero diff'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
     - 'packages/ds-tokens/src/color/semantic/syntax.tokens.json'
+    - packages/ds-tokens/src/color/semantic/foreground.tokens.json
+    - packages/ds-tokens/generated
+    - packages/ds-tokens/usage-baseline.json
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Removing the stale color.syntax.* namespace changes no rendered byte: every color.foreground.syntax.* value in resolved.tokens.json/tokens.css and every generated component artifact remains byte-identical.'
+  - 'The usage baseline is re-derived only via the sanctioned tokens:write-usage-baseline command, never hand-edited.'
+  - 'The orphaned comment fontStyle italic intent from the stale file is dropped deliberately (it never rendered); any future italic-comments styling must be a new contract-governed slice, not smuggled back via token source.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
