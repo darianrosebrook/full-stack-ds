@@ -2,9 +2,11 @@ id: FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01
 title: 'Swift token carriers measured where they live + ref arm completes the resolution chain'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Swift carriers measured inline (732/895 true), ref arm aligns resolution with RN/Compose, XCTest-proven'
 created_at: '2026-08-18T02:09:44.054Z'
-updated_at: '2026-08-18T02:11:22.672Z'
+updated_at: '2026-08-18T02:27:27.131Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui (ref emission at the 4 definition sites + tests)'
