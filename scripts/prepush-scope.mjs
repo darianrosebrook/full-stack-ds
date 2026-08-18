@@ -37,20 +37,6 @@ const PATTERNS = {
   // surfaces in ds-react.
   resolvability:
     /^(packages\/ds-(react|tokens)\/|scripts\/token-resolvability-audit\/|scripts\/lib\/ledger-ratchet)/,
-  // token-consumption rail (RAIL-TOKEN-CONSUMPTION-AUDIT-01): namespace-level
-  // dead-weight ledger over the semantic layer. The scanner counts var()/
-  // DTCG/designTokens references repo-wide, so EVERY generated tree is a
-  // consumption input alongside the graph itself; contract sidecars are
-  // scanned too (.tokens.json brace refs). Wired in lockstep with ci.yml.
-  tokenConsumption:
-    /^(packages\/ds-(contracts|react|vue|svelte|angular|lit|react-native|tokens)\/|scripts\/token-consumption-audit\/|scripts\/lib\/ledger-ratchet)/,
-  // native token realization (FEAT-TOKEN-REALIZATION-AUDIT-001). Inputs are
-  // BOTH sides of the scoreboard: the contract sidecars that declare slots,
-  // the three native carrier trees that realize them, the target allowlists
-  // in fsds.targets.json (admission is a verdict input), and the audit's own
-  // scripts. Wired in lockstep with ci.yml like its siblings.
-  tokenRealization:
-    /^(packages\/ds-(contracts|react-native|swiftui|jetpack-compose)\/|fsds\.targets\.json$|scripts\/token-realization-audit\/|scripts\/lib\/ledger-ratchet)/,
   // behavior-realization rail (RAIL-BEHAVIOR-REALIZATION-AUDIT-01). Derives
   // interactivity obligations from the LIVE contract corpus and asserts them in
   // the five WEB generated trees (the audit's FRAMEWORKS list excludes
@@ -87,8 +73,6 @@ export function classify(files, opts = {}) {
   const iconography = full || has("iconography");
   const stylingAudits = full || has("stylingAudits");
   const resolvability = full || has("resolvability");
-  const tokenConsumption = full || has("tokenConsumption");
-  const tokenRealization = full || has("tokenRealization");
   const behaviorAudit = full || has("behaviorAudit");
   const a11yAudit = full || has("a11yAudit");
   const lintable = full || has("lintable");
@@ -102,9 +86,12 @@ export function classify(files, opts = {}) {
 
   const flags = {
     // shared prerequisite: build tokens once for BOTH generate:check and the gates
-    // `|| resolvability || tokenConsumption`: both token-direction audits read
-    // the composed graph, so they are only meaningful once it is built.
-    RUN_TOKEN_BUILD: genGroup || resolvability || tokenConsumption,
+    // `|| resolvability`: that audit diffs generated CSS against the COMPOSED
+    // graph, so it is only meaningful once the graph is built. A change to the
+    // audit script alone is outside genGroup, and without this the audit would
+    // run against a missing tokens.css — where it fails loudly by design, but
+    // for the wrong reason.
+    RUN_TOKEN_BUILD: genGroup || resolvability,
     RUN_TOKEN_GATES: tokens,
     RUN_GENERATE_CHECK: genGroup,
     RUN_DOCS_CLAIMS: codegen || docs,
@@ -132,15 +119,6 @@ export function classify(files, opts = {}) {
     // flag rather than riding `tokens`, because a change to EITHER side of the
     // name diff can move the verdict.
     RUN_TOKEN_RESOLVABILITY: resolvability,
-    // dead semantic namespace ledger (RAIL-TOKEN-CONSUMPTION-AUDIT-01): the
-    // consumption-direction sibling of resolvability — restores the
-    // lost-consumer signal at namespace granularity under the stricter
-    // per-token ledger ratchet instead of the absorb-everything count floor.
-    RUN_TOKEN_CONSUMPTION: tokenConsumption,
-    // native carrier parity scoreboard (FEAT-TOKEN-REALIZATION-AUDIT-001):
-    // own flag for the same reason as resolvability — a change to either
-    // side (sidecar slots or carrier emission or allowlist) moves the verdict.
-    RUN_TOKEN_REALIZATION: tokenRealization,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)

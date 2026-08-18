@@ -283,7 +283,7 @@ function buildRow(target, admitted) {
         derivable: false,
         value: UNMEASURED,
         evidence: isNative
-          ? `per-component carrier realization now MEASURED by scripts/token-realization-audit/audit.mjs (FEAT-TOKEN-REALIZATION-AUDIT-001) — see docs/token-realization-audit/realization-matrix.md; this matrix leaves the cell unmeasured rather than duplicating that rail's denominator`
+          ? `per-component carrier realization is not scored by this script; the ledger that measured it was removed as a population pin (FIX-UNWIND-FREEZE-RATCHETS-01) — see ADR-0001 §1.2`
           : `web token output verified via tokens:* gates + rail diff; depth not scored by this script`,
       },
       behaviorController: {
