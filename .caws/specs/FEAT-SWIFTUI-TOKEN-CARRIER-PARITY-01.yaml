@@ -4,18 +4,26 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-08-18T02:09:44.054Z'
-updated_at: '2026-08-18T02:09:44.054Z'
+updated_at: '2026-08-18T02:11:22.672Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui (ref emission at the 4 definition sites + tests)'
+    - 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift (ref field + resolution arm)'
+    - 'scripts/token-realization-audit (swiftui carrier path fix) + docs/token-realization-audit + snapshot correction'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
     - 'packages/ds-codegen/src/frameworks/swift'
+    - packages/ds-swiftui
+    - scripts/token-realization-audit
+    - docs/token-realization-audit
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The audit measures every swiftui component against the file that actually carries its scopes — the inline enum in the component source — never a convention borrowed from another target.'
+  - 'Swift resolution order matches RN/Compose semantics: slot-name override, then semantic ref override, then literal, then fallback.'
+  - 'Every newly surfaced real slot gap carries a ledger disposition; the 49 false carrier entries are deleted, not re-ledgered.'
 acceptance:
   - id: A1
     given: 'swiftui components embed per-component token scopes inline (enum NameTokens in Name.swift) consumed via resolveFsdsComponentTokens'
