@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "js-yaml declared as a root devDependency (package.json + pnpm-lock); pnpm install reports '+ js-yaml 4.1.1'; node -e require.resolve('js-yaml',{paths:['.caws/hooks/lib']}) resolves to node_modules/.pnpm/js-yaml@4.1.1/node_modules/js-yaml/index.js, so the oracle's lazy require now succeeds and the canonical scope.in claim check runs instead of silently degrading"
     recorded_at: "2026-08-18T16:28:41.299Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "The two trees' script sets were byte-for-byte identical name sets (32 .sh/.py each) before removal, so every deleted file had a v39 counterpart. Removed 46 tracked paths plus untracked node_modules/__pycache__/package-lock.json; .claude/hooks now contains exactly CLAUDE.md, README.md, state. grep for .claude/hooks script references across .caws/hooks, settings.json, ci.yml, .githooks, scripts and package.json returns only a prose comment in scripts/docs-link-check.mjs naming .claude/hooks/CLAUDE.md, which still exists"
+    recorded_at: "2026-08-18T16:28:43.657Z"
