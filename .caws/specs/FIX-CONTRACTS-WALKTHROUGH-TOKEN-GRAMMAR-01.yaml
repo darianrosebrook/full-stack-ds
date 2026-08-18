@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: walkthrough-token-grammar
 created_at: '2026-08-18T01:52:17.135Z'
-updated_at: '2026-08-18T01:54:18.981Z'
+updated_at: '2026-08-18T02:04:32.558Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components/Walkthrough (tokens + styles sidecars)'
@@ -26,6 +26,7 @@ scope:
     - packages/ds-figma-plugin/src/generated
     - packages/ds-tokens
     - docs/current-implementation-snapshot.md
+    - docs/dead-slot-audit
   out: []
 invariants:
   - 'Every Walkthrough slot key belongs to a corpus grammar axis (color/size/spacing/typography/box-model/motion), so suffix-grammar consumers need no Walkthrough special case.'
