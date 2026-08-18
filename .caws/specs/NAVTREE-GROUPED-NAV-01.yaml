@@ -90,3 +90,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run governed:rail exit 0 with byte-clean tree after full-corpus regenerate; NavTree emitted for react/vue/svelte/angular/lit/react-native + figma (swiftui/compose intentionally allowlisted-out, explicit-only targets)"
     recorded_at: "2026-08-18T02:58:33.793Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "all six audit:* scripts PASS in worktree (behavior-realization, a11y-realization, dead-slots, pseudo-state, state-suppression, token-resolvability) — NavTree adds 0 unledgered findings; 18/18 nav-tree slots consumed"
+    recorded_at: "2026-08-18T02:58:35.572Z"
