@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "CLAUDE.md hooks section rewritten: heading and body now name .caws/hooks with the dispatch/ + lib/ layout and the CAWS_AGENT_SURFACE-prefixed settings wiring; protected-paths bullet corrected to .caws/hooks with the *.md admission and the caws reprieve escape hatch; the reference paragraph now records that vendor docs and the runtime state/ dir stay under .claude/hooks. All five cited paths verified to exist on disk. NOTE: CLAUDE.md is gitignored (.gitignore:69), so this edit is machine-local and rides no commit"
     recorded_at: "2026-08-18T16:29:06.027Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Post-removal the PreToolUse chain still refuses an interpolated inline python3 -c with the opaque-execution message and explicitly does NOT arm the latch. caws doctor unchanged at 2E/6W (both ERRORs are pre-existing wedged sessions pointing at the June examples-app-shapes worktree). Verification also EXPOSED two protected-paths defects, fixed in f3d17f2b: the matcher only covered the vendor dir so it had become a no-op after the relocation, and its guard-artifact branch returned exit 1 which Claude Code treats as non-blocking despite printing BLOCKED. Proof: a Write to .caws/hooks/.protected-probe succeeded twice before the fix and is refused by the harness after it; dispatcher exit is now 2"
+    recorded_at: "2026-08-18T16:29:07.348Z"
