@@ -3,7 +3,6 @@ title: 'Remove stale duplicate color.syntax token namespace (syntax.tokens.json)
 risk_tier: 1
 mode: fix
 lifecycle_state: active
-worktree: stale-syntax-ns
 created_at: '2026-08-18T00:42:59.072Z'
 updated_at: '2026-08-18T00:43:32.776Z'
 blast_radius:
