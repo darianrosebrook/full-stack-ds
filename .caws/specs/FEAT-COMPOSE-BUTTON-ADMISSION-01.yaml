@@ -3,6 +3,7 @@ title: 'Compose Button admission: projected-children action path on the owned su
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: compose-button
 created_at: '2026-08-18T02:57:59.142Z'
 updated_at: '2026-08-18T02:58:29.352Z'
 blast_radius:
