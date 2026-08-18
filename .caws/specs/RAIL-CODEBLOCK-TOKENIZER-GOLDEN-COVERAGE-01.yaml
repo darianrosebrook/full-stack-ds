@@ -45,3 +45,8 @@ contracts:
   - name: 'CodeBlock'
     type: behavior
     path: 'packages/ds-contracts/components/CodeBlock/CodeBlock.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "golden-fixtures.json case languages == [typescript, bash, json, plaintext, css, html, javascript, jsx, markdown, tsx] (exactly the ten contract CodeBlockLanguage values); expected arrays machine-generated from canonical tokenize.ts with in-script lossless+in-enum+non-empty assertions, then audited"
+    recorded_at: "2026-08-18T00:57:42.058Z"
