@@ -33,3 +33,8 @@ contracts:
   - name: 'FsdsTheme semantic defaults'
     type: behavior
     path: 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "swift test: FsdsSemanticDefaultsTests 3/3 — testEveryDefaultsEntryEqualsItsGraphValue pins all 168 entries to committed resolved.tokens.json (74 adaptive light+dark pairs, 94 scalars), testComponentSlotReachesGraphValueThroughRefArm resolves card.color.background.default through slot-ref → defaults to the graph value, testDefaultsThemeStillYieldsToSlotNameOverride preserves precedence; full swift suite 40 tests 0 failures; swift build + settings-example swift build both exit 0 with .environment(\\.fsdsTheme, FsdsTheme(tokens: FsdsSemanticDefaults.light)) wired; governed:rail exit 0 after composed-graph build; pnpm test 2163/2163; audit 212/212 PASS"
+    recorded_at: "2026-08-18T02:49:38.301Z"
