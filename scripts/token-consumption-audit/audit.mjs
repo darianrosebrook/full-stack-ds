@@ -49,11 +49,15 @@
  * is an explicitly-owned decision, not a verified plan.
  *
  * READ-ONLY over the graph. Writes only its own report under
- * docs/token-consumption-audit/. The ledger (known-dead-namespaces.json) was
- * machine-seeded once at introduction and ships with no re-seed command:
- * post-introduction entries are hand-authored with owning spec + note, and the
- * two-directional ratchet (unledgered = fail, stale = fail) makes the ledger
- * shrink-only.
+ * docs/token-consumption-audit/.
+ *
+ * POSTURE (ADR-0001, structural freeze doctrine): REPORT-ONLY UNTIL RELEASE
+ * CANDIDATE. This audit is a state freeze over the current population of a
+ * consumption relationship — it fails when development succeeds, and its
+ * mechanical discharge (delete the namespace) is the void-hazard the doctrine
+ * prohibits pre-RC. CI runs it with continue-on-error; pre-push does not run
+ * it; the exit code below is preserved for manual runs and for the RC flip,
+ * where the ledger is re-derived once and the ratchet becomes blocking.
  */
 
 import { mkdirSync, writeFileSync } from "node:fs";

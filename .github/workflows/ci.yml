@@ -264,15 +264,18 @@ jobs:
       - name: Token-realization ledger (native carrier parity scoreboard)
         run: pnpm run audit:token-realization
 
-      # Dead semantic namespace ledger (RAIL-TOKEN-CONSUMPTION-AUDIT-01): the
-      # consumption-direction sibling of resolvability above. Restores the
-      # lost-consumer signal the resolvability rail recorded as a dropped
-      # non-claim — at namespace granularity, under the two-directional ledger
-      # ratchet instead of the count floor whose sanctioned re-baseline
-      # absorbed the stale color.syntax duplicate. Consumption is derived by
-      # the same analyzeTokenUsage authority behind usage-baseline.json.
-      - name: Token-consumption ledger (dead semantic namespaces)
+      # Dead semantic namespace ledger (RAIL-TOKEN-CONSUMPTION-AUDIT-01):
+      # REPORT-ONLY UNTIL RELEASE CANDIDATE per ADR-0001 (structural freeze
+      # doctrine, DOC-STRUCTURAL-FREEZE-DOCTRINE-01). A state freeze on the
+      # current population of an evolving consumption relationship fails when
+      # development succeeds and biases agents toward deleting vocabulary —
+      # the void-hazard the ADR prohibits pre-RC. The measurement still ships
+      # (matrix + committed ledger are the future RC baseline); only the
+      # blocking posture is withheld. The RC flip is a governed slice that
+      # re-derives the ledger once, then drops continue-on-error.
+      - name: Token-consumption ledger (report-only until RC per ADR-0001)
         run: pnpm run audit:token-consumption
+        continue-on-error: true
 
   runtime-rail:
     name: Runtime visual proof rail
