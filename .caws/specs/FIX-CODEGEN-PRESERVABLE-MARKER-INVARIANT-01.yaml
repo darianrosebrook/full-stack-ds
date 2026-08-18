@@ -41,3 +41,8 @@ contracts:
   - name: 'GeneratedFile.preservable'
     type: behavior
     path: 'packages/ds-codegen/src/emitter.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/preserve.test.ts → 32 passed incl. 3 assertPreservableHasMarkers tests (plain-Error-not-PreserveError, header-comment-is-not-a-marker, block markers pass); live probe: guard fired on jetpack-compose Switch.kt, svelte PopoverFixture.svelte, figma Accordion/README.md during governed:rail runs, all three fixed, then pnpm run governed:rail exit 0 over all targets; double-regen byte-stable (sha 38e17e70bb657f62 before/after, zero SKIPPED lines); :library:compileKotlin BUILD SUCCESSFUL"
+    recorded_at: "2026-08-18T01:05:38.441Z"
