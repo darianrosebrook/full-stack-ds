@@ -86,3 +86,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run generate:check — Validation: 51/51 component contract(s) passed (NavTree VALID; no DRIFT) in worktree after pnpm -F @full-stack-ds/tokens build"
     recorded_at: "2026-08-18T02:58:31.055Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 with byte-clean tree after full-corpus regenerate; NavTree emitted for react/vue/svelte/angular/lit/react-native + figma (swiftui/compose intentionally allowlisted-out, explicit-only targets)"
+    recorded_at: "2026-08-18T02:58:33.793Z"
