@@ -1,8 +1,8 @@
 {
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
-  "components": 50,
-  "slotsDeclared": 906,
-  "consumed": 792,
+  "components": 51,
+  "slotsDeclared": 924,
+  "consumed": 810,
   "inert": 114,
   "shadowed": 16,
   "dead": 98,
@@ -5424,6 +5424,124 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"groupLabel\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
+        }
+      ]
+    },
+    {
+      "component": "NavTree",
+      "prefix": "nav-tree",
+      "total": 18,
+      "consumed": 18,
+      "shadowed": 0,
+      "dead": 0,
+      "slots": [
+        {
+          "slot": "nav-tree.color.foreground.default",
+          "cssVar": "--fsds-nav-tree-color-foreground-default",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.color.foreground.hover",
+          "cssVar": "--fsds-nav-tree-color-foreground-hover",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.color.foreground.current",
+          "cssVar": "--fsds-nav-tree-color-foreground-current",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.color.foreground.heading",
+          "cssVar": "--fsds-nav-tree-color-foreground-heading",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.color.foreground.headingHover",
+          "cssVar": "--fsds-nav-tree-color-foreground-heading-hover",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.color.connector",
+          "cssVar": "--fsds-nav-tree-color-connector",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.color.outline.focus",
+          "cssVar": "--fsds-nav-tree-color-outline-focus",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.indent",
+          "cssVar": "--fsds-nav-tree-size-indent",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.margin.group",
+          "cssVar": "--fsds-nav-tree-size-margin-group",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.padding.block",
+          "cssVar": "--fsds-nav-tree-size-padding-block",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.padding.inline",
+          "cssVar": "--fsds-nav-tree-size-padding-inline",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.fontSize.heading",
+          "cssVar": "--fsds-nav-tree-size-font-size-heading",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.fontSize.item",
+          "cssVar": "--fsds-nav-tree-size-font-size-item",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.radius.default",
+          "cssVar": "--fsds-nav-tree-size-radius-default",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.gap.heading",
+          "cssVar": "--fsds-nav-tree-size-gap-heading",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.size.gap.item",
+          "cssVar": "--fsds-nav-tree-size-gap-item",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.stateLayer.hover",
+          "cssVar": "--fsds-nav-tree-state-layer-hover",
+          "source": "tokens",
+          "status": "consumed"
+        },
+        {
+          "slot": "nav-tree.stateLayer.selected",
+          "cssVar": "--fsds-nav-tree-state-layer-selected",
+          "source": "tokens",
+          "status": "consumed"
         }
       ]
     },

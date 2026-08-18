@@ -45,6 +45,7 @@ import {
   collectIconGlyphNodes,
   ICON_GLYPH_PATH_ATTRS,
   ICONOGRAPHY_MODULE,
+  iconGlyphNameArg,
   iconGlyphPxExpr,
   iconGlyphSizeHintsLiteral,
 } from "../icon-glyph.js";
@@ -2166,8 +2167,11 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     if (pxIdent) {
       lines.push(`  const ${pxIdent} = ${pxExpr};`);
     }
+    const nameOptional =
+      ir.styledProps.find((p) => p.name === glyph.namePropName)?.required ===
+      false;
     lines.push(
-      `  const ${glyphIdent} = resolveIcon(${glyph.namePropName}, ` +
+      `  const ${glyphIdent} = resolveIcon(${iconGlyphNameArg(glyph.namePropName, nameOptional)}, ` +
         `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"});`,
     );
     iconGlyphIdents.set(node, { glyphIdent, pxIdent });

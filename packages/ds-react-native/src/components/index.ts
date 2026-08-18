@@ -52,6 +52,8 @@ export { Markdown } from "./Markdown/Markdown";
 export type { MarkdownProps } from "./Markdown/Markdown";
 export { NavList } from "./NavList/NavList";
 export type { NavListProps } from "./NavList/NavList";
+export { NavTree } from "./NavTree/NavTree";
+export type { NavTreeProps } from "./NavTree/NavTree";
 export { OTP } from "./OTP/OTP";
 export type { OTPProps } from "./OTP/OTP";
 export { Popover } from "./Popover/Popover";

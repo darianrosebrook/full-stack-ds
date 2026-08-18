@@ -25,6 +25,7 @@ export * from "./Links/Links";
 export * from "./List/List";
 export * from "./Markdown/Markdown";
 export * from "./NavList/NavList";
+export * from "./NavTree/NavTree";
 export * from "./OTP/OTP";
 export * from "./Popover/Popover";
 export * from "./Postcard/Postcard";

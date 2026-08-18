@@ -1,8 +1,8 @@
 {
   "spec": "PSEUDO-STATE-STYLING-RAIL-01",
-  "componentsWithStates": 49,
-  "totalObligations": 231,
-  "realized": 62,
+  "componentsWithStates": 50,
+  "totalObligations": 235,
+  "realized": 64,
   "gaps": 19,
   "failing": [
     {
@@ -1773,6 +1773,59 @@
           "gaps": [
             "focus"
           ],
+          "total": 2
+        }
+      ],
+      "promptObligation": null
+    },
+    {
+      "component": "NavTree",
+      "prefix": "nav-tree",
+      "inputBacked": false,
+      "focusStrategyNone": true,
+      "dims": [
+        {
+          "dim": "pointer",
+          "category": "interaction",
+          "initial": "default",
+          "values": [
+            {
+              "value": "default",
+              "category": "interaction",
+              "expected": ".nav-tree--default",
+              "status": "base"
+            },
+            {
+              "value": "hover",
+              "category": "interaction",
+              "expected": ".nav-tree:hover",
+              "status": "realized"
+            }
+          ],
+          "realizedCount": 1,
+          "gaps": [],
+          "total": 2
+        },
+        {
+          "dim": "focus",
+          "category": "interaction",
+          "initial": "unfocused",
+          "values": [
+            {
+              "value": "unfocused",
+              "category": "interaction",
+              "expected": ".nav-tree--unfocused",
+              "status": "base"
+            },
+            {
+              "value": "focus",
+              "category": "interaction",
+              "expected": ".nav-tree:focus-visible",
+              "status": "realized"
+            }
+          ],
+          "realizedCount": 1,
+          "gaps": [],
           "total": 2
         }
       ],

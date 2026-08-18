@@ -1,0 +1,254 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "NavTree",
+  "description": "Grouped navigation branch: a labelled top-level entry (optionally navigable, optionally iconified) with indented subpage rows connected by tree connector lines. One NavTree renders one branch - compose it inside a list landmark such as NavList and mark the active row's anchor with aria-current=page. Connector lines are decorative web-only styling; React Native degrades to indentation.",
+  "layer": "compound",
+  "category": "structure",
+  "anatomy": {
+    "parts": [
+      "root",
+      "heading",
+      "icon",
+      "headingLink",
+      "headingLabel",
+      "list",
+      "item"
+    ],
+    "details": {
+      "root": {
+        "tag": "li",
+        "description": "List-item branch wrapping one group heading and its indented subpage list. Must sit inside a <ul>, e.g. NavList's list.",
+        "role": "root"
+      },
+      "heading": {
+        "tag": "div",
+        "description": "Row pairing the optional icon with either the heading link or the static heading label.",
+        "role": "label"
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Optional decorative glyph preceding the heading text, rendered from the iconography catalog.",
+        "role": "decoration"
+      },
+      "headingLink": {
+        "tag": "a",
+        "description": "Navigable heading rendered when href is provided.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "headingLabel": {
+        "tag": "span",
+        "description": "Static heading rendered when href is absent.",
+        "role": "label"
+      },
+      "list": {
+        "tag": "ul",
+        "description": "Indented subpage list; connector lines run along its items.",
+        "role": "group"
+      },
+      "item": {
+        "tag": "li",
+        "description": "Single subpage row. Consumer renders an <a> as the item's child and marks the active row's anchor with aria-current=page.",
+        "role": "item",
+        "multiple": true
+      }
+    },
+    "dom": {
+      "tag": "li",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "heading",
+          "children": [
+            {
+              "tag": "span",
+              "part": "icon",
+              "if": "icon",
+              "attrs": {
+                "aria-hidden": "true"
+              },
+              "children": [
+                {
+                  "tag": "svg",
+                  "attrs": {
+                    "fill": "none",
+                    "xmlns": "http://www.w3.org/2000/svg"
+                  },
+                  "iconGlyph": {
+                    "nameFrom": "prop:icon",
+                    "sizeFrom": "prop:iconSize",
+                    "sizeHints": {
+                      "sm": 16,
+                      "md": 20
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "a",
+              "part": "headingLink",
+              "if": "href",
+              "bindings": {
+                "href": "prop:href"
+              },
+              "content": "prop:label"
+            },
+            {
+              "tag": "span",
+              "part": "headingLabel",
+              "if": "!href",
+              "content": "prop:label"
+            }
+          ]
+        },
+        {
+          "tag": "ul",
+          "part": "list",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "designed": {
+      "members": [
+        {
+          "name": "label",
+          "propType": {
+            "kind": "string"
+          },
+          "required": true,
+          "description": "Heading text for the group. Rendered inside the heading link when href is provided, otherwise inside the static heading label."
+        },
+        {
+          "name": "href",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "When provided, the heading renders as a navigable <a> to this destination; when absent, the heading renders as a static label."
+        },
+        {
+          "name": "icon",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "Canonical icon name resolved against the @full-stack-ds/iconography catalog (e.g. \"home\"). An unknown name renders no glyph."
+        },
+        {
+          "name": "iconSize",
+          "propType": {
+            "kind": "ref",
+            "to": "NavTreeIconSize"
+          },
+          "default": "sm",
+          "description": "Rendered size of the heading glyph."
+        }
+      ]
+    }
+  },
+  "types": {
+    "NavTreeIconSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md"
+      ]
+    }
+  },
+  "variants": {
+    "iconSize": [
+      "sm",
+      "md"
+    ]
+  },
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      }
+    }
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "NavTree itself is not focusable. The heading link and the consumer's row anchors are native links that receive native tab focus."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"nav-tree\"]"
+    },
+    "heading": {
+      "required": false,
+      "selector": "[data-slot=\"nav-tree-heading\"]"
+    },
+    "icon": {
+      "required": false,
+      "selector": "[data-slot=\"nav-tree-icon\"]"
+    },
+    "list": {
+      "required": false,
+      "selector": "[data-slot=\"nav-tree-list\"]"
+    },
+    "item": {
+      "required": false,
+      "selector": "[data-slot=\"nav-tree-item\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "listitem",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "navigation",
+    "usageHints": [
+      "Compose one NavTree per group inside a list landmark such as NavList - the branch renders an <li> and must sit inside a <ul>.",
+      "Pass href to make the heading a navigable link; omit it to render a static heading label.",
+      "Render each subpage row as a NavTreeItem whose child is an <a>; mark the active row's anchor with aria-current=\"page\".",
+      "One grouping level per instance. For deeper hierarchies, nest a further list inside a NavTreeItem (List-style composition).",
+      "Connector lines are decorative and web-only; React Native renders indentation without them."
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "NavTreeItem",
+        "node-ref"
+      ]
+    }
+  }
+}

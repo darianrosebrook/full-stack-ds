@@ -2,7 +2,7 @@
 
 `PSEUDO-STATE-STYLING-RAIL-01` — read-only. Each declared state obligation (from `states.dimensions`, plus the empty-field input prompt for text inputs) is classified against the generated React CSS using the codegen's realization vocabulary: a derivable pseudo-class (`:hover`/`:focus-visible`/`:disabled`/`:checked`), an ARIA-attribute selector (`[aria-expanded="true"]`), the `:has(.<prefix>__input:<state>)` input wrapper, or a BEM modifier (`.<prefix>--<value>`). An obligation is **realized** if any valid form exists, **base** if it is the dimension's initial value, **behavioral** if it is channel-driven / suppressed / focus-exempt (not a CSS gap), or a **gap** otherwise.
 
-Components with states: **49** · obligations: **231** · realized: **62** · gaps: **19**
+Components with states: **50** · obligations: **235** · realized: **64** · gaps: **19**
 
 ## Gaps — declared state obligations with no realization
 
@@ -222,6 +222,13 @@ Components with states: **49** · obligations: **231** · realized: **62** · ga
 |---|---|---|---|
 | `pointer` | interaction | default | default∘ hover✓ |
 | `focus` | interaction | unfocused | unfocused∘ focus✗ |
+
+### NavTree  `.nav-tree` · focus:none
+
+| dim | category | initial | values (✓ realized · ✗ gap · ∘ base · ~ behavioral) |
+|---|---|---|---|
+| `pointer` | interaction | default | default∘ hover✓ |
+| `focus` | interaction | unfocused | unfocused∘ focus✓ |
 
 ### OTP  `.otp`
 

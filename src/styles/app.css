@@ -277,15 +277,17 @@ button {
   padding-bottom: var(--fsds-core-spacing-size-07);
 }
 
-.sidebar-group {
-  padding: var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-06)
-    var(--fsds-core-spacing-size-04);
-  font-size: var(--fsds-core-typography-ramp-1);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--fsds-semantic-color-foreground-tertiary);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium);
-  list-style: none;
+/*
+ * Grouped sections render as NavTree branches from @full-stack-ds/react —
+ * their heading, indentation and connector lines are DS-owned CSS. Only the
+ * Badge sizing hack needs an app rule (see the .sidebar-item > .badge note
+ * below), applied to tree rows as well.
+ */
+.nav-tree__item .badge {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .sidebar-item {

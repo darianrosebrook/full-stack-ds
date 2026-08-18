@@ -69,6 +69,7 @@ import {
   collectIconGlyphNodes,
   ICON_GLYPH_PATH_ATTRS,
   ICONOGRAPHY_MODULE,
+  iconGlyphNameArg,
   iconGlyphPxExpr,
   iconGlyphSizeHintsLiteral,
 } from "../icon-glyph.js";
@@ -628,11 +629,26 @@ function generateCompoundPartClass(
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
+  // LIT-HOST-LISTITEM-ROLE (see generateDomTreeClassBody): a compound part
+  // whose semantic element is `li` has its host standing in for the list
+  // item inside the consumer's list — same host-role compensation. Stamped
+  // in connectedCallback, not the constructor (custom-elements spec).
+  const hostRoleLines =
+    part.semanticElement === "li"
+      ? [
+          `  override connectedCallback(): void {`,
+          `    super.connectedCallback();`,
+          `    this.setAttribute("role", "listitem");`,
+          `  }`,
+          ``,
+        ]
+      : [];
 
   return [
     `export class ${className} extends LitElement {`,
     ...litStaticStylesLine(ir),
     ``,
+    ...hostRoleLines,
     `  override render() {`,
     `    return html\`<fsds-stack${asAttr}${variantAttr} class="${cssClass}"><slot></slot></fsds-stack>\`;`,
     `  }`,
@@ -1899,6 +1915,15 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   const selectorAnchor = selectorAnchoredRootPortal(ir);
   const rootPortal = portalsRootToBody(ir) || selectorAnchor !== null;
   const needsLifecycle = (hasOverlayClick && booleanChannel) || rootPortal;
+  // LIT-HOST-LISTITEM-ROLE: an `li`-rooted component renders its list item
+  // inside the shadow root, so the HOST element is what sits inside the
+  // consumer's <ul> — and a custom element is not a valid list child. Stamp
+  // role="listitem" on the host so the flattened tree reads ul > listitem
+  // for assistive tech and axe's `list` rule. This is the structural fix the
+  // scaffold-violation policy demands instead of suppressing the rule.
+  // Light-DOM emitters render the native <li> directly and need no host
+  // compensation.
+  const needsHostListItemRole = ir.dom.tag === "li";
 
   if (hasOverlayClick && booleanChannel) {
     const setter = `set${capitalizeLit(booleanChannel.name)}`;
@@ -1973,6 +1998,9 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(`    super.connectedCallback();`);
     // Host attribute for audit/devtools (ICONOGRAPHY-TOKEN-DISCIPLINE-02 Phase 5).
     lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
+    if (needsHostListItemRole) {
+      lines.push(`    this.setAttribute("role", "listitem");`);
+    }
     if (hasOverlayClick && booleanChannel) {
       lines.push(`    this.addEventListener('click', this._handleOverlayClick);`);
     }
@@ -2019,6 +2047,9 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(`  override connectedCallback(): void {`);
     lines.push(`    super.connectedCallback();`);
     lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
+    if (needsHostListItemRole) {
+      lines.push(`    this.setAttribute("role", "listitem");`);
+    }
     lines.push(`  }`);
   }
 
@@ -2113,7 +2144,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   // const undefined and the render branch emits nothing. `Number.NaN`
   // deliberately matches no authored size, so resolveIcon falls back to
   // the smallest authored variant. Mirrors the React emitter's body consts.
-  for (const { node } of iconGlyphNodes) {
+  for (const { node, glyph } of iconGlyphNodes) {
     const entry = iconGlyphIdents.get(node);
     const locals = iconGlyphRenderLocals.get(node);
     if (!entry || !locals) continue;
@@ -2121,8 +2152,11 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     if (pxIdent && locals.pxExpr !== undefined) {
       lines.push(`    const ${pxIdent} = ${locals.pxExpr};`);
     }
+    const nameOptional =
+      ir.styledProps.find((p) => p.name === glyph.namePropName)?.required ===
+      false;
     lines.push(
-      `    const ${glyphIdent} = resolveIcon(${locals.nameAcc}, ` +
+      `    const ${glyphIdent} = resolveIcon(${iconGlyphNameArg(locals.nameAcc, nameOptional)}, ` +
         `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"});`,
     );
   }

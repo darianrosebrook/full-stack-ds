@@ -65,6 +65,7 @@ import {
   collectIconGlyphNodes,
   ICON_GLYPH_PATH_ATTRS,
   ICONOGRAPHY_MODULE,
+  iconGlyphNameArg,
   iconGlyphPxExpr,
   iconGlyphSizeHintsLiteral,
 } from "../icon-glyph.js";
@@ -2101,9 +2102,13 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       lines.push(`  }`);
       lines.push(``);
     }
+    const nameProp = styledByName.get(glyph.namePropName);
     lines.push(`  get ${glyphGetter}() {`);
     lines.push(
-      `    return resolveIcon(this.${glyph.namePropName}, ` +
+      `    return resolveIcon(${iconGlyphNameArg(
+        `this.${glyph.namePropName}`,
+        nameProp !== undefined && !nameProp.required,
+      )}, ` +
         `${pxGetter ? `this.${pxGetter} ?? Number.NaN` : "Number.NaN"});`,
     );
     lines.push(`  }`);

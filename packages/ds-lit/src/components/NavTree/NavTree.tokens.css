@@ -1,0 +1,43 @@
+@layer components {
+/* @generated:start tokens */
+.nav-tree {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-padding-block: 0;
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-gap: 0;
+  --fsds-box-model-width: auto;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-max-width: none;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: 0;
+  --fsds-box-model-max-height: none;
+  --fsds-nav-tree-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
+  --fsds-nav-tree-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-nav-tree-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-nav-tree-color-foreground-heading: var(--fsds-semantic-color-foreground-secondary, #474647);
+  --fsds-nav-tree-color-foreground-heading-hover: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-nav-tree-color-connector: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+  --fsds-nav-tree-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
+  --fsds-nav-tree-size-indent: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-nav-tree-size-margin-group: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-nav-tree-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
+  --fsds-nav-tree-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-nav-tree-size-font-size-heading: var(--fsds-semantic-typography-caption-03, 10px);
+  --fsds-nav-tree-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
+  --fsds-nav-tree-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
+  --fsds-nav-tree-size-gap-heading: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-nav-tree-size-gap-item: var(--fsds-core-spacing-size-01, 1px);
+  --fsds-nav-tree-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
+  --fsds-nav-tree-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */
+
+}
