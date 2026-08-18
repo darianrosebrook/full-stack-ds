@@ -61,12 +61,21 @@ contract. FSDS examples: the closed token-kind enum in a component contract
 (design authority expressed AS closedness); the contract schema itself; the
 cross-framework token-stream identity fixtures (five generated packages must
 produce identical streams from a byte-identical runtime); WCAG contrast pairs
-(an external correctness contract, not taste); every
-contract-declared-vs-realized obligation the realization ledgers gate.
+(an external correctness contract, not taste).
 
 A structural freeze is legitimate when an unreviewed addition, removal,
 rename, reorder, or default would change what the system is allowed to mean
 or prove.
+
+A realization ledger is **not** on this list, and the distinction is the whole
+point of §1.2. "Every contract-declared-vs-realized obligation" sounds
+structural because each row names a contract obligation — but the ledger's
+frozen content is the current *population* of unrealized rows, which grows
+whenever a component is added and shrinks whenever a carrier is written. Both
+directions fail the gate. A ledger that fires because the corpus grew is
+classifying growth as breakage, and no amount of per-row contract vocabulary
+converts that into an identity claim. Measure realization; do not freeze it
+before RC.
 
 The expected response to a structural-freeze failure is not "refresh the
 snapshot." The response is: determine whether the change is intentional;
@@ -216,6 +225,14 @@ acceptable answers (1, 2, 4, 5, 11, 12 are disqualifying on "no"):
   ledger-with-spec path. Agents take the cheap path; the system loses its
   decision surface (§3). This is the anti-pattern the token-consumption
   audit instantiated and this ADR retires.
+- **Cross-slice contamination.** A population ledger keyed on the whole corpus
+  fires inside *every* concurrently-active slice the moment any one of them
+  grows the corpus. The agent who trips it did not cause it and cannot
+  discharge it within its own scope, so it either ledgers a stranger's rows
+  under its own spec or misreads the block as damage to its own work. Both
+  happened when NavTree landed (three slices affected). A gate whose failure
+  is not attributable to the change that triggered it is inadmissible
+  regardless of stage.
 - **Snapshot as authority.** A generated snapshot becomes the only place
   defining the contract. The owner remains the typed schema or contract.
 - **Freeze below the real seam.** Freezing a generated tree by hand instead
@@ -273,9 +290,10 @@ decision is.
 | Golden token-stream / markdown-tree fixtures | Structural identity (cross-framework), mandated regen discharge | blocking | blocking |
 | Token-reference resolvability (`audit:token-resolvability`) | Correctness (dangling names) | blocking | blocking |
 | Component-contrast + ancestry ledgers (`generate:check` lens) | External contract (WCAG AA) | blocking | blocking |
-| Realization ledgers (dead-slots, pseudo-state, state-suppression, behavior, a11y, token-realization) | Contract-declared vs realized obligations | blocking | blocking |
+| Realization ledgers (dead-slots, pseudo-state, state-suppression, behavior, a11y) | Contract-declared vs realized obligations, per-component | blocking | blocking |
 | Usage count floor (`tokens:check-usage:gate`) | Population measurement | report-only (demoted by RAIL-TOKEN-REFERENCE-RESOLVABILITY-01) | candidate for blocking at RC |
-| Token-consumption ledger (`audit:token-consumption`) | Population measurement (state freeze) | **report-only** (demoted by this ADR) | blocking after the one sanctioned RC re-derivation |
+| Native token-realization scoreboard | Population measurement (state freeze) | **removed** (FIX-UNWIND-FREEZE-RATCHETS-01) | re-introduce as measurement at RC, if wanted |
+| Token-consumption ledger | Population measurement (state freeze) | **removed** (FIX-UNWIND-FREEZE-RATCHETS-01) | re-introduce as measurement at RC, if wanted |
 | Emission manifest / drift diffs (`governed:rail`, CI tree diff) | Identity (bytes ↔ contract ↔ codegen ↔ env) | blocking | blocking |
 
 ## 11. Canonical statement

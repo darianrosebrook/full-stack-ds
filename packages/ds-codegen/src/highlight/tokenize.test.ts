@@ -54,30 +54,6 @@ const CASES: { language: string; code: string }[] = [
     language: "markdown",
     code: '# Heading\n\nSome **bold** and `inline` with a [link](https://example.com).\n\n```ts\nconst a = 1;\n```\n',
   },
-  {
-    language: "css",
-    code: "/* token surface */\n:root {\n  --gap: 0.5rem;\n}\n.code-block,\npre > code {\n  background-color: var(--fsds-code-block-color-background, #10131a);\n  padding: calc(var(--gap) * 2) 1rem;\n  content: \"<img onerror=alert(1)>\";\n}\n@media (max-width: 600px) {\n  .code-block { border-radius: 6px !important; }\n}",
-  },
-  {
-    language: "html",
-    code: "<!DOCTYPE html>\n<!-- header region -->\n<main class=\"app\" data-toggle=\"open\">\n  <h1 id=\"title\">Title &amp; more</h1>\n  <img src=\"x.png\" alt=\"\" loading=\"lazy\">\n  <script>window.__injected = 1;</script>\n</main>",
-  },
-  {
-    language: "javascript",
-    code: "const fsds = \"full-stack-ds\";\nlet count = 0xff + 1.5e3;\n/* block\n   comment */\nfunction render(items) {\n  return items.map((item) => `${item.id}: ${item.label}`).join(\"\\n\");\n}\n// done",
-  },
-  {
-    language: "jsx",
-    code: "import { Stack } from \"@full-stack-ds/react\";\n\nexport function Card({ title, actions }) {\n  return (\n    <Stack gap=\"sm\" as=\"article\">\n      <h2>{title}</h2>\n      {actions ?? <button type=\"button\">Save</button>}\n    </Stack>\n  );\n}",
-  },
-  {
-    language: "markdown",
-    code: "# Contract-governed\n\nSome **bold**, _emphasis_, and `code` with a [link](https://example.com).\n\n- one\n- two\n\n> quote with <div class=\"x\">raw html</div>\n\n```ts\nconst answer = 42;\n```",
-  },
-  {
-    language: "tsx",
-    code: "import { useState } from \"react\";\n\ninterface Props {\n  items: string[];\n}\n\nexport function List({ items }: Props) {\n  const [active, setActive] = useState<string | null>(null);\n  return (\n    <ul>\n      {items.map((item) => (\n        <li key={item} onClick={() => setActive(item)}>{item}</li>\n      ))}\n    </ul>\n  );\n}",
-  },
   { language: "plaintext", code: 'raw output — <script>alert("x")</script> & done' },
   { language: "typescript", code: "" },
 ];

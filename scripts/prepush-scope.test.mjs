@@ -154,55 +154,6 @@ test("a docs-only push does NOT run the token-resolvability ledger", () => {
   assert.equal(classify(["docs/x.md"]).RUN_TOKEN_RESOLVABILITY, false);
 });
 
-// --- native token realization (FEAT-TOKEN-REALIZATION-AUDIT-001) ---
-// The scoreboard diffs contract-declared slots against native carrier
-// realization, so sidecars, carrier trees, AND the allowlists in
-// fsds.targets.json (admission is a verdict input) all trigger it.
-
-test("changing a contract sidecar runs the token-realization ledger", () => {
-  assert.equal(
-    classify(["packages/ds-contracts/components/Button/Button.tokens.json"])
-      .RUN_TOKEN_REALIZATION,
-    true,
-  );
-});
-
-test("changing a native carrier tree runs the token-realization ledger", () => {
-  assert.equal(
-    classify([
-      "packages/ds-swiftui/Sources/DsSwiftUI/Components/Switch/SwitchTokens.swift",
-    ]).RUN_TOKEN_REALIZATION,
-    true,
-  );
-  assert.equal(
-    classify([
-      "packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/Switch/SwitchTokens.kt",
-    ]).RUN_TOKEN_REALIZATION,
-    true,
-  );
-});
-
-test("changing the targets allowlist runs the token-realization ledger", () => {
-  // Admission IS a verdict input: growing the jetpack-compose allowlist
-  // converts admission gaps into carrier/slot obligations.
-  assert.equal(classify(["fsds.targets.json"]).RUN_TOKEN_REALIZATION, true);
-});
-
-test("editing the realization audit runs it", () => {
-  assert.equal(
-    classify(["scripts/token-realization-audit/audit.mjs"]).RUN_TOKEN_REALIZATION,
-    true,
-  );
-});
-
-test("a web-tree-only push does NOT run the token-realization ledger", () => {
-  assert.equal(
-    classify(["packages/ds-react/src/components/Button/Button.tsx"])
-      .RUN_TOKEN_REALIZATION,
-    false,
-  );
-});
-
 // --- behavior/a11y realization audits (PREPUSH-LOCKSTEP-01) ------------------
 // ci.yml's gate job runs audit:behavior-realization + audit:a11y-realization;
 // the hook must run them on the SAME input surfaces, or a push gets its
@@ -275,25 +226,3 @@ test("a docs-only push does NOT run the realization audits", () => {
   assert.equal(r.RUN_A11Y_AUDIT, false);
 });
 
-test("token-consumption rail: fires on token graph, contracts, generated trees, and its own scripts", () => {
-  for (const f of [
-    "packages/ds-tokens/src/color/semantic/foreground.tokens.json",
-    "packages/ds-contracts/components/CodeBlock/CodeBlock.tokens.json",
-    "packages/ds-react/src/components/CodeBlock/CodeBlock.tokens.css",
-    "packages/ds-vue/src/components/CodeBlock/CodeBlock.css",
-    "scripts/token-consumption-audit/audit.mjs",
-    "scripts/token-consumption-audit/known-dead-namespaces.json",
-    "scripts/lib/ledger-ratchet.mjs",
-  ]) {
-    const r = classify([f]);
-    assert.equal(r.RUN_TOKEN_CONSUMPTION, true, f);
-    assert.equal(r.RUN_TOKEN_BUILD, true, f); // the scan reads the composed graph
-  }
-});
-
-test("token-consumption rail: NOT fired by docs or the resolvability audit's own scripts", () => {
-  const d = classify(["docs/some-doc.md", "docs/token-resolvability-audit/resolvability-matrix.md"]);
-  assert.equal(d.RUN_TOKEN_CONSUMPTION, false);
-  const r = classify(["scripts/token-resolvability-audit/audit.mjs"]);
-  assert.equal(r.RUN_TOKEN_CONSUMPTION, false);
-});
