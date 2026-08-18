@@ -88,9 +88,12 @@ export function generateJetpackComposeTokensFile(ir: ComponentIR): string {
   );
   lines.push(`package com.fullstackds.components.${packageSegment(ir.name)}`);
   lines.push(``);
+  lines.push(`// @generated:start imports`);
   lines.push(`import com.fullstackds.tokens.ComponentTokenDefinition`);
   lines.push(`import com.fullstackds.tokens.ComponentTokenScopes`);
+  lines.push(`// @generated:end`);
   lines.push(``);
+  lines.push(`// @generated:start component`);
   lines.push(`val ${tokenConstName(ir)}: ComponentTokenScopes = mapOf(`);
   for (const scope of ir.tokenScopes) {
     if (scope.values.length === 0) continue;
@@ -112,6 +115,7 @@ export function generateJetpackComposeTokensFile(ir: ComponentIR): string {
     lines.push(`    ),`);
   }
   lines.push(`)`);
+  lines.push(`// @generated:end`);
   lines.push(``);
   return lines.join("\n");
 }
@@ -184,6 +188,7 @@ export function generateJetpackComposeComponentSource(
   );
   lines.push(`package com.fullstackds.components.${segment}`);
   lines.push(``);
+  lines.push(`// @generated:start imports`);
   lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
   lines.push(`import androidx.compose.runtime.Composable`);
   lines.push(`import androidx.compose.runtime.getValue`);
@@ -286,7 +291,9 @@ export function generateJetpackComposeComponentSource(
       lines.push(`import com.fullstackds.tokens.toFsdsMs`);
     }
   }
+  lines.push(`// @generated:end`);
   lines.push(``);
+  lines.push(`// @generated:start component`);
   if (sizeEnumName && sizeValues.length > 0) {
     lines.push(
       `/** Size axis lowered from the contract's ${sizeEnumName} type. */`,
@@ -472,6 +479,7 @@ export function generateJetpackComposeComponentSource(
   lines.push(`        modifier = modifier,`);
   lines.push(`    )`);
   lines.push(`}`);
+  lines.push(`// @generated:end`);
   lines.push(``);
   return lines.join("\n");
 }

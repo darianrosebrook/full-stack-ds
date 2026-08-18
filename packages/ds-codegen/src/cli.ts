@@ -42,6 +42,7 @@ import { REACT_ADMITTED_TYPES } from "./frameworks/react/admitted-types.js";
 import {
   type CommentStyle,
   PreserveError,
+  assertPreservableHasMarkers,
   hasMarkers,
   injectMigrationTodo,
   mergeSections,
@@ -1159,6 +1160,12 @@ type WriteResolution =
  *
  * Files not marked `preservable` are written verbatim; preservation is
  * opt-in per `GeneratedFile`.
+ *
+ * Invariant: a `preservable` file whose generated contents carry no
+ * `@generated` markers can never be merge-updated — the first write lands,
+ * and every later regeneration hits the "legacy file (no markers)" skip.
+ * That is always an emitter bug, so it fails loudly here instead of
+ * silently skipping (see FIX-CODEGEN-PRESERVABLE-MARKER-INVARIANT-01).
  */
 function resolveWriteContents(
   file: GeneratedFile,
@@ -1168,6 +1175,7 @@ function resolveWriteContents(
   if (!file.preservable) {
     return { kind: "fresh", contents: file.contents };
   }
+  assertPreservableHasMarkers(file.relativePath, file.contents);
   if (!fs.existsSync(absPath) || args.force) {
     return { kind: "fresh", contents: file.contents };
   }

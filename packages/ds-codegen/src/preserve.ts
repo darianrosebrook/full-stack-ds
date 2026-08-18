@@ -61,6 +61,30 @@ export function hasMarkers(text: string): boolean {
 }
 
 /**
+ * Invariant guard (FIX-CODEGEN-PRESERVABLE-MARKER-INVARIANT-01): a file
+ * marked `preservable` whose generated contents carry no markers can never
+ * be merge-updated — the first write lands, and every later regeneration
+ * takes the "legacy file (no markers)" skip, silently freezing the stale
+ * bytes. Emitters must either emit `@generated` regions or opt out with
+ * `preservable: false`. Deliberately throws a plain `Error` (NOT
+ * `PreserveError`) so no caller can downgrade it into a skip: it is an
+ * emitter bug, not a parse condition.
+ */
+export function assertPreservableHasMarkers(
+  relativePath: string,
+  contents: string,
+): void {
+  if (!hasMarkers(contents)) {
+    throw new Error(
+      `emitter bug: ${relativePath} is marked preservable but its generated ` +
+        `contents contain no @generated markers — once written, every later ` +
+        `regeneration would silently skip it. Either emit ` +
+        `@generated:start/@generated:end regions or set preservable: false.`,
+    );
+  }
+}
+
+/**
  * Split a marker-bearing file into its ordered list of sections.
  *
  * Free text between marker pairs becomes a `between` section. Marker
