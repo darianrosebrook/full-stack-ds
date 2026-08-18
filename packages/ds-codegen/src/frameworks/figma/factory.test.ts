@@ -99,7 +99,9 @@ describe("createFigmaEmitter", () => {
       "Button/README.md",
     ]);
     expect(files[0]!.preservable).toBe(false);
-    expect(files[1]!.preservable).toBe(true);
+    // READMEs are emitted without region markers, so they are regen-owned
+    // wholesale (FIX-CODEGEN-PRESERVABLE-MARKER-INVARIANT-01).
+    expect(files[1]!.preservable).toBe(false);
     expect(JSON.parse(files[0]!.contents)).toEqual(toFigmaComponentDescriptor(fixtureIR()));
     expect(files[1]!.contents).toContain("transfer artifact, not the source of truth");
   });

@@ -30,7 +30,10 @@ export function createFigmaEmitter(): FrameworkEmitter {
         {
           relativePath: `${ir.name}/README.md`,
           contents: generateComponentReadme(ir),
-          preservable: true,
+          // Markdown is emitted without region markers; preservable would
+          // freeze first-written bytes behind the legacy-skip
+          // (FIX-CODEGEN-PRESERVABLE-MARKER-INVARIANT-01).
+          preservable: false,
         },
       ];
     },

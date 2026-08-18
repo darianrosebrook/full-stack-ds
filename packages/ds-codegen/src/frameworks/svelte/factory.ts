@@ -127,7 +127,11 @@ export function createSvelteEmitter(): FrameworkEmitter {
           {
             relativePath: `${ir.name}/__tests__/${ir.name}Fixture.svelte`,
             contents: surfaceTests.fixtureFile,
-            preservable: true,
+            // The fixture is regen-owned scaffolding emitted without region
+            // markers; marking it preservable would freeze its first-written
+            // bytes behind the legacy-skip (FIX-CODEGEN-PRESERVABLE-MARKER-
+            // INVARIANT-01).
+            preservable: false,
           },
         ];
       }
