@@ -1,0 +1,28 @@
+id: FIX-CONTRACTS-WALKTHROUGH-TOKEN-GRAMMAR-01
+title: 'Normalize Walkthrough token slots to the corpus grammar (color/size/spacing/typography axes)'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-08-18T01:52:17.135Z'
+updated_at: '2026-08-18T01:52:17.135Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Walkthrough'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'Walkthrough''s 23 non-box-model slots named outside the corpus grammar (surface.bg, title.color, dots.active...)'
+    when: 'the sidecars are renamed to grammar-conformant keys (walkthrough.color.<element>.<property>, walkthrough.size.*, walkthrough.spacing.*, walkthrough.typography.*) and everything is regenerated'
+    then: 'generate:check, the styling audits, and the token-realization ledger stay green with no orphaned references to the old names'
+non_functional: {}
+contracts:
+  - name: 'component.tokens sidecar'
+    type: schema
+    path: 'packages/ds-contracts/component.tokens.schema.json'
