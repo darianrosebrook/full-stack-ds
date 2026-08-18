@@ -18,13 +18,13 @@
     {
       "target": "swiftui",
       "admitted": 49,
-      "carriersPresent": 0,
-      "slotsRealized": 0,
+      "carriersPresent": 49,
+      "slotsRealized": 732,
       "slotsDeclared": 895,
       "gaps": {
         "admission": 1,
-        "carrier": 49,
-        "slot": 0,
+        "carrier": 0,
+        "slot": 163,
         "orphan": 0
       }
     },
@@ -45,128 +45,387 @@
   "gaps": [
     {
       "target": "swiftui",
-      "component": "Accordion",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Alert",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "AlertNotice",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Avatar",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Badge",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Blockquote",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Breadcrumbs",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Button",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Calendar",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Card",
-      "kind": "carrier"
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-block-start"
     },
     {
       "target": "swiftui",
       "component": "Checkbox",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.padding-block-end"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.gap"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.min-height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.color.background.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.color.border.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.border.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.border.radius"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.transition.duration"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.color"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.style"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.offset"
     },
     {
       "target": "swiftui",
       "component": "Chip",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.gap"
     },
     {
       "target": "swiftui",
-      "component": "CodeBlock",
-      "kind": "carrier"
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.default"
     },
     {
       "target": "swiftui",
-      "component": "CodeSnippet",
-      "kind": "carrier"
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.hover"
     },
     {
       "target": "swiftui",
-      "component": "Command",
-      "kind": "carrier"
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.active"
     },
     {
       "target": "swiftui",
-      "component": "Details",
-      "kind": "carrier"
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.foreground.default"
     },
     {
       "target": "swiftui",
-      "component": "Dialog",
-      "kind": "carrier"
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.border.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.padding.horizontal"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.padding.vertical"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.gap"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.radius"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.border"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.text.size"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.text.weight"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.motion.duration.fast"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.color"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.style"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.offset"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.minHeight"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.selected"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.foreground.selected"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.border.selected"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.dismiss.size"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.dismiss.gap"
     },
     {
       "target": "swiftui",
       "component": "Divider",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.gap"
     },
     {
       "target": "swiftui",
-      "component": "Field",
-      "kind": "carrier"
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.color.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.size.thickness"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.size.thicknessThick"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.spacing.margin"
     },
     {
       "target": "swiftui",
       "component": "Icon",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "icon.size.sm"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.md"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.lg"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.xl"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.color.foreground.default"
     },
     {
       "target": "swiftui",
       "component": "Image",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.gap"
     },
     {
       "target": "swiftui",
-      "component": "Input",
-      "kind": "carrier"
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.color.background.default"
     },
     {
       "target": "swiftui",
-      "component": "Label",
-      "kind": "carrier"
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.color.foreground.primary"
     },
     {
       "target": "swiftui",
-      "component": "Links",
-      "kind": "carrier"
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.icon"
     },
     {
       "target": "swiftui",
-      "component": "List",
-      "kind": "carrier"
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.typography.error.fontSize"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.xs"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.sm"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.md"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.lg"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.xl"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.none"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.sm"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.md"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.lg"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.full"
     },
     {
       "target": "swiftui",
@@ -175,123 +434,597 @@
     },
     {
       "target": "swiftui",
-      "component": "NavList",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "OTP",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Popover",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "Postcard",
-      "kind": "carrier"
-    },
-    {
-      "target": "swiftui",
-      "component": "ProfileFlag",
-      "kind": "carrier"
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.text.default"
     },
     {
       "target": "swiftui",
       "component": "Progress",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "progress.spacing.gap"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.motion.duration.indeterminate"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.track.background"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.info"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.success"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.warning"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.danger"
     },
     {
       "target": "swiftui",
       "component": "Select",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.padding-block-start"
     },
     {
       "target": "swiftui",
-      "component": "Sheet",
-      "kind": "carrier"
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end"
     },
     {
       "target": "swiftui",
-      "component": "ShowMore",
-      "kind": "carrier"
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start"
     },
     {
       "target": "swiftui",
-      "component": "Shuttle",
-      "kind": "carrier"
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end"
     },
     {
       "target": "swiftui",
-      "component": "Skeleton",
-      "kind": "carrier"
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.gap"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.min-height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.background.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.foreground.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.border.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.icon.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.placeholder.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.padding.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.radius.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.border.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.sm.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.md.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.lg.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.font.size.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.font.lineHeight.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.icon.isOpen"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.color"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.style"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.offset"
     },
     {
       "target": "swiftui",
       "component": "Spinner",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "spinner.size.xs"
     },
     {
       "target": "swiftui",
-      "component": "Stat",
-      "kind": "carrier"
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.sm"
     },
     {
       "target": "swiftui",
-      "component": "Status",
-      "kind": "carrier"
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.md"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.lg"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.thickness.hairline"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.thickness.regular"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.thickness.bold"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.color.accent"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.color.track"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.anim.duration"
     },
     {
       "target": "swiftui",
       "component": "Switch",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.padding-block-start"
     },
     {
       "target": "swiftui",
-      "component": "Table",
-      "kind": "carrier"
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end"
     },
     {
       "target": "swiftui",
-      "component": "Tabs",
-      "kind": "carrier"
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start"
     },
     {
       "target": "swiftui",
-      "component": "Text",
-      "kind": "carrier"
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end"
     },
     {
       "target": "swiftui",
-      "component": "TextField",
-      "kind": "carrier"
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.gap"
     },
     {
       "target": "swiftui",
-      "component": "Toast",
-      "kind": "carrier"
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.min-height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.min-width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.motion.duration"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.motion.easing"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.track.background.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.track.border.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.thumb.background.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.thumb.shadow.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.input.outline.focus"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.radius"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.padding"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.size"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.radius"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.padding"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.size"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.radius"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.padding"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.size"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.height"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.translate.off"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.translate.on"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.translate.off"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.translate.on"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.translate.off"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.translate.on"
     },
     {
       "target": "swiftui",
       "component": "ToggleSwitch",
-      "kind": "carrier"
+      "kind": "slot",
+      "slot": "box-model.padding-block-start"
     },
     {
       "target": "swiftui",
-      "component": "Tooltip",
-      "kind": "carrier"
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end"
     },
     {
       "target": "swiftui",
-      "component": "Truncate",
-      "kind": "carrier"
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start"
     },
     {
       "target": "swiftui",
-      "component": "Walkthrough",
-      "kind": "carrier"
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.gap"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.min-height"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.min-width"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.foreground.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.border.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.border.radius.default"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.motion.duration.fast"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.hover"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.checked"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.disabled"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.width"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.color"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.style"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.offset"
     },
     {
       "target": "jetpack-compose",

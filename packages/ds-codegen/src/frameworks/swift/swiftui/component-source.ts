@@ -339,6 +339,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
       let literalArg = "";
+      const refArg = value.resolvesTo ? `ref: "${value.resolvesTo}"` : "";
       if (value.rawValue) {
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value);
@@ -348,7 +349,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
-          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+          `cssVar: "${value.cssVar}", name: "${value.name}"${refArg ? ", " + refArg : ""}${literalArg ? ", " + literalArg : ""}),`,
       );
     }
     lines.push(`${INDENT}${INDENT}],`);
@@ -2513,6 +2514,7 @@ function emitActionComponent(ir: ComponentIR): string {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
       let literalArg = "";
+      const refArg = value.resolvesTo ? `ref: "${value.resolvesTo}"` : "";
       if (value.rawValue) {
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value);
@@ -2522,7 +2524,7 @@ function emitActionComponent(ir: ComponentIR): string {
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
-          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+          `cssVar: "${value.cssVar}", name: "${value.name}"${refArg ? ", " + refArg : ""}${literalArg ? ", " + literalArg : ""}),`,
       );
     }
     lines.push(`${INDENT}${INDENT}],`);
@@ -2865,6 +2867,7 @@ function emitComposerComponent(
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
       let literalArg = "";
+      const refArg = value.resolvesTo ? `ref: "${value.resolvesTo}"` : "";
       if (value.rawValue) {
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value);
@@ -2874,7 +2877,7 @@ function emitComposerComponent(
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
-          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+          `cssVar: "${value.cssVar}", name: "${value.name}"${refArg ? ", " + refArg : ""}${literalArg ? ", " + literalArg : ""}),`,
       );
     }
     lines.push(`${INDENT}${INDENT}],`);
@@ -3216,6 +3219,7 @@ export function emitTokenScopesSection(
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
       let literalArg = "";
+      const refArg = value.resolvesTo ? `ref: "${value.resolvesTo}"` : "";
       if (value.rawValue) {
         const kind = value.isLiteral ? "literal" : "fallback";
         const dark = graphDarkFor(value, contractsRoot);
@@ -3225,7 +3229,7 @@ export function emitTokenScopesSection(
       }
       lines.push(
         `${INDENT}${INDENT}${INDENT}"${value.name}": FsdsComponentTokenDefinition(` +
-          `cssVar: "${value.cssVar}", name: "${value.name}"${literalArg ? ", " + literalArg : ""}),`,
+          `cssVar: "${value.cssVar}", name: "${value.name}"${refArg ? ", " + refArg : ""}${literalArg ? ", " + literalArg : ""}),`,
       );
     }
     lines.push(`${INDENT}${INDENT}],`);

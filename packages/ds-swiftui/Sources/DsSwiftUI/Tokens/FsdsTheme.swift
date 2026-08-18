@@ -114,12 +114,19 @@ public enum FsdsTokenValue: Sendable, Equatable {
 public struct FsdsComponentTokenDefinition: Sendable {
     public let cssVar: String
     public let name: String
+    /// Semantic graph path this slot resolves through (the sidecar's
+    /// `resolvesTo`), when the slot is not a literal. A semantic-defaults
+    /// table reaches component slots through this arm
+    /// (FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01) — same semantics as the
+    /// RN/Compose carriers.
+    public let ref: String?
     public let literal: FsdsTokenValue?
     public let fallback: FsdsTokenValue?
 
-    public init(cssVar: String, name: String, literal: FsdsTokenValue? = nil, fallback: FsdsTokenValue? = nil) {
+    public init(cssVar: String, name: String, ref: String? = nil, literal: FsdsTokenValue? = nil, fallback: FsdsTokenValue? = nil) {
         self.cssVar = cssVar
         self.name = name
+        self.ref = ref
         self.literal = literal
         self.fallback = fallback
     }
@@ -150,7 +157,10 @@ extension EnvironmentValues {
     }
 }
 
-/// Resolve one scope: theme override by slot name, else literal, else fallback.
+/// Resolve one scope: theme override by slot name, then theme override by
+/// semantic ref, else literal, else fallback. The ref arm is what lets a
+/// semantic-defaults table reach component slots — without it, only
+/// slot-name-keyed overrides could (FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01).
 public func resolveFsdsComponentTokens(
     _ scopes: FsdsComponentTokenScopes,
     _ theme: FsdsTheme
@@ -166,6 +176,7 @@ public func resolveFsdsComponentTokens(
             // (FIX-SWIFTUI-TOKEN-RESOLVER-01).
             let value: FsdsTokenValue? =
                 theme.tokens[definition.name]
+                ?? definition.ref.flatMap { theme.tokens[$0] }
                 ?? definition.literal
                 ?? definition.fallback
             resolved[slotName] = value
