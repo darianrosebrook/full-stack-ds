@@ -1,0 +1,28 @@
+id: FEAT-TOKEN-REALIZATION-AUDIT-001
+title: 'Token-realization audit rail: per-contract slot obligations vs native carrier realization, two-directional ratchet'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-08-18T01:06:57.797Z'
+updated_at: '2026-08-18T01:06:57.797Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/token-realization-audit'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'the contract corpus and its tokens sidecars'
+    when: 'the audit runs against the react-native, swiftui, and jetpack-compose carrier trees'
+    then: 'it emits a per-target realization matrix (admitted components, carrier presence, slot realization counts) and enforces a two-directional gaps ledger so new gaps fail unledgered and fixed gaps go stale'
+non_functional: {}
+contracts:
+  - name: 'component.tokens sidecar'
+    type: schema
+    path: 'packages/ds-contracts/component.tokens.schema.json'
