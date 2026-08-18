@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "docs/architecture/adr/0001-structural-freeze-doctrine.md — mirrors sterling 0051 structure (§1 two classes, §4 rationale-bearing, §5 placement, §6 decision vocabulary, §7 review tests, §8 anti-patterns, §9 precedents, §11 canonical statement) and adds §2 release-candidate gate (RC = declared marker + written schedule) and §3 void-hazard rule (deletion must never be the cheapest discharge)"
     recorded_at: "2026-08-18T03:00:46.199Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "demotion applied: ci.yml Token-consumption step renamed '(report-only until RC per ADR-0001)' + continue-on-error: true; .githooks/pre-push blocking invocation removed with RUN_TOKEN_CONSUMPTION flag retained (RC flip = one line); known-dead-namespaces.json comment carries the once-at-RC re-derivation clause; audit.mjs header records the posture; manual run green 29/29 ledgered, exit semantics preserved"
+    recorded_at: "2026-08-18T03:00:47.516Z"
