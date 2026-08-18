@@ -3,7 +3,6 @@ title: 'Restore the Compose Button admission reverted by a stray staged index in
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: compose-button-restore
 created_at: '2026-08-18T04:44:38.863Z'
 updated_at: '2026-08-18T04:44:38.863Z'
 blast_radius:
