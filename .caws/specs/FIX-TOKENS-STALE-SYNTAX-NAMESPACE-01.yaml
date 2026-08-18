@@ -2,9 +2,11 @@ id: FIX-TOKENS-STALE-SYNTAX-NAMESPACE-01
 title: 'Remove stale duplicate color.syntax token namespace (syntax.tokens.json)'
 risk_tier: 1
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Stale pre-repair color.syntax namespace deleted; 9 paths removed, zero value drift, usage baseline re-derived, all gates green'
 created_at: '2026-08-18T00:42:59.072Z'
-updated_at: '2026-08-18T00:43:32.776Z'
+updated_at: '2026-08-18T00:48:46.916Z'
 blast_radius:
   modules:
     - 'ds-tokens: semantic token source (delete stale syntax.tokens.json) and committed generated outputs (resolved.tokens.json, tokens.css) plus usage-baseline.json re-derivation'
