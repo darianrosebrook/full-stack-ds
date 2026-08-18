@@ -7,7 +7,10 @@ created_at: '2026-08-18T16:13:05.341Z'
 updated_at: '2026-08-18T16:13:05.341Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'remove: .claude/hooks 34 *.sh + classify_command.py + session_log_renderer.py + caws_dispatch/ + lib/ + package.json + node_modules (all superseded by .caws/hooks v39)'
+    - 'keep: .claude/hooks/state (v39 caws_canonical_state_dir target), CLAUDE.md and README.md (vendor pack docs, caws-managed)'
+    - 'add: js-yaml root devDependency so worktree-claim-oracle.cjs resolves it from .caws/hooks/lib upward'
+    - 'docs: CLAUDE.md hooks section repointed from .claude/hooks to .caws/hooks'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -19,7 +22,9 @@ scope:
     - 'CLAUDE.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Guard capability may only increase. The canonical scope.in claim check is currently degraded (js-yaml unresolvable); it is restored BEFORE any script is deleted, never after.'
+  - 'Deletion order is load-bearing: js-yaml is provisioned first, then the duplicates go. Removing .claude/hooks/node_modules while the oracle still depends on it would deepen the degradation instead of fixing it.'
+  - 'Only unsourced duplicates are removed. .claude/hooks/state is live runtime state that v39 still writes to, and the two vendor markdown files are caws-managed — neither is a duplicate.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
