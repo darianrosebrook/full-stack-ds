@@ -1075,8 +1075,8 @@
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
         {
-          "slot": "walkthrough.dots.active",
-          "cssVar": "--fsds-walkthrough-dots-active",
+          "slot": "walkthrough.color.dots.active",
+          "cssVar": "--fsds-walkthrough-color-dots-active",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -2016,8 +2016,8 @@
       "component": "Walkthrough",
       "dead": [
         {
-          "slot": "walkthrough.dots.active",
-          "cssVar": "--fsds-walkthrough-dots-active",
+          "slot": "walkthrough.color.dots.active",
+          "cssVar": "--fsds-walkthrough-color-dots-active",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
@@ -8050,142 +8050,142 @@
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
         },
         {
-          "slot": "walkthrough.surface.bg",
-          "cssVar": "--fsds-walkthrough-surface-bg",
+          "slot": "walkthrough.color.surface.background",
+          "cssVar": "--fsds-walkthrough-color-surface-background",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.surface.border",
-          "cssVar": "--fsds-walkthrough-surface-border",
+          "slot": "walkthrough.color.surface.border",
+          "cssVar": "--fsds-walkthrough-color-surface-border",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.surface.radius",
-          "cssVar": "--fsds-walkthrough-surface-radius",
+          "slot": "walkthrough.size.surface.radius",
+          "cssVar": "--fsds-walkthrough-size-surface-radius",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.surface.shadow",
-          "cssVar": "--fsds-walkthrough-surface-shadow",
+          "slot": "walkthrough.color.surface.shadow",
+          "cssVar": "--fsds-walkthrough-color-surface-shadow",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.surface.padding",
-          "cssVar": "--fsds-walkthrough-surface-padding",
+          "slot": "walkthrough.size.surface.padding",
+          "cssVar": "--fsds-walkthrough-size-surface-padding",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.title.fontSize",
-          "cssVar": "--fsds-walkthrough-title-font-size",
+          "slot": "walkthrough.size.title.fontSize",
+          "cssVar": "--fsds-walkthrough-size-title-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.title.fontWeight",
-          "cssVar": "--fsds-walkthrough-title-font-weight",
+          "slot": "walkthrough.typography.title.fontWeight",
+          "cssVar": "--fsds-walkthrough-typography-title-font-weight",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.title.color",
-          "cssVar": "--fsds-walkthrough-title-color",
+          "slot": "walkthrough.color.title.foreground",
+          "cssVar": "--fsds-walkthrough-color-title-foreground",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.description.fontSize",
-          "cssVar": "--fsds-walkthrough-description-font-size",
+          "slot": "walkthrough.size.description.fontSize",
+          "cssVar": "--fsds-walkthrough-size-description-font-size",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.description.color",
-          "cssVar": "--fsds-walkthrough-description-color",
+          "slot": "walkthrough.color.description.foreground",
+          "cssVar": "--fsds-walkthrough-color-description-foreground",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.description.marginTop",
-          "cssVar": "--fsds-walkthrough-description-margin-top",
+          "slot": "walkthrough.spacing.description.marginTop",
+          "cssVar": "--fsds-walkthrough-spacing-description-margin-top",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.controls.gap",
-          "cssVar": "--fsds-walkthrough-controls-gap",
+          "slot": "walkthrough.spacing.controls.gap",
+          "cssVar": "--fsds-walkthrough-spacing-controls-gap",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.controls.marginTop",
-          "cssVar": "--fsds-walkthrough-controls-margin-top",
+          "slot": "walkthrough.spacing.controls.marginTop",
+          "cssVar": "--fsds-walkthrough-spacing-controls-margin-top",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.dots.size",
-          "cssVar": "--fsds-walkthrough-dots-size",
+          "slot": "walkthrough.size.dots.default",
+          "cssVar": "--fsds-walkthrough-size-dots-default",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.dots.gap",
-          "cssVar": "--fsds-walkthrough-dots-gap",
+          "slot": "walkthrough.spacing.dots.gap",
+          "cssVar": "--fsds-walkthrough-spacing-dots-gap",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.dots.active",
-          "cssVar": "--fsds-walkthrough-dots-active",
+          "slot": "walkthrough.color.dots.active",
+          "cssVar": "--fsds-walkthrough-color-dots-active",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"active\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         },
         {
-          "slot": "walkthrough.dots.idle",
-          "cssVar": "--fsds-walkthrough-dots-idle",
+          "slot": "walkthrough.color.dots.idle",
+          "cssVar": "--fsds-walkthrough-color-dots-idle",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.button.primary.bg",
-          "cssVar": "--fsds-walkthrough-button-primary-bg",
+          "slot": "walkthrough.color.button.primary.background",
+          "cssVar": "--fsds-walkthrough-color-button-primary-background",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.button.primary.color",
-          "cssVar": "--fsds-walkthrough-button-primary-color",
+          "slot": "walkthrough.color.button.primary.foreground",
+          "cssVar": "--fsds-walkthrough-color-button-primary-foreground",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.button.primary.radius",
-          "cssVar": "--fsds-walkthrough-button-primary-radius",
+          "slot": "walkthrough.size.button.primary.radius",
+          "cssVar": "--fsds-walkthrough-size-button-primary-radius",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.button.secondary.bg",
-          "cssVar": "--fsds-walkthrough-button-secondary-bg",
+          "slot": "walkthrough.color.button.secondary.background",
+          "cssVar": "--fsds-walkthrough-color-button-secondary-background",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.button.secondary.color",
-          "cssVar": "--fsds-walkthrough-button-secondary-color",
+          "slot": "walkthrough.color.button.secondary.foreground",
+          "cssVar": "--fsds-walkthrough-color-button-secondary-foreground",
           "source": "tokens",
           "status": "consumed"
         },
         {
-          "slot": "walkthrough.button.secondary.border",
-          "cssVar": "--fsds-walkthrough-button-secondary-border",
+          "slot": "walkthrough.color.button.secondary.border",
+          "cssVar": "--fsds-walkthrough-color-button-secondary-border",
           "source": "tokens",
           "status": "consumed"
         }
