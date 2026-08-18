@@ -4,7 +4,7 @@
 
 `declared as` names the kebab-cased spelling the token graph actually ships, when the miss is a casing seam. A blank there means the name is missing for some other reason and needs its own diagnosis.
 
-Declarations in the graph: **876** · unresolvable references: **0** across **0** distinct name(s)
+Declarations in the graph: **866** · unresolvable references: **0** across **0** distinct name(s)
 
 | name | components | silent fallback | declared as | token value | repair |
 |---|---|---|---|---|---|

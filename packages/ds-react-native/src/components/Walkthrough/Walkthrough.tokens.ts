@@ -76,141 +76,141 @@ export const walkthroughTokenScopes = {
       cssVar: "--fsds-box-model-max-height",
       literal: "none",
     },
-    "walkthrough.surface.bg": {
-      name: "walkthrough.surface.bg",
-      cssVar: "--fsds-walkthrough-surface-bg",
+    "walkthrough.color.surface.background": {
+      name: "walkthrough.color.surface.background",
+      cssVar: "--fsds-walkthrough-color-surface-background",
       ref: "semantic.color.background.secondary",
       fallback: "#d0d0d0",
     },
-    "walkthrough.surface.border": {
-      name: "walkthrough.surface.border",
-      cssVar: "--fsds-walkthrough-surface-border",
+    "walkthrough.color.surface.border": {
+      name: "walkthrough.color.surface.border",
+      cssVar: "--fsds-walkthrough-color-surface-border",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
-    "walkthrough.surface.radius": {
-      name: "walkthrough.surface.radius",
-      cssVar: "--fsds-walkthrough-surface-radius",
+    "walkthrough.size.surface.radius": {
+      name: "walkthrough.size.surface.radius",
+      cssVar: "--fsds-walkthrough-size-surface-radius",
       ref: "semantic.shape.radius.large",
       fallback: 16,
     },
-    "walkthrough.surface.shadow": {
-      name: "walkthrough.surface.shadow",
-      cssVar: "--fsds-walkthrough-surface-shadow",
+    "walkthrough.color.surface.shadow": {
+      name: "walkthrough.color.surface.shadow",
+      cssVar: "--fsds-walkthrough-color-surface-shadow",
       ref: "semantic.elevation.surface.floating",
       fallback: "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
     },
-    "walkthrough.surface.padding": {
-      name: "walkthrough.surface.padding",
-      cssVar: "--fsds-walkthrough-surface-padding",
+    "walkthrough.size.surface.padding": {
+      name: "walkthrough.size.surface.padding",
+      cssVar: "--fsds-walkthrough-size-surface-padding",
       ref: "core.spacing.size.08",
       fallback: 32,
     },
-    "walkthrough.title.fontSize": {
-      name: "walkthrough.title.fontSize",
-      cssVar: "--fsds-walkthrough-title-font-size",
+    "walkthrough.size.title.fontSize": {
+      name: "walkthrough.size.title.fontSize",
+      cssVar: "--fsds-walkthrough-size-title-font-size",
       ref: "semantic.typography.heading.03",
       fallback: 20,
     },
-    "walkthrough.title.fontWeight": {
-      name: "walkthrough.title.fontWeight",
-      cssVar: "--fsds-walkthrough-title-font-weight",
+    "walkthrough.typography.title.fontWeight": {
+      name: "walkthrough.typography.title.fontWeight",
+      cssVar: "--fsds-walkthrough-typography-title-font-weight",
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
-    "walkthrough.title.color": {
-      name: "walkthrough.title.color",
-      cssVar: "--fsds-walkthrough-title-color",
+    "walkthrough.color.title.foreground": {
+      name: "walkthrough.color.title.foreground",
+      cssVar: "--fsds-walkthrough-color-title-foreground",
       ref: "semantic.color.foreground.primary",
       fallback: "#141414",
     },
-    "walkthrough.description.fontSize": {
-      name: "walkthrough.description.fontSize",
-      cssVar: "--fsds-walkthrough-description-font-size",
+    "walkthrough.size.description.fontSize": {
+      name: "walkthrough.size.description.fontSize",
+      cssVar: "--fsds-walkthrough-size-description-font-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
-    "walkthrough.description.color": {
-      name: "walkthrough.description.color",
-      cssVar: "--fsds-walkthrough-description-color",
+    "walkthrough.color.description.foreground": {
+      name: "walkthrough.color.description.foreground",
+      cssVar: "--fsds-walkthrough-color-description-foreground",
       ref: "semantic.color.foreground.secondary",
       fallback: "#474647",
     },
-    "walkthrough.description.marginTop": {
-      name: "walkthrough.description.marginTop",
-      cssVar: "--fsds-walkthrough-description-margin-top",
+    "walkthrough.spacing.description.marginTop": {
+      name: "walkthrough.spacing.description.marginTop",
+      cssVar: "--fsds-walkthrough-spacing-description-margin-top",
       ref: "core.spacing.size.04",
       fallback: 8,
     },
-    "walkthrough.controls.gap": {
-      name: "walkthrough.controls.gap",
-      cssVar: "--fsds-walkthrough-controls-gap",
+    "walkthrough.spacing.controls.gap": {
+      name: "walkthrough.spacing.controls.gap",
+      cssVar: "--fsds-walkthrough-spacing-controls-gap",
       ref: "core.spacing.size.05",
       fallback: 12,
     },
-    "walkthrough.controls.marginTop": {
-      name: "walkthrough.controls.marginTop",
-      cssVar: "--fsds-walkthrough-controls-margin-top",
+    "walkthrough.spacing.controls.marginTop": {
+      name: "walkthrough.spacing.controls.marginTop",
+      cssVar: "--fsds-walkthrough-spacing-controls-margin-top",
       ref: "core.spacing.size.06",
       fallback: 16,
     },
-    "walkthrough.dots.size": {
-      name: "walkthrough.dots.size",
-      cssVar: "--fsds-walkthrough-dots-size",
+    "walkthrough.size.dots.default": {
+      name: "walkthrough.size.dots.default",
+      cssVar: "--fsds-walkthrough-size-dots-default",
       ref: "core.spacing.size.04",
       fallback: 8,
     },
-    "walkthrough.dots.gap": {
-      name: "walkthrough.dots.gap",
-      cssVar: "--fsds-walkthrough-dots-gap",
+    "walkthrough.spacing.dots.gap": {
+      name: "walkthrough.spacing.dots.gap",
+      cssVar: "--fsds-walkthrough-spacing-dots-gap",
       ref: "core.spacing.size.03",
       fallback: 4,
     },
-    "walkthrough.dots.active": {
-      name: "walkthrough.dots.active",
-      cssVar: "--fsds-walkthrough-dots-active",
+    "walkthrough.color.dots.active": {
+      name: "walkthrough.color.dots.active",
+      cssVar: "--fsds-walkthrough-color-dots-active",
       ref: "semantic.color.action.background.primary.default",
       fallback: "#0566fe",
     },
-    "walkthrough.dots.idle": {
-      name: "walkthrough.dots.idle",
-      cssVar: "--fsds-walkthrough-dots-idle",
+    "walkthrough.color.dots.idle": {
+      name: "walkthrough.color.dots.idle",
+      cssVar: "--fsds-walkthrough-color-dots-idle",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
-    "walkthrough.button.primary.bg": {
-      name: "walkthrough.button.primary.bg",
-      cssVar: "--fsds-walkthrough-button-primary-bg",
+    "walkthrough.color.button.primary.background": {
+      name: "walkthrough.color.button.primary.background",
+      cssVar: "--fsds-walkthrough-color-button-primary-background",
       ref: "semantic.color.action.background.primary.default",
       fallback: "#0566fe",
     },
-    "walkthrough.button.primary.color": {
-      name: "walkthrough.button.primary.color",
-      cssVar: "--fsds-walkthrough-button-primary-color",
+    "walkthrough.color.button.primary.foreground": {
+      name: "walkthrough.color.button.primary.foreground",
+      cssVar: "--fsds-walkthrough-color-button-primary-foreground",
       ref: "semantic.color.action.foreground.primary.default",
       fallback: "#ffffff",
     },
-    "walkthrough.button.primary.radius": {
-      name: "walkthrough.button.primary.radius",
-      cssVar: "--fsds-walkthrough-button-primary-radius",
+    "walkthrough.size.button.primary.radius": {
+      name: "walkthrough.size.button.primary.radius",
+      cssVar: "--fsds-walkthrough-size-button-primary-radius",
       ref: "semantic.shape.control.radius.default",
       fallback: 6,
     },
-    "walkthrough.button.secondary.bg": {
-      name: "walkthrough.button.secondary.bg",
-      cssVar: "--fsds-walkthrough-button-secondary-bg",
+    "walkthrough.color.button.secondary.background": {
+      name: "walkthrough.color.button.secondary.background",
+      cssVar: "--fsds-walkthrough-color-button-secondary-background",
       ref: "core.color.mode.transparent",
       fallback: "#00000000",
     },
-    "walkthrough.button.secondary.color": {
-      name: "walkthrough.button.secondary.color",
-      cssVar: "--fsds-walkthrough-button-secondary-color",
+    "walkthrough.color.button.secondary.foreground": {
+      name: "walkthrough.color.button.secondary.foreground",
+      cssVar: "--fsds-walkthrough-color-button-secondary-foreground",
       ref: "semantic.color.foreground.secondary",
       fallback: "#474647",
     },
-    "walkthrough.button.secondary.border": {
-      name: "walkthrough.button.secondary.border",
-      cssVar: "--fsds-walkthrough-button-secondary-border",
+    "walkthrough.color.button.secondary.border": {
+      name: "walkthrough.color.button.secondary.border",
+      cssVar: "--fsds-walkthrough-color-button-secondary-border",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
