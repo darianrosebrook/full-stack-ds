@@ -51,3 +51,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run src/consumption/chrome-coverage.test.ts — 35 families (incl. NavTree) statically imported by chrome files; exhibit namespace surfaces excluded; no phantom families; negative control bites
     recorded_at: "2026-08-18T03:48:55.094Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "ds-package-contract A2 REQUIRED extended to 48 exports (all adopted families + compound parts + Stack), green under pnpm test"
+    recorded_at: "2026-08-18T03:48:56.073Z"
