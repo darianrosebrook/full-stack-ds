@@ -3,6 +3,7 @@ title: 'Upgrade the CAWS hook pack v14 to v39 and wire the live surface to it'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: hook-pack-upgrade
 created_at: '2026-08-18T06:29:16.252Z'
 updated_at: '2026-08-18T06:29:16.252Z'
 blast_radius:
