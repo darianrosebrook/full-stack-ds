@@ -3,6 +3,7 @@ title: 'Structural freeze doctrine: freezes admitted only at release candidate; 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: freeze-doctrine
 created_at: '2026-08-18T02:57:07.051Z'
 updated_at: '2026-08-18T02:57:07.051Z'
 blast_radius:
