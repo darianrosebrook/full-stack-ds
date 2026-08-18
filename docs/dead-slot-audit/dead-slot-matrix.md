@@ -2,7 +2,7 @@
 
 `RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.
 
-Components: **50** · slots declared: **906** · consumed: **792** · **inert: 114** (defects: **98** · inert-by-design: **16**)
+Components: **51** · slots declared: **924** · consumed: **810** · **inert: 114** (defects: **98** · inert-by-design: **16**)
 
 ## Dead slots — declared slots with no `var()` consumer in the structure CSS
 
@@ -626,6 +626,10 @@ declared: **17** · consumed: **10** · dead: **7**
 | `nav-list.size.gap.group` | `--fsds-nav-list-size-gap-group` | ✗ dead | `tokens` |
 | `nav-list.size.fontSize.item` | `--fsds-nav-list-size-font-size-item` | ✗ dead | `tokens` |
 | `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-font-size-group-label` | ✗ dead | `tokens` |
+
+### NavTree  `.nav-tree`
+
+declared: **18** · consumed: **18** · dead: **0**
 
 ### OTP  `.otp`
 
