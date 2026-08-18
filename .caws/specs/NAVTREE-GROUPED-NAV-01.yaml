@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: navtree-grouped-nav
 created_at: '2026-08-18T01:14:37.692Z'
-updated_at: '2026-08-18T01:14:37.692Z'
+updated_at: '2026-08-18T01:51:44.455Z'
 blast_radius:
   modules:
     - 'ds-contracts'
@@ -32,6 +32,7 @@ scope:
     - 'packages/ds-figma-plugin'
     - 'src/layout/Sidebar.tsx'
     - 'src/styles/app.css'
+    - packages/ds-iconography
   out: []
 invariants:
   - 'Heading interactivity is contract-governed: the heading renders as an anchor only when href is provided and as a static span otherwise (if / if:! dom guards) - no emitter special-casing for NavTree'
