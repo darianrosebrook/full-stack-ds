@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/consumption/css-hygiene.test.ts (4 green): dead-selector derivation + named DS-internals allowlist (caught table__* sticky chrome on first run, allowlisted with Table named) + phantom-allowlist check + negative control"
     recorded_at: "2026-08-18T04:23:01.691Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "hex accounting gate: palette capped at 12 distinct values (brand lang-dot colors + print-sheet black/white documented in the guard header); properties-panel.css deferred to FIX-EDITOR-CONTROL-BINDING-PROOF-01, still active"
+    recorded_at: "2026-08-18T04:23:02.791Z"
