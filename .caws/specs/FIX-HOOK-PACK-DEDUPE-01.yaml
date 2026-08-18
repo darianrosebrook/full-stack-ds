@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "The two trees' script sets were byte-for-byte identical name sets (32 .sh/.py each) before removal, so every deleted file had a v39 counterpart. Removed 46 tracked paths plus untracked node_modules/__pycache__/package-lock.json; .claude/hooks now contains exactly CLAUDE.md, README.md, state. grep for .claude/hooks script references across .caws/hooks, settings.json, ci.yml, .githooks, scripts and package.json returns only a prose comment in scripts/docs-link-check.mjs naming .claude/hooks/CLAUDE.md, which still exists"
     recorded_at: "2026-08-18T16:28:43.657Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "CLAUDE.md hooks section rewritten: heading and body now name .caws/hooks with the dispatch/ + lib/ layout and the CAWS_AGENT_SURFACE-prefixed settings wiring; protected-paths bullet corrected to .caws/hooks with the *.md admission and the caws reprieve escape hatch; the reference paragraph now records that vendor docs and the runtime state/ dir stay under .claude/hooks. All five cited paths verified to exist on disk. NOTE: CLAUDE.md is gitignored (.gitignore:69), so this edit is machine-local and rides no commit"
+    recorded_at: "2026-08-18T16:29:06.027Z"
