@@ -60,3 +60,8 @@ contracts:
   - name: 'CodeBlock'
     type: behavior
     path: 'packages/ds-contracts/components/CodeBlock/CodeBlock.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Post-removal grep for token-realization-audit|audit:token-realization|token-consumption-audit|audit:token-consumption|RUN_TOKEN_REALIZATION|RUN_TOKEN_CONSUMPTION across the repo (excluding .git/node_modules/.caws) returns matches only in docs/architecture/adr/0001; both scripts/ trees, both docs/ report dirs, usage-scan.ts, both package.json scripts, both ci.yml steps and both pre-push blocks are deleted in merge fa0beae8"
+    recorded_at: "2026-08-18T04:38:39.493Z"
