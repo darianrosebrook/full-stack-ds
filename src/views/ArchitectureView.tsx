@@ -1,5 +1,5 @@
 import type { Bundle } from "../types/data";
-import { Stack } from "@full-stack-ds/react";
+import { Blockquote, Divider, Stack } from "@full-stack-ds/react";
 
 interface ArchitectureViewProps {
   bundle: Bundle;
@@ -33,20 +33,20 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
         <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">The claim</h2>
         </Stack>
-        <div className="panel panel--inset">
-          <p style={{ margin: 0 }}>
-            Compositional systems — systems where higher-order artifacts are
-            assembled from lower-order ones under shared constraints —
-            converge on a single architectural shape. Systems that conform to
-            it compose cleanly across heterogeneous targets, regenerate safely,
-            and survive transfer to new substrates. Systems that resist it
-            accumulate a predictable family of symptoms — shadow files,
-            stubbed-out implementations, force-pushes around quality gates,
-            runtime drift between layers, irreproducible builds — that no
-            amount of after-the-fact tooling fully fixes.
-          </p>
-        </div>
+        <Blockquote variant="highlighted" size="lg">
+          Compositional systems — systems where higher-order artifacts are
+          assembled from lower-order ones under shared constraints —
+          converge on a single architectural shape. Systems that conform to
+          it compose cleanly across heterogeneous targets, regenerate safely,
+          and survive transfer to new substrates. Systems that resist it
+          accumulate a predictable family of symptoms — shadow files,
+          stubbed-out implementations, force-pushes around quality gates,
+          runtime drift between layers, irreproducible builds — that no
+          amount of after-the-fact tooling fully fixes.
+        </Blockquote>
       </section>
+
+      <Divider />
 
       <section className="section">
         <Stack as="header" variant="horizontal" className="section-header stack-gap-06">

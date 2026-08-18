@@ -1,5 +1,5 @@
 import type { ComponentBundle } from "../types/data";
-import { Stack } from "@full-stack-ds/react";
+import { Breadcrumbs, Stack } from "@full-stack-ds/react";
 import { Anatomy } from "./sections/Anatomy";
 import { PropsTable } from "./sections/PropsTable";
 import { VariantsMatrix } from "./sections/VariantsMatrix";
@@ -31,6 +31,13 @@ export function DesignView({
       <p className="page-eyebrow">
         {(component.contract.layer ?? "component").toUpperCase()}
       </p>
+      <Breadcrumbs ariaLabel="Component context">
+        <li>
+          <a href="#/">Components</a>
+        </li>
+        <li>{component.contract.layer}</li>
+        <li aria-current="page">{component.name}</li>
+      </Breadcrumbs>
       <h1 className="page-title">{component.name}</h1>
       <p className="page-lede">
         {component.contract.description ?? "Component contract."}
