@@ -73,6 +73,7 @@
     "audit:pseudo-state": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/pseudo-state-audit/realization.test.mjs && node scripts/pseudo-state-audit/audit.mjs",
     "audit:state-suppression": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/state-suppression-audit/selfcheck.mjs && node scripts/state-suppression-audit/audit.mjs",
     "audit:token-resolvability": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-resolvability-audit/selfcheck.mjs && node scripts/token-resolvability-audit/audit.mjs",
+    "audit:token-consumption": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-consumption-audit/selfcheck.mjs && node scripts/token-consumption-audit/audit.mjs",
     "audit:token-realization": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-realization-audit/selfcheck.mjs && node scripts/token-realization-audit/audit.mjs"
   },
   "dependencies": {

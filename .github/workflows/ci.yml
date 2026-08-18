@@ -264,6 +264,16 @@ jobs:
       - name: Token-realization ledger (native carrier parity scoreboard)
         run: pnpm run audit:token-realization
 
+      # Dead semantic namespace ledger (RAIL-TOKEN-CONSUMPTION-AUDIT-01): the
+      # consumption-direction sibling of resolvability above. Restores the
+      # lost-consumer signal the resolvability rail recorded as a dropped
+      # non-claim — at namespace granularity, under the two-directional ledger
+      # ratchet instead of the count floor whose sanctioned re-baseline
+      # absorbed the stale color.syntax duplicate. Consumption is derived by
+      # the same analyzeTokenUsage authority behind usage-baseline.json.
+      - name: Token-consumption ledger (dead semantic namespaces)
+        run: pnpm run audit:token-consumption
+
   runtime-rail:
     name: Runtime visual proof rail
     runs-on: ubuntu-latest
