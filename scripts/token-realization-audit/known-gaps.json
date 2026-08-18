@@ -2,355 +2,12 @@
   "gaps": [
     {
       "target": "swiftui",
-      "component": "Accordion",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Alert",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "AlertNotice",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Avatar",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Badge",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Blockquote",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Breadcrumbs",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Button",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Calendar",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Card",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Checkbox",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Chip",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "CodeBlock",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "CodeSnippet",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Command",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Details",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Dialog",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Divider",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Field",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Icon",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Image",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Input",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Label",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Links",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "List",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
       "component": "Markdown",
       "kind": "admission",
       "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
       "note": "Markdown is the one corpus component outside the swiftui allowlist; admitting it requires the Markdown lowering class first."
     },
     {
-      "target": "swiftui",
-      "component": "NavList",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "OTP",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Popover",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Postcard",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "ProfileFlag",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Progress",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Select",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Sheet",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "ShowMore",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Shuttle",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Skeleton",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Spinner",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Stat",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Status",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Switch",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Table",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Tabs",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Text",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "TextField",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Toast",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "ToggleSwitch",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Tooltip",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Truncate",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
-      "target": "swiftui",
-      "component": "Walkthrough",
-      "kind": "carrier",
-      "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
-      "note": "swiftui emits components without per-component token carriers; styling consumes FsdsTheme semantic defaults only. Carrier emission is the prerequisite for slot-level parity with react-native/jetpack-compose (owned-substrate doctrine)."
-    },
-    {
       "target": "jetpack-compose",
       "component": "Accordion",
       "kind": "admission",
@@ -685,6 +342,1310 @@
       "kind": "admission",
       "spec": "FEAT-TOKEN-REALIZATION-AUDIT-001",
       "note": "compose allowlist holds Switch+ToggleSwitch only; breadth growth proceeds by collapse class (Button next per the settings-lane priority), each admission removing these entries."
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-block-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "box-model.min-height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.color.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.color.border.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.border.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.border.radius",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.transition.duration",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.color",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.style",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Checkbox",
+      "kind": "slot",
+      "slot": "checkbox.focus.ring.offset",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.hover",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.active",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.foreground.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.border.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.padding.horizontal",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.padding.vertical",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.radius",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.border",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.text.size",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.text.weight",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.motion.duration.fast",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.color",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.style",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.focus.ring.offset",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.size.minHeight",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.background.selected",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.foreground.selected",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.color.border.selected",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.dismiss.size",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Chip",
+      "kind": "slot",
+      "slot": "chip.dismiss.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.color.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.size.thickness",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.size.thicknessThick",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Divider",
+      "kind": "slot",
+      "slot": "divider.spacing.margin",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.sm",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.md",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.lg",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.size.xl",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Icon",
+      "kind": "slot",
+      "slot": "icon.color.foreground.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.color.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.color.foreground.primary",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.icon",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.typography.error.fontSize",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.xs",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.sm",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.md",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.lg",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.size.xl",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.none",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.sm",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.md",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.lg",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Image",
+      "kind": "slot",
+      "slot": "image.radius.full",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.text.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.spacing.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.motion.duration.indeterminate",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.track.background",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.info",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.success",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.warning",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Progress",
+      "kind": "slot",
+      "slot": "progress.color.fill.danger",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-block-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "box-model.min-height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.foreground.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.border.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.icon.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.placeholder.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.padding.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.radius.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.border.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.sm.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.md.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.size.lg.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.font.size.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.font.lineHeight.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.color.icon.isOpen",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.color",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.style",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Select",
+      "kind": "slot",
+      "slot": "select.focus.ring.offset",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.xs",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.sm",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.md",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.size.lg",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.thickness.hairline",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.thickness.regular",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.thickness.bold",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.color.accent",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.color.track",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Spinner",
+      "kind": "slot",
+      "slot": "spinner.anim.duration",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "composer path emits only the slots its rendering reads; full sidecar coverage pending per-component deepening"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-block-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.min-height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "box-model.min-width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.motion.duration",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.motion.easing",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.track.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.track.border.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.thumb.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.thumb.shadow.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.color.input.outline.focus",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.radius",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.track.padding",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.size",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.radius",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.track.padding",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.size",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.radius",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.track.padding",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.size",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.translate.off",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.sm.thumb.translate.on",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.translate.off",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.md.thumb.translate.on",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.translate.off",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "Switch",
+      "kind": "slot",
+      "slot": "switch.size.lg.thumb.translate.on",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-block-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-block-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-start",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.padding-inline-end",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.gap",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.min-height",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "box-model.min-width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.foreground.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.border.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.border.radius.default",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.motion.duration.fast",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.hover",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.checked",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.color.background.disabled",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.width",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.color",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.style",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
+    },
+    {
+      "target": "swiftui",
+      "component": "ToggleSwitch",
+      "kind": "slot",
+      "slot": "toggle-switch.focus.ring.offset",
+      "spec": "FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01",
+      "note": "native-collapse path wraps the platform control and embeds no per-component scopes; repaint onto the owned substrate (doctrine) converts these \u2014 settings-lane toggle repaint is the template"
     }
   ]
 }

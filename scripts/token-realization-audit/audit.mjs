@@ -69,8 +69,13 @@ export const NATIVE_TARGETS = [
   {
     id: "swiftui",
     explicitOnly: true,
+    // SwiftUI carries its per-component scopes INLINE — a caseless
+    // `enum <Name>Tokens` inside the component file itself, consumed via
+    // resolveFsdsComponentTokens. There is no separate <Name>Tokens.swift;
+    // measuring against one (the RN/Compose convention) reports a false
+    // zero (FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01).
     carrierRel: (name) =>
-      `packages/ds-swiftui/Sources/DsSwiftUI/Components/${name}/${name}Tokens.swift`,
+      `packages/ds-swiftui/Sources/DsSwiftUI/Components/${name}/${name}.swift`,
   },
   {
     id: "jetpack-compose",

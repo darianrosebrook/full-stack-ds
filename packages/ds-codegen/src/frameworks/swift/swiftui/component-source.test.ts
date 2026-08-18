@@ -107,6 +107,10 @@ describe("generateSwiftUIComponentSource — projected-children action (Button)"
     expect(source).toContain("public static let scopes: FsdsComponentTokenScopes = [");
     expect(source).toContain('"variant_destructive": [');
     expect(source).toContain('fallback: .string("#d92d2e")');
+    // The ref arm (FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01): sidecar
+    // resolvesTo paths must reach the runtime so semantic-keyed theme
+    // tables can override component slots like RN/Compose.
+    expect(source).toMatch(/ref: "semantic\.[a-z.]+"/);
     expect(source).toContain("resolveFsdsLayeredTokens(");
     expect(source).toContain("@Environment(\\.fsdsTheme)");
     // Layering: root base + variant_<size> + variant_<intent> (Swift

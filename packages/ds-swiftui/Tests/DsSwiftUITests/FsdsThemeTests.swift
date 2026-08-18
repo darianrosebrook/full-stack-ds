@@ -120,3 +120,46 @@ final class FsdsAdaptiveColorTests: XCTestCase {
         XCTAssertNil(FsdsTokenValue.adaptive(light: "not-hex", dark: "#000000").color)
     }
 }
+
+// FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01: the ref arm. Without it, a
+// semantic-keyed theme table can never reach component slots — only
+// slot-name-keyed overrides could — and swift theming would silently
+// diverge from the RN/Compose carriers.
+final class FsdsTokenRefResolutionTests: XCTestCase {
+    private let scopes: FsdsComponentTokenScopes = [
+        "root": [
+            "switch.color.track.background.default": FsdsComponentTokenDefinition(
+                cssVar: "--fsds-switch-color-track-background-default",
+                name: "switch.color.track.background.default",
+                ref: "semantic.color.background.tertiary",
+                fallback: .string("#b8b8b8")
+            ),
+        ],
+    ]
+
+    func testSemanticRefOverrideReachesSlotAndBeatsFallback() {
+        let theme = FsdsTheme(tokens: ["semantic.color.background.tertiary": .string("#123456")])
+        let resolved = resolveFsdsComponentTokens(scopes, theme)["root"]?["switch.color.track.background.default"] ?? nil
+        XCTAssertEqual(resolved, .string("#123456"))
+    }
+
+    func testSlotNameOverrideStillBeatsRefOverride() {
+        let theme = FsdsTheme(tokens: [
+            "switch.color.track.background.default": .string("#aaaaaa"),
+            "semantic.color.background.tertiary": .string("#123456"),
+        ])
+        let resolved = resolveFsdsComponentTokens(scopes, theme)["root"]?["switch.color.track.background.default"] ?? nil
+        XCTAssertEqual(resolved, .string("#aaaaaa"))
+    }
+
+    func testNoOverridesFallsBackToAuthoredFallback() {
+        let resolved = resolveFsdsComponentTokens(scopes, FsdsTheme())["root"]?["switch.color.track.background.default"] ?? nil
+        XCTAssertEqual(resolved, .string("#b8b8b8"))
+    }
+
+    func testUnrelatedRefKeyDoesNotLeakIntoSlot() {
+        let theme = FsdsTheme(tokens: ["semantic.color.unrelated": .string("#ffff00")])
+        let resolved = resolveFsdsComponentTokens(scopes, theme)["root"]?["switch.color.track.background.default"] ?? nil
+        XCTAssertEqual(resolved, .string("#b8b8b8"))
+    }
+}
