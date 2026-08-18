@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "chrome-coverage ratchet now requires the FULL corpus minus BLOCKED_FAMILIES=[Command,Shuttle,Text] (each with its documented emitter-composition blocker); package-contract A2 extended to 51 exports; negative control asserts blocked families have no imports"
     recorded_at: "2026-08-18T04:18:34.253Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "#/settings + #/activity routed (router.tsx kinds + buildHref), Header gains palette/tour/about triggers (Header.test green unmodified - onOpenPalette optional); surfaces reachable via Header buttons + palette without Sidebar"
+    recorded_at: "2026-08-18T04:18:35.096Z"
