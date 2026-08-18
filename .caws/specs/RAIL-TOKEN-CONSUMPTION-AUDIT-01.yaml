@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "root package.json audit:token-consumption; ci.yml Token-consumption ledger step after token-resolvability; prepush-scope.mjs RUN_TOKEN_CONSUMPTION (also feeds RUN_TOKEN_BUILD) with contract tests 36/36 including ledger-edit fires / docs does not; .githooks/pre-push block mirrors resolvability"
     recorded_at: "2026-08-18T02:29:55.310Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "worktree gates: tokens:build:check pass, generate:check 50/50, docs:check-claims 12/12, governed:rail Overall PASS clean tree, eslint clean on changed files, typecheck clean, pnpm test 2163/2163, test:frameworks all green"
+    recorded_at: "2026-08-18T02:29:56.234Z"
