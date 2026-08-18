@@ -38,3 +38,8 @@ contracts:
   - name: 'projected-children action lowering'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: ":library:compileKotlin BUILD SUCCESSFUL with generated Button.kt + FsdsButton.kt; examples/settings/compose compileKotlin BUILD SUCCESSFUL with all five action call sites on FSDS Button (variant primary/destructive/secondary, disabled gating via confirmation); gate: dispatch on exported isProjectedChildrenAction — grep shows zero component-name checks in the action path; layering root → variant_<size> → variant_<intent> emitted in layeredSlot; audit: jetpack-compose 3 admitted, 83/83 slots, Button admission entry removed (ledger 211→213 with concurrent NavTree additions), ratchet PASS; governed:rail exit 0; pnpm test 2171/2171; typecheck clean"
+    recorded_at: "2026-08-18T03:13:44.825Z"
