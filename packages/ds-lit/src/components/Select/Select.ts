@@ -867,6 +867,11 @@ export class SelectOptionElement extends LitElement {
     }
   `;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("role", "listitem");
+  }
+
   override render() {
     return html`<fsds-stack as="li" class="select__option"><slot></slot></fsds-stack>`;
   }

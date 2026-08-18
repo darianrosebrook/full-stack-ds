@@ -195,6 +195,7 @@ export class NavTreeElement extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute("data-fsds-component", "nav-tree");
+    this.setAttribute("role", "listitem");
   }
 
   private computeClasses(): string {
@@ -575,6 +576,11 @@ export class NavTreeItemElement extends LitElement {
       outline-offset: 1px;
     }
   `;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("role", "listitem");
+  }
 
   override render() {
     return html`<fsds-stack as="li" class="nav-tree__item"><slot></slot></fsds-stack>`;
