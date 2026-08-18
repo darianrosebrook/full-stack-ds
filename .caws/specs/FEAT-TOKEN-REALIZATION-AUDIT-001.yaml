@@ -3,6 +3,7 @@ title: 'Token-realization audit rail: per-contract slot obligations vs native ca
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: token-realization-audit
 created_at: '2026-08-18T01:06:57.797Z'
 updated_at: '2026-08-18T01:07:46.406Z'
 blast_radius:
