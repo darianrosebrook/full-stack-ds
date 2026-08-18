@@ -42,3 +42,8 @@ contracts:
   - name: 'stack-layout-consumption'
     type: behavior
     path: 'src/consumption/stack-layout.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/consumption/stack-layout.test.ts (A1/A2 green: Stack imported across 15 surfaces, zero inline axis-flex); computed-style probe on dev server confirmed identical geometry (brand row 12px/center, section-header 16px/baseline/between, anatomy-key column 12px, display-case-header row 24px, semantic HEADER/DL tags preserved via Stack as)"
+    recorded_at: "2026-08-18T03:00:24.778Z"
