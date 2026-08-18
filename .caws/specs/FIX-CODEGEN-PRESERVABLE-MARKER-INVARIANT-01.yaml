@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: preserve-marker-invariant
 created_at: '2026-08-18T00:47:59.313Z'
-updated_at: '2026-08-18T01:04:29.841Z'
+updated_at: '2026-08-18T01:04:59.290Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen (CLI write path + jetpack-compose emitter)'
@@ -19,6 +19,7 @@ scope:
     - packages/ds-codegen/src/frameworks/svelte/factory.ts
     - packages/ds-codegen/src/frameworks
     - packages/ds-codegen/src/preserve.ts
+    - packages/ds-codegen/src/preserve.test.ts
   out: []
 invariants:
   - 'A GeneratedFile marked preservable whose contents contain no @generated:start/@generated:end markers makes generate fail with a typed error naming the file — never a silent skip on subsequent runs.'
