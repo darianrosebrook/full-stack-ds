@@ -2,9 +2,11 @@ id: NAVTREE-GROUPED-NAV-01
 title: 'NavTree grouped navigation branch'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'NavTree grouped navigation branch: contract + sidecars, emitted across six rail targets and figma, sidebar adoption, optional-glyph resolveIcon coalescing and lit li-host role compensation'
 created_at: '2026-08-18T01:14:37.692Z'
-updated_at: '2026-08-18T02:53:10.053Z'
+updated_at: '2026-08-18T02:58:53.731Z'
 blast_radius:
   modules:
     - 'ds-contracts'
