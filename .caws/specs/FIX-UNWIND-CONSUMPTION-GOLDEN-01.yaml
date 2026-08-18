@@ -2,9 +2,11 @@ id: FIX-UNWIND-CONSUMPTION-GOLDEN-01
 title: 'Remove RAIL-TOKEN-CONSUMPTION-AUDIT-01 and RAIL-CODEBLOCK-TOKENIZER-GOLDEN-COVERAGE-01 surfaces entirely'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: superseded
+closure_notes: 'Mis-scoped: excluded the token-realization ratchet and ADR-0001, the surfaces that actually blocked peer agents; superseded by a spec covering both ratchets'
 created_at: '2026-08-18T03:54:12.516Z'
-updated_at: '2026-08-18T04:23:21.353Z'
+updated_at: '2026-08-18T04:26:14.862Z'
 blast_radius:
   modules:
     - 'delete: scripts/token-consumption-audit/ (audit, selfcheck, seeded ledger), packages/ds-tokens/build/runners/usage-scan.ts, docs/token-consumption-audit/'
