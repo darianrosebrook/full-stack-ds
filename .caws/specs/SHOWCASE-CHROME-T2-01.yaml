@@ -43,3 +43,8 @@ contracts:
   - name: 'chrome-coverage-full-corpus'
     type: behavior
     path: 'src/consumption/chrome-coverage.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "commit 27d6356f + ChromeT2.surfaces.test.tsx (palette Dialog+entries, Settings 2 toggles + 9 group checkboxes + reset gate, Activity 2 Postcards + Calendar, About markdown+figure) + pnpm test 174 files / 2183 tests green"
+    recorded_at: "2026-08-18T04:18:33.419Z"
