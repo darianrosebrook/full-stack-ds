@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "ds-package-contract A2 REQUIRED extended to 48 exports (all adopted families + compound parts + Stack), green under pnpm test"
     recorded_at: "2026-08-18T03:48:56.073Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Header.test / TracePanel.test / TokensView.consumption / evidence-sections all green unmodified; e2e-coupled .preview-status--error class preserved on the Alert host; Text deferred via residual backlog (contract declares children slot, emitter TextProps omits it) and Field deferred to phase-3 Input pairing - both documented in chrome-coverage.test.ts header"
+    recorded_at: "2026-08-18T03:48:57.223Z"
