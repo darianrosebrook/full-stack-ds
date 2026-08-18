@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTab, Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
+import { Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import { buildHref, type TokensTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -1520,13 +1520,10 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
     >
       {layers.map((layer) => (
         <div key={layer.title} className="panel panel--inset">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--fsds-core-spacing-size-05)",
-              marginBottom: "var(--fsds-core-spacing-size-05)",
-            }}
+          <Stack
+            variant="horizontal"
+            className="stack-gap-05"
+            style={{ alignItems: "center", marginBottom: "var(--fsds-core-spacing-size-05)" }}
           >
             <span
               style={{
@@ -1545,7 +1542,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
               {layer.number}
             </span>
             <strong style={{ fontSize: "var(--fsds-core-typography-ramp-4)" }}>{layer.title}</strong>
-          </div>
+          </Stack>
           <p
             className="muted"
             style={{

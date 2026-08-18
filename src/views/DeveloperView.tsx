@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Stack, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
 import { bundle } from "../types/bundle";
 import {
@@ -96,7 +96,11 @@ export function DeveloperView({
 
       <ComponentViewTabs componentName={component.name} activeTab="developer" />
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "var(--fsds-core-spacing-size-08) 0 var(--fsds-core-spacing-size-06)" }}>
+      <Stack
+        variant="horizontal"
+        className="stack-gap-06"
+        style={{ justifyContent: "space-between", alignItems: "center", margin: "var(--fsds-core-spacing-size-08) 0 var(--fsds-core-spacing-size-06)" }}
+      >
         <Tabs
           appearance="pills"
           value={framework}
@@ -127,7 +131,7 @@ export function DeveloperView({
         <span className="muted" style={{ fontSize: "var(--fsds-core-typography-ramp-2)" }}>
           {traceIndex.hits.length} traced region{traceIndex.hits.length === 1 ? "" : "s"}
         </span>
-      </div>
+      </Stack>
 
       <p className="muted fw-readiness" style={{ fontSize: "var(--fsds-core-typography-ramp-2)", marginTop: 0 }}>
         Generated source:{" "}
@@ -150,15 +154,15 @@ export function DeveloperView({
       ) : (
         <>
           <section className="section" style={{ marginTop: 0 }}>
-            <header className="section-header">
+            <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
               <h2 className="section-title">Live preview</h2>
               <span className="section-meta">in-iframe {framework}</span>
-            </header>
+            </Stack>
             <div className="panel">
-              <div className="panel-toolbar">
+              <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
                 <span>{framework}</span>
                 <span className="subtle">demo harness</span>
-              </div>
+              </Stack>
               <div className="preview-frame">
                 <FrameworkPreview
                   key={`${framework}-${component.name}`}
@@ -176,10 +180,10 @@ export function DeveloperView({
           </section>
 
           <section className="section">
-            <header className="section-header">
+            <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
               <h2 className="section-title">Component source</h2>
               <span className="section-meta">{componentFile.filename}</span>
-            </header>
+            </Stack>
             <CodeViewer
               code={componentFile.code}
               filename={componentFile.filename}
@@ -200,20 +204,20 @@ export function DeveloperView({
 
           {hookFile && (
             <section className="section">
-              <header className="section-header">
+              <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
                 <h2 className="section-title">Hook / behavior</h2>
                 <span className="section-meta">{hookFile.filename}</span>
-              </header>
+              </Stack>
               <CodeViewer code={hookFile.code} filename={hookFile.filename} />
             </section>
           )}
 
           {cssFile && (
             <section className="section">
-              <header className="section-header">
+              <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
                 <h2 className="section-title">Styles</h2>
                 <span className="section-meta">{cssFile.filename}</span>
-              </header>
+              </Stack>
               <CodeViewer code={cssFile.code} filename={cssFile.filename} />
             </section>
           )}

@@ -1,4 +1,5 @@
 import { useMemo, useRef, useEffect } from "react";
+import { Stack } from "@full-stack-ds/react";
 import type { TraceHit } from "../trace/types";
 
 interface CodeViewerProps {
@@ -57,15 +58,15 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
   return (
     <div className="panel">
       {filename && (
-        <div className="panel-toolbar">
+        <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
           <span>{filename}</span>
           <span className="subtle">{code.split("\n").length} lines</span>
-        </div>
+        </Stack>
       )}
       <pre className="code-block" ref={containerRef} style={{ borderRadius: 0, border: "none" }}>
         <code>
           {lines.map(({ lineNumber, segments }) => (
-            <div key={lineNumber} style={{ display: "flex" }}>
+            <Stack key={lineNumber} variant="horizontal" className="stack-gap-00">
               <span
                 className="subtle"
                 style={{
@@ -108,7 +109,7 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
                   ),
                 )}
               </span>
-            </div>
+            </Stack>
           ))}
         </code>
       </pre>

@@ -1,4 +1,5 @@
 import type { Bundle } from "../types/data";
+import { Stack } from "@full-stack-ds/react";
 
 interface ArchitectureViewProps {
   bundle: Bundle;
@@ -29,9 +30,9 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </p>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">The claim</h2>
-        </header>
+        </Stack>
         <div className="panel panel--inset">
           <p style={{ margin: 0 }}>
             Compositional systems — systems where higher-order artifacts are
@@ -48,10 +49,10 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Why five frameworks</h2>
           <span className="section-meta">the falsification surface</span>
-        </header>
+        </Stack>
         <p>
           Five frameworks is not a feature. It is the test. React hooks, Vue
           composables, Svelte runes, Angular signals, and Lit reactive
@@ -66,9 +67,9 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">The discipline this is an instance of</h2>
-        </header>
+        </Stack>
         <p>
           The operative concern is governance, not composition.
           &ldquo;Compositional&rdquo; describes the result; governance
@@ -90,10 +91,10 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">The seven properties</h2>
           <span className="section-meta">what a system in normal form looks like</span>
-        </header>
+        </Stack>
         <ol className="arch-properties">
           <li>
             <strong>A typed contract that owns semantic authority.</strong>{" "}
@@ -142,10 +143,10 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">The move that produces it</h2>
           <span className="section-meta">a procedure, not a checklist</span>
-        </header>
+        </Stack>
         <p>The seven properties are the outcome of a recurring methodological move:</p>
         <ol className="arch-move">
           <li>
@@ -187,9 +188,9 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Falsification</h2>
-        </header>
+        </Stack>
         <p>The claim is broad. It is also narrow enough to be falsified:</p>
         <ul>
           <li>
@@ -209,9 +210,9 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Read the full argument</h2>
-        </header>
+        </Stack>
         <p>
           The long-form argument — including the cross-substrate transfer
           evidence and the detailed treatment of the load-bearing

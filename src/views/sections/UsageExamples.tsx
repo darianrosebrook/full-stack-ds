@@ -5,6 +5,7 @@ import type {
   UsageTreeNode,
 } from "../../types/data";
 import { renderUsageTree } from "../../lib/render-usage";
+import { Stack } from "@full-stack-ds/react";
 import {
   materialTokenRows,
   tokenOverridesToStyle,
@@ -149,7 +150,7 @@ function ExampleFrame({
 
   return (
     <div className="panel">
-      <div className="panel-toolbar">
+      <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
         <span>
           {componentName} · <strong>{example.name}</strong>
         </span>
@@ -158,19 +159,18 @@ function ExampleFrame({
             {example.description}
           </span>
         )}
-      </div>
-      <div
-        className="preview-frame"
+      </Stack>
+      <Stack
+        className="preview-frame stack-gap-00"
         style={{
           padding: emphasize ? "var(--fsds-core-spacing-size-08)" : "var(--fsds-core-spacing-size-06)",
-          display: "flex",
           alignItems: "center",
           justifyContent: "center",
           ...tokenStyle,
         }}
       >
         {renderUsageTree(renderedTree)}
-      </div>
+      </Stack>
     </div>
   );
 }

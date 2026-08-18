@@ -1,4 +1,5 @@
 import type { ComponentBundle } from "../types/data";
+import { Stack } from "@full-stack-ds/react";
 import { Anatomy } from "./sections/Anatomy";
 import { PropsTable } from "./sections/PropsTable";
 import { VariantsMatrix } from "./sections/VariantsMatrix";
@@ -39,12 +40,12 @@ export function DesignView({
 
       {hasUsage ? (
         <section className="section">
-          <header className="section-header">
+          <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">Examples</h2>
             <span className="section-meta">
               {component.name}.usage.jsonl · rendered with @full-stack-ds/react
             </span>
-          </header>
+          </Stack>
           <UsageExamples
             component={component}
             propOverrides={propOverrides}
@@ -67,20 +68,20 @@ export function DesignView({
 
       {component.contract.anatomy && (
         <section className="section">
-          <header className="section-header">
+          <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">Anatomy</h2>
             <span className="section-meta">contract.anatomy</span>
-          </header>
+          </Stack>
           <Anatomy contract={component.contract} />
         </section>
       )}
 
       {showVariantMatrix && component.contract.variants && Object.keys(component.contract.variants).length > 0 && (
         <section className="section">
-          <header className="section-header">
+          <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">Variants</h2>
             <span className="section-meta">contract.variants</span>
-          </header>
+          </Stack>
           <VariantsMatrix
             component={component}
             tokenOverrides={tokenOverrides}
@@ -90,47 +91,47 @@ export function DesignView({
 
       {component.contract.states && component.contract.states.length > 0 && (
         <section className="section">
-          <header className="section-header">
+          <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">States</h2>
             <span className="section-meta">contract.states</span>
-          </header>
+          </Stack>
           <StatesGrid contract={component.contract} />
         </section>
       )}
 
       {component.contract.props?.styled?.members && (
         <section className="section">
-          <header className="section-header">
+          <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">Props</h2>
             <span className="section-meta">contract.props.styled.members</span>
-          </header>
+          </Stack>
           <PropsTable members={component.contract.props.styled.members} />
         </section>
       )}
 
       {component.contract.a11y && (
         <section className="section">
-          <header className="section-header">
+          <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">Accessibility</h2>
             <span className="section-meta">contract.a11y</span>
-          </header>
+          </Stack>
           <A11yPanel a11y={component.contract.a11y} />
         </section>
       )}
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">A2UI descriptor</h2>
           <span className="section-meta">deriveA2UIDescriptor(contract)</span>
-        </header>
+        </Stack>
         <A2UIDescriptorPanel contract={component.contract} />
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Evidence &amp; residuals</h2>
           <span className="section-meta">bundle-derivable facts</span>
-        </header>
+        </Stack>
         <EvidencePanel component={component} />
       </section>
     </div>

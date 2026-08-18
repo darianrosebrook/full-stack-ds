@@ -1,4 +1,4 @@
-import { Card, Badge } from "@full-stack-ds/react";
+import { Card, Badge, Stack } from "@full-stack-ds/react";
 import type { ComponentContract } from "../../types/data";
 
 type Intent = "info" | "success" | "warning" | "danger" | undefined;
@@ -32,14 +32,14 @@ export function StatesGrid({ contract }: StatesGridProps) {
         {states.map((s) => {
           const meta = STATE_META[s] ?? { intent: undefined as Intent, description: "Declared state." };
           return (
-            <div key={s} style={{ display: "flex", flexDirection: "column", gap: "var(--fsds-core-spacing-size-04)" }}>
+            <Stack key={s} className="stack-gap-04">
               <Badge variant="tag" intent={meta.intent} size="sm" style={{ fontFamily: "var(--fsds-core-typography-font-family-mono)" }}>
                 {s}
               </Badge>
               <span className="muted" style={{ fontSize: "var(--fsds-core-typography-ramp-2)" }}>
                 {meta.description}
               </span>
-            </div>
+            </Stack>
           );
         })}
       </div>

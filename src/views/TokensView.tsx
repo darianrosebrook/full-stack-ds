@@ -1,15 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { MouseEvent } from "react";
-import {
-  Chip,
-  Input,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableHeaderCell,
-  TableCell,
-} from "@full-stack-ds/react";
+import { Chip, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
 import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
@@ -248,7 +239,7 @@ export function TokensView({ bundle }: TokensViewProps) {
         resolves to.
       </p>
 
-      <div className="tokens-controls">
+      <Stack variant="horizontal" className="tokens-controls stack-gap-06">
         <Input
           id="tokens-filter"
           name="tokens-filter"
@@ -260,7 +251,13 @@ export function TokensView({ bundle }: TokensViewProps) {
           onChange={setFilter}
         />
 
-        <div className="tokens-layer-chips" role="group" aria-label="Token layers">
+        <Stack
+          layout="inline-stack"
+          variant="horizontal"
+          className="tokens-layer-chips stack-gap-04"
+          role="group"
+          aria-label="Token layers"
+        >
           {LAYER_ORDER.map((l) => {
             const active = layers[l];
             return (
@@ -276,12 +273,12 @@ export function TokensView({ bundle }: TokensViewProps) {
               </Chip>
             );
           })}
-        </div>
-      </div>
+        </Stack>
+      </Stack>
 
-      <div className="tokens-brand-bar" role="radiogroup" aria-label="Active brand">
+      <Stack variant="horizontal" className="tokens-brand-bar stack-gap-06" role="radiogroup" aria-label="Active brand">
         <span className="tokens-brand-bar-label">Brand</span>
-        <div className="tokens-brand-pills">
+        <Stack layout="inline-stack" variant="horizontal" className="tokens-brand-pills stack-gap-04">
           {brands.map((b) => (
             <button
               key={b.id}
@@ -295,8 +292,8 @@ export function TokensView({ bundle }: TokensViewProps) {
               {b.name}
             </button>
           ))}
-        </div>
-      </div>
+        </Stack>
+      </Stack>
 
       <div className="panel tokens-card">
         <Table className="tokens-table" ariaLabel="Design tokens">
@@ -315,14 +312,14 @@ export function TokensView({ bundle }: TokensViewProps) {
               return [
                 <TableRow key={`hdr-${layer}`} className="tokens-section-row">
                   <TableCell colSpan={4}>
-                    <div className="tokens-section-row-inner">
+                    <Stack variant="horizontal" className="tokens-section-row-inner stack-gap-05">
                       <span className={`tokens-layer-dot tokens-layer-dot--${layer}`} aria-hidden />
                       <span className="tokens-section-title">{LAYER_LABEL[layer]}</span>
                       {layer === "brand" && activeBrand && (
                         <span className="muted">— {activeBrand.name}</span>
                       )}
                       <span className="muted tokens-section-count">{items.length}</span>
-                    </div>
+                    </Stack>
                   </TableCell>
                 </TableRow>,
                 ...items.map((t) => {

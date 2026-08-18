@@ -134,9 +134,6 @@ export function Sidebar({ bundle, route }: SidebarProps) {
                     aria-current={activeComponent === c.name ? "page" : undefined}
                   >
                     <span>{c.name}</span>
-                    <Badge variant="counter" size="sm">
-                      {Object.keys(c.sources).length}/5
-                    </Badge>
                   </a>
                 </NavTreeItem>
               ))}

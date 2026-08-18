@@ -1,4 +1,5 @@
 import type { ComponentBundle } from "../../types/data";
+import { Stack } from "@full-stack-ds/react";
 import { bundle } from "../../types/bundle";
 import { FrameworkPreview } from "../../runtime/FrameworkPreview";
 import { buildReactDemo } from "../../runtime/demos";
@@ -49,14 +50,14 @@ export function VariantsMatrix({
 
   return (
     <div className="panel">
-      <div className="panel-toolbar">
+      <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
         <span>
           {keys.length === 1
             ? `${combos.length} variant${combos.length === 1 ? "" : "s"}`
             : `${combos.length} combination${combos.length === 1 ? "" : "s"} · ${keys.join(" × ")}`}
         </span>
         <span className="subtle">React preview</span>
-      </div>
+      </Stack>
       <div className="matrix">
         {combos.map((combo, i) => {
           const props: Record<string, string> = {};
@@ -64,7 +65,7 @@ export function VariantsMatrix({
             props[keys[idx]] = val;
           });
           return (
-            <div className="matrix-cell" key={i}>
+            <Stack className="matrix-cell stack-gap-05" key={i}>
               <div className="preview-frame">
                 {reactSource?.component ? (
                   <FrameworkPreview
@@ -82,14 +83,14 @@ export function VariantsMatrix({
                   <span className="muted">No preview</span>
                 )}
               </div>
-              <div className="matrix-meta">
+              <Stack variant="horizontal" className="matrix-meta stack-gap-04">
                 {keys.map((k) => (
                   <span className="pill pill--mono" key={k}>
                     {k}={String(props[k])}
                   </span>
                 ))}
-              </div>
-            </div>
+              </Stack>
+            </Stack>
           );
         })}
       </div>

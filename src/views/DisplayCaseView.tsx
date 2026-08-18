@@ -51,12 +51,12 @@ export function DisplayCaseView({ bundle }: DisplayCaseViewProps) {
 
   return (
     <div className="display-case-page">
-      <header className="display-case-header">
+      <DS.Stack as="header" variant="horizontal" className="display-case-header stack-gap-07">
         <div>
           <p className="display-case-kicker">Internal visual audit</p>
           <h1 className="display-case-title">Display Case</h1>
         </div>
-        <dl className="display-case-stats" aria-label="Display case summary">
+        <DS.Stack as="dl" variant="horizontal" className="display-case-stats stack-gap-06" aria-label="Display case summary">
           <div>
             <dt>Components</dt>
             <dd>{bundle.components.length}</dd>
@@ -65,16 +65,16 @@ export function DisplayCaseView({ bundle }: DisplayCaseViewProps) {
             <dt>Families</dt>
             <dd>{groups.length}</dd>
           </div>
-        </dl>
-      </header>
+        </DS.Stack>
+      </DS.Stack>
 
       <div className="display-case-groups">
         {groups.map((group) => (
           <section className="display-case-family" key={group.category}>
-            <div className="display-case-family-header">
+            <DS.Stack variant="horizontal" className="display-case-family-header stack-gap-05">
               <h2>{formatLabel(group.category)}</h2>
               <span>{group.components.length}</span>
-            </div>
+            </DS.Stack>
             <div className="display-case-grid">
               {group.components.map((component) => (
                 <ComponentTile component={component} key={component.name} />
@@ -92,13 +92,13 @@ function ComponentTile({ component }: { component: ComponentBundle }) {
 
   return (
     <article className="display-case-tile">
-      <div className="display-case-tile-header">
+      <DS.Stack variant="horizontal" className="display-case-tile-header stack-gap-05">
         <div>
           <h3>{component.name}</h3>
           <p>{component.contract.layer}</p>
         </div>
         <span>{caseCountLabel(cases.length)}</span>
-      </div>
+      </DS.Stack>
 
       <div className="display-case-samples">
         {cases.map((variantCase) => (
@@ -400,14 +400,14 @@ function DisplayCaseDialogSample({
                 help: "Shown in shared review comments and approvals.",
               }}
             />
-            <div className="display-case-dialog-actions">
+            <DS.Stack variant="horizontal" className="display-case-dialog-actions stack-gap-03">
               <DS.Button size="small" variant="secondary" onClick={() => setOpen(false)}>
                 Cancel
               </DS.Button>
               <DS.Button size="small" variant="primary" onClick={() => setOpen(false)}>
                 Save profile
               </DS.Button>
-            </div>
+            </DS.Stack>
           </div>
         ) : (
           <div className="display-case-copy-stack">
@@ -415,14 +415,14 @@ function DisplayCaseDialogSample({
               This removes generated artifacts, review notes, and runtime
               snapshots for this workspace. The action cannot be undone.
             </p>
-            <div className="display-case-dialog-actions">
+            <DS.Stack variant="horizontal" className="display-case-dialog-actions stack-gap-03">
               <DS.Button size="small" variant="secondary" onClick={() => setOpen(false)}>
                 Cancel
               </DS.Button>
               <DS.Button size="small" variant="destructive" onClick={() => setOpen(false)}>
                 Delete workspace
               </DS.Button>
-            </div>
+            </DS.Stack>
           </div>
         )}
       </DS.Dialog>

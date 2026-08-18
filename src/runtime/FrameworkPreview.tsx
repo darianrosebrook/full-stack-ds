@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Stack } from "@full-stack-ds/react";
 import type { Framework, SourceFile } from "../types/data";
 import { buildAngularShell } from "./shells/angular";
 import { REACT_PREVIEW_URL_PREFIX } from "./react-preview/constants";
@@ -208,8 +209,9 @@ export function FrameworkPreview({
         style={{ height, pointerEvents: interactive ? "auto" : "none" }}
       />
       {(status !== "ready" || errMsg) && (
-        <div
-          className={`preview-status${status === "error" ? " preview-status--error" : ""}`}
+        <Stack
+          variant="horizontal"
+          className={`preview-status stack-gap-05${status === "error" ? " preview-status--error" : ""}`}
           role={status === "error" ? "alert" : undefined}
         >
           {status === "loading" && (
@@ -223,7 +225,7 @@ export function FrameworkPreview({
               {errMsg ?? "Preview failed"}
             </span>
           )}
-        </div>
+        </Stack>
       )}
     </div>
   );
