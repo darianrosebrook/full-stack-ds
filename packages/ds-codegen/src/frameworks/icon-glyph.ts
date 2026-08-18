@@ -104,3 +104,20 @@ export function iconGlyphPxExpr(
   }
   return sizeAccessor;
 }
+
+/**
+ * Expression for the `resolveIcon` name argument, given the
+ * framework-specific accessor for the name prop (`icon`, `props.icon`,
+ * `this.icon`, ...). When the bound name prop is optional (NavTree's
+ * `icon?`), the argument coalesces to `""` — a guaranteed catalog miss — so
+ * the strict `resolveIcon(name: string, …)` signature stays satisfied and an
+ * absent name renders no glyph, exactly like an unknown one. Required name
+ * props (Icon's `name`) keep the bare accessor so their emitted bytes are
+ * unchanged.
+ */
+export function iconGlyphNameArg(
+  accessor: string,
+  namePropOptional: boolean,
+): string {
+  return namePropOptional ? `${accessor} ?? ""` : accessor;
+}

@@ -93,6 +93,7 @@ import {
   collectIconGlyphNodes,
   ICON_GLYPH_PATH_ATTRS,
   ICONOGRAPHY_MODULE,
+  iconGlyphNameArg,
   iconGlyphPxExpr,
   iconGlyphSizeHintsLiteral,
 } from "../icon-glyph.js";
@@ -1568,8 +1569,11 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       iconGlyphLines.push(`const ${pxIdent} = $derived(${pxExpr});`);
     }
     const nameAccessor = jsAccessorFor(glyph.namePropName);
+    const nameOptional =
+      ir.styledProps.find((p) => p.name === glyph.namePropName)?.required ===
+      false;
     iconGlyphLines.push(
-      `const ${glyphIdent} = $derived(resolveIcon(${nameAccessor}, ` +
+      `const ${glyphIdent} = $derived(resolveIcon(${iconGlyphNameArg(nameAccessor, nameOptional)}, ` +
         `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"}));`,
     );
     iconGlyphIdents.set(node, { glyphIdent, pxIdent });

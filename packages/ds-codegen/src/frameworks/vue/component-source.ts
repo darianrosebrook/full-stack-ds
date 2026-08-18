@@ -81,6 +81,7 @@ import {
   collectIconGlyphNodes,
   ICON_GLYPH_PATH_ATTRS,
   ICONOGRAPHY_MODULE,
+  iconGlyphNameArg,
   iconGlyphPxExpr,
   iconGlyphSizeHintsLiteral,
 } from "../icon-glyph.js";
@@ -1788,9 +1789,12 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     if (pxIdent) {
       iconGlyphLines.push(`const ${pxIdent} = computed(() => ${pxExpr});`);
     }
+    const nameOptional =
+      ir.styledProps.find((p) => p.name === glyph.namePropName)?.required ===
+      false;
     iconGlyphLines.push(
       `const ${glyphIdent} = computed(() => resolveIcon(` +
-        `props.${propAccess(glyph.namePropName)}, ` +
+        `${iconGlyphNameArg(`props.${propAccess(glyph.namePropName)}`, nameOptional)}, ` +
         `${pxIdent ? `${pxIdent}.value ?? Number.NaN` : "Number.NaN"}));`,
     );
     iconGlyphIdents.set(node, { glyphIdent, pxIdent });

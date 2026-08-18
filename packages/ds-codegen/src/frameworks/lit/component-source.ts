@@ -69,6 +69,7 @@ import {
   collectIconGlyphNodes,
   ICON_GLYPH_PATH_ATTRS,
   ICONOGRAPHY_MODULE,
+  iconGlyphNameArg,
   iconGlyphPxExpr,
   iconGlyphSizeHintsLiteral,
 } from "../icon-glyph.js";
@@ -2113,7 +2114,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   // const undefined and the render branch emits nothing. `Number.NaN`
   // deliberately matches no authored size, so resolveIcon falls back to
   // the smallest authored variant. Mirrors the React emitter's body consts.
-  for (const { node } of iconGlyphNodes) {
+  for (const { node, glyph } of iconGlyphNodes) {
     const entry = iconGlyphIdents.get(node);
     const locals = iconGlyphRenderLocals.get(node);
     if (!entry || !locals) continue;
@@ -2121,8 +2122,11 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     if (pxIdent && locals.pxExpr !== undefined) {
       lines.push(`    const ${pxIdent} = ${locals.pxExpr};`);
     }
+    const nameOptional =
+      ir.styledProps.find((p) => p.name === glyph.namePropName)?.required ===
+      false;
     lines.push(
-      `    const ${glyphIdent} = resolveIcon(${locals.nameAcc}, ` +
+      `    const ${glyphIdent} = resolveIcon(${iconGlyphNameArg(locals.nameAcc, nameOptional)}, ` +
         `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"});`,
     );
   }
