@@ -1,4 +1,4 @@
-import { Links } from "@full-stack-ds/react";
+import { Links, Stack } from "@full-stack-ds/react";
 import { buildHref, type ComponentTab } from "../router";
 
 interface ComponentViewTabsProps {
@@ -14,7 +14,7 @@ const TABS: { tab: ComponentTab; label: string }[] = [
 
 export function ComponentViewTabs({ componentName, activeTab }: ComponentViewTabsProps) {
   return (
-    <nav className="view-tabs" aria-label="View mode">
+    <Stack as="nav" variant="horizontal" className="view-tabs stack-gap-04" aria-label="View mode">
       {TABS.map(({ tab, label }) => (
         <Links
           key={tab}
@@ -25,6 +25,6 @@ export function ComponentViewTabs({ componentName, activeTab }: ComponentViewTab
           {label}
         </Links>
       ))}
-    </nav>
+    </Stack>
   );
 }

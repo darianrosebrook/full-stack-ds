@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Popover, Switch } from "@full-stack-ds/react";
+import { Button, Popover, Stack, Switch } from "@full-stack-ds/react";
 
 const BRAND_LABEL_OVERRIDES: Record<string, string> = {
   default: "Default",
@@ -96,13 +96,13 @@ export function Header() {
 
   return (
     <header className="app-header">
-      <a className="brand" href="#/">
+      <Stack as="a" variant="horizontal" className="brand stack-gap-05" href="#/">
         <span className="brand-mark">fs</span>
         <span>Full-Stack DS</span>
         <span className="brand-meta">contract → 5 frameworks</span>
-      </a>
+      </Stack>
 
-      <div className="header-actions">
+      <Stack variant="horizontal" className="header-actions stack-gap-05">
         <a
           className="icon-btn"
           href="https://github.com/darianrosebrook/full-stack-ds"
@@ -136,10 +136,15 @@ export function Header() {
               onChange={(checked) => setTheme(checked ? "dark" : "light")}
               className="header-appearance-row"
             >
-              <span className="header-appearance-row__label">
+              <Stack
+                as="span"
+                layout="inline-stack"
+                variant="horizontal"
+                className="header-appearance-row__label stack-gap-05"
+              >
                 <SunMoonIcon />
                 <span>Dark mode</span>
-              </span>
+              </Stack>
             </Switch>
 
             <div
@@ -151,13 +156,19 @@ export function Header() {
             >
               Brand
             </div>
-            <div className="header-brand-options" role="radiogroup" aria-label="Brand theme">
+            <Stack
+              className="header-brand-options stack-gap-04"
+              role="radiogroup"
+              aria-label="Brand theme"
+            >
               {brands.map((id) => {
                 const active = brand === id;
                 return (
-                  <label
+                  <Stack
+                    as="label"
                     key={id}
-                    className={`header-brand-option${active ? " header-brand-option--active" : ""}`}
+                    variant="horizontal"
+                    className={`header-brand-option${active ? " header-brand-option--active" : ""} stack-gap-04`}
                   >
                     <input
                       className="header-brand-option__input"
@@ -173,10 +184,10 @@ export function Header() {
                         ✓
                       </span>
                     )}
-                  </label>
+                  </Stack>
                 );
               })}
-            </div>
+            </Stack>
 
             {brands.length <= 1 && (
               <p
@@ -194,7 +205,7 @@ export function Header() {
             )}
           </Popover.Content>
         </Popover>
-      </div>
+      </Stack>
     </header>
   );
 }

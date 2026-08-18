@@ -14,6 +14,37 @@
   --fsds-app-transition-fast: 120ms ease;
 }
 
+/*
+ * Stack gap overrides. The DS Stack primitive carries exactly one gap channel
+ * (--fsds-semantic-spacing-gap-stack, = core size-06). Rows whose rhythm was
+ * designed against a different core size remap it here; alignment, wrap and
+ * flex-sizing remain in the row's own rule — Stack owns axis + display mode,
+ * exactly like the generated components use it.
+ */
+.stack-gap-00 {
+  --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-00);
+}
+
+.stack-gap-03 {
+  --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-03);
+}
+
+.stack-gap-04 {
+  --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-04);
+}
+
+.stack-gap-05 {
+  --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-05);
+}
+
+.stack-gap-06 {
+  --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-06);
+}
+
+.stack-gap-07 {
+  --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-07);
+}
+
 *,
 *::before,
 *::after {
@@ -104,9 +135,7 @@ button {
 }
 
 .brand {
-  display: flex;
   align-items: center;
-  gap: var(--fsds-core-spacing-size-05);
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
   font-size: var(--fsds-core-typography-ramp-4);
   letter-spacing: -0.01em;
@@ -211,9 +240,15 @@ button {
   box-shadow: none;
 }
 
+/* Layout axis + gap ride on Stack; only alignment (and the responsive gap
+ * remap) are the row's own. */
+.header-actions {
+  align-items: center;
+}
+
 @media (max-width: 900px) {
   .header-actions {
-    gap: var(--fsds-core-spacing-size-03);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-core-spacing-size-03);
   }
 }
 
@@ -398,10 +433,8 @@ button {
 }
 
 .section-header {
-  display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--fsds-core-spacing-size-06);
   margin-bottom: var(--fsds-core-spacing-size-06);
   padding-bottom: var(--fsds-core-spacing-size-05);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
@@ -442,8 +475,6 @@ button {
  * page, so the shared name caused a global cascade collision.
  */
 .view-tabs {
-  display: flex;
-  gap: var(--fsds-core-spacing-size-04);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
   margin-bottom: var(--fsds-core-spacing-size-07);
 }
@@ -493,7 +524,6 @@ button {
 }
 
 .panel-toolbar {
-  display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-06);
@@ -737,9 +767,7 @@ button {
 }
 
 .preview-status {
-  display: flex;
   align-items: center;
-  gap: var(--fsds-core-spacing-size-05);
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06);
   font-size: var(--fsds-core-typography-ramp-2);
   color: var(--fsds-semantic-color-foreground-tertiary);
@@ -793,9 +821,6 @@ button {
 }
 
 .matrix-cell {
-  display: flex;
-  flex-direction: column;
-  gap: var(--fsds-core-spacing-size-05);
   padding: var(--fsds-core-spacing-size-06);
   border: 1px dashed var(--fsds-semantic-color-border-default);
   border-radius: var(--fsds-core-shape-radius-04);
@@ -813,9 +838,7 @@ button {
 .matrix-meta {
   font-size: var(--fsds-core-typography-ramp-2);
   color: var(--fsds-semantic-color-foreground-tertiary);
-  display: flex;
   flex-wrap: wrap;
-  gap: var(--fsds-core-spacing-size-04);
 }
 
 /* Anatomy */
@@ -861,16 +884,7 @@ button {
   margin-left: var(--fsds-core-spacing-size-04);
 }
 
-.anatomy-key {
-  display: flex;
-  flex-direction: column;
-  gap: var(--fsds-core-spacing-size-05);
-}
-
 .anatomy-key-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--fsds-core-spacing-size-04);
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06);
   background: var(--fsds-semantic-color-background-subtle);
   border-radius: var(--fsds-core-shape-radius-03);
@@ -878,10 +892,8 @@ button {
 }
 
 .anatomy-key-heading {
-  display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--fsds-core-spacing-size-04);
 }
 
 .anatomy-key-item code {
@@ -890,10 +902,8 @@ button {
 }
 
 .anatomy-key-meta {
-  display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--fsds-core-spacing-size-03);
 }
 
 /* Framework tabs (dev view) */
@@ -912,10 +922,11 @@ button {
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06);
   font-size: var(--fsds-core-typography-ramp-2);
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
-  color: var(--fsds-semantic-color-foreground-secondary);
   display: inline-flex;
   align-items: center;
   gap: var(--fsds-core-spacing-size-04);
+  color: var(--fsds-semantic-color-foreground-secondary);
+  align-items: center;
   transition:
     background var(--fsds-app-transition-fast),
     color var(--fsds-app-transition-fast);
@@ -1021,8 +1032,6 @@ button {
 
 /* Tokens page */
 .tokens-controls {
-  display: flex;
-  gap: var(--fsds-core-spacing-size-06);
   align-items: stretch;
   margin-bottom: var(--fsds-core-spacing-size-06);
   flex-wrap: wrap;
@@ -1031,11 +1040,6 @@ button {
 /* Layout only — the DS Input component (.input) owns the field's appearance. */
 .tokens-filter-input {
   flex: 1 1 280px;
-}
-
-.tokens-layer-chips {
-  display: inline-flex;
-  gap: var(--fsds-core-spacing-size-04);
 }
 
 /*
@@ -1066,9 +1070,7 @@ button {
 }
 
 .tokens-brand-bar {
-  display: flex;
   align-items: center;
-  gap: var(--fsds-core-spacing-size-06);
   margin-bottom: var(--fsds-core-spacing-size-06);
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06);
   background: var(--fsds-semantic-color-background-subtle);
@@ -1086,8 +1088,6 @@ button {
 }
 
 .tokens-brand-pills {
-  display: flex;
-  gap: var(--fsds-core-spacing-size-04);
   flex-wrap: wrap;
 }
 
@@ -1198,9 +1198,7 @@ button {
 }
 
 .tokens-section-row-inner {
-  display: flex;
   align-items: center;
-  gap: var(--fsds-core-spacing-size-05);
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06);
   font-size: var(--fsds-core-typography-ramp-1);
   text-transform: uppercase;
@@ -1315,18 +1313,9 @@ button {
   background: rgba(91, 141, 239, 0.06);
 }
 
-/* Component token facts */
-.component-token-facts {
-  display: flex;
-  flex-direction: column;
-  gap: var(--fsds-core-spacing-size-06);
-}
-
 .component-token-facts__masthead {
-  display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: var(--fsds-core-spacing-size-06);
   padding: var(--fsds-core-spacing-size-06) 0;
   border-top: 8px solid var(--fsds-semantic-color-foreground-primary);
   border-bottom: 2px solid var(--fsds-semantic-color-foreground-primary);
@@ -1370,10 +1359,8 @@ button {
 }
 
 .token-facts-label__header {
-  display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: var(--fsds-core-spacing-size-05);
   border-bottom: 4px solid #000;
   padding-bottom: var(--fsds-core-spacing-size-04);
 }
@@ -1456,10 +1443,8 @@ button {
 }
 
 .token-facts-label__value {
-  display: inline-flex;
   align-items: center;
   justify-content: end;
-  gap: var(--fsds-core-spacing-size-03);
   font-size: var(--fsds-core-typography-ramp-2);
   color: #000;
   max-width: 100%;
@@ -1624,9 +1609,7 @@ button {
 }
 
 .header-appearance-row__label {
-  display: inline-flex;
   align-items: center;
-  gap: var(--fsds-core-spacing-size-05);
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
   font-size: var(--fsds-core-typography-ramp-3);
 }
@@ -1635,18 +1618,10 @@ button {
   order: 2;
 }
 
-.header-brand-options {
-  display: flex;
-  flex-direction: column;
-  gap: var(--fsds-core-spacing-size-04);
-}
-
 .header-brand-option {
   position: relative;
-  display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--fsds-core-spacing-size-04);
   padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05);
   border-radius: var(--fsds-core-shape-radius-02);
   cursor: pointer;
@@ -1689,10 +1664,8 @@ button {
 }
 
 .display-case-header {
-  display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: var(--fsds-core-spacing-size-07);
   margin-bottom: var(--fsds-core-spacing-size-08);
   padding-bottom: var(--fsds-core-spacing-size-07);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
@@ -1715,8 +1688,6 @@ button {
 }
 
 .display-case-stats {
-  display: flex;
-  gap: var(--fsds-core-spacing-size-06);
   margin: 0;
 }
 
@@ -1753,10 +1724,8 @@ button {
 }
 
 .display-case-family-header {
-  display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--fsds-core-spacing-size-05);
 }
 
 .display-case-family-header h2 {
@@ -1788,10 +1757,8 @@ button {
 }
 
 .display-case-tile-header {
-  display: flex;
   justify-content: space-between;
   align-items: start;
-  gap: var(--fsds-core-spacing-size-05);
   padding: var(--fsds-core-spacing-size-06);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
   background: var(--fsds-semantic-color-background-elevated);
@@ -1880,10 +1847,8 @@ button {
 }
 
 .display-case-dialog-actions {
-  display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--fsds-core-spacing-size-03);
 }
 
 .display-case-page .dialog__closeButton {
@@ -1951,7 +1916,6 @@ button {
 
   .display-case-header {
     align-items: stretch;
-    flex-direction: column;
   }
 
   .display-case-stats {

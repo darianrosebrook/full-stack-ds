@@ -1,4 +1,5 @@
 import type { TokenDefinition } from "../../types/data";
+import { Stack } from "@full-stack-ds/react";
 
 interface TokensTableProps {
   tokens: Record<string, TokenDefinition>;
@@ -60,20 +61,20 @@ export function TokensTable({ tokens }: TokensTableProps) {
   const tokenCount = Object.keys(tokens).length;
 
   return (
-    <div
-      className="component-token-facts"
+    <Stack
+      className="component-token-facts stack-gap-06"
       aria-label="Component-level token slots"
     >
       <div className="component-token-facts__grid">
         {visibleGroups.map((group) => (
           <section className="token-facts-label" key={group.key}>
-            <header className="token-facts-label__header">
+            <Stack as="header" variant="horizontal" className="token-facts-label__header stack-gap-05">
               <h4>{group.label} token slots</h4>
               <span>
                 {group.entries.length} slot
                 {group.entries.length === 1 ? "" : "s"}
               </span>
-            </header>
+            </Stack>
             <div className="token-facts-label__bar" aria-hidden />
             <dl className="token-facts-label__rows">
               {group.entries.map(({ slot, definition }) => (
@@ -83,7 +84,7 @@ export function TokensTable({ tokens }: TokensTableProps) {
                     <span>{cssVarForSlot(slot)}</span>
                   </dt>
                   <dd>
-                    <span className="token-facts-label__value">
+                    <Stack as="span" layout="inline-stack" variant="horizontal" className="token-facts-label__value stack-gap-03">
                       {isColorish(definition.fallback) && (
                         <span
                           className="token-swatch"
@@ -92,7 +93,7 @@ export function TokensTable({ tokens }: TokensTableProps) {
                         />
                       )}
                       {definition.fallback ?? "none"}
-                    </span>
+                    </Stack>
                     <span>{definition.layer ?? "unlayered"}</span>
                   </dd>
                   <dd className="token-facts-label__resolve">
@@ -104,6 +105,6 @@ export function TokensTable({ tokens }: TokensTableProps) {
           </section>
         ))}
       </div>
-    </div>
+    </Stack>
   );
 }

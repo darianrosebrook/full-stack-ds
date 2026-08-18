@@ -1,5 +1,6 @@
 import {
   Card,
+  Stack,
   Stat,
   Chip,
   Table,
@@ -72,12 +73,10 @@ export function Home({ bundle }: HomeProps) {
     const p = present(t.id);
     return (
       <Card key={t.id} density="inset">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--fsds-core-spacing-size-05)",
-          }}
+        <Stack
+          variant="horizontal"
+          className="stack-gap-05"
+          style={{ alignItems: "center" }}
         >
           <span
             className={`lang-dot ${p.dot}`}
@@ -91,7 +90,7 @@ export function Home({ bundle }: HomeProps) {
           <strong style={{ fontSize: "var(--fsds-core-typography-ramp-4)" }}>
             {p.label}
           </strong>
-        </div>
+        </Stack>
         <p
           className="muted"
           style={{
@@ -182,16 +181,16 @@ export function Home({ bundle }: HomeProps) {
       </div>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Target frameworks</h2>
           <span className="section-meta">in-browser preview, all {web.length}</span>
-        </header>
+        </Stack>
         <div style={gridStyle}>{web.map(renderCard)}</div>
 
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Beyond the web</h2>
           <span className="section-meta">code-only previews</span>
-        </header>
+        </Stack>
         <div style={gridStyle}>{beyond.map(renderCard)}</div>
 
         {emitterOnly.length > 0 && (
@@ -203,10 +202,10 @@ export function Home({ bundle }: HomeProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Parity matrix</h2>
           <span className="section-meta">which target ships which component</span>
-        </header>
+        </Stack>
         <details>
           <summary className="muted" style={{ cursor: "pointer" }}>
             Show the {componentCount} × {matrixCols.length} targets × components matrix
@@ -251,7 +250,7 @@ export function Home({ bundle }: HomeProps) {
       </section>
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Start exploring</h2>
           <a
             className="muted"
@@ -263,7 +262,7 @@ export function Home({ bundle }: HomeProps) {
           >
             See Button →
           </a>
-        </header>
+        </Stack>
         <div
           style={{
             display: "grid",
@@ -282,17 +281,14 @@ export function Home({ bundle }: HomeProps) {
               })}
               style={{ display: "block" }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "var(--fsds-core-spacing-size-05)",
-                }}
+              <Stack
+                variant="horizontal"
+                className="stack-gap-05"
+                style={{ alignItems: "center", justifyContent: "space-between" }}
               >
                 <strong>{c.name}</strong>
                 <Chip size="small">{c.contract.layer}</Chip>
-              </div>
+              </Stack>
               <p
                 className="muted"
                 style={{

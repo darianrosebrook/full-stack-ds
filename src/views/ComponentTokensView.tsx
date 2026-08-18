@@ -1,4 +1,5 @@
 import type { ComponentBundle } from "../types/data";
+import { Stack } from "@full-stack-ds/react";
 import { ComponentViewTabs } from "./ComponentViewTabs";
 import { TokensTable } from "./sections/TokensTable";
 
@@ -24,12 +25,12 @@ export function ComponentTokensView({ component }: ComponentTokensViewProps) {
       <ComponentViewTabs componentName={component.name} activeTab="tokens" />
 
       <section className="section">
-        <header className="section-header">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
           <h2 className="section-title">Component-level token slots</h2>
           <span className="section-meta">
             {tokenCount} slot{tokenCount === 1 ? "" : "s"} · contract.tokens
           </span>
-        </header>
+        </Stack>
         {tokenCount > 0 ? (
           <TokensTable tokens={tokens} />
         ) : (
