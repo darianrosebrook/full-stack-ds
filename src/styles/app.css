@@ -460,12 +460,6 @@ button {
   color: var(--fsds-semantic-color-foreground-tertiary);
 }
 
-.section-prose {
-  color: var(--fsds-semantic-color-foreground-secondary);
-  font-size: var(--fsds-core-typography-ramp-4);
-  line-height: var(--fsds-semantic-typography-line-height-loose);
-  max-width: 64ch;
-}
 
 /* Tabs */
 /*
@@ -938,11 +932,6 @@ button {
   color: var(--fsds-semantic-color-foreground-primary);
 }
 
-.fw-tab--active {
-  background: var(--fsds-semantic-color-background-elevated);
-  color: var(--fsds-semantic-color-foreground-primary);
-  box-shadow: var(--fsds-semantic-elevation-surface-raised);
-}
 
 .fw-tab .lang-dot {
   width: 8px;
@@ -967,20 +956,8 @@ button {
 .lang-lit {
   color: #325cff;
 }
-.lang-react-native {
-  color: #61dafb;
-}
 .lang-swift {
   color: #41b883;
-}
-.lang-uikit {
-  color: #ff3e00;
-}
-.lang-kotlin {
-  color: #dd0031;
-}
-.lang-jetpack {
-  color: #325cff;
 }
 
 /* Trace panel */
@@ -1315,35 +1292,9 @@ button {
   background: rgba(91, 141, 239, 0.06);
 }
 
-.component-token-facts__masthead {
-  justify-content: space-between;
-  align-items: end;
-  padding: var(--fsds-core-spacing-size-06) 0;
-  border-top: 8px solid var(--fsds-semantic-color-foreground-primary);
-  border-bottom: 2px solid var(--fsds-semantic-color-foreground-primary);
-  color: var(--fsds-semantic-color-foreground-primary);
-}
 
-.component-token-facts__masthead h3 {
-  margin: 0;
-  font-size: 2.25rem;
-  line-height: 0.95;
-  letter-spacing: 0;
-  font-weight: 900;
-}
 
-.component-token-facts__masthead p {
-  margin: var(--fsds-core-spacing-size-03) 0 0;
-  font-family: var(--fsds-core-typography-font-family-mono);
-  font-size: var(--fsds-core-typography-ramp-2);
-}
 
-.component-token-facts__masthead strong {
-  font-size: 2.75rem;
-  line-height: 0.9;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-}
 
 .component-token-facts__grid {
   display: grid;
@@ -1478,15 +1429,6 @@ button {
 }
 
 /* Loading */
-.spinner {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 1.5px solid var(--fsds-semantic-color-border-default);
-  border-top-color: var(--fsds-semantic-color-foreground-primary);
-  animation: spin 0.8s linear infinite;
-}
 
 @keyframes spin {
   to {
@@ -1509,12 +1451,6 @@ button {
   background: var(--fsds-semantic-color-background-elevated);
 }
 
-.home-stat-value {
-  font-size: var(--fsds-core-typography-ramp-8);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium);
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
 
 .home-stat-label {
   margin-top: var(--fsds-core-spacing-size-05);
