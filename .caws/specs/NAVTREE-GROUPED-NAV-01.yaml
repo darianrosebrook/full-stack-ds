@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: navtree-grouped-nav
 created_at: '2026-08-18T01:14:37.692Z'
-updated_at: '2026-08-18T02:47:21.166Z'
+updated_at: '2026-08-18T02:50:33.963Z'
 blast_radius:
   modules:
     - 'ds-contracts'
@@ -36,6 +36,8 @@ scope:
     - packages/ds-codegen/src
     - docs/normal-form.md
     - docs/architecture/design/box-model-primitive.md
+    - docs/dead-slot-audit
+    - docs/pseudo-state-audit
   out: []
 invariants:
   - 'Heading interactivity is contract-governed: the heading renders as an anchor only when href is provided and as a static span otherwise (if / if:! dom guards) - no emitter special-casing for NavTree'
