@@ -94,3 +94,7 @@ evidence:
     status: pass
     evidence_ref: "all six audit:* scripts PASS in worktree (behavior-realization, a11y-realization, dead-slots, pseudo-state, state-suppression, token-resolvability) — NavTree adds 0 unledgered findings; 18/18 nav-tree slots consumed"
     recorded_at: "2026-08-18T02:58:35.572Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm test (172 files / 2171 tests) and pnpm run test:frameworks (vue 604, lit 522 incl NavTree, svelte 520, angular 563, react-native 74 — all passed) in worktree; pnpm run typecheck:all exit 0"
+    recorded_at: "2026-08-18T02:58:51.756Z"
