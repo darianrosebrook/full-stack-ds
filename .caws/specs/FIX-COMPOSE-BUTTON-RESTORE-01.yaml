@@ -49,3 +49,8 @@ contracts:
   - name: 'Button'
     type: behavior
     path: 'packages/ds-contracts/components/Button/Button.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "git diff --cached --stat 465c77b5~1 -- <the 8 swept paths> returned empty: restored tree byte-identical to the pre-reversion state across Button.kt/ButtonTokens.kt/FsdsButton.kt/Components.generated.kt, both component-source.ts emitters, SettingsApp.kt and fsds.targets.json"
+    recorded_at: "2026-08-18T04:48:27.470Z"
