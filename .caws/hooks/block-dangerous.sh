@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 42
 # caws_min_major: 11
 # lineage_refs: 1,17
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -313,6 +313,23 @@ case "$DECISION" in
       # so it cannot swallow any other capability ask or a deny.
       if [[ "$SOURCE" == "capability" && "$REASON" == "opaque execution — cannot prove payload"* ]]; then
         FULL_REASON="CAWS command-safety: $REASON. This inline payload cannot be verified, so it is refused — but the session danger latch was NOT armed and you can proceed immediately by rewriting it. Do this instead: (1) write the probe to a script file in your scope (e.g. a .py or .js file) and run it by path — file payloads are inspectable and are not opaque; or (2) for read-only inspection, use the Read tool / cat / jq against the file directly; or (3) if the payload is genuinely a literal with no \$VAR/\$()/backtick, inline it without shell interpolation. Do NOT rephrase the same opaque -c/-e to evade this. Command was: $COMMAND"
+        emit_block_json "$FULL_REASON"
+        exit 0
+      fi
+      # Bare-commit staged-deletions carve-out
+      # (CAWS-GUARD-COMMIT-DELETES-UNNAMED-001): a bare `git commit` whose
+      # index stages deletions of tracked files — or whose staged state the
+      # classifier could not verify — is REFUSED with the path-scoped
+      # remediation, but it does NOT arm the sticky session latch. A commit
+      # with no pathspec sweeps the ENTIRE index; under a stale or foreign
+      # index that deletes tracked content under an unrelated message (two
+      # real sweeps shipped this way). The safe fix — inspect the staged
+      # set, then name the intended paths after `--` — is entirely in the
+      # agent's own hands, so ordinary deletions get one refusal-with-
+      # remediation, never a session freeze. Keyed on the classifier source
+      # so it cannot swallow any other confirm-class ask.
+      if [[ "$SOURCE" == "commit_deletions" ]]; then
+        FULL_REASON="CAWS command-safety: $REASON. This command was refused — the session danger latch was NOT armed. Do this instead: (1) inspect what is actually staged: git status && git diff --cached --stat; (2) if the staged set is exactly what you intend, commit it with the paths named explicitly: git commit -m \"<msg>\" -- <paths>; (3) if the staged set contains work that is NOT yours (another session's files, a half-applied revert), STOP and ask the user before unstaging anything. Do NOT rephrase the same bare commit to evade this. Command was: $COMMAND"
         emit_block_json "$FULL_REASON"
         exit 0
       fi

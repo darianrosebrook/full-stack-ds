@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 42
 # caws_min_major: 11
 # lineage_refs: 19
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -70,7 +70,7 @@ fi
 # Capture both stdout (JSON) and stderr (diagnostics). On any CLI error,
 # fall through to silent exit.
 CLI_OUT="$(
-  "$CAWS_BIN" agents heartbeat \
+  caws_run_cli agents heartbeat \
     --session-id "$HOOK_SESSION_ID" \
     --platform "$CAWS_PLATFORM_FLAG" \
     --throttle 15000 \
@@ -242,7 +242,7 @@ _HEARTBEAT_CTX="$(printf '%s' "$CLI_OUT" | EMIT_STATE_FILE="$EMIT_STATE_FILE" no
 # message) emits nothing and never blocks the tool call. Independent of the peer
 # notice above — both can fire on the same call.
 _MSG_OUT="$(
-  "$CAWS_BIN" message poll \
+  caws_run_cli message poll \
     --me "$HOOK_SESSION_ID" \
     --json \
   2>/dev/null

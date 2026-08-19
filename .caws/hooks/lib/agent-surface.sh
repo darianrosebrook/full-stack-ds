@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 42
 # caws_min_major: 11
 # lineage_refs: (new in shared-core-001)
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -417,4 +417,40 @@ caws_source_lib() {
   fi
 
   return 1
+}
+
+# ---------------------------------------------------------------------------
+# 6. caws_run_cli <args...>
+#
+# CAWS-HOOKS-CLI-CWD-LEAK-001. Invoke the CAWS CLI binary ($CAWS_BIN, default
+# "caws") from CAWS_PROJECT_DIR rather than the hook process's inherited
+# ambient cwd. CAWS_PROJECT_DIR is the canonical "which repo" signal every
+# shared hook already resolves (§1 above); the CLI itself has NO knowledge of
+# it — command implementations resolve their repo root from process.cwd()
+# (see e.g. setupIO in src/shell/commands/agents.ts), not from this env var.
+# A hook that shells out to the CLI without first `cd`-ing into
+# CAWS_PROJECT_DIR silently resolves against whatever directory the process
+# happened to inherit.
+#
+# This is invisible in ordinary harness usage (the hook process's PWD
+# naturally sits inside the repo the harness is driving), but surfaces hard
+# the moment CAWS_PROJECT_DIR points somewhere the inherited cwd does not —
+# which is exactly what an isolated test fixture does (bats' `run env
+# CAWS_PROJECT_DIR=<tmp-repo> bash <hook>.sh` pattern, cwd left at the bats
+# runner's real location): agent-heartbeat.sh's `agents heartbeat` and
+# `message poll` calls, agent-register.sh's `agents register`, and
+# agent-stop.sh's `agents stop` all landed real leases/session records in
+# whatever repo the test process actually sat in, not the fixture.
+#
+# Prints the CLI's stdout, returns its exit code. A missing/unusable
+# CAWS_PROJECT_DIR (unset, ".", or not a directory) falls open to the plain
+# invocation — this must never turn a working hook into a broken one.
+# ---------------------------------------------------------------------------
+caws_run_cli() {
+  local _bin="${CAWS_BIN:-caws}"
+  if [[ -n "${CAWS_PROJECT_DIR:-}" && "${CAWS_PROJECT_DIR}" != "." && -d "${CAWS_PROJECT_DIR}" ]]; then
+    ( cd "${CAWS_PROJECT_DIR}" && "$_bin" "$@" )
+  else
+    "$_bin" "$@"
+  fi
 }

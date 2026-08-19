@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 42
 # caws_min_major: 11
 # lineage_refs: 19
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -36,7 +36,7 @@ if ! command -v "$CAWS_BIN" >/dev/null 2>&1; then
   exit 0
 fi
 
-"$CAWS_BIN" agents register \
+caws_run_cli agents register \
   --session-id "$HOOK_SESSION_ID" \
   --platform "$CAWS_PLATFORM_FLAG" \
   2>/dev/null || true

@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 42
 # caws_min_major: 11
 # lineage_refs: 8,16
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -392,5 +392,79 @@ with open(sys.argv[8], "w") as f:
     rm -f "$tmpfile" 2>/dev/null
     return 0
   }
+  _reap_stale_agent_pid_records "$sessions_dir"
+  return 0
+}
+
+# CAWS-HOOKS-AGENT-PID-PROGRESSIVE-REAP-001
+# Progressive age-based reap for .caws/sessions/agent-pid-*.json records.
+# Called from _write_agent_pid_record, right after a successful write/refresh
+# of THIS session's own record — so the record just written is always "now"
+# and can never be swept by this same pass.
+#
+# Nothing else ever deletes these records (read_session_id_from_agent_pid
+# treats a live-process match as authoritative regardless of age — see
+# agent-pid.sh), so absent a reaper the directory grows by one file per
+# distinct OS pid, forever. Real agent sessions here run days, rarely a
+# week, so retention is tiered to that lifecycle rather than a single
+# cliff-edge TTL:
+#   < 3 days old:  never touched (the common case; costs nothing extra).
+#   3-7 days old:  deleted ONLY if the recorded pid is confirmed dead
+#                  (kill -0) — a still-live long session is left alone.
+#   > 7 days old:  deleted unconditionally. No plausible caws session runs
+#                  that long; this is a hard backstop against a wrong/stale
+#                  liveness read (permission edge cases, clock skew), not
+#                  the common path. Losing a record here only degrades the
+#                  resolver to its next fallback tier (envelope/capsule
+#                  scan) — never a hard failure, per the fail-open contract
+#                  this correlation cache already has.
+# Orphaned `.agent-pid-<pid>.tmp.<random>` atomic-write remnants (from a
+# write killed mid-rename) get the same >60m sweep regardless of pid — a
+# legitimate write completes in milliseconds.
+#
+# Rate-limited to once per hour via a marker file's mtime, so this scan does
+# not run on every single hook fire. All failures are silently swallowed;
+# this MUST NOT block or slow the caller's write.
+_reap_stale_agent_pid_records() {
+  local sessions_dir="$1"
+  [[ -d "$sessions_dir" ]] || return 0
+
+  local marker="$sessions_dir/.agent-pid-reap-marker"
+  if [[ -e "$marker" ]]; then
+    [[ -n "$(find "$marker" -mmin -60 2>/dev/null)" ]] && return 0
+  fi
+  # Claim the slot before scanning (not after), so a slow scan cannot let a
+  # concurrent hook fire start a second redundant sweep.
+  : > "$marker" 2>/dev/null || return 0
+
+  # Hard backstop: unconditional past 7 days.
+  local f
+  while IFS= read -r -d '' f; do
+    rm -f "$f" 2>/dev/null
+  done < <(find "$sessions_dir" -maxdepth 1 -name 'agent-pid-*.json' -mtime +7 -print0 2>/dev/null)
+
+  # Grace band: 3-7 days old, pid-liveness-gated.
+  local pid
+  while IFS= read -r -d '' f; do
+    pid=$(python3 -c '
+import json, sys
+try:
+    with open(sys.argv[1]) as fh:
+        d = json.load(fh)
+    v = d.get("agent_pid")
+    if isinstance(v, int):
+        print(v)
+except Exception:
+    pass
+' "$f" 2>/dev/null)
+    [[ -z "$pid" ]] && continue
+    kill -0 "$pid" 2>/dev/null || rm -f "$f" 2>/dev/null
+  done < <(find "$sessions_dir" -maxdepth 1 -name 'agent-pid-*.json' -mtime +3 -mtime -7 -print0 2>/dev/null)
+
+  # Orphaned atomic-write temp files: age alone is sufficient, no pid to check.
+  while IFS= read -r -d '' f; do
+    rm -f "$f" 2>/dev/null
+  done < <(find "$sessions_dir" -maxdepth 1 -name '.agent-pid-*.tmp.*' -mmin +60 -print0 2>/dev/null)
+
   return 0
 }

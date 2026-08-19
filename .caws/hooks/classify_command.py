@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 42
 # caws_min_major: 11
 # lineage_refs: 1,17
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -1041,17 +1041,19 @@ def normalize_command_tokens(tokens: Sequence[str]) -> tuple[int, list[str] | No
     return i, None
 
 
-def detect_git_subcommand(segment: str) -> str | None:
-    """Detect the semantic Git subcommand for one executable segment.
+def _locate_git_subcommand(tokens: list[str]) -> tuple[int, int] | None:
+    """Locate a git invocation inside pre-split tokens.
 
-    This recognizes wrappers such as env/command/nohup/time, absolute Git
-    executable paths, and Git global options before the real subcommand.
+    Returns (start, sub_idx): tokens[start] is the git executable (after
+    wrappers such as env/command/nohup/time) and tokens[sub_idx] is its
+    subcommand (after global options). None when the tokens are not a git
+    invocation or the subcommand cannot be identified.
+
+    Single-sources the walk for detect_git_subcommand and
+    classify_commit_deletions so the two can never disagree about which
+    token is the subcommand — a second implementation of these semantics
+    is a trap (CAWS-GUARD-COMMIT-DELETES-UNNAMED-001).
     """
-    try:
-        tokens = shlex.split(segment)
-    except ValueError:
-        return None
-
     if not tokens:
         return None
 
@@ -1082,12 +1084,29 @@ def detect_git_subcommand(segment: str) -> str | None:
             if "=" in tok:
                 i += 1
                 continue
-            break
-        return tok
+            return None
+        return (start, i)
 
     if i < len(tokens) and not tokens[i].startswith("-"):
-        return tokens[i]
+        return (start, i)
     return None
+
+
+def detect_git_subcommand(segment: str) -> str | None:
+    """Detect the semantic Git subcommand for one executable segment.
+
+    This recognizes wrappers such as env/command/nohup/time, absolute Git
+    executable paths, and Git global options before the real subcommand.
+    """
+    try:
+        tokens = shlex.split(segment)
+    except ValueError:
+        return None
+
+    loc = _locate_git_subcommand(tokens)
+    if loc is None:
+        return None
+    return tokens[loc[1]]
 
 
 def git_alias_value_invokes_init(value: str) -> bool:
@@ -1229,6 +1248,148 @@ def cherry_pick_touches_only_specs(segment: str, repo_root: Path | None) -> bool
         if not all(_SPEC_PATH_RE.match(f) for f in files):
             return False
     return True
+
+
+# ---------------------------------------------------------------------------
+# CAWS-GUARD-COMMIT-DELETES-UNNAMED-001 — bare-commit staged-deletions guard
+# ---------------------------------------------------------------------------
+
+# Env assignments that redirect which repository/index a git command operates
+# on. When one prefixes a commit, the cwd-based staged-state inspection below
+# would read the WRONG index — so the guard fails closed instead of guessing.
+_GIT_ENV_REDIRECT_PREFIXES = ("GIT_DIR=", "GIT_WORK_TREE=", "GIT_INDEX_FILE=")
+
+# `git commit` short options that consume a value. In a bundled short-flag
+# token the first value-taking char swallows the rest of the token, so chars
+# after it are its value, not flags: `-am` is `-a -m <next>`, but `-ma` is
+# `-m a` (a message that says "a"), NOT `-m -a`.
+_COMMIT_SHORT_OPTS_WITH_VALUE = "mFCctS"
+
+
+def _commit_stages_all(commit_args: list[str]) -> bool:
+    """True when a `git commit` carries -a/--all (auto-stage tracked changes)."""
+    for tok in commit_args:
+        if tok in ("-a", "--all"):
+            return True
+        if tok.startswith("-") and not tok.startswith("--") and len(tok) > 1:
+            for ch in tok[1:]:
+                if ch == "a":
+                    return True
+                if ch in _COMMIT_SHORT_OPTS_WITH_VALUE:
+                    break
+    return False
+
+
+def classify_commit_deletions(segment: str, cwd: Path | None) -> tuple[str, str] | None:
+    """Ask before a bare `git commit` that would sweep staged deletions.
+
+    The old premise — "plain commit creates a new commit object; not
+    destructive" — is false. A commit with no pathspec commits the ENTIRE
+    index, and an index carrying stale or foreign state (a failed
+    `git revert -n`, a cross-worktree sweep, a sibling session's staged
+    work) deletes tracked content under an unrelated commit message. Two
+    real sweeps (2656 and 178 deleted lines) shipped through that premise.
+
+    Fires ONLY for forms the allow-list would otherwise admit:
+      - `--amend` is excluded here (already governed — it falls through to
+        the governed-family amend ask);
+      - `--dry-run` mutates nothing;
+      - an explicit pathspec after `--` is admitted: naming the paths IS
+        the author asserting intent — the same discipline CAWS's own
+        autoCommit uses, and exactly the remediation this guard prescribes.
+
+    For a bare commit the guard inspects the staged set (`git diff --cached
+    --diff-filter=D`) in the classification cwd, honoring `-C`; with
+    `-a`/`--all` it inspects tracked deletions against HEAD instead,
+    because -a stages working-tree deletions at commit time. Deletions →
+    ask, naming the count and the path-scoped remediation. Unreadable
+    staged state (not a repo, git failure/timeout, or a redirected
+    GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE/--git-dir/--work-tree) → ask,
+    fail closed: a commit whose effect cannot be seen is not auto-admitted.
+
+    The inspection runs at classify time, BEFORE the command executes: the
+    hazard this guards — stale/foreign index state — exists before the
+    commit is issued, by definition. Content the author stages in a sibling
+    segment of the same compound command is their own work and out of scope.
+    """
+    try:
+        tokens = shlex.split(segment)
+    except ValueError:
+        return None
+    loc = _locate_git_subcommand(tokens)
+    if loc is None:
+        return None
+    start, sub_idx = loc
+    if tokens[sub_idx] != "commit":
+        return None
+    commit_args = tokens[sub_idx + 1:]
+    if any(t == "--amend" or t.startswith("--amend=") for t in commit_args):
+        return None  # governed elsewhere: falls through to the amend ask
+    if "--dry-run" in commit_args:
+        return None
+    if "--" in commit_args and commit_args.index("--") < len(commit_args) - 1:
+        return None  # explicitly path-scoped: the author named their paths
+
+    remediation = (
+        "inspect the staged set first (git status; git diff --cached --stat), "
+        "then commit with the paths named explicitly: git commit -m <msg> -- <paths>"
+    )
+
+    def fail_closed(detail: str) -> tuple[str, str]:
+        return (
+            "ask",
+            "bare git commit (no pathspec) commits the ENTIRE index, and the "
+            f"staged state could not be verified ({detail}) — not auto-admitting; "
+            + remediation,
+        )
+
+    if cwd is None:
+        return fail_closed("no working directory available")
+    if any(t.startswith(_GIT_ENV_REDIRECT_PREFIXES) for t in tokens[:start]) or any(
+        t in ("--git-dir", "--work-tree") or t.startswith(("--git-dir=", "--work-tree="))
+        for t in tokens[start + 1 : sub_idx]
+    ):
+        return fail_closed("the invocation redirects the git dir/work-tree/index")
+
+    # Honor `git -C <dir>`: successive values compose the way git composes
+    # them (a relative value appends; an absolute one replaces).
+    check_dir = Path(cwd)
+    i = start + 1
+    while i < sub_idx:
+        if tokens[i] == "-C" and i + 1 < sub_idx:
+            check_dir = check_dir / tokens[i + 1]
+            i += 2
+            continue
+        i += 1
+
+    diff_args = ["diff", "--cached", "--diff-filter=D", "--name-only", "-z"]
+    if _commit_stages_all(commit_args):
+        # -a stages tracked working-tree deletions at commit time; diffing
+        # against HEAD sees both those and already-staged deletions.
+        diff_args = ["diff", "--diff-filter=D", "--name-only", "-z", "HEAD"]
+    try:
+        proc = subprocess.run(
+            ["git", "-c", "core.quotePath=false", *diff_args],
+            cwd=str(check_dir),
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return fail_closed("git did not answer")
+    if proc.returncode != 0:
+        return fail_closed("not a git repository here, or git failed")
+    deleted = [p for p in proc.stdout.split("\0") if p]
+    if not deleted:
+        return None  # additions/modifications only — ordinary work, admitted
+    shown = ", ".join(deleted[:3]) + (", …" if len(deleted) > 3 else "")
+    return (
+        "ask",
+        "bare git commit (no pathspec) would commit the ENTIRE index, which "
+        f"currently stages {len(deleted)} deletion(s) of tracked files ({shown}) — "
+        "a stale or foreign index sweeps content you did not intend under your "
+        "message; " + remediation,
+    )
 
 
 def classify_git_semantics(
@@ -1502,11 +1663,17 @@ def classify_allow_list(segment: str) -> tuple[str, str] | None:
             if index_only or dry_run:
                 return ("allow", "")
             return None
-        # Special-case `git commit` — admit plain commit (creates a new
-        # commit object; not destructive). REJECT --amend, which rewrites
-        # the last commit (history-rewrite + attribution-loss risk). --amend
-        # falls through to "ask" and is additionally blocked by
-        # worktree-guard.sh while worktrees are active.
+        # Special-case `git commit` — admit plain commit at THIS tier (the
+        # allow-list is suppress-only). NOTE the premise "a plain commit is
+        # not destructive" is FALSE: with no pathspec it commits the ENTIRE
+        # index, and a stale/foreign index deletes tracked content under an
+        # unrelated message. That case is escalated by the paired
+        # classify_commit_deletions pipeline stage
+        # (CAWS-GUARD-COMMIT-DELETES-UNNAMED-001), which outranks this admit.
+        # REJECT --amend, which rewrites the last commit (history-rewrite +
+        # attribution-loss risk). --amend falls through to "ask" and is
+        # additionally blocked by worktree-guard.sh while worktrees are
+        # active.
         if sub == "commit":
             try:
                 tokens = shlex.split(segment)
@@ -2528,13 +2695,15 @@ def classify_command(
     additive fields ride alongside the unchanged decision/reason:
       source      — diagnostic provenance of the WINNING decision: capability |
                     legacy_family | regex | rm_classifier | find_delete |
-                    classifier_error | sidecar_error | unknown.
+                    commit_deletions | classifier_error | sidecar_error | unknown.
       enforcement — the wrapper contract block-dangerous.sh branches on:
                     pass | advisory | confirm | block.
     enforcement is DERIVED from (decision, source) by derive_enforcement(): deny
     -> block; allow -> pass; a CAPABILITY-derived ask (facet lattice / opaque-exec,
     carrying structured semantic evidence) or a classifier_error/budget ask ->
-    confirm (current-command human approval at the hook boundary); every other
+    confirm (current-command human approval at the hook boundary); a
+    commit_deletions ask carries EXPLICIT confirm enforcement (block-dangerous.sh
+    refuses the command with remediation but never arms the latch); every other
     ask (legacy governed-family default, CONFIRM regex, rm/find) -> advisory,
     preserving CAWS-DANGER-LATCH-CATASTROPHIC-ONLY-001. Bare `ask -> block` is
     explicitly rejected.
@@ -2686,6 +2855,19 @@ def classify_command(
         find_result = classify_find_delete(segment)
         if find_result:
             escalate(find_result[0], find_result[1], "find_delete")
+
+        # --- bare-commit staged-deletions classifier ---
+        # (CAWS-GUARD-COMMIT-DELETES-UNNAMED-001) A bare `git commit` sweeps
+        # the ENTIRE index; when the index stages deletions of tracked files
+        # (stale/foreign state), that is destructive. Enforcement is explicit
+        # confirm-class: block-dangerous.sh refuses THIS command with the
+        # path-scoped remediation but never arms the session latch — the fix
+        # (name the intended paths after `--`) is entirely in the agent's
+        # own hands. This ask outranks the allow-list admit below because
+        # escalate() keeps the most restrictive decision.
+        commit_result = classify_commit_deletions(segment, cwd)
+        if commit_result:
+            escalate(commit_result[0], commit_result[1], "commit_deletions", "confirm")
 
         # --- DANGER-LATCH-CALIBRATION-001 ---
         # Hybrid fail-closed for governed families (git/gh/npm).
