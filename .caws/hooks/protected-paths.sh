@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 39
+# hook_pack_version: 43
 # caws_min_major: 11
 # lineage_refs: 8,16,23
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -17,10 +17,18 @@
 # CAWS Protected Paths Guard
 #
 # Blocks direct Write/Edit access to:
-#   - hook SCRIPTS under the vendor hooks dir (no agent-side hook editing):
+#   - hook SCRIPTS under the shared pack's install directory (.caws/hooks/)
+#     and any vendor-surface hooks dir (no agent-side hook editing):
 #     *.sh, *.py, *.cjs — the executable guard artifacts
 #   - strike-state files in vendor logs (no manual manipulation of
 #     progressive-strike counters)
+#
+# The shared pack installs its executable guards to .caws/hooks/ for every
+# agent surface; CAWS_VENDOR_DIR selects a separate, per-surface
+# settings/config directory (e.g. .claude for claude-code) that is not
+# generally where the guard scripts themselves live. Protecting only the
+# vendor-dir path leaves the pack's actual install directory — where every
+# live guard resides — unprotected, so this guard covers both.
 #
 # Documentation under the hooks dir (*.md — e.g. the installer-managed
 # CLAUDE.md, or a hand-authored README.md) is NOT a guard artifact and is
@@ -29,7 +37,11 @@
 # describe them (CAWS-PROTECTED-PATHS-DOCS-NOT-SCRIPTS-001). Blocking a
 # legitimate doc edit was the over-match defect: it refused the very
 # CLAUDE.md `caws init` itself ships and re-writes, pushing the agent
-# toward a bypass — the exact failure mode CAWS exists to prevent.
+# toward a bypass — the exact failure mode CAWS exists to prevent. This
+# admission applies uniformly across every protected hooks directory,
+# including .caws/hooks/ — .pristine/ baselines under .caws/hooks/ are
+# written by the CAWS CLI process directly (never by an agent Write/Edit
+# tool call), so no separate carve-out is needed for them.
 #
 # The match keys on the artifact CLASS, not the directory: docs are
 # allowlisted, every other extension under the hooks dir stays blocked
@@ -37,8 +49,8 @@
 #
 # SECURITY NOTE: case patterns in bash cannot expand variables, so the
 # vendor-dir pattern is written as a conditional using [[ == ]] with
-# CAWS_VENDOR_DIR. This is structurally equivalent to the literal patterns
-# in the claude-code original but works for any vendor dir value.
+# CAWS_VENDOR_DIR. The .caws/hooks/ pattern is a plain literal — that path
+# is the pack's fixed install location, not surface-derived.
 
 set -euo pipefail
 
@@ -75,22 +87,17 @@ fi
 
 FILE_PATH="$HOOK_FILE_PATH"
 
-# Match against vendor-dir hooks directory using conditional expressions
-# (case patterns cannot expand variables — CAWS-PROTECTED-PATHS-DOCS-NOT-SCRIPTS-001
-# original used literal .claude/hooks/; we generalize via CAWS_VENDOR_DIR).
-# Pattern: */${CAWS_VENDOR_DIR}/hooks/
+# Match against every directory the shared pack actually installs guard
+# scripts into: the pack's own install dir (.caws/hooks/, always — this is
+# where every agent surface's guards physically live) and the vendor-surface
+# hooks dir (case patterns cannot expand variables — CAWS-PROTECTED-PATHS-
+# DOCS-NOT-SCRIPTS-001 original used literal .claude/hooks/; we generalize
+# via CAWS_VENDOR_DIR for legacy layouts / per-surface staging).
+# Patterns: .caws/hooks/  and  */${CAWS_VENDOR_DIR}/hooks/
 
 _hooks_prefix_match() {
-  # Returns 0 (true) if FILE_PATH is under any vendor hooks dir.
-  #
-  # LOCAL GROWTH (FIX-HOOK-PACK-DEDUPE-01): the shared pack installs its
-  # EXECUTABLE guards to .caws/hooks/, while CAWS_VENDOR_DIR is .claude for
-  # this surface — so the vendor-dir clauses below now match a directory
-  # holding only CLAUDE.md/README.md, which the *.md branch then admits.
-  # Left as-is this hook is a no-op for claude-code: every live guard under
-  # .caws/hooks/ was agent-writable (verified — a Write to
-  # .caws/hooks/.protected-probe succeeded before this clause existed).
-  # Cover the shared hooks dir too, so protection follows the scripts.
+  # Returns 0 (true) if FILE_PATH is under the shared pack's install
+  # directory or a vendor-surface hooks dir.
   [[ "$FILE_PATH" == */.caws/hooks/* ]] || \
   [[ "$FILE_PATH" == ".caws/hooks/"* ]] || \
   [[ "$FILE_PATH" == */"${CAWS_VENDOR_DIR}"/hooks/* ]] || \
@@ -120,14 +127,13 @@ if _hooks_prefix_match; then
       if command -v guard_reprieve_hint >/dev/null 2>&1; then
         guard_reprieve_hint protected-paths.sh >&2
       fi
-      # LOCAL GROWTH (FIX-HOOK-PACK-DEDUPE-01): exit 2, not 1. This branch says
-      # "Fail closed" and prints BLOCKED, but Claude Code treats ONLY exit 2 as
-      # a block — exit 1 is a non-blocking error, so the tool call proceeds.
-      # Verified empirically: a Write to .caws/hooks/.protected-probe succeeded
-      # while the dispatcher returned 1 for that exact path. The strike-state
-      # branch below already uses 2; this one was inconsistent with both its own
-      # message and its sibling. Reprieve via `caws reprieve grant` when a
-      # deliberate hook edit is needed.
+      # exit 2, not 1: the Claude Code PreToolUse protocol treats ONLY exit 2
+      # as a block. Exit 1 is a non-blocking error — the dispatcher (which
+      # returns the max handler exit code) reports failure, but the tool call
+      # itself still proceeds, silently defeating the "BLOCKED" message above.
+      # The missing-lib branch above and the strike-state branch below both
+      # already exit 2; this keeps this branch consistent with them and with
+      # its own diagnostic.
       exit 2
       ;;
   esac
