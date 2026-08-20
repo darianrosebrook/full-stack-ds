@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run docs:check-claims:fix repaired all 3 planted drifts; recheck green (34 claims); grep for duplicated markers (--><!--) across all four docs returned 0"
     recorded_at: "2026-08-20T23:43:53.922Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "full gate in bound worktree docs-claims-derived (tokens rebuilt first): pnpm run governed:rail && pnpm test && pnpm run test:frameworks → exit 0; root suite 57 files / 479 tests passed; zero tracked-tree drift after regeneration"
+    recorded_at: "2026-08-20T23:43:54.300Z"
