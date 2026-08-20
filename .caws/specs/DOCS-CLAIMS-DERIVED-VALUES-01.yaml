@@ -7,7 +7,10 @@ created_at: '2026-08-20T23:40:07.474Z'
 updated_at: '2026-08-20T23:40:07.474Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'scripts/docs-claims-check.mjs'
+    - 'AGENTS.md'
+    - 'README.md'
+    - 'packages/ds-swiftui/README.md'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,7 +21,10 @@ scope:
     - 'packages/ds-swiftui/README.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The gate never weakens: every marker class governed before this slice (component-count, rail-admitted-target-count, registered-target-count, icon-count) still derives from the same authorities and still fails on drift.'
+  - 'Marker vocabulary stays mentionable: a marker followed by no shape-compatible value (docs tables, code spans) is skipped, and an unknown marker name still exits 2.'
+  - 'Machine-local agent docs are gated present-when-here and skipped-when-absent; the tracked-file scan itself is unchanged.'
+  - 'No doc value is authored where a derivation exists: per-target allowlist counts, the web-framework family, and the snapshot freshness date all derive from their live authorities.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
