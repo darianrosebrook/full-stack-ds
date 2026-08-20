@@ -44,3 +44,8 @@ acceptance:
     then: 'given the bound worktree; when the full local gate runs (governed:rail, pnpm test, pnpm run test:frameworks); then every gate passes'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims at merge 950824b9 → 'OK — 34 marked claim(s) match derived values' (tracked docs + machine-local CLAUDE.md admitted via LOCAL_AGENT_DOCS)"
+    recorded_at: "2026-08-20T23:43:53.217Z"
