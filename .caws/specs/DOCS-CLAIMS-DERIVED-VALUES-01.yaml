@@ -1,0 +1,40 @@
+id: DOCS-CLAIMS-DERIVED-VALUES-01
+title: 'Derive stale doc claims (per-target counts, web-framework list, snapshot date) instead of authoring them'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-08-20T23:40:07.474Z'
+updated_at: '2026-08-20T23:40:07.474Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/docs-claims-check.mjs'
+    - 'AGENTS.md'
+    - 'README.md'
+    - 'packages/ds-swiftui/README.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the extended claims gate; when docs:check-claims runs over tracked docs plus machine-local CLAUDE.md; then every marked value matches its derived authority'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a planted stale value in any governed shape (int, list, or date) in any scanned doc including gitignored CLAUDE.md; when docs:check-claims runs; then it exits 1 naming the claim and the derived value'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given planted drift repaired via docs:check-claims --fix; when the rewrite completes; then values are correct and no marker is duplicated'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the bound worktree; when the full local gate runs (governed:rail, pnpm test, pnpm run test:frameworks); then every gate passes'
+non_functional: {}
+contracts: []
