@@ -53,3 +53,7 @@ evidence:
     status: pass
     evidence_ref: "planted drift one per shape at merge 950824b9 (CLAUDE.md web-framework-list truncated, AGENTS.md swiftui count 50, README.md snapshot date 2026-05-26); pnpm run docs:check-claims exited 1 naming each claim + derived value"
     recorded_at: "2026-08-20T23:43:53.562Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims:fix repaired all 3 planted drifts; recheck green (34 claims); grep for duplicated markers (--><!--) across all four docs returned 0"
+    recorded_at: "2026-08-20T23:43:53.922Z"
