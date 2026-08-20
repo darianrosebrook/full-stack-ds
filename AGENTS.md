@@ -4,9 +4,9 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## What this repo is
 
-This is **not** primarily a design system — it is a falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof. One polymorphic primitive (`Stack`) plus JSON contracts drive code generation for the **five Web DOM** framework targets (React, Vue, Svelte, Angular, Lit), plus React Native, a Figma descriptor target, and the explicit-only native targets (SwiftUI, Jetpack Compose). If the same contract can drive all of them idiomatically without leaking framework details, the contract is at the right level of abstraction.
+This is **not** primarily a design system — it is a falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof. One polymorphic primitive (`Stack`) plus JSON contracts drive code generation for the **Web DOM** framework targets (<!-- web-framework-list -->React, Vue, Svelte, Angular, Lit), plus React Native, a Figma descriptor target, and the explicit-only native targets (SwiftUI, Jetpack Compose). If the same contract can drive all of them idiomatically without leaking framework details, the contract is at the right level of abstraction.
 
-The registered target set is authoritative in `fsds.targets.json` (<!-- registered-target-count -->9 builtin targets today); the **rail-admitted** subset is authoritative in `packages/ds-codegen/src/validation/admission-descriptor.ts` (<!-- rail-admitted-target-count -->6 — the five web frameworks plus react-native). Never hand-count either from prose; both numbers here are gated by `pnpm run docs:check-claims`.
+The registered target set is authoritative in `fsds.targets.json` (<!-- registered-target-count -->9 builtin targets today); the **rail-admitted** subset is authoritative in `packages/ds-codegen/src/validation/admission-descriptor.ts` (<!-- rail-admitted-target-count -->6 — the <!-- web-framework-count -->5 web frameworks plus react-native). Never hand-count either from prose; both numbers here are gated by `pnpm run docs:check-claims`.
 
 Read `docs/current-implementation-snapshot.md` first to know what is currently proven vs. only foundation. That document overrides older architecture docs when they disagree.
 
@@ -32,7 +32,7 @@ pnpm run build
 # Codegen (default target = react)
 pnpm run generate                              # React only
 pnpm run generate -- --target=all              # Every registered target in fsds.targets.json
-                                               #   (5 web + react-native + figma + swiftui + jetpack-compose;
+                                               #   (<!-- web-framework-count -->5 web + react-native + figma + swiftui + jetpack-compose;
                                                #    swiftui/compose emit only their allowlisted components)
 pnpm run generate -- --target=vue,svelte       # Subset
 pnpm run generate -- Switch                    # Single component
@@ -108,7 +108,7 @@ pnpm run audit:state-suppression               # Declared suppression vs. honour
 pnpm run audit:token-resolvability             # Token references that never resolve
 
 # Doc gates
-pnpm run docs:check-claims                     # Marked counts match their derived authority
+pnpm run docs:check-claims                     # Marked doc values match their derived authority
 pnpm run docs:check-claims:fix                 # Rewrites stale marked counts in place
 pnpm run docs:check-links                      # Every relative .md link in a tracked doc resolves
 ```
@@ -122,11 +122,18 @@ markdown file, and `docs:check-claims` derives and enforces it:
 | `<!-- rail-admitted-target-count -->` | modules under `validation/frameworks/` that export an `AdmissionDescriptor` |
 | `<!-- registered-target-count -->` | the `targets` array in `fsds.targets.json` |
 | `<!-- icon-count -->` | directories under `packages/ds-iconography/icons/` |
+| `<!-- target-component-count:<id> -->` | the `components` allowlist length for `<id>` in `fsds.targets.json` (the corpus count when the target declares no allowlist) |
+| `<!-- web-framework-list -->` | rail-admitted descriptor ids minus `react-native`, in display order |
+| `<!-- web-framework-count -->` | the length of that derived web-framework list |
+| `<!-- snapshot-updated -->` | the `updated` frontmatter date of `docs/current-implementation-snapshot.md` |
 
-Usage is `<!-- marker -->N`. Only the integer immediately after a marker is checked, so unmarked
-numbers (hypotheticals, thresholds, historical baselines) are deliberately left alone. Add a row to
-`CLAIMS` in `scripts/docs-claims-check.mjs` to govern a new number — and prefer that over writing a
-bare count.
+Usage is `<!-- marker -->value`. Count claims govern the integer immediately after the marker;
+`web-framework-list` governs a bare comma list (no terminal "and") and `snapshot-updated` a
+`YYYY-MM-DD` date, each derived from its authority above. A marker followed by no
+shape-compatible value is ignored — that is how this table can name the markers themselves.
+Unmarked numbers (hypotheticals, thresholds, historical baselines) are deliberately left alone.
+Add a row to `CLAIMS` in `scripts/docs-claims-check.mjs` to govern a new value — and prefer that
+over writing a bare count.
 
 ### Pre-push hook tracks CI, but is change-scoped — CI is authoritative
 
@@ -281,10 +288,10 @@ When reasoning or writing docs/comments, do not over-claim:
 
 - The rail proves **artifact↔contract↔codegen↔env binding**, not determinism, not visual quality, not a11y adequacy, not full environment attestation.
 - The runtime fact rail (Playwright, `e2e/runtime-rail.spec.ts`) proves narrow facts — default and non-default CSS-var fallbacks, and iteration DOM shape — for Progress/Truncate/ShowMore/OTP/Calendar/Shuttle/Walkthrough/Select across **all five** web frameworks including Angular. The one Angular exclusion is the Select callback-capture interaction test, which is skipped because `angular-preview` uses a synthesized-host pipeline rather than the shared `config-entry.ts` callback bus — not because Angular preview is unproven. It does not prove cross-framework behavioral parity beyond DOM shape, or visual quality. Screenshot baselines are darwin-only and skip under `CI=true` — CI runs OS-agnostic fact assertions.
-- React Native is a **rail-admitted default target**: it is in `admission-descriptor.ts`, `--target=all` and `governed:rail` emit and verify it, and CI's generated-tree diff covers `packages/ds-react-native/src`. It is not recon. SwiftUI and Jetpack Compose *are* explicit-only builtin targets outside rail verification and outside CI drift diffs — SwiftUI emits the full 49-component corpus and Compose emits two components, both compiled by dedicated CI native lanes over hand-authored example consumers, which proves compilation, not component correctness.
+- React Native is a **rail-admitted default target**: it is in `admission-descriptor.ts`, `--target=all` and `governed:rail` emit and verify it, and CI's generated-tree diff covers `packages/ds-react-native/src`. It is not recon. SwiftUI and Jetpack Compose *are* explicit-only builtin targets outside rail verification and outside CI drift diffs — SwiftUI emits its allowlisted <!-- target-component-count:swiftui -->49 of the <!-- component-count -->51 corpus contracts and Compose emits its allowlisted <!-- target-component-count:jetpack-compose -->3, both compiled by dedicated CI native lanes over hand-authored example consumers, which proves compilation, not component correctness.
 - Web DOM is the only family proven end-to-end (emit → rail → runtime). It is **not** the only admitted executable family.
 - `@full-stack-ds/*` packages are **workspace-only**; not published to npm.
-- Local target packs are metadata-only (`LOCAL_TARGET_PACK_EXECUTION_STATUS` in `target-packs/local.ts`) until an executable local-loader slice lands. Note `fsds.targets.json` currently declares **no** local packs — all nine registered targets are `kind: "builtin"`.
+- Local target packs are metadata-only (`LOCAL_TARGET_PACK_EXECUTION_STATUS` in `target-packs/local.ts`) until an executable local-loader slice lands. Note `fsds.targets.json` currently declares **no** local packs — all <!-- registered-target-count -->9 registered targets are `kind: "builtin"`.
 - The two native compile lanes (Kotlin/`kotlinc`, Swift/`swiftc`) compile hand-authored example consumers, not the generated component trees. They prove the rail can drive a non-pnpm toolchain; they do not drift-gate emitted native bytes.
 - Figma descriptor emission ≠ live Figma library publication.
 
