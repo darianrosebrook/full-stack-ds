@@ -83,3 +83,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/editor-binding-rail.spec.ts A2 at merge 082d41b1: gap control offered under button.size.gap.default (the read slot), fill 24px moves preview computed gap to 24px, clearing restores the recorded baseline — both directions measured"
     recorded_at: "2026-08-21T23:32:37.980Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Investigated before implementation (tmp/a3-shadowed-gap-probe.mjs, corpus scan of sidecars x generated React CSS): 22 components declare 2+ gap-matching slots; 11 mis-bound — editor bound box-model.gap (first in sidecar order) while CSS reads only the component-prefixed slot (Button/Tabs/Card/etc.); two severity classes (Tabs outright dead, distinct resolvesTo; Button alive only via semantic-var echo with cross-component blast radius). Finding reported in fix commit c6ab1e67 and pinned replayably by 'A3 pin' in control-derivation.test.ts (asserts the split read-truth from committed Button.css)"
+    recorded_at: "2026-08-21T23:32:38.390Z"
