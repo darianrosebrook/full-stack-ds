@@ -19,6 +19,7 @@ import { useState } from "react";
 import type { ComponentBundle, FoundationToken } from "../../types/data";
 import {
   deriveControls,
+  markRowsRead,
   materialTokenRows,
   resolveBoxModel,
   resolveFillColor,
@@ -31,6 +32,7 @@ import {
   type ControlDescriptor,
   type TokenRowDescriptor,
 } from "./control-derivation";
+import { readCssVarsFor } from "./css-read-proof";
 import { TokenPicker, type TokenPick } from "./TokenPicker";
 import { TokenValueControl } from "./TokenValueControl";
 import { BoxModelEditor } from "./BoxModelEditor";
@@ -137,6 +139,27 @@ function TokenRow({
   onChange: (v: string) => void;
   onOpenPicker: () => void;
 }) {
+  // Unwired (FIX-EDITOR-CONTROL-BINDING-PROOF-01): no generated CSS rule reads
+  // this slot's var, so an edit cannot move the rendered component. The row
+  // stays visible — the declaration is interface, not drift — but renders as a
+  // disabled field with an explicit unwired marker instead of a live control.
+  if (row.isRead === false) {
+    return (
+      <div className="fsds-pp__token-row fsds-pp__token-row--unwired" data-unwired={row.slot}>
+        <span className="fsds-pp__swatch fsds-pp__swatch--dim" aria-hidden />
+        <input
+          className="fsds-pp__token-value"
+          type="text"
+          value={value}
+          disabled
+          aria-label={`${row.slot} value (unwired)`}
+        />
+        <span className="fsds-pp__unwired-badge" title="No generated CSS rule reads this slot — edits cannot affect the preview">
+          unwired
+        </span>
+      </div>
+    );
+  }
   return (
     <div className="fsds-pp__token-row">
       {row.isColor ? (
@@ -189,12 +212,20 @@ export function PropertiesPanel({
   foundationTokens,
 }: PropertiesPanelProps) {
   const { variantAxes, props, tokens } = deriveControls(component.contract);
+  // Read-proof (FIX-EDITOR-CONTROL-BINDING-PROOF-01): the `--fsds-*` vars the
+  // committed generated React CSS actually reads. Rows whose var is never
+  // read are declared-but-unwired interface — they render explicitly as
+  // unwired and never become editable controls, because an edit on them
+  // cannot move the rendered component. Null (no CSS for the name) leaves
+  // rows unmarked and behavior unchanged.
+  const readVars = readCssVarsFor(component.name);
   // The box-model sections read the normalized MATERIAL surface (authored
   // sidecar rows + inherited primitive/profile slots from the data plugin),
   // not raw sidecar presence. The Component-tokens section keeps `tokens`
   // (authored-only): the sidecar is the authoring surface, the material rows
   // are the realized one.
-  const materialRows = materialTokenRows(component);
+  const materialRows = materialTokenRows({ ...component, readCssVars: readVars });
+  const markedTokens = markRowsRead(tokens, readVars);
   const overrideCount =
     Object.keys(propValues).length + Object.keys(tokenValues).length;
   // Which token row's picker is open (by slot), and whether it's color-only.
@@ -212,12 +243,12 @@ export function PropertiesPanel({
   const widthRow = byRole.get("min-width") ?? byRole.get("width");
   const heightRow = byRole.get("min-height") ?? byRole.get("height");
   const radiusRow = byRole.get("radius");
-  const fillRow = resolveFillColor(tokens);
+  const fillRow = resolveFillColor(markedTokens);
   const hasLayout = !!(widthRow || heightRow);
 
   // Typography roles (font-size / font-weight / font-family) — same match-by-use
   // resolution; the section shows only the roles the component owns.
-  const typography = resolveTypography(tokens);
+  const typography = resolveTypography(markedTokens);
   const typoByRole = new Map<TypographyRole, TokenRowDescriptor>(
     typography.map((b) => [b.role, b.row]),
   );
@@ -434,9 +465,9 @@ export function PropertiesPanel({
         </PropertySection>
       )}
 
-      {tokens.length > 0 && (
+      {markedTokens.length > 0 && (
         <PropertySection title="Component tokens" defaultOpen={false}>
-          {tokens.map((row) => (
+          {markedTokens.map((row) => (
             <div
               className="fsds-pp__field fsds-pp__field--token"
               key={row.slot}

@@ -94,6 +94,14 @@ export interface TokenRowDescriptor {
   cssVar: string;
   /** Merge-layer provenance. Rows derived from the raw sidecar are authored. */
   source?: TokenProvenance;
+  /**
+   * False when no committed generated CSS rule reads this slot's var — the
+   * override interface is declared but unwired, so an edit cannot move the
+   * rendered component (FIX-EDITOR-CONTROL-BINDING-PROOF-01). Undefined means
+   * no read-proof source was supplied (legacy callers) and the row is treated
+   * as readable, preserving pre-proof behavior.
+   */
+  isRead?: boolean;
 }
 
 /** The full derived control surface for one component. */
@@ -308,6 +316,21 @@ export function deriveControls(contract: ComponentContract): DerivedControls {
 }
 
 /**
+ * Stamp read-proof onto token rows: `isRead` true/false when a proof source
+ * (`--fsds-*` vars the generated CSS actually reads — see css-read-proof.ts)
+ * is supplied, left undefined when it is not. Pure; returns new row objects
+ * only when marking applies.
+ */
+export function markRowsRead(
+  rows: TokenRowDescriptor[],
+  readCssVars?: Iterable<string> | null,
+): TokenRowDescriptor[] {
+  if (!readCssVars) return rows;
+  const reads = readCssVars instanceof Set ? readCssVars : new Set(readCssVars);
+  return rows.map((r) => ({ ...r, isRead: reads.has(r.cssVar) }));
+}
+
+/**
  * The token rows the box-model editor inspects: the component's authored
  * sidecar rows PLUS the inherited box-model slots from the normalized material
  * surface (primitive < morphology profile < sidecar, computed by the data
@@ -315,10 +338,14 @@ export function deriveControls(contract: ComponentContract): DerivedControls {
  * inherited slots append after, mapped to display rows (a `literal` becomes
  * the shown fallback). This is what makes the editor read the same surface
  * codegen realizes, instead of inferring "no sidecar key = no box model".
+ *
+ * When `readCssVars` is supplied, rows carry `isRead` so downstream resolvers
+ * bind only slots the generated CSS provably reads.
  */
 export function materialTokenRows(component: {
   contract: ComponentContract;
   boxModelSurface?: BoxModelSurfaceSlot[];
+  readCssVars?: Iterable<string> | null;
 }): TokenRowDescriptor[] {
   const authored = deriveControls(component.contract).tokens;
   const authoredSlots = new Set(authored.map((r) => r.slot));
@@ -333,7 +360,7 @@ export function materialTokenRows(component: {
       cssVar: slotToCssVar(s.slot),
       source: s.source,
     }));
-  return [...authored, ...inherited];
+  return markRowsRead([...authored, ...inherited], component.readCssVars);
 }
 
 /**
@@ -487,23 +514,41 @@ const ROLE_MATCHERS: Record<BoxModelRole, RegExp[]> = {
 };
 
 /**
+ * Pick the row a role binds under matcher priority, preferring rows whose slot
+ * the generated CSS provably reads. Candidates are collected per matcher in
+ * row order; rows marked `isRead: false` are excluded from binding UNLESS no
+ * readable candidate exists for the role — in which case the role is UNWIRED
+ * and returns undefined (no control: an edit on an unread slot cannot move
+ * the rendered component, so offering one lies to the designer). Rows without
+ * an `isRead` mark (no proof source) keep legacy first-match behavior.
+ */
+function bindRoleRow(
+  tokens: TokenRowDescriptor[],
+  used: Set<string>,
+  matchers: RegExp[],
+): TokenRowDescriptor | undefined {
+  const readable = (t: TokenRowDescriptor) => t.isRead !== false;
+  let found: TokenRowDescriptor | undefined;
+  for (const re of matchers) {
+    found = tokens.find((t) => !used.has(t.slot) && readable(t) && re.test(t.slot.toLowerCase()));
+    if (found) break;
+  }
+  return found;
+}
+
+/**
  * Resolve box-model roles to the component's token rows. Returns one binding
- * per role that has a matching slot — roles without a slot are omitted. Used by
- * the BoxModelEditor to know which positions are editable and which token each
- * drives. Pure projection over deriveControls(contract).tokens.
+ * per role that has a matching slot — roles without a slot are omitted, and
+ * (with read-proof marked rows) roles whose every candidate slot is unread
+ * are omitted too, because no edit on them can move the rendered component.
+ * Used by the BoxModelEditor to know which positions are editable and which
+ * token each drives. Pure projection over deriveControls(contract).tokens.
  */
 export function resolveBoxModel(tokens: TokenRowDescriptor[]): BoxModelBinding[] {
   const out: BoxModelBinding[] = [];
   const used = new Set<string>();
   for (const role of Object.keys(ROLE_MATCHERS) as BoxModelRole[]) {
-    const matchers = ROLE_MATCHERS[role];
-    let found: TokenRowDescriptor | undefined;
-    for (const re of matchers) {
-      found = tokens.find(
-        (t) => !used.has(t.slot) && re.test(t.slot.toLowerCase()),
-      );
-      if (found) break;
-    }
+    const found = bindRoleRow(tokens, used, ROLE_MATCHERS[role]);
     if (found) {
       used.add(found.slot);
       out.push({ role, row: found });
@@ -634,13 +679,16 @@ const FILL_MATCHERS: RegExp[] = [
 
 /**
  * Resolve the component's primary fill (background) color token row. Only rows
- * whose value reads as a color qualify. Used by the Fill section. Pure
- * projection over deriveControls(contract).tokens.
+ * whose value reads as a color qualify, and — when rows carry read-proof —
+ * only rows the generated CSS provably reads: a fill control on an unread
+ * slot cannot move the rendered component. Null when no readable color row
+ * exists. Used by the Fill section. Pure projection over
+ * deriveControls(contract).tokens.
  */
 export function resolveFillColor(
   tokens: TokenRowDescriptor[],
 ): TokenRowDescriptor | null {
-  const colorRows = tokens.filter((t) => t.isColor);
+  const colorRows = tokens.filter((t) => t.isColor && t.isRead !== false);
   for (const re of FILL_MATCHERS) {
     const hit = colorRows.find((t) => re.test(t.slot.toLowerCase()));
     if (hit) return hit;
@@ -678,8 +726,10 @@ export interface TypographyBinding {
 
 /**
  * Resolve typography roles to the component's token rows (font-size,
- * font-weight, font-family). One binding per role that has a matching slot.
- * Pure projection over deriveControls(contract).tokens.
+ * font-weight, font-family). One binding per role that has a matching slot;
+ * with read-proof marked rows, roles whose every candidate is unread are
+ * omitted (same wire-only rule as the box-model roles). Pure projection over
+ * deriveControls(contract).tokens.
  */
 export function resolveTypography(
   tokens: TokenRowDescriptor[],
@@ -687,13 +737,7 @@ export function resolveTypography(
   const out: TypographyBinding[] = [];
   const used = new Set<string>();
   for (const role of Object.keys(TYPOGRAPHY_MATCHERS) as TypographyRole[]) {
-    let found: TokenRowDescriptor | undefined;
-    for (const re of TYPOGRAPHY_MATCHERS[role]) {
-      found = tokens.find(
-        (t) => !used.has(t.slot) && re.test(t.slot.toLowerCase()),
-      );
-      if (found) break;
-    }
+    const found = bindRoleRow(tokens, used, TYPOGRAPHY_MATCHERS[role]);
     if (found) {
       used.add(found.slot);
       out.push({ role, row: found });

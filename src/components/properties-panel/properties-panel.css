@@ -844,3 +844,24 @@
 .fsds-bme-constraint__note {
   color: var(--fsds-semantic-color-foreground-tertiary);
 }
+
+/* Unwired token rows (FIX-EDITOR-CONTROL-BINDING-PROOF-01): the slot is
+   declared interface but no generated CSS rule reads its var — rendered
+   disabled with an explicit marker, never as a live control. */
+.fsds-pp__token-row--unwired {
+  opacity: 0.6;
+}
+.fsds-pp__token-row--unwired .fsds-pp__token-value {
+  font-style: italic;
+}
+.fsds-pp__unwired-badge {
+  flex: none;
+  align-self: center;
+  padding: 1px 6px;
+  border: 1px solid var(--fsds-semantic-color-foreground-tertiary);
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  white-space: nowrap;
+}
