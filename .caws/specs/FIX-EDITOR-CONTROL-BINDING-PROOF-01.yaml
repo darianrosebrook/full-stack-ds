@@ -74,3 +74,8 @@ contracts:
   - name: 'control-derivation'
     type: behavior
     path: 'src/components/properties-panel/control-derivation.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e/editor-binding-rail.spec.ts A1 at merge 082d41b1 (2 passed): Button's unread box-model.gap renders explicitly unwired (badge + disabled input, data-unwired attr) and no editable control for it exists anywhere in the panel — the pre-fix dead knob is unreachable"
+    recorded_at: "2026-08-21T23:32:37.510Z"
