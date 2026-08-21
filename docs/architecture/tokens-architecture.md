@@ -235,6 +235,19 @@ The invariant is enforced by:
 
 The diagnostic-code shape mirrors the admission rail: every issue is a JSON-pointer to the failing field and a sentence describing what's wrong. No silent passes, no warnings-that-are-errors-elsewhere.
 
+## The editor wire-honesty rule
+
+> **A properties-panel control is offered only for a slot the committed generated CSS provably reads.**
+
+An override is live only if some rule READS the custom property. A declared slot with zero `var(--fsds-…)` reads is unwired interface — legitimate to declare (the declaration is the design-tool override surface; see the dead-slot ledger's interface framing), but never a live control: an edit on it cannot move the rendered component, and a dead knob costs a designer a debugging session to disprove.
+
+- **Proof source:** the committed generated React CSS, scanned for `var(--fsds-*)` reads — the same authority the dead-slot audit reads. No IR change was needed: reads are derivable from the emitted CSS directly (`src/components/properties-panel/css-read-proof.ts`).
+- **Binding rule:** role resolution (`resolveBoxModel`, `resolveFillColor`, `resolveTypography`) prefers the read slot when several name-matching candidates exist, and omits the role when none is read. This is what fixes shadow pairs like Button's `box-model.gap` (authored first, never read) vs `button.size.gap.default` (the slot `Button.css` actually reads) — 11 corpus components had the editor bound to the unread half of such a pair.
+- **Rendering rule:** unread token rows stay visible — declaration is interface, not drift — but render explicitly `unwired` (disabled field + badge), never as an editable control.
+- **Fail-open boundary:** rows without a proof source (no generated CSS for the name) keep legacy behavior rather than hiding controls; the proof marks `isRead`, and only a positive `false` withdraws a control.
+
+Verified at runtime by `e2e/editor-binding-rail.spec.ts` (Button: gap control binds the read slot and moves the preview's computed gap in both directions; the unread slot renders unwired) and pinned by the read-proof block of `src/components/properties-panel/control-derivation.test.ts`.
+
 ## Load-bearing decisions
 
 These choices are not arbitrary. Changing any of them invalidates load-bearing assumptions elsewhere — call out the breakage if you propose to.

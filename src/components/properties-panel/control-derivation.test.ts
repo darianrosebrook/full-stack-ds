@@ -13,7 +13,10 @@ import {
   boxModelRolePathPattern,
   resolveFillColor,
   resolveTypography,
+  markRowsRead,
+  materialTokenRows,
 } from "./control-derivation";
+import { extractReadVars } from "./css-read-proof";
 import type { ComponentContract, TokenDefinition } from "../../types/data";
 
 // Load real corpus contracts (+ their token sidecars) exactly as the showcase
@@ -560,5 +563,159 @@ describe("material surface projection", () => {
       fallback: "8px",
       source: "morphology-profile",
     });
+  });
+});
+
+// ---- Read-proof binding (FIX-EDITOR-CONTROL-BINDING-PROOF-01) -------------
+//
+// The A3 measured defect: Button authors BOTH `box-model.gap` (first in
+// sidecar order) and `button.size.gap.default`, and the committed Button.css
+// reads ONLY the component-prefixed slot. Legacy first-match bound the editor
+// control to the unread slot — a knob that cannot move the rendered button.
+// These tests pin the fix: role binding prefers the slot the generated CSS
+// provably reads, and omits the role when no candidate is read.
+
+const REACT_CSS = path.resolve(
+  __dirname,
+  "../../../packages/ds-react/src/components",
+);
+
+describe("markRowsRead", () => {
+  it("marks rows true/false against the proof set and leaves rows unmarked without one", () => {
+    const rows = [
+      { slot: "box-model.gap", cssVar: "--fsds-box-model-gap", isColor: false },
+      {
+        slot: "button.size.gap.default",
+        cssVar: "--fsds-button-size-gap-default",
+        isColor: false,
+      },
+    ];
+    const marked = markRowsRead(rows, ["--fsds-button-size-gap-default"]);
+    expect(marked[0].isRead).toBe(false);
+    expect(marked[1].isRead).toBe(true);
+    // No proof source → rows untouched (legacy callers keep old behavior).
+    expect(markRowsRead(rows)[0].isRead).toBeUndefined();
+    expect(markRowsRead(rows, null)[0].isRead).toBeUndefined();
+  });
+
+  it("materialTokenRows marks authored and inherited rows from readCssVars", () => {
+    const contract = loadContract("Button");
+    const marked = materialTokenRows({
+      contract,
+      boxModelSurface: [
+        {
+          slot: "box-model.margin-top",
+          literal: "0px",
+          source: "primitive-default",
+        },
+      ],
+      readCssVars: ["--fsds-button-size-gap-default"],
+    });
+    const bySlot = new Map(marked.map((r) => [r.slot, r]));
+    expect(bySlot.get("button.size.gap.default")?.isRead).toBe(true);
+    expect(bySlot.get("box-model.gap")?.isRead).toBe(false);
+    expect(bySlot.get("box-model.margin-top")?.isRead).toBe(false);
+  });
+});
+
+describe("resolveBoxModel — read-proof preference", () => {
+  const buttonRows = deriveControls(loadContract("Button")).tokens;
+  const buttonReads = extractReadVars(
+    readFileSync(path.join(REACT_CSS, "Button", "Button.css"), "utf-8"),
+  );
+
+  it("A3 pin: Button's gap role binds the slot the generated CSS reads, not the first name match", () => {
+    // Ground truth from the committed CSS: the shadow pair is split.
+    expect(buttonReads.has("--fsds-box-model-gap")).toBe(false);
+    expect(buttonReads.has("--fsds-button-size-gap-default")).toBe(true);
+    // And authored order puts the unread slot first — the trap.
+    const gapSlots = buttonRows
+      .filter((r) => /(^|\.)gap/.test(r.slot))
+      .map((r) => r.slot);
+    expect(gapSlots[0]).toBe("box-model.gap");
+
+    const gap = resolveBoxModel(markRowsRead(buttonRows, buttonReads)).find(
+      (b) => b.role === "gap",
+    );
+    expect(
+      gap?.row.slot,
+      "Button gap control must bind the provably-read slot: box-model.gap is authored first but no Button.css rule reads it (dead knob)",
+    ).toBe("button.size.gap.default");
+  });
+
+  it("A4 mutation kill: legacy first-match (unmarked rows) binds the unread slot — the preference must exclude it", () => {
+    // Unmarked rows ARE the mutation control: identical input minus the
+    // read-proof. If the readable() filter is removed from bindRoleRow, the
+    // marked case below degenerates to this binding and the A3 pin fails,
+    // naming Button + box-model.gap.
+    const legacyGap = resolveBoxModel(buttonRows).find((b) => b.role === "gap");
+    expect(legacyGap?.row.slot).toBe("box-model.gap");
+
+    const markedGap = resolveBoxModel(markRowsRead(buttonRows, buttonReads)).find(
+      (b) => b.role === "gap",
+    );
+    expect(markedGap?.row.slot).not.toBe("box-model.gap");
+  });
+
+  it("omits the role entirely when every candidate slot is unread (A1: no dead control)", () => {
+    const allUnread = buttonRows.map((r) => ({ ...r, isRead: false }));
+    expect(
+      resolveBoxModel(allUnread).find((b) => b.role === "gap"),
+    ).toBeUndefined();
+    expect(resolveBoxModel(allUnread)).toEqual([]);
+  });
+
+  it("marked-readable rows bind exactly as legacy when nothing is excluded", () => {
+    const allRead = buttonRows.map((r) => ({ ...r, isRead: true }));
+    const legacy = resolveBoxModel(buttonRows);
+    const marked = resolveBoxModel(allRead);
+    expect(marked.map((b) => [b.role, b.row.slot])).toEqual(
+      legacy.map((b) => [b.role, b.row.slot]),
+    );
+  });
+});
+
+describe("resolveFillColor / resolveTypography — read-proof preference", () => {
+  const color = (slot: string, isRead?: boolean) => ({
+    slot,
+    resolvesTo: "semantic.color.background.primary.default",
+    fallback: "#0566fe",
+    layer: "semantic",
+    isColor: true,
+    cssVar: slotToCssVar(slot),
+    ...(isRead === undefined ? {} : { isRead }),
+  });
+
+  it("fill skips an unread background.default and binds the read sibling", () => {
+    const unread = color("x.color.background.default", false);
+    const read = color("y.color.background", true);
+    expect(resolveFillColor([unread, read])?.slot).toBe("y.color.background");
+  });
+
+  it("fill returns null when every color row is unread", () => {
+    expect(
+      resolveFillColor([color("x.color.background.default", false)]),
+    ).toBeNull();
+  });
+
+  it("typography omits roles whose only candidate is unread", () => {
+    const rows = [
+      {
+        slot: "x.size.fontSize",
+        fallback: "14px",
+        isColor: false,
+        cssVar: "--fsds-x-size-fontsize",
+        isRead: false,
+      },
+      {
+        slot: "y.text.weight",
+        fallback: "600",
+        isColor: false,
+        cssVar: "--fsds-y-text-weight",
+        isRead: true,
+      },
+    ];
+    const bindings = resolveTypography(rows);
+    expect(bindings.map((b) => b.role)).toEqual(["font-weight"]);
   });
 });
