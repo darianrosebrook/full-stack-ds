@@ -87,3 +87,7 @@ evidence:
     status: pass
     evidence_ref: "Investigated before implementation (tmp/a3-shadowed-gap-probe.mjs, corpus scan of sidecars x generated React CSS): 22 components declare 2+ gap-matching slots; 11 mis-bound — editor bound box-model.gap (first in sidecar order) while CSS reads only the component-prefixed slot (Button/Tabs/Card/etc.); two severity classes (Tabs outright dead, distinct resolvesTo; Button alive only via semantic-var echo with cross-component blast radius). Finding reported in fix commit c6ab1e67 and pinned replayably by 'A3 pin' in control-derivation.test.ts (asserts the split read-truth from committed Button.css)"
     recorded_at: "2026-08-21T23:32:38.390Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "'A4 mutation kill' in control-derivation.test.ts (54/54 at merge 082d41b1): unmarked rows ARE the mutation control — identical input minus read-proof degenerates to the legacy box-model.gap binding, and the test asserts the marked path must not, naming Button + box-model.gap on failure; full gate (governed:rail + 479 root tests + test:frameworks) exit 0 in the merged worktree"
+    recorded_at: "2026-08-21T23:32:38.808Z"
