@@ -3,6 +3,7 @@ title: 'The properties editor must only surface controls whose slot is provably 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: editor-binding-proof
 created_at: '2026-07-30T04:49:21.152Z'
 updated_at: '2026-07-30T04:49:21.152Z'
 blast_radius:
