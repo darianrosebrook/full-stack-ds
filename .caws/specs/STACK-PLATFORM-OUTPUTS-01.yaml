@@ -1,6 +1,6 @@
 id: STACK-PLATFORM-OUTPUTS-01
 title: 'Platform output reconciliation through Stack host/layout contract'
-risk_tier: 4
+risk_tier: 3
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-13T00:00:00.000Z'
