@@ -3,6 +3,7 @@ title: 'Every declared component slot owes a binding — reread the dead-slot le
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: slot-completeness
 created_at: '2026-07-30T04:49:59.373Z'
 updated_at: '2026-07-30T04:49:59.373Z'
 blast_radius:
