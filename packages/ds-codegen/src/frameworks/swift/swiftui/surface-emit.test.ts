@@ -42,9 +42,16 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     const { componentFile } = generateSwiftUISurfaceFiles(irFor("Dialog"));
 
     expect(componentFile).toContain("public struct Dialog<Header: View, Title: View, BodyContent: View, Footer: View>: View {");
-    expect(componentFile).toContain(".sheet(isPresented: Binding(");
-    expect(componentFile).toContain("get: { open.value },");
+    // Presentation rides the stored controlled binding when present (a
+    // computed binding over the StateObject never invalidates for
+    // controlled after-mount flips — press-proven defect fix), with set
+    // routing through ControllableValue so native dismissal fires
+    // onOpenChange.
+    expect(componentFile).toContain(".sheet(isPresented: presentationBinding)");
+    expect(componentFile).toContain("private let openControlled: Binding<Bool>?");
+    expect(componentFile).toContain("get: { controlled.wrappedValue },");
     expect(componentFile).toContain("set: { open.set($0) }");
+    expect(componentFile).toContain("get: { open.value },");
     expect(componentFile).toContain("ControllableValue(controlled: open");
     expect(componentFile).toContain("open: Binding<Bool>? = nil");
     expect(componentFile).toContain("defaultOpen: Bool = false");
@@ -67,7 +74,7 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain(
       "public struct Tooltip<Trigger: View, Content: View>: View {",
     );
-    expect(componentFile).toContain(".popover(isPresented: Binding(");
+    expect(componentFile).toContain(".popover(isPresented: presentationBinding");
     expect(componentFile).toContain("arrowEdge: placementEdge");
     expect(componentFile).toContain(".onHover { hovering in");
     expect(componentFile).toContain("if !disabled { open.set(hovering) }");
@@ -86,7 +93,7 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
 describe("generateSwiftUISurfaceFiles — coverage batch (sheet + search channel)", () => {
   it("routes the sheet kind through the centered-modal branch", () => {
     const { componentFile } = generateSwiftUISurfaceFiles(irFor("Sheet"));
-    expect(componentFile).toContain(".sheet(isPresented: Binding(");
+    expect(componentFile).toContain(".sheet(isPresented: presentationBinding)");
     expect(componentFile).toContain("open: Binding<Bool>? = nil");
     // side/modal props omitted, never accepted-and-ignored.
     expect(componentFile).not.toContain("side:");

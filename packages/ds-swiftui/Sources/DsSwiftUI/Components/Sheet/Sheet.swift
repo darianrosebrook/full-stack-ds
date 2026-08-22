@@ -60,6 +60,7 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
         SheetTokens.scopes
     }
     @StateObject private var open: ControllableValue<Bool>
+    private let openControlled: Binding<Bool>?
     private let content: Content
     private let header: Header
     private let title: Title
@@ -80,6 +81,7 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
         @ViewBuilder footer: () -> Footer = { EmptyView() }
     ) {
         self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
+        self.openControlled = open
         self.content = content()
         self.header = header()
         self.title = title()
@@ -127,12 +129,22 @@ public struct Sheet<Content: View, Header: View, Title: View, Description: View,
             .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
     }
 
+    private var presentationBinding: Binding<Bool> {
+        if let controlled = openControlled {
+            return Binding(
+                get: { controlled.wrappedValue },
+                set: { open.set($0) }
+            )
+        }
+        return Binding(
+            get: { open.value },
+            set: { open.set($0) }
+        )
+    }
+
     public var body: some View {
         SwiftUI.Color.clear.frame(width: 0, height: 0)
-            .sheet(isPresented: Binding(
-                get: { open.value },
-                set: { open.set($0) }
-            )) {
+            .sheet(isPresented: presentationBinding) {
                 panel
             }
     }

@@ -102,6 +102,40 @@ public struct Tabs<Content: View>: View {
         VStack(spacing: gap) {
             content
         }
+            .environmentObject(activeTab)
+    }
+}
+
+/// Press-wired tab: sets the `activeTab` channel to `value`.
+public struct TabsTab: View {
+    @EnvironmentObject var activeTab: ControllableValue<String>
+    private let value: String
+    private let label: String
+    public init(value: String, label: String) {
+        self.value = value
+        self.label = label
+    }
+    public var body: some View {
+        Button(label) { activeTab.set(value) }
+            .buttonStyle(.plain)
+    }
+}
+
+/// Panel region: content visible only while the `activeTab` channel equals `value`.
+public struct TabsPanel<Content: View>: View {
+    @EnvironmentObject var activeTab: ControllableValue<String>
+    private let value: String
+    private let content: Content
+    public init(value: String, @ViewBuilder content: () -> Content) {
+        self.value = value
+        self.content = content()
+    }
+    public var body: some View {
+        if activeTab.value == value {
+            content
+        } else {
+            EmptyView()
+        }
     }
 }
 // @generated:end

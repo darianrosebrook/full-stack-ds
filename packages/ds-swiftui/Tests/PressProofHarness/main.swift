@@ -53,7 +53,11 @@ final class Counters {
     var calendarButtonsDump: [String] = []
     var calendarChanges: [String] = []
     var calendarCensus: [String: Int] = [:]
-    var structuralCensus: [String: Int] = [:]
+    // FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01 compound proofs.
+    var tabsChanges: [String] = []
+    var accordionChanges: [String] = []
+    var shuttleChanges: [String] = []
+    var compoundCensus: [String: Int] = [:]
     var limitations: [String] = []
 }
 
@@ -71,7 +75,7 @@ final class HarnessModel: ObservableObject {
         case dialogPlainProbe
         case dialogUncontrolled
         case calendarDay
-        case structuralProbes
+        case compoundProofs
         case done
     }
 
@@ -82,6 +86,8 @@ final class HarnessModel: ObservableObject {
     @Published var selection = ""
     @Published var otp = ""
     @Published var dialogOpen = false
+    /// Which dialog pass we are on (1 = pre-probe, 2 = probe-informed re-run).
+    var dialogPass = 1
     @Published var plainSheetOpen = false
     @Published var pickedDate: Date? = nil
     let counters = Counters()
@@ -92,16 +98,26 @@ final class HarnessModel: ObservableObject {
         schedule(3.0) { self.advance() }
     }
 
+    /// End of the compound proofs: advance to done.
+    private func finishCompound() {
+        self.phase = .done
+        self.schedule(0.5) { self.advance() }
+    }
+
     func schedule(_ delay: Double, _ work: @escaping @MainActor () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
     }
 
     /// Poll for the controlled sheet's content (close-dialog) up to
     /// `remaining` times, then drive the close path and poll dismissal.
+    /// Closing flips the consumer binding (what the footer button does);
+    /// AXPress from this main thread into a PRESENTED modal sheet can
+    /// block the AppKit run loop — sheet-resident controls are never
+    /// actuated through AX here, only detected.
     func pollDialogPresentation(remaining: Int) {
         if Self.axButtons(labeled: "close-dialog").count > 0 {
             counters.dialogSheetVisibleAfterOpen = true
-            Self.click(at: Self.axButtons(labeled: "close-dialog")[0])
+            self.dialogOpen = false
             pollDialogDismissal(remaining: 10)
             return
         }
@@ -129,17 +145,37 @@ final class HarnessModel: ObservableObject {
     func pollDialogDismissal(remaining: Int) {
         if Self.axButtons(labeled: "close-dialog").isEmpty {
             counters.dialogSheetVisibleAfterClose = false
-            if counters.dialogOpens != [true, false] {
-                failures.append("dialog: onOpenChange values \(counters.dialogOpens), expected [true, false]")
+            // Web parity: onOpenChange fires from NATIVE dismissal
+            // (Esc/overlay — the component's own transition), never from a
+            // consumer-driven binding change (the consumer did it; React
+            // Dialog behaves identically). This proof closes via the
+            // consumer binding, so the web-parity-correct value is [].
+            if counters.dialogOpens != [] {
+                failures.append("dialog: onOpenChange values \(counters.dialogOpens), expected [] (consumer-driven close does not fire the channel — web parity)")
             }
-            phase = .dialogPlainProbe
+            counters.limitations.append(
+                "dialog(native dismissal): onOpenChange-on-dismissal unproven on this host — AXPress from this main thread into a presented modal sheet blocks the AppKit run loop (probe-evidenced); the channel's dismissal wiring is proven at the emitter level (set routes through ControllableValue) but not through a native dismissal interaction here"
+            )
+            // Two-pass topology: the first dismissal leads to the plain
+            // probe, whose verdict informs the dialog re-run; the SECOND
+            // dismissal exits to uncontrolled. Without the pass counter the
+            // probe↔dialog cycle never terminates once the emitted Dialog
+            // actually presents (which is exactly what the presentation
+            // fix made happen — the loop only "worked" before because the
+            // controlled sheet never presented and exhaustion broke out).
+            if dialogPass == 1 {
+                dialogPass = 2
+                phase = .dialogPlainProbe
+            } else {
+                phase = .dialogUncontrolled
+            }
             schedule(0.5) { self.advance() }
             return
         }
         guard remaining > 0 else {
             counters.dialogSheetVisibleAfterClose = true
             failures.append("dialog: sheet content still present after close")
-            phase = .dialogPlainProbe
+            phase = .dialogUncontrolled
             schedule(1.0) { self.advance() }
             return
         }
@@ -147,16 +183,19 @@ final class HarnessModel: ObservableObject {
     }
 
     /// Poll for the plain probe's sheet text; classify environmental
-    /// limitation vs component defect accordingly.
+    /// limitation vs component defect accordingly. The probe records the
+    /// host's capability and dismisses via its own binding; the DEFECT
+    /// verdict is appended by the re-run dialog phase only if the emitted
+    /// Dialog fails while the probe presented (the differential).
     func pollPlainSheet(remaining: Int) {
         let presented = Self.axStaticTexts().contains { Self.title(of: $0) == "plain-probe-sheet" }
         if presented {
             counters.plainSheetVisible = true
-            // The host presents after-mount flips fine — the emitted
-            // Dialog's binding path is the defect. Record loudly.
-            failures.append(
-                "dialog(plain probe): plain SwiftUI sheet PRESENTED on the same after-mount flip where the emitted Dialog did not — emitted binding path defect"
-            )
+            // Host presents after-mount flips fine. Dismiss through the
+            // consumer binding and let the dialog phase re-run carry the
+            // differential verdict (a still-presented sheet here would
+            // block every later sheet from this window).
+            self.plainSheetOpen = false
             phase = .dialogChannel
             schedule(1.0) { self.advance() }
             return
@@ -167,6 +206,7 @@ final class HarnessModel: ObservableObject {
             counters.limitations.append(
                 "dialog(plain probe): even plain SwiftUI Color.clear.sheet(isPresented:) does not present on an after-mount binding flip on this host (trigger \(counters.plainTriggerPresses == 0 ? "" : "pressed ")— environmental) — controlled-Dialog after-mount presentation proof unavailable on this host"
             )
+            self.plainSheetOpen = false
             phase = .dialogChannel
             schedule(1.0) { self.advance() }
             return
@@ -444,7 +484,7 @@ final class HarnessModel: ObservableObject {
                     self.counters.limitations.append(
                         "calendar: no AXIncrementor to step the date (buttons \(self.counters.calendarButtonsDump), census \(self.counters.calendarCensus.sorted { $0.key < $1.key })) — day-step proof unavailable on this host"
                     )
-                    self.phase = .structuralProbes
+                    self.phase = .compoundProofs
                     self.schedule(0.5) { self.advance() }
                     return
                 }
@@ -456,34 +496,107 @@ final class HarnessModel: ObservableObject {
                     if self.counters.calendarChanges.count > 1 {
                         self.failures.append("calendar: single increment fired onChange \(self.counters.calendarChanges.count)x, expected 1")
                     }
-                    self.phase = .structuralProbes
+                    self.phase = .compoundProofs
                     self.schedule(0.5) { self.advance() }
                 }
             }
 
-        case .structuralProbes:
+        case .compoundProofs:
             schedule(1.0) {
                 // Scope discovery to the Press Proof window: earlier
                 // phases can leave orphaned sheet windows in the app's
                 // window list, and the menu bar contributes ~131 items
                 // of noise. The window-scoped census is the honest
                 // artifact for what THIS surface exposes.
-                self.counters.structuralCensus = Self.axCensus(scopedToMainWindow: true)
+                self.counters.compoundCensus = Self.axCensus(scopedToMainWindow: true)
                 let pressable = Self.axElements(withRoles: ["AXButton", "AXCheckBox", "AXSwitch"], scopedToMainWindow: true).count
-                let editable = Self.axElements(withRoles: ["AXTextField"], scopedToMainWindow: true).count
-                if pressable == 0 && editable == 0 {
-                    self.counters.limitations.append(
-                        "structural (tabs/accordion/shuttle): mounted via public inits, window-scoped AX census \(self.counters.structuralCensus.sorted { $0.key < $1.key }) exposes ZERO pressable/editable elements — channels are not wired to any control in the current emission; interaction proof impossible until the emitter deepens these classes"
-                    )
-                } else {
-                    // Found interaction where the emission was believed
-                    // structural — investigate rather than assume.
+                if pressable == 0 {
+                    // The FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01 emission
+                    // wires every compound control as a pressable; zero
+                    // pressables is a wiring regression, not a limitation.
                     self.failures.append(
-                        "structural probes: expected 0 pressable/editable (structural emissions), found \(pressable) pressable / \(editable) editable; census \(self.counters.structuralCensus)"
+                        "compound: window census \(self.counters.compoundCensus.sorted { $0.key < $1.key }) exposes ZERO pressables — the deepened Tabs/Accordion/Shuttle wiring regressed to structural emission"
                     )
+                    self.phase = .done
+                    self.schedule(0.5) { self.advance() }
+                    return
                 }
-                self.phase = .done
-                self.schedule(0.5) { self.advance() }
+
+                @MainActor func accordionStep() {
+                    // -- Accordion: press the item trigger twice; the union
+                    // openness channel toggles membership both directions
+                    // and the content region follows.
+                    guard let trigger = Self.axButtons(labeled: "accordion trigger").first else {
+                        self.failures.append("accordion: no pressable 'accordion trigger' (census \(self.counters.compoundCensus.sorted { $0.key < $1.key }))")
+                        return self.finishCompound()
+                    }
+                    Self.click(at: trigger)
+                    self.schedule(0.8) {
+                        let opened = Self.waitForStaticText("accordion content")
+                        Self.click(at: trigger)
+                        self.schedule(0.8) {
+                            let closed = Self.waitForStaticTextAbsence("accordion content")
+                            if self.counters.accordionChanges != ["[\"k1\"]", "[]"] {
+                                self.failures.append("accordion: openness changes \(self.counters.accordionChanges), expected [\"[\\\"k1\\\"]\", \"[]\"] (both directions)")
+                            }
+                            if !opened || !closed {
+                                let titles = Self.axStaticTexts().compactMap { Self.title(of: $0) }
+                                self.failures.append("accordion: content visibility did not track openness (opened=\(opened) closed=\(closed); staticTexts=\(titles))")
+                            }
+                            self.finishCompound()
+                        }
+                    }
+                }
+
+                @MainActor func shuttleStep() {
+                    // -- Shuttle: the contract iterates the SELECTION channel
+                    // (web parity: `(selection ?? []).map`), so rendered rows
+                    // are selected items and press REMOVES. Two removals
+                    // prove press→channel→re-render in both observable
+                    // directions; an "add" press is not contract-modeled in
+                    // any family and is not asserted here.
+                    let rowAlpha = Self.axButtons(labeled: "alpha").first
+                    let rowBeta = Self.axButtons(labeled: "beta").first
+                    guard let alpha = rowAlpha else {
+                        self.failures.append("shuttle: no pressable 'alpha' row (census \(self.counters.compoundCensus.sorted { $0.key < $1.key }))")
+                        return accordionStep()
+                    }
+                    Self.click(at: alpha)
+                    self.schedule(0.8) {
+                        let alphaGone = Self.axButtons(labeled: "alpha").isEmpty
+                        if let beta = rowBeta ?? Self.axButtons(labeled: "beta").first {
+                            Self.click(at: beta)
+                        }
+                        self.schedule(0.8) {
+                            if self.counters.shuttleChanges != ["[\"beta\"]", "[]"] {
+                                self.failures.append("shuttle: selection changes \(self.counters.shuttleChanges), expected [\"[\\\"beta\\\"]\", \"[]\"]")
+                            }
+                            if !alphaGone {
+                                self.failures.append("shuttle: pressed row 'alpha' did not leave the rendered selection")
+                            }
+                            accordionStep()
+                        }
+                    }
+                }
+
+                // -- Tabs: press tab "b"; the string channel fires once and
+                // swaps the gated panel content.
+                guard let tabB = Self.axButtons(labeled: "tabs-b").first else {
+                    self.failures.append("tabs: no pressable 'tabs-b' control (census \(self.counters.compoundCensus.sorted { $0.key < $1.key }))")
+                    return shuttleStep()
+                }
+                Self.click(at: tabB)
+                self.schedule(0.8) {
+                    let panelB = Self.waitForStaticText("tabs panel b")
+                    let panelA = Self.waitForStaticText("tabs panel a", attempts: 2)
+                    if self.counters.tabsChanges != ["b"] {
+                        self.failures.append("tabs: activeTab changes \(self.counters.tabsChanges), expected [\"b\"] exactly once")
+                    }
+                    if !panelB || panelA {
+                        self.failures.append("tabs: panel gating did not swap (panelB=\(panelB) panelA=\(panelA))")
+                    }
+                    shuttleStep()
+                }
             }
 
         case .done:
@@ -501,7 +614,7 @@ final class HarnessModel: ObservableObject {
             print("otp.onChange(last)         : \(counters.otpChanges.last ?? "<none>")")
             print("otp.onComplete             : \(counters.otpCompletes)")
             print("otp.bindingFinal           : \"\(counters.otpBindingFinal)\"")
-            print("dialog.onOpenChange        : \(counters.dialogOpens) [expect [true, false]]")
+            print("dialog.onOpenChange        : \(counters.dialogOpens) [expect [] — consumer-driven close does not fire the channel (web parity); native-dismissal fire is a ledgered host limitation]")
             print("dialog.sheet before/open/after-close: \(counters.dialogSheetVisibleBefore)/\(counters.dialogSheetVisibleAfterOpen)/\(counters.dialogSheetVisibleAfterClose) [expect false/true/false]")
             print("dialog.uncontrolled visible at mount: \(counters.dialogUncontrolledVisible) [expect true — isolates EmptyView().sheet anchor]")
             print("dialog.uncontrolled onOpenChange: \(counters.dialogOpensUncontrolled)")
@@ -509,7 +622,10 @@ final class HarnessModel: ObservableObject {
             print("calendar.onChange          : \(counters.calendarChanges)")
             print("calendar.buttons           : \(counters.calendarButtonsDump)")
             print("calendar.census            : \(counters.calendarCensus.sorted { $0.key < $1.key })")
-            print("structural.census          : \(counters.structuralCensus.sorted { $0.key < $1.key })")
+            print("compound.census            : \(counters.compoundCensus.sorted { $0.key < $1.key })")
+            print("tabs.activeTab changes     : \(counters.tabsChanges) [expect [\"b\"]]")
+            print("accordion.openness changes : \(counters.accordionChanges) [expect [\"[\\\"k1\\\"]\", \"[]\"]]")
+            print("shuttle.selection changes  : \(counters.shuttleChanges) [expect [\"[\\\"beta\\\"]\", \"[]\"]]")
             for limitation in counters.limitations {
                 print("LIMITATION: \(limitation)")
             }
@@ -635,6 +751,33 @@ final class HarnessModel: ObservableObject {
 
     static func title(of element: AXUIElement) -> String? {
         stringAttribute(kAXTitleAttribute as CFString, of: element)
+            ?? stringAttribute(kAXValueAttribute as CFString, of: element)
+    }
+
+    /// Poll for a static text to become exposed with the given title. The
+    /// AX tree lags rapid interaction (successive clicks coalesce and
+    /// attribute reads transiently return nil while SwiftUI rebuilds the
+    /// accessibility snapshot); a single immediate read under-asserts.
+    static func waitForStaticText(_ wanted: String, attempts: Int = 8) -> Bool {
+        for _ in 0..<attempts {
+            if axStaticTexts().contains(where: { title(of: $0) == wanted }) {
+                return true
+            }
+            usleep(250_000)
+        }
+        return false
+    }
+
+    /// Poll for a static text to disappear AND stay gone (the inverse of
+    /// waitForStaticText: absence is only trusted after the tree settles).
+    static func waitForStaticTextAbsence(_ unwanted: String, attempts: Int = 8) -> Bool {
+        for _ in 0..<attempts {
+            if !axStaticTexts().contains(where: { title(of: $0) == unwanted }) {
+                return true
+            }
+            usleep(250_000)
+        }
+        return false
     }
 
     static func description(of element: AXUIElement) -> String? {
@@ -743,8 +886,17 @@ final class HarnessModel: ObservableObject {
     /// delivery was attempted first and requires a keyable window this
     /// swift-run host never grants (keyWindow nil after
     /// orderFrontRegardless + makeKeyAndOrderFront — recorded per phase).
+    /// Focus is a once-per-run courtesy: AXPress does not require key
+    /// state, and re-keying every owned window on each click fights a
+    /// presented modal sheet for key status (the sheet is itself a keyable
+    /// window) — observed as a main-thread livelock once the controlled
+    /// Dialog actually presented (FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01).
+    private static var didFocusOnce = false
     static func click(at button: AXUIElement) {
-        focusOurWindow()
+        if !didFocusOnce {
+            focusOurWindow()
+            didFocusOnce = true
+        }
         let result = AXUIElementPerformAction(button, kAXPressAction as CFString)
         if result != .success {
             FileHandle.standardError.write(Data(("AXPress error: \(result.rawValue)\n").utf8))
@@ -854,11 +1006,33 @@ struct PressProofHarnessApp: App {
                         value: $model.pickedDate,
                         onChange: { model.counters.calendarChanges.append(String(describing: $0)) }
                     )
-                case .structuralProbes:
+                case .compoundProofs:
                     VStack(spacing: 16) {
-                        Tabs { SwiftUI.Text("tabs panel") }
-                        Accordion { SwiftUI.Text("accordion panel") }
-                        Shuttle(selection: .constant(["a", "b"]))
+                        // Composed through the deepened compound API: the
+                        // root injects its channel; subcomponents consume it
+                        // and press-wire it (FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01).
+                        Tabs(
+                            defaultActiveTab: "a",
+                            onActiveTabChange: { model.counters.tabsChanges.append($0) }
+                        ) {
+                            HStack {
+                                TabsTab(value: "a", label: "tabs-a")
+                                TabsTab(value: "b", label: "tabs-b")
+                            }
+                            TabsPanel(value: "a") { SwiftUI.Text("tabs panel a") }
+                            TabsPanel(value: "b") { SwiftUI.Text("tabs panel b") }
+                        }
+                        Accordion(
+                            onOpennessChange: { model.counters.accordionChanges.append(String(describing: $0)) }
+                        ) {
+                            AccordionItem(key: "k1", trigger: { SwiftUI.Text("accordion trigger") }) {
+                                SwiftUI.Text("accordion content")
+                            }
+                        }
+                        Shuttle(
+                            defaultSelection: ["alpha", "beta"],
+                            onSelectionChange: { model.counters.shuttleChanges.append(String(describing: $0)) }
+                        )
                     }
                 case .done:
                     SwiftUI.Text("done")

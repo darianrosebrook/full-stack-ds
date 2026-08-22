@@ -81,7 +81,12 @@ public struct Shuttle: View {
     public var body: some View {
         VStack(spacing: gap) {
             ForEach(selection.value, id: \.self) { item in
-                SwiftUI.Text(item)
+                Button {
+                    selection.set(selection.value.filter { $0 != item })
+                } label: {
+                    SwiftUI.Text(item)
+                }
+                    .buttonStyle(.plain)
             }
         }
             .fsdsAccessibilityLabel(accessibilityLabel)

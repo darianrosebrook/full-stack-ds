@@ -178,7 +178,10 @@ jobs:
             packages/ds-svelte/src \
             packages/ds-angular/src \
             packages/ds-lit/src \
-            packages/ds-react-native/src
+            packages/ds-react-native/src \
+            packages/ds-swiftui/Sources/DsSwiftUI/Components \
+            packages/ds-swiftui/Sources/DsSwiftUI/primitives \
+            packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components
 
       # Iconography emission ledger: proves the committed content-addressed edge
       # set (packages/ds-iconography/emission-ledger.json) matches a fresh

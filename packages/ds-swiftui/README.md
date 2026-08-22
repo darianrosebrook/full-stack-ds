@@ -12,11 +12,11 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=all   # emits the allowlisted set (<!-- target-component-count:swiftui -->49 of the <!-- component-count -->51 corpus contracts)
+pnpm run generate -- --target=all   # emits the allowlisted set (<!-- target-component-count:swiftui -->51 of the <!-- component-count -->51 corpus contracts)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission
-allowlist** (the <!-- target-component-count:swiftui -->49 allowlisted components): `--target=all` and
+allowlist** (the <!-- target-component-count:swiftui -->51 allowlisted components): `--target=all` and
 `pnpm run governed:rail` emit exactly that set and skip the rest by
 declaration. Explicit single-component requests bypass the allowlist and
 surface the emitter's own fail-loud errors. The target remains outside the
