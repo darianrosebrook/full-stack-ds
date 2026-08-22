@@ -85,3 +85,7 @@ evidence:
     status: pass
     evidence_ref: "fsds.targets.json swiftui allowlist now the full corpus (target-component-count:swiftui marker derives 51 at merge fa181fae, docs:check-claims green); swift build green over all 51; Markdown degrades to plain-text content: String exactly as RN (documented in snapshot row + package README); NavTree emits via its list path"
     recorded_at: "2026-08-22T03:22:01.509Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "ci.yml post-rail git diff and .githooks/pre-push tip diff both now include packages/ds-swiftui/Sources/DsSwiftUI/{Components,primitives} and the compose components kotlin tree; scripts/prepush-scope.mjs generated-pattern widened to ds-(...|swiftui|jetpack-compose) so native-tree changes trigger the rail locally (the hook's lockstep gap closed); full gate in worktree (governed:rail + 479 root tests + test:frameworks) exit 0 with zero post-regen drift"
+    recorded_at: "2026-08-22T03:22:01.975Z"
