@@ -242,6 +242,36 @@ export function classifyDisposition(slot, { tokens, styles, contract, prefix, re
     }
   }
 
+  // 5b. delete — the leaf is a PRESET for a freeform prop: it concatenates a
+  //     designed prop's name with a value suffix, and that prop's propType
+  //     declares no value vocabulary (plain string/number). A freeform prop
+  //     cannot ever select the preset, so the slot names a value on an axis
+  //     the component's design surface does not have. Positive evidence: the
+  //     prop exists, is freeform, and the leaf decomposes onto it — "nothing
+  //     reads it" alone is never sufficient (spec A3's higher bar).
+  const leafLower = leaf.toLowerCase();
+  const designed = contract?.props?.designed?.members;
+  if (Array.isArray(designed)) {
+    for (const member of designed) {
+      const propName = member?.name;
+      if (typeof propName !== "string" || propName.length === 0) continue;
+      const kind = member?.propType?.kind;
+      const hasVocabulary =
+        Array.isArray(member?.propType?.values) ||
+        typeof member?.propType?.ref === "string";
+      if (kind !== "string" && kind !== "number") continue;
+      if (hasVocabulary) continue;
+      const propLower = propName.toLowerCase();
+      if (!leafLower.startsWith(propLower)) continue;
+      const suffix = leafLower.slice(propLower.length);
+      if (suffix.length === 0) continue; // the leaf IS the prop name, not a preset
+      return {
+        disposition: "delete",
+        evidence: `leaf "${leaf}" is a preset of designed prop "${propName}" (propType ${kind}, freeform — no declared value vocabulary); a freeform prop can never select the "${suffix}" value, so the slot names an axis the component's design surface does not have`,
+      };
+    }
+  }
+
   // 6. review — no rule matched. NOT an overclaim finding: a fall-through is the
   //    absence of evidence, and auto-deleting on it would destroy real intent.
   return {

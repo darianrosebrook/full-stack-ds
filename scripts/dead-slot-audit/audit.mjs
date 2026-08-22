@@ -273,14 +273,14 @@ if (RUN_DIRECTLY) {
   md.push("# Dead-slot matrix");
   md.push("");
   md.push(
-    "`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.",
+    "`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. **Interface framing (FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01):** a component-scoped slot is the design-tool override interface, so a declared slot with no binding is UNBOUND INTERFACE, not drift to delete. The ledger shrinks by binding slots, and only by deletion where positive evidence shows the slot names a property outside the component's design surface (an unrendered part, or a preset on a freeform-prop axis). Each entry carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows; `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **unbound** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.",
   );
   md.push("");
   md.push(
-    `Components: **${components.length}** · slots declared: **${totalSlots}** · consumed: **${consumedCount}** · **inert: ${deadCount + shadowedCount}** (defects: **${deadCount}** · inert-by-design: **${shadowedCount}**)`,
+    `Components: **${components.length}** · slots declared: **${totalSlots}** · consumed: **${consumedCount}** · **inert: ${deadCount + shadowedCount}** (unbound interface: **${deadCount}** · inert-by-design: **${shadowedCount}**)`,
   );
   md.push("");
-  md.push("## Dead slots — declared slots with no `var()` consumer in the structure CSS");
+  md.push("## Unbound interface — declared slots with no `var()` consumer in the structure CSS");
   md.push("");
   if (failing.length) {
     md.push("| component | slot | CSS var | disposition | evidence |");
@@ -344,6 +344,37 @@ if (RUN_DIRECTLY) {
 
   // --- ratchet: the ledger may only shrink truthfully ---
   const current = inert.flatMap((f) => f.inert.map((d) => ({ component: f.component, ...d })));
+
+  // --reseed: maintenance mode — rewrite the ledger FROM the current findings
+  // so every disposition/note is machine-computed (spec A1: no hand-edited
+  // dispositions). Existing entries keep their `spec` provenance by id; new
+  // entries are attributed to the re-deriving spec. Exits 0 — the next plain
+  // run re-checks the ratchet against what was written.
+  if (process.argv.includes("--reseed")) {
+    const RESEED_SPEC = "FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01";
+    const existingSpec = new Map(
+      loadLedger(LEDGER_PATH, ["component", "slot"]).map((e) => [deadId(e), e.spec]),
+    );
+    const gaps = current.map((row) => ({
+      component: row.component,
+      slot: row.slot,
+      status: row.status,
+      disposition: row.disposition,
+      spec: existingSpec.get(deadId(row)) ?? RESEED_SPEC,
+      note: row.evidence,
+    }));
+    const comment =
+      "Unbound-interface ledger (reframed by FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01 from the inert-slot ledger of RAIL-STYLING-REALIZATION-LEDGERS-01). A component-scoped slot is the design-tool override interface; an entry here is interface NOT YET WIRED — setting the custom property has no effect until a rule reads it, so it advertises a control with no wire behind it. The ledger shrinks by binding slots (a rule reads the var) or by deleting the declaration under POSITIVE evidence (unrendered anatomy part, or a preset on a freeform-prop axis) — never by being declared acceptable, and `review` means needs-adjudication, never safe-to-delete. `status: shadowed` entries are inert BY DESIGN (an author root rule deliberately overrides the box-model primitive) and stay ledgered: an entry leaves only by becoming consumed or by deletion. Two-directional ratchet: the audit fails on an unledgered unbound slot or a stale entry; a third check fails on disposition drift. Do NOT widen consumption scanning to <C>.tokens.css: a slot redefinition is not a consumption, and admitting it would mass-false-green the re-point class. `disposition` and `note` are computed by scripts/dead-slot-audit/disposition.mjs (re-derive with --reseed, never hand-edit).";
+    writeFileSync(
+      LEDGER_PATH,
+      JSON.stringify({ $comment: comment, gaps }, null, 2) + "\n",
+    );
+    console.log(
+      `[dead-slot] reseeded ${gaps.length} ledger entr(ies) from current findings — dispositions and notes are machine-computed; spec provenance preserved by id.`,
+    );
+    process.exit(0);
+  }
+
   const ledger = loadLedger(LEDGER_PATH, ["component", "slot"]);
   const { unledgered, stale } = diffLedger({ current, ledger, idOf: deadId });
   let code = reportRatchet({ label: "dead-slot", current, unledgered, stale, idOf: deadId });

@@ -1,10 +1,10 @@
 # Dead-slot matrix
 
-`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. Each dead slot carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows. `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **dead** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.
+`RAIL-STYLING-REALIZATION-LEDGERS-01` — gated by a two-directional ledger (`scripts/dead-slot-audit/known-dead.json`): the audit fails if a dead slot is unledgered OR if a ledger entry no longer reproduces. **Interface framing (FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01):** a component-scoped slot is the design-tool override interface, so a declared slot with no binding is UNBOUND INTERFACE, not drift to delete. The ledger shrinks by binding slots, and only by deletion where positive evidence shows the slot names a property outside the component's design surface (an unrendered part, or a preset on a freeform-prop axis). Each entry carries a machine-computed **disposition** (`scripts/dead-slot-audit/disposition.mjs`) so the reviewer audits the rule rather than the rows; `review` means no rule matched and the entry needs human adjudication — it does NOT mean the slot is safe to delete. Every token/style slot a contract declares (from `<Component>.tokens.json` top-level keys + `<Component>.styles.json` dotted property keys) is classified against the generated React structure CSS (`<Component>.css`): **consumed** if `var(--fsds-<slug>)` appears, **unbound** otherwise. The declaration site (`<Component>.tokens.css`) is excluded so a slot cannot consume itself. Consumption is scanned in ds-react only (the reference framework); all five web frameworks derive from the same IR, so a slot dead in ds-react is dead everywhere. **This audit is a gate, not advisory**: `pnpm run audit:dead-slots` runs in `.githooks/pre-push` and `.github/workflows/ci.yml`, and exits non-zero on any of three conditions — an unledgered dead slot, a ledger entry that no longer reproduces, or a ledger entry whose recorded disposition no longer matches the classifier. What is *not* required is fixing the existing defects: the ratchet blocks regressions and ledger inaccuracy, not the standing debt.
 
-Components: **51** · slots declared: **924** · consumed: **810** · **inert: 114** (defects: **98** · inert-by-design: **16**)
+Components: **51** · slots declared: **913** · consumed: **815** · **inert: 98** (unbound interface: **82** · inert-by-design: **16**)
 
-## Dead slots — declared slots with no `var()` consumer in the structure CSS
+## Unbound interface — declared slots with no `var()` consumer in the structure CSS
 
 | component | slot | CSS var | disposition | evidence |
 |---|---|---|---|---|
@@ -31,26 +31,14 @@ Components: **51** · slots declared: **924** · consumed: **810** · **inert: 1
 | Calendar | `calendar.color.border.accent` | `--fsds-calendar-color-border-accent` | `review` | no rule matched: "accent" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Calendar | `calendar.color.day.range.background` | `--fsds-calendar-color-day-range-background` | `review` | no rule matched: "background" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Calendar | `calendar.typography.weekday.size` | `--fsds-calendar-typography-weekday-size` | `review` | no rule matched: "size" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Card | `card.color.badge.success.background` | `--fsds-card-color-badge-success-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.success.foreground` | `--fsds-card-color-badge-success-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.warning.background` | `--fsds-card-color-badge-warning-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.warning.foreground` | `--fsds-card-color-badge-warning-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.info.background` | `--fsds-card-color-badge-info-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.info.foreground` | `--fsds-card-color-badge-info-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.error.background` | `--fsds-card-color-badge-error-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.error.foreground` | `--fsds-card-color-badge-error-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.neutral.background` | `--fsds-card-color-badge-neutral-background` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
-| Card | `card.color.badge.neutral.foreground` | `--fsds-card-color-badge-neutral-foreground` | `delete` | slot hangs off anatomy part "badge", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it |
 | Chip | `chip.color.background.active` | `--fsds-chip-color-background-active` | `wire` | "active" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Chip | `chip.focus.ring.width` | `--fsds-chip-focus-ring-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Chip | `chip.focus.ring.color` | `--fsds-chip-focus-ring-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Chip | `chip.focus.ring.style` | `--fsds-chip-focus-ring-style` | `review` | no rule matched: "style" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Chip | `chip.focus.ring.offset` | `--fsds-chip-focus-ring-offset` | `review` | no rule matched: "offset" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Command | `command.opacity.disabled` | `--fsds-command-opacity-disabled` | `wire` | "disabled" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Details | `details.size.padding.page` | `--fsds-details-size-padding-page` | `review` | no rule matched: "page" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Details | `details.typography.fontSize.body` | `--fsds-details-typography-font-size-body` | `review` | no rule matched: "body" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Details | `details.typography.fontSize.compact` | `--fsds-details-typography-font-size-compact` | `wire` | "compact" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| Divider | `divider.size.thicknessThick` | `--fsds-divider-size-thickness-thick` | `review` | no rule matched: "thicknessThick" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.pad.y` | `--fsds-field-pad-y` | `review` | no rule matched: "y" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.color.borderBold` | `--fsds-field-color-border-bold` | `review` | no rule matched: "borderBold" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Field | `field.color.validating-border` | `--fsds-field-color-validating-border` | `review` | no rule matched: "validating-border" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -62,9 +50,7 @@ Components: **51** · slots declared: **924** · consumed: **810** · **inert: 1
 | Input | `input.space.inline.default` | `--fsds-input-space-inline-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Label | `label.typo.weight.default` | `--fsds-label-typo-weight-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
-| NavList | `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | `wire` | "hover" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | `review` | no rule matched: "current" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| NavList | `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | `wire` | "focus" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | NavList | `nav-list.size.gap.group` | `--fsds-nav-list-size-gap-group` | `review` | no rule matched: "group" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | NavList | `nav-list.size.fontSize.item` | `--fsds-nav-list-size-font-size-item` | `review` | no rule matched: "item" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | NavList | `nav-list.size.fontSize.groupLabel` | `--fsds-nav-list-size-font-size-group-label` | `review` | no rule matched: "groupLabel" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -76,10 +62,8 @@ Components: **51** · slots declared: **924** · consumed: **810** · **inert: 1
 | Sheet | `sheet.focus.width` | `--fsds-sheet-focus-width` | `review` | no rule matched: "width" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Sheet | `sheet.focus.color` | `--fsds-sheet-focus-color` | `review` | no rule matched: "color" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Sheet | `sheet.color.backgroundHover` | `--fsds-sheet-color-background-hover` | `review` | no rule matched: "backgroundHover" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| ShowMore | `show-more.color.border.default` | `--fsds-show-more-color-border-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | ShowMore | `show-more.color.border.accent` | `--fsds-show-more-color-border-accent` | `review` | no rule matched: "accent" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | ShowMore | `show-more.overlay.imageOverlay` | `--fsds-show-more-overlay-image-overlay` | `review` | no rule matched: "imageOverlay" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
-| Shuttle | `shuttle.color.border.default` | `--fsds-shuttle-color-border-default` | `wire` | "default" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing |
 | Skeleton | `skeleton.color.static` | `--fsds-skeleton-color-static` | `review` | no rule matched: "static" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Skeleton | `skeleton.radius.sm` | `--fsds-skeleton-radius-sm` | `review` | no rule matched: "sm" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
 | Skeleton | `skeleton.radius.lg` | `--fsds-skeleton-radius-lg` | `review` | no rule matched: "lg" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication |
@@ -302,7 +286,7 @@ declared: **23** · consumed: **20** · dead: **3**
 
 ### Card  `.card`
 
-declared: **35** · consumed: **24** · dead: **10**
+declared: **25** · consumed: **24** · dead: **0**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -322,16 +306,6 @@ declared: **35** · consumed: **24** · dead: **10**
 | `card.size.gap.default` | `--fsds-card-size-gap-default` | ✓ consumed | `tokens` |
 | `card.typography.lineHeight.heading` | `--fsds-card-typography-line-height-heading` | ✓ consumed | `tokens` |
 | `card.typography.lineHeight.normal` | `--fsds-card-typography-line-height-normal` | ✓ consumed | `tokens` |
-| `card.color.badge.success.background` | `--fsds-card-color-badge-success-background` | ✗ dead | `tokens` |
-| `card.color.badge.success.foreground` | `--fsds-card-color-badge-success-foreground` | ✗ dead | `tokens` |
-| `card.color.badge.warning.background` | `--fsds-card-color-badge-warning-background` | ✗ dead | `tokens` |
-| `card.color.badge.warning.foreground` | `--fsds-card-color-badge-warning-foreground` | ✗ dead | `tokens` |
-| `card.color.badge.info.background` | `--fsds-card-color-badge-info-background` | ✗ dead | `tokens` |
-| `card.color.badge.info.foreground` | `--fsds-card-color-badge-info-foreground` | ✗ dead | `tokens` |
-| `card.color.badge.error.background` | `--fsds-card-color-badge-error-background` | ✗ dead | `tokens` |
-| `card.color.badge.error.foreground` | `--fsds-card-color-badge-error-foreground` | ✗ dead | `tokens` |
-| `card.color.badge.neutral.background` | `--fsds-card-color-badge-neutral-background` | ✗ dead | `tokens` |
-| `card.color.badge.neutral.foreground` | `--fsds-card-color-badge-neutral-foreground` | ✗ dead | `tokens` |
 | `card.color.badge.accent.background` | `--fsds-card-color-badge-accent-background` | ✓ consumed | `tokens` |
 | `card.color.badge.accent.foreground` | `--fsds-card-color-badge-accent-foreground` | ✓ consumed | `tokens` |
 | `card.color.statusAccent.default` | `--fsds-card-color-status-accent-default` | ✓ consumed | `tokens` |
@@ -395,29 +369,7 @@ declared: **15** · consumed: **15** · dead: **0**
 
 ### Command  `.command`
 
-declared: **19** · consumed: **18** · dead: **1**
-
-| slot | CSS var | status | source |
-|---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
-| `command.color.overlay` | `--fsds-command-color-overlay` | ✓ consumed | `tokens` |
-| `command.color.background` | `--fsds-command-color-background` | ✓ consumed | `tokens` |
-| `command.color.border` | `--fsds-command-color-border` | ✓ consumed | `tokens` |
-| `command.color.borderLight` | `--fsds-command-color-border-light` | ✓ consumed | `tokens` |
-| `command.color.text` | `--fsds-command-color-text` | ✓ consumed | `tokens` |
-| `command.color.textMuted` | `--fsds-command-color-text-muted` | ✓ consumed | `tokens` |
-| `command.border.width` | `--fsds-command-border-width` | ✓ consumed | `tokens` |
-| `command.border.radius` | `--fsds-command-border-radius` | ✓ consumed | `tokens` |
-| `command.size.maxWidth` | `--fsds-command-size-max-width` | ✓ consumed | `tokens` |
-| `command.size.maxHeight` | `--fsds-command-size-max-height` | ✓ consumed | `tokens` |
-| `command.size.topOffset` | `--fsds-command-size-top-offset` | ✓ consumed | `tokens` |
-| `command.size.icon` | `--fsds-command-size-icon` | ✓ consumed | `tokens` |
-| `command.spacing.dialogPadding` | `--fsds-command-spacing-dialog-padding` | ✓ consumed | `tokens` |
-| `command.text.size` | `--fsds-command-text-size` | ✓ consumed | `tokens` |
-| `command.text.sizeSmall` | `--fsds-command-text-size-small` | ✓ consumed | `tokens` |
-| `command.shadow` | `--fsds-command-shadow` | ✓ consumed | `tokens` |
-| `command.opacity.disabled` | `--fsds-command-opacity-disabled` | ✗ dead | `tokens` |
-| `command.color.backgroundHover` | `--fsds-command-color-background-hover` | ✓ consumed | `tokens` |
+declared: **19** · consumed: **19** · dead: **0**
 
 ### Details  `.details`
 
@@ -451,15 +403,7 @@ declared: **28** · consumed: **28** · dead: **0**
 
 ### Divider  `.divider`
 
-declared: **5** · consumed: **4** · dead: **1**
-
-| slot | CSS var | status | source |
-|---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
-| `divider.color.default` | `--fsds-divider-color-default` | ✓ consumed | `tokens` |
-| `divider.size.thickness` | `--fsds-divider-size-thickness` | ✓ consumed | `tokens` |
-| `divider.size.thicknessThick` | `--fsds-divider-size-thickness-thick` | ✗ dead | `tokens` |
-| `divider.spacing.margin` | `--fsds-divider-spacing-margin` | ✓ consumed | `tokens` |
+declared: **4** · consumed: **4** · dead: **0**
 
 ### Field  `.field`
 
@@ -605,7 +549,7 @@ declared: **3** · consumed: **3** · dead: **0**
 
 ### NavList  `.nav-list`
 
-declared: **17** · consumed: **10** · dead: **7**
+declared: **17** · consumed: **12** · dead: **5**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -614,11 +558,11 @@ declared: **17** · consumed: **10** · dead: **7**
 | `nav-list.color.foreground.hover` | `--fsds-nav-list-color-foreground-hover` | ✓ consumed | `tokens` |
 | `nav-list.color.foreground.current` | `--fsds-nav-list-color-foreground-current` | ✓ consumed | `tokens` |
 | `nav-list.color.background.default` | `--fsds-nav-list-color-background-default` | ✗ dead | `tokens` |
-| `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | ✗ dead | `tokens` |
+| `nav-list.color.background.hover` | `--fsds-nav-list-color-background-hover` | ✓ consumed | `tokens` |
 | `nav-list.stateLayer.hover` | `--fsds-nav-list-state-layer-hover` | ✓ consumed | `tokens` |
 | `nav-list.stateLayer.selected` | `--fsds-nav-list-state-layer-selected` | ✓ consumed | `tokens` |
 | `nav-list.color.background.current` | `--fsds-nav-list-color-background-current` | ✗ dead | `tokens` |
-| `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | ✗ dead | `tokens` |
+| `nav-list.color.outline.focus` | `--fsds-nav-list-color-outline-focus` | ✓ consumed | `tokens` |
 | `nav-list.size.padding.block` | `--fsds-nav-list-size-padding-block` | ✓ consumed | `tokens` |
 | `nav-list.size.padding.inline` | `--fsds-nav-list-size-padding-inline` | ✓ consumed | `tokens` |
 | `nav-list.size.radius.default` | `--fsds-nav-list-size-radius-default` | ✓ consumed | `tokens` |
@@ -772,7 +716,7 @@ declared: **26** · consumed: **23** · dead: **3**
 
 ### ShowMore  `.show-more`
 
-declared: **15** · consumed: **12** · dead: **3**
+declared: **15** · consumed: **13** · dead: **2**
 
 | slot | CSS var | status | source |
 |---|---|---|---|
@@ -786,7 +730,7 @@ declared: **15** · consumed: **12** · dead: **3**
 | `show-more.color.background.default` | `--fsds-show-more-color-background-default` | ✓ consumed | `tokens` |
 | `show-more.color.foreground.primary` | `--fsds-show-more-color-foreground-primary` | ✓ consumed | `tokens` |
 | `show-more.color.foreground.secondary` | `--fsds-show-more-color-foreground-secondary` | ✓ consumed | `tokens` |
-| `show-more.color.border.default` | `--fsds-show-more-color-border-default` | ✗ dead | `tokens` |
+| `show-more.color.border.default` | `--fsds-show-more-color-border-default` | ✓ consumed | `tokens` |
 | `show-more.color.border.accent` | `--fsds-show-more-color-border-accent` | ✗ dead | `tokens` |
 | `show-more.size.padding.default` | `--fsds-show-more-size-padding-default` | ✓ consumed | `tokens` |
 | `show-more.size.radius.default` | `--fsds-show-more-size-radius-default` | ✓ consumed | `tokens` |
@@ -794,17 +738,7 @@ declared: **15** · consumed: **12** · dead: **3**
 
 ### Shuttle  `.shuttle`
 
-declared: **7** · consumed: **6** · dead: **1**
-
-| slot | CSS var | status | source |
-|---|---|---|---|
-| `box-model.gap` | `--fsds-box-model-gap` | ✓ consumed | `tokens` |
-| `shuttle.color.background.default` | `--fsds-shuttle-color-background-default` | ✓ consumed | `tokens` |
-| `shuttle.color.foreground.primary` | `--fsds-shuttle-color-foreground-primary` | ✓ consumed | `tokens` |
-| `shuttle.color.border.default` | `--fsds-shuttle-color-border-default` | ✗ dead | `tokens` |
-| `shuttle.color.border.accent` | `--fsds-shuttle-color-border-accent` | ✓ consumed | `tokens` |
-| `shuttle.size.padding.default` | `--fsds-shuttle-size-padding-default` | ✓ consumed | `tokens` |
-| `shuttle.size.radius.default` | `--fsds-shuttle-size-radius-default` | ✓ consumed | `tokens` |
+declared: **7** · consumed: **7** · dead: **0**
 
 ### Skeleton  `.skeleton`
 

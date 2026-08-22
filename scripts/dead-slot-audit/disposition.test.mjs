@@ -210,6 +210,86 @@ check("an unmatched slot is `review`, NOT `delete`", () => {
   assert.equal(r.disposition, "review");
 });
 
+// --- delete 5b: preset on a freeform-prop axis -----------------------------
+// FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01 A3's higher deletion bar: a
+// leaf that concatenates a FREEFORM prop's name with a value suffix names an
+// axis the component's design surface does not have — positive evidence, so
+// it deletes. Every near-miss below must NOT delete.
+check("5b: a preset of a freeform string prop is `delete`, with evidence naming the prop", () => {
+  const r = classifyDisposition(
+    "divider.size.thicknessThick",
+    ctx({
+      prefix: "divider",
+      contract: {
+        anatomy: { parts: ["root"] },
+        props: {
+          designed: {
+            members: [{ name: "thickness", propType: { kind: "string" } }],
+          },
+        },
+      },
+    }),
+  );
+  assert.equal(r.disposition, "delete");
+  assert.match(r.evidence, /preset of designed prop "thickness"/);
+  assert.match(r.evidence, /propType string, freeform/);
+});
+
+check("5b boundary: an ENUM prop has a value vocabulary, so its presets are NOT 5b deletes", () => {
+  const r = classifyDisposition(
+    "x.size.thicknessThick",
+    ctx({
+      prefix: "x",
+      contract: {
+        anatomy: { parts: ["root"] },
+        props: {
+          designed: {
+            members: [
+              { name: "thickness", propType: { kind: "ref", ref: "Thickness" } },
+            ],
+          },
+        },
+      },
+    }),
+  );
+  assert.notEqual(r.disposition, "delete");
+});
+
+check("5b boundary: a leaf that IS the prop name (no preset suffix) is NOT a 5b delete", () => {
+  const r = classifyDisposition(
+    "x.size.thickness",
+    ctx({
+      prefix: "x",
+      contract: {
+        anatomy: { parts: ["root"] },
+        props: {
+          designed: {
+            members: [{ name: "thickness", propType: { kind: "string" } }],
+          },
+        },
+      },
+    }),
+  );
+  assert.notEqual(r.disposition, "delete");
+});
+
+check("5b boundary: a leaf starting with a freeform prop name by coincidence is only reviewed", () => {
+  // "titleTagged" starts with "title" — but only full-prefix decomposition on
+  // a REAL prop counts; this fixture's prop list doesn't contain "title", so
+  // no rule matches and the residual must stay `review`.
+  const r = classifyDisposition(
+    "x.size.titleTagged",
+    ctx({
+      prefix: "x",
+      contract: {
+        anatomy: { parts: ["root"] },
+        props: { designed: { members: [] } },
+      },
+    }),
+  );
+  assert.equal(r.disposition, "review");
+});
+
 // --- renderedPartsOf -------------------------------------------------------
 check("renderedPartsOf reads BEM parts out of the render source", () => {
   const parts = renderedPartsOf('<div className="card__header"><span class="card__media" />', "card");

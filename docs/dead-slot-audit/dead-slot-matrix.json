@@ -1,11 +1,11 @@
 {
   "spec": "ICONOGRAPHY-TOKEN-DISCIPLINE-02",
   "components": 51,
-  "slotsDeclared": 924,
-  "consumed": 810,
-  "inert": 114,
+  "slotsDeclared": 913,
+  "consumed": 815,
+  "inert": 98,
   "shadowed": 16,
-  "dead": 98,
+  "dead": 82,
   "inertSlots": [
     {
       "component": "Accordion",
@@ -263,86 +263,6 @@
           "status": "shadowed",
           "disposition": "shadowed",
           "evidence": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-        },
-        {
-          "slot": "card.color.badge.success.background",
-          "cssVar": "--fsds-card-color-badge-success-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.success.foreground",
-          "cssVar": "--fsds-card-color-badge-success-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.warning.background",
-          "cssVar": "--fsds-card-color-badge-warning-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.warning.foreground",
-          "cssVar": "--fsds-card-color-badge-warning-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.info.background",
-          "cssVar": "--fsds-card-color-badge-info-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.info.foreground",
-          "cssVar": "--fsds-card-color-badge-info-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.error.background",
-          "cssVar": "--fsds-card-color-badge-error-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.error.foreground",
-          "cssVar": "--fsds-card-color-badge-error-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.neutral.background",
-          "cssVar": "--fsds-card-color-badge-neutral-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.neutral.foreground",
-          "cssVar": "--fsds-card-color-badge-neutral-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
         }
       ]
     },
@@ -408,19 +328,6 @@
       ]
     },
     {
-      "component": "Command",
-      "inert": [
-        {
-          "slot": "command.opacity.disabled",
-          "cssVar": "--fsds-command-opacity-disabled",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        }
-      ]
-    },
-    {
       "component": "Details",
       "inert": [
         {
@@ -454,19 +361,6 @@
           "status": "dead",
           "disposition": "wire",
           "evidence": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        }
-      ]
-    },
-    {
-      "component": "Divider",
-      "inert": [
-        {
-          "slot": "divider.size.thicknessThick",
-          "cssVar": "--fsds-divider-size-thickness-thick",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "review",
-          "evidence": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         }
       ]
     },
@@ -611,28 +505,12 @@
           "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
-          "slot": "nav-list.color.background.hover",
-          "cssVar": "--fsds-nav-list-color-background-hover",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        },
-        {
           "slot": "nav-list.color.background.current",
           "cssVar": "--fsds-nav-list-color-background-current",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"current\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        },
-        {
-          "slot": "nav-list.color.outline.focus",
-          "cssVar": "--fsds-nav-list-color-outline-focus",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.size.gap.group",
@@ -761,14 +639,6 @@
       "component": "ShowMore",
       "inert": [
         {
-          "slot": "show-more.color.border.default",
-          "cssVar": "--fsds-show-more-color-border-default",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        },
-        {
           "slot": "show-more.color.border.accent",
           "cssVar": "--fsds-show-more-color-border-accent",
           "source": "tokens",
@@ -783,19 +653,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"imageOverlay\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        }
-      ]
-    },
-    {
-      "component": "Shuttle",
-      "inert": [
-        {
-          "slot": "shuttle.color.border.default",
-          "cssVar": "--fsds-shuttle-color-border-default",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -1301,91 +1158,6 @@
       ]
     },
     {
-      "component": "Card",
-      "dead": [
-        {
-          "slot": "card.color.badge.success.background",
-          "cssVar": "--fsds-card-color-badge-success-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.success.foreground",
-          "cssVar": "--fsds-card-color-badge-success-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.warning.background",
-          "cssVar": "--fsds-card-color-badge-warning-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.warning.foreground",
-          "cssVar": "--fsds-card-color-badge-warning-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.info.background",
-          "cssVar": "--fsds-card-color-badge-info-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.info.foreground",
-          "cssVar": "--fsds-card-color-badge-info-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.error.background",
-          "cssVar": "--fsds-card-color-badge-error-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.error.foreground",
-          "cssVar": "--fsds-card-color-badge-error-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.neutral.background",
-          "cssVar": "--fsds-card-color-badge-neutral-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.neutral.foreground",
-          "cssVar": "--fsds-card-color-badge-neutral-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        }
-      ]
-    },
-    {
       "component": "Chip",
       "dead": [
         {
@@ -1431,19 +1203,6 @@
       ]
     },
     {
-      "component": "Command",
-      "dead": [
-        {
-          "slot": "command.opacity.disabled",
-          "cssVar": "--fsds-command-opacity-disabled",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        }
-      ]
-    },
-    {
       "component": "Details",
       "dead": [
         {
@@ -1469,19 +1228,6 @@
           "status": "dead",
           "disposition": "wire",
           "evidence": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        }
-      ]
-    },
-    {
-      "component": "Divider",
-      "dead": [
-        {
-          "slot": "divider.size.thicknessThick",
-          "cssVar": "--fsds-divider-size-thickness-thick",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "review",
-          "evidence": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         }
       ]
     },
@@ -1597,28 +1343,12 @@
           "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
-          "slot": "nav-list.color.background.hover",
-          "cssVar": "--fsds-nav-list-color-background-hover",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        },
-        {
           "slot": "nav-list.color.background.current",
           "cssVar": "--fsds-nav-list-color-background-current",
           "source": "tokens",
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"current\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        },
-        {
-          "slot": "nav-list.color.outline.focus",
-          "cssVar": "--fsds-nav-list-color-outline-focus",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         },
         {
           "slot": "nav-list.size.gap.group",
@@ -1739,14 +1469,6 @@
       "component": "ShowMore",
       "dead": [
         {
-          "slot": "show-more.color.border.default",
-          "cssVar": "--fsds-show-more-color-border-default",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-        },
-        {
           "slot": "show-more.color.border.accent",
           "cssVar": "--fsds-show-more-color-border-accent",
           "source": "tokens",
@@ -1761,19 +1483,6 @@
           "status": "dead",
           "disposition": "review",
           "evidence": "no rule matched: \"imageOverlay\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-        }
-      ]
-    },
-    {
-      "component": "Shuttle",
-      "dead": [
-        {
-          "slot": "shuttle.color.border.default",
-          "cssVar": "--fsds-shuttle-color-border-default",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
         }
       ]
     },
@@ -3236,10 +2945,10 @@
     {
       "component": "Card",
       "prefix": "card",
-      "total": 35,
+      "total": 25,
       "consumed": 24,
       "shadowed": 1,
-      "dead": 10,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -3338,86 +3047,6 @@
           "cssVar": "--fsds-card-typography-line-height-normal",
           "source": "tokens",
           "status": "consumed"
-        },
-        {
-          "slot": "card.color.badge.success.background",
-          "cssVar": "--fsds-card-color-badge-success-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.success.foreground",
-          "cssVar": "--fsds-card-color-badge-success-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.warning.background",
-          "cssVar": "--fsds-card-color-badge-warning-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.warning.foreground",
-          "cssVar": "--fsds-card-color-badge-warning-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.info.background",
-          "cssVar": "--fsds-card-color-badge-info-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.info.foreground",
-          "cssVar": "--fsds-card-color-badge-info-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.error.background",
-          "cssVar": "--fsds-card-color-badge-error-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.error.foreground",
-          "cssVar": "--fsds-card-color-badge-error-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.neutral.background",
-          "cssVar": "--fsds-card-color-badge-neutral-background",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
-        },
-        {
-          "slot": "card.color.badge.neutral.foreground",
-          "cssVar": "--fsds-card-color-badge-neutral-foreground",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "delete",
-          "evidence": "slot hangs off anatomy part \"badge\", which the generated component never renders (no .card__badge in the emitted source); nothing can consume it"
         },
         {
           "slot": "card.color.badge.accent.background",
@@ -4037,9 +3666,9 @@
       "component": "Command",
       "prefix": "command",
       "total": 19,
-      "consumed": 18,
+      "consumed": 19,
       "shadowed": 0,
-      "dead": 1,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -4147,9 +3776,7 @@
           "slot": "command.opacity.disabled",
           "cssVar": "--fsds-command-opacity-disabled",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"disabled\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+          "status": "consumed"
         },
         {
           "slot": "command.color.backgroundHover",
@@ -4472,10 +4099,10 @@
     {
       "component": "Divider",
       "prefix": "divider",
-      "total": 5,
+      "total": 4,
       "consumed": 4,
       "shadowed": 0,
-      "dead": 1,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -4494,14 +4121,6 @@
           "cssVar": "--fsds-divider-size-thickness",
           "source": "tokens",
           "status": "consumed"
-        },
-        {
-          "slot": "divider.size.thicknessThick",
-          "cssVar": "--fsds-divider-size-thickness-thick",
-          "source": "tokens",
-          "status": "dead",
-          "disposition": "review",
-          "evidence": "no rule matched: \"thicknessThick\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
         },
         {
           "slot": "divider.spacing.margin",
@@ -5305,9 +4924,9 @@
       "component": "NavList",
       "prefix": "nav-list",
       "total": 17,
-      "consumed": 10,
+      "consumed": 12,
       "shadowed": 0,
-      "dead": 7,
+      "dead": 5,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -5345,9 +4964,7 @@
           "slot": "nav-list.color.background.hover",
           "cssVar": "--fsds-nav-list-color-background-hover",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"hover\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+          "status": "consumed"
         },
         {
           "slot": "nav-list.stateLayer.hover",
@@ -5373,9 +4990,7 @@
           "slot": "nav-list.color.outline.focus",
           "cssVar": "--fsds-nav-list-color-outline-focus",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"focus\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+          "status": "consumed"
         },
         {
           "slot": "nav-list.size.padding.block",
@@ -6339,9 +5954,9 @@
       "component": "ShowMore",
       "prefix": "show-more",
       "total": 15,
-      "consumed": 12,
+      "consumed": 13,
       "shadowed": 0,
-      "dead": 3,
+      "dead": 2,
       "slots": [
         {
           "slot": "box-model.padding-block-start",
@@ -6407,9 +6022,7 @@
           "slot": "show-more.color.border.default",
           "cssVar": "--fsds-show-more-color-border-default",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+          "status": "consumed"
         },
         {
           "slot": "show-more.color.border.accent",
@@ -6445,9 +6058,9 @@
       "component": "Shuttle",
       "prefix": "shuttle",
       "total": 7,
-      "consumed": 6,
+      "consumed": 7,
       "shadowed": 0,
-      "dead": 1,
+      "dead": 0,
       "slots": [
         {
           "slot": "box-model.gap",
@@ -6471,9 +6084,7 @@
           "slot": "shuttle.color.border.default",
           "cssVar": "--fsds-shuttle-color-border-default",
           "source": "tokens",
-          "status": "dead",
-          "disposition": "wire",
-          "evidence": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
+          "status": "consumed"
         },
         {
           "slot": "shuttle.color.border.accent",

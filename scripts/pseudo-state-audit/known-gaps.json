@@ -37,13 +37,6 @@
       "note": "audit prescribes a root-anchored ':disabled', which only matches form controls — this root is <span>, so the selector can NEVER match. Needs the element-aware lowering plus a contract-declared a11y.attribute (aria-disabled); authoring a bare 'disabled' block today would score realized while doing nothing at runtime."
     },
     {
-      "component": "Command",
-      "dim": "availability",
-      "value": "disabled",
-      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
-      "note": "':has(.command__input:disabled)' IS satisfiable as prescribed — the wrapper form is correct and simply unauthored."
-    },
-    {
       "component": "Details",
       "dim": "availability",
       "value": "disabled",
@@ -84,13 +77,6 @@
       "value": "empty-prompt",
       "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
       "note": "root IS <input>, so '.input:placeholder-shown' is satisfiable and simply unauthored; ':placeholder-shown' is emitted nowhere in the corpus today."
-    },
-    {
-      "component": "NavList",
-      "dim": "focus",
-      "value": "focus",
-      "spec": "FEAT-STATE-ANCHOR-LOWERING-01",
-      "note": "root is <nav> and not focusable; the focusable element is the item descendant. Needs the state-anchor fact."
     },
     {
       "component": "Tabs",

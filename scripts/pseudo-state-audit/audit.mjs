@@ -210,6 +210,21 @@ function detectRealization(cssText, prefix, value, inputBacked, a11y) {
   // Native HTML state attribute (e.g. `[open]`).
   const native = NATIVE_STATE_ATTRS[value];
   if (native && new RegExp(escRe(native)).test(cssText)) return true;
+  // Non-native hosts carry `disabled` as the ARIA attribute form — the same
+  // host-aware lowering the emitter applies (expandOptionsForContract) and
+  // the suppression guard emits (suppressionGuardFor). `:disabled` only
+  // matches native form controls, so crediting only that form would mark
+  // every div/span/a-host realization a gap while its honest selector sits
+  // right there in the CSS. The attribute must carry the RESTYLE, not merely
+  // appear inside a `:not(…)` suppression guard — Chip's hover guard mentions
+  // the attribute while its disabled restyle is genuinely missing, and
+  // crediting the guard would green a real gap (the locked test pins this).
+  if (
+    value === "disabled" &&
+    /(?<!:not\()\[aria-disabled="true"\]/.test(cssText)
+  ) {
+    return true;
+  }
   const pseudo = DERIVABLE_STATE_TO_PSEUDO[value];
   if (pseudo) {
     if (inputBacked && hasInputBackedRealization(cssText, prefix, pseudo)) return true;
