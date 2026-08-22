@@ -101,3 +101,7 @@ evidence:
     status: pass
     evidence_ref: "audit.mjs reframed to the unbound-interface vocabulary (report header, status column, ledger $comment rewritten); ledger re-derived via `node scripts/dead-slot-audit/audit.mjs --reseed` (114->98, dispositions+notes machine-computed, spec provenance preserved by id); at merge 66ebd749: findings=98 ledgered=98 unledgered=0 stale=0 PASS"
     recorded_at: "2026-08-22T00:25:05.588Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "five slots bound (Command disabled opacity, NavList hover state-layer + focus outline, ShowMore trigger border, Shuttle item separator); each read by a generated rule and Chromium-proven with computed-style before/after at merge 66ebd749: e2e/slot-binding-rail.spec.ts 5 passed (hover settles past the 120ms oklab transition to non-zero alpha; Command opacity 0.5 both directions; ShowMore override moves rgb(184,184,184)->rgb(255,0,0) via the panel var mechanism)"
+    recorded_at: "2026-08-22T00:25:05.999Z"
