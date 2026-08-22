@@ -1,0 +1,59 @@
+id: FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01
+title: 'SwiftUI compound interactivity: wire Tabs/Accordion/Shuttle channels to pressable controls, AX-press-proven'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-08-22T01:11:24.560Z'
+updated_at: '2026-08-22T01:11:24.560Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui'
+    - 'packages/ds-swiftui'
+    - 'fsds.targets.json'
+    - '.github/workflows/ci.yml'
+    - '.githooks/pre-push'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composed swift Tabs surface (List/Tab/Panel subcomponents); when the harness AXPresses a tab; then onActiveTabChange fires exactly once with that tab value and the selected panel becomes visible (census exposes pressable controls, not zero)'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composed swift Accordion surface; when the harness AXPresses an item trigger; then the openness channel change fires with the item key and pressing again toggles it back (both directions)'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a swift Shuttle item; when the harness AXPresses an unselected item; then the selection channel gains it and a second press removes it (both directions)'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the deepened emission; when the press-proof harness runs; then the structural limitation entry for tabs/accordion/shuttle is retired and every pre-existing proof (Switch/Select/Calendar/Dialog/Chip/Walkthrough) still passes'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the swiftui allowlist; when NavTree and Markdown are admitted; then the full 51-corpus emits, swift build stays green, and Markdown''s plain-text degradation is documented'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the native generated trees; when CI (and the pre-push drift list) regenerate; then packages/ds-swiftui component sources and the compose tree are git-diff drift-gated like the six TS trees'
+non_functional: {}
+contracts:
+  - name: 'tabs-activeTab'
+    type: behavior
+    path: 'packages/ds-contracts/components/Tabs/Tabs.contract.json'
+  - name: 'accordion-openness'
+    type: behavior
+    path: 'packages/ds-contracts/components/Accordion/Accordion.contract.json'
+  - name: 'shuttle-selection'
+    type: behavior
+    path: 'packages/ds-contracts/components/Shuttle/Shuttle.contract.json'
