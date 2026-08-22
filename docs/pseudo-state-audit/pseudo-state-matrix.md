@@ -2,7 +2,7 @@
 
 `PSEUDO-STATE-STYLING-RAIL-01` — read-only. Each declared state obligation (from `states.dimensions`, plus the empty-field input prompt for text inputs) is classified against the generated React CSS using the codegen's realization vocabulary: a derivable pseudo-class (`:hover`/`:focus-visible`/`:disabled`/`:checked`), an ARIA-attribute selector (`[aria-expanded="true"]`), the `:has(.<prefix>__input:<state>)` input wrapper, or a BEM modifier (`.<prefix>--<value>`). An obligation is **realized** if any valid form exists, **base** if it is the dimension's initial value, **behavioral** if it is channel-driven / suppressed / focus-exempt (not a CSS gap), or a **gap** otherwise.
 
-Components with states: **50** · obligations: **235** · realized: **64** · gaps: **19**
+Components with states: **50** · obligations: **235** · realized: **66** · gaps: **17**
 
 ## Gaps — declared state obligations with no realization
 
@@ -13,14 +13,12 @@ Components with states: **50** · obligations: **235** · realized: **64** · ga
 | Calendar | `today` | presentation | `today` | `.calendar--today` |
 | Calendar | `month` | presentation | `outsideMonth` | `.calendar--outsideMonth` |
 | Chip | `availability` | availability | `disabled` | `.chip:disabled` |
-| Command | `availability` | availability | `disabled` | `:has(.command__input:disabled)` |
 | Details | `availability` | availability | `disabled` | `.details:disabled` |
 | Dialog | `pointer` | interaction | `active` | `.dialog:active` |
 | Dialog | `focus` | interaction | `focus` | `.dialog:focus-visible` |
 | Image | `validation` | validation | `error` | `.image--error` |
 | Image | `loading` | data | `loading` | `.image--loading` |
 | Input | `prompt` | prompt | `empty-prompt` | `.input:placeholder-shown (or .input__input:placeholder-shown)` |
-| NavList | `focus` | interaction | `focus` | `.nav-list:focus-visible` |
 | Tabs | `focus` | interaction | `focus` | `.tabs:focus-visible` |
 | Tabs | `selection` | selection | `selected` | `.tabs[aria-selected="true"]` |
 | Text | `validation` | validation | `error` | `.text--error` |
@@ -138,7 +136,7 @@ Components with states: **50** · obligations: **235** · realized: **64** · ga
 | dim | category | initial | values (✓ realized · ✗ gap · ∘ base · ~ behavioral) |
 |---|---|---|---|
 | `pointer` | interaction | default | default∘ hover✓ |
-| `availability` | availability | enabled | enabled∘ disabled✗ |
+| `availability` | availability | enabled | enabled∘ disabled✓ |
 | `selection` | selection | unselected | unselected∘ selected✓ |
 
 ### Details  `.details`
@@ -221,7 +219,7 @@ Components with states: **50** · obligations: **235** · realized: **64** · ga
 | dim | category | initial | values (✓ realized · ✗ gap · ∘ base · ~ behavioral) |
 |---|---|---|---|
 | `pointer` | interaction | default | default∘ hover✓ |
-| `focus` | interaction | unfocused | unfocused∘ focus✗ |
+| `focus` | interaction | unfocused | unfocused∘ focus✓ |
 
 ### NavTree  `.nav-tree` · focus:none
 

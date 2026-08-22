@@ -14,11 +14,6 @@
     "fallback": "1px",
     "layer": "semantic"
   },
-  "divider.size.thicknessThick": {
-    "resolvesTo": "semantic.shape.control.border.defaultWidth",
-    "fallback": "1px",
-    "layer": "semantic"
-  },
   "divider.spacing.margin": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",

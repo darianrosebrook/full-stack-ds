@@ -4939,6 +4939,14 @@ export interface ExpandStylesKeyOptions {
    */
   portalContentSelector?: string;
   /**
+   * Host-aware selector for the `disabled` state block. `:disabled` only
+   * matches native form controls, so a non-disableable host (div, span…)
+   * must carry the state as `[aria-disabled="true"]` instead — the same
+   * form the suppression guard emits (see suppressionGuardFor). Computed
+   * from the contract's root tag; absent means legacy `:disabled`.
+   */
+  disabledSelector?: string;
+  /**
    * Part key → selector overrides for components whose parts are marked by a
    * data-attribute rather than a part class (the anchored-surface family).
    * Consulted before the default `.<prefix>__<part>` lowering.
@@ -4988,8 +4996,27 @@ export function expandOptionsForContract(
         }
       : undefined;
 
-  if (!portalContentSelector && !surfacePartSelectors) return undefined;
-  return { portalContentSelector, surfacePartSelectors };
+  // The disabled-state selector is host-aware for EVERY contract, not only
+  // the portal/surface ones: a `disabled` block on a div host lowered to
+  // `:disabled` emits a rule that can never match, which would green the
+  // slot's consumption while the styling stays dead.
+  const rootTag =
+    contract.anatomy && !Array.isArray(contract.anatomy)
+      ? contract.anatomy.dom?.tag
+      : undefined;
+  const disabledSelector =
+    rootTag && NATIVE_DISABLEABLE_TAGS.has(rootTag)
+      ? ":disabled"
+      : ('[aria-disabled="true"]' as const);
+
+  if (!portalContentSelector && !surfacePartSelectors) {
+    return rootTag ? { disabledSelector } : undefined;
+  }
+  return {
+    portalContentSelector,
+    surfacePartSelectors,
+    ...(rootTag ? { disabledSelector } : {}),
+  };
 }
 
 export function expandStylesKey(
@@ -5034,7 +5061,10 @@ export function expandStylesKey(
   if (key.includes(":") || key.includes("[")) {
     return expandComplexSelector(key, prefix);
   }
-  const statePseudo = DERIVABLE_STATE_TO_PSEUDO[key];
+  const statePseudo =
+    key === "disabled" && options.disabledSelector
+      ? options.disabledSelector
+      : DERIVABLE_STATE_TO_PSEUDO[key];
   if (statePseudo) return `.${prefix}${statePseudo}`;
   return `.${prefix}__${key}`;
 }

@@ -1,4 +1,10 @@
 {
+  "disabled": {
+    "opacity": {
+      "resolvesTo": "command.opacity.disabled",
+      "fallback": "0.5"
+    }
+  },
   "root": {
     "position": {
       "literal": "fixed",

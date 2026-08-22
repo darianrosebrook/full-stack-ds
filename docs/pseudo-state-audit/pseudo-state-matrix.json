@@ -2,8 +2,8 @@
   "spec": "PSEUDO-STATE-STYLING-RAIL-01",
   "componentsWithStates": 50,
   "totalObligations": 235,
-  "realized": 64,
-  "gaps": 19,
+  "realized": 66,
+  "gaps": 17,
   "failing": [
     {
       "component": "Breadcrumbs",
@@ -37,16 +37,6 @@
     },
     {
       "component": "Chip",
-      "gaps": [
-        {
-          "dim": "availability",
-          "category": "availability",
-          "value": "disabled"
-        }
-      ]
-    },
-    {
-      "component": "Command",
       "gaps": [
         {
           "dim": "availability",
@@ -102,16 +92,6 @@
           "dim": "prompt",
           "category": "prompt",
           "value": "empty-prompt"
-        }
-      ]
-    },
-    {
-      "component": "NavList",
-      "gaps": [
-        {
-          "dim": "focus",
-          "category": "interaction",
-          "value": "focus"
         }
       ]
     },
@@ -1062,13 +1042,11 @@
               "value": "disabled",
               "category": "availability",
               "expected": ":has(.command__input:disabled)",
-              "status": "gap"
+              "status": "realized"
             }
           ],
-          "realizedCount": 0,
-          "gaps": [
-            "disabled"
-          ],
+          "realizedCount": 1,
+          "gaps": [],
           "total": 2
         },
         {
@@ -1766,13 +1744,11 @@
               "value": "focus",
               "category": "interaction",
               "expected": ".nav-list:focus-visible",
-              "status": "gap"
+              "status": "realized"
             }
           ],
-          "realizedCount": 0,
-          "gaps": [
-            "focus"
-          ],
+          "realizedCount": 1,
+          "gaps": [],
           "total": 2
         }
       ],

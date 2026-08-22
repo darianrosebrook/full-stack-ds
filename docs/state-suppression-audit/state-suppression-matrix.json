@@ -81,12 +81,7 @@
       "component": "Links",
       "rootTag": "a",
       "guarded": true,
-      "suppressedProps": [
-        "color",
-        "cursor",
-        "text-decoration-line",
-        "pointer-events"
-      ],
+      "suppressedProps": [],
       "leaks": []
     },
     {

@@ -40,6 +40,22 @@
       "resolvesTo": "shuttle.color.foreground.primary",
       "fallback": "#141414"
     },
+    "border-block-end-style": {
+      "literal": "solid",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-block-end-width": {
+      "literal": "1px",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-block-end-color": {
+      "resolvesTo": "shuttle.color.border.default",
+      "fallback": "#b8b8b8"
+    },
     "cursor": {
       "literal": "pointer",
       "platforms": [

@@ -76,6 +76,10 @@ export class CommandElement extends LitElement {
       justify-content: center;
       padding-top: var(--fsds-command-size-top-offset, 10vh);
       pointer-events: none;
+
+      &[aria-disabled="true"] {
+        opacity: var(--fsds-command-opacity-disabled, 0.5);
+      }
     }
 
     .command__overlay {
@@ -393,6 +397,10 @@ export class CommandListElement extends LitElement {
       justify-content: center;
       padding-top: var(--fsds-command-size-top-offset, 10vh);
       pointer-events: none;
+
+      &[aria-disabled="true"] {
+        opacity: var(--fsds-command-opacity-disabled, 0.5);
+      }
     }
 
     .command__overlay {
@@ -614,6 +622,10 @@ export class CommandGroupElement extends LitElement {
       justify-content: center;
       padding-top: var(--fsds-command-size-top-offset, 10vh);
       pointer-events: none;
+
+      &[aria-disabled="true"] {
+        opacity: var(--fsds-command-opacity-disabled, 0.5);
+      }
     }
 
     .command__overlay {
@@ -835,6 +847,10 @@ export class CommandItemElement extends LitElement {
       justify-content: center;
       padding-top: var(--fsds-command-size-top-offset, 10vh);
       pointer-events: none;
+
+      &[aria-disabled="true"] {
+        opacity: var(--fsds-command-opacity-disabled, 0.5);
+      }
     }
 
     .command__overlay {

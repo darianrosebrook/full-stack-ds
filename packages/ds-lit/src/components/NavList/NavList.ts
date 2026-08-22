@@ -88,8 +88,15 @@ export class NavListElement extends LitElement {
     }
 
     .nav-list__item:hover {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
+      background-color: color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-hover, #141414);
+    }
+
+    .nav-list__item:focus-visible {
+      outline-style: solid;
+      outline-width: 2px;
+      outline-color: var(--fsds-nav-list-color-outline-focus, #d92d2e);
+      outline-offset: -2px;
     }
 
     .nav-list__item[aria-current="page"] {
@@ -197,8 +204,15 @@ export class NavListListElement extends LitElement {
     }
 
     .nav-list__item:hover {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
+      background-color: color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-hover, #141414);
+    }
+
+    .nav-list__item:focus-visible {
+      outline-style: solid;
+      outline-width: 2px;
+      outline-color: var(--fsds-nav-list-color-outline-focus, #d92d2e);
+      outline-offset: -2px;
     }
 
     .nav-list__item[aria-current="page"] {
@@ -285,8 +299,15 @@ export class NavListItemElement extends LitElement {
     }
 
     .nav-list__item:hover {
-      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
+      background-color: color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
       color: var(--fsds-nav-list-color-foreground-hover, #141414);
+    }
+
+    .nav-list__item:focus-visible {
+      outline-style: solid;
+      outline-width: 2px;
+      outline-color: var(--fsds-nav-list-color-outline-focus, #d92d2e);
+      outline-offset: -2px;
     }
 
     .nav-list__item[aria-current="page"] {
