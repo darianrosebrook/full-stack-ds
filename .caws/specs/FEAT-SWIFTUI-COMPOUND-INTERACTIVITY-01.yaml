@@ -64,3 +64,8 @@ contracts:
   - name: 'shuttle-selection'
     type: behavior
     path: 'packages/ds-contracts/components/Shuttle/Shuttle.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "PressProofHarness compoundProofs at merge fa181fae (exit 0): composed Tabs surface AXPresses tab 'tabs-b' -> onActiveTabChange [\"b\"] exactly once, panel swaps to 'tabs panel b' with panel a absent (polled past AX-tree settle); census exposes 5 pressables where the pre-slice emission exposed zero"
+    recorded_at: "2026-08-22T03:21:59.609Z"
