@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: slot-completeness
 created_at: '2026-07-30T04:49:59.373Z'
-updated_at: '2026-08-22T00:09:50.923Z'
+updated_at: '2026-08-22T00:21:08.048Z'
 blast_radius:
   modules:
     - 'scripts/dead-slot-audit/{audit.mjs,disposition.mjs,known-dead.json}'
@@ -21,6 +21,7 @@ scope:
     - packages/ds-codegen/src/ir.ts
     - scripts/pseudo-state-audit
     - e2e/slot-binding-rail.spec.ts
+    - README.md
   out: []
 invariants:
   - >-
