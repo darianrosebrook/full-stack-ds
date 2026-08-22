@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "PressProofHarness compoundProofs at merge fa181fae (exit 0): composed Tabs surface AXPresses tab 'tabs-b' -> onActiveTabChange [\"b\"] exactly once, panel swaps to 'tabs panel b' with panel a absent (polled past AX-tree settle); census exposes 5 pressables where the pre-slice emission exposed zero"
     recorded_at: "2026-08-22T03:21:59.609Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "PressProofHarness at merge fa181fae: AccordionItem trigger pressed twice -> openness changes [\"[\\\"k1\\\"]\", \"[]\"] (both directions) with 'accordion content' visible while open and absent when closed"
+    recorded_at: "2026-08-22T03:22:00.073Z"
