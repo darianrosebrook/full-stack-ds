@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: "PressProofHarness at merge fa181fae: AccordionItem trigger pressed twice -> openness changes [\"[\\\"k1\\\"]\", \"[]\"] (both directions) with 'accordion content' visible while open and absent when closed"
     recorded_at: "2026-08-22T03:22:00.073Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "PressProofHarness at merge fa181fae: Shuttle item presses remove 'alpha' then 'beta' -> selection changes [\"[\\\"beta\\\"]\", \"[]\"], pressed row leaves the rendered selection (press->channel->re-render). Contract-parity note: the contract iterates the selection channel in every family (web renders (selection ?? []).map), so rendered rows ARE selected items and press removes — an 'add' press is not contract-modeled in any family"
+    recorded_at: "2026-08-22T03:22:00.591Z"
