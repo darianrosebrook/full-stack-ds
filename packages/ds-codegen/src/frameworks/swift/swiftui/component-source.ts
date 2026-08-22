@@ -1173,7 +1173,12 @@ function emitArrayIteratedList(ir: ComponentIR): string {
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "4"}) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}ForEach(${channel.name}.value, id: \\.self) { item in`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(item)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}Button {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}${channel.name}.set(${channel.name}.value.filter { $0 != item })`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}} label: {`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(item)`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
   lines.push(`${INDENT}${INDENT}}`);
   if (hasAria) lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
@@ -1285,9 +1290,84 @@ function emitInteractiveComposite(ir: ComponentIR): string {
   lines.push(`${INDENT}${INDENT}VStack(spacing: ${chrome.gap ? "gap" : "4"}) {`);
   lines.push(`${INDENT}${INDENT}${INDENT}content`);
   lines.push(`${INDENT}${INDENT}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}.environmentObject(${channel.name})`);
   if (hasAria) lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
   lines.push(`${INDENT}}`);
   lines.push(`}`);
+  lines.push("");
+  // Press-wired subcomponents, keyed off the channel's IR type — the swift
+  // lowering of the web/RN compound-context pattern: the root injects the
+  // channel (environmentObject above); the subcomponents consume it and
+  // mutate it through ControllableValue.set, never local divergent state.
+  // A subcomponent used outside its root traps at @EnvironmentObject access,
+  // mirroring the RN compound-context throw.
+  if (isUnion) {
+    lines.push(
+      `/// Disclosure item: press toggles \`${channel.name}\` membership for \`key\`; content visible while contained.`,
+    );
+    lines.push(`public struct ${exportName}Item<Trigger: View, Content: View>: View {`);
+    lines.push(`${INDENT}@EnvironmentObject var ${channel.name}: ControllableValue<[String]>`);
+    lines.push(`${INDENT}private let key: String`);
+    lines.push(`${INDENT}private let trigger: Trigger`);
+    lines.push(`${INDENT}private let content: Content`);
+    lines.push(`${INDENT}public init(key: String, @ViewBuilder trigger: () -> Trigger, @ViewBuilder content: () -> Content) {`);
+    lines.push(`${INDENT}${INDENT}self.key = key`);
+    lines.push(`${INDENT}${INDENT}self.trigger = trigger()`);
+    lines.push(`${INDENT}${INDENT}self.content = content()`);
+    lines.push(`${INDENT}}`);
+    lines.push(`${INDENT}public var body: some View {`);
+    lines.push(`${INDENT}${INDENT}VStack(spacing: 4) {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}Button {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}let next = ${channel.name}.value.contains(key)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}? ${channel.name}.value.filter { $0 != key }`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}: ${channel.name}.value + [key]`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${channel.name}.set(next)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}} label: {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}trigger`);
+    lines.push(`${INDENT}${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}if ${channel.name}.value.contains(key) {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}content`);
+    lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}EmptyView()`);
+    lines.push(`${INDENT}${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}}`);
+    lines.push(`}`);
+  } else {
+    lines.push(`/// Press-wired tab: sets the \`${channel.name}\` channel to \`value\`.`);
+    lines.push(`public struct ${exportName}Tab: View {`);
+    lines.push(`${INDENT}@EnvironmentObject var ${channel.name}: ControllableValue<String>`);
+    lines.push(`${INDENT}private let value: String`);
+    lines.push(`${INDENT}private let label: String`);
+    lines.push(`${INDENT}public init(value: String, label: String) {`);
+    lines.push(`${INDENT}${INDENT}self.value = value`);
+    lines.push(`${INDENT}${INDENT}self.label = label`);
+    lines.push(`${INDENT}}`);
+    lines.push(`${INDENT}public var body: some View {`);
+    lines.push(`${INDENT}${INDENT}Button(label) { ${channel.name}.set(value) }`);
+    lines.push(`${INDENT}${INDENT}${INDENT}.buttonStyle(.plain)`);
+    lines.push(`${INDENT}}`);
+    lines.push(`}`);
+    lines.push("");
+    lines.push(`/// Panel region: content visible only while the \`${channel.name}\` channel equals \`value\`.`);
+    lines.push(`public struct ${exportName}Panel<Content: View>: View {`);
+    lines.push(`${INDENT}@EnvironmentObject var ${channel.name}: ControllableValue<String>`);
+    lines.push(`${INDENT}private let value: String`);
+    lines.push(`${INDENT}private let content: Content`);
+    lines.push(`${INDENT}public init(value: String, @ViewBuilder content: () -> Content) {`);
+    lines.push(`${INDENT}${INDENT}self.value = value`);
+    lines.push(`${INDENT}${INDENT}self.content = content()`);
+    lines.push(`${INDENT}}`);
+    lines.push(`${INDENT}public var body: some View {`);
+    lines.push(`${INDENT}${INDENT}if ${channel.name}.value == value {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}content`);
+    lines.push(`${INDENT}${INDENT}} else {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}EmptyView()`);
+    lines.push(`${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}}`);
+    lines.push(`}`);
+  }
   lines.push("// @generated:end");
   void hasDisabled;
   return lines.join("\n");
