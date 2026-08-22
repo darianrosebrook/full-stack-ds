@@ -67,6 +67,9 @@ export class ShuttleElement extends LitElement {
       align-items: center;
       padding: 4px 8px;
       color: var(--fsds-shuttle-color-foreground-primary, #141414);
+      border-block-end-style: solid;
+      border-block-end-width: 1px;
+      border-block-end-color: var(--fsds-shuttle-color-border-default, #b8b8b8);
       cursor: pointer;
     }
   `;
@@ -157,6 +160,9 @@ export class ShuttleItemElement extends LitElement {
       align-items: center;
       padding: 4px 8px;
       color: var(--fsds-shuttle-color-foreground-primary, #141414);
+      border-block-end-style: solid;
+      border-block-end-width: 1px;
+      border-block-end-color: var(--fsds-shuttle-color-border-default, #b8b8b8);
       cursor: pointer;
     }
   `;

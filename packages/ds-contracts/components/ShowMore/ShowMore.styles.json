@@ -92,11 +92,21 @@
         "web"
       ]
     },
-    "border": {
-      "literal": "none",
+    "border-style": {
+      "literal": "solid",
       "platforms": [
         "web"
       ]
+    },
+    "border-width": {
+      "literal": "1px",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-color": {
+      "resolvesTo": "show-more.color.border.default",
+      "fallback": "#b8b8b8"
     },
     "padding": {
       "literal": "0",

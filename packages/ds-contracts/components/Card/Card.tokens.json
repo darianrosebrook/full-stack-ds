@@ -79,56 +79,6 @@
     "fallback": "1.5",
     "layer": "semantic"
   },
-  "card.color.badge.success.background": {
-    "resolvesTo": "semantic.color.background.success.subtle",
-    "fallback": "#b3dba7",
-    "layer": "semantic"
-  },
-  "card.color.badge.success.foreground": {
-    "resolvesTo": "semantic.color.foreground.on.success.subtle",
-    "fallback": "#2c4f09",
-    "layer": "semantic"
-  },
-  "card.color.badge.warning.background": {
-    "resolvesTo": "semantic.color.background.warning.subtle",
-    "fallback": "#fdc67f",
-    "layer": "semantic"
-  },
-  "card.color.badge.warning.foreground": {
-    "resolvesTo": "semantic.color.foreground.on.warning.subtle",
-    "fallback": "#6c3a00",
-    "layer": "semantic"
-  },
-  "card.color.badge.info.background": {
-    "resolvesTo": "semantic.color.background.info.subtle",
-    "fallback": "#95dafb",
-    "layer": "semantic"
-  },
-  "card.color.badge.info.foreground": {
-    "resolvesTo": "semantic.color.foreground.on.info.subtle",
-    "fallback": "#013ab0",
-    "layer": "semantic"
-  },
-  "card.color.badge.error.background": {
-    "resolvesTo": "semantic.color.background.danger.subtle",
-    "fallback": "#fac2c2",
-    "layer": "semantic"
-  },
-  "card.color.badge.error.foreground": {
-    "resolvesTo": "semantic.color.foreground.on.danger.subtle",
-    "fallback": "#900909",
-    "layer": "semantic"
-  },
-  "card.color.badge.neutral.background": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
-    "layer": "semantic"
-  },
-  "card.color.badge.neutral.foreground": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#474647",
-    "layer": "semantic"
-  },
   "card.color.badge.accent.background": {
     "resolvesTo": "semantic.color.background.accent",
     "fallback": "#d92d2e",

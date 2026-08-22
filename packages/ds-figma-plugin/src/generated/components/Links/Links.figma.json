@@ -225,7 +225,7 @@
         }
       },
       {
-        "selector": ".links:disabled",
+        "selector": ".links[aria-disabled=\"true\"]",
         "declarations": {
           "color": "var(--fsds-links-color-foreground-disabled, #727272)",
           "cursor": "not-allowed",

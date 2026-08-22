@@ -81,7 +81,7 @@
   },
   ".nav-list__item:hover": {
     "background-color": {
-      "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent)",
+      "literal": "color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent)",
       "platforms": [
         "web"
       ]
@@ -89,6 +89,30 @@
     "color": {
       "resolvesTo": "nav-list.color.foreground.hover",
       "fallback": "#141414"
+    }
+  },
+  ".nav-list__item:focus-visible": {
+    "outline-style": {
+      "literal": "solid",
+      "platforms": [
+        "web"
+      ]
+    },
+    "outline-width": {
+      "literal": "2px",
+      "platforms": [
+        "web"
+      ]
+    },
+    "outline-color": {
+      "resolvesTo": "nav-list.color.outline.focus",
+      "fallback": "#d92d2e"
+    },
+    "outline-offset": {
+      "literal": "-2px",
+      "platforms": [
+        "web"
+      ]
     }
   },
   ".nav-list__item[aria-current=\"page\"]": {

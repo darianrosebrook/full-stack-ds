@@ -95,7 +95,7 @@ export class LinksElement extends LitElement {
         color: var(--fsds-links-color-foreground-visited, #e55b5a);
       }
 
-      &:disabled {
+      &[aria-disabled="true"] {
         color: var(--fsds-links-color-foreground-disabled, #727272);
         cursor: not-allowed;
         text-decoration-line: none;

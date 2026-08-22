@@ -21,6 +21,10 @@
   justify-content: center;
   padding-top: var(--fsds-command-size-top-offset, 10vh);
   pointer-events: none;
+
+  &[aria-disabled="true"] {
+    opacity: var(--fsds-command-opacity-disabled, 0.5);
+  }
 }
 
 .command__overlay {

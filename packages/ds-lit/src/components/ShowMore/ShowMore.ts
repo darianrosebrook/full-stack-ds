@@ -83,7 +83,9 @@ export class ShowMoreElement extends LitElement {
       align-items: center;
       color: var(--fsds-show-more-color-foreground-primary, #141414);
       background: none;
-      border: none;
+      border-style: solid;
+      border-width: 1px;
+      border-color: var(--fsds-show-more-color-border-default, #b8b8b8);
       padding: 0;
       cursor: pointer;
     }
@@ -192,7 +194,9 @@ export class ShowMoreContentElement extends LitElement {
       align-items: center;
       color: var(--fsds-show-more-color-foreground-primary, #141414);
       background: none;
-      border: none;
+      border-style: solid;
+      border-width: 1px;
+      border-color: var(--fsds-show-more-color-border-default, #b8b8b8);
       padding: 0;
       cursor: pointer;
     }
@@ -270,7 +274,9 @@ export class ShowMoreTriggerElement extends LitElement {
       align-items: center;
       color: var(--fsds-show-more-color-foreground-primary, #141414);
       background: none;
-      border: none;
+      border-style: solid;
+      border-width: 1px;
+      border-color: var(--fsds-show-more-color-border-default, #b8b8b8);
       padding: 0;
       cursor: pointer;
     }

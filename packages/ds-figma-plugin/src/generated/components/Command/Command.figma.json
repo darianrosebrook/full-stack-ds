@@ -396,6 +396,12 @@
         }
       },
       {
+        "selector": ".command[aria-disabled=\"true\"]",
+        "declarations": {
+          "opacity": "var(--fsds-command-opacity-disabled, 0.5)"
+        }
+      },
+      {
         "selector": ".command__overlay",
         "declarations": {
           "position": "absolute",

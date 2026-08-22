@@ -36,7 +36,6 @@ export class DividerElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-divider-color-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-divider-size-thickness: var(--fsds-semantic-shape-control-border-default-width, 1px);
-      --fsds-divider-size-thickness-thick: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-divider-spacing-margin: var(--fsds-core-spacing-size-04, 8px);
     }
 
