@@ -50,6 +50,7 @@ public struct Tooltip<Trigger: View, Content: View>: View {
         TooltipTokens.scopes
     }
     @StateObject private var open: ControllableValue<Bool>
+    private let openControlled: Binding<Bool>?
     private let placement: TooltipPlacement
     private let disabled: Bool
     private let trigger: Trigger
@@ -66,6 +67,7 @@ public struct Tooltip<Trigger: View, Content: View>: View {
         @ViewBuilder content: () -> Content = { EmptyView() }
     ) {
         self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
+        self.openControlled = open
         self.placement = placement
         self.disabled = disabled
         self.trigger = trigger()
@@ -108,12 +110,22 @@ public struct Tooltip<Trigger: View, Content: View>: View {
             .foregroundStyle(foreground)
     }
 
+    private var presentationBinding: Binding<Bool> {
+        if let controlled = openControlled {
+            return Binding(
+                get: { controlled.wrappedValue },
+                set: { open.set($0) }
+            )
+        }
+        return Binding(
+            get: { open.value },
+            set: { open.set($0) }
+        )
+    }
+
     public var body: some View {
         trigger
-            .popover(isPresented: Binding(
-                get: { open.value },
-                set: { open.set($0) }
-            ), arrowEdge: placementEdge) {
+            .popover(isPresented: presentationBinding, arrowEdge: placementEdge) {
                 panel
             }
             .onHover { hovering in

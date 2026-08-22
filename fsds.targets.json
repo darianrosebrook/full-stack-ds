@@ -97,7 +97,9 @@
         "ToggleSwitch",
         "Tooltip",
         "Truncate",
-        "Walkthrough"
+        "Walkthrough",
+        "Markdown",
+        "NavTree"
       ]
     },
     {

@@ -100,6 +100,38 @@ public struct Accordion<Content: View>: View {
         VStack(spacing: gap) {
             content
         }
+            .environmentObject(openness)
+    }
+}
+
+/// Disclosure item: press toggles `openness` membership for `key`; content visible while contained.
+public struct AccordionItem<Trigger: View, Content: View>: View {
+    @EnvironmentObject var openness: ControllableValue<[String]>
+    private let key: String
+    private let trigger: Trigger
+    private let content: Content
+    public init(key: String, @ViewBuilder trigger: () -> Trigger, @ViewBuilder content: () -> Content) {
+        self.key = key
+        self.trigger = trigger()
+        self.content = content()
+    }
+    public var body: some View {
+        VStack(spacing: 4) {
+            Button {
+                let next = openness.value.contains(key)
+                    ? openness.value.filter { $0 != key }
+                    : openness.value + [key]
+                openness.set(next)
+            } label: {
+                trigger
+            }
+                .buttonStyle(.plain)
+            if openness.value.contains(key) {
+                content
+            } else {
+                EmptyView()
+            }
+        }
     }
 }
 // @generated:end

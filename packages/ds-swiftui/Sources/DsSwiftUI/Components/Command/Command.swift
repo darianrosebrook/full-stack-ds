@@ -53,6 +53,7 @@ public struct Command<List: View, Group: View, Item: View>: View {
         CommandTokens.scopes
     }
     @StateObject private var open: ControllableValue<Bool>
+    private let openControlled: Binding<Bool>?
     @StateObject private var search: ControllableValue<String>
     private let list: List
     private let group: Group
@@ -71,6 +72,7 @@ public struct Command<List: View, Group: View, Item: View>: View {
         @ViewBuilder item: () -> Item = { EmptyView() }
     ) {
         self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
+        self.openControlled = open
         self._search = StateObject(wrappedValue: ControllableValue(controlled: search, defaultValue: defaultSearch, onChange: onSearchChange))
         self.list = list()
         self.group = group()
@@ -122,12 +124,22 @@ public struct Command<List: View, Group: View, Item: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
     }
 
+    private var presentationBinding: Binding<Bool> {
+        if let controlled = openControlled {
+            return Binding(
+                get: { controlled.wrappedValue },
+                set: { open.set($0) }
+            )
+        }
+        return Binding(
+            get: { open.value },
+            set: { open.set($0) }
+        )
+    }
+
     public var body: some View {
         SwiftUI.Color.clear.frame(width: 0, height: 0)
-            .sheet(isPresented: Binding(
-                get: { open.value },
-                set: { open.set($0) }
-            )) {
+            .sheet(isPresented: presentationBinding) {
                 panel
             }
     }
