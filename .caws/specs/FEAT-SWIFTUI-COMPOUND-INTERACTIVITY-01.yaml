@@ -81,3 +81,7 @@ evidence:
     status: pass
     evidence_ref: "structuralProbes limitation retired (replaced by compoundProofs proofs); all pre-existing proofs pass at merge fa181fae: chip/walkthrough/switch/select/calendar/dialog counters all at expectation, harness exit 0. The strengthened harness additionally EXPOSED and the slice FIXED a real defect: .sheet/.popover rode a computed Binding over the StateObject which never invalidates for controlled after-mount flips (plain-probe differential) — controlled Dialog cycle now proves before/open/after-close false/true/false; the former 'host never presents sheets' limitation is retired as masking this defect"
     recorded_at: "2026-08-22T03:22:01.046Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "fsds.targets.json swiftui allowlist now the full corpus (target-component-count:swiftui marker derives 51 at merge fa181fae, docs:check-claims green); swift build green over all 51; Markdown degrades to plain-text content: String exactly as RN (documented in snapshot row + package README); NavTree emits via its list path"
+    recorded_at: "2026-08-22T03:22:01.509Z"
