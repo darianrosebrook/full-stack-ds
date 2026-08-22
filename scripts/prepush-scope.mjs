@@ -21,7 +21,10 @@ const PATTERNS = {
   // generated framework src trees — matches CI's six-tree drift diff exactly
   // (react-native was added to CI by 289058a4 but missing here; this closes
   // that latent gap the hook's own lockstep comment warns about).
-  generated: /^packages\/ds-(react|vue|svelte|angular|lit|react-native)\//,
+  // swiftui/jetpack-compose generated trees joined the CI+pre-push drift
+  // diff under FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01, so changes under
+  // them must trigger the rail exactly like the TS trees.
+  generated: /^packages\/ds-(react|vue|svelte|angular|lit|react-native|swiftui|jetpack-compose)\//,
   // iconography has its own emission ledger gate (ledger-icons.mjs --check),
   // separate from the codegen rail's generated-tree drift diff.
   iconography: /^packages\/ds-iconography\//,
