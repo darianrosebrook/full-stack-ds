@@ -105,3 +105,7 @@ evidence:
     status: pass
     evidence_ref: "five slots bound (Command disabled opacity, NavList hover state-layer + focus outline, ShowMore trigger border, Shuttle item separator); each read by a generated rule and Chromium-proven with computed-style before/after at merge 66ebd749: e2e/slot-binding-rail.spec.ts 5 passed (hover settles past the 120ms oklab transition to non-zero alpha; Command opacity 0.5 both directions; ShowMore override moves rgb(184,184,184)->rgb(255,0,0) via the panel var mechanism)"
     recorded_at: "2026-08-22T00:25:05.999Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "11 deletions each carry positive evidence recorded in the machine-computed ledger note BEFORE deletion: Card's 10 non-accent badge slots (unrendered anatomy part, classifier rule 5) and divider.size.thicknessThick (preset of the freeform string prop thickness — classifier rule 5b added this slice with 3 locked boundary tests incl. enum-prop and bare-name near-misses). 'Nothing reads it' alone deleted nothing: the other 65 review entries remain ledgered."
+    recorded_at: "2026-08-22T00:25:06.400Z"
