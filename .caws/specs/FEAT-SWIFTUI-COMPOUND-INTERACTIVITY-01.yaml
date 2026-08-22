@@ -2,9 +2,10 @@ id: FEAT-SWIFTUI-COMPOUND-INTERACTIVITY-01
 title: 'SwiftUI compound interactivity: wire Tabs/Accordion/Shuttle channels to pressable controls, AX-press-proven'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: swiftui-compound
 created_at: '2026-08-22T01:11:24.560Z'
-updated_at: '2026-08-22T01:11:24.560Z'
+updated_at: '2026-08-22T01:11:53.368Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
