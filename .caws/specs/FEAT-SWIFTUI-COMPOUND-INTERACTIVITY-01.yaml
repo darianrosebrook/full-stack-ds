@@ -3,7 +3,6 @@ title: 'SwiftUI compound interactivity: wire Tabs/Accordion/Shuttle channels to 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: swiftui-compound
 created_at: '2026-08-22T01:11:24.560Z'
 updated_at: '2026-08-22T03:12:25.085Z'
 blast_radius:
