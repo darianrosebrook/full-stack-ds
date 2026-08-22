@@ -20,7 +20,11 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'No per-component-name lore in the emitter: the deepening keys off IR facts (channel name/type, compound part anatomy) exactly like the web/RN compound paths — if a new compound component matches the shape, it deepens too.'
+  - 'The channel stays the single source of truth: subcomponents mutate it through ControllableValue.set (the same controlled/uncontrolled routing every swift surface uses), never through local divergent state.'
+  - 'Union openness keeps its v1 lowering (multi member [String]); the Accordion wiring operates on that same shape the web compound path uses, not a bespoke variant.'
+  - 'The press-proof harness only gets STRICTER: proofs replace the structural limitation entry; pre-existing proofs must keep passing; the census remains the honest artifact.'
+  - 'Drift-gating extends to the two native trees with the same byte-stability standard as the six TS trees — regenerating is a no-op on a clean tree.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
