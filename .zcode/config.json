@@ -1,0 +1,53 @@
+{
+  "hooks": {
+    "enabled": true,
+    "events": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash|Read|Write|Edit|Glob|Grep|NotebookEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${ZCODE_PROJECT_DIR}\"/.zcode/hooks/caws-bridge.sh PreToolUse \"${ZCODE_PROJECT_DIR}\"/.caws/hooks/dispatch/pre_tool_use.sh",
+              "timeout": 45
+            }
+          ]
+        }
+      ],
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|Bash|ExitPlanMode",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${ZCODE_PROJECT_DIR}\"/.zcode/hooks/caws-bridge.sh PostToolUse \"${ZCODE_PROJECT_DIR}\"/.caws/hooks/dispatch/post_tool_use.sh",
+              "timeout": 60
+            }
+          ]
+        }
+      ],
+      "SessionStart": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${ZCODE_PROJECT_DIR}\"/.zcode/hooks/caws-bridge.sh SessionStart \"${ZCODE_PROJECT_DIR}\"/.caws/hooks/dispatch/session_start.sh",
+              "timeout": 30
+            }
+          ]
+        }
+      ],
+      "Stop": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${ZCODE_PROJECT_DIR}\"/.zcode/hooks/caws-bridge.sh Stop \"${ZCODE_PROJECT_DIR}\"/.caws/hooks/dispatch/stop.sh",
+              "timeout": 30
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -67,6 +67,11 @@ docs/internal/
 # Claude runtime state — hooks/ and settings.json are tracked,
 # everything else under .claude/ is per-machine.
 CLAUDE.md
+
+# ZCode runtime state — hooks/ and config.json are tracked,
+# everything else under .zcode/ is per-machine.
+.zcode/plans/
+.zcode/hooks/state/
 .claude/logs/
 .claude/sessions/
 .claude/plans/
