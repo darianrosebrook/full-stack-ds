@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 43
+# hook_pack_version: 44
 # caws_min_major: 11
 # lineage_refs: (new in shared-core-001)
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -259,6 +259,15 @@ case "$CAWS_AGENT_SURFACE" in
     # command through unrewritten on this surface.
     CAWS_AGENT_PROCESS_NAMES="qwen qwen-code"
     CAWS_SUPPORTS_UPDATED_INPUT="0"
+    ;;
+  dsh)
+    CAWS_VENDOR_DIR=".dsh"
+    CAWS_PLATFORM_FLAG="dsh"
+    # DSH supports allow/ask/deny on tools/pre-execute via the typed
+    # PreToolDecision + the approval seam (ask prompts through ctx.approval).
+    CAWS_PERMISSION_VOCAB="ask"
+    CAWS_INSTRUCTION_FILES="AGENTS.md"
+    CAWS_AGENT_PROCESS_NAMES="dsh"
     ;;
   *)
     # Unknown surface — fall through to claude-code defaults so a
