@@ -3,7 +3,6 @@ title: 'Compose static-content hygiene: dead-lookup-free chrome, content-color p
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-static-hygiene
 created_at: '2026-08-30T23:37:30.895Z'
 updated_at: '2026-08-30T23:53:46.190Z'
 blast_radius:
