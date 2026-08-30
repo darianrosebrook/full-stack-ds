@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-rn-parity
 created_at: '2026-08-30T22:05:41.844Z'
-updated_at: '2026-08-30T22:06:13.700Z'
+updated_at: '2026-08-30T22:19:23.476Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -23,6 +23,7 @@ scope:
     - '.github/workflows/ci.yml'
     - '.githooks/pre-push'
     - 'docs/current-implementation-snapshot.md'
+    - AGENTS.md
   out: []
 invariants:
   - 'The static-content gate is a mirror of the swift classifier — same shared IR shape facts (surface/channels/instance-children/root-tag, children-leaf or decorative box), zero per-component names; a corpus addition routes through it automatically or throws loudly, never silently misroutes.'
