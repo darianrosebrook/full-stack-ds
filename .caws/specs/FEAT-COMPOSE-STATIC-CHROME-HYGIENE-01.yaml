@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/compose-parity-diff.mjs: 16/16 admitted, zero layeredSlot(\"\")/empty-key lookups; DEAD LOOKUP check falsified by injecting FAKE-DEAD-SLOT into Text.kt (gate exited 1 naming the key) then regenerated to restore"
     recorded_at: "2026-08-30T23:54:36.835Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "compose-parity usage ratchet: every chrome-role slot the RN <Name>.styles.ts consumes is consumed by the Compose emission per emitter path (static claims box-model roles, button claims size-suffixed slots, toggle claims track/thumb); corpus grammar now matches passive roots (status.color.foreground.primary resolved, previously missed by the .default-only grammar)"
+    recorded_at: "2026-08-30T23:54:37.250Z"
