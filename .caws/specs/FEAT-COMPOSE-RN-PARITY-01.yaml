@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "isStaticContent/emitStaticContent in packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (swift-gate mirror, zero component names); pnpm exec vitest run packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts -> 4/4 pass; all 13 batch components emit .kt + full TokenScopes.kt"
     recorded_at: "2026-08-30T22:21:53.611Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "fsds.targets.json jetpack-compose allowlist 3 -> 16; ./gradlew :library:compileKotlin --no-daemon exit 0 (packages/ds-jetpack-compose); ./gradlew compileKotlin --no-daemon exit 0 (examples/settings/compose consumer lane)"
+    recorded_at: "2026-08-30T22:21:54.005Z"
