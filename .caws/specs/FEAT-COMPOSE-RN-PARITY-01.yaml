@@ -56,3 +56,8 @@ contracts:
   - name: 'static-content-class'
     type: behavior
     path: 'packages/ds-contracts/components/Text/Text.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isStaticContent/emitStaticContent in packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (swift-gate mirror, zero component names); pnpm exec vitest run packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts -> 4/4 pass; all 13 batch components emit .kt + full TokenScopes.kt"
+    recorded_at: "2026-08-30T22:21:53.611Z"
