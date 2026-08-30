@@ -23,6 +23,7 @@ enum class ToggleSwitchSize { Small, Medium, Large }
 
 @Composable
 fun ToggleSwitch(
+    modifier: Modifier = Modifier,
     checked: Boolean? = null,
     defaultChecked: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
@@ -31,7 +32,6 @@ fun ToggleSwitch(
     ariaLabel: String? = null,
     ariaDescribedby: String? = null,
     contentDescription: String? = null,
-    modifier: Modifier = Modifier,
 ) {
     var uncontrolledChecked by remember { mutableStateOf(defaultChecked) }
     val resolvedChecked = checked ?: uncontrolledChecked

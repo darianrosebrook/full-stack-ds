@@ -24,6 +24,7 @@ enum class SwitchSize { Sm, Md, Lg }
 
 @Composable
 fun Switch(
+    modifier: Modifier = Modifier,
     checked: Boolean? = null,
     defaultChecked: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
@@ -32,7 +33,6 @@ fun Switch(
     name: String? = null,
     value: String? = null,
     contentDescription: String? = null,
-    modifier: Modifier = Modifier,
 ) {
     var uncontrolledChecked by remember { mutableStateOf(defaultChecked) }
     val resolvedChecked = checked ?: uncontrolledChecked

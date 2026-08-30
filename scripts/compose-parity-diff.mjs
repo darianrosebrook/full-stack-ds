@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Compose ↔ React Native token-usage parity gate (FEAT-COMPOSE-RN-PARITY-01).
+ * Compose ↔ React Native token-usage parity gate (FEAT-COMPOSE-RN-PARITY-01,
+ * extended by FEAT-COMPOSE-STATIC-CHROME-HYGIENE-01).
  *
- * For every jetpack-compose ADMITTED component, proves two things against
- * the generated trees:
+ * For every jetpack-compose ADMITTED component, proves against the generated
+ * trees:
  *
  *   1. Scope parity: the set of `--fsds-*` custom properties emitted in the
  *      Compose `<Name>Tokens.kt` equals the set emitted in the RN
@@ -13,11 +14,24 @@
  *      token the theme resolves) or a `literal`/`fallback` — no entry that
  *      the FsdsTheme chain (slot-name override -> semantic-ref -> literal ->
  *      fallback) cannot resolve.
+ *   3. Usage parity (no dead chrome): every slot key the emitted Compose
+ *      `<Name>.kt` looks up must exist in the component's token scopes, and
+ *      every chrome-role slot the RN `<Name>.styles.ts` consumes must be
+ *      consumed by the Compose emission. A `layeredSlot("")` / `get("")`
+ *      empty-key lookup is a hard failure. The claimed chrome-role set is
+ *      exactly what the static-content path realizes: background, foreground,
+ *      radius, box-model padding-inline/block, box-model.min-height —
+ *      everything else (gap, min-width, borders, typography) is a named
+ *      non-claim until its slice lands.
+ *   4. Content-color propagation: a static-content component whose scopes
+ *      carry a foreground slot must provide it via LocalFsdsContentColor.
+ *   5. API shape: `modifier: Modifier = Modifier` is the first optional
+ *      parameter of every generated composable (AOSP Compose API guideline).
  *
  * The gate is a local oracle like swift-parity-diff: read-only over the
  * generated trees, exits nonzero on divergence. Wired into CI and pre-push
- * under the generated-drift family (the classifier routes native-tree
- * changes to it) so token-scope parity cannot silently rot.
+ * under the generated-drift family so token-scope AND token-usage parity
+ * cannot silently rot.
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -40,11 +54,80 @@ function cssVarSet(source) {
   return new Set([...source.matchAll(/"(--fsds-[a-z0-9-]+)"/g)].map((m) => m[1]));
 }
 
+/** All scope/slot keys declared in a `<Name>Tokens.kt` (map keys). */
+function tokensKeySet(tokensSource) {
+  return new Set(
+    [...tokensSource.matchAll(/^\s*"([^"]+)" to (?:mapOf|ComponentTokenDefinition)/gm)]
+      .map((m) => m[1]),
+  );
+}
+
+/** Slot keys the emitted Compose component looks up (`layeredSlot("…")` /
+ *  `get("…")` with a string literal). */
+function composeConsumedKeys(ktSource) {
+  const keys = new Set();
+  for (const m of ktSource.matchAll(/(?:layeredSlot|get)\("([^"]*)"\)/g)) {
+    keys.add(m[1]);
+  }
+  return keys;
+}
+
+/** Slot keys the RN `<Name>.styles.ts` consumes (`tokens.<scope>?.["…"]`). */
+function rnConsumedKeys(stylesSource) {
+  return new Set(
+    [...stylesSource.matchAll(/tokens\.[A-Za-z0-9_]+(\?\.)?\["([^"]+)"\]/g)]
+      .map((m) => m[2]),
+  );
+}
+
+/** The claimed chrome-role set, per emitter path. Each path claims exactly
+ *  the roles it realizes: static-content claims box-model padding/min-height +
+ *  base color tones + radius; the projected-children (button) path realizes
+ *  padding/min-height through the size-suffixed slots; the native-toggle path
+ *  claims none of the chrome roles (its realization is the track/thumb color
+ *  surface). State variants (`.foreground.hover`, `.background.active`) and
+ *  per-part tones (Stat's `.foreground.value`/`.label`) are never claimed. */
+const BASE_BACKGROUND = /\.color\.background\.(default|bg)$/;
+const BASE_FOREGROUND = /\.color\.foreground\.(default|primary)$/;
+const CHROME_ROLE_STATIC = new RegExp(
+  [BASE_BACKGROUND.source, BASE_FOREGROUND.source, "\\.(?:size|border)\\.radius(?:\\.|$)", "box-model\\.padding", "box-model\\.min-height(?:\\.|$)"].join("|"),
+);
+const CHROME_ROLE_BUTTON = new RegExp(
+  [BASE_BACKGROUND.source, BASE_FOREGROUND.source, "\\.(?:size|border)\\.radius(?:\\.|$)", "size\\.padding", "size\\.minHeight"].join("|"),
+);
+const CHROME_ROLE_TOGGLE = /(?!)/;
+
+/** Which emitter path produced a generated `<Name>.kt`. */
+function emitterPath(ktSource) {
+  if (ktSource.includes("FsdsButtonScope")) return "button";
+  if (ktSource.includes("FsdsToggle")) return "toggle";
+  return "static";
+}
+
+/** Chrome-role filter for a generated component's emitter path. */
+function chromeRoleForPath(path) {
+  if (path === "button") return CHROME_ROLE_BUTTON;
+  if (path === "toggle") return CHROME_ROLE_TOGGLE;
+  return CHROME_ROLE_STATIC;
+}
+
+/** First parameter that carries a default in the composable signature. */
+function firstDefaultParam(ktSource, name) {
+  const m = ktSource.match(new RegExp(`fun ${name}\\(([\\s\\S]*?)\\)\\s*\\{`));
+  if (!m) return null;
+  const params = m[1].split("\n").map((l) => l.trim()).filter(Boolean).join(" ");
+  // Split on top-level commas (none appear inside the lambda types used here).
+  const firstWithDefault = params.split(",").find((p) => p.includes("="));
+  return firstWithDefault?.trim() ?? null;
+}
+
 for (const name of admitted) {
   const composeTokens = join(COMPOSE_ROOT, name, `${name}Tokens.kt`);
+  const composeKt = join(COMPOSE_ROOT, name, `${name}.kt`);
   const rnTokens = join(RN_ROOT, name, `${name}.tokens.ts`);
-  if (!existsSync(composeTokens)) {
-    console.error(`[compose-parity] MISSING compose tokens: ${composeTokens}`);
+  const rnStyles = join(RN_ROOT, name, `${name}.styles.ts`);
+  if (!existsSync(composeTokens) || !existsSync(composeKt)) {
+    console.error(`[compose-parity] MISSING compose emission: ${name}`);
     failures += 1;
     continue;
   }
@@ -54,6 +137,7 @@ for (const name of admitted) {
     continue;
   }
   const c = readFileSync(composeTokens, "utf8");
+  const kt = readFileSync(composeKt, "utf8");
   const r = readFileSync(rnTokens, "utf8");
   const cSet = cssVarSet(c);
   const rSet = cssVarSet(r);
@@ -85,14 +169,71 @@ for (const name of admitted) {
     );
     continue;
   }
-  console.log(`[compose-parity] OK ${name}: ${cSet.size} cssVars, scopes ${cSet.size === rSet.size ? "match" : "MISMATCH"}, ${defs.length} definitions resolvable`);
+
+  // Usage parity: no dead lookups, every consumed key exists, and every
+  // RN-consumed chrome-role slot is consumed by the Compose emission.
+  const declared = tokensKeySet(c);
+  const consumed = composeConsumedKeys(kt);
+  const emptyKeys = [...consumed].filter((k) => k === "");
+  const deadKeys = [...consumed].filter((k) => k !== "" && !declared.has(k));
+  if (emptyKeys.length > 0) {
+    failures += 1;
+    console.error(`[compose-parity] DEAD LOOKUP ${name}: ${emptyKeys.length} empty-key lookup(s) — slot-existence gating violated`);
+    continue;
+  }
+  if (deadKeys.length > 0) {
+    failures += 1;
+    console.error(`[compose-parity] DEAD LOOKUP ${name}: keys not declared in scopes: ${deadKeys.join(",")}`);
+    continue;
+  }
+  if (existsSync(rnStyles)) {
+    const path = emitterPath(kt);
+    const chromeRole = chromeRoleForPath(path);
+    const rnConsumed = [...rnConsumedKeys(readFileSync(rnStyles, "utf8"))].filter(
+      (k) => chromeRole.test(k),
+    );
+    const missing = rnConsumed.filter((k) => !consumed.has(k));
+    if (missing.length > 0) {
+      failures += 1;
+      console.error(
+        `[compose-parity] USAGE DIVERGENCE ${name} (${path}): RN consumes chrome slots the Compose emission does not: ${missing.join(",")}`,
+      );
+      continue;
+    }
+  }
+
+  // Content-color propagation: static-content components with a classified
+  // BASE-TONE foreground slot (the same grammar the emitter resolves) must
+  // provide it via LocalFsdsContentColor. Per-part tones (Stat's value/label)
+  // are not content tones and impose no obligation.
+  const isStaticContent = kt.includes("content: @Composable () -> Unit");
+  const hasBaseForegroundSlot = [...declared].some((k) => BASE_FOREGROUND.test(k));
+  if (isStaticContent && hasBaseForegroundSlot && !kt.includes("LocalFsdsContentColor")) {
+    failures += 1;
+    console.error(
+      `[compose-parity] CONTENT COLOR ${name}: static-content component carries a base foreground slot but never provides LocalFsdsContentColor`,
+    );
+    continue;
+  }
+
+  // API shape: modifier is the first optional parameter.
+  const firstDefault = firstDefaultParam(kt, name);
+  if (firstDefault !== "modifier: Modifier = Modifier") {
+    failures += 1;
+    console.error(
+      `[compose-parity] MODIFIER ORDER ${name}: first defaulted parameter is '${firstDefault ?? "none"}' — must be 'modifier: Modifier = Modifier'`,
+    );
+    continue;
+  }
+
+  console.log(`[compose-parity] OK ${name}: ${cSet.size} cssVars, scopes match, ${defs.length} definitions resolvable, ${consumed.size} slot lookups all declared, modifier first-optional`);
 }
 
 console.log(
   `\n[compose-parity] ${admitted.length} admitted component(s); RN corpus reference present for ${admitted.filter((n) => existsSync(join(RN_ROOT, n, `${n}.tokens.ts`))).length}.`,
 );
 if (failures > 0) {
-  console.error(`\n[compose-parity] FAIL — ${failures} divergence(s). Token-scope parity between Compose and RN is broken; fix the emitter or regenerate.`);
+  console.error(`\n[compose-parity] FAIL — ${failures} divergence(s). Token scope/usage parity between Compose and RN is broken; fix the emitter or regenerate.`);
   process.exit(1);
 }
-console.log("[compose-parity] PASS — every admitted component's token scope matches RN exactly and resolves through the theme chain.");
+console.log("[compose-parity] PASS — every admitted component's token scopes match RN, every emitted lookup resolves, chrome usage matches RN, and modifier is first-optional.");

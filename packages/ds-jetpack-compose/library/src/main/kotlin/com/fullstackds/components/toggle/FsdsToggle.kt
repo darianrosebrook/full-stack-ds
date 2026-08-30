@@ -40,6 +40,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -56,8 +57,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
-/** Fully-resolved toggle styling. Every value arrives from token scope data
- *  resolved through LocalFsdsTheme (or an emitter-side ledgered fallback). */
+/** Fully-resolved toggle styling — @Immutable so the generated component's
+ *  style object stays skippable across recomposition (M3 stability contract). */
+@Immutable
 class FsdsToggleStyle(
     val trackWidth: Dp,
     val trackHeight: Dp,
@@ -134,8 +136,15 @@ fun FsdsToggle(
         modifier = modifier
             .padding(style.padding)
             .requiredSizeIn(
-                minWidth = style.minTouchWidth,
-                minHeight = style.minTouchHeight,
+                // 48dp touch-area floor (M3 accessibility baseline) on top of
+                // the token-driven minimums: the track is drawn centered inside
+                // this box, so the floor never inflates the track visual. The
+                // button substrate cannot split visual/touch without
+                // minimumInteractiveComponentSize (Android-only, absent from
+                // the CMP 1.8.0 desktop toolchain), so its touch sizing stays
+                // token-driven — named non-claim.
+                minWidth = style.minTouchWidth.coerceAtLeast(48.dp),
+                minHeight = style.minTouchHeight.coerceAtLeast(48.dp),
             )
             .toggleable(
                 value = checked,

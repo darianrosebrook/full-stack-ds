@@ -45,6 +45,47 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
     expect(src).toContain('"root"');
   });
 
+  it("emits slot-existence-gated chrome: no dead lookups, no unused vals", () => {
+    // Text has no background slot and no radius slot: no containerColor val,
+    // no shape/clip, no empty-key layeredSlot calls anywhere.
+    const text = generateJetpackComposeComponentSource(irFor("Text"));
+    expect(text).not.toContain('layeredSlot("")');
+    expect(text).not.toContain('get("")');
+    expect(text).not.toContain("containerColor");
+    expect(text).not.toContain("RoundedCornerShape");
+    expect(text).not.toContain(".clip(");
+    // Status carries background + foreground: both resolved, no empty keys.
+    const status = generateJetpackComposeComponentSource(irFor("Status"));
+    expect(status).toContain('layeredSlot("status.color.background.default")');
+    expect(status).toContain('layeredSlot("status.color.foreground.primary")');
+    expect(status).not.toContain('layeredSlot("")');
+  });
+
+  it("provides the resolved foreground through LocalFsdsContentColor when a foreground slot exists", () => {
+    const text = generateJetpackComposeComponentSource(irFor("Text"));
+    expect(text).toContain("import com.fullstackds.tokens.LocalFsdsContentColor");
+    expect(text).toContain(
+      "CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified))",
+    );
+    // Skeleton is the decorative box: no foreground slot, no provider.
+    const skeleton = generateJetpackComposeComponentSource(irFor("Skeleton"));
+    expect(skeleton).not.toContain("LocalFsdsContentColor");
+  });
+
+  it("places modifier as the first optional parameter (AOSP API guideline)", () => {
+    for (const name of ["Text", "Status", "List", "Skeleton"]) {
+      const src = generateJetpackComposeComponentSource(irFor(name));
+      const modifierIdx = src.indexOf("modifier: Modifier = Modifier,");
+      expect(modifierIdx).toBeGreaterThan(-1);
+      expect(modifierIdx).toBeLessThan(src.indexOf("content: @Composable () -> Unit,"));
+      // modifier precedes every axis enum parameter
+      for (const axis of Object.keys(irFor(name).variants ?? {})) {
+        const axisParam = src.indexOf(`${axis}: `);
+        if (axisParam !== -1) expect(modifierIdx).toBeLessThan(axisParam);
+      }
+    }
+  });
+
   it("escapes Kotlin hard keywords as axis parameter names (List's `as` axis)", () => {
     const src = generateJetpackComposeComponentSource(irFor("List"));
     expect(src).toContain("`as`: ListAs");

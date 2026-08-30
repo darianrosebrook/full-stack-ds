@@ -25,13 +25,13 @@ enum class ButtonVariant { Primary, Secondary, Tertiary, Ghost, Destructive, Out
 
 @Composable
 fun Button(
+    modifier: Modifier = Modifier,
     size: ButtonSize = ButtonSize.Medium,
     variant: ButtonVariant = ButtonVariant.Primary,
     disabled: Boolean = false,
     loading: Boolean = false,
     accessibilityLabel: String? = null,
     onClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
     content: @Composable FsdsButtonScope.() -> Unit,
 ) {
     val fsdsTheme = LocalFsdsTheme.current
