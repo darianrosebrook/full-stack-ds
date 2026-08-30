@@ -80,3 +80,7 @@ evidence:
     status: pass
     evidence_ref: "@Immutable on FsdsButtonStyle/FsdsToggleStyle/ComponentTokenDefinition; FsdsToggle 48dp touch floor via requiredSizeIn(coerceAtLeast(48.dp)) with track drawn centered; ./gradlew :library:compileKotlin and settings lane compileKotlin exit 0; named non-claim: button visual/touch split impossible (minimumInteractiveComponentSize is Android-only, absent from CMP 1.8.0 desktop) so button touch sizing stays token-driven"
     recorded_at: "2026-08-30T23:54:45.487Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "pnpm run governed:rail PASS; pnpm test 178 files / 2203 tests; pnpm run test:frameworks 74 tests; node scripts/compose-parity-diff.mjs PASS 16/16; docs:check-claims 26/26; lint 0 errors; regenerated trees committed"
+    recorded_at: "2026-08-30T23:54:45.877Z"
