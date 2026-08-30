@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-RN-PARITY-01
 title: 'Compose↔RN parity: static-content emitter path + token-scope parity gate'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose admits 13 static-content components (3->16) via a swift-mirror emitter path with zero name lore; RN token-usage parity is a two-directional wired ratchet in CI and pre-push'
 created_at: '2026-08-30T22:05:41.844Z'
-updated_at: '2026-08-30T22:19:23.476Z'
+updated_at: '2026-08-30T22:22:05.424Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
