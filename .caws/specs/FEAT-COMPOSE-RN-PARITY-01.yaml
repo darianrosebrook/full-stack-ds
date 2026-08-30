@@ -24,7 +24,11 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The static-content gate is a mirror of the swift classifier — same shared IR shape facts (surface/channels/instance-children/root-tag, children-leaf or decorative box), zero per-component names; a corpus addition routes through it automatically or throws loudly, never silently misroutes.'
+  - 'Token scopes come from the same ComponentIR.tokenScopes the web/RN/swift emitters consume — the Compose tokens emitter is shape-agnostic (walks ir.tokenScopes), so admitted components carry FULL scopes, never a consumed subset.'
+  - 'The parity ratchet is two-directional: a Compose scope diverging from RN fails, and an RN scope entry with no Compose counterpart fails — the gate cannot be satisfied by hiding one side.'
+  - 'The Compose FsdsTheme chain resolves every admitted slot (slot-name override -> semantic-ref -> literal -> fallback, mirroring RN); zero unresolvable slots in the batch.'
+  - 'Native-collapse and projected-children paths are unchanged; the static-content path dispatches before the shape throw.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
