@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "compose-parity usage ratchet: every chrome-role slot the RN <Name>.styles.ts consumes is consumed by the Compose emission per emitter path (static claims box-model roles, button claims size-suffixed slots, toggle claims track/thumb); corpus grammar now matches passive roots (status.color.foreground.primary resolved, previously missed by the .default-only grammar)"
     recorded_at: "2026-08-30T23:54:37.250Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "static components with a base-tone foreground slot emit CompositionLocalProvider(LocalFsdsContentColor provides contentColor) — Text/Status carry it, Skeleton (no fg slot) omits it; zero androidx.compose.material imports in generated code; mirror of swift foregroundStyle / RN color"
+    recorded_at: "2026-08-30T23:54:37.662Z"
