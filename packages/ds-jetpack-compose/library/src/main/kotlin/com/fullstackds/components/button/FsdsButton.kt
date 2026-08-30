@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -41,6 +42,9 @@ import androidx.compose.ui.unit.dp
  * (indication is null — painted state changes only), and there is no
  * Material elevation/tonal interpolation.
  */
+/** Fully-resolved button styling — @Immutable so the generated component's
+ *  style object stays skippable across recomposition (M3 stability contract). */
+@Immutable
 class FsdsButtonStyle(
     val containerColor: Color? = null,
     val containerColorHover: Color? = null,

@@ -22,13 +22,17 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /** One token slot as authored in the token graph. Values stay raw strings;
- *  accessors below parse target-usable forms (dp, Color). */
+ *  accessors below parse target-usable forms (dp, Color). @Immutable so the
+ *  scope maps and derived style objects stay skippable across recomposition
+ *  (the M3-style stability contract). */
+@Immutable
 class ComponentTokenDefinition(
     val name: String,
     val cssVar: String,
@@ -56,6 +60,16 @@ class FsdsTheme(val tokens: Map<String, String> = emptyMap()) {
 }
 
 val LocalFsdsTheme = staticCompositionLocalOf { FsdsTheme() }
+
+/**
+ * Foundation-only content-color local — the Compose analog of swift's
+ * `foregroundStyle` / RN's `color` on the element, without material3's
+ * LocalContentColor (owned-substrate doctrine). Generated static-content
+ * components provide their resolved foreground slot here so nested text
+ * inherits the design-system tone inside colored chrome. Color.Unspecified
+ * means "inherit" (the default when a component carries no foreground slot).
+ */
+val LocalFsdsContentColor = staticCompositionLocalOf { Color.Unspecified }
 
 @Composable
 fun FsdsThemeProvider(theme: FsdsTheme, content: @Composable () -> Unit) {
