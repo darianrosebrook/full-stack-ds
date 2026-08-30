@@ -2,18 +2,13 @@
 package com.fullstackds.components.stat
 
 // @generated:start imports
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.fullstackds.tokens.LocalFsdsTheme
-import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
 // @generated:end
 
@@ -26,9 +21,9 @@ enum class StatTrend { Up, Down, Neutral }
 
 @Composable
 fun Stat(
+    modifier: Modifier = Modifier,
     size: StatSize = StatSize.Md,
     trend: StatTrend = StatTrend.Up,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     val fsdsTheme = LocalFsdsTheme.current
@@ -39,18 +34,14 @@ fun Stat(
         }
         return null
     }
-    val containerColor = layeredSlot("")?.toFsdsColor()
-    val contentColor = layeredSlot("")?.toFsdsColor()
-    val cornerRadius = layeredSlot("")?.toFsdsDp() ?: 0.dp
-    val paddingInline = layeredSlot("box-model.padding-inline-start")?.toFsdsDp() ?: 0.dp
-    val paddingBlock = layeredSlot("box-model.padding-block-start")?.toFsdsDp() ?: 0.dp
+    val paddingInlineStart = layeredSlot("box-model.padding-inline-start")?.toFsdsDp() ?: 0.dp
+    val paddingInlineEnd = layeredSlot("box-model.padding-inline-end")?.toFsdsDp() ?: 0.dp
+    val paddingBlockStart = layeredSlot("box-model.padding-block-start")?.toFsdsDp() ?: 0.dp
+    val paddingBlockEnd = layeredSlot("box-model.padding-block-end")?.toFsdsDp() ?: 0.dp
     val minHeight = layeredSlot("box-model.min-height")?.toFsdsDp()
 
-    val shape = RoundedCornerShape(cornerRadius)
     val chromeModifier = Modifier
-        .clip(shape)
-        .then(if (containerColor != null) Modifier.background(containerColor, shape) else Modifier)
-        .padding(horizontal = paddingInline, vertical = paddingBlock)
+        .padding(start = paddingInlineStart, end = paddingInlineEnd, top = paddingBlockStart, bottom = paddingBlockEnd)
         .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)
 
     Box(modifier.then(chromeModifier)) { content() }
