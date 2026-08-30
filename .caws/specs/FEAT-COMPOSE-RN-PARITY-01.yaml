@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/compose-parity-diff.mjs -> 16/16 admitted components: per-component generated Compose scope cssVar set EQUALS RN <Name>.tokens.ts set, two-directional (compose-only or rn-only entry fails, exit 1); falsified once by an injected compose-only cssVar then regenerated to restore"
     recorded_at: "2026-08-30T22:21:59.578Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "compose-parity-diff.mjs per-entry resolvability check: every ComponentTokenDefinition carries ref OR literal+fallback resolvable through the FsdsTheme chain (slot-name -> semantic-ref -> literal -> fallback, RN-mirrored); 0 unresolvable slots across all 16 admitted components"
+    recorded_at: "2026-08-30T22:21:59.956Z"
