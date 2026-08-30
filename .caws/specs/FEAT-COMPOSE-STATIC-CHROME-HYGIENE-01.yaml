@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "gate MODIFIER ORDER check: first defaulted param must be modifier: Modifier = Modifier across all 16 signatures; falsified by moving variant before modifier in Text.kt (gate exited 1) then regenerated; AOSP Compose API guideline verbatim"
     recorded_at: "2026-08-30T23:54:45.101Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "@Immutable on FsdsButtonStyle/FsdsToggleStyle/ComponentTokenDefinition; FsdsToggle 48dp touch floor via requiredSizeIn(coerceAtLeast(48.dp)) with track drawn centered; ./gradlew :library:compileKotlin and settings lane compileKotlin exit 0; named non-claim: button visual/touch split impossible (minimumInteractiveComponentSize is Android-only, absent from CMP 1.8.0 desktop) so button touch sizing stays token-driven"
+    recorded_at: "2026-08-30T23:54:45.487Z"
