@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-static-hygiene
 created_at: '2026-08-30T23:37:30.895Z'
-updated_at: '2026-08-30T23:37:37.499Z'
+updated_at: '2026-08-30T23:53:46.190Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
@@ -22,6 +22,7 @@ scope:
     - 'scripts/compose-parity-diff.mjs'
     - 'package.json'
     - 'docs/current-implementation-snapshot.md'
+    - README.md
   out: []
 invariants:
   - 'The static-content emitter emits a slot resolution only when findLayeredSlot/findTokenSlot returns an actual scope value; the ?? "" empty-key sentinel is removed from the emitter.'
