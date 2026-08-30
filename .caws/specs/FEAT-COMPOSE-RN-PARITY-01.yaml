@@ -1,0 +1,53 @@
+id: FEAT-COMPOSE-RN-PARITY-01
+title: 'Compose↔RN parity: static-content emitter path + token-scope parity gate'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-08-30T22:05:41.844Z'
+updated_at: '2026-08-30T22:05:41.844Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose'
+    - 'fsds.targets.json'
+    - 'packages/ds-jetpack-compose'
+    - 'packages/ds-react-native/src'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'scripts/prepush-scope.mjs'
+    - 'package.json'
+    - '.github/workflows/ci.yml'
+    - '.githooks/pre-push'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the Compose emitter; when a static-content IR shape is emitted; then it lowers through a new static-content path (mirror of the swift gate: no surface/channels/instance children/button|input|img root, single children leaf or decorative box) with NO component-name lore, and every static-content corpus component emits .kt plus full TokenScopes.kt without throwing'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the static batch; when the allowlist admits them; then fsds.targets.json lists them, generation succeeds, and the gradle library plus settings-example lane compile green (compose admission 3 -> 16)'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the generated trees; when scripts/compose-parity-diff.mjs runs; then every compose-admitted component''s generated scope cssVar set equals the RN component''s scope cssVar set (identical sets per component) and the script exits nonzero on any divergence — the two-directional token-usage parity ratchet'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the admitted batch; when the gate inspects each scope entry; then every entry carries a resolvable ref or literal+fallback that the Compose FsdsTheme chain (slot-name -> semantic-ref -> literal -> fallback) resolves — zero unresolvable slots'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the parity gate; when CI and pre-push run; then the compose-parity check is wired into the generated-drift family so token-scope parity cannot silently rot'
+non_functional: {}
+contracts:
+  - name: 'static-content-class'
+    type: behavior
+    path: 'packages/ds-contracts/components/Text/Text.contract.json'
