@@ -59,3 +59,8 @@ contracts:
   - name: 'static-chrome-class'
     type: behavior
     path: 'packages/ds-contracts/components/Text/Text.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node scripts/compose-parity-diff.mjs: 16/16 admitted, zero layeredSlot(\"\")/empty-key lookups; DEAD LOOKUP check falsified by injecting FAKE-DEAD-SLOT into Text.kt (gate exited 1 naming the key) then regenerated to restore"
+    recorded_at: "2026-08-30T23:54:36.835Z"
