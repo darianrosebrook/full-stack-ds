@@ -72,7 +72,8 @@
     "audit:dead-slots": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/dead-slot-audit/disposition.test.mjs && node scripts/dead-slot-audit/classification.test.mjs && node scripts/dead-slot-audit/audit.mjs",
     "audit:pseudo-state": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/pseudo-state-audit/realization.test.mjs && node scripts/pseudo-state-audit/audit.mjs",
     "audit:state-suppression": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/state-suppression-audit/selfcheck.mjs && node scripts/state-suppression-audit/audit.mjs",
-    "audit:token-resolvability": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-resolvability-audit/selfcheck.mjs && node scripts/token-resolvability-audit/audit.mjs"
+    "audit:token-resolvability": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-resolvability-audit/selfcheck.mjs && node scripts/token-resolvability-audit/audit.mjs",
+    "parity:compose-tokens": "node scripts/compose-parity-diff.mjs"
   },
   "dependencies": {
     "@full-stack-ds/angular": "workspace:*",

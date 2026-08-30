@@ -195,6 +195,13 @@ if [ "${RUN_RAIL:-false}" = true ]; then
     say "the rail. Commit the regen output before pushing. CI will reject otherwise."
     exit 1
   fi
+  echo ""; say "compose↔RN token-usage parity (compose-parity-diff)"
+  if ! node scripts/compose-parity-diff.mjs; then
+    echo ""
+    say "compose token scopes diverged from RN for an admitted component —"
+    say "regenerate (contracts drive both trees) and commit the output."
+    exit 1
+  fi
 else say "skip governed:rail"; fi
 
 # --- realization-audit group: AFTER the rail + drift diff, mirroring ci.yml ---
