@@ -108,8 +108,21 @@
         "kind": "builtin"
       },
       "components": [
+        "Blockquote",
+        "Breadcrumbs",
         "Button",
+        "Label",
+        "Links",
+        "List",
+        "NavList",
+        "Postcard",
+        "ProfileFlag",
+        "Skeleton",
+        "Stat",
+        "Status",
         "Switch",
+        "Table",
+        "Text",
         "ToggleSwitch"
       ]
     }
