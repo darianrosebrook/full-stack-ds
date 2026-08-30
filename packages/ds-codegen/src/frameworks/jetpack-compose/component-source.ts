@@ -39,11 +39,30 @@ function packageSegment(name: string): string {
   return KOTLIN_HARD_KEYWORDS.has(segment) ? `${segment}component` : segment;
 }
 
+/**
+ * Kotlin parameter-name escape: hard keywords are backtick-quoted
+ * (`` `as` ``), so a contract axis named `as`/`in`/`is` can still lower to
+ * a composable parameter.
+ */
+function kotlinParamName(name: string): string {
+  return KOTLIN_HARD_KEYWORDS.has(name) ? `\`${name}\`` : name;
+}
+
 function pascalCase(value: string): string {
   return value
     .split(/[-_]/)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("");
+}
+
+/**
+ * Kotlin enum-entry identifier: pascalCase plus a digit-leading guard —
+ * "2xl" must not emit as an enum member (identifier starting with a digit
+ * is a syntax error). Prefixes "N" so TextSize.2xl -> TextSize.N2xl.
+ */
+function kotlinEnumName(value: string): string {
+  const pascal = pascalCase(value);
+  return /^[0-9]/.test(pascal) ? `N${pascal}` : pascal;
 }
 
 /**
@@ -171,21 +190,21 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
   lines.push(`// @generated:start component`);
   if (size) {
     lines.push(`/** Size axis lowered from the contract's ${size.propName} variant. */`);
-    lines.push(`enum class ${size.enumName} { ${size.values.map(pascalCase).join(", ")} }`);
+    lines.push(`enum class ${size.enumName} { ${size.values.map(kotlinEnumName).join(", ")} }`);
     lines.push(``);
   }
   if (intent) {
     lines.push(`/** Intent axis lowered from the contract's ${intent.propName} variant. */`);
-    lines.push(`enum class ${intent.enumName} { ${intent.values.map(pascalCase).join(", ")} }`);
+    lines.push(`enum class ${intent.enumName} { ${intent.values.map(kotlinEnumName).join(", ")} }`);
     lines.push(``);
   }
   lines.push(`@Composable`);
   lines.push(`fun ${name}(`);
   if (size) {
-    lines.push(`    ${size.propName}: ${size.enumName} = ${size.enumName}.${pascalCase(size.defaultExpr)},`);
+    lines.push(`    ${size.propName}: ${size.enumName} = ${size.enumName}.${kotlinEnumName(size.defaultExpr)},`);
   }
   if (intent) {
-    lines.push(`    ${intent.propName}: ${intent.enumName} = ${intent.enumName}.${pascalCase(intent.defaultExpr)},`);
+    lines.push(`    ${intent.propName}: ${intent.enumName} = ${intent.enumName}.${kotlinEnumName(intent.defaultExpr)},`);
   }
   if (hasDisabled) lines.push(`    disabled: Boolean = false,`);
   if (hasLoading) lines.push(`    loading: Boolean = false,`);
@@ -324,11 +343,175 @@ export function generateJetpackComposeTokensFile(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * The static-content class: a passive non-container root (label,
+ * blockquote, p, …) whose entire dom is one projected children region —
+ * no channels, no surface. Mirror of the swift static-content gate: same
+ * shared IR shape facts, no component-name lore.
+ */
+function isStaticContent(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if (ir.dom.tag === "button" || ir.dom.tag === "input") return false;
+  let childrenLeaves = 0;
+  let hasInstance = false;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if ((node as { componentRef?: string }).componentRef) hasInstance = true;
+    const kids = node.children ?? [];
+    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
+    kids.forEach(walk);
+  };
+  walk(ir.dom);
+  if (hasInstance) return false;
+  if (ir.dom.tag === "img") return false;
+  if (childrenLeaves === 1) return true;
+  // Decorative box: no children leaf at all, no content binding — a pure
+  // chrome surface (Skeleton).
+  if (childrenLeaves === 0 && !ir.dom.content && (ir.dom.children ?? []).length === 0) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Static-content composable: a passive root whose content is the consumer's
+ * composable lambda, with chrome (padding/background/radius/foreground)
+ * resolved from the component's token scopes through the theme. Variant
+ * axes lower to enums; layered resolution prefers the active variant scope
+ * over root — the same ordering the projected-children path uses.
+ */
+function emitStaticContent(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const axes = Object.keys(ir.variants ?? {}).map((axis) => {
+    const values = ir.variants[axis] ?? [];
+    const prop = ir.styledProps.find((p) => p.safeName === axis);
+    const defaultExpr =
+      prop?.defaultExpr?.replace(/^["']|["']$/g, "") ?? values[0];
+    return {
+      propName: prop?.safeName ?? axis,
+      enumName: `${name}${pascalCase(axis)}`,
+      values,
+      defaultExpr,
+    };
+  });
+  const variantKeysKt = axes
+    .map((a) => `"variant_" + ${kotlinParamName(a.propName)}.name.lowercase()`)
+    .join(", ");
+
+  const bgSlot = findLayeredSlot(ir, ["root"], "color.background.default");
+  const fgSlot = findLayeredSlot(ir, ["root"], "color.foreground.default");
+  const radiusSlot = findLayeredSlot(ir, ["root"], "size.radius");
+  const paddingInlineSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-start");
+  const paddingBlockSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-start");
+  const minHeightSlot = findLayeredSlot(ir, ["root"], "box-model.min-height");
+  const usesTheme = ir.tokenScopes.length > 0;
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  lines.push(`import androidx.compose.foundation.background`);
+  lines.push(`import androidx.compose.foundation.layout.Box`);
+  lines.push(`import androidx.compose.foundation.layout.height`);
+  lines.push(`import androidx.compose.foundation.layout.padding`);
+  lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.draw.clip`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  if (usesTheme) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  for (const axis of axes) {
+    lines.push(
+      `/** ${axis.propName} axis lowered from the contract's ${axis.propName} variant. */`,
+    );
+    lines.push(
+      `enum class ${axis.enumName} { ${axis.values.map(kotlinEnumName).join(", ")} }`,
+    );
+    lines.push(``);
+  }
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  for (const axis of axes) {
+    lines.push(
+      `    ${kotlinParamName(axis.propName)}: ${axis.enumName} = ${axis.enumName}.${kotlinEnumName(axis.defaultExpr)},`,
+    );
+  }
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    content: @Composable () -> Unit,`);
+  lines.push(`) {`);
+  if (usesTheme) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+    lines.push(`    fun layeredSlot(slotName: String): String? {`);
+    lines.push(
+      `        for (key in listOf(${[variantKeysKt, `"root"`].filter(Boolean).join(", ")})) {`,
+    );
+    lines.push(`            val def = ${tokenConstName(ir)}[key]?.get(slotName)`);
+    lines.push(`            if (def != null) return fsdsTheme.resolve(def)`);
+    lines.push(`        }`);
+    lines.push(`        return null`);
+    lines.push(`    }`);
+    lines.push(
+      `    val containerColor = layeredSlot(${JSON.stringify(bgSlot?.name ?? "")})?.toFsdsColor()`,
+    );
+    lines.push(
+      `    val contentColor = layeredSlot(${JSON.stringify(fgSlot?.name ?? "")})?.toFsdsColor()`,
+    );
+    lines.push(
+      `    val cornerRadius = layeredSlot(${JSON.stringify(radiusSlot?.name ?? "")})?.toFsdsDp() ?: 0.dp`,
+    );
+    lines.push(
+      `    val paddingInline = layeredSlot(${JSON.stringify(paddingInlineSlot?.name ?? "")})?.toFsdsDp() ?: 0.dp`,
+    );
+    lines.push(
+      `    val paddingBlock = layeredSlot(${JSON.stringify(paddingBlockSlot?.name ?? "")})?.toFsdsDp() ?: 0.dp`,
+    );
+    lines.push(
+      `    val minHeight = layeredSlot(${JSON.stringify(minHeightSlot?.name ?? "")})?.toFsdsDp()`,
+    );
+    lines.push(``);
+    lines.push(`    val shape = RoundedCornerShape(cornerRadius)`);
+    lines.push(`    val chromeModifier = Modifier`);
+    lines.push(`        .clip(shape)`);
+    lines.push(
+      `        .then(if (containerColor != null) Modifier.background(containerColor, shape) else Modifier)`,
+    );
+    lines.push(
+      `        .padding(horizontal = paddingInline, vertical = paddingBlock)`,
+    );
+    lines.push(
+      `        .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)`,
+    );
+    lines.push(``);
+    lines.push(`    Box(modifier.then(chromeModifier)) { content() }`);
+  } else {
+    lines.push(`    Box(modifier) { content() }`);
+  }
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
 export function generateJetpackComposeComponentSource(
   ir: ComponentIR,
 ): string {
   if (isProjectedChildrenAction(ir)) {
     return emitProjectedChildrenAction(ir);
+  }
+  if (isStaticContent(ir)) {
+    return emitStaticContent(ir);
   }
   const collapseIntents = collectCollapseIntents(ir);
   if (!collapseIntents.has("native-toggle-affordance")) {
@@ -506,7 +689,7 @@ export function generateJetpackComposeComponentSource(
       `/** Size axis lowered from the contract's ${sizeEnumName} type. */`,
     );
     lines.push(
-      `enum class ${sizeEnumName} { ${sizeValues.map(pascalCase).join(", ")} }`,
+      `enum class ${sizeEnumName} { ${sizeValues.map(kotlinEnumName).join(", ")} }`,
     );
     lines.push(``);
   }
@@ -517,7 +700,7 @@ export function generateJetpackComposeComponentSource(
   lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
   if (sizeEnumName && sizeDefault) {
     lines.push(
-      `    size: ${sizeEnumName} = ${sizeEnumName}.${pascalCase(sizeDefault)},`,
+      `    size: ${sizeEnumName} = ${sizeEnumName}.${kotlinEnumName(sizeDefault)},`,
     );
   }
   if (hasDisabled) {
@@ -605,12 +788,12 @@ export function generateJetpackComposeComponentSource(
         mdHeightSlot
       ) {
         lines.push(
-          `        ${sizeEnumName}.${pascalCase(value)} -> (fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(mdWidthSlot.name)}))?.toFsdsDp() ?: ${w}.dp) to (fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(mdHeightSlot.name)}))?.toFsdsDp() ?: ${h}.dp)`,
+          `        ${sizeEnumName}.${kotlinEnumName(value)} -> (fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(mdWidthSlot.name)}))?.toFsdsDp() ?: ${w}.dp) to (fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(mdHeightSlot.name)}))?.toFsdsDp() ?: ${h}.dp)`,
         );
         continue;
       }
       lines.push(
-        `        ${sizeEnumName}.${pascalCase(value)} -> ${w}.dp to ${h}.dp`,
+        `        ${sizeEnumName}.${kotlinEnumName(value)} -> ${w}.dp to ${h}.dp`,
       );
     }
     lines.push(`    }`);
