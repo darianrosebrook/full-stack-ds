@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-STATIC-CHROME-HYGIENE-01
 title: 'Compose static-content hygiene: dead-lookup-free chrome, content-color propagation, modifier-first API'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-static-hygiene
 created_at: '2026-08-30T23:37:30.895Z'
-updated_at: '2026-08-30T23:37:30.895Z'
+updated_at: '2026-08-30T23:37:37.499Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
