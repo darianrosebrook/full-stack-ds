@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: "compose-parity-diff.mjs per-entry resolvability check: every ComponentTokenDefinition carries ref OR literal+fallback resolvable through the FsdsTheme chain (slot-name -> semantic-ref -> literal -> fallback, RN-mirrored); 0 unresolvable slots across all 16 admitted components"
     recorded_at: "2026-08-30T22:21:59.956Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: ".github/workflows/ci.yml 'Compose-RN token parity' step in the generated-drift family (runs node scripts/compose-parity-diff.mjs); .githooks/pre-push compose-parity-diff block inside the RUN_RAIL section after the drift diff; package.json parity:compose-tokens"
+    recorded_at: "2026-08-30T22:22:00.335Z"
