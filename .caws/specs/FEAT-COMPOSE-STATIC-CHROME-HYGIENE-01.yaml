@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-STATIC-CHROME-HYGIENE-01
 title: 'Compose static-content hygiene: dead-lookup-free chrome, content-color propagation, modifier-first API'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose static-content hygiene: slot-gated chrome emission (zero dead lookups), corpus role grammar, LocalFsdsContentColor propagation, modifier-first API, @Immutable substrates, 48dp toggle touch floor; parity gate is now a usage ratchet'
 created_at: '2026-08-30T23:37:30.895Z'
-updated_at: '2026-08-30T23:53:46.190Z'
+updated_at: '2026-08-30T23:54:51.899Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
