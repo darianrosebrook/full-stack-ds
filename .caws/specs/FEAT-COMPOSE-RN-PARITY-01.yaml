@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "fsds.targets.json jetpack-compose allowlist 3 -> 16; ./gradlew :library:compileKotlin --no-daemon exit 0 (packages/ds-jetpack-compose); ./gradlew compileKotlin --no-daemon exit 0 (examples/settings/compose consumer lane)"
     recorded_at: "2026-08-30T22:21:54.005Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "node scripts/compose-parity-diff.mjs -> 16/16 admitted components: per-component generated Compose scope cssVar set EQUALS RN <Name>.tokens.ts set, two-directional (compose-only or rn-only entry fails, exit 1); falsified once by an injected compose-only cssVar then regenerated to restore"
+    recorded_at: "2026-08-30T22:21:59.578Z"
