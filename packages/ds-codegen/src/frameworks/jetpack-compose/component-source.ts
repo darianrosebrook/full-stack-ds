@@ -114,6 +114,42 @@ function findLayeredSlot(ir: ComponentIR, layers: string[], suffix: string) {
 }
 
 /**
+ * Chrome-role slot lookup with a corpus-derived suffix grammar. The corpus
+ * names chrome slots with a per-component prefix plus a role suffix that
+ * varies by family (passive roots use `.color.foreground.primary`, interactive
+ * use `.color.foreground.default`; radius appears as `.size.radius`,
+ * `.border.radius`, `.radius.default`, …). This mirrors the RN emitter's
+ * suffix-list selection (`tokenStringByName`/`tokenNumberByName`) so both
+ * families resolve the SAME slot for a role — the usage-parity ratchet in
+ * scripts/compose-parity-diff.mjs asserts the consumed keys agree. Returns the
+ * first role slot found; `undefined` when the component carries no slot for
+ * the role, and the emitter then omits the resolution entirely (no dead
+ * lookups).
+ */
+function findLayeredSlotAny(
+  ir: ComponentIR,
+  layers: string[],
+  suffixes: readonly string[],
+) {
+  for (const layer of [...layers].reverse()) {
+    const scope = ir.tokenScopes.find((s) => s.scope === layer);
+    if (!scope) continue;
+    for (const suffix of suffixes) {
+      const hit = scope.values.find((value) => value.name.endsWith(suffix));
+      if (hit) return { scopeKey: layer, name: hit.name };
+    }
+  }
+  return undefined;
+}
+
+/** Corpus chrome-role suffix grammar, mirroring the RN emitter's lists. */
+const CHROME_ROLE_SUFFIXES = {
+  background: [".color.background.default", ".color.bg.default", ".color.bg"],
+  foreground: [".color.foreground.default", ".color.foreground.primary"],
+  radius: [".border.radius", ".size.radius", ".radius.default", ".radius"],
+} as const;
+
+/**
  * The projected-children action class: a native button root whose entire
  * content is the consumer's projected children (Button is the corpus
  * consumer). Lowers onto the hand-authored foundation-only FsdsButton
@@ -151,18 +187,19 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
     `"root"`,
   ].join(", ");
 
-  const containerSlot = findLayeredSlot(ir, ["root"], "color.background.default");
+  const containerSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.background);
   const hoverSlot = findLayeredSlot(ir, ["root"], "color.background.hover");
   const activeSlot = findLayeredSlot(ir, ["root"], "color.background.active");
   const disabledBgSlot = findLayeredSlot(ir, ["root"], "color.background.disabled");
-  const fgSlot = findLayeredSlot(ir, ["root"], "color.foreground.default");
+  const fgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.foreground);
   const fgDisabledSlot = findLayeredSlot(ir, ["root"], "color.foreground.disabled");
   const borderSlot = findLayeredSlot(ir, ["root"], "color.border.default");
   const focusSlot = findLayeredSlot(ir, ["root"], "color.border.focus");
-  const radiusSlot = findLayeredSlot(ir, ["root"], "size.radius");
+  const radiusSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.radius);
   const borderWidthSlot = findLayeredSlot(ir, ["root"], "size.border");
   const durationSlot = findLayeredSlot(ir, ["root"], "motion.duration.fast");
   const minHeightSlot = findLayeredSlot(ir, ["root"], "size.minHeight.medium");
+  const minWidthSlot = findLayeredSlot(ir, ["root"], "box-model.min-width");
   const paddingInlineSlot = findLayeredSlot(ir, ["root"], "size.padding-inline.medium");
   const paddingBlockSlot = findLayeredSlot(ir, ["root"], "size.padding-block.medium");
 
@@ -200,6 +237,8 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
   }
   lines.push(`@Composable`);
   lines.push(`fun ${name}(`);
+  // AOSP Compose API guideline: `modifier` is the first optional parameter.
+  lines.push(`    modifier: Modifier = Modifier,`);
   if (size) {
     lines.push(`    ${size.propName}: ${size.enumName} = ${size.enumName}.${kotlinEnumName(size.defaultExpr)},`);
   }
@@ -210,7 +249,6 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
   if (hasLoading) lines.push(`    loading: Boolean = false,`);
   if (hasAriaLabel) lines.push(`    accessibilityLabel: String? = null,`);
   lines.push(`    ${onClickProp}: (() -> Unit)? = null,`);
-  lines.push(`    modifier: Modifier = Modifier,`);
   lines.push(`    content: @Composable FsdsButtonScope.() -> Unit,`);
   lines.push(`) {`);
   lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
@@ -237,29 +275,28 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
   colorVal("contentDisabledColor", fgDisabledSlot);
   colorVal("borderColor", borderSlot);
   colorVal("focusRingColor", focusSlot);
-  lines.push(
-    `    val cornerRadius = layeredSlot(${JSON.stringify(radiusSlot?.name ?? "")})?.toFsdsDp() ?: 4.dp`,
-  );
-  lines.push(
-    `    val borderWidth = layeredSlot(${JSON.stringify(borderWidthSlot?.name ?? "")})?.toFsdsDp() ?: 1.dp`,
-  );
+  // Dimension slots resolve through the theme when the component carries
+  // them; absent roles fall back to the ledgered constant with NO dead lookup.
+  const dimVal = (valName: string, s: { name: string } | undefined, fallback: string) => {
+    if (s) {
+      lines.push(
+        `    val ${valName} = layeredSlot(${JSON.stringify(s.name)})?.toFsdsDp() ?: ${fallback}`,
+      );
+    } else {
+      lines.push(`    val ${valName} = ${fallback}`);
+    }
+  };
+  dimVal("cornerRadius", radiusSlot, "4.dp");
+  dimVal("borderWidth", borderWidthSlot, "1.dp");
   if (durationSlot) {
     lines.push(
       `    val pressDurationMs = layeredSlot(${JSON.stringify(durationSlot.name)})?.toFsdsMs() ?: 100`,
     );
   }
-  lines.push(
-    `    val minHeight = layeredSlot(${JSON.stringify(minHeightSlot?.name ?? "")})?.toFsdsDp() ?: 32.dp`,
-  );
-  lines.push(
-    `    val minWidth = layeredSlot(${JSON.stringify(findLayeredSlot(ir, ["root"], "box-model.min-width")?.name ?? "")})?.toFsdsDp() ?: 32.dp`,
-  );
-  lines.push(
-    `    val paddingInline = layeredSlot(${JSON.stringify(paddingInlineSlot?.name ?? "")})?.toFsdsDp() ?: 8.dp`,
-  );
-  lines.push(
-    `    val paddingBlock = layeredSlot(${JSON.stringify(paddingBlockSlot?.name ?? "")})?.toFsdsDp() ?: 4.dp`,
-  );
+  dimVal("minHeight", minHeightSlot, "32.dp");
+  dimVal("minWidth", minWidthSlot, "32.dp");
+  dimVal("paddingInline", paddingInlineSlot, "8.dp");
+  dimVal("paddingBlock", paddingBlockSlot, "4.dp");
   lines.push(``);
   lines.push(`    val buttonStyle = FsdsButtonStyle(`);
   lines.push(`        containerColor = containerColor,`);
@@ -399,13 +436,24 @@ function emitStaticContent(ir: ComponentIR): string {
     .map((a) => `"variant_" + ${kotlinParamName(a.propName)}.name.lowercase()`)
     .join(", ");
 
-  const bgSlot = findLayeredSlot(ir, ["root"], "color.background.default");
-  const fgSlot = findLayeredSlot(ir, ["root"], "color.foreground.default");
-  const radiusSlot = findLayeredSlot(ir, ["root"], "size.radius");
-  const paddingInlineSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-start");
-  const paddingBlockSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-start");
+  // Chrome roles resolve through the corpus suffix grammar; a role slot that
+  // the component does not carry is OMITTED entirely — never a dead
+  // `layeredSlot("")` lookup (A1).
+  const bgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.background);
+  const fgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.foreground);
+  const radiusSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.radius);
+  const paddingInlineStartSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-start");
+  const paddingBlockEndSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-end");
   const minHeightSlot = findLayeredSlot(ir, ["root"], "box-model.min-height");
   const usesTheme = ir.tokenScopes.length > 0;
+  const usesColors = Boolean(bgSlot || fgSlot);
+  const anyPaddingSlot = Boolean(
+    paddingInlineStartSlot || paddingInlineEndSlot || paddingBlockStartSlot || paddingBlockEndSlot,
+  );
+  const usesDims = Boolean(radiusSlot || anyPaddingSlot || minHeightSlot);
+  const needsClip = Boolean(bgSlot || radiusSlot);
 
   const lines: string[] = [];
   lines.push(
@@ -414,21 +462,27 @@ function emitStaticContent(ir: ComponentIR): string {
   lines.push(`package com.fullstackds.components.${segment}`);
   lines.push(``);
   lines.push(`// @generated:start imports`);
-  lines.push(`import androidx.compose.foundation.background`);
+  if (usesColors) lines.push(`import androidx.compose.foundation.background`);
   lines.push(`import androidx.compose.foundation.layout.Box`);
-  lines.push(`import androidx.compose.foundation.layout.height`);
-  lines.push(`import androidx.compose.foundation.layout.padding`);
-  lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  if (minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
+  if (anyPaddingSlot) {
+    lines.push(`import androidx.compose.foundation.layout.padding`);
+  }
+  if (needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
   lines.push(`import androidx.compose.runtime.Composable`);
+  if (fgSlot) {
+    lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
+  }
   lines.push(`import androidx.compose.ui.Modifier`);
-  lines.push(`import androidx.compose.ui.draw.clip`);
-  lines.push(`import androidx.compose.ui.graphics.Color`);
-  lines.push(`import androidx.compose.ui.unit.dp`);
+  if (needsClip) lines.push(`import androidx.compose.ui.draw.clip`);
+  if (usesColors) lines.push(`import androidx.compose.ui.graphics.Color`);
+  if (usesDims) lines.push(`import androidx.compose.ui.unit.dp`);
   if (usesTheme) {
     lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
-    lines.push(`import com.fullstackds.tokens.toFsdsColor`);
-    lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    if (usesColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
   }
+  if (fgSlot) lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
   lines.push(`// @generated:end`);
   lines.push(``);
   lines.push(`// @generated:start component`);
@@ -443,12 +497,13 @@ function emitStaticContent(ir: ComponentIR): string {
   }
   lines.push(`@Composable`);
   lines.push(`fun ${name}(`);
+  // AOSP Compose API guideline: `modifier` is the first optional parameter.
+  lines.push(`    modifier: Modifier = Modifier,`);
   for (const axis of axes) {
     lines.push(
       `    ${kotlinParamName(axis.propName)}: ${axis.enumName} = ${axis.enumName}.${kotlinEnumName(axis.defaultExpr)},`,
     );
   }
-  lines.push(`    modifier: Modifier = Modifier,`);
   lines.push(`    content: @Composable () -> Unit,`);
   lines.push(`) {`);
   if (usesTheme) {
@@ -462,39 +517,77 @@ function emitStaticContent(ir: ComponentIR): string {
     lines.push(`        }`);
     lines.push(`        return null`);
     lines.push(`    }`);
-    lines.push(
-      `    val containerColor = layeredSlot(${JSON.stringify(bgSlot?.name ?? "")})?.toFsdsColor()`,
-    );
-    lines.push(
-      `    val contentColor = layeredSlot(${JSON.stringify(fgSlot?.name ?? "")})?.toFsdsColor()`,
-    );
-    lines.push(
-      `    val cornerRadius = layeredSlot(${JSON.stringify(radiusSlot?.name ?? "")})?.toFsdsDp() ?: 0.dp`,
-    );
-    lines.push(
-      `    val paddingInline = layeredSlot(${JSON.stringify(paddingInlineSlot?.name ?? "")})?.toFsdsDp() ?: 0.dp`,
-    );
-    lines.push(
-      `    val paddingBlock = layeredSlot(${JSON.stringify(paddingBlockSlot?.name ?? "")})?.toFsdsDp() ?: 0.dp`,
-    );
-    lines.push(
-      `    val minHeight = layeredSlot(${JSON.stringify(minHeightSlot?.name ?? "")})?.toFsdsDp()`,
-    );
+    if (bgSlot) {
+      lines.push(
+        `    val containerColor = layeredSlot(${JSON.stringify(bgSlot.name)})?.toFsdsColor()`,
+      );
+    }
+    if (fgSlot) {
+      lines.push(
+        `    val contentColor = layeredSlot(${JSON.stringify(fgSlot.name)})?.toFsdsColor()`,
+      );
+    }
+    if (radiusSlot) {
+      lines.push(
+        `    val cornerRadius = layeredSlot(${JSON.stringify(radiusSlot.name)})?.toFsdsDp() ?: 0.dp`,
+      );
+    }
+    // Four-sided padding resolves each side slot the component carries;
+    // absent sides default to 0.dp (RN mirrors the same per-side access).
+    const sideVal = (valName: string, slot: { name: string } | undefined) => {
+      if (slot) {
+        lines.push(
+          `    val ${valName} = layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp`,
+        );
+        return valName;
+      }
+      return "0.dp";
+    };
+    const paddingInlineStart = sideVal("paddingInlineStart", paddingInlineStartSlot);
+    const paddingInlineEnd = sideVal("paddingInlineEnd", paddingInlineEndSlot);
+    const paddingBlockStart = sideVal("paddingBlockStart", paddingBlockStartSlot);
+    const paddingBlockEnd = sideVal("paddingBlockEnd", paddingBlockEndSlot);
+    if (minHeightSlot) {
+      lines.push(
+        `    val minHeight = layeredSlot(${JSON.stringify(minHeightSlot.name)})?.toFsdsDp()`,
+      );
+    }
     lines.push(``);
-    lines.push(`    val shape = RoundedCornerShape(cornerRadius)`);
-    lines.push(`    val chromeModifier = Modifier`);
-    lines.push(`        .clip(shape)`);
-    lines.push(
-      `        .then(if (containerColor != null) Modifier.background(containerColor, shape) else Modifier)`,
-    );
-    lines.push(
-      `        .padding(horizontal = paddingInline, vertical = paddingBlock)`,
-    );
-    lines.push(
-      `        .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)`,
-    );
+    const chromeLines: string[] = [`    val chromeModifier = Modifier`];
+    if (needsClip) {
+      lines.push(`    val shape = RoundedCornerShape(cornerRadius)`);
+      chromeLines.push(`        .clip(shape)`);
+    }
+    if (bgSlot) {
+      chromeLines.push(
+        `        .then(if (containerColor != null) Modifier.background(containerColor, shape) else Modifier)`,
+      );
+    }
+    if (anyPaddingSlot) {
+      chromeLines.push(
+        `        .padding(start = ${paddingInlineStart}, end = ${paddingInlineEnd}, top = ${paddingBlockStart}, bottom = ${paddingBlockEnd})`,
+      );
+    }
+    if (minHeightSlot) {
+      chromeLines.push(
+        `        .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)`,
+      );
+    }
+    lines.push(...chromeLines);
     lines.push(``);
-    lines.push(`    Box(modifier.then(chromeModifier)) { content() }`);
+    const box = `Box(modifier.then(chromeModifier)) { content() }`;
+    if (fgSlot) {
+      // Content-color propagation (A3): the resolved foreground is provided to
+      // the content lambda through a foundation-only CompositionLocal, the
+      // Compose analog of swift's foregroundStyle / RN's color on the element.
+      lines.push(
+        `    CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {`,
+      );
+      lines.push(`        ${box}`);
+      lines.push(`    }`);
+    } else {
+      lines.push(`    ${box}`);
+    }
   } else {
     lines.push(`    Box(modifier) { content() }`);
   }
@@ -695,6 +788,8 @@ export function generateJetpackComposeComponentSource(
   }
   lines.push(`@Composable`);
   lines.push(`fun ${name}(`);
+  // AOSP Compose API guideline: `modifier` is the first optional parameter.
+  lines.push(`    modifier: Modifier = Modifier,`);
   lines.push(`    ${valueProp}: Boolean? = null,`);
   lines.push(`    ${defaultValueProp}: Boolean = false,`);
   lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
@@ -710,7 +805,6 @@ export function generateJetpackComposeComponentSource(
     lines.push(`    ${prop.safeName}: String? = null,`);
   }
   lines.push(`    contentDescription: String? = null,`);
-  lines.push(`    modifier: Modifier = Modifier,`);
   lines.push(`) {`);
   lines.push(
     `    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`,
