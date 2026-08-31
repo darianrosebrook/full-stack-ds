@@ -118,6 +118,11 @@ const CHROME_ROLE_BUTTON = new RegExp(
   [BASE_BACKGROUND.source, BASE_FOREGROUND.source, "\\.(?:size|border)\\.radius(?:\\.|$)", "size\\.padding", "size\\.minHeight"].join("|"),
 );
 const CHROME_ROLE_TOGGLE = /(?!)/;
+/** Font-size role: claimed by the prop-text leaf path (the corpus's
+ *  text-leaf size vocabulary — `code-block.size.fontSize.default` etc.). */
+const FONT_SIZE_ROLE = /\.size\.fontSize\.|\.typography\.fontSize\./;
+/** Text-color role: claimed by the progress path (`progress.color.text.default`). */
+const TEXT_COLOR_ROLE = /\.color\.text\./;
 /** Typography role: claimed only for typography-bearing content-role roots
  *  (slot-evidence: the scopes carry `text.size.*` keys). Covers the slots the
  *  RN Text styles consume (text.size.md + text.typography.fontWeight.*). */
@@ -127,6 +132,11 @@ const TYPO_ROLE = /text\.size\.|text\.typography\.fontWeight\./;
 function emitterPath(ktSource) {
   if (ktSource.includes("FsdsButtonScope")) return "button";
   if (ktSource.includes("FsdsToggle")) return "toggle";
+  if (ktSource.includes("FsdsProgressIndicator")) return "progress";
+  if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
+    return "propText";
+  }
+  if (ktSource.includes("resolvedExpanded")) return "expandable";
   return "static";
 }
 
@@ -134,6 +144,13 @@ function emitterPath(ktSource) {
 function chromeRoleForPath(path) {
   if (path === "button") return CHROME_ROLE_BUTTON;
   if (path === "toggle") return CHROME_ROLE_TOGGLE;
+  if (path === "progress") {
+    return new RegExp([CHROME_ROLE_STATIC.source, TEXT_COLOR_ROLE.source].join("|"));
+  }
+  if (path === "propText") {
+    return new RegExp([CHROME_ROLE_STATIC.source, FONT_SIZE_ROLE.source].join("|"));
+  }
+  if (path === "expandable") return CHROME_ROLE_STATIC;
   return CHROME_ROLE_STATIC;
 }
 
