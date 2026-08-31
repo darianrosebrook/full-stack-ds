@@ -67,3 +67,7 @@ evidence:
     status: pass
     evidence_ref: "Text emits enum class TextElement { P..H6 }, backtick-quoted `as` param, and all six h1-h6 values lower to Modifier.semantics { heading() } — general over the union values, zero per-component names; Heading.Level absent from the CMP 1.8.0 desktop semantics artifact (verified by jar scan) so the level distinction is a named non-claim"
     recorded_at: "2026-08-31T00:13:19.185Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm run governed:rail PASS; pnpm test 178 files / 2205 tests; pnpm run test:frameworks 74 tests; node scripts/compose-parity-diff.mjs PASS 16/16; docs:check-claims 26/26; lint 0 errors; ./gradlew :library:compileKotlin + settings lane compileKotlin exit 0; generated trees committed"
+    recorded_at: "2026-08-31T00:13:26.161Z"
