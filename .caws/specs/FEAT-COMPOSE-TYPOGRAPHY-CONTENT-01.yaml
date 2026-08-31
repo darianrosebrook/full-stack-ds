@@ -3,7 +3,6 @@ title: 'Compose typography lowering + element semantics for content-role roots'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-typography
 created_at: '2026-08-30T23:55:31.568Z'
 updated_at: '2026-08-30T23:55:38.005Z'
 blast_radius:
