@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: "fsds.targets.json jetpack-compose allowlist 16 -> 23; generation succeeds (23 file groups); pnpm run governed:rail PASS (overall: pass); pnpm test 178 files / 2209 tests; pnpm run test:frameworks 74 tests; node scripts/compose-parity-diff.mjs PASS 23/23; docs:check-claims 26/26; lint 0 errors; ./gradlew :library:compileKotlin + settings lane compileKotlin exit 0; generated trees committed"
     recorded_at: "2026-08-31T00:46:41.829Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "the usage ratchet covers all 23 admits with zero dead lookups (DEAD LOOKUP fired on Progress's stale spinner.size lookups — fixed; USAGE DIVERGENCE fired on CodeSnippet when the fontSize lookup was deleted — named code-snippet.size.fontSize.default — restored by regeneration); per-path claimed sets: font-size role (prop-text), text-color role (progress); Markdown plain-text degradation is a named non-claim"
+    recorded_at: "2026-08-31T00:46:42.242Z"
