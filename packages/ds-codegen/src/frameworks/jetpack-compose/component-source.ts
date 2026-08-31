@@ -410,6 +410,146 @@ function isStaticContent(ir: ComponentIR): boolean {
   return false;
 }
 
+/** Chrome-role slots a passive root can realize, resolved through the corpus
+ *  suffix grammar. Shared by the static-content, prop-text, expandable, and
+ *  progress/status paths — one grammar, one place. */
+interface StaticChromeSlots {
+  bgSlot?: { name: string };
+  fgSlot?: { name: string };
+  radiusSlot?: { name: string };
+  paddingInlineStartSlot?: { name: string };
+  paddingInlineEndSlot?: { name: string };
+  paddingBlockStartSlot?: { name: string };
+  paddingBlockEndSlot?: { name: string };
+  minHeightSlot?: { name: string };
+  usesColors: boolean;
+  anyPaddingSlot: boolean;
+  usesDims: boolean;
+  needsClip: boolean;
+}
+
+function resolveStaticChrome(ir: ComponentIR): StaticChromeSlots {
+  const bgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.background);
+  const fgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.foreground);
+  const radiusSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.radius);
+  const paddingInlineStartSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-start");
+  const paddingBlockEndSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-end");
+  const minHeightSlot = findLayeredSlot(ir, ["root"], "box-model.min-height");
+  const usesColors = Boolean(bgSlot || fgSlot);
+  const anyPaddingSlot = Boolean(
+    paddingInlineStartSlot || paddingInlineEndSlot || paddingBlockStartSlot || paddingBlockEndSlot,
+  );
+  const usesDims = Boolean(radiusSlot || anyPaddingSlot || minHeightSlot);
+  const needsClip = Boolean(bgSlot || radiusSlot);
+  return {
+    bgSlot,
+    fgSlot,
+    radiusSlot,
+    paddingInlineStartSlot,
+    paddingInlineEndSlot,
+    paddingBlockStartSlot,
+    paddingBlockEndSlot,
+    minHeightSlot,
+    usesColors,
+    anyPaddingSlot,
+    usesDims,
+    needsClip,
+  };
+}
+
+/** Emits the theme read + layeredSlot resolver (variant scopes then root). */
+function emitThemeHeader(
+  lines: string[],
+  ir: ComponentIR,
+  variantKeysKt: string,
+): void {
+  lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+  lines.push(`    fun layeredSlot(slotName: String): String? {`);
+  lines.push(
+    `        for (key in listOf(${[variantKeysKt, `"root"`].filter(Boolean).join(", ")})) {`,
+  );
+  lines.push(`            val def = ${tokenConstName(ir)}[key]?.get(slotName)`);
+  lines.push(`            if (def != null) return fsdsTheme.resolve(def)`);
+  lines.push(`        }`);
+  lines.push(`        return null`);
+  lines.push(`    }`);
+}
+
+/** Emits the chrome val resolutions (gated on slot existence) and returns the
+ *  four padding side expressions (a slot val name, or "0.dp"). */
+function emitChromeVals(
+  lines: string[],
+  slots: StaticChromeSlots,
+): [string, string, string, string] {
+  if (slots.bgSlot) {
+    lines.push(
+      `    val containerColor = layeredSlot(${JSON.stringify(slots.bgSlot.name)})?.toFsdsColor()`,
+    );
+  }
+  if (slots.fgSlot) {
+    lines.push(
+      `    val contentColor = layeredSlot(${JSON.stringify(slots.fgSlot.name)})?.toFsdsColor()`,
+    );
+  }
+  if (slots.radiusSlot) {
+    lines.push(
+      `    val cornerRadius = layeredSlot(${JSON.stringify(slots.radiusSlot.name)})?.toFsdsDp() ?: 0.dp`,
+    );
+  }
+  const sideVal = (valName: string, slot: { name: string } | undefined): string => {
+    if (slot) {
+      lines.push(
+        `    val ${valName} = layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp`,
+      );
+      return valName;
+    }
+    return "0.dp";
+  };
+  const paddingInlineStart = sideVal("paddingInlineStart", slots.paddingInlineStartSlot);
+  const paddingInlineEnd = sideVal("paddingInlineEnd", slots.paddingInlineEndSlot);
+  const paddingBlockStart = sideVal("paddingBlockStart", slots.paddingBlockStartSlot);
+  const paddingBlockEnd = sideVal("paddingBlockEnd", slots.paddingBlockEndSlot);
+  if (slots.minHeightSlot) {
+    lines.push(
+      `    val minHeight = layeredSlot(${JSON.stringify(slots.minHeightSlot.name)})?.toFsdsDp()`,
+    );
+  }
+  return [paddingInlineStart, paddingInlineEnd, paddingBlockStart, paddingBlockEnd];
+}
+
+/** Emits the chrome modifier chain (clip/background/padding/min-height).
+ *  `sides` are the four padding side expressions from emitChromeVals. */
+function emitChromeModifier(
+  lines: string[],
+  slots: StaticChromeSlots,
+  sides: [string, string, string, string],
+): void {
+  const [paddingInlineStart, paddingInlineEnd, paddingBlockStart, paddingBlockEnd] = sides;
+  const chromeLines: string[] = [`    val chromeModifier = Modifier`];
+  if (slots.needsClip) {
+    lines.push(`    val shape = RoundedCornerShape(cornerRadius)`);
+    chromeLines.push(`        .clip(shape)`);
+  }
+  if (slots.bgSlot) {
+    chromeLines.push(
+      `        .then(if (containerColor != null) Modifier.background(containerColor, shape) else Modifier)`,
+    );
+  }
+  if (slots.anyPaddingSlot) {
+    chromeLines.push(
+      `        .padding(start = ${paddingInlineStart}, end = ${paddingInlineEnd}, top = ${paddingBlockStart}, bottom = ${paddingBlockEnd})`,
+    );
+  }
+  if (slots.minHeightSlot) {
+    chromeLines.push(
+      `        .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)`,
+    );
+  }
+  lines.push(...chromeLines);
+}
+
 /**
  * Static-content composable: a passive root whose content is the consumer's
  * composable lambda, with chrome (padding/background/radius/foreground)
@@ -439,21 +579,9 @@ function emitStaticContent(ir: ComponentIR): string {
   // Chrome roles resolve through the corpus suffix grammar; a role slot that
   // the component does not carry is OMITTED entirely — never a dead
   // `layeredSlot("")` lookup (A1).
-  const bgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.background);
-  const fgSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.foreground);
-  const radiusSlot = findLayeredSlotAny(ir, ["root"], CHROME_ROLE_SUFFIXES.radius);
-  const paddingInlineStartSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-start");
-  const paddingInlineEndSlot = findLayeredSlot(ir, ["root"], "box-model.padding-inline-end");
-  const paddingBlockStartSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-start");
-  const paddingBlockEndSlot = findLayeredSlot(ir, ["root"], "box-model.padding-block-end");
-  const minHeightSlot = findLayeredSlot(ir, ["root"], "box-model.min-height");
+  const slots = resolveStaticChrome(ir);
+  const { fgSlot } = slots;
   const usesTheme = ir.tokenScopes.length > 0;
-  const usesColors = Boolean(bgSlot || fgSlot);
-  const anyPaddingSlot = Boolean(
-    paddingInlineStartSlot || paddingInlineEndSlot || paddingBlockStartSlot || paddingBlockEndSlot,
-  );
-  const usesDims = Boolean(radiusSlot || anyPaddingSlot || minHeightSlot);
-  const needsClip = Boolean(bgSlot || radiusSlot);
 
   // Typography-bearing content root: the scopes carry text-size slots
   // (`text.size.*`) — the same slot evidence the parity ratchet keys on, so
@@ -513,21 +641,21 @@ function emitStaticContent(ir: ComponentIR): string {
   lines.push(`package com.fullstackds.components.${segment}`);
   lines.push(``);
   lines.push(`// @generated:start imports`);
-  if (usesColors) lines.push(`import androidx.compose.foundation.background`);
+  if (slots.usesColors) lines.push(`import androidx.compose.foundation.background`);
   lines.push(`import androidx.compose.foundation.layout.Box`);
-  if (minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
-  if (anyPaddingSlot) {
+  if (slots.minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
+  if (slots.anyPaddingSlot) {
     lines.push(`import androidx.compose.foundation.layout.padding`);
   }
-  if (needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  if (slots.needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
   lines.push(`import androidx.compose.runtime.Composable`);
   if (fgSlot) {
     lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
   }
   lines.push(`import androidx.compose.ui.Modifier`);
-  if (needsClip) lines.push(`import androidx.compose.ui.draw.clip`);
-  if (usesColors) lines.push(`import androidx.compose.ui.graphics.Color`);
-  if (usesDims) lines.push(`import androidx.compose.ui.unit.dp`);
+  if (slots.needsClip) lines.push(`import androidx.compose.ui.draw.clip`);
+  if (slots.usesColors) lines.push(`import androidx.compose.ui.graphics.Color`);
+  if (slots.usesDims) lines.push(`import androidx.compose.ui.unit.dp`);
   if (emitsTextStyle) {
     lines.push(`import androidx.compose.ui.text.TextStyle`);
     lines.push(`import androidx.compose.ui.text.font.FontWeight`);
@@ -539,8 +667,8 @@ function emitStaticContent(ir: ComponentIR): string {
   }
   if (usesTheme) {
     lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
-    if (usesColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
-    if (usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    if (slots.usesColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (slots.usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
   }
   if (fgSlot) lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
   if (emitsTextStyle) {
@@ -586,51 +714,8 @@ function emitStaticContent(ir: ComponentIR): string {
   lines.push(`    content: @Composable () -> Unit,`);
   lines.push(`) {`);
   if (usesTheme) {
-    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
-    lines.push(`    fun layeredSlot(slotName: String): String? {`);
-    lines.push(
-      `        for (key in listOf(${[variantKeysKt, `"root"`].filter(Boolean).join(", ")})) {`,
-    );
-    lines.push(`            val def = ${tokenConstName(ir)}[key]?.get(slotName)`);
-    lines.push(`            if (def != null) return fsdsTheme.resolve(def)`);
-    lines.push(`        }`);
-    lines.push(`        return null`);
-    lines.push(`    }`);
-    if (bgSlot) {
-      lines.push(
-        `    val containerColor = layeredSlot(${JSON.stringify(bgSlot.name)})?.toFsdsColor()`,
-      );
-    }
-    if (fgSlot) {
-      lines.push(
-        `    val contentColor = layeredSlot(${JSON.stringify(fgSlot.name)})?.toFsdsColor()`,
-      );
-    }
-    if (radiusSlot) {
-      lines.push(
-        `    val cornerRadius = layeredSlot(${JSON.stringify(radiusSlot.name)})?.toFsdsDp() ?: 0.dp`,
-      );
-    }
-    // Four-sided padding resolves each side slot the component carries;
-    // absent sides default to 0.dp (RN mirrors the same per-side access).
-    const sideVal = (valName: string, slot: { name: string } | undefined) => {
-      if (slot) {
-        lines.push(
-          `    val ${valName} = layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp`,
-        );
-        return valName;
-      }
-      return "0.dp";
-    };
-    const paddingInlineStart = sideVal("paddingInlineStart", paddingInlineStartSlot);
-    const paddingInlineEnd = sideVal("paddingInlineEnd", paddingInlineEndSlot);
-    const paddingBlockStart = sideVal("paddingBlockStart", paddingBlockStartSlot);
-    const paddingBlockEnd = sideVal("paddingBlockEnd", paddingBlockEndSlot);
-    if (minHeightSlot) {
-      lines.push(
-        `    val minHeight = layeredSlot(${JSON.stringify(minHeightSlot.name)})?.toFsdsDp()`,
-      );
-    }
+    emitThemeHeader(lines, ir, variantKeysKt);
+    const sides = emitChromeVals(lines, slots);
     if (isTypographyRoot && weightAxis) {
       // Typography lowering (FEAT-COMPOSE-TYPOGRAPHY-CONTENT-01): the type
       // scale resolves from the layered scopes — fontSize from the `text.size.md`
@@ -653,27 +738,7 @@ function emitStaticContent(ir: ComponentIR): string {
       );
     }
     lines.push(``);
-    const chromeLines: string[] = [`    val chromeModifier = Modifier`];
-    if (needsClip) {
-      lines.push(`    val shape = RoundedCornerShape(cornerRadius)`);
-      chromeLines.push(`        .clip(shape)`);
-    }
-    if (bgSlot) {
-      chromeLines.push(
-        `        .then(if (containerColor != null) Modifier.background(containerColor, shape) else Modifier)`,
-      );
-    }
-    if (anyPaddingSlot) {
-      chromeLines.push(
-        `        .padding(start = ${paddingInlineStart}, end = ${paddingInlineEnd}, top = ${paddingBlockStart}, bottom = ${paddingBlockEnd})`,
-      );
-    }
-    if (minHeightSlot) {
-      chromeLines.push(
-        `        .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)`,
-      );
-    }
-    lines.push(...chromeLines);
+    emitChromeModifier(lines, slots, sides);
     if (elementAxis) {
       // Element semantics: h1-h6 lower to the heading semantics marker (the
       // union values are the fact — no component names); p/span/div carry no
@@ -723,11 +788,558 @@ function emitStaticContent(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/** Variant axes for a component: enum per axis from ir.variants with the
+ *  same-named designed prop's defaultExpr. Shared by the axis-bearing paths. */
+function collectVariantAxes(ir: ComponentIR) {
+  return Object.keys(ir.variants ?? {}).map((axis) => {
+    const values = ir.variants[axis] ?? [];
+    const prop = ir.styledProps.find((p) => p.safeName === axis);
+    const defaultExpr = prop?.defaultExpr?.replace(/^["']|["']$/g, "") ?? values[0];
+    return {
+      propName: prop?.safeName ?? axis,
+      enumName: `${ir.name}${pascalCase(axis)}`,
+      values,
+      defaultExpr,
+    };
+  });
+}
+
+/** Resolve the text source of a prop-text leaf: a prop binding on the root,
+ *  on a single `code` part child, or the source prop of a content transform
+ *  (highlight/markdown degrade to their source prop — the swift gate's facts).
+ *  The IR owns the content binding shape; no per-component names. */
+function propTextSource(ir: ComponentIR): { prop: string } | undefined {
+  const direct = ir.dom?.content;
+  if (direct && "prop" in direct) return { prop: direct.prop };
+  const codeChild = (ir.dom?.children ?? []).find((c) => c.part === "code");
+  const nested = codeChild?.content;
+  if (nested && "prop" in nested) return { prop: nested.prop };
+  const nestedSrc = (nested as { source?: unknown } | undefined)?.source;
+  if (nestedSrc && typeof nestedSrc === "object" && "prop" in nestedSrc) {
+    return { prop: (nestedSrc as { prop: string }).prop };
+  }
+  const directSrc = (direct as { source?: unknown } | undefined)?.source;
+  if (directSrc && typeof directSrc === "object" && "prop" in directSrc) {
+    return { prop: (directSrc as { prop: string }).prop };
+  }
+  return undefined;
+}
+
+/** Prop-text leaf: a passive root (no channels, no surface) whose text
+ *  content binds to a prop — CodeBlock/CodeSnippet/Markdown. */
+function isPropTextLeaf(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if (ir.dom.tag === "button" || ir.dom.tag === "input") return false;
+  return propTextSource(ir) !== undefined;
+}
+
+/**
+ * Prop-text leaf composable: foundation BasicText rendering the bound prop,
+ * with chrome resolved from the token scopes and the font-size role slot
+ * (`*.size.fontSize.default` / `*.typography.fontSize.default` — the corpus's
+ * text-leaf size vocabulary, distinct from the content-role `text.size.*`).
+ */
+function emitPropTextLeaf(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const slots = resolveStaticChrome(ir);
+  const textSource = propTextSource(ir)!;
+  const textProp = ir.styledProps.find((p) => p.safeName === textSource.prop);
+  const propHasDefault = textProp?.defaultExpr !== undefined;
+  const fontSizeSlot = findLayeredSlotAny(ir, ["root"], [
+    ".size.fontSize.default",
+    ".typography.fontSize.default",
+    "text.size.md",
+  ]);
+  const usesTheme = ir.tokenScopes.length > 0;
+  const usesColors = slots.usesColors;
+  const emitsTextStyle = Boolean(fontSizeSlot || slots.fgSlot);
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  if (usesColors) lines.push(`import androidx.compose.foundation.background`);
+  lines.push(`import androidx.compose.foundation.text.BasicText`);
+  if (slots.minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
+  if (slots.anyPaddingSlot) lines.push(`import androidx.compose.foundation.layout.padding`);
+  if (slots.needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  if (slots.needsClip) lines.push(`import androidx.compose.ui.draw.clip`);
+  if (usesColors || emitsTextStyle) lines.push(`import androidx.compose.ui.graphics.Color`);
+  if (slots.usesDims) lines.push(`import androidx.compose.ui.unit.dp`);
+  if (emitsTextStyle) {
+    lines.push(`import androidx.compose.ui.text.TextStyle`);
+    lines.push(`import androidx.compose.ui.unit.TextUnit`);
+  }
+  if (usesTheme) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    if (usesColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (slots.usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    if (fontSizeSlot) lines.push(`import com.fullstackds.tokens.toFsdsSp`);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  if (propHasDefault) {
+    lines.push(`    modifier: Modifier = Modifier,`);
+    lines.push(
+      `    ${textSource.prop}: String = ${JSON.stringify(textProp!.defaultExpr!.replace(/^["']|["']$/g, ""))},`,
+    );
+  } else {
+    lines.push(`    ${textSource.prop}: String,`);
+    lines.push(`    modifier: Modifier = Modifier,`);
+  }
+  lines.push(`) {`);
+  if (usesTheme) {
+    emitThemeHeader(lines, ir, "");
+    const sides = emitChromeVals(lines, slots);
+    if (fontSizeSlot) {
+      lines.push(
+        `    val fsdsFontSize = layeredSlot(${JSON.stringify(fontSizeSlot.name)})?.toFsdsSp()`,
+      );
+    }
+    lines.push(``);
+    emitChromeModifier(lines, slots, sides);
+    lines.push(`    val fsdsTextStyle = TextStyle(`);
+    lines.push(
+      `        fontSize = ${fontSizeSlot ? "fsdsFontSize ?: TextUnit.Unspecified" : "TextUnit.Unspecified"},`,
+    );
+    lines.push(
+      `        color = ${slots.fgSlot ? "contentColor ?: Color.Unspecified" : "Color.Unspecified"},`,
+    );
+    lines.push(`    )`);
+    lines.push(`    BasicText(`);
+    lines.push(`        text = ${textSource.prop},`);
+    lines.push(`        modifier = modifier.then(chromeModifier),`);
+    lines.push(`        style = fsdsTextStyle,`);
+    lines.push(`    )`);
+  } else {
+    lines.push(
+      `    BasicText(text = ${textSource.prop}, modifier = modifier, style = TextStyle.Default)`,
+    );
+  }
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
+/** Expandable content: a children leaf paired with an `expand*` boolean
+ *  channel — Truncate/ShowMore. The expanded channel drives the disclosure
+ *  toggle; the toggle's label comes from the IR's conditional content (the
+ *  whenTrue/whenFalse props the contract authors). */
+function isExpandableContent(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const expandChannel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "boolean" && c.name.startsWith("expand"),
+  );
+  if (!expandChannel) return false;
+  let childrenLeaves = 0;
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if (node.tag === "children" && (node.children ?? []).length === 0) childrenLeaves += 1;
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  return childrenLeaves >= 1;
+}
+
+/** Prop name of a BindingExpression when it is a `prop` binding. */
+function propNameOf(expr: { kind?: string; prop?: string } | undefined): string | undefined {
+  if (expr && "prop" in (expr as Record<string, unknown>)) return (expr as { prop: string }).prop;
+  return undefined;
+}
+
+/** Find the disclosure-toggle dom node (part `toggle` or `trigger`). */
+function findTogglePart(ir: ComponentIR) {
+  const walk = (node: NonNullable<ComponentIR["dom"]>): typeof node | undefined => {
+    if (node.part === "toggle" || node.part === "trigger") return node;
+    for (const child of node.children ?? []) {
+      const hit = walk(child);
+      if (hit) return hit;
+    }
+    return undefined;
+  };
+  return ir.dom ? walk(ir.dom) : undefined;
+}
+
+function emitExpandableContent(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const slots = resolveStaticChrome(ir);
+  const channel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "boolean" && c.name.startsWith("expand"),
+  )!;
+  const valueProp = channel.valueProp;
+  const defaultValueProp = channel.defaultValueProp ?? `${valueProp}Default`;
+  const changeProp = channel.changeHandlerProp;
+  const toggleNode = findTogglePart(ir);
+  const conditional = toggleNode?.content;
+  const collapseProp =
+    conditional && "whenTrue" in conditional ? propNameOf(conditional.whenTrue) : undefined;
+  const expandProp =
+    conditional && "whenTrue" in conditional ? propNameOf(conditional.whenFalse) : undefined;
+  const gateProp = toggleNode?.ifProp ?? undefined;
+  const gapSlot = findLayeredSlot(ir, ["root"], "box-model.gap");
+  const usesTheme = ir.tokenScopes.length > 0;
+  const hasToggle = Boolean(collapseProp || expandProp || gateProp);
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  if (slots.usesColors) lines.push(`import androidx.compose.foundation.background`);
+  lines.push(`import androidx.compose.foundation.clickable`);
+  if (slots.minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
+  lines.push(`import androidx.compose.foundation.layout.Arrangement`);
+  lines.push(`import androidx.compose.foundation.layout.Column`);
+  lines.push(`import androidx.compose.foundation.text.BasicText`);
+  if (slots.anyPaddingSlot) lines.push(`import androidx.compose.foundation.layout.padding`);
+  if (slots.needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.mutableStateOf`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.runtime.setValue`);
+  if (slots.fgSlot) lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  if (slots.needsClip) lines.push(`import androidx.compose.ui.draw.clip`);
+  if (slots.usesColors) lines.push(`import androidx.compose.ui.graphics.Color`);
+  if (slots.usesDims) lines.push(`import androidx.compose.ui.unit.dp`);
+  if (hasToggle) {
+    lines.push(`import androidx.compose.ui.semantics.Role`);
+    lines.push(`import androidx.compose.ui.semantics.semantics`);
+    lines.push(`import androidx.compose.ui.semantics.stateDescription`);
+  }
+  if (usesTheme) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    if (slots.usesColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (slots.usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  }
+  if (slots.fgSlot) lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    ${valueProp}: Boolean? = null,`);
+  lines.push(`    ${defaultValueProp}: Boolean = false,`);
+  lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
+  if (gateProp) {
+    const gatePropDef = ir.styledProps.find((p) => p.safeName === gateProp);
+    lines.push(`    ${gateProp}: Boolean = ${gatePropDef?.defaultExpr ?? "false"},`);
+  }
+  if (collapseProp) lines.push(`    ${collapseProp}: String? = null,`);
+  if (expandProp) lines.push(`    ${expandProp}: String? = null,`);
+  lines.push(`    content: @Composable () -> Unit,`);
+  lines.push(`) {`);
+  lines.push(
+    `    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`,
+  );
+  lines.push(
+    `    val resolved${pascalCase(valueProp)} = ${valueProp} ?: uncontrolled${pascalCase(valueProp)}`,
+  );
+  if (usesTheme) {
+    emitThemeHeader(lines, ir, "");
+    const sides = emitChromeVals(lines, slots);
+    if (gapSlot) {
+      lines.push(`    val gap = layeredSlot(${JSON.stringify(gapSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    }
+    lines.push(``);
+    emitChromeModifier(lines, slots, sides);
+    lines.push(``);
+    lines.push(`    Column(`);
+    lines.push(`        modifier = modifier.then(chromeModifier),`);
+    lines.push(
+      `        verticalArrangement = ${gapSlot ? "Arrangement.spacedBy(gap)" : "Arrangement.Top"},`,
+    );
+    lines.push(`    ) {`);
+    if (slots.fgSlot) {
+      // Content-color propagation (same contract as the static-content path):
+      // the resolved foreground reaches the consumer's content region.
+      lines.push(
+        `        CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {`,
+      );
+      lines.push(`            content()`);
+      lines.push(`        }`);
+    } else {
+      lines.push(`        content()`);
+    }
+    if (hasToggle) {
+      const toggleBody = () => {
+        lines.push(`            BasicText(`);
+        lines.push(
+          `                text = (if (resolved${pascalCase(valueProp)}) ${collapseProp ?? "null"} else ${expandProp ?? "null"}) ?: "",`,
+        );
+        lines.push(`                modifier = Modifier.clickable(`);
+        lines.push(`                    role = Role.Button,`);
+        lines.push(`                ) {`);
+        lines.push(
+          `                    if (${valueProp} == null) { uncontrolled${pascalCase(valueProp)} = !resolved${pascalCase(valueProp)} }`,
+        );
+        lines.push(`                    ${changeProp}?.invoke(!resolved${pascalCase(valueProp)})`);
+        lines.push(`                }.semantics {`);
+        lines.push(
+          `                    stateDescription = if (resolved${pascalCase(valueProp)}) "expanded" else "collapsed"`,
+        );
+        lines.push(`                },`);
+        lines.push(`            )`);
+      };
+      if (gateProp) {
+        lines.push(`        if (${gateProp}) {`);
+        toggleBody();
+        lines.push(`        }`);
+      } else {
+        toggleBody();
+      }
+    }
+    lines.push(`    }`);
+  } else {
+    lines.push(`    Column(modifier = modifier) { content() }`);
+  }
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
+/** Progress/status indicator: a progressbar-role root (determinate bar from
+ *  the 0-100 value prop, or circular when the contract declares a circular
+ *  variant) or a status-role visual leaf (indeterminate spinner). */
+function isProgressIndicator(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  const role = ir.root?.effectiveRole;
+  if (role === "progressbar") return true;
+  if (role === "status") {
+    // A status-role indicator leaf must carry a visual child (Spinner's
+    // aria-hidden visual part). The empty decorative box (Skeleton) stays on
+    // the static-content path.
+    if ((ir.dom.children ?? []).length === 0) return false;
+    let childrenLeaves = 0;
+    const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+      if (node.tag === "children" && (node.children ?? []).length === 0) childrenLeaves += 1;
+      (node.children ?? []).forEach(walk);
+    };
+    walk(ir.dom);
+    return childrenLeaves === 0;
+  }
+  return false;
+}
+
+/** Per-axis slot lookup: resolves `<prefix>.<axis>.<value>` through the
+ *  layered scopes — the Switch track-dims pattern, generalized. */
+function emitAxisSlotLookup(
+  lines: string[],
+  valName: string,
+  prefix: string,
+  axis: { propName: string; enumName: string; values: string[] },
+  accessor: "toFsdsDp" | "toFsdsColor" | "toFsdsMs",
+): void {
+  lines.push(`    val ${valName} = layeredSlot(`);
+  lines.push(`        when (${kotlinParamName(axis.propName)}) {`);
+  for (const value of axis.values) {
+    lines.push(
+      `            ${axis.enumName}.${kotlinEnumName(value)} -> ${JSON.stringify(`${prefix}.${value}`)}`,
+    );
+  }
+  lines.push(`        },`);
+  lines.push(`    )?.${accessor}()`);
+}
+
+function emitProgressIndicator(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const slots = resolveStaticChrome(ir);
+  const axes = collectVariantAxes(ir);
+  const variantKeysKt = axes
+    .map((a) => `"variant_" + ${kotlinParamName(a.propName)}.name.lowercase()`)
+    .join(", ");
+  const isBar = ir.root?.effectiveRole === "progressbar";
+  const valueProp = ir.styledProps.find((p) => p.safeName === "value");
+  const labelProp = ir.styledProps.find((p) => p.safeName === "label");
+  const showValueProp = ir.styledProps.find((p) => p.safeName === "showValue");
+  const textColorSlot = findLayeredSlot(ir, ["root"], ".color.text.default");
+  const trackColorSlot = findLayeredSlot(ir, ["root"], ".color.track.background");
+  const fillSlot = findLayeredSlotAny(ir, ["root"], [".color.fill.info", ".color.fill"]);
+  const durationSlot = findLayeredSlot(ir, ["root"], ".motion.duration.indeterminate");
+  const sizeAxis = axes.find((a) => a.propName === "size");
+  const thicknessAxis = axes.find((a) => a.propName === "thickness");
+  const variantAxis = axes.find((a) => a.propName === "variant");
+  const intentAxis = axes.find((a) => a.propName === "intent");
+  const usesTheme = ir.tokenScopes.length > 0;
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  if (slots.usesColors) lines.push(`import androidx.compose.foundation.background`);
+  if (slots.minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
+  if (slots.anyPaddingSlot) lines.push(`import androidx.compose.foundation.layout.padding`);
+  if (slots.needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  if (textColorSlot) lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  if (slots.needsClip) lines.push(`import androidx.compose.ui.draw.clip`);
+  // Color is always referenced (the substrate call carries ledgered fallback
+  // constants), and toFsdsColor whenever any color slot resolves.
+  const usesProgressColors = Boolean(textColorSlot || trackColorSlot || fillSlot);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  if (slots.usesDims) lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import com.fullstackds.components.progress.FsdsProgressIndicator`);
+  if (usesTheme) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    if (slots.usesColors || usesProgressColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (slots.usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    if (durationSlot) lines.push(`import com.fullstackds.tokens.toFsdsMs`);
+  }
+  if (textColorSlot) lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  for (const axis of axes) {
+    lines.push(
+      `/** ${axis.propName} axis lowered from the contract's ${axis.propName} variant. */`,
+    );
+    lines.push(
+      `enum class ${axis.enumName} { ${axis.values.map(kotlinEnumName).join(", ")} }`,
+    );
+    lines.push(``);
+  }
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  if (valueProp && isBar) lines.push(`    value: Float? = null,`);
+  if (labelProp) lines.push(`    label: String? = null,`);
+  if (showValueProp && isBar) lines.push(`    showValue: Boolean = false,`);
+  for (const axis of axes) {
+    lines.push(
+      `    ${kotlinParamName(axis.propName)}: ${axis.enumName} = ${axis.enumName}.${kotlinEnumName(axis.defaultExpr)},`,
+    );
+  }
+  if (isBar && showValueProp) lines.push(`    content: @Composable () -> Unit = {},`);
+  lines.push(`) {`);
+  if (usesTheme) {
+    emitThemeHeader(lines, ir, variantKeysKt);
+    const sides = emitChromeVals(lines, slots);
+    if (textColorSlot) {
+      lines.push(
+        `    val textColor = layeredSlot(${JSON.stringify(textColorSlot.name)})?.toFsdsColor()`,
+      );
+    }
+    if (trackColorSlot) {
+      lines.push(
+        `    val trackColor = layeredSlot(${JSON.stringify(trackColorSlot.name)})?.toFsdsColor()`,
+      );
+    }
+    if (fillSlot && intentAxis) {
+      emitAxisSlotLookup(lines, "fillColor", "progress.color.fill", intentAxis, "toFsdsColor");
+    } else if (fillSlot) {
+      lines.push(
+        `    val fillColor = layeredSlot(${JSON.stringify(fillSlot.name)})?.toFsdsColor()`,
+      );
+    }
+    if (durationSlot) {
+      lines.push(
+        `    val durationMs = layeredSlot(${JSON.stringify(durationSlot.name)})?.toFsdsMs() ?: 1200`,
+      );
+    }
+    // The per-value dim lookups emit only when the component's scopes carry
+    // the spinner size/thickness slots (Spinner does; Progress's size axis
+    // has no dim slots — the substrate default applies instead).
+    const hasSpinnerSizeSlots = ir.tokenScopes.some((s) =>
+      s.values.some((v) => v.name.startsWith("spinner.size.")),
+    );
+    const hasSpinnerThicknessSlots = ir.tokenScopes.some((s) =>
+      s.values.some((v) => v.name.startsWith("spinner.thickness.")),
+    );
+    if (sizeAxis && hasSpinnerSizeSlots) {
+      emitAxisSlotLookup(lines, "spinnerSize", "spinner.size", sizeAxis, "toFsdsDp");
+    }
+    if (thicknessAxis && hasSpinnerThicknessSlots) {
+      emitAxisSlotLookup(lines, "spinnerThickness", "spinner.thickness", thicknessAxis, "toFsdsDp");
+    }
+    lines.push(``);
+    emitChromeModifier(lines, slots, sides);
+    lines.push(``);
+    lines.push(`    FsdsProgressIndicator(`);
+    lines.push(
+      `        progress = ${valueProp && isBar ? "value?.let { it / 100f }" : "null"},`,
+    );
+    lines.push(
+      `        linear = ${isBar ? (variantAxis ? `${variantAxis.enumName}.Linear == ${kotlinParamName(variantAxis.propName)}` : "true") : "false"},`,
+    );
+    lines.push(
+      `        size = ${hasSpinnerSizeSlots && sizeAxis ? "spinnerSize ?: 24.dp" : "24.dp"},`,
+    );
+    lines.push(
+      `        strokeWidth = ${hasSpinnerThicknessSlots && thicknessAxis ? "spinnerThickness ?: 3.dp" : "4.dp"},`,
+    );
+    lines.push(
+      `        trackColor = ${trackColorSlot ? "trackColor ?: Color(0xFFD0D0D0)" : "Color(0xFFD0D0D0)"},`,
+    );
+    lines.push(
+      `        fillColor = ${fillSlot ? "fillColor ?: Color(0xFF0566FE)" : "Color(0xFF0566FE)"},`,
+    );
+    lines.push(`        durationMs = ${durationSlot ? "durationMs" : "1200"},`);
+    lines.push(`        contentDescription = ${labelProp ? "label" : "null"},`);
+    lines.push(`        modifier = modifier.then(chromeModifier),`);
+    lines.push(`    )`);
+    if (isBar && showValueProp) {
+      lines.push(``);
+      lines.push(`    if (showValue) {`);
+      if (textColorSlot) {
+        lines.push(
+          `        CompositionLocalProvider(LocalFsdsContentColor provides (textColor ?: Color.Unspecified)) {`,
+        );
+        lines.push(`            content()`);
+        lines.push(`        }`);
+      } else {
+        lines.push(`        content()`);
+      }
+      lines.push(`    }`);
+    }
+  } else {
+    lines.push(`    FsdsProgressIndicator(`);
+    lines.push(`        progress = null,`);
+    lines.push(`        linear = false,`);
+    lines.push(`        modifier = modifier,`);
+    lines.push(`    )`);
+  }
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
 export function generateJetpackComposeComponentSource(
   ir: ComponentIR,
 ): string {
   if (isProjectedChildrenAction(ir)) {
     return emitProjectedChildrenAction(ir);
+  }
+  if (isPropTextLeaf(ir)) {
+    return emitPropTextLeaf(ir);
+  }
+  if (isExpandableContent(ir)) {
+    return emitExpandableContent(ir);
+  }
+  if (isProgressIndicator(ir)) {
+    return emitProgressIndicator(ir);
   }
   if (isStaticContent(ir)) {
     return emitStaticContent(ir);
