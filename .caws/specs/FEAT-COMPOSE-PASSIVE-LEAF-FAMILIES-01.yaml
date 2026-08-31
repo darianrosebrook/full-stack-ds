@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-PASSIVE-LEAF-FAMILIES-01
 title: 'Compose passive-leaf families: prop-text + expandable content + progress/status (allowlist 16 -> 23)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose admits the two passive-leaf families (16 -> 23): prop-text BasicText leaves with the font-size role, expandable disclosure content with IR-derived toggle labels, and painted progress/status indicators with progressBarRangeInfo; the parity gate''s per-path claimed sets caught and fixed two real defects'
 created_at: '2026-08-31T00:27:46.154Z'
-updated_at: '2026-08-31T00:43:02.692Z'
+updated_at: '2026-08-31T00:46:42.791Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (three new emitter paths)'
