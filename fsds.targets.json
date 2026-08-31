@@ -111,19 +111,26 @@
         "Blockquote",
         "Breadcrumbs",
         "Button",
+        "CodeBlock",
+        "CodeSnippet",
         "Label",
         "Links",
         "List",
+        "Markdown",
         "NavList",
         "Postcard",
         "ProfileFlag",
+        "Progress",
+        "ShowMore",
         "Skeleton",
+        "Spinner",
         "Stat",
         "Status",
         "Switch",
         "Table",
         "Text",
-        "ToggleSwitch"
+        "ToggleSwitch",
+        "Truncate"
       ]
     }
   ]
