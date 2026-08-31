@@ -63,3 +63,7 @@ evidence:
     status: pass
     evidence_ref: "parity gate typography role: RN Text styles consume text.size.md + text.typography.fontWeight.* and the Compose emission consumes them (when-arm literals + dynamic prefixes counted); falsified by deleting the fontSize lookup — gate exited 1 naming text.size.md — restored by regeneration; 16/16 PASS"
     recorded_at: "2026-08-31T00:13:18.779Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Text emits enum class TextElement { P..H6 }, backtick-quoted `as` param, and all six h1-h6 values lower to Modifier.semantics { heading() } — general over the union values, zero per-component names; Heading.Level absent from the CMP 1.8.0 desktop semantics artifact (verified by jar scan) so the level distinction is a named non-claim"
+    recorded_at: "2026-08-31T00:13:19.185Z"
