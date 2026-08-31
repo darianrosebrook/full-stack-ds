@@ -71,3 +71,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run governed:rail PASS; pnpm test 178 files / 2205 tests; pnpm run test:frameworks 74 tests; node scripts/compose-parity-diff.mjs PASS 16/16; docs:check-claims 26/26; lint 0 errors; ./gradlew :library:compileKotlin + settings lane compileKotlin exit 0; generated trees committed"
     recorded_at: "2026-08-31T00:13:26.161Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "named non-claims recorded in docs/current-implementation-snapshot.md row 58: Heading.Level absent on CMP 1.8.0 desktop (level-less heading() marker only), text-align/text-transform do not inherit through a content-lambda TextStyle, font-family has no token (RN hardcodes its code font)"
+    recorded_at: "2026-08-31T00:13:26.569Z"
