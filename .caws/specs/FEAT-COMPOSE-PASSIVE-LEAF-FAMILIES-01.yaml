@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "Truncate/ShowMore emit the expanded channel (expanded: Boolean?/defaultExpanded/onExpandedChange) with a stateful disclosure toggle whose label comes from the IR conditional content (if (resolvedExpanded) collapseText else expandText — the contract's labels, not hardcoded), gated by the contract's expandable prop when authored (Truncate), with content-color propagation; verified in generated trees + tests"
     recorded_at: "2026-08-31T00:46:33.135Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Progress/Spinner emit the foundation-only FsdsProgressIndicator (determinate linear bar from value/100, circular via the variant axis, indeterminate spinner with per-value spinner.size.*/spinner.thickness.* dim lookups and per-intent progress.color.fill.*); the substrate paints with progressBarRangeInfo semantics and the label as contentDescription — zero material imports in generated code; Skeleton stays on the static path (status-role check requires a visual child)"
+    recorded_at: "2026-08-31T00:46:33.551Z"
