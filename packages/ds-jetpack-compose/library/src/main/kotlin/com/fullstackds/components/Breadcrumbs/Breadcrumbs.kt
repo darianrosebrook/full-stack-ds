@@ -41,7 +41,6 @@ fun Breadcrumbs(
     val chromeModifier = Modifier
         .padding(start = paddingInlineStart, end = paddingInlineEnd, top = paddingBlockStart, bottom = paddingBlockEnd)
         .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)
-
     CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {
         Box(modifier.then(chromeModifier)) { content() }
     }
