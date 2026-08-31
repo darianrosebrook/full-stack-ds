@@ -19,14 +19,19 @@
 package com.fullstackds.tokens
 
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /** One token slot as authored in the token graph. Values stay raw strings;
  *  accessors below parse target-usable forms (dp, Color). @Immutable so the
@@ -71,6 +76,30 @@ val LocalFsdsTheme = staticCompositionLocalOf { FsdsTheme() }
  */
 val LocalFsdsContentColor = staticCompositionLocalOf { Color.Unspecified }
 
+/**
+ * Foundation-only text-style local — the Compose analog of the type scale a
+ * content root carries. Generated content-role components resolve their
+ * typography slots into a TextStyle and provide it here. The provider below
+ * also mirrors it into material3's LocalTextStyle so plain-M3 Text consumers
+ * inherit the design-system type scale (the material import lives in this
+ * hand-authored runtime, never in generated code — owned-substrate doctrine).
+ */
+val LocalFsdsTextStyle = staticCompositionLocalOf { TextStyle.Default }
+
+/**
+ * Provide the FSDS type scale to a content region. Wraps the content lambda
+ * so both LocalFsdsTextStyle readers (FSDS-aware text) and material3
+ * LocalTextStyle readers (M3 Text) inherit the resolved style.
+ */
+@Composable
+fun ProvideFsdsTextStyle(textStyle: TextStyle, content: @Composable () -> Unit) {
+    CompositionLocalProvider(
+        LocalFsdsTextStyle provides textStyle,
+        LocalTextStyle provides textStyle,
+        content = content,
+    )
+}
+
 @Composable
 fun FsdsThemeProvider(theme: FsdsTheme, content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalFsdsTheme provides theme) { content() }
@@ -103,6 +132,22 @@ fun String?.toFsdsDp(): Dp? {
     return match.groupValues[1].toFloatOrNull()?.dp
 }
 
+/** Parse a px-like token into sp for font sizes ("16px" → 16.sp). rem-based
+ *  fallbacks (the CSS-authoring vocabulary) resolve only when the semantic
+ *  defaults theme overrides them with graph px values; otherwise null. */
+fun String?.toFsdsSp(): TextUnit? {
+    if (this == null) return null
+    val match = Regex("^(-?[0-9]+(?:\\.[0-9]+)?)px$").find(this.trim()) ?: return null
+    return match.groupValues[1].toFloatOrNull()?.sp
+}
+
+/** Parse a numeric font-weight token ("400"/"500"/"700") into FontWeight. */
+fun String?.toFsdsWeight(): FontWeight? {
+    if (this == null) return null
+    val value = this.trim().toIntOrNull() ?: return null
+    return if (value in 100..900) FontWeight(value) else null
+}
+
 /**
  * Light-half semantic defaults resolved from the token graph
  * (packages/ds-tokens/generated/tokens.css, base :root layer at
@@ -126,6 +171,19 @@ object FsdsSemanticDefaults {
         "semantic.color.action.background.primary.active" to "#013ab0",
         "semantic.color.action.foreground.primary.default" to "#ffffff",
         "semantic.color.action.border.primary.default" to "#0566fe",
+        // core.typography.ramp.* → graph px values (mirrors the swift
+        // FsdsTheme semantic-defaults table; component scopes fall back to
+        // rem strings, which the px accessors skip — the theme override is
+        // what makes fontSize resolve).
+        "core.typography.ramp.2" to "12px",
+        "core.typography.ramp.3" to "14px",
+        "core.typography.ramp.4" to "16px",
+        "core.typography.ramp.5" to "18px",
+        "core.typography.ramp.6" to "20px",
+        "core.typography.ramp.7" to "24px",
+        "core.typography.ramp.8" to "32px",
+        "core.typography.ramp.11" to "60px",
+        "core.typography.weight.medium" to "500",
     )
 }
 
