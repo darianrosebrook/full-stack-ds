@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-PASSIVE-LEAF-FAMILIES-01
 title: 'Compose passive-leaf families: prop-text + expandable content + progress/status (allowlist 16 -> 23)'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-passive-leaf
 created_at: '2026-08-31T00:27:46.154Z'
-updated_at: '2026-08-31T00:27:46.154Z'
+updated_at: '2026-08-31T00:27:52.247Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (three new emitter paths)'
