@@ -39,7 +39,10 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
     expect(src).toContain("content: @Composable () -> Unit,");
     expect(src).toContain("val fsdsTheme = LocalFsdsTheme.current");
     expect(src).toContain("fun layeredSlot(slotName: String): String?");
-    expect(src).toContain("Box(modifier.then(chromeModifier)) { content() }");
+    // Text carries the element prop, so the box appends the heading modifier.
+    expect(src).toContain(
+      "Box(modifier.then(chromeModifier).then(headingModifier)) { content() }",
+    );
     // Variant scopes participate in layered resolution, root last.
     expect(src).toContain('"variant_" + variant.name.lowercase()');
     expect(src).toContain('"root"');
@@ -84,6 +87,34 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
         if (axisParam !== -1) expect(modifierIdx).toBeLessThan(axisParam);
       }
     }
+  });
+
+  it("lowers the typography slots into a TextStyle for content-role roots (Text)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Text"));
+    expect(src).toContain('layeredSlot("text.size.md")?.toFsdsSp()');
+    // Weight axis lowers through the corpus value→slot vocabulary.
+    expect(src).toContain('TextWeight.Normal -> "text.typography.fontWeight.regular"');
+    expect(src).toContain('TextWeight.Semibold -> "text.typography.fontWeight.medium"');
+    expect(src).toContain('TextWeight.Bold -> "text.typography.fontWeight.bold"');
+    expect(src).toContain("?.toFsdsWeight()");
+    expect(src).toContain(
+      "val fsdsTextStyle = TextStyle(fontSize = fsdsFontSize ?: TextUnit.Unspecified, fontWeight = fsdsFontWeight ?: FontWeight.Normal)",
+    );
+    expect(src).toContain("ProvideFsdsTextStyle(fsdsTextStyle) {");
+    // Non-typography static roots carry none of the machinery.
+    const status = generateJetpackComposeComponentSource(irFor("Status"));
+    expect(status).not.toContain("ProvideFsdsTextStyle");
+    expect(status).not.toContain("TextStyle(");
+  });
+
+  it("lowers the element-tag union prop to a parameter plus heading semantics (Text's `as`)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Text"));
+    expect(src).toContain("enum class TextElement { P, Span, Div, H1, H2, H3, H4, H5, H6 }");
+    expect(src).toContain("`as`: TextElement = TextElement.P,");
+    // All six heading values lower to the heading marker (the CMP 1.8.0
+    // desktop semantics artifact has no Heading.Level class).
+    expect(src.match(/-> Modifier\.semantics \{ heading\(\) \}/g)?.length).toBe(6);
+    expect(src).toContain("Box(modifier.then(chromeModifier).then(headingModifier)) { content() }");
   });
 
   it("escapes Kotlin hard keywords as axis parameter names (List's `as` axis)", () => {

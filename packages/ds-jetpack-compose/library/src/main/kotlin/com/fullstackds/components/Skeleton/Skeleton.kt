@@ -47,7 +47,6 @@ fun Skeleton(
     val chromeModifier = Modifier
         .padding(start = paddingInlineStart, end = paddingInlineEnd, top = paddingBlockStart, bottom = paddingBlockEnd)
         .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)
-
     Box(modifier.then(chromeModifier)) { content() }
 }
 // @generated:end

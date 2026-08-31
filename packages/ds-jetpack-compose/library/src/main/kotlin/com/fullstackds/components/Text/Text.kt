@@ -11,10 +11,18 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
 import com.fullstackds.tokens.LocalFsdsContentColor
+import com.fullstackds.tokens.ProvideFsdsTextStyle
+import com.fullstackds.tokens.toFsdsSp
+import com.fullstackds.tokens.toFsdsWeight
 // @generated:end
 
 // @generated:start component
@@ -33,6 +41,9 @@ enum class TextAlign { Left, Center, Right, Justify }
 /** transform axis lowered from the contract's transform variant. */
 enum class TextTransform { None, Uppercase, Lowercase, Capitalize }
 
+/** Element-tag prop lowered from the contract's as union type. */
+enum class TextElement { P, Span, Div, H1, H2, H3, H4, H5, H6 }
+
 @Composable
 fun Text(
     modifier: Modifier = Modifier,
@@ -41,6 +52,7 @@ fun Text(
     weight: TextWeight = TextWeight.Light,
     align: TextAlign = TextAlign.Left,
     transform: TextTransform = TextTransform.None,
+    `as`: TextElement = TextElement.P,
     content: @Composable () -> Unit,
 ) {
     val fsdsTheme = LocalFsdsTheme.current
@@ -57,13 +69,35 @@ fun Text(
     val paddingBlockStart = layeredSlot("box-model.padding-block-start")?.toFsdsDp() ?: 0.dp
     val paddingBlockEnd = layeredSlot("box-model.padding-block-end")?.toFsdsDp() ?: 0.dp
     val minHeight = layeredSlot("box-model.min-height")?.toFsdsDp()
+    val fsdsFontSize = layeredSlot("text.size.md")?.toFsdsSp()
+    val fsdsFontWeight = layeredSlot(
+        when (weight) {
+            TextWeight.Light -> "text.typography.fontWeight.light"
+            TextWeight.Normal -> "text.typography.fontWeight.regular"
+            TextWeight.Medium -> "text.typography.fontWeight.medium"
+            TextWeight.Semibold -> "text.typography.fontWeight.medium"
+            TextWeight.Bold -> "text.typography.fontWeight.bold"
+        },
+    )?.toFsdsWeight()
+    val fsdsTextStyle = TextStyle(fontSize = fsdsFontSize ?: TextUnit.Unspecified, fontWeight = fsdsFontWeight ?: FontWeight.Normal)
 
     val chromeModifier = Modifier
         .padding(start = paddingInlineStart, end = paddingInlineEnd, top = paddingBlockStart, bottom = paddingBlockEnd)
         .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)
+    val headingModifier = when (`as`) {
+        TextElement.H1 -> Modifier.semantics { heading() }
+        TextElement.H2 -> Modifier.semantics { heading() }
+        TextElement.H3 -> Modifier.semantics { heading() }
+        TextElement.H4 -> Modifier.semantics { heading() }
+        TextElement.H5 -> Modifier.semantics { heading() }
+        TextElement.H6 -> Modifier.semantics { heading() }
+        else -> Modifier
+    }
 
-    CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {
-        Box(modifier.then(chromeModifier)) { content() }
+    ProvideFsdsTextStyle(fsdsTextStyle) {
+        CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {
+            Box(modifier.then(chromeModifier).then(headingModifier)) { content() }
+        }
     }
 }
 // @generated:end
