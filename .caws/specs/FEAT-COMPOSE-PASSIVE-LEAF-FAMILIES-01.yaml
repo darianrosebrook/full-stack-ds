@@ -56,3 +56,8 @@ contracts:
   - name: 'prop-text-leaf'
     type: behavior
     path: 'packages/ds-contracts/components/CodeBlock/CodeBlock.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "CodeBlock/CodeSnippet/Markdown emit foundation BasicText with the bound prop as text (code-snippet: text: String -> BasicText(text = text)); the font-size role slot resolves (*.size.fontSize.default / *.typography.fontSize.default via toFsdsSp); highlight/markdown transforms degrade to their source prop; content transforms degrade — verified in generated trees + emitter unit tests"
+    recorded_at: "2026-08-31T00:46:32.702Z"
