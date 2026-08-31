@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: "Text.kt emits: val fsdsFontSize = layeredSlot(\"text.size.md\")?.toFsdsSp(); the fontWeight when-expression (Normal->regular, Semibold->medium vocabulary); val fsdsTextStyle = TextStyle(...); ProvideFsdsTextStyle(fsdsTextStyle) wrap; variant axes now drive the type scale — verified in generated Text.kt + emitter unit test"
     recorded_at: "2026-08-31T00:13:18.384Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "parity gate typography role: RN Text styles consume text.size.md + text.typography.fontWeight.* and the Compose emission consumes them (when-arm literals + dynamic prefixes counted); falsified by deleting the fontSize lookup — gate exited 1 naming text.size.md — restored by regeneration; 16/16 PASS"
+    recorded_at: "2026-08-31T00:13:18.779Z"
