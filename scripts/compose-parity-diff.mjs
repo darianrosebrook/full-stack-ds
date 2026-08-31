@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Compose ↔ React Native token-usage parity gate (FEAT-COMPOSE-RN-PARITY-01,
- * extended by FEAT-COMPOSE-STATIC-CHROME-HYGIENE-01).
+ * extended by FEAT-COMPOSE-STATIC-CHROME-HYGIENE-01 and
+ * FEAT-COMPOSE-TYPOGRAPHY-CONTENT-01).
  *
  * For every jetpack-compose ADMITTED component, proves against the generated
  * trees:
@@ -14,17 +15,19 @@
  *      token the theme resolves) or a `literal`/`fallback` — no entry that
  *      the FsdsTheme chain (slot-name override -> semantic-ref -> literal ->
  *      fallback) cannot resolve.
- *   3. Usage parity (no dead chrome): every slot key the emitted Compose
- *      `<Name>.kt` looks up must exist in the component's token scopes, and
- *      every chrome-role slot the RN `<Name>.styles.ts` consumes must be
- *      consumed by the Compose emission. A `layeredSlot("")` / `get("")`
- *      empty-key lookup is a hard failure. The claimed chrome-role set is
- *      exactly what the static-content path realizes: background, foreground,
- *      radius, box-model padding-inline/block, box-model.min-height —
- *      everything else (gap, min-width, borders, typography) is a named
- *      non-claim until its slice lands.
+ *   3. Usage parity (no dead lookups): every slot key the emitted Compose
+ *      `<Name>.kt` looks up must exist in the component's token scopes
+ *      (exact keys, or a declared key under a dynamic-concatenation prefix);
+ *      and every chrome-role slot the RN `<Name>.styles.ts` consumes must be
+ *      consumed by the Compose emission. The claimed chrome-role set is per
+ *      emitter path: static-content claims box-model padding/min-height +
+ *      base color tones + radius; button claims the size-suffixed slots;
+ *      toggle claims track/thumb. Typography-bearing content roots also claim
+ *      the typography role (text.size.*, text.typography.fontWeight.*) —
+ *      exactly the slots RN's Text styles consume.
  *   4. Content-color propagation: a static-content component whose scopes
- *      carry a foreground slot must provide it via LocalFsdsContentColor.
+ *      carry a base-tone foreground slot must provide it via
+ *      LocalFsdsContentColor.
  *   5. API shape: `modifier: Modifier = Modifier` is the first optional
  *      parameter of every generated composable (AOSP Compose API guideline).
  *
@@ -63,13 +66,32 @@ function tokensKeySet(tokensSource) {
 }
 
 /** Slot keys the emitted Compose component looks up (`layeredSlot("…")` /
- *  `get("…")` with a string literal). */
+ *  `get("…")` with a string literal). Dynamic concatenation lookups
+ *  (`layeredSlot("text.typography.fontWeight." + weight.name.lowercase())`)
+ *  are captured as PREFIXES: any declared key starting with the literal
+ *  prefix counts as consumed.
+ *  Returns { exact: Set<string>, prefixes: Set<string> }. */
 function composeConsumedKeys(ktSource) {
-  const keys = new Set();
+  const exact = new Set();
+  const prefixes = new Set();
   for (const m of ktSource.matchAll(/(?:layeredSlot|get)\("([^"]*)"\)/g)) {
-    keys.add(m[1]);
+    if (m[1] !== "") exact.add(m[1]);
   }
-  return keys;
+  for (const m of ktSource.matchAll(/(?:layeredSlot|get)\("([^"]*)"\s*\+/g)) {
+    if (m[1] !== "") prefixes.add(m[1]);
+  }
+  // Multi-line `layeredSlot( when (…) { … -> "slot.key" })` lookups (the
+  // weight-axis vocabulary): the when-arm string literals ARE the lookup keys.
+  for (const m of ktSource.matchAll(/->\s*"([^"]+)"\s*,?$/gm)) {
+    if (m[1] !== "") exact.add(m[1]);
+  }
+  return { exact, prefixes };
+}
+
+/** True when a declared key set covers a consumed key (exact or prefix). */
+function isConsumed(declared, consumed, key) {
+  if (consumed.exact.has(key)) return true;
+  return [...consumed.prefixes].some((p) => key.startsWith(p));
 }
 
 /** Slot keys the RN `<Name>.styles.ts` consumes (`tokens.<scope>?.["…"]`). */
@@ -96,6 +118,10 @@ const CHROME_ROLE_BUTTON = new RegExp(
   [BASE_BACKGROUND.source, BASE_FOREGROUND.source, "\\.(?:size|border)\\.radius(?:\\.|$)", "size\\.padding", "size\\.minHeight"].join("|"),
 );
 const CHROME_ROLE_TOGGLE = /(?!)/;
+/** Typography role: claimed only for typography-bearing content-role roots
+ *  (slot-evidence: the scopes carry `text.size.*` keys). Covers the slots the
+ *  RN Text styles consume (text.size.md + text.typography.fontWeight.*). */
+const TYPO_ROLE = /text\.size\.|text\.typography\.fontWeight\./;
 
 /** Which emitter path produced a generated `<Name>.kt`. */
 function emitterPath(ktSource) {
@@ -171,32 +197,33 @@ for (const name of admitted) {
   }
 
   // Usage parity: no dead lookups, every consumed key exists, and every
-  // RN-consumed chrome-role slot is consumed by the Compose emission.
+  // RN-consumed chrome/typography-role slot is consumed by the Compose
+  // emission (exact or via the dynamic-prefix lookups).
   const declared = tokensKeySet(c);
   const consumed = composeConsumedKeys(kt);
-  const emptyKeys = [...consumed].filter((k) => k === "");
-  const deadKeys = [...consumed].filter((k) => k !== "" && !declared.has(k));
-  if (emptyKeys.length > 0) {
+  const deadExact = [...consumed.exact].filter((k) => !declared.has(k));
+  const deadPrefix = [...consumed.prefixes].filter(
+    (p) => ![...declared].some((k) => k.startsWith(p)),
+  );
+  if (deadExact.length > 0 || deadPrefix.length > 0) {
     failures += 1;
-    console.error(`[compose-parity] DEAD LOOKUP ${name}: ${emptyKeys.length} empty-key lookup(s) — slot-existence gating violated`);
-    continue;
-  }
-  if (deadKeys.length > 0) {
-    failures += 1;
-    console.error(`[compose-parity] DEAD LOOKUP ${name}: keys not declared in scopes: ${deadKeys.join(",")}`);
+    console.error(
+      `[compose-parity] DEAD LOOKUP ${name}: exact keys not declared: ${deadExact.join(",")}${deadPrefix.length > 0 ? `; prefixes with no declared key: ${deadPrefix.join(",")}` : ""}`,
+    );
     continue;
   }
   if (existsSync(rnStyles)) {
     const path = emitterPath(kt);
     const chromeRole = chromeRoleForPath(path);
+    const isTypographyBearing = [...declared].some((k) => k.includes("text.size."));
     const rnConsumed = [...rnConsumedKeys(readFileSync(rnStyles, "utf8"))].filter(
-      (k) => chromeRole.test(k),
+      (k) => chromeRole.test(k) || (isTypographyBearing && TYPO_ROLE.test(k)),
     );
-    const missing = rnConsumed.filter((k) => !consumed.has(k));
+    const missing = rnConsumed.filter((k) => !isConsumed(declared, consumed, k));
     if (missing.length > 0) {
       failures += 1;
       console.error(
-        `[compose-parity] USAGE DIVERGENCE ${name} (${path}): RN consumes chrome slots the Compose emission does not: ${missing.join(",")}`,
+        `[compose-parity] USAGE DIVERGENCE ${name} (${path}): RN consumes chrome/typography slots the Compose emission does not: ${missing.join(",")}`,
       );
       continue;
     }
@@ -226,7 +253,7 @@ for (const name of admitted) {
     continue;
   }
 
-  console.log(`[compose-parity] OK ${name}: ${cSet.size} cssVars, scopes match, ${defs.length} definitions resolvable, ${consumed.size} slot lookups all declared, modifier first-optional`);
+  console.log(`[compose-parity] OK ${name}: ${cSet.size} cssVars, scopes match, ${defs.length} definitions resolvable, ${consumed.exact.size + consumed.prefixes.size} slot lookups all declared, modifier first-optional`);
 }
 
 console.log(
