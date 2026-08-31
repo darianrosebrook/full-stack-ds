@@ -139,3 +139,64 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
     );
   });
 });
+
+describe("generateJetpackComposeComponentSource — passive-leaf families", () => {
+  it("emits a prop-text leaf as BasicText with the bound prop and font-size slot (CodeSnippet)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("CodeSnippet"));
+    expect(src).toContain("import androidx.compose.foundation.text.BasicText");
+    expect(src).toContain("text: String,");
+    expect(src).toContain("BasicText(");
+    expect(src).toContain("text = text,");
+    expect(src).toContain('layeredSlot("code-snippet.size.fontSize.default")?.toFsdsSp()');
+    expect(src).toContain(
+      "val fsdsTextStyle = TextStyle(",
+    );
+    // No content lambda — the text is the bound prop.
+    expect(src).not.toContain("content: @Composable () -> Unit,");
+    // Markdown's content transform degrades to its source prop.
+    const markdown = generateJetpackComposeComponentSource(irFor("Markdown"));
+    expect(markdown).toContain("content: String,");
+    expect(markdown).toContain("text = content,");
+  });
+
+  it("emits the expandable-content shape with the expanded channel and a wired toggle (Truncate)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Truncate"));
+    expect(src).toContain("expanded: Boolean? = null,");
+    expect(src).toContain("defaultExpanded: Boolean = false,");
+    expect(src).toContain("onExpandedChange: ((Boolean) -> Unit)? = null,");
+    expect(src).toContain("expandable: Boolean = false,");
+    expect(src).toContain("collapseText: String? = null,");
+    expect(src).toContain("expandText: String? = null,");
+    // The toggle label comes from the IR conditional content (expanded →
+    // collapseText, collapsed → expandText), not hardcoded labels.
+    expect(src).toContain(
+      "text = (if (resolvedExpanded) collapseText else expandText) ?: \"\",",
+    );
+    expect(src).toContain("onExpandedChange?.invoke(!resolvedExpanded)");
+    expect(src).toContain("stateDescription = if (resolvedExpanded) \"expanded\" else \"collapsed\"");
+    // Gated by the contract's expandable prop.
+    expect(src).toContain("if (expandable) {");
+  });
+
+  it("emits a progressbar-role indicator with the 0-100 value and intent fill (Progress)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Progress"));
+    expect(src).toContain("enum class ProgressVariant { Linear, Circular }");
+    expect(src).toContain("value: Float? = null,");
+    expect(src).toContain("FsdsProgressIndicator(");
+    expect(src).toContain("progress = value?.let { it / 100f },");
+    // Per-intent fill color resolves through the layered scopes.
+    expect(src).toContain('ProgressIntent.Info -> "progress.color.fill.info"');
+    expect(src).toContain('ProgressIntent.Danger -> "progress.color.fill.danger"');
+    // No dead dim lookups: Progress has no spinner.size slots.
+    expect(src).not.toContain("spinner.size.sm");
+  });
+
+  it("emits a status-role spinner with per-value size/thickness dim lookups (Spinner)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Spinner"));
+    expect(src).toContain("enum class SpinnerSize { Xs, Sm, Md, Lg }");
+    expect(src).toContain("linear = false,");
+    expect(src).toContain('SpinnerSize.Md -> "spinner.size.md"');
+    expect(src).toContain('SpinnerThickness.Regular -> "spinner.thickness.regular"');
+    expect(src).toContain("FsdsProgressIndicator(");
+  });
+});
