@@ -54,3 +54,8 @@ contracts:
   - name: 'content-typography'
     type: behavior
     path: 'packages/ds-contracts/components/Text/Text.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Text.kt emits: val fsdsFontSize = layeredSlot(\"text.size.md\")?.toFsdsSp(); the fontWeight when-expression (Normal->regular, Semibold->medium vocabulary); val fsdsTextStyle = TextStyle(...); ProvideFsdsTextStyle(fsdsTextStyle) wrap; variant axes now drive the type scale — verified in generated Text.kt + emitter unit test"
+    recorded_at: "2026-08-31T00:13:18.384Z"
