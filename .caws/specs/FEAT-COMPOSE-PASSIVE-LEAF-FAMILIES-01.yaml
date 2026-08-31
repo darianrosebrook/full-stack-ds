@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "Progress/Spinner emit the foundation-only FsdsProgressIndicator (determinate linear bar from value/100, circular via the variant axis, indeterminate spinner with per-value spinner.size.*/spinner.thickness.* dim lookups and per-intent progress.color.fill.*); the substrate paints with progressBarRangeInfo semantics and the label as contentDescription — zero material imports in generated code; Skeleton stays on the static path (status-role check requires a visual child)"
     recorded_at: "2026-08-31T00:46:33.551Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "fsds.targets.json jetpack-compose allowlist 16 -> 23; generation succeeds (23 file groups); pnpm run governed:rail PASS (overall: pass); pnpm test 178 files / 2209 tests; pnpm run test:frameworks 74 tests; node scripts/compose-parity-diff.mjs PASS 23/23; docs:check-claims 26/26; lint 0 errors; ./gradlew :library:compileKotlin + settings lane compileKotlin exit 0; generated trees committed"
+    recorded_at: "2026-08-31T00:46:41.829Z"
