@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-passive-leaf
 created_at: '2026-08-31T00:27:46.154Z'
-updated_at: '2026-08-31T00:27:52.247Z'
+updated_at: '2026-08-31T00:43:02.692Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (three new emitter paths)'
@@ -23,6 +23,7 @@ scope:
     - 'fsds.targets.json'
     - 'docs/current-implementation-snapshot.md'
     - 'README.md'
+    - AGENTS.md
   out: []
 invariants:
   - 'Each new path keys off IR shape facts (content-binding kind, channel shape, root role) — zero per-component names.'
