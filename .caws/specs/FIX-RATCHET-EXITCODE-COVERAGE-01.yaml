@@ -38,3 +38,9 @@ evidence:
     recorded_at: "2026-09-01T19:50:35.322Z"
     command: node scripts/lib/ledger-ratchet.test.mjs
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "A passing run now contains 0 lines matching FAIL (grep -c FAIL = 0; was 2, emitted by reportRatchet as a side effect of the moved checks asking it for a return code). The assertions were MOVED, not deleted: the shared probe still drives reportRatchet and additionally asserts its output text, and the green case asserts the output does not contain FAIL. Falsification kept in-scope by mutating the ledger rather than a generated file: swapping the Popover entry for an absent path yielded findings=79 (ledgered=78) unledgered=1 stale=1, exit 1, naming packages/ds-react/src/components/Popover/Popover.css::overrides as unledgered and the fixture as stale — both ratchet directions firing simultaneously. Restoring the ledger returned 79/79/0/0 exit 0."
+    recorded_at: "2026-09-01T19:50:45.974Z"
+    command: "pnpm run audit:custom-regions"
+    exit_code: 0
