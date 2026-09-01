@@ -135,17 +135,27 @@ final class TokenPaintTests: XCTestCase {
         let expected = try Self.graphColorModes("semantic.color.background.primary")
         let card = Card(content: { SwiftUI.Text("paint") })
 
+        // Host at the card's fitting size and sample inside the trailing
+        // inline padding band, vertically centered: the card sizes to its
+        // content, so a fixed oversized frame leaves transparent
+        // (unpainted) margins around it, and dead center lands on the
+        // antialiased text glyphs. The padding band is pure background,
+        // away from the corner-radius clip.
+        let fitting = NSHostingView(rootView: card).fittingSize
+        let size = CGSize(width: max(fitting.width, 40), height: max(fitting.height, 28))
+        let point = CGPoint(x: size.width - 4, y: size.height / 2)
+
         let light = try sampledPixel(
-            of: card, size: CGSize(width: 240, height: 120),
+            of: card, size: size,
             appearance: NSAppearance(named: .aqua),
-            at: CGPoint(x: 228, y: 60)
+            at: point
         )
         assertClose(light, expected.light)
 
         let dark = try sampledPixel(
-            of: card, size: CGSize(width: 240, height: 120),
+            of: card, size: size,
             appearance: NSAppearance(named: .darkAqua),
-            at: CGPoint(x: 228, y: 60)
+            at: point
         )
         assertClose(dark, expected.dark)
     }
