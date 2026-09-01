@@ -78,3 +78,9 @@ evidence:
     recorded_at: "2026-09-01T19:26:09.230Z"
     command: "pnpm run generate -- --target=all --force Blockquote && pnpm run governed:rail"
     exit_code: 0
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Component-source occupancy fell 6 -> 1: the five byte-identical Blockquote regions are retired by contract, leaving only packages/ds-react/src/components/Popover/Popover.css::overrides, whose ledger note records that contract.motion is read by zero emitters so the pipeline cannot lower the animation its own contract declares. SCOPE CORRECTION vs how this criterion was written: the pre-work scan excluded __tests__ and so reported 6 total occupied regions. The full scan finds 84 (6 source + 78 test). The audit therefore classifies the two apart and ledgers both; the 78 test regions are the escape hatch's intended use (hand-authored hostile-path coverage), ledgered so the set cannot grow silently, not counted as debt. Final ledger: 79 entries, 1 source + 78 test, unledgered=0 stale=0."
+    recorded_at: "2026-09-01T19:26:18.935Z"
+    command: "pnpm run audit:custom-regions"
+    exit_code: 0
