@@ -33,3 +33,8 @@ acceptance:
     then: 'given the companion additions; when governed:rail regenerates all targets; then the companions survive and the generated trees show no drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:react-native exit 0: 82/82 test files, 150/150 tests, measured 85.69% lines (from 63.16) / 78.24% branches / 91.95% functions — at least 82 percent per the criterion"
+    recorded_at: "2026-09-01T02:40:24.707Z"
