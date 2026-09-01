@@ -2,9 +2,10 @@ id: TEST-COVERAGE-RAISE-FIGMA-01
 title: 'Raise figma-plugin line coverage to an 80-certifying floor via plugin UI and preview tests'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: figma-coverage
 created_at: '2026-09-01T01:26:23.467Z'
-updated_at: '2026-09-01T01:26:23.467Z'
+updated_at: '2026-09-01T01:26:24.321Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
