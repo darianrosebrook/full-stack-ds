@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
+import fsdsData from "./vite-plugin-fsds-data";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const floors = JSON.parse(
@@ -12,8 +13,10 @@ const floors = JSON.parse(
 // Scoped runner for the showcase app (src/). Its tests also run under the
 // root vitest config; this config gives the coverage-scoped command its own
 // thresholds (`pnpm exec vitest run -c vitest.showcase.config.ts --coverage`).
+// The fsds-data plugin provides `virtual:fsds/data`, which src/types/bundle
+// imports — the same wiring as vite.config.ts.
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), fsdsData()],
   resolve: {
     alias: {
       "@full-stack-ds/react": path.resolve(
