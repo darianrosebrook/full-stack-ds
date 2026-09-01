@@ -42,3 +42,7 @@ evidence:
     status: pass
     evidence_ref: "coverage-floors.json react-native ratchet 33/73/90/33 -> 45/74/90/45; measured 47.52 leaves 2.52 margin; docs-claims-check 46/46 after the floor marker update"
     recorded_at: "2026-09-01T02:23:56.751Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 overall pass with the seven companion test files committed inside the drift-gated RN tree: regeneration preserved them, zero generated drift (git status clean)"
+    recorded_at: "2026-09-01T02:23:57.197Z"
