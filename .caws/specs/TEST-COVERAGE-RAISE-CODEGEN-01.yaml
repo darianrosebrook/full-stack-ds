@@ -3,7 +3,6 @@ title: 'Raise codegen coverage via in-process CLI main-path suites (guards, vali
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: codegen-coverage
 created_at: '2026-09-01T01:40:25.629Z'
 updated_at: '2026-09-01T01:40:26.657Z'
 blast_radius:
