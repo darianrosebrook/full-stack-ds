@@ -68,3 +68,9 @@ evidence:
     recorded_at: "2026-09-01T20:12:48.951Z"
     command: "pnpm run audit:motion-realization"
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "contract.motion is typed as ContractMotion (was unknown), projected by buildMotion into MotionIR on ComponentIR, and lowered once in css.ts#reducedMotionBlock. All five web families share emitCss, so one seam reaches every target: 17 components per target now carry a derived @media (prefers-reduced-motion: reduce) block (react/vue/svelte/lit/angular all 17; react also shows Popover before its region was retired). The selector list is derived from the emitted declarations, and declarations that name an animating property while switching it off (animation: none on Skeleton --wipe/--none) are excluded, so the block names 4 selectors for Skeleton rather than 6. Honouring is opt-out (honorsReducedMotion = reducedMotion !== 'ignore'), which is why Button/Details/Skeleton/Spinner are covered despite declaring no motion block at all. governed:rail overall pass; typecheck:all 0 errors."
+    recorded_at: "2026-09-01T20:12:59.093Z"
+    command: pnpm run generate -- --target=all
+    exit_code: 0
