@@ -2,9 +2,10 @@ id: TEST-COVERAGE-RAISE-TOKENS-10
 title: 'Unit tests for type generation and resolver-module deep branches'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: tokens-types
 created_at: '2026-09-01T04:34:50.800Z'
-updated_at: '2026-09-01T04:34:50.800Z'
+updated_at: '2026-09-01T04:34:51.948Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
