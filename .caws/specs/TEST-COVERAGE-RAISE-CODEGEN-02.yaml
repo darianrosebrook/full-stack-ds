@@ -33,3 +33,8 @@ acceptance:
     then: 'given the new tests; when governed:rail regenerates all targets; then the generated trees show no drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:codegen exit 0: 81/81 test files, measured 62.79% lines (from 61.65) / 72.87% branches / 79.2% functions"
+    recorded_at: "2026-09-01T02:01:54.972Z"
