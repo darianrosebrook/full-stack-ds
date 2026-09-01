@@ -1,0 +1,32 @@
+id: FIX-RATCHET-EXITCODE-COVERAGE-01
+title: 'Move reportRatchet exit-code coverage into the shared ledger-ratchet probe'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-01T19:46:32.424Z'
+updated_at: '2026-09-01T19:46:32.424Z'
+blast_radius:
+  modules:
+    - 'scripts/lib/ledger-ratchet.test.mjs'
+    - 'scripts/custom-region-audit/selfcheck.mjs'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/lib/ledger-ratchet.test.mjs'
+    - 'scripts/custom-region-audit'
+  out: []
+invariants:
+  - 'reportRatchet''s diff-to-exit-code mapping is pinned in the shared probe that every ledger audit runs, not inside a single audit''s selfcheck.'
+  - 'A passing selfcheck emits no line containing FAIL, so a reader scanning pre-push output cannot misread a green run as a failure.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given reportRatchet is shared by six audits; when node scripts/lib/ledger-ratchet.test.mjs runs; then it asserts the return code is 1 for unledgered, 1 for stale, and 0 for a fully-ledgered set, and those assertions no longer live only in the custom-region selfcheck'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a passing run; when pnpm run audit:custom-regions runs; then its combined output contains no FAIL line, and the ratchet''s own reporting is still exercised rather than suppressed by deleting the assertions'
+non_functional: {}
+contracts: []
