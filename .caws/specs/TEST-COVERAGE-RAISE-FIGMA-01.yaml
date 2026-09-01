@@ -36,3 +36,8 @@ acceptance:
     then: 'given the added tests; when governed:rail regenerates all targets; then the generated trees show no drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:figma-plugin exit 0: 9/9 test files, measured 95.1% lines (from 70.68) / 82.91% branches / 95.32% functions"
+    recorded_at: "2026-09-01T01:37:53.281Z"
