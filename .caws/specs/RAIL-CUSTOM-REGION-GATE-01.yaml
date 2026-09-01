@@ -72,3 +72,9 @@ evidence:
     recorded_at: "2026-09-01T19:25:59.683Z"
     command: node scripts/custom-region-audit/selfcheck.mjs
     exit_code: 0
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Blockquote.tokens.json now declares blockquote.size.border.accent -> core.spacing.size.03 (4px) and Blockquote.styles.json binds it on --bordered. Regenerated: all five web targets emit 'border-inline-start-width: var(--fsds-blockquote-size-border-accent, 4px)' from codegen, and all five @custom overrides regions are empty (verified byte-wise per target). React Native's root_variant_bordered is restored to borderLeftWidth/borderLeftColor/paddingLeft from the renamed slot after an intermediate ::before form collapsed it to borderLeftWidth: 0. generate:check 51/51 VALID; governed:rail 'overall': 'pass'; working tree after the rail's full regeneration is confined to Blockquote + wiring (no drift)."
+    recorded_at: "2026-09-01T19:26:09.230Z"
+    command: "pnpm run generate -- --target=all --force Blockquote && pnpm run governed:rail"
+    exit_code: 0
