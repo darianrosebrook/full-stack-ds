@@ -34,3 +34,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:tokens exit 0: 5/5 test files, measured 10.07% lines (from 5.5) / 65.65% branches / 40.67% functions"
     recorded_at: "2026-09-01T03:00:20.976Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json tokens ratchet 3/54/29/3 -> 8/63/38/8; measured 10.07 leaves 2.07 margin; docs-claims-check 46/46 after the floor marker update"
+    recorded_at: "2026-09-01T03:00:21.450Z"
