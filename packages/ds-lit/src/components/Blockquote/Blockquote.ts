@@ -44,7 +44,7 @@ export class BlockquoteElement extends LitElement {
       --fsds-blockquote-size-padding-sm: var(--fsds-core-spacing-size-04, 8px);
       --fsds-blockquote-size-padding-lg: var(--fsds-core-spacing-size-07, 24px);
       --fsds-blockquote-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-blockquote-size-border-thick: var(--fsds-semantic-shape-control-border-focus-width, 2px);
+      --fsds-blockquote-size-border-accent: var(--fsds-core-spacing-size-03, 4px);
       --fsds-blockquote-size-font-size-sm: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-blockquote-size-font-size-md: var(--fsds-core-typography-ramp-4, 1rem);
       --fsds-blockquote-size-font-size-lg: var(--fsds-core-typography-ramp-5, 1.125rem);
@@ -109,7 +109,7 @@ export class BlockquoteElement extends LitElement {
     }
 
     .blockquote--bordered {
-      border-inline-start-width: var(--fsds-blockquote-size-border-thick, 2px);
+      border-inline-start-width: var(--fsds-blockquote-size-border-accent, 4px);
       border-inline-start-style: solid;
       border-inline-start-color: var(--fsds-blockquote-color-border-default, #d92d2e);
       padding-inline-start: var(--fsds-blockquote-size-padding-default, 12px);

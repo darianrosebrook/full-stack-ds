@@ -74,10 +74,10 @@
     "fallback": "6px",
     "layer": "semantic"
   },
-  "blockquote.size.border.thick": {
-    "resolvesTo": "semantic.shape.control.border.focusWidth",
-    "fallback": "2px",
-    "layer": "semantic"
+  "blockquote.size.border.accent": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
   },
   "blockquote.size.fontSize.sm": {
     "resolvesTo": "core.typography.ramp.3",

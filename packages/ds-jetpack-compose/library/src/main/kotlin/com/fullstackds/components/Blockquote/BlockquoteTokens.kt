@@ -139,11 +139,11 @@ val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.shape.control.radius.default",
             fallback = "6px",
         ),
-        "blockquote.size.border.thick" to ComponentTokenDefinition(
-            name = "blockquote.size.border.thick",
-            cssVar = "--fsds-blockquote-size-border-thick",
-            ref = "semantic.shape.control.border.focusWidth",
-            fallback = "2px",
+        "blockquote.size.border.accent" to ComponentTokenDefinition(
+            name = "blockquote.size.border.accent",
+            cssVar = "--fsds-blockquote-size-border-accent",
+            ref = "core.spacing.size.03",
+            fallback = "4px",
         ),
         "blockquote.size.fontSize.sm" to ComponentTokenDefinition(
             name = "blockquote.size.fontSize.sm",

@@ -73,8 +73,8 @@
       "fallback": "12px"
     },
     "border-inline-start-width": {
-      "resolvesTo": "blockquote.size.border.thick",
-      "fallback": "2px"
+      "resolvesTo": "blockquote.size.border.accent",
+      "fallback": "4px"
     },
     "border-inline-start-style": {
       "literal": "solid",
