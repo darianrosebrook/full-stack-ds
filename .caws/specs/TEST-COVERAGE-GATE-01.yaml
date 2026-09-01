@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "Fail path proven live: react suite at pre-calibration floors exited 1 with 'ERROR: Coverage for branches (76.38%) does not meet global threshold (77%)' (pnpm ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL); after ratcheting floors to scoped measurements the ten-suite chain exited 0. CI wiring: .github/workflows/ci.yml coverage-gate job runs pnpm run test:coverage with needs: gate; floors enforced by vitest coverage.thresholds and jest coverageThreshold in each runner config"
     recorded_at: "2026-09-01T00:32:49.354Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "docs/current-implementation-snapshot.md carries the 'Test coverage governance' ledger row with ten coverage-floor-lines markers and ten coverage-vs-target markers; node scripts/docs-claims-check.mjs -> '46 marked claim(s) match derived values' (all coverage markers derive from coverage-floors.json, the same authority the runner configs enforce). The row names the 80%-lines target gap per package and the non-claims (aggregate not per-file, percentage not assertion depth)"
+    recorded_at: "2026-09-01T00:32:49.781Z"
