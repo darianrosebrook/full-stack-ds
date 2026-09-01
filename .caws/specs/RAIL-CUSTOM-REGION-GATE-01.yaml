@@ -1,0 +1,53 @@
+id: RAIL-CUSTOM-REGION-GATE-01
+title: 'Gate the no-hand-edits-to-generated-output constraint and retire the Blockquote exception'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-01T19:02:45.728Z'
+updated_at: '2026-09-01T19:02:45.728Z'
+blast_radius:
+  modules:
+    - 'scripts/custom-region-audit'
+    - 'packages/ds-contracts/components/Blockquote'
+    - 'generated web component trees (ds-react, ds-vue, ds-svelte, ds-lit, ds-angular)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/custom-region-audit'
+    - 'packages/ds-contracts/components/Blockquote'
+    - 'packages/ds-react/src/components/Blockquote'
+    - 'packages/ds-vue/src/components/Blockquote'
+    - 'packages/ds-svelte/src/components/Blockquote'
+    - 'packages/ds-lit/src/components/Blockquote'
+    - 'packages/ds-angular/src/components/Blockquote'
+    - 'packages/ds-react-native/src/components/Blockquote'
+    - 'scripts/prepush-scope.mjs'
+    - '.githooks/pre-push'
+    - '.github/workflows/ci.yml'
+  out: []
+invariants:
+  - 'No @custom region in a generated framework artifact carries an authored body unless that file is on the audit''s dated allowlist; the allowlist only ever shrinks.'
+  - 'The Blockquote bordered accent is authored once in contract sidecars and lowered by codegen, not hand-replicated per target.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the contract corpus and the six generated component trees; when pnpm run audit:custom-regions runs; then it enumerates every @custom region, reports each authored body with its file and label, and exits non-zero for any authored body whose file is not on the dated allowlist'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an authored body deliberately injected into a generated artifact that is not on the allowlist; when the audit selfcheck runs; then the audit fails and names that exact file, proving the gate can fail for the right reason'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the bordered accent authored in Blockquote.styles.json and Blockquote.tokens.json; when pnpm run generate -- --target=all Blockquote runs; then all five web targets emit the accent rule from codegen and every Blockquote @custom region is empty'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the retired Blockquote exception; when the audit runs; then the allowlist holds only the React Popover region and the authored-body count has fallen from 6 to 1'
+non_functional: {}
+contracts:
+  - name: 'custom-region-ledger'
+    type: contract-test
+    path: 'scripts/custom-region-audit/selfcheck.mjs'
