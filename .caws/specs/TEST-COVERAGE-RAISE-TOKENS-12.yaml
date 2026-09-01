@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "POLO probe in worktree tokens-burn2 after severance of generators/index.ts, generateCSSTokens.mjs, validators/index.ts, validateTokens.mjs, inspectTokens.mjs(+test): lint 0 errors; typecheck exit 0; tokens:build green; governed:rail exit 0 — no check named any dependent"
     recorded_at: "2026-09-01T04:45:38.696Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run test:coverage:tokens (worktree tokens-burn2, post-burn): 284/284 tests pass, All files 73.14 lines / 81.65 branches / 95.88 functions — above the previous 67.54/81.46/94.77 and above the ratcheted floors 71/79/93/71"
+    recorded_at: "2026-09-01T04:45:39.202Z"
