@@ -88,6 +88,9 @@ describe("Tabs — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TabsList from "../TabsList.vue";
+import TabsPanel from "../TabsPanel.vue";
+import TabsTab from "../TabsTab.vue";
 import { h, ref } from "vue";
 import TabsList from "../TabsList.vue";
 import TabsTab from "../TabsTab.vue";
@@ -472,4 +475,5 @@ describe("Tabs — accessibility (full fixture)", () => {
     wrapper.unmount();
   });
 });
+
 // @custom:end

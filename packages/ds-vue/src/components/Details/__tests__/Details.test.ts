@@ -93,5 +93,18 @@ describe("Details — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import DetailsContent from "../DetailsContent.vue";
 
+
+describe("Details — compound parts", () => {
+  it("mounts DetailsContent with tag, base class, and slot content", () => {
+    const wrapper = mount(DetailsContent as Component, {
+      slots: { default: "Details part" },
+      attrs: { "data-testid": "details-detailscontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("details__content");
+    expect(wrapper.text()).toContain("Details part");
+  });
+});
 // @custom:end

@@ -301,5 +301,7 @@ describe("Tooltip — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TooltipContent from "../TooltipContent.vue";
+import TooltipTrigger from "../TooltipTrigger.vue";
 
 // @custom:end

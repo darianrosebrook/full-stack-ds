@@ -110,5 +110,40 @@ describe("Walkthrough — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import WalkthroughContent from "../WalkthroughContent.vue";
+import WalkthroughDescription from "../WalkthroughDescription.vue";
+import WalkthroughTitle from "../WalkthroughTitle.vue";
 
+
+describe("Walkthrough — compound parts", () => {
+  it("mounts WalkthroughContent with tag, base class, and slot content", () => {
+    const wrapper = mount(WalkthroughContent as Component, {
+      slots: { default: "Walkthrough part" },
+      attrs: { "data-testid": "walkthrough-walkthroughcontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("walkthrough__content");
+    expect(wrapper.text()).toContain("Walkthrough part");
+  });
+
+  it("mounts WalkthroughDescription with tag, base class, and slot content", () => {
+    const wrapper = mount(WalkthroughDescription as Component, {
+      slots: { default: "Walkthrough part" },
+      attrs: { "data-testid": "walkthrough-walkthroughdescription" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("p");
+    expect(wrapper.classes()).toContain("walkthrough__description");
+    expect(wrapper.text()).toContain("Walkthrough part");
+  });
+
+  it("mounts WalkthroughTitle with tag, base class, and slot content", () => {
+    const wrapper = mount(WalkthroughTitle as Component, {
+      slots: { default: "Walkthrough part" },
+      attrs: { "data-testid": "walkthrough-walkthroughtitle" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
+    expect(wrapper.classes()).toContain("walkthrough__title");
+    expect(wrapper.text()).toContain("Walkthrough part");
+  });
+});
 // @custom:end

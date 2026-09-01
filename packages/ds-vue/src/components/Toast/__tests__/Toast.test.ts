@@ -124,5 +124,40 @@ describe("Toast — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import ToastDescription from "../ToastDescription.vue";
+import ToastItem from "../ToastItem.vue";
+import ToastTitle from "../ToastTitle.vue";
 
+
+describe("Toast — compound parts", () => {
+  it("mounts ToastDescription with tag, base class, and slot content", () => {
+    const wrapper = mount(ToastDescription as Component, {
+      slots: { default: "Toast part" },
+      attrs: { "data-testid": "toast-toastdescription" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("p");
+    expect(wrapper.classes()).toContain("toast__description");
+    expect(wrapper.text()).toContain("Toast part");
+  });
+
+  it("mounts ToastItem with tag, base class, and slot content", () => {
+    const wrapper = mount(ToastItem as Component, {
+      slots: { default: "Toast part" },
+      attrs: { "data-testid": "toast-toastitem" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("li");
+    expect(wrapper.classes()).toContain("toast__item");
+    expect(wrapper.text()).toContain("Toast part");
+  });
+
+  it("mounts ToastTitle with tag, base class, and slot content", () => {
+    const wrapper = mount(ToastTitle as Component, {
+      slots: { default: "Toast part" },
+      attrs: { "data-testid": "toast-toasttitle" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
+    expect(wrapper.classes()).toContain("toast__title");
+    expect(wrapper.text()).toContain("Toast part");
+  });
+});
 // @custom:end

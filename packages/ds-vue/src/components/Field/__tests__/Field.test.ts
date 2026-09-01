@@ -83,5 +83,18 @@ describe("Field — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import FieldHeader from "../FieldHeader.vue";
 
+
+describe("Field — compound parts", () => {
+  it("mounts FieldHeader with tag, base class, and slot content", () => {
+    const wrapper = mount(FieldHeader as Component, {
+      slots: { default: "Field part" },
+      attrs: { "data-testid": "field-fieldheader" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.classes()).toContain("field__header");
+    expect(wrapper.text()).toContain("Field part");
+  });
+});
 // @custom:end

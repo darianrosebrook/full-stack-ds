@@ -85,5 +85,40 @@ describe("Command — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import CommandGroup from "../CommandGroup.vue";
+import CommandItem from "../CommandItem.vue";
+import CommandList from "../CommandList.vue";
 
+
+describe("Command — compound parts", () => {
+  it("mounts CommandGroup with tag, base class, and slot content", () => {
+    const wrapper = mount(CommandGroup as Component, {
+      slots: { default: "Command part" },
+      attrs: { "data-testid": "command-commandgroup" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("command__group");
+    expect(wrapper.text()).toContain("Command part");
+  });
+
+  it("mounts CommandItem with tag, base class, and slot content", () => {
+    const wrapper = mount(CommandItem as Component, {
+      slots: { default: "Command part" },
+      attrs: { "data-testid": "command-commanditem" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("li");
+    expect(wrapper.classes()).toContain("command__item");
+    expect(wrapper.text()).toContain("Command part");
+  });
+
+  it("mounts CommandList with tag, base class, and slot content", () => {
+    const wrapper = mount(CommandList as Component, {
+      slots: { default: "Command part" },
+      attrs: { "data-testid": "command-commandlist" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("ul");
+    expect(wrapper.classes()).toContain("command__list");
+    expect(wrapper.text()).toContain("Command part");
+  });
+});
 // @custom:end

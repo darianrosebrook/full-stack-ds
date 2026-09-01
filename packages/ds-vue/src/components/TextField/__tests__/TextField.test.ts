@@ -58,5 +58,18 @@ describe("TextField — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TextFieldDescription from "../TextFieldDescription.vue";
 
+
+describe("TextField — compound parts", () => {
+  it("mounts TextFieldDescription with tag, base class, and slot content", () => {
+    const wrapper = mount(TextFieldDescription as Component, {
+      slots: { default: "TextField part" },
+      attrs: { "data-testid": "textfield-textfielddescription" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("p");
+    expect(wrapper.classes()).toContain("text-field__description");
+    expect(wrapper.text()).toContain("TextField part");
+  });
+});
 // @custom:end

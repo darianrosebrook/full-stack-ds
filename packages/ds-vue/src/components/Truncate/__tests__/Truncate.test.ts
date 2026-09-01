@@ -58,5 +58,18 @@ describe("Truncate — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TruncateContent from "../TruncateContent.vue";
 
+
+describe("Truncate — compound parts", () => {
+  it("mounts TruncateContent with tag, base class, and slot content", () => {
+    const wrapper = mount(TruncateContent as Component, {
+      slots: { default: "Truncate part" },
+      attrs: { "data-testid": "truncate-truncatecontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("truncate__content");
+    expect(wrapper.text()).toContain("Truncate part");
+  });
+});
 // @custom:end

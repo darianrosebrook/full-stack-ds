@@ -103,5 +103,51 @@ describe("Card — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import CardContent from "../CardContent.vue";
+import CardDescription from "../CardDescription.vue";
+import CardFooter from "../CardFooter.vue";
+import CardHeader from "../CardHeader.vue";
 
+
+describe("Card — compound parts", () => {
+  it("mounts CardContent with tag, base class, and slot content", () => {
+    const wrapper = mount(CardContent as Component, {
+      slots: { default: "Card part" },
+      attrs: { "data-testid": "card-cardcontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("card__content");
+    expect(wrapper.text()).toContain("Card part");
+  });
+
+  it("mounts CardDescription with tag, base class, and slot content", () => {
+    const wrapper = mount(CardDescription as Component, {
+      slots: { default: "Card part" },
+      attrs: { "data-testid": "card-carddescription" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("p");
+    expect(wrapper.classes()).toContain("card__description");
+    expect(wrapper.text()).toContain("Card part");
+  });
+
+  it("mounts CardFooter with tag, base class, and slot content", () => {
+    const wrapper = mount(CardFooter as Component, {
+      slots: { default: "Card part" },
+      attrs: { "data-testid": "card-cardfooter" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.classes()).toContain("card__footer");
+    expect(wrapper.text()).toContain("Card part");
+  });
+
+  it("mounts CardHeader with tag, base class, and slot content", () => {
+    const wrapper = mount(CardHeader as Component, {
+      slots: { default: "Card part" },
+      attrs: { "data-testid": "card-cardheader" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.classes()).toContain("card__header");
+    expect(wrapper.text()).toContain("Card part");
+  });
+});
 // @custom:end
