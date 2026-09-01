@@ -33,3 +33,8 @@ acceptance:
     then: 'given the @custom block additions; when governed:rail regenerates all targets; then the custom blocks survive byte-for-byte and the generated trees show no drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:react-native exit 0: 60/60 test files, 95/95 tests, measured 47.52% lines (from 35.83) / 76.94% branches / 92.82% functions"
+    recorded_at: "2026-09-01T02:23:56.290Z"
