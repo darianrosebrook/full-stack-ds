@@ -51,7 +51,7 @@ function writeBaseline(baseline: Baseline): void {
   fs.writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n', 'utf8');
 }
 
-async function main() {
+export async function main() {
   const args = process.argv.slice(2);
   const outputFile = args
     .find((arg) => arg.startsWith('--output='))
@@ -206,4 +206,9 @@ async function main() {
   }
 }
 
-main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error("[usage] runner crashed:", err);
+    process.exit(2);
+  });
+}

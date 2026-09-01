@@ -115,7 +115,7 @@ async function runBuild(): Promise<void> {
   if (!success) process.exit(1);
 }
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   const opts = parseArgs(process.argv.slice(2));
   if (opts.validateOnly) {
     await runValidate();
@@ -124,4 +124,6 @@ async function main(): Promise<void> {
   await runBuild();
 }
 
-void main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  void main();
+}
