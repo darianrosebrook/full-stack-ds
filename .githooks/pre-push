@@ -266,5 +266,17 @@ if [ "${RUN_TOKEN_RESOLVABILITY:-false}" = true ]; then
   pnpm run audit:token-resolvability
 else say "skip token-resolvability ledger"; fi
 
+# Custom-region occupancy (RAIL-CUSTOM-REGION-GATE-01). The only gate on the
+# constraint the whole method rests on: generated artifacts are emitted from
+# contracts, and a filled @custom region means one stopped being. It is invisible
+# to every other gate by construction — preserve.ts re-emits the region verbatim,
+# so typecheck, tests and governed:rail's byte diff all stay green while the
+# artifact quietly diverges from its contract and the other targets miss the edit.
+# Reads only committed source, so it needs neither the token graph nor a build.
+if [ "${RUN_CUSTOM_REGIONS:-false}" = true ]; then
+  echo ""; say "audit:custom-regions"
+  pnpm run audit:custom-regions
+else say "skip custom-region ledger"; fi
+
 echo ""
 say "all selected checks passed; proceeding with push"

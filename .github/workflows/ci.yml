@@ -265,6 +265,18 @@ jobs:
       - name: Token-resolvability ledger (references that never resolve)
         run: pnpm run audit:token-resolvability
 
+      # The gate on the constraint every other gate presupposes
+      # (RAIL-CUSTOM-REGION-GATE-01): generated artifacts are emitted from
+      # contracts. A filled @custom region means one stopped being — and no
+      # other check can see it, because preserve.ts re-emits the region
+      # verbatim, so typecheck, the suites and governed:rail's byte diff all
+      # stay green while the artifact diverges from its contract and the other
+      # targets silently miss the edit. Ratchets in both directions: an
+      # unledgered region fails, and so does a ledger entry that no longer
+      # reproduces, so retired debt cannot linger on the books.
+      - name: Custom-region ledger (hand edits in generated output)
+        run: pnpm run audit:custom-regions
+
   coverage-gate:
     name: Coverage thresholds
     runs-on: ubuntu-latest

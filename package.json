@@ -84,6 +84,7 @@
     "audit:pseudo-state": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/pseudo-state-audit/realization.test.mjs && node scripts/pseudo-state-audit/audit.mjs",
     "audit:state-suppression": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/state-suppression-audit/selfcheck.mjs && node scripts/state-suppression-audit/audit.mjs",
     "audit:token-resolvability": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-resolvability-audit/selfcheck.mjs && node scripts/token-resolvability-audit/audit.mjs",
+    "audit:custom-regions": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/custom-region-audit/selfcheck.mjs && node scripts/custom-region-audit/audit.mjs",
     "parity:compose-tokens": "node scripts/compose-parity-diff.mjs"
   },
   "dependencies": {
