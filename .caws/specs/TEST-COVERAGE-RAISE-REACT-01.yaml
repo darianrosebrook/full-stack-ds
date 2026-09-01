@@ -2,9 +2,10 @@ id: TEST-COVERAGE-RAISE-REACT-01
 title: 'Raise react package line coverage to an 80-certifying floor via tokenizer language-breadth tests'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: react-coverage
 created_at: '2026-09-01T01:19:43.609Z'
-updated_at: '2026-09-01T01:19:43.609Z'
+updated_at: '2026-09-01T01:19:44.477Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
