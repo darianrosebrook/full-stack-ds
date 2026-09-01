@@ -42,3 +42,7 @@ evidence:
     status: pass
     evidence_ref: "coverage-floors.json codegen ratchet 56/70/75/56 -> 59/71/75/59; measured 61.65 leaves 2.65 margin; docs-claims-check 46/46 after the floor marker update"
     recorded_at: "2026-09-01T01:51:01.136Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 overall pass after the cli.test.ts addition: zero generated drift (git status clean)"
+    recorded_at: "2026-09-01T01:51:01.519Z"
