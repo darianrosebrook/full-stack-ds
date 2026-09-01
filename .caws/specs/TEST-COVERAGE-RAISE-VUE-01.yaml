@@ -34,3 +34,8 @@ acceptance:
     then: 'given hand-written assertions inside @custom tests blocks; when governed:rail regenerates all targets; then the custom blocks survive byte-for-byte and the generated trees show no drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:vue exit 0: 62/62 test files, 698/698 tests, measured 89.13% lines (from 71.31) / 78.79% branches / 82.5% functions"
+    recorded_at: "2026-09-01T01:05:48.625Z"
