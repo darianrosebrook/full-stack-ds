@@ -32,7 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { PATHS } from "../core/index.js";
 
-interface UnresolvedRef {
+export interface UnresolvedRef {
   brand: string;
   file: string;
   tokenPath: string[];        // path inside the brand file (e.g. ["color","foreground","accent"])
@@ -41,7 +41,7 @@ interface UnresolvedRef {
   suggestions: string[];      // up to 3 closest matches in the composed graph
 }
 
-interface Report {
+export interface Report {
   brand: string;
   file: string;
   refsChecked: number;
@@ -51,7 +51,7 @@ interface Report {
 const REF_RE = /^\{([a-zA-Z][a-zA-Z0-9._-]*)\}$/;
 const INLINE_REF_RE = /\{([a-zA-Z][a-zA-Z0-9._-]*)\}/g;
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
@@ -62,7 +62,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  * children can inherit it (e.g. `core.color.palette` has `$type: "color"`
  * but the actual leaves are `core.color.palette.red.500` etc).
  */
-function collectValidPaths(graph: unknown, prefix: string[] = [], out = new Set<string>()): Set<string> {
+export function collectValidPaths(graph: unknown, prefix: string[] = [], out = new Set<string>()): Set<string> {
   if (!isPlainObject(graph)) return out;
   if ("$value" in graph) {
     out.add(prefix.join("."));
@@ -87,7 +87,7 @@ function collectValidPaths(graph: unknown, prefix: string[] = [], out = new Set<
  * composed graph IS rooted at "core.*" / "semantic.*", so we need to try
  * both forms when checking each ref.
  */
-function collectRefsFromBrandFile(
+export function collectRefsFromBrandFile(
   node: unknown,
   filePath: string,
   brand: string,
@@ -188,7 +188,7 @@ function collectRefsFromBrandFile(
  * composed graph is rooted under "core" and "semantic". A bare ref counts
  * as resolved if either the prefixed form or the literal form exists.
  */
-function resolvesAgainstGraph(ref: string, validPaths: Set<string>): boolean {
+export function resolvesAgainstGraph(ref: string, validPaths: Set<string>): boolean {
   if (validPaths.has(ref)) return true;
   if (validPaths.has(`core.${ref}`)) return true;
   if (validPaths.has(`semantic.${ref}`)) return true;
@@ -201,7 +201,7 @@ function resolvesAgainstGraph(ref: string, validPaths: Set<string>): boolean {
  * Levenshtein distance on the final segment. Cheap, no deps, good enough
  * to spot mass-renames.
  */
-function nearestMatches(ref: string, validPaths: Set<string>): string[] {
+export function nearestMatches(ref: string, validPaths: Set<string>): string[] {
   const refSegs = ref.split(".");
   const refLast = refSegs[refSegs.length - 1];
   const scored: Array<{ path: string; score: number }> = [];
@@ -242,7 +242,7 @@ function nearestMatches(ref: string, validPaths: Set<string>): string[] {
   return filtered.slice(0, 3).map((s) => s.path);
 }
 
-function levenshtein(a: string, b: string): number {
+export function levenshtein(a: string, b: string): number {
   if (a === b) return 0;
   if (a.length === 0) return b.length;
   if (b.length === 0) return a.length;
@@ -262,7 +262,7 @@ function levenshtein(a: string, b: string): number {
   return dp[a.length][b.length];
 }
 
-function formatReport(reports: Report[], totals: { refs: number; unresolved: number }): string {
+export function formatReport(reports: Report[], totals: { refs: number; unresolved: number }): string {
   const lines: string[] = [];
   lines.push("");
   lines.push("=".repeat(64));
