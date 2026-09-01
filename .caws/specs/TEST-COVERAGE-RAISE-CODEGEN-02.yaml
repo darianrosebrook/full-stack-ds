@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-CODEGEN-02
 title: 'Raise codegen coverage via per-framework tests-emitter suites (react/svelte/angular/lit/react-native)'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Codegen line coverage 61.7 to 62.8 via per-framework tests-emitter suites; floor ratcheted to 60 (still below the 80 target, next tranches continue)'
 created_at: '2026-09-01T01:52:52.221Z'
-updated_at: '2026-09-01T01:52:53.154Z'
+updated_at: '2026-09-01T02:01:56.284Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
