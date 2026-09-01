@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-SHOWCASE-02
 title: 'Certify showcase at the 80 target via all-tab doc-view suites'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Showcase line coverage 65.5 to 82.8 via all-tab doc-view suites; floor ratcheted to 80 — showcase certified above the target'
 created_at: '2026-09-01T02:50:12.577Z'
-updated_at: '2026-09-01T02:50:13.581Z'
+updated_at: '2026-09-01T02:52:47.766Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
