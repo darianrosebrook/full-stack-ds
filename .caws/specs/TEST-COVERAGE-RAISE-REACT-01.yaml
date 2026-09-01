@@ -42,3 +42,7 @@ evidence:
     status: pass
     evidence_ref: "coverage-floors.json react ratchet 78/74/70/78 -> 81/76/70/81; measured 83.58 leaves 2.58 margin above the 81 floor which certifies the 80 target; docs-claims-check 46/46 after marker updates"
     recorded_at: "2026-09-01T01:24:46.795Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 overall pass after the tokenizer test additions: regeneration preserved the hand-written breadth block byte-for-byte, git status clean (zero generated drift)"
+    recorded_at: "2026-09-01T01:24:47.179Z"
