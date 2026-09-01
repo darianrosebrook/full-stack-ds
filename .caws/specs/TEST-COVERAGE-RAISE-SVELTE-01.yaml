@@ -42,3 +42,7 @@ evidence:
     status: pass
     evidence_ref: "coverage-floors.json svelte ratchet 72/73/67/72 -> 87/80/80/87; measured 89.26 leaves 2.26 margin above the 87 floor which certifies the 80 target; node scripts/docs-claims-check.mjs -> 46/46 markers match (svelte floor 87, vs-target above)"
     recorded_at: "2026-09-01T01:18:24.275Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 overall pass after @custom blocks were populated: regeneration preserved hand-written imports/tests byte-for-byte, git status clean (zero drift), and the new SFC harness fixtures plus hand-written test files survived the rail"
+    recorded_at: "2026-09-01T01:18:24.660Z"
