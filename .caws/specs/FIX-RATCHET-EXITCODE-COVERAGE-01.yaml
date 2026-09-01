@@ -3,7 +3,6 @@ title: 'Move reportRatchet exit-code coverage into the shared ledger-ratchet pro
 risk_tier: 3
 mode: fix
 lifecycle_state: active
-worktree: ratchet-coverage
 created_at: '2026-09-01T19:46:32.424Z'
 updated_at: '2026-09-01T19:46:41.048Z'
 blast_radius:
