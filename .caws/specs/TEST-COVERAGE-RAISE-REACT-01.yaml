@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:react exit 0: 63/63 test files, measured 83.58% lines (from 79.91) / 78.33% branches / 72.9% functions"
     recorded_at: "2026-09-01T01:24:46.420Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json react ratchet 78/74/70/78 -> 81/76/70/81; measured 83.58 leaves 2.58 margin above the 81 floor which certifies the 80 target; docs-claims-check 46/46 after marker updates"
+    recorded_at: "2026-09-01T01:24:46.795Z"
