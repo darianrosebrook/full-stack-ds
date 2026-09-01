@@ -80,3 +80,9 @@ evidence:
     recorded_at: "2026-09-01T20:13:09.723Z"
     command: "pnpm run audit:motion-realization && pnpm run audit:custom-regions"
     exit_code: 0
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Live falsification on the real tree: deleting the derived @generated:start reduced-motion region from packages/ds-react/src/components/Skeleton/Skeleton.css produced 'REDUCED_MOTION_UNHONOURED: 1 - Skeleton: css animates with no prefers-reduced-motion block', findings=50 unledgered=1, exit 1; restoring returned 49/49/0/0 exit 0. The dangling-easing half was exercised for real rather than synthetically: Select's two refs WERE dangling and the rail named them before repair. selfcheck 16/16, four pinning the self-answering-question trap — the neutralising block sets animation-duration, so without stripReducedMotion every honouring component would read as animating AND have the block, making REDUCED_MOTION_UNHONOURED unreachable; one check asserts the block alone does not read as animation, one that stripping removes the whole media block rather than its first rule, one that keyframe-declared properties count as realized, one that properties inside the block do not."
+    recorded_at: "2026-09-01T20:13:20.692Z"
+    command: node scripts/motion-realization-audit/selfcheck.mjs
+    exit_code: 0
