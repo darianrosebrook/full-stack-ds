@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: figma-coverage
 created_at: '2026-09-01T01:26:23.467Z'
-updated_at: '2026-09-01T01:27:31.465Z'
+updated_at: '2026-09-01T01:31:03.274Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -17,6 +17,8 @@ scope:
     - 'coverage-floors.json'
     - 'docs/current-implementation-snapshot.md'
     - packages/ds-figma-plugin/vitest.config.ts
+    - packages/ds-figma-plugin/package.json
+    - pnpm-lock.yaml
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
