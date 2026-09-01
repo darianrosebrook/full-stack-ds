@@ -19,7 +19,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   setDefaultSchema,
@@ -27,7 +27,12 @@ import {
   type ValidationResult,
 } from "./w3c/w3c-index.js";
 
-const HERE = fileURLToPath(new URL(".", import.meta.url));
+// dirname(fileURLToPath(import.meta.url)), not new URL(".", import.meta.url):
+// vite's asset-import-meta-url plugin rewrites the `new URL(…, import.meta.url)`
+// form when this module is loaded from a jsdom-environment vitest run (the root
+// config runs packages/* under jsdom), turning it into a non-file URL and
+// crashing fileURLToPath at import time.
+const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = join(HERE, "..");
 const SRC_DIR = join(PACKAGE_ROOT, "src");
 
