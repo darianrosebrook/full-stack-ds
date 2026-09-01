@@ -74,3 +74,9 @@ evidence:
     recorded_at: "2026-09-01T20:12:59.093Z"
     command: pnpm run generate -- --target=all
     exit_code: 0
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "REDUCED_MOTION_UNHONOURED is 0 across the corpus: every component whose emitted CSS animates and whose contract does not say ignore now carries a derived block. Popover's hand-authored region is retired — its min/max-width, contain, and enter animation come from Popover.styles.json plus a new contract keyframes block, with the hardcoded 200ms and cubic-bezier(0.34,1.56,0.64,1) replaced by core.motion.duration.short and core.motion.easing.emphasizedOut, the two tokens its own contract declared. Verified per target: popover-enter keyframes present and custom region empty in all five (react/vue/svelte/lit/angular). audit:custom-regions source occupancy 1 -> 0, findings=78 (ledgered=78) unledgered=0 stale=0. Stated visual change: the token easing has no overshoot, so the entrance no longer bounces."
+    recorded_at: "2026-09-01T20:13:09.723Z"
+    command: "pnpm run audit:motion-realization && pnpm run audit:custom-regions"
+    exit_code: 0
