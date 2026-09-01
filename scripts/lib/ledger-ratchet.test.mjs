@@ -15,7 +15,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { diffLedger, loadLedger } from "./ledger-ratchet.mjs";
+import { diffLedger, loadLedger, reportRatchet } from "./ledger-ratchet.mjs";
 
 const idOf = (r) => `${r.component} ${r.slot}`;
 const entry = (component, slot) => ({
@@ -110,6 +110,69 @@ check("an entry with an empty `note` is rejected, not treated as present", () =>
 check("a missing ledger file yields an empty ledger, so findings read as unledgered", () => {
   const loaded = loadLedger(join(tmpdir(), "definitely-absent-ledger.json"), ["component"]);
   assert.deepEqual(loaded, [], "a missing ledger must not silently pass the audit");
+});
+
+// --- reportRatchet: the diff -> exit code mapping ---------------------------
+// Six audits call this and exit on what it returns, so it is the function that
+// actually decides whether a push is blocked — and until now nothing pinned it.
+// It briefly picked up accidental coverage inside one audit's selfcheck; that
+// left the mapping unproven for the other five and made a PASSING selfcheck
+// print two FAIL blocks, because reportRatchet logs its verdict as a side
+// effect of being asked for a return code. It belongs here instead.
+//
+// `capture` exists so the probe's own output stays honest — a green run must
+// not contain the word FAIL — but it is not mere muting: the captured text is
+// asserted on, because the ids and the owning spec in that output are the only
+// thing a human can act on when the gate blocks them.
+function capture(fn) {
+  const lines = [];
+  const { log, error } = console;
+  console.log = (...args) => lines.push(args.join(" "));
+  console.error = (...args) => lines.push(args.join(" "));
+  try {
+    return { returned: fn(), output: lines.join("\n") };
+  } finally {
+    console.log = log;
+    console.error = error;
+  }
+}
+
+const ratchet = (current, ledger) => {
+  const { unledgered, stale } = diffLedger({ current, ledger, idOf });
+  return capture(() =>
+    reportRatchet({ label: "probe", current, unledgered, stale, idOf }),
+  );
+};
+
+check("an unledgered finding returns exit code 1 and names the finding", () => {
+  const { returned, output } = ratchet([{ component: "Chip", slot: "a.b" }], []);
+  assert.equal(returned, 1, "new unaccounted debt must block the push");
+  assert.match(output, /UNLEDGERED/);
+  assert.match(output, /Chip a\.b/, "the operator can only act on a named id");
+});
+
+check("a stale ledger entry returns exit code 1 and names its owning spec", () => {
+  const { returned, output } = ratchet([], [entry("Chip", "a.b")]);
+  assert.equal(returned, 1, "a ledger that no longer reproduces has rotted into fiction");
+  assert.match(output, /STALE/);
+  assert.match(output, /Chip a\.b \(spec SOME-SPEC-01\)/);
+});
+
+check("a fully ledgered finding set returns exit code 0 and reports no failure", () => {
+  const current = [{ component: "Chip", slot: "a.b" }];
+  const { returned, output } = ratchet(current, [entry("Chip", "a.b")]);
+  assert.equal(returned, 0);
+  assert.match(output, /PASS/);
+  assert.doesNotMatch(output, /FAIL/, "a green verdict must not print the word FAIL");
+});
+
+check("both directions firing at once still returns a single blocking code", () => {
+  // The renamed-slot case from A1/A2 above, carried through to the exit code:
+  // one unledgered and one stale must not cancel out into a pass.
+  const { returned, output } = ratchet([{ component: "Chip", slot: "new" }], [entry("Chip", "old")]);
+  assert.equal(returned, 1);
+  assert.match(output, /UNLEDGERED/);
+  assert.match(output, /STALE/);
 });
 
 if (failures > 0) {

@@ -22,7 +22,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { diffLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
+import { diffLedger } from "../lib/ledger-ratchet.mjs";
 import { artifactKind, isOccupied, parseRegions, regionId, scanTree } from "./audit.mjs";
 
 let failures = 0;
@@ -152,42 +152,36 @@ check("emptying the region clears the finding", () => {
   }
 });
 
-// --- the ratchet, in both directions ---------------------------------------
+// --- this audit's identity function, against the shared ratchet -------------
+// reportRatchet's diff -> exit-code mapping is pinned once, for all six audits,
+// in scripts/lib/ledger-ratchet.test.mjs (which `audit:custom-regions` runs
+// first). What is audit-SPECIFIC, and so belongs here, is `regionId`: the
+// ratchet can only be as precise as the identity it is handed.
 
 const row = (file, label) => ({ file, label, kind: "source" });
 
-check("an unledgered finding fails the ratchet", () => {
-  const current = [row("a.css", "overrides")];
-  const { unledgered, stale } = diffLedger({ current, ledger: [], idOf: regionId });
-  assert.equal(unledgered.length, 1);
-  assert.equal(
-    reportRatchet({ label: "selfcheck", current, unledgered, stale, idOf: regionId }),
-    1,
-  );
-});
-
-check("a ledger entry that no longer reproduces fails the ratchet", () => {
-  const ledger = [{ ...row("gone.css", "overrides"), spec: "X-01", note: "n" }];
-  const { unledgered, stale } = diffLedger({ current: [], ledger, idOf: regionId });
-  assert.equal(stale.length, 1, "burned debt must not stay on the books");
-  assert.equal(
-    reportRatchet({ label: "selfcheck", current: [], unledgered, stale, idOf: regionId }),
-    1,
-  );
-});
-
-check("a fully ledgered finding set passes", () => {
-  const current = [row("a.css", "overrides")];
-  const ledger = [{ ...current[0], spec: "X-01", note: "n" }];
-  const { unledgered, stale } = diffLedger({ current, ledger, idOf: regionId });
-  assert.equal(
-    reportRatchet({ label: "selfcheck", current, unledgered, stale, idOf: regionId }),
-    0,
-  );
-});
-
 check("region identity is (file, label), so two regions in one file stay distinct", () => {
+  // A file-only id would collapse a component's `imports` and `trailing`
+  // regions into one, and an edit to the second would inherit the first's
+  // ledger entry instead of failing.
   assert.notEqual(regionId(row("a.tsx", "imports")), regionId(row("a.tsx", "trailing")));
+});
+
+check("region identity ignores the class, so a region cannot be relabelled out of the ledger", () => {
+  assert.equal(
+    regionId({ ...row("a.tsx", "tests"), kind: "test" }),
+    regionId({ ...row("a.tsx", "tests"), kind: "source" }),
+  );
+});
+
+check("this audit's ids flow through the ratchet unchanged", () => {
+  const current = [row("a.css", "overrides")];
+  const { unledgered, stale } = diffLedger({
+    current,
+    ledger: [{ ...current[0], spec: "X-01", note: "n" }],
+    idOf: regionId,
+  });
+  assert.deepEqual([unledgered, stale], [[], []], "a ledgered region must match itself");
 });
 
 console.log(
