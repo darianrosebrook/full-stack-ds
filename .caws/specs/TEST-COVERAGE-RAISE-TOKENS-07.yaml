@@ -2,9 +2,10 @@ id: TEST-COVERAGE-RAISE-TOKENS-07
 title: 'Unit tests for the tokens usage analytics tracker'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: tokens-usage
 created_at: '2026-09-01T04:19:34.475Z'
-updated_at: '2026-09-01T04:19:34.475Z'
+updated_at: '2026-09-01T04:19:35.707Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
