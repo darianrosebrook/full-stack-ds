@@ -1,0 +1,36 @@
+id: TEST-COVERAGE-RAISE-VUE-01
+title: 'Raise vue package line coverage to an 80-certifying floor via @custom tests blocks'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-01T00:37:57.654Z'
+updated_at: '2026-09-01T00:37:57.654Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-vue/src'
+    - 'packages/ds-vue/vitest.config.ts'
+    - 'coverage-floors.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the added assertion suites; when pnpm run test:coverage:vue runs; then every vue test passes and measured line coverage is at least 82 percent'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the measured coverage; when coverage-floors.json is updated; then the vue lines floor reaches 80 with at least 2 points of margin and docs:check-claims derives the markers without drift'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given hand-written assertions inside @custom tests blocks; when governed:rail regenerates all targets; then the custom blocks survive byte-for-byte and the generated trees show no drift'
+non_functional: {}
+contracts: []
