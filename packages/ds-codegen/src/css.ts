@@ -238,6 +238,88 @@ function formatKeyframes(kf: KeyframeIR): string {
 }
 
 /**
+ * CSS properties whose presence means a block actually animates.
+ *
+ * Longhands are listed alongside the shorthands because a block that sets only
+ * `animation-name` or only `transition-property` animates just as much as one
+ * using the shorthand, and a reduced-motion block that missed those would be a
+ * gate reporting success over a still-moving component.
+ */
+const ANIMATING_PROPERTIES = new Set([
+  "animation",
+  "animation-name",
+  "animation-duration",
+  "transition",
+  "transition-property",
+  "transition-duration",
+]);
+
+/**
+ * Values that name an animating property while switching motion OFF.
+ *
+ * Skeleton's `--wipe` and `--none` variants both set `animation: none`, and a
+ * naive property-name match pulled them into the reduced-motion block —
+ * harmless in the browser, but it made the derived rule assert that six
+ * selectors animate when three do. The rail reads this block, so an
+ * overstatement here becomes a false realization claim there.
+ */
+const NON_ANIMATING_VALUES = new Set(["none", "0", "0s", "0ms", "initial", "unset"]);
+
+function blockAnimates(declarations: Record<string, string>): boolean {
+  return Object.entries(declarations).some(
+    ([property, value]) =>
+      ANIMATING_PROPERTIES.has(property) &&
+      !NON_ANIMATING_VALUES.has(value.trim().toLowerCase()),
+  );
+}
+
+/**
+ * Derive the `prefers-reduced-motion` block from the declarations that were
+ * actually emitted (RAIL-REDUCED-MOTION-01).
+ *
+ * Derived, not authored, and that is the point: a hand-written reduced-motion
+ * block drifts the moment someone adds an animation to another selector, and
+ * the corpus proved it — before this landed, `prefers-reduced-motion` appeared
+ * exactly ONCE across every generated artifact, inside a hand-authored
+ * `@custom` region in one framework's Popover.css, while twelve contracts
+ * declared `reducedMotion: "respect"` and seven components animated
+ * unconditionally. Reading the emitted blocks means the neutralising rule
+ * cannot name a selector that no longer animates, or miss one that started to.
+ *
+ * The lowering zeroes durations rather than setting `animation: none`.
+ * `none` drops an animation's final state, so a `forwards` fill that is the
+ * only thing making an element visible would leave it stuck at its `from`
+ * frame — reduced motion must remove the MOTION, not the end state. A ~0
+ * duration with a single iteration lands on the final frame immediately, which
+ * is what a user asking for reduced motion wants to see.
+ */
+export function reducedMotionBlock(ir: ComponentIR): string {
+  if (!ir.motion.honorsReducedMotion) return "";
+
+  // Nothing animates -> nothing to neutralise. Emitting an empty media query
+  // would make the rail's "has a reduced-motion block" check pass for every
+  // component regardless of whether it moves, which is worse than no block.
+  const selectors = ir.cssBlocks
+    .filter((block) => blockAnimates(block.declarations))
+    .map((block) => block.selector);
+  if (selectors.length === 0) return "";
+
+  // One grouped rule rather than one per selector: the declarations are
+  // identical by construction, so N copies would be N times the byte churn on
+  // every regeneration for no behavioural difference.
+  const selectorList = [...new Set(selectors)].join(",\n  ");
+  return (
+    `@media (prefers-reduced-motion: reduce) {\n` +
+    `  ${selectorList} {\n` +
+    `    animation-duration: 0.01ms;\n` +
+    `    animation-iteration-count: 1;\n` +
+    `    transition-duration: 0.01ms;\n` +
+    `  }\n` +
+    `}`
+  );
+}
+
+/**
  * Format the IR-derived blocks + keyframes as the `<Component>.css`
  * artifact: nested BEM via `&-...`, property references only (slots
  * live in the sibling `.tokens.css`), `@import` at the top.
@@ -270,6 +352,13 @@ export function emitCss(ir: ComponentIR): string {
   if (keyframesBody) {
     sections.push(
       { kind: "generated", id: "keyframes", body: keyframesBody },
+      { kind: "between", body: "" },
+    );
+  }
+  const reducedMotionBody = reducedMotionBlock(ir);
+  if (reducedMotionBody) {
+    sections.push(
+      { kind: "generated", id: "reduced-motion", body: reducedMotionBody },
       { kind: "between", body: "" },
     );
   }

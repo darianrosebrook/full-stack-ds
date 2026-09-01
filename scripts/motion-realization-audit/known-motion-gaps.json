@@ -1,0 +1,348 @@
+{
+  "spec": "RAIL-REDUCED-MOTION-01",
+  "gaps": [
+    {
+      "component": "Accordion",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "collapse declares height",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "collapse declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "expand declares height",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "expand declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "collapse.duration -> accordion.motion.duration",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "collapse.easing -> accordion.motion.easing",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "expand.duration -> accordion.motion.duration",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Accordion",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "expand.easing -> accordion.motion.easing",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "close.duration -> calendar.motion.duration",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "close.easing -> calendar.motion.easing",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "open.duration -> calendar.motion.duration",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Calendar",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "open.easing -> calendar.motion.easing",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "close.duration -> command.motion.duration",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "close.easing -> command.motion.easing",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "open.duration -> command.motion.duration",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Command",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "open.easing -> command.motion.easing",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "close.duration -> dialog.motion.duration.exit",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "close.easing -> dialog.motion.easing.exit",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "open.duration -> dialog.motion.duration.enter",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Dialog",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "open.easing -> dialog.motion.easing.enter",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Select",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Select",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Select",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Select",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Sheet",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Sheet",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Switch",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "toggle declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Tabs",
+      "kind": "MOTION_TOKEN_UNRESOLVABLE",
+      "detail": "indicator.duration -> tabs.motion.indicator",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "Component-local motion slot declared in the contract's motion block but never in its tokens sidecar, so the reference lowers to a --fsds-* name the graph does not declare. NOT repaired here, deliberately: adding the slot while nothing consumes it would immediately register as a dead slot in RAIL-STYLING-REALIZATION-LEDGERS-01, trading one ledger entry for another. It can only be repaired together with the transition lowering that would give it a var() consumer."
+    },
+    {
+      "component": "Toast",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Toast",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Toast",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Toast",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Tooltip",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "hide declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Tooltip",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "show declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Walkthrough",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "close declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Walkthrough",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares opacity",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    },
+    {
+      "component": "Walkthrough",
+      "kind": "MOTION_PROPERTY_UNREALIZED",
+      "detail": "open declares transform",
+      "spec": "RAIL-REDUCED-MOTION-01",
+      "note": "A property this transition declares that no emitted rule animates. Realizing it means inferring which selector represents a trigger like `openness=closed→open`; that inference is unsolved and is exactly where per-component emitter lore would accumulate (see ContractMotion in contract.ts). Ledgered so the declared-but-unrealized set cannot grow while the lowering stays open."
+    }
+  ]
+}

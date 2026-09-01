@@ -66,6 +66,14 @@ const PATTERNS = {
   // change there can silently move every verdict at once.
   customRegions:
     /^(packages\/ds-(react|vue|svelte|angular|lit|react-native)\/src\/|scripts\/custom-region-audit\/|scripts\/lib\/ledger-ratchet|packages\/ds-codegen\/src\/preserve\.ts)/,
+  // motion-realization rail (RAIL-REDUCED-MOTION-01). Its verdict is a diff
+  // between a contract's motion block and the generated React CSS, so BOTH
+  // sides are inputs, plus ds-tokens (a renamed motion token is exactly how a
+  // resolving duration reference goes dangling) and ds-codegen (the
+  // reduced-motion block is DERIVED, so an emitter change can silently remove
+  // it from every component at once).
+  motionAudit:
+    /^(packages\/ds-(contracts|codegen|react|tokens)\/|scripts\/motion-realization-audit\/|scripts\/lib\/ledger-ratchet)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -86,6 +94,7 @@ export function classify(files, opts = {}) {
   const stylingAudits = full || has("stylingAudits");
   const resolvability = full || has("resolvability");
   const customRegions = full || has("customRegions");
+  const motionAudit = full || has("motionAudit");
   const behaviorAudit = full || has("behaviorAudit");
   const a11yAudit = full || has("a11yAudit");
   const lintable = full || has("lintable");
@@ -104,7 +113,7 @@ export function classify(files, opts = {}) {
     // audit script alone is outside genGroup, and without this the audit would
     // run against a missing tokens.css — where it fails loudly by design, but
     // for the wrong reason.
-    RUN_TOKEN_BUILD: genGroup || resolvability,
+    RUN_TOKEN_BUILD: genGroup || resolvability || motionAudit,
     RUN_TOKEN_GATES: tokens,
     RUN_GENERATE_CHECK: genGroup,
     RUN_DOCS_CLAIMS: codegen || docs,
@@ -137,6 +146,11 @@ export function classify(files, opts = {}) {
     // genGroup — it reads committed source only, needs no token graph and no
     // regeneration, and is meaningful on a push that regenerates nothing.
     RUN_CUSTOM_REGIONS: customRegions,
+    // motion-realization (RAIL-REDUCED-MOTION-01). Needs the token graph: the
+    // resolvability class compares a lowered --fsds-* name against what
+    // tokens.css declares, and without the build every reference would read as
+    // dangling — failing loudly, but for the wrong reason.
+    RUN_MOTION_AUDIT: motionAudit,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)

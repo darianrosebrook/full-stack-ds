@@ -85,6 +85,10 @@ export class PopoverElement extends LitElement {
     }
     
     [data-popover-content] {
+      min-width: 256px;
+      max-width: calc(100vw - 16px);
+      contain: layout paint style;
+      animation: popover-enter var(--fsds-core-motion-duration-short, 150ms) var(--fsds-core-motion-easing-emphasized-out, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
       background-color: var(--fsds-popover-color-background-content, #d0d0d0);
       border-color: var(--fsds-popover-color-border-accent, #d92d2e);
       border-radius: var(--fsds-popover-size-radius-default, 6px);
@@ -95,6 +99,17 @@ export class PopoverElement extends LitElement {
       display: inline-block;
       border-style: solid;
       border-width: 1px;
+    }
+    
+    @keyframes popover-enter {
+      from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
   `;
   @property({ type: Boolean }) open?: boolean;
@@ -253,6 +268,10 @@ export class PopoverTriggerElement extends LitElement {
     }
     
     [data-popover-content] {
+      min-width: 256px;
+      max-width: calc(100vw - 16px);
+      contain: layout paint style;
+      animation: popover-enter var(--fsds-core-motion-duration-short, 150ms) var(--fsds-core-motion-easing-emphasized-out, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
       background-color: var(--fsds-popover-color-background-content, #d0d0d0);
       border-color: var(--fsds-popover-color-border-accent, #d92d2e);
       border-radius: var(--fsds-popover-size-radius-default, 6px);
@@ -263,6 +282,17 @@ export class PopoverTriggerElement extends LitElement {
       display: inline-block;
       border-style: solid;
       border-width: 1px;
+    }
+    
+    @keyframes popover-enter {
+      from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
   `;
   private _ctx = new ContextConsumerController<PopoverSurfaceContext>(this, PopoverSurface_CTX);
@@ -396,6 +426,10 @@ export class PopoverContentElement extends LitElement {
     }
     
     [data-popover-content] {
+      min-width: 256px;
+      max-width: calc(100vw - 16px);
+      contain: layout paint style;
+      animation: popover-enter var(--fsds-core-motion-duration-short, 150ms) var(--fsds-core-motion-easing-emphasized-out, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
       background-color: var(--fsds-popover-color-background-content, #d0d0d0);
       border-color: var(--fsds-popover-color-border-accent, #d92d2e);
       border-radius: var(--fsds-popover-size-radius-default, 6px);
@@ -406,6 +440,17 @@ export class PopoverContentElement extends LitElement {
       display: inline-block;
       border-style: solid;
       border-width: 1px;
+    }
+    
+    @keyframes popover-enter {
+      from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
   `;
 

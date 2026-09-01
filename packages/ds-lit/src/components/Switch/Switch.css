@@ -105,6 +105,17 @@
 }
 /* @generated:end */
 
+/* @generated:start reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .switch__track,
+  .switch__thumb {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}
+/* @generated:end */
+
 /* @custom:start overrides */
 
 /* @custom:end */

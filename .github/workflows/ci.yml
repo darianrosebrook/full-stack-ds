@@ -277,6 +277,18 @@ jobs:
       - name: Custom-region ledger (hand edits in generated output)
         run: pnpm run audit:custom-regions
 
+      # Motion realization (RAIL-REDUCED-MOTION-01). `contract.motion` was
+      # declared by twelve contracts and read by nothing, so
+      # `reducedMotion: "respect"` was a promise with no mechanism — and
+      # `prefers-reduced-motion` appeared exactly once in the whole generated
+      # corpus, inside a hand-authored region. The block is now derived from
+      # the declarations actually emitted; this rail fails if that derivation
+      # stops reaching a component that animates, and ledgers the motion token
+      # references that resolve to nothing plus the transition properties no
+      # emitted rule realizes.
+      - name: Motion-realization ledger (reduced motion + motion tokens)
+        run: pnpm run audit:motion-realization
+
   coverage-gate:
     name: Coverage thresholds
     runs-on: ubuntu-latest

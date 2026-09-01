@@ -36,6 +36,30 @@
     }
   },
   "content": {
+    "min-width": {
+      "literal": "256px",
+      "platforms": [
+        "web"
+      ]
+    },
+    "max-width": {
+      "literal": "calc(100vw - 16px)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "contain": {
+      "literal": "layout paint style",
+      "platforms": [
+        "web"
+      ]
+    },
+    "animation": {
+      "literal": "popover-enter var(--fsds-core-motion-duration-short, 150ms) var(--fsds-core-motion-easing-emphasized-out, cubic-bezier(0.4, 0, 0.2, 1)) forwards",
+      "platforms": [
+        "web"
+      ]
+    },
     "background-color": {
       "resolvesTo": "popover.color.background.content",
       "fallback": "#d0d0d0"

@@ -85,6 +85,7 @@
     "audit:state-suppression": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/state-suppression-audit/selfcheck.mjs && node scripts/state-suppression-audit/audit.mjs",
     "audit:token-resolvability": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-resolvability-audit/selfcheck.mjs && node scripts/token-resolvability-audit/audit.mjs",
     "audit:custom-regions": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/custom-region-audit/selfcheck.mjs && node scripts/custom-region-audit/audit.mjs",
+    "audit:motion-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/motion-realization-audit/selfcheck.mjs && node scripts/motion-realization-audit/audit.mjs",
     "parity:compose-tokens": "node scripts/compose-parity-diff.mjs"
   },
   "dependencies": {

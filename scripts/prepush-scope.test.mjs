@@ -206,6 +206,43 @@ test("a docs-only push does NOT run the custom-region ledger", () => {
   assert.equal(classify(["docs/x.md"]).RUN_CUSTOM_REGIONS, false);
 });
 
+// --- motion-realization (RAIL-REDUCED-MOTION-01) -----------------------------
+// Four input surfaces, and each one can move a verdict on its own. The
+// ds-codegen case matters most: the reduced-motion block is DERIVED, so an
+// emitter change can strip it from every component at once — the one failure
+// mode where a silent rail would be worst.
+
+test("changing a contract runs the motion rail", () => {
+  assert.equal(
+    classify(["packages/ds-contracts/components/Dialog/Dialog.contract.json"]).RUN_MOTION_AUDIT,
+    true,
+  );
+});
+
+test("changing codegen runs the motion rail", () => {
+  assert.equal(classify(["packages/ds-codegen/src/css.ts"]).RUN_MOTION_AUDIT, true);
+});
+
+test("renaming a motion token runs the motion rail", () => {
+  // Exactly how a resolving duration reference goes dangling.
+  assert.equal(
+    classify(["packages/ds-tokens/src/motion/core/easing.tokens.json"]).RUN_MOTION_AUDIT,
+    true,
+  );
+});
+
+test("the motion rail builds the token graph it compares against", () => {
+  // Without this the resolvability class reads every reference as dangling —
+  // failing loudly, but for the wrong reason.
+  const flags = classify(["scripts/motion-realization-audit/audit.mjs"]);
+  assert.equal(flags.RUN_MOTION_AUDIT, true);
+  assert.equal(flags.RUN_TOKEN_BUILD, true);
+});
+
+test("a docs-only push does NOT run the motion rail", () => {
+  assert.equal(classify(["docs/x.md"]).RUN_MOTION_AUDIT, false);
+});
+
 test("the custom-region ledger needs no token build", () => {
   // It reads committed source only. If this ever flips true, the audit has
   // grown a dependency on generated token state it does not actually use.
