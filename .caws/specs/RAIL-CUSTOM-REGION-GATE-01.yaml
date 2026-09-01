@@ -59,3 +59,10 @@ contracts:
   - name: 'custom-region-ledger'
     type: contract-test
     path: 'scripts/custom-region-audit/selfcheck.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run audit:custom-regions: 2119 regions scanned across 6 emitted trees; reports 'occupied: 1 in component source (target: 0) / 78 in generated tests (by design)', names each source finding as file:line [label] with a body preview, and summarises the test class per package (ds-angular 4, ds-lit 6, ds-react 15, ds-svelte 26, ds-vue 27). Ratchet verdict: findings=79 (ledgered=79) unledgered=0 stale=0, exit 0. ds-codegen is excluded by design (its emitters carry the markers as literals)."
+    recorded_at: "2026-09-01T19:25:50.308Z"
+    command: "pnpm run audit:custom-regions"
+    exit_code: 0
