@@ -34,3 +34,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:codegen (worktree): 92/92 files, 1293/1293 tests pass, All files 73.73 lines / 72.85 branches / 85.71 functions — above the previous round's 70.95/71.74/84.03 and above the ratcheted floors 71/70/83/71"
     recorded_at: "2026-09-01T03:30:53.280Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json codegen ratcheted 68->71 statements, 69->70 branches, 82->83 functions, 68->71 lines (measured minus 2-point margin); pnpm run docs:check-claims: 46 marked claims OK with the codegen markers at 71"
+    recorded_at: "2026-09-01T03:30:53.775Z"
