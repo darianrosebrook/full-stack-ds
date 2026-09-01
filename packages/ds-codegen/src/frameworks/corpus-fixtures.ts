@@ -1,0 +1,37 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import type { ComponentContract } from "../contract.js";
+import { buildComponentIR, type ComponentIR } from "../ir.js";
+
+/**
+ * Corpus-backed fixture helpers for framework emitter tests.
+ *
+ * The contract corpus (packages/ds-contracts/components) is the authority
+ * for component shape. Loading the real contract — instead of a synthetic
+ * trimmed copy — keeps emitter tests honest about the IR shapes the
+ * generators actually meet: compound containers (Tabs), guarded open
+ * channels (Select), dismissal triggers (Dialog), and surface taxonomies
+ * (Popover/Toast) all carry facts that hand-built fixtures tend to lose.
+ */
+
+const REPO_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../../..",
+);
+
+export function loadCorpusContract(name: string): ComponentContract {
+  const contractPath = path.join(
+    REPO_ROOT,
+    "packages/ds-contracts/components",
+    name,
+    `${name}.contract.json`,
+  );
+  return JSON.parse(
+    fs.readFileSync(contractPath, "utf8"),
+  ) as unknown as ComponentContract;
+}
+
+export function corpusIR(name: string): ComponentIR {
+  return buildComponentIR(loadCorpusContract(name));
+}

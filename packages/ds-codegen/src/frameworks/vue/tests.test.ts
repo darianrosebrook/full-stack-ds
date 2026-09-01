@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../../contract.js";
 import { buildComponentIR } from "../../ir.js";
+import { corpusIR } from "../corpus-fixtures.js";
 import { generateVueTest } from "./tests.js";
 
 describe("generateVueTest", () => {
@@ -56,3 +57,41 @@ function makeContract(): ComponentContract {
     },
   };
 }
+
+describe("generateVueTest — real corpus contracts", () => {
+  it("emits the compound Tabs plan against the real contract", () => {
+    const source = generateVueTest(corpusIR("Tabs"));
+
+    expect(source).toContain(`import Tabs from "../Tabs.vue";`);
+    expect(source).toContain(`describe("Tabs — unit"`);
+    expect(source).toContain(`"orientation": "horizontal"`);
+    expect(source).toContain(`"tabs--horizontal"`);
+  });
+
+  it("mounts Select with the open channel bound and covers dismissal", () => {
+    const source = generateVueTest(corpusIR("Select"));
+
+    expect(source).toContain(`import Select from "../Select.vue";`);
+    expect(source).toContain(`"open": true, "onOpenChange": onOpenChangeSpy`);
+  });
+
+  it("emits the disclosure plan for Accordion", () => {
+    const source = generateVueTest(corpusIR("Accordion"));
+
+    expect(source).toContain(`import Accordion from "../Accordion.vue";`);
+  });
+
+  it("attaches Dialog to the body for portal/dismissal assertions", () => {
+    const source = generateVueTest(corpusIR("Dialog"));
+
+    expect(source).toContain(`import Dialog from "../Dialog.vue";`);
+    expect(source).toContain(`attachTo: document.body`);
+  });
+
+  it("keeps the generic plan for the Toast surface and cleans up timers", () => {
+    const source = generateVueTest(corpusIR("Toast"));
+
+    expect(source).toContain(`import Toast from "../Toast.vue";`);
+    expect(source).toContain(`afterEach`);
+  });
+});

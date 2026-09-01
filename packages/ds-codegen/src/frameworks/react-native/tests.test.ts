@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../../contract.js";
 import { buildComponentIR } from "../../ir.js";
+import { corpusIR } from "../corpus-fixtures.js";
 import { generateReactNativeTest } from "./tests.js";
 
 describe("generateReactNativeTest", () => {
@@ -50,3 +51,82 @@ function makeContract(): ComponentContract {
     },
   };
 }
+
+describe("generateReactNativeTest — real corpus contracts", () => {
+  it("emits the compound-selection plan for Tabs", () => {
+    const source = generateReactNativeTest(corpusIR("Tabs"));
+
+    expect(source).toContain(
+      `describe("Tabs React Native compound selection"`,
+    );
+    expect(source).toContain(
+      `it("pressing a tab drives onValueChange and flips accessibilityState.selected"`,
+    );
+    expect(source).toContain(`compound component used outside`);
+  });
+
+  it("emits the non-blocking live-region surface plan for Toast", () => {
+    const source = generateReactNativeTest(corpusIR("Toast"));
+
+    expect(source).toContain(
+      `it("renders a non-blocking live region without a modal host"`,
+    );
+  });
+
+  it("emits the expandable-disclosure plan for Truncate", () => {
+    const source = generateReactNativeTest(corpusIR("Truncate"));
+
+    expect(source).toContain(
+      `it("renders collapsed content and expanded trigger state"`,
+    );
+  });
+
+  it("emits the button plan for Button", () => {
+    const source = generateReactNativeTest(corpusIR("Button"));
+
+    expect(source).toContain(
+      `it("renders button semantics and press passthrough"`,
+    );
+  });
+
+  it("emits the progress plan for Progress", () => {
+    const source = generateReactNativeTest(corpusIR("Progress"));
+
+    expect(source).toContain(
+      `it("renders progressbar accessibility value and fill width"`,
+    );
+  });
+
+  it("emits the checkbox plan for Checkbox", () => {
+    const source = generateReactNativeTest(corpusIR("Checkbox"));
+
+    expect(source).toContain(
+      `it("renders checkbox semantics and press handler"`,
+    );
+  });
+
+  it("emits the anchored-surface plan for Dialog", () => {
+    const source = generateReactNativeTest(corpusIR("Dialog"));
+
+    expect(source).toContain(
+      `it("renders a native modal bound to the open channel"`,
+    );
+  });
+
+  it("emits the anchored trigger plan for Popover including backdrop dismissal", () => {
+    const source = generateReactNativeTest(corpusIR("Popover"));
+
+    expect(source).toContain(
+      `it("opens the anchored surface from the trigger interaction"`,
+    );
+    expect(source).toContain(`dismisses on backdrop press`);
+  });
+
+  it("emits the native-toggle plan for the real Switch contract", () => {
+    const source = generateReactNativeTest(corpusIR("Switch"));
+
+    expect(source).toContain(
+      `it("renders native switch state and change handler"`,
+    );
+  });
+});
