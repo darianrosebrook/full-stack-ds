@@ -34,3 +34,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:tokens (worktree tokens-schema): 22/22 files, 276/276 tests pass, All files 57.67 lines / 80.61 branches / 92.75 functions — above the previous 47.25/80.65/92.22 and above the ratcheted floors 55/78/90/55; generateSchema.mjs at 99.74 lines"
     recorded_at: "2026-09-01T04:33:46.546Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json tokens ratcheted 45->55 statements, 78->78 branches, 90->90 functions, 45->55 lines (measured minus 2-point margin, all margins >= 2.52); pnpm run docs:check-claims: 46 marked claims OK with tokens at 55"
+    recorded_at: "2026-09-01T04:33:46.993Z"
