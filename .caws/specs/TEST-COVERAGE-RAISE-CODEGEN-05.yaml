@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-CODEGEN-05
 title: 'Raise codegen coverage via compound and surface fixtures across the tests emitters'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Corpus-backed fixtures across all six test emitters raised codegen 70.95->73.73 lines; floors ratchet to 71.'
 created_at: '2026-09-01T03:15:01.821Z'
-updated_at: '2026-09-01T03:15:02.994Z'
+updated_at: '2026-09-01T03:31:00.423Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
