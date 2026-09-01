@@ -35,3 +35,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:showcase exit 0: 32/32 test files, measured 65.49% lines (from 32.27) / 70.61% branches / 59.07% functions"
     recorded_at: "2026-09-01T02:49:03.466Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json showcase ratchet 30/68/54/30 -> 63/68/57/63; measured 65.49 leaves 2.49 margin; docs-claims-check 46/46 after the floor marker update"
+    recorded_at: "2026-09-01T02:49:03.895Z"
