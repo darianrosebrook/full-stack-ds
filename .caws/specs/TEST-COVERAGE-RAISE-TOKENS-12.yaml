@@ -33,3 +33,8 @@ acceptance:
     then: 'given the measured coverage; when coverage-floors.json is updated; then the tokens floor ratchets to measured minus the standard margin and docs:check-claims derives the markers without drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "POLO probe in worktree tokens-burn2 after severance of generators/index.ts, generateCSSTokens.mjs, validators/index.ts, validateTokens.mjs, inspectTokens.mjs(+test): lint 0 errors; typecheck exit 0; tokens:build green; governed:rail exit 0 — no check named any dependent"
+    recorded_at: "2026-09-01T04:45:38.696Z"
