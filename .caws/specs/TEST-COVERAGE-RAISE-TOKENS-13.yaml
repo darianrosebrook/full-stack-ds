@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-13
 title: 'Burn orphaned legacy scripts and spawn-test the live usage and contrast runners'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Orphan burn, brand-refs main guard and live-runner spawn tests took tokens from 73.14 to 78.28 lines; floor ratchets to 76.'
 created_at: '2026-09-01T04:46:38.237Z'
-updated_at: '2026-09-01T04:46:39.382Z'
+updated_at: '2026-09-01T04:52:40.442Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
