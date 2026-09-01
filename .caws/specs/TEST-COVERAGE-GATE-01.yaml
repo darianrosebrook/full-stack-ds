@@ -7,7 +7,11 @@ created_at: '2026-09-01T00:00:48.950Z'
 updated_at: '2026-09-01T00:00:48.950Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'root workspace package.json (test:coverage scripts, devDependency)'
+    - 'vitest configs (root, examples, vue, svelte, lit, react-native)'
+    - 'packages/ds-angular jest coverage config'
+    - '.github/workflows/ci.yml (coverage gate job)'
+    - 'docs/current-implementation-snapshot.md (coverage claim row)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -25,7 +29,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Coverage instrumentation changes nothing about which tests run or pass: the same suites that pass without --coverage pass with it.'
+  - 'Thresholds ratchet from measured floors, never above the measured value at wiring time; the 80% target is recorded as a declared gap in the snapshot row, not enforced as a hard floor on day one.'
+  - 'Every coverage number written into prose is reproducible by the coverage command at the cited commit; the snapshot row names its measurement command.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
