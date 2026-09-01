@@ -3,7 +3,6 @@ title: 'Raise react-native coverage via @custom tests-block suites for the leaf 
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: rn-coverage
 created_at: '2026-09-01T02:04:41.573Z'
 updated_at: '2026-09-01T02:04:42.475Z'
 blast_radius:
