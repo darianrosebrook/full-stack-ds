@@ -1,0 +1,35 @@
+id: TEST-COVERAGE-RAISE-TOKENS-12
+title: 'Burn barrel-only dead legacy generators and validators'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-01T04:43:24.354Z'
+updated_at: '2026-09-01T04:43:24.354Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-tokens'
+    - 'coverage-floors.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the dead barrels and their legacy mjs removed in the worktree; when lint typecheck tokens-build and the governed rail run; then no check names any dependent and every gate stays green'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the removal; when pnpm run test:coverage:tokens runs; then every tokens test passes and measured line coverage rises above the current floor'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the measured coverage; when coverage-floors.json is updated; then the tokens floor ratchets to measured minus the standard margin and docs:check-claims derives the markers without drift'
+non_functional: {}
+contracts: []
