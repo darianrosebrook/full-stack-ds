@@ -2,9 +2,11 @@ id: FIX-RATCHET-EXITCODE-COVERAGE-01
 title: 'Move reportRatchet exit-code coverage into the shared ledger-ratchet probe'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'reportRatchet''s exit-code mapping now pinned in the shared probe all six ledger audits run, and a passing selfcheck no longer prints FAIL.'
 created_at: '2026-09-01T19:46:32.424Z'
-updated_at: '2026-09-01T19:46:41.048Z'
+updated_at: '2026-09-01T19:51:13.122Z'
 blast_radius:
   modules:
     - 'scripts/lib/ledger-ratchet.test.mjs'
