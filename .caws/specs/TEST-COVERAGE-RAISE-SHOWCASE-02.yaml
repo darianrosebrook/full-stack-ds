@@ -29,3 +29,8 @@ acceptance:
     then: 'given the measured coverage; when coverage-floors.json is updated; then the showcase lines floor reaches 80 with at least 2 points of margin and docs:check-claims derives the markers without drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:showcase exit 0: 33/33 test files, measured 82.84% lines (from 65.49) / 72.85% branches / 64.22% functions — at least 82 percent per the criterion"
+    recorded_at: "2026-09-01T02:52:46.690Z"
