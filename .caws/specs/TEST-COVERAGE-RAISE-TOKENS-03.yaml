@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-03
 title: 'Unit tests for tokens utils: tokenValidator and generator'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'WCAG validator suites took tokens from 21.05 to 27.45 lines; floor ratchets to 25.'
 created_at: '2026-09-01T03:53:23.397Z'
-updated_at: '2026-09-01T03:53:24.548Z'
+updated_at: '2026-09-01T04:00:14.348Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
