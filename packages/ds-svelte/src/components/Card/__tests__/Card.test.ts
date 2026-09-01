@@ -103,5 +103,52 @@ describe("Card — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import CardContent from "../CardContent.svelte";
+import CardDescription from "../CardDescription.svelte";
+import CardFooter from "../CardFooter.svelte";
+import CardHeader from "../CardHeader.svelte";
+
+describe("Card — compound parts", () => {
+  it("mounts CardContent with tag and base class", () => {
+    const { container } = render(CardContent as Component, {
+      props: { "data-testid": "card-cardcontent" },
+    });
+    const root = container.querySelector('[data-testid="card-cardcontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("card__content");
+  });
+
+  it("mounts CardDescription with tag and base class", () => {
+    const { container } = render(CardDescription as Component, {
+      props: { "data-testid": "card-carddescription" },
+    });
+    const root = container.querySelector('[data-testid="card-carddescription"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("p");
+    expect(root!.className.split(/\s+/)).toContain("card__description");
+  });
+
+  it("mounts CardFooter with tag and base class", () => {
+    const { container } = render(CardFooter as Component, {
+      props: { "data-testid": "card-cardfooter" },
+    });
+    const root = container.querySelector('[data-testid="card-cardfooter"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.className.split(/\s+/)).toContain("card__footer");
+  });
+
+  it("mounts CardHeader with tag and base class", () => {
+    const { container } = render(CardHeader as Component, {
+      props: { "data-testid": "card-cardheader" },
+    });
+    const root = container.querySelector('[data-testid="card-cardheader"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.className.split(/\s+/)).toContain("card__header");
+  });
+});
+
 
 // @custom:end

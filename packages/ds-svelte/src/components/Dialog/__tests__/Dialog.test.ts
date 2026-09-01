@@ -120,6 +120,53 @@ describe("Dialog — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import DialogBody from "../DialogBody.svelte";
+import DialogFooter from "../DialogFooter.svelte";
+import DialogHeader from "../DialogHeader.svelte";
+import DialogTitle from "../DialogTitle.svelte";
+
+describe("Dialog — compound parts", () => {
+  it("mounts DialogBody with tag and base class", () => {
+    const { container } = render(DialogBody as Component, {
+      props: { "data-testid": "dialog-dialogbody" },
+    });
+    const root = container.querySelector('[data-testid="dialog-dialogbody"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("dialog__body");
+  });
+
+  it("mounts DialogFooter with tag and base class", () => {
+    const { container } = render(DialogFooter as Component, {
+      props: { "data-testid": "dialog-dialogfooter" },
+    });
+    const root = container.querySelector('[data-testid="dialog-dialogfooter"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.className.split(/\s+/)).toContain("dialog__footer");
+  });
+
+  it("mounts DialogHeader with tag and base class", () => {
+    const { container } = render(DialogHeader as Component, {
+      props: { "data-testid": "dialog-dialogheader" },
+    });
+    const root = container.querySelector('[data-testid="dialog-dialogheader"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.className.split(/\s+/)).toContain("dialog__header");
+  });
+
+  it("mounts DialogTitle with tag and base class", () => {
+    const { container } = render(DialogTitle as Component, {
+      props: { "data-testid": "dialog-dialogtitle" },
+    });
+    const root = container.querySelector('[data-testid="dialog-dialogtitle"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("h3");
+    expect(root!.className.split(/\s+/)).toContain("dialog__title");
+  });
+});
+
 describe("Dialog — portal (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01)", () => {
   it("relocates the dialog root to document.body, escaping an ancestor stacking context", () => {
     // A transform/overflow ancestor creates a stacking context that would clip

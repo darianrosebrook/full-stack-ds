@@ -68,6 +68,20 @@ describe("Accordion — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import AccordionItem from "../AccordionItem.svelte";
+
+describe("Accordion — compound parts", () => {
+  it("mounts AccordionItem with tag and base class", () => {
+    const { container } = render(AccordionItem as Component, {
+      props: { "data-testid": "accordion-accordionitem" },
+    });
+    const root = container.querySelector('[data-testid="accordion-accordionitem"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("accordion__item");
+  });
+});
+
 import { fireEvent } from "@testing-library/svelte";
 import { vi } from "vitest";
 import AccordionFixture from "./AccordionFixture.svelte";

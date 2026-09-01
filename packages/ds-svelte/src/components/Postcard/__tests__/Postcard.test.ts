@@ -73,5 +73,41 @@ describe("Postcard — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import PostcardContent from "../PostcardContent.svelte";
+import PostcardFooter from "../PostcardFooter.svelte";
+import PostcardHeader from "../PostcardHeader.svelte";
+
+describe("Postcard — compound parts", () => {
+  it("mounts PostcardContent with tag and base class", () => {
+    const { container } = render(PostcardContent as Component, {
+      props: { "data-testid": "postcard-postcardcontent" },
+    });
+    const root = container.querySelector('[data-testid="postcard-postcardcontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("postcard__content");
+  });
+
+  it("mounts PostcardFooter with tag and base class", () => {
+    const { container } = render(PostcardFooter as Component, {
+      props: { "data-testid": "postcard-postcardfooter" },
+    });
+    const root = container.querySelector('[data-testid="postcard-postcardfooter"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.className.split(/\s+/)).toContain("postcard__footer");
+  });
+
+  it("mounts PostcardHeader with tag and base class", () => {
+    const { container } = render(PostcardHeader as Component, {
+      props: { "data-testid": "postcard-postcardheader" },
+    });
+    const root = container.querySelector('[data-testid="postcard-postcardheader"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.className.split(/\s+/)).toContain("postcard__header");
+  });
+});
+
 
 // @custom:end

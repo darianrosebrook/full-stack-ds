@@ -83,5 +83,19 @@ describe("Field — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import FieldHeader from "../FieldHeader.svelte";
+
+describe("Field — compound parts", () => {
+  it("mounts FieldHeader with tag and base class", () => {
+    const { container } = render(FieldHeader as Component, {
+      props: { "data-testid": "field-fieldheader" },
+    });
+    const root = container.querySelector('[data-testid="field-fieldheader"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.className.split(/\s+/)).toContain("field__header");
+  });
+});
+
 
 // @custom:end

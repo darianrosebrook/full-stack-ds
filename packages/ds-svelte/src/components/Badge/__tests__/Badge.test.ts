@@ -113,5 +113,19 @@ describe("Badge — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import BadgeContent from "../BadgeContent.svelte";
+
+describe("Badge — compound parts", () => {
+  it("mounts BadgeContent with tag and base class", () => {
+    const { container } = render(BadgeContent as Component, {
+      props: { "data-testid": "badge-badgecontent" },
+    });
+    const root = container.querySelector('[data-testid="badge-badgecontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("badge__content");
+  });
+});
+
 
 // @custom:end

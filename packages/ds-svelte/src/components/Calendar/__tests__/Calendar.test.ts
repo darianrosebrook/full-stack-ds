@@ -73,5 +73,19 @@ describe("Calendar — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import CalendarHeader from "../CalendarHeader.svelte";
+
+describe("Calendar — compound parts", () => {
+  it("mounts CalendarHeader with tag and base class", () => {
+    const { container } = render(CalendarHeader as Component, {
+      props: { "data-testid": "calendar-calendarheader" },
+    });
+    const root = container.querySelector('[data-testid="calendar-calendarheader"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.className.split(/\s+/)).toContain("calendar__header");
+  });
+});
+
 
 // @custom:end

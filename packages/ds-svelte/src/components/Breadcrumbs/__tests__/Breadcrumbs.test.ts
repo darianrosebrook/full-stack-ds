@@ -58,5 +58,19 @@ describe("Breadcrumbs — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import BreadcrumbsList from "../BreadcrumbsList.svelte";
+
+describe("Breadcrumbs — compound parts", () => {
+  it("mounts BreadcrumbsList with tag and base class", () => {
+    const { container } = render(BreadcrumbsList as Component, {
+      props: { "data-testid": "breadcrumbs-breadcrumbslist" },
+    });
+    const root = container.querySelector('[data-testid="breadcrumbs-breadcrumbslist"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("ul");
+    expect(root!.className.split(/\s+/)).toContain("breadcrumbs__list");
+  });
+});
+
 
 // @custom:end

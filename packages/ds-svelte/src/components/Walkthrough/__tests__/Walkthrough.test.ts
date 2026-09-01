@@ -111,5 +111,41 @@ describe("Walkthrough — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import WalkthroughContent from "../WalkthroughContent.svelte";
+import WalkthroughDescription from "../WalkthroughDescription.svelte";
+import WalkthroughTitle from "../WalkthroughTitle.svelte";
+
+describe("Walkthrough — compound parts", () => {
+  it("mounts WalkthroughContent with tag and base class", () => {
+    const { container } = render(WalkthroughContent as Component, {
+      props: { "data-testid": "walkthrough-walkthroughcontent" },
+    });
+    const root = container.querySelector('[data-testid="walkthrough-walkthroughcontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("walkthrough__content");
+  });
+
+  it("mounts WalkthroughDescription with tag and base class", () => {
+    const { container } = render(WalkthroughDescription as Component, {
+      props: { "data-testid": "walkthrough-walkthroughdescription" },
+    });
+    const root = container.querySelector('[data-testid="walkthrough-walkthroughdescription"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("p");
+    expect(root!.className.split(/\s+/)).toContain("walkthrough__description");
+  });
+
+  it("mounts WalkthroughTitle with tag and base class", () => {
+    const { container } = render(WalkthroughTitle as Component, {
+      props: { "data-testid": "walkthrough-walkthroughtitle" },
+    });
+    const root = container.querySelector('[data-testid="walkthrough-walkthroughtitle"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("h3");
+    expect(root!.className.split(/\s+/)).toContain("walkthrough__title");
+  });
+});
+
 
 // @custom:end

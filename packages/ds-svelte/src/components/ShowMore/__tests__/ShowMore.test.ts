@@ -58,5 +58,30 @@ describe("ShowMore — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import ShowMoreContent from "../ShowMoreContent.svelte";
+import ShowMoreTrigger from "../ShowMoreTrigger.svelte";
+
+describe("ShowMore — compound parts", () => {
+  it("mounts ShowMoreContent with tag and base class", () => {
+    const { container } = render(ShowMoreContent as Component, {
+      props: { "data-testid": "showmore-showmorecontent" },
+    });
+    const root = container.querySelector('[data-testid="showmore-showmorecontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("show-more__content");
+  });
+
+  it("mounts ShowMoreTrigger with tag and base class", () => {
+    const { container } = render(ShowMoreTrigger as Component, {
+      props: { "data-testid": "showmore-showmoretrigger" },
+    });
+    const root = container.querySelector('[data-testid="showmore-showmoretrigger"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("button");
+    expect(root!.className.split(/\s+/)).toContain("show-more__trigger");
+  });
+});
+
 
 // @custom:end

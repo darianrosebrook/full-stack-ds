@@ -73,5 +73,19 @@ describe("OTP — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import OTPGroup from "../OTPGroup.svelte";
+
+describe("OTP — compound parts", () => {
+  it("mounts OTPGroup with tag and base class", () => {
+    const { container } = render(OTPGroup as Component, {
+      props: { "data-testid": "otp-otpgroup" },
+    });
+    const root = container.querySelector('[data-testid="otp-otpgroup"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("otp__group");
+  });
+});
+
 
 // @custom:end

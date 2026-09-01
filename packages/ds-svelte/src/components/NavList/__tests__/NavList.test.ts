@@ -68,5 +68,30 @@ describe("NavList — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import NavListItem from "../NavListItem.svelte";
+import NavListList from "../NavListList.svelte";
+
+describe("NavList — compound parts", () => {
+  it("mounts NavListItem with tag and base class", () => {
+    const { container } = render(NavListItem as Component, {
+      props: { "data-testid": "navlist-navlistitem" },
+    });
+    const root = container.querySelector('[data-testid="navlist-navlistitem"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("li");
+    expect(root!.className.split(/\s+/)).toContain("nav-list__item");
+  });
+
+  it("mounts NavListList with tag and base class", () => {
+    const { container } = render(NavListList as Component, {
+      props: { "data-testid": "navlist-navlistlist" },
+    });
+    const root = container.querySelector('[data-testid="navlist-navlistlist"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("ul");
+    expect(root!.className.split(/\s+/)).toContain("nav-list__list");
+  });
+});
+
 
 // @custom:end
