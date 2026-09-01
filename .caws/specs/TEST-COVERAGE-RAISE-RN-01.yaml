@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:react-native exit 0: 60/60 test files, 95/95 tests, measured 47.52% lines (from 35.83) / 76.94% branches / 92.82% functions"
     recorded_at: "2026-09-01T02:23:56.290Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json react-native ratchet 33/73/90/33 -> 45/74/90/45; measured 47.52 leaves 2.52 margin; docs-claims-check 46/46 after the floor marker update"
+    recorded_at: "2026-09-01T02:23:56.751Z"
