@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-04
 title: 'Unit tests for the DTCG w3c-validator core'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'DTCG w3c-validator suite took tokens from 27.45 to 31.86 lines; floor ratchets to 29.'
 created_at: '2026-09-01T04:01:32.693Z'
-updated_at: '2026-09-01T04:01:33.795Z'
+updated_at: '2026-09-01T04:05:51.050Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
