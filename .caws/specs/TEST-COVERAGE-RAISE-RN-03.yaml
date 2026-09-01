@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-RN-03
 title: 'Certify react-native at the 80 target via the third companion batch (passive components)'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'RN line coverage 63.2 to 85.7 via the third companion batch; floor ratcheted to 83 — react-native certified above the 80 target'
 created_at: '2026-09-01T02:32:04.646Z'
-updated_at: '2026-09-01T02:32:05.703Z'
+updated_at: '2026-09-01T02:40:26.182Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
