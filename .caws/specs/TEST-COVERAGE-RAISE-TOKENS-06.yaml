@@ -3,7 +3,6 @@ title: 'Unit tests for the tokens pipeline: cache, compose, build runner'
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: tokens-core2
 created_at: '2026-09-01T04:15:36.926Z'
 updated_at: '2026-09-01T04:15:37.442Z'
 blast_radius:
