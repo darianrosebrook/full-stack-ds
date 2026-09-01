@@ -29,3 +29,8 @@ acceptance:
     then: 'given the measured coverage; when coverage-floors.json is updated; then the tokens floor ratchets to measured minus the standard margin and docs:check-claims derives the markers without drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:tokens (worktree tokens-usage): 19/19 files, 244/244 tests pass, All files 44.63 lines / 80.15 branches / 92.01 functions — above the previous 42.35/79.65/91.89 and above the ratcheted floors 42/78/90/42; usageTracker.ts at 94.17 lines"
+    recorded_at: "2026-09-01T04:22:08.048Z"
