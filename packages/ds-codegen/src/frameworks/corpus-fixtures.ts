@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ComponentContract } from "../contract.js";
+import { componentsDir } from "../contracts-fs.js";
 import { buildComponentIR, type ComponentIR } from "../ir.js";
 
 /**
@@ -34,4 +35,19 @@ export function loadCorpusContract(name: string): ComponentContract {
 
 export function corpusIR(name: string): ComponentIR {
   return buildComponentIR(loadCorpusContract(name));
+}
+
+/**
+ * Component names discovered by the contract loader's corpus walk —
+ * the same authority `pnpm run docs:check-claims` derives the
+ * component-count marker from. Never a hand-maintained list.
+ */
+export function allCorpusComponentNames(): string[] {
+  return fs
+    .readdirSync(componentsDir(path.join(REPO_ROOT, "packages/ds-contracts")), {
+      withFileTypes: true,
+    })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
 }
