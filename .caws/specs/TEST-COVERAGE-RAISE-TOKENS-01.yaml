@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-01
 title: 'Raise tokens coverage via unit suites for the pure resolver, transforms, and validator core'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Tokens line coverage 5.5 to 10.1 via resolver core suites; floor ratcheted to 8 (multi-tranche campaign continues)'
 created_at: '2026-09-01T02:53:57.180Z'
-updated_at: '2026-09-01T02:53:58.228Z'
+updated_at: '2026-09-01T03:00:22.106Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
