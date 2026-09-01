@@ -1,0 +1,558 @@
+{
+  "spec": "RAIL-CUSTOM-REGION-GATE-01",
+  "gaps": [
+    {
+      "file": "packages/ds-angular/src/components/Accordion/__tests__/Accordion.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-angular/src/components/Dialog/__tests__/Dialog.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-angular/src/components/Icon/__tests__/Icon.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-angular/src/components/Skeleton/__tests__/Skeleton.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Accordion/__tests__/Accordion.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Dialog/__tests__/Dialog.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Icon/__tests__/Icon.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Skeleton/__tests__/Skeleton.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Table/__tests__/Table.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Tabs/__tests__/Tabs.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Accordion/__tests__/Accordion.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Alert/__tests__/Alert.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Card/__tests__/Card.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Chip/__tests__/Chip.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Command/__tests__/Command.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Dialog/__tests__/Dialog.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Icon/__tests__/Icon.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/OTP/__tests__/OTP.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Popover/__tests__/Popover.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Popover/Popover.css",
+      "label": "overrides",
+      "kind": "source",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "React-only hand-implementation of the enter animation Popover.contract.json already declares under motion.transitions. contract.motion is read by zero emitters (contract.ts types it `unknown`), so the pipeline cannot lower it today and the other four web targets get nothing. Retire by wiring motion into the IR, not by re-authoring this region."
+    },
+    {
+      "file": "packages/ds-react/src/components/Select/__tests__/Select.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/ShowMore/__tests__/ShowMore.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Skeleton/__tests__/Skeleton.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Table/__tests__/Table.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Tabs/__tests__/Tabs.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Truncate/__tests__/Truncate.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Accordion/__tests__/Accordion.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Alert/__tests__/Alert.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/AlertNotice/__tests__/AlertNotice.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Badge/__tests__/Badge.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Breadcrumbs/__tests__/Breadcrumbs.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Calendar/__tests__/Calendar.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Card/__tests__/Card.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Command/__tests__/Command.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Details/__tests__/Details.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Dialog/__tests__/Dialog.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Field/__tests__/Field.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Icon/__tests__/Icon.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/NavList/__tests__/NavList.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/NavTree/__tests__/NavTree.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/OTP/__tests__/OTP.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Postcard/__tests__/Postcard.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Select/__tests__/Select.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Sheet/__tests__/Sheet.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/ShowMore/__tests__/ShowMore.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Shuttle/__tests__/Shuttle.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Table/__tests__/Table.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Tabs/__tests__/Tabs.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/TextField/__tests__/TextField.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Toast/__tests__/Toast.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Truncate/__tests__/Truncate.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-svelte/src/components/Walkthrough/__tests__/Walkthrough.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Accordion/__tests__/Accordion.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Alert/__tests__/Alert.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/AlertNotice/__tests__/AlertNotice.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Badge/__tests__/Badge.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Breadcrumbs/__tests__/Breadcrumbs.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Calendar/__tests__/Calendar.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Card/__tests__/Card.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Command/__tests__/Command.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Details/__tests__/Details.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Dialog/__tests__/Dialog.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Field/__tests__/Field.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Icon/__tests__/Icon.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/NavList/__tests__/NavList.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/NavTree/__tests__/NavTree.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/OTP/__tests__/OTP.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Popover/__tests__/Popover.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Postcard/__tests__/Postcard.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Select/__tests__/Select.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Sheet/__tests__/Sheet.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/ShowMore/__tests__/ShowMore.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Shuttle/__tests__/Shuttle.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Table/__tests__/Table.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Tabs/__tests__/Tabs.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/TextField/__tests__/TextField.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Toast/__tests__/Toast.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Truncate/__tests__/Truncate.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-vue/src/components/Walkthrough/__tests__/Walkthrough.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "RAIL-CUSTOM-REGION-GATE-01",
+      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    }
+  ]
+}

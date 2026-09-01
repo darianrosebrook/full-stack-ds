@@ -2525,8 +2525,8 @@
           "status": "consumed"
         },
         {
-          "slot": "blockquote.size.border.thick",
-          "cssVar": "--fsds-blockquote-size-border-thick",
+          "slot": "blockquote.size.border.accent",
+          "cssVar": "--fsds-blockquote-size-border-accent",
           "source": "tokens",
           "status": "consumed"
         },

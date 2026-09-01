@@ -135,11 +135,11 @@ export const blockquoteTokenScopes = {
       ref: "semantic.shape.control.radius.default",
       fallback: 6,
     },
-    "blockquote.size.border.thick": {
-      name: "blockquote.size.border.thick",
-      cssVar: "--fsds-blockquote-size-border-thick",
-      ref: "semantic.shape.control.border.focusWidth",
-      fallback: 2,
+    "blockquote.size.border.accent": {
+      name: "blockquote.size.border.accent",
+      cssVar: "--fsds-blockquote-size-border-accent",
+      ref: "core.spacing.size.03",
+      fallback: 4,
     },
     "blockquote.size.fontSize.sm": {
       name: "blockquote.size.fontSize.sm",
