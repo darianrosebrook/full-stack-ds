@@ -61,3 +61,10 @@ contracts:
   - name: 'motion-realization-ledger'
     type: contract-test
     path: 'scripts/motion-realization-audit/selfcheck.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "The rail resolves every declared duration/easing reference through codegen's own tokenSlug against the names tokens.css declares. Of 19 initially dangling, 2 were repaired in-contract (Select's emphasizedDecelerate/emphasizedAccelerate named tokens existing under no spelling; now emphasizedOut/emphasizedIn) and 17 are ledgered as MOTION_TOKEN_UNRESOLVABLE. The 17 are deliberately NOT repaired: they are component-local slots (accordion.motion.duration, dialog.motion.duration.enter, tabs.motion.indicator, ...) and declaring them while nothing consumes them would immediately register as dead slots in RAIL-STYLING-REALIZATION-LEDGERS-01 — trading one ledger entry for another. Each entry's note records that. Final: findings=49 (ledgered=49) unledgered=0 stale=0, exit 0."
+    recorded_at: "2026-09-01T20:12:48.951Z"
+    command: "pnpm run audit:motion-realization"
+    exit_code: 0
