@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-07
 title: 'Unit tests for the tokens usage analytics tracker'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Usage analytics suite took tokens from 42.35 to 44.63 lines; floor ratchets to 42.'
 created_at: '2026-09-01T04:19:34.475Z'
-updated_at: '2026-09-01T04:19:35.707Z'
+updated_at: '2026-09-01T04:22:09.199Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
