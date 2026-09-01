@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-CODEGEN-04
 title: 'Certify codegen at the 80 target via surface-tests and validation CLI suites'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Codegen line coverage 68.6 to 71.0 via surface-tests suites; floor ratcheted to 68 — certification carried to the next tranche'
 created_at: '2026-09-01T03:08:04.311Z'
-updated_at: '2026-09-01T03:08:05.386Z'
+updated_at: '2026-09-01T03:12:59.729Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
