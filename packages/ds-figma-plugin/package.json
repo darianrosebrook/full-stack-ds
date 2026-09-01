@@ -18,6 +18,7 @@
   "devDependencies": {
     "@figma/plugin-typings": "^1.127.0",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@testing-library/svelte": "^5.3.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.8"
   }

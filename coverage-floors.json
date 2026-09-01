@@ -11,7 +11,7 @@
     "lit": { "statements": 83, "branches": 76, "functions": 80, "lines": 83 },
     "angular": { "statements": 87, "branches": 72, "functions": 71, "lines": 87 },
     "react-native": { "statements": 33, "branches": 73, "functions": 90, "lines": 33 },
-    "figma-plugin": { "statements": 68, "branches": 79, "functions": 87, "lines": 68 },
+    "figma-plugin": { "statements": 93, "branches": 80, "functions": 93, "lines": 93 },
     "tokens": { "statements": 3, "branches": 54, "functions": 29, "lines": 3 },
     "showcase": { "statements": 30, "branches": 68, "functions": 54, "lines": 30 }
   }
