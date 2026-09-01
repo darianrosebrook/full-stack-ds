@@ -1,0 +1,50 @@
+id: RAIL-MOTION-REALIZATION-01
+title: 'Wire contract.motion into the IR and rail its realization'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-01T19:28:00.087Z'
+updated_at: '2026-09-01T19:28:00.087Z'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src (contract.ts, ir.ts, css.ts)'
+    - 'packages/ds-contracts/components (the 12 motion-declaring contracts)'
+    - 'scripts/motion-realization-audit'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-contracts/components'
+    - 'scripts/motion-realization-audit'
+    - 'scripts/custom-region-audit'
+  out: []
+invariants:
+  - 'Every motion.transitions entry resolves its duration and easing to a token that exists in the graph; a dangling reference fails the rail rather than rendering a silent fallback.'
+  - 'Every property a transition declares is animated in the emitted artifact of each admitted web family, or is a ledgered obligation naming its owning spec.'
+  - 'Motion is lowered from a governed IR fact, so no framework realizes it via a hand-authored @custom region — audit:custom-regions source count reaches zero.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the 12 contracts declaring motion.transitions; when pnpm run audit:motion-realization runs; then every declared duration and easing token reference resolves in the token graph, and the 18 that currently dangle are either repaired or ledgered with an owning spec'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given motion typed in contract.ts and represented as a MotionIR fact; when pnpm run generate -- --target=all runs; then each admitted web family emits the declared transition or keyframes plus a prefers-reduced-motion honouring block, derived from the IR rather than per-emitter lore'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the motion lowering; when Popover regenerates; then its enter animation is emitted from the contract in all five web targets and its @custom overrides region is empty, taking audit:custom-regions source occupancy from 1 to 0'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a deliberately dangling easing reference and a declared property that no emitter animates; when the audit selfcheck runs; then the rail fails naming each, proving it can fail for the right reason'
+non_functional: {}
+contracts:
+  - name: 'motion-ir'
+    type: behavior
+    path: 'packages/ds-codegen/src/ir.ts'
+  - name: 'motion-realization-ledger'
+    type: contract-test
+    path: 'scripts/motion-realization-audit/selfcheck.mjs'
