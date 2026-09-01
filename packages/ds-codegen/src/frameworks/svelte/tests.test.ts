@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../../contract.js";
 import { buildComponentIR } from "../../ir.js";
+import { corpusIR } from "../corpus-fixtures.js";
 import { generateSvelteTest } from "./tests.js";
 
 describe("generateSvelteTest", () => {
@@ -56,3 +57,41 @@ function makeContract(): ComponentContract {
     },
   };
 }
+
+describe("generateSvelteTest — real corpus contracts", () => {
+  it("emits the compound Tabs plan against the real contract", () => {
+    const source = generateSvelteTest(corpusIR("Tabs"));
+
+    expect(source).toContain(`import Tabs from "../Tabs.svelte";`);
+    expect(source).toContain(`describe("Tabs — unit"`);
+    expect(source).toContain(`"orientation": "horizontal"`);
+    expect(source).toContain(`"tabs--horizontal"`);
+  });
+
+  it("renders Select with the open channel bound", () => {
+    const source = generateSvelteTest(corpusIR("Select"));
+
+    expect(source).toContain(`import Select from "../Select.svelte";`);
+    expect(source).toContain(`"open": true, "onOpenChange": onOpenChangeSpy`);
+  });
+
+  it("emits the disclosure plan for Accordion", () => {
+    const source = generateSvelteTest(corpusIR("Accordion"));
+
+    expect(source).toContain(`import Accordion from "../Accordion.svelte";`);
+  });
+
+  it("renders Dialog with the openness channel and dismissal coverage", () => {
+    const source = generateSvelteTest(corpusIR("Dialog"));
+
+    expect(source).toContain(`import Dialog from "../Dialog.svelte";`);
+    expect(source).toContain(`"open": true, "onOpenChange": onOpenChangeSpy`);
+  });
+
+  it("keeps the generic plan for the Toast surface and cleans up timers", () => {
+    const source = generateSvelteTest(corpusIR("Toast"));
+
+    expect(source).toContain(`import Toast from "../Toast.svelte";`);
+    expect(source).toContain(`afterEach`);
+  });
+});

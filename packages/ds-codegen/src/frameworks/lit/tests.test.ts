@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../../contract.js";
 import { buildComponentIR } from "../../ir.js";
+import { corpusIR } from "../corpus-fixtures.js";
 import { generateLitTest } from "./tests.js";
 
 describe("generateLitTest", () => {
@@ -54,3 +55,47 @@ function makeContract(): ComponentContract {
     },
   };
 }
+
+describe("generateLitTest — real corpus contracts", () => {
+  it("emits the compound Tabs plan against the real contract", () => {
+    const source = generateLitTest(corpusIR("Tabs"));
+
+    expect(source).toContain(`import "../Tabs";`);
+    expect(source).toContain(`describe("Tabs — unit"`);
+    expect(source).toContain(`axe`);
+  });
+
+  it("emits the Select plan with behavior assertions", () => {
+    const source = generateLitTest(corpusIR("Select"));
+
+    expect(source).toContain(`import "../Select";`);
+    expect(source).toContain(`"onOpenChange"`);
+  });
+
+  it("emits the disclosure plan for Accordion", () => {
+    const source = generateLitTest(corpusIR("Accordion"));
+
+    expect(source).toContain(`import "../Accordion";`);
+  });
+
+  it("emits the Dialog plan with dismissal coverage", () => {
+    const source = generateLitTest(corpusIR("Dialog"));
+
+    expect(source).toContain(`import "../Dialog";`);
+    expect(source).toContain(`"onOpenChange"`);
+  });
+
+  it("keeps the generic plan for the Popover surface", () => {
+    const source = generateLitTest(corpusIR("Popover"));
+
+    expect(source).toContain(`import "../Popover";`);
+    expect(source).toContain(`describe("Popover — unit"`);
+  });
+
+  it("keeps the generic plan for the Toast surface", () => {
+    const source = generateLitTest(corpusIR("Toast"));
+
+    expect(source).toContain(`import "../Toast";`);
+    expect(source).toContain(`describe("Toast — unit"`);
+  });
+});
