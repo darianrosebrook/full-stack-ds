@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-VUE-01
 title: 'Raise vue package line coverage to an 80-certifying floor via @custom tests blocks'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Vue line coverage 71.3 to 89.1 via tokenizer language-breadth, hook proofs, and compound sub-part suites; floor ratcheted to 87, certifying the 80 target'
 created_at: '2026-09-01T00:37:57.654Z'
-updated_at: '2026-09-01T00:38:04.830Z'
+updated_at: '2026-09-01T01:05:56.875Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
