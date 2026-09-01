@@ -88,10 +88,10 @@ describe("Tabs — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
-import { h, ref } from "vue";
 import TabsList from "../TabsList.vue";
-import TabsTab from "../TabsTab.vue";
 import TabsPanel from "../TabsPanel.vue";
+import TabsTab from "../TabsTab.vue";
+import { h, ref } from "vue";
 
 /**
  * Mount a standard two-tab fixture using the render function (h()) API.
@@ -472,4 +472,5 @@ describe("Tabs — accessibility (full fixture)", () => {
     wrapper.unmount();
   });
 });
+
 // @custom:end

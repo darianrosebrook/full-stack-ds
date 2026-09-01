@@ -113,5 +113,18 @@ describe("Badge — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import BadgeContent from "../BadgeContent.vue";
 
+
+describe("Badge — compound parts", () => {
+  it("mounts BadgeContent with tag, base class, and slot content", () => {
+    const wrapper = mount(BadgeContent as Component, {
+      slots: { default: "Badge part" },
+      attrs: { "data-testid": "badge-badgecontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("badge__content");
+    expect(wrapper.text()).toContain("Badge part");
+  });
+});
 // @custom:end

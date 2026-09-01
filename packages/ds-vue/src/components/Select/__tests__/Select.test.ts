@@ -95,6 +95,9 @@ describe("Select — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import SelectContent from "../SelectContent.vue";
+import SelectOption from "../SelectOption.vue";
+import SelectTrigger from "../SelectTrigger.vue";
 
 // VUE-FIRST-RENDER-CONTROLLABLE-DEFAULT-01.
 // The generated tests above all pass `open: true` (controlled), which
@@ -204,4 +207,36 @@ describe("Select — multiple-mode toggle (channelUpdate toggleMembership)", () 
   });
 });
 
+
+describe("Select — compound parts", () => {
+  it("mounts SelectContent with tag, base class, and slot content", () => {
+    const wrapper = mount(SelectContent as Component, {
+      slots: { default: "Select part" },
+      attrs: { "data-testid": "select-selectcontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("select__content");
+    expect(wrapper.text()).toContain("Select part");
+  });
+
+  it("mounts SelectOption with tag, base class, and slot content", () => {
+    const wrapper = mount(SelectOption as Component, {
+      slots: { default: "Select part" },
+      attrs: { "data-testid": "select-selectoption" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("li");
+    expect(wrapper.classes()).toContain("select__option");
+    expect(wrapper.text()).toContain("Select part");
+  });
+
+  it("mounts SelectTrigger with tag, base class, and slot content", () => {
+    const wrapper = mount(SelectTrigger as Component, {
+      slots: { default: "Select part" },
+      attrs: { "data-testid": "select-selecttrigger" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("button");
+    expect(wrapper.classes()).toContain("select__trigger");
+    expect(wrapper.text()).toContain("Select part");
+  });
+});
 // @custom:end

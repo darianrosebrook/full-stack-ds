@@ -75,5 +75,29 @@ describe("NavTree — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import NavTreeItem from "../NavTreeItem.vue";
+import NavTreeList from "../NavTreeList.vue";
 
+
+describe("NavTree — compound parts", () => {
+  it("mounts NavTreeItem with tag, base class, and slot content", () => {
+    const wrapper = mount(NavTreeItem as Component, {
+      slots: { default: "NavTree part" },
+      attrs: { "data-testid": "navtree-navtreeitem" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("li");
+    expect(wrapper.classes()).toContain("nav-tree__item");
+    expect(wrapper.text()).toContain("NavTree part");
+  });
+
+  it("mounts NavTreeList with tag, base class, and slot content", () => {
+    const wrapper = mount(NavTreeList as Component, {
+      slots: { default: "NavTree part" },
+      attrs: { "data-testid": "navtree-navtreelist" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("ul");
+    expect(wrapper.classes()).toContain("nav-tree__list");
+    expect(wrapper.text()).toContain("NavTree part");
+  });
+});
 // @custom:end

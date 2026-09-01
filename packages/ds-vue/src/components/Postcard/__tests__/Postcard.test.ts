@@ -73,5 +73,40 @@ describe("Postcard — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import PostcardContent from "../PostcardContent.vue";
+import PostcardFooter from "../PostcardFooter.vue";
+import PostcardHeader from "../PostcardHeader.vue";
 
+
+describe("Postcard — compound parts", () => {
+  it("mounts PostcardContent with tag, base class, and slot content", () => {
+    const wrapper = mount(PostcardContent as Component, {
+      slots: { default: "Postcard part" },
+      attrs: { "data-testid": "postcard-postcardcontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("postcard__content");
+    expect(wrapper.text()).toContain("Postcard part");
+  });
+
+  it("mounts PostcardFooter with tag, base class, and slot content", () => {
+    const wrapper = mount(PostcardFooter as Component, {
+      slots: { default: "Postcard part" },
+      attrs: { "data-testid": "postcard-postcardfooter" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.classes()).toContain("postcard__footer");
+    expect(wrapper.text()).toContain("Postcard part");
+  });
+
+  it("mounts PostcardHeader with tag, base class, and slot content", () => {
+    const wrapper = mount(PostcardHeader as Component, {
+      slots: { default: "Postcard part" },
+      attrs: { "data-testid": "postcard-postcardheader" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.classes()).toContain("postcard__header");
+    expect(wrapper.text()).toContain("Postcard part");
+  });
+});
 // @custom:end

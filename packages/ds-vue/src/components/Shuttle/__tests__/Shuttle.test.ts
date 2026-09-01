@@ -58,5 +58,18 @@ describe("Shuttle — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import ShuttleItem from "../ShuttleItem.vue";
 
+
+describe("Shuttle — compound parts", () => {
+  it("mounts ShuttleItem with tag, base class, and slot content", () => {
+    const wrapper = mount(ShuttleItem as Component, {
+      slots: { default: "Shuttle part" },
+      attrs: { "data-testid": "shuttle-shuttleitem" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("li");
+    expect(wrapper.classes()).toContain("shuttle__item");
+    expect(wrapper.text()).toContain("Shuttle part");
+  });
+});
 // @custom:end

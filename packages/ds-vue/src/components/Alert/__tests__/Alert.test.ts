@@ -98,5 +98,29 @@ describe("Alert — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import AlertBody from "../AlertBody.vue";
+import AlertTitle from "../AlertTitle.vue";
 
+
+describe("Alert — compound parts", () => {
+  it("mounts AlertBody with tag, base class, and slot content", () => {
+    const wrapper = mount(AlertBody as Component, {
+      slots: { default: "Alert part" },
+      attrs: { "data-testid": "alert-alertbody" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("alert__body");
+    expect(wrapper.text()).toContain("Alert part");
+  });
+
+  it("mounts AlertTitle with tag, base class, and slot content", () => {
+    const wrapper = mount(AlertTitle as Component, {
+      slots: { default: "Alert part" },
+      attrs: { "data-testid": "alert-alerttitle" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
+    expect(wrapper.classes()).toContain("alert__title");
+    expect(wrapper.text()).toContain("Alert part");
+  });
+});
 // @custom:end

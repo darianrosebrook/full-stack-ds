@@ -68,5 +68,29 @@ describe("NavList — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import NavListItem from "../NavListItem.vue";
+import NavListList from "../NavListList.vue";
 
+
+describe("NavList — compound parts", () => {
+  it("mounts NavListItem with tag, base class, and slot content", () => {
+    const wrapper = mount(NavListItem as Component, {
+      slots: { default: "NavList part" },
+      attrs: { "data-testid": "navlist-navlistitem" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("li");
+    expect(wrapper.classes()).toContain("nav-list__item");
+    expect(wrapper.text()).toContain("NavList part");
+  });
+
+  it("mounts NavListList with tag, base class, and slot content", () => {
+    const wrapper = mount(NavListList as Component, {
+      slots: { default: "NavList part" },
+      attrs: { "data-testid": "navlist-navlistlist" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("ul");
+    expect(wrapper.classes()).toContain("nav-list__list");
+    expect(wrapper.text()).toContain("NavList part");
+  });
+});
 // @custom:end

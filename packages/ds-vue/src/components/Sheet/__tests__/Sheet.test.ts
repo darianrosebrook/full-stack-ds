@@ -113,5 +113,73 @@ describe("Sheet — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import SheetBody from "../SheetBody.vue";
+import SheetContent from "../SheetContent.vue";
+import SheetDescription from "../SheetDescription.vue";
+import SheetFooter from "../SheetFooter.vue";
+import SheetHeader from "../SheetHeader.vue";
+import SheetTitle from "../SheetTitle.vue";
 
+
+describe("Sheet — compound parts", () => {
+  it("mounts SheetBody with tag, base class, and slot content", () => {
+    const wrapper = mount(SheetBody as Component, {
+      slots: { default: "Sheet part" },
+      attrs: { "data-testid": "sheet-sheetbody" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("sheet__body");
+    expect(wrapper.text()).toContain("Sheet part");
+  });
+
+  it("mounts SheetContent with tag, base class, and slot content", () => {
+    const wrapper = mount(SheetContent as Component, {
+      slots: { default: "Sheet part" },
+      attrs: { "data-testid": "sheet-sheetcontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("sheet__content");
+    expect(wrapper.text()).toContain("Sheet part");
+  });
+
+  it("mounts SheetDescription with tag, base class, and slot content", () => {
+    const wrapper = mount(SheetDescription as Component, {
+      slots: { default: "Sheet part" },
+      attrs: { "data-testid": "sheet-sheetdescription" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("p");
+    expect(wrapper.classes()).toContain("sheet__description");
+    expect(wrapper.text()).toContain("Sheet part");
+  });
+
+  it("mounts SheetFooter with tag, base class, and slot content", () => {
+    const wrapper = mount(SheetFooter as Component, {
+      slots: { default: "Sheet part" },
+      attrs: { "data-testid": "sheet-sheetfooter" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.classes()).toContain("sheet__footer");
+    expect(wrapper.text()).toContain("Sheet part");
+  });
+
+  it("mounts SheetHeader with tag, base class, and slot content", () => {
+    const wrapper = mount(SheetHeader as Component, {
+      slots: { default: "Sheet part" },
+      attrs: { "data-testid": "sheet-sheetheader" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.classes()).toContain("sheet__header");
+    expect(wrapper.text()).toContain("Sheet part");
+  });
+
+  it("mounts SheetTitle with tag, base class, and slot content", () => {
+    const wrapper = mount(SheetTitle as Component, {
+      slots: { default: "Sheet part" },
+      attrs: { "data-testid": "sheet-sheettitle" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
+    expect(wrapper.classes()).toContain("sheet__title");
+    expect(wrapper.text()).toContain("Sheet part");
+  });
+});
 // @custom:end

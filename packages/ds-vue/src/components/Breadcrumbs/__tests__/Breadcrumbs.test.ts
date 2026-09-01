@@ -58,5 +58,18 @@ describe("Breadcrumbs — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import BreadcrumbsList from "../BreadcrumbsList.vue";
 
+
+describe("Breadcrumbs — compound parts", () => {
+  it("mounts BreadcrumbsList with tag, base class, and slot content", () => {
+    const wrapper = mount(BreadcrumbsList as Component, {
+      slots: { default: "Breadcrumbs part" },
+      attrs: { "data-testid": "breadcrumbs-breadcrumbslist" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("ul");
+    expect(wrapper.classes()).toContain("breadcrumbs__list");
+    expect(wrapper.text()).toContain("Breadcrumbs part");
+  });
+});
 // @custom:end

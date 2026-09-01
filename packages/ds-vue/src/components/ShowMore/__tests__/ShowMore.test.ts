@@ -58,5 +58,29 @@ describe("ShowMore — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import ShowMoreContent from "../ShowMoreContent.vue";
+import ShowMoreTrigger from "../ShowMoreTrigger.vue";
 
+
+describe("ShowMore — compound parts", () => {
+  it("mounts ShowMoreContent with tag, base class, and slot content", () => {
+    const wrapper = mount(ShowMoreContent as Component, {
+      slots: { default: "ShowMore part" },
+      attrs: { "data-testid": "showmore-showmorecontent" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("show-more__content");
+    expect(wrapper.text()).toContain("ShowMore part");
+  });
+
+  it("mounts ShowMoreTrigger with tag, base class, and slot content", () => {
+    const wrapper = mount(ShowMoreTrigger as Component, {
+      slots: { default: "ShowMore part" },
+      attrs: { "data-testid": "showmore-showmoretrigger" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("button");
+    expect(wrapper.classes()).toContain("show-more__trigger");
+    expect(wrapper.text()).toContain("ShowMore part");
+  });
+});
 // @custom:end

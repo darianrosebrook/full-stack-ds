@@ -58,8 +58,13 @@ describe("Table — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TableBody from "../TableBody.vue";
+import TableCaption from "../TableCaption.vue";
 import TableCell from "../TableCell.vue";
+import TableFooter from "../TableFooter.vue";
+import TableHead from "../TableHead.vue";
 import TableHeaderCell from "../TableHeaderCell.vue";
+import TableRow from "../TableRow.vue";
 
 // SHOWCASE-CONSUMPTION-03 A1 — the Vue cell/header SFCs own their <td>/<th>,
 // so they must forward the HTML attributes a real data table needs.
@@ -89,6 +94,68 @@ describe("Table — cell attribute forwarding", () => {
     const wrapper = mount(TableCell as Component, { slots: { default: "x" } });
     expect(wrapper.attributes("colspan")).toBeUndefined();
     expect(wrapper.attributes("id")).toBeUndefined();
+  });
+});
+
+describe("Table — compound parts", () => {
+  it("mounts TableBody with tag, base class, and slot content", () => {
+    const wrapper = mount(TableBody as Component, {
+      slots: { default: "Table part" },
+      attrs: { "data-testid": "table-tablebody" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("tbody");
+    expect(wrapper.classes()).toContain("table__body");
+    expect(wrapper.text()).toContain("Table part");
+  });
+
+  it("mounts TableCaption with tag, base class, and slot content", () => {
+    const wrapper = mount(TableCaption as Component, {
+      slots: { default: "Table part" },
+      attrs: { "data-testid": "table-tablecaption" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("caption");
+    expect(wrapper.classes()).toContain("table__caption");
+    expect(wrapper.text()).toContain("Table part");
+  });
+
+  it("mounts TableCell with tag, base class, and slot content", () => {
+    const wrapper = mount(TableCell as Component, {
+      slots: { default: "Table part" },
+      attrs: { "data-testid": "table-tablecell" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("td");
+    expect(wrapper.classes()).toContain("table__cell");
+    expect(wrapper.text()).toContain("Table part");
+  });
+
+  it("mounts TableFooter with tag, base class, and slot content", () => {
+    const wrapper = mount(TableFooter as Component, {
+      slots: { default: "Table part" },
+      attrs: { "data-testid": "table-tablefooter" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("tfoot");
+    expect(wrapper.classes()).toContain("table__footer");
+    expect(wrapper.text()).toContain("Table part");
+  });
+
+  it("mounts TableHead with tag, base class, and slot content", () => {
+    const wrapper = mount(TableHead as Component, {
+      slots: { default: "Table part" },
+      attrs: { "data-testid": "table-tablehead" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("thead");
+    expect(wrapper.classes()).toContain("table__head");
+    expect(wrapper.text()).toContain("Table part");
+  });
+
+  it("mounts TableRow with tag, base class, and slot content", () => {
+    const wrapper = mount(TableRow as Component, {
+      slots: { default: "Table part" },
+      attrs: { "data-testid": "table-tablerow" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("tr");
+    expect(wrapper.classes()).toContain("table__row");
+    expect(wrapper.text()).toContain("Table part");
   });
 });
 // @custom:end

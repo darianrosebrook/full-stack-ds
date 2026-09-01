@@ -68,10 +68,10 @@ describe("Accordion — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
-import { defineComponent, h } from "vue";
+import AccordionContent from "../AccordionContent.vue";
 import AccordionItem from "../AccordionItem.vue";
 import AccordionTrigger from "../AccordionTrigger.vue";
-import AccordionContent from "../AccordionContent.vue";
+import { defineComponent, h } from "vue";
 
 // FIX-COMPOUND-CONTAINER-ANCESTOR-PREDICATE-01 (A2, Vue): trigger click toggles
 // its own item through the openness channel; aria-expanded + region wire from
@@ -139,4 +139,16 @@ describe("Accordion — disclosure behavior", () => {
   });
 });
 
+
+describe("Accordion — compound parts", () => {
+  it("mounts AccordionItem with tag, base class, and slot content", () => {
+    const wrapper = mount(AccordionItem as Component, {
+      slots: { default: "Accordion part" },
+      attrs: { "data-testid": "accordion-accordionitem" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("accordion__item");
+    expect(wrapper.text()).toContain("Accordion part");
+  });
+});
 // @custom:end

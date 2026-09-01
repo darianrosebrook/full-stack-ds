@@ -73,5 +73,18 @@ describe("Calendar — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import CalendarHeader from "../CalendarHeader.vue";
 
+
+describe("Calendar — compound parts", () => {
+  it("mounts CalendarHeader with tag, base class, and slot content", () => {
+    const wrapper = mount(CalendarHeader as Component, {
+      slots: { default: "Calendar part" },
+      attrs: { "data-testid": "calendar-calendarheader" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.classes()).toContain("calendar__header");
+    expect(wrapper.text()).toContain("Calendar part");
+  });
+});
 // @custom:end

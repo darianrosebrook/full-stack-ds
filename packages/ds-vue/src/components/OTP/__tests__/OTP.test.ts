@@ -73,6 +73,7 @@ describe("OTP — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import OTPGroup from "../OTPGroup.vue";
 // FEAT-CHANNEL-UPDATE-OPERATIONS-01 — set-char-at-index on the OTP field's
 // `input` wire. Pins the A2 behavioral claim for Vue (the second framework
 // alongside React).
@@ -96,6 +97,18 @@ describe("OTP — set-char-at-index (channelUpdate setCharAt)", () => {
     const fields = wrapper.findAll("input[data-otp-index]");
     await fields[1].setValue("0"); // → "1034"
     expect(onChange).toHaveBeenLastCalledWith("1034");
+  });
+});
+
+describe("OTP — compound parts", () => {
+  it("mounts OTPGroup with tag, base class, and slot content", () => {
+    const wrapper = mount(OTPGroup as Component, {
+      slots: { default: "OTP part" },
+      attrs: { "data-testid": "otp-otpgroup" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("otp__group");
+    expect(wrapper.text()).toContain("OTP part");
   });
 });
 // @custom:end

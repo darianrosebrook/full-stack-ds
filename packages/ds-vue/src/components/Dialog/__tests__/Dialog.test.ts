@@ -120,6 +120,10 @@ describe("Dialog — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import DialogBody from "../DialogBody.vue";
+import DialogFooter from "../DialogFooter.vue";
+import DialogHeader from "../DialogHeader.vue";
+import DialogTitle from "../DialogTitle.vue";
 describe("Dialog — portal (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01)", () => {
   it("teleports the dialog root to document.body, escaping an ancestor stacking context", () => {
     // A transform/overflow ancestor creates a stacking context that would clip
@@ -148,6 +152,48 @@ describe("Dialog — portal (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01)", () => {
     expect(host.contains(dialogRoot)).toBe(false);
 
     host.remove();
+  });
+});
+
+describe("Dialog — compound parts", () => {
+  it("mounts DialogBody with tag, base class, and slot content", () => {
+    const wrapper = mount(DialogBody as Component, {
+      slots: { default: "Dialog part" },
+      attrs: { "data-testid": "dialog-dialogbody" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("dialog__body");
+    expect(wrapper.text()).toContain("Dialog part");
+  });
+
+  it("mounts DialogFooter with tag, base class, and slot content", () => {
+    const wrapper = mount(DialogFooter as Component, {
+      slots: { default: "Dialog part" },
+      attrs: { "data-testid": "dialog-dialogfooter" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.classes()).toContain("dialog__footer");
+    expect(wrapper.text()).toContain("Dialog part");
+  });
+
+  it("mounts DialogHeader with tag, base class, and slot content", () => {
+    const wrapper = mount(DialogHeader as Component, {
+      slots: { default: "Dialog part" },
+      attrs: { "data-testid": "dialog-dialogheader" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.classes()).toContain("dialog__header");
+    expect(wrapper.text()).toContain("Dialog part");
+  });
+
+  it("mounts DialogTitle with tag, base class, and slot content", () => {
+    const wrapper = mount(DialogTitle as Component, {
+      slots: { default: "Dialog part" },
+      attrs: { "data-testid": "dialog-dialogtitle" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
+    expect(wrapper.classes()).toContain("dialog__title");
+    expect(wrapper.text()).toContain("Dialog part");
   });
 });
 // @custom:end

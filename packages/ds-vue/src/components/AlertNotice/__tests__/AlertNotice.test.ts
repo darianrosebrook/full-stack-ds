@@ -98,5 +98,29 @@ describe("AlertNotice — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import AlertNoticeBody from "../AlertNoticeBody.vue";
+import AlertNoticeTitle from "../AlertNoticeTitle.vue";
 
+
+describe("AlertNotice — compound parts", () => {
+  it("mounts AlertNoticeBody with tag, base class, and slot content", () => {
+    const wrapper = mount(AlertNoticeBody as Component, {
+      slots: { default: "AlertNotice part" },
+      attrs: { "data-testid": "alertnotice-alertnoticebody" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
+    expect(wrapper.classes()).toContain("alert-notice__body");
+    expect(wrapper.text()).toContain("AlertNotice part");
+  });
+
+  it("mounts AlertNoticeTitle with tag, base class, and slot content", () => {
+    const wrapper = mount(AlertNoticeTitle as Component, {
+      slots: { default: "AlertNotice part" },
+      attrs: { "data-testid": "alertnotice-alertnoticetitle" },
+    });
+    expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
+    expect(wrapper.classes()).toContain("alert-notice__title");
+    expect(wrapper.text()).toContain("AlertNotice part");
+  });
+});
 // @custom:end
