@@ -2,9 +2,10 @@ id: RAIL-CUSTOM-REGION-GATE-01
 title: 'Gate the no-hand-edits-to-generated-output constraint and retire the Blockquote exception'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: custom-region-gate
 created_at: '2026-09-01T19:02:45.728Z'
-updated_at: '2026-09-01T19:02:45.728Z'
+updated_at: '2026-09-01T19:03:02.565Z'
 blast_radius:
   modules:
     - 'scripts/custom-region-audit'
