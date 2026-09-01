@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "coverage-floors.json figma-plugin ratchet 68/79/87/68 -> 93/80/93/93; measured 95.1 leaves 2.1 margin above the 93 floor which certifies the 80 target; docs-claims-check 46/46 after marker updates"
     recorded_at: "2026-09-01T01:37:53.715Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 overall pass after the test additions: zero generated drift (git status clean)"
+    recorded_at: "2026-09-01T01:37:54.149Z"
