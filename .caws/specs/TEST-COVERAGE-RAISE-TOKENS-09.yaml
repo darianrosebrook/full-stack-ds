@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-09
 title: 'Unit tests for schema generation and token inspection mjs cores'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Schema and inspection core suites took tokens from 47.25 to 57.67 lines; floor ratchets to 55.'
 created_at: '2026-09-01T04:29:58.724Z'
-updated_at: '2026-09-01T04:29:59.786Z'
+updated_at: '2026-09-01T04:33:47.640Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
