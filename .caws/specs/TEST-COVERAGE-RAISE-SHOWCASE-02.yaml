@@ -1,0 +1,31 @@
+id: TEST-COVERAGE-RAISE-SHOWCASE-02
+title: 'Certify showcase at the 80 target via all-tab doc-view suites'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-01T02:50:12.577Z'
+updated_at: '2026-09-01T02:50:12.577Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'src'
+    - 'coverage-floors.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the all-tab suites; when pnpm run test:coverage:showcase runs; then every showcase test passes and measured line coverage is at least 82 percent'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the measured coverage; when coverage-floors.json is updated; then the showcase lines floor reaches 80 with at least 2 points of margin and docs:check-claims derives the markers without drift'
+non_functional: {}
+contracts: []
