@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-12
 title: 'Burn barrel-only dead legacy generators and validators'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Probed burn of the barrel-only dead legacy cluster took tokens from 67.54 to 73.14 lines; floor ratchets to 71.'
 created_at: '2026-09-01T04:43:24.354Z'
-updated_at: '2026-09-01T04:43:25.518Z'
+updated_at: '2026-09-01T04:45:40.298Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
