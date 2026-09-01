@@ -34,3 +34,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:tokens (worktree): 12/12 files, 194/194 tests pass, All files 31.86 lines / 78.96 branches / 79.41 functions — above the previous 27.45/77.31/78.22 and above the ratcheted floors 29/76/77/29; w3c-validator.ts itself at 96.75 lines / 92.85 branches"
     recorded_at: "2026-09-01T04:05:49.980Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json tokens ratcheted 25->29 statements, 75->76 branches, 76->77 functions, 25->29 lines (measured minus 2-point margin, all margins >= 2.41); pnpm run docs:check-claims: 46 marked claims OK with tokens at 29"
+    recorded_at: "2026-09-01T04:05:50.436Z"
