@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-FIGMA-01
 title: 'Raise figma-plugin line coverage to an 80-certifying floor via plugin UI and preview tests'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Figma-plugin line coverage 70.7 to 95.1 via UI render, preview, and live-audit suites; floor ratcheted to 93, certifying the 80 target'
 created_at: '2026-09-01T01:26:23.467Z'
-updated_at: '2026-09-01T01:31:03.274Z'
+updated_at: '2026-09-01T01:37:54.742Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
