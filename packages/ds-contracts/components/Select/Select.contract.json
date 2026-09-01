@@ -388,7 +388,7 @@
           "transform"
         ],
         "duration": "core.motion.duration.short",
-        "easing": "core.motion.easing.emphasizedDecelerate"
+        "easing": "core.motion.easing.emphasizedOut"
       },
       {
         "name": "close",
@@ -399,7 +399,7 @@
           "transform"
         ],
         "duration": "core.motion.duration.short",
-        "easing": "core.motion.easing.emphasizedAccelerate"
+        "easing": "core.motion.easing.emphasizedIn"
       }
     ]
   },

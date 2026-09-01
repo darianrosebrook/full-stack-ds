@@ -267,6 +267,10 @@
       {
         "selector": "[data-popover-content]",
         "declarations": {
+          "min-width": "256px",
+          "max-width": "calc(100vw - 16px)",
+          "contain": "layout paint style",
+          "animation": "popover-enter var(--fsds-core-motion-duration-short, 150ms) var(--fsds-core-motion-easing-emphasized-out, cubic-bezier(0.4, 0, 0.2, 1)) forwards",
           "background-color": "var(--fsds-popover-color-background-content, #d0d0d0)",
           "border-color": "var(--fsds-popover-color-border-accent, #d92d2e)",
           "border-radius": "var(--fsds-popover-size-radius-default, 6px)",
@@ -280,7 +284,27 @@
         }
       }
     ],
-    "keyframes": []
+    "keyframes": [
+      {
+        "name": "popover-enter",
+        "frames": [
+          {
+            "selector": "from",
+            "declarations": {
+              "opacity": "0",
+              "transform": "translateY(-8px) scale(0.96)"
+            }
+          },
+          {
+            "selector": "to",
+            "declarations": {
+              "opacity": "1",
+              "transform": "translateY(0) scale(1)"
+            }
+          }
+        ]
+      }
+    ]
   },
   "behavior": {
     "channels": [

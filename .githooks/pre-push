@@ -278,5 +278,16 @@ if [ "${RUN_CUSTOM_REGIONS:-false}" = true ]; then
   pnpm run audit:custom-regions
 else say "skip custom-region ledger"; fi
 
+# Motion realization (RAIL-REDUCED-MOTION-01). The reduced-motion block is
+# DERIVED from the declarations actually emitted, so this rail's job is to
+# notice if that derivation ever stops reaching a component that animates —
+# an accessibility regression no other gate can see. Also carries the
+# declared-but-dangling motion token refs and the declared-but-unrealized
+# transition properties as ledgered debt. Needs the composed token graph.
+if [ "${RUN_MOTION_AUDIT:-false}" = true ]; then
+  echo ""; say "audit:motion-realization"
+  pnpm run audit:motion-realization
+else say "skip motion-realization ledger"; fi
+
 echo ""
 say "all selected checks passed; proceeding with push"

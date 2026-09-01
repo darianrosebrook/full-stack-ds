@@ -504,6 +504,44 @@ export interface StyleEntry {
 // Behavior contract types — previously `unknown` in ComponentContract.
 // ---------------------------------------------------------------------------
 
+/** One named animated transition the component performs. */
+export interface ContractMotionTransition {
+  name: string;
+  description?: string;
+  /** Event or state change that starts it, e.g. `openness=closed→open`. */
+  trigger?: string;
+  /** CSS properties animated, e.g. `["opacity", "transform"]`. */
+  properties?: string[];
+  /** Token reference driving the duration. */
+  duration?: string;
+  /** Token reference driving the easing. */
+  easing?: string;
+  phase?: 'enter' | 'exit' | 'move' | 'attention';
+}
+
+/**
+ * Motion contract.
+ *
+ * Was `motion?: unknown` — declared by 12 contracts and read by nothing, so
+ * `reducedMotion: "respect"` was a promise the pipeline had no way to keep.
+ * `reducedMotion` is now lowered (see `buildMotion` in ir.ts and the
+ * reduced-motion block in css.ts). `transitions` is still NOT a codegen input:
+ * realizing a `trigger` like `openness=closed→open` means inferring which
+ * selector represents that state, which is unsolved and is exactly where
+ * per-component emitter lore would accumulate. It is typed here so the
+ * motion-realization rail can derive obligations from it.
+ */
+export interface ContractMotion {
+  description?: string;
+  transitions?: ContractMotionTransition[];
+  /**
+   * `respect` honors `prefers-reduced-motion`; `disable` always skips;
+   * `reduce` uses shorter variants; `ignore` does not adapt.
+   */
+  reducedMotion?: 'respect' | 'disable' | 'reduce' | 'ignore';
+  reducedMotionStrategy?: string;
+}
+
 export interface ContractFocus {
   description?: string;
   /** `trap` for modal-class containers, `roving` for menus/lists, `auto` defers to the platform. */
@@ -793,7 +831,7 @@ export interface ComponentContract {
     }>;
   };
   form?: ContractForm;
-  motion?: unknown;
+  motion?: ContractMotion;
   focus?: ContractFocus;
   portal?: ContractPortal;
   textOverflow?: ContractTextOverflow;

@@ -1122,6 +1122,39 @@ export interface KeyframeIR {
 }
 
 /**
+ * Motion facts (RAIL-REDUCED-MOTION-01).
+ *
+ * `honorsReducedMotion` is OPT-OUT, not opt-in: it is true unless the contract
+ * explicitly says `ignore`. Keying it on `reducedMotion === "respect"` was the
+ * obvious reading and it is wrong, because it makes an accessibility baseline
+ * depend on remembering to ask for it. The corpus shows what that costs — the
+ * four components that animate hardest (Button, Details, Skeleton, Spinner)
+ * declare no `motion` block at all, so an opt-in rule would leave every one of
+ * them moving for a user who asked the OS for stillness, while the three that
+ * happened to declare `respect` got covered. The schema already calls `ignore`
+ * "strongly discouraged", which is the contract saying the default is to
+ * honour; this encodes that rather than restating it in prose.
+ *
+ * `reducedMotion: null` means undeclared — kept distinct from `respect` so the
+ * motion rail can tell "chose to honour" from "never said", even though both
+ * lower identically.
+ *
+ * `transitions` is carried for the rail, NOT for emission — see
+ * `ContractMotion` on why a `trigger` cannot be lowered yet.
+ */
+export interface MotionIR {
+  honorsReducedMotion: boolean;
+  reducedMotion: 'respect' | 'disable' | 'reduce' | 'ignore' | null;
+  transitions: Array<{
+    name: string;
+    phase: 'enter' | 'exit' | 'move' | 'attention' | null;
+    properties: string[];
+    durationRef: string | null;
+    easingRef: string | null;
+  }>;
+}
+
+/**
  * A substrate-neutral typed token fact (FEAT-MOBILE-IR-001, Phase 0.2).
  *
  * Non-DOM emitters (SwiftUI, Compose, RN) need token VALUES, not CSS
@@ -1510,6 +1543,12 @@ export interface ComponentIR {
   keyframes: KeyframeIR[];
 
   /**
+   * Motion facts. Always present — `reducedMotion: null` distinguishes
+   * "declared nothing" from "declared respect"; both honour by default.
+   */
+  motion: MotionIR;
+
+  /**
    * Typed token facts (FEAT-MOBILE-IR-001). Substrate-neutral projection of
    * `contract.tokens` so non-DOM emitters read token values without parsing
    * CSS. Additive — web emitters ignore this and read `cssBlocks`.
@@ -1717,6 +1756,7 @@ export function buildComponentIR(
 
   const cssBlocks = buildCssBlocks(contract, cssPrefix);
   const keyframes = buildKeyframes(contract);
+  const motion = buildMotion(contract);
   const tokenFacts = buildTokenFacts(contract.tokens ?? {});
   const tokenScopes = buildTokenScopes(contract, cssPrefix);
 
@@ -1828,6 +1868,7 @@ export function buildComponentIR(
     },
     cssBlocks,
     keyframes,
+    motion,
     tokenFacts,
     tokenScopes,
     behavior,
@@ -4764,6 +4805,32 @@ function buildClassRecipe(inputs: ClassRecipeInputs): ClassRecipeIR {
 // ---------------------------------------------------------------------------
 // CSS
 // ---------------------------------------------------------------------------
+
+/**
+ * Project `contract.motion` into the IR.
+ *
+ * Always returns a fact, even for the 39 contracts that declare no `motion`
+ * block — because the question the CSS lowering asks ("must this honour
+ * reduced motion?") has an answer for every component, and that answer is yes
+ * by default. Returning `null` for undeclared motion would push the
+ * opt-out-vs-opt-in decision into css.ts, which is exactly the emitter lore
+ * this layer exists to prevent.
+ */
+export function buildMotion(contract: ComponentContract): MotionIR {
+  const motion = contract.motion;
+  const reducedMotion = motion?.reducedMotion ?? null;
+  return {
+    reducedMotion,
+    honorsReducedMotion: reducedMotion !== 'ignore',
+    transitions: (motion?.transitions ?? []).map((t) => ({
+      name: t.name,
+      phase: t.phase ?? null,
+      properties: t.properties ?? [],
+      durationRef: t.duration ?? null,
+      easingRef: t.easing ?? null,
+    })),
+  };
+}
 
 function buildKeyframes(contract: ComponentContract): KeyframeIR[] {
   const keyframes = contract.keyframes || {};

@@ -135,13 +135,6 @@
       "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
     },
     {
-      "file": "packages/ds-react/src/components/Popover/Popover.css",
-      "label": "overrides",
-      "kind": "source",
-      "spec": "RAIL-CUSTOM-REGION-GATE-01",
-      "note": "React-only hand-implementation of the enter animation Popover.contract.json already declares under motion.transitions. contract.motion is read by zero emitters (contract.ts types it `unknown`), so the pipeline cannot lower it today and the other four web targets get nothing. Retire by wiring motion into the IR, not by re-authoring this region."
-    },
-    {
       "file": "packages/ds-react/src/components/Select/__tests__/Select.test.tsx",
       "label": "tests",
       "kind": "test",
