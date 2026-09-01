@@ -2,9 +2,11 @@ id: RAIL-CUSTOM-REGION-GATE-01
 title: 'Gate the no-hand-edits-to-generated-output constraint and retire the Blockquote exception'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Custom-region occupancy is now gated in both directions; Blockquote''s five hand-authored accent regions retired into contract sidecars, leaving Popover as the one ledgered source finding pending motion IR wiring.'
 created_at: '2026-09-01T19:02:45.728Z'
-updated_at: '2026-09-01T19:19:28.853Z'
+updated_at: '2026-09-01T19:26:49.748Z'
 blast_radius:
   modules:
     - 'scripts/custom-region-audit'
