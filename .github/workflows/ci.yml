@@ -265,6 +265,43 @@ jobs:
       - name: Token-resolvability ledger (references that never resolve)
         run: pnpm run audit:token-resolvability
 
+  coverage-gate:
+    name: Coverage thresholds
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: gate
+    # Runs the ten scoped coverage suites (pnpm run test:coverage); every
+    # runner enforces the floors declared once in coverage-floors.json
+    # (vitest coverage.thresholds / jest coverageThreshold), so any floor
+    # regression fails the job. Separate from `gate` so the slow
+    # instrumented suites parallelize with the rail jobs instead of
+    # lengthening the main critical path. Note this job is also the first
+    # CI execution of the svelte/lit/angular/react-native suites — the gate
+    # job runs only the root (React-focused) suite and test:vue.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build design tokens
+        run: pnpm -F @full-stack-ds/tokens build
+
+      - name: Coverage gate (all ten suites)
+        run: pnpm run test:coverage
+
   runtime-rail:
     name: Runtime visual proof rail
     runs-on: ubuntu-latest

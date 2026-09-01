@@ -27,12 +27,21 @@
  *   list — <!-- web-framework-list -->React, Vue, Svelte, Angular, Lit
  *          (bare comma list, no terminal "and" — the canonical form)
  *   date — <!-- snapshot-updated -->2026-08-17
+ *   word — <!-- coverage-vs-target:vue -->below          (above|below)
  *
  * Parametric claims carry their argument after a colon:
  *   <!-- target-component-count:swiftui -->49
  *   (the `components` allowlist length for that target in
  *   fsds.targets.json; a target with no allowlist derives the full
  *   loader-discovered corpus count instead.)
+ *
+ *   <!-- coverage-floor-lines:react -->79
+ *   <!-- coverage-floor-branches:react -->77
+ *   <!-- coverage-floor-functions:react -->70
+ *   <!-- coverage-vs-target:react -->below
+ *   (per-package coverage floors and 80%-target status, derived from
+ *   coverage-floors.json — the same authority every runner config
+ *   enforces as its coverage thresholds.)
  *
  * Usage:
  *   node scripts/docs-claims-check.mjs            # check, exit 1 on drift
@@ -53,6 +62,7 @@ const RAIL_FRAMEWORKS_DIR = join(
 const TARGET_REGISTRY = join(REPO_ROOT, "fsds.targets.json");
 const ICONS_DIR = join(REPO_ROOT, "packages", "ds-iconography", "icons");
 const SNAPSHOT_DOC = join(REPO_ROOT, "docs", "current-implementation-snapshot.md");
+const COVERAGE_FLOORS_FILE = join(REPO_ROOT, "coverage-floors.json");
 
 const FIX = process.argv.includes("--fix");
 
@@ -68,12 +78,48 @@ const CLAIMS = {
 };
 
 const TARGET_COMPONENT_COUNT_PREFIX = "target-component-count:";
+const COVERAGE_FLOOR_LINES_PREFIX = "coverage-floor-lines:";
+const COVERAGE_FLOOR_BRANCHES_PREFIX = "coverage-floor-branches:";
+const COVERAGE_FLOOR_FUNCTIONS_PREFIX = "coverage-floor-functions:";
+const COVERAGE_VS_TARGET_PREFIX = "coverage-vs-target:";
+
+/**
+ * Coverage floors — the single authority consumed by every runner config
+ * (vitest `coverage.thresholds` / jest `coverageThreshold`) and derived
+ * from here for the coverage-* doc markers. Loaded lazily so a claim-less
+ * run never reads the file.
+ */
+let coverageFloorsJson;
+function coverageFloors() {
+  if (!coverageFloorsJson) {
+    try {
+      coverageFloorsJson = JSON.parse(readFileSync(COVERAGE_FLOORS_FILE, "utf8"));
+    } catch (err) {
+      console.error(
+        `docs-claims-check: cannot read coverage floors at ${COVERAGE_FLOORS_FILE} — ${err.message}`,
+      );
+      process.exit(2);
+    }
+  }
+  return coverageFloorsJson;
+}
+
+/** Per-package floor record, or loud exit for a marker naming an unknown id. */
+function coverageFloorsFor(id) {
+  const pkg = coverageFloors().packages?.[id];
+  if (!pkg) {
+    console.error(`docs-claims-check: unknown coverage package id "${id}" in coverage-floors.json`);
+    process.exit(2);
+  }
+  return pkg;
+}
 
 /**
  * Resolve a marker name to its derivation. Static CLAIMS rows first; the
- * one parametric family (target-component-count:<id>) derives from the
- * target registry for any well-formed id. Anything else is a typo'd claim
- * that would otherwise sit here silently unchecked — loud exit.
+ * parametric families (target-component-count:<id> and the four
+ * coverage-*:<id> claims) derive from their registries for any well-formed
+ * id. Anything else is a typo'd claim that would otherwise sit here
+ * silently unchecked — loud exit.
  */
 function resolveClaim(name) {
   if (Object.prototype.hasOwnProperty.call(CLAIMS, name)) return CLAIMS[name];
@@ -81,6 +127,30 @@ function resolveClaim(name) {
     const id = name.slice(TARGET_COMPONENT_COUNT_PREFIX.length);
     if (/^[a-z][a-z0-9-]*$/.test(id)) {
       return { derive: () => deriveTargetComponentCount(id) };
+    }
+  }
+  const parametric = [
+    [COVERAGE_FLOOR_LINES_PREFIX, (id) => ({ derive: () => coverageFloorsFor(id).lines })],
+    [COVERAGE_FLOOR_BRANCHES_PREFIX, (id) => ({ derive: () => coverageFloorsFor(id).branches })],
+    [
+      COVERAGE_FLOOR_FUNCTIONS_PREFIX,
+      (id) => ({ derive: () => coverageFloorsFor(id).functions }),
+    ],
+    [
+      COVERAGE_VS_TARGET_PREFIX,
+      (id) => ({
+        derive: () =>
+          coverageFloorsFor(id).lines >= (coverageFloors().target?.lines ?? 80)
+            ? "above"
+            : "below",
+        format: "word",
+      }),
+    ],
+  ];
+  for (const [prefix, make] of parametric) {
+    if (name.startsWith(prefix)) {
+      const id = name.slice(prefix.length);
+      if (/^[a-z][a-z0-9-]*$/.test(id)) return make(id);
     }
   }
   console.error(`docs-claims-check: unknown claim marker "${name}"`);
@@ -296,6 +366,9 @@ const VALUE_FORMATS = {
   int: /^(\s*)(\d+)/,
   list: /^([ \t]*)((?:[A-Z][A-Za-z0-9-]*)(?:,[ \t]*[A-Z][A-Za-z0-9-]*)*)/,
   date: /^([ \t]*)(\d{4}-\d{2}-\d{2})/,
+  // Only the two tokens the coverage-vs-target claim ever emits — a bare
+  // `[a-z-]+` would silently swallow prose words after a vocabulary marker.
+  word: /^([ \t]*)(above|below)/,
 };
 
 let drift = 0;

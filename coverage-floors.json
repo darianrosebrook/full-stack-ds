@@ -1,0 +1,18 @@
+{
+  "$comment": "Single authority for per-package coverage floors. Each runner config (vitest coverage.thresholds / jest coverageThreshold) enforces these, and scripts/docs-claims-check.mjs derives the coverage-floor-* and coverage-vs-target doc markers from this file. Floors ratchet from measured values (measured via `pnpm run test:coverage`); the 80%-lines target is declared in `target`, not enforced here.",
+  "target": {
+    "lines": 80
+  },
+  "packages": {
+    "react": { "statements": 78, "branches": 74, "functions": 70, "lines": 78 },
+    "codegen": { "statements": 56, "branches": 70, "functions": 75, "lines": 56 },
+    "vue": { "statements": 69, "branches": 73, "functions": 80, "lines": 69 },
+    "svelte": { "statements": 72, "branches": 73, "functions": 67, "lines": 72 },
+    "lit": { "statements": 83, "branches": 76, "functions": 80, "lines": 83 },
+    "angular": { "statements": 87, "branches": 72, "functions": 71, "lines": 87 },
+    "react-native": { "statements": 33, "branches": 73, "functions": 90, "lines": 33 },
+    "figma-plugin": { "statements": 68, "branches": 79, "functions": 87, "lines": 68 },
+    "tokens": { "statements": 3, "branches": 54, "functions": 29, "lines": 3 },
+    "showcase": { "statements": 30, "branches": 68, "functions": 54, "lines": 30 }
+  }
+}
