@@ -59,3 +59,8 @@ contracts:
   - name: 'coverage-thresholds'
     type: schema
     path: 'vitest.config.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage (full ten-suite chain, exit 0): react 63 files/692 tests 79.91% lines, codegen 75/1203 58.35%, figma 5/59 70.68%, tokens 3/30 5.5%, showcase 30/201 32.27%, vue 58/598 71.31%, svelte 55/557 74.43%, lit 55/516 85.91%, angular 57/479 89.99%, react-native 53/74 35.83% — every runner printed a v8 coverage table with no provider errors; codegen re-verified at main e403b0d7 exit 0"
+    recorded_at: "2026-09-01T00:32:22.603Z"
