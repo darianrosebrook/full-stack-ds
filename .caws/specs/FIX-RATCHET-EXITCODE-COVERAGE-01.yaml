@@ -31,3 +31,10 @@ acceptance:
     then: 'given a passing run; when pnpm run audit:custom-regions runs; then its combined output contains no FAIL line, and the ratchet''s own reporting is still exercised rather than suppressed by deleting the assertions'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "scripts/lib/ledger-ratchet.test.mjs grew from 8 to 12 checks; the four new ones assert reportRatchet returns 1 for unledgered (naming the finding id), 1 for stale (naming the id and its owning spec), 0 for a fully-ledgered set, and 1 when both directions fire at once so they cannot cancel into a pass. The three that previously lived only in scripts/custom-region-audit/selfcheck.mjs are removed from there. Probe run: 12/12 ok, exit 0. All five ledger audits exercise this probe first and stay green: dead-slot 98/0/0, pseudo-state 17/0/0, state-suppression 0/0/0, token-resolvability 0/0/0, custom-region 79/79/0/0."
+    recorded_at: "2026-09-01T19:50:35.322Z"
+    command: node scripts/lib/ledger-ratchet.test.mjs
+    exit_code: 0
