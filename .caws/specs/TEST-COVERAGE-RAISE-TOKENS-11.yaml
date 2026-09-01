@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "POLO probe in worktree tokens-burn after severance: static grep 0 importers for all three files; pnpm run lint 0 errors; pnpm run typecheck exit 0; pnpm run tokens:build green; pnpm run test:coverage:tokens 291/291 pass; pnpm run governed:rail exit 0 — no check named any dependent"
     recorded_at: "2026-09-01T04:42:26.556Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run test:coverage:tokens (worktree tokens-burn, post-burn): 291/291 tests pass, All files 67.54 lines / 81.46 branches / 94.77 functions — above the previous 58.39/81.30/93.79 and above the ratcheted floors 65/79/92/65"
+    recorded_at: "2026-09-01T04:42:27.043Z"
