@@ -33,3 +33,8 @@ acceptance:
     then: 'given the helper exports; when the brand-refs runner executes; then its behavior is unchanged because the edit only widens the module surface'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:tokens (worktree tokens-brandrefs): 20/20 files, 263/263 tests pass, All files 47.25 lines / 80.65 branches / 92.22 functions — above the previous 44.63/80.15/92.01 and above the ratcheted floors 45/78/90/45"
+    recorded_at: "2026-09-01T04:28:24.665Z"
