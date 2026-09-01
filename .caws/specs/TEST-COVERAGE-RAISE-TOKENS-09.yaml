@@ -3,7 +3,6 @@ title: 'Unit tests for schema generation and token inspection mjs cores'
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: tokens-schema
 created_at: '2026-09-01T04:29:58.724Z'
 updated_at: '2026-09-01T04:29:59.786Z'
 blast_radius:
