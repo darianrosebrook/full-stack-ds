@@ -2,9 +2,10 @@ id: TEST-COVERAGE-RAISE-TOKENS-04
 title: 'Unit tests for the DTCG w3c-validator core'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: tokens-w3c
 created_at: '2026-09-01T04:01:32.693Z'
-updated_at: '2026-09-01T04:01:32.693Z'
+updated_at: '2026-09-01T04:01:33.795Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
