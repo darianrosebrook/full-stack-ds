@@ -2,10 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-05
 title: 'Unit tests for tokens core helpers: core/index, logger, pathUtils, palette ramps'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
-worktree: tokens-core2
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Reopened only to repair a registry loss during hook migration; no new work — original merge 176b8488 stands.'
 created_at: '2026-09-01T04:06:31.100Z'
-updated_at: '2026-09-01T04:12:02.318Z'
+updated_at: '2026-09-01T04:15:45.305Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
