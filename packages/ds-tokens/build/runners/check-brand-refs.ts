@@ -387,7 +387,9 @@ async function main(): Promise<void> {
   process.exit(totalUnresolved === 0 ? 0 : 1);
 }
 
-main().catch((err) => {
-  console.error("[brand-refs] runner crashed:", err);
-  process.exit(2);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error("[brand-refs] runner crashed:", err);
+    process.exit(2);
+  });
+}
