@@ -43,3 +43,7 @@ evidence:
     status: pass
     evidence_ref: "coverage-floors.json vue ratchet 69/73/80/69 -> 87/76/80/87; measured 89.13 leaves 2.13 margin above the 87 floor which certifies the 80 target; node scripts/docs-claims-check.mjs -> 46/46 markers match (vue floor marker 87, vs-target above)"
     recorded_at: "2026-09-01T01:05:49.066Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0 overall pass after the @custom blocks were populated: regeneration preserved all hand-written imports/tests byte-for-byte, git status clean (zero generated drift), and the four new hand-written hook/compose test files survived the rail"
+    recorded_at: "2026-09-01T01:05:49.517Z"
