@@ -3,7 +3,6 @@ title: 'Gate the no-hand-edits-to-generated-output constraint and retire the Blo
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: custom-region-gate
 created_at: '2026-09-01T19:02:45.728Z'
 updated_at: '2026-09-01T19:19:28.853Z'
 blast_radius:
