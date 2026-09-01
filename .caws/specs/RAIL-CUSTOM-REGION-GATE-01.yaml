@@ -66,3 +66,9 @@ evidence:
     recorded_at: "2026-09-01T19:25:50.308Z"
     command: "pnpm run audit:custom-regions"
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Live injection on the real tree, not a fixture: adding '.blockquote { outline: 1px dashed hotpink; }' to the now-empty overrides region of packages/ds-react/src/components/Blockquote/Blockquote.css moved the verdict to 'occupied: 2 in component source', findings=80 (ledgered=79) unledgered=1, exit 1, naming exactly 'packages/ds-react/src/components/Blockquote/Blockquote.css::overrides' and no other file. Restoring via 'pnpm run generate -- --target=react --force Blockquote' returned findings=79 unledgered=0 stale=0 exit 0. selfcheck.mjs: 17/17 checks pass, including two that pin the false-positive shape (a prose mention and a string literal must open NO region) that the first, looser oracle failed on, plus both ratchet directions (unledgered fails; stale fails)."
+    recorded_at: "2026-09-01T19:25:59.683Z"
+    command: node scripts/custom-region-audit/selfcheck.mjs
+    exit_code: 0
