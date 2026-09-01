@@ -29,3 +29,8 @@ acceptance:
     then: 'given the measured coverage; when coverage-floors.json is updated; then the codegen lines floor reaches 80 with at least 2 points of margin and docs:check-claims derives the markers without drift'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run test:coverage:codegen exit 0: 92/92 test files, measured 70.95% lines (from 68.55) / 71.7% branches / 84.03% functions — the criterion required 82 and is carried to the next tranche"
+    recorded_at: "2026-09-01T03:12:58.625Z"
