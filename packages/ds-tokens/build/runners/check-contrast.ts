@@ -25,7 +25,7 @@ interface Failure {
   level: string;
 }
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   if (!fs.existsSync(PATHS.outputResolved)) {
     console.error(
       `[contrast] ❌ resolved.tokens.json not found at ${PATHS.outputResolved}`,
@@ -86,7 +86,9 @@ async function main(): Promise<void> {
   process.exit(1);
 }
 
-main().catch((err) => {
-  console.error("[contrast] Fatal:", err);
-  process.exit(2);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error("[contrast] Fatal:", err);
+    process.exit(2);
+  });
+}
