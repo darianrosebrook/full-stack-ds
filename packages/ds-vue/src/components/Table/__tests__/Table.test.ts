@@ -65,8 +65,6 @@ import TableFooter from "../TableFooter.vue";
 import TableHead from "../TableHead.vue";
 import TableHeaderCell from "../TableHeaderCell.vue";
 import TableRow from "../TableRow.vue";
-import TableCell from "../TableCell.vue";
-import TableHeaderCell from "../TableHeaderCell.vue";
 
 // SHOWCASE-CONSUMPTION-03 A1 — the Vue cell/header SFCs own their <td>/<th>,
 // so they must forward the HTML attributes a real data table needs.

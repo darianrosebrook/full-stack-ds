@@ -72,9 +72,6 @@ import AccordionContent from "../AccordionContent.vue";
 import AccordionItem from "../AccordionItem.vue";
 import AccordionTrigger from "../AccordionTrigger.vue";
 import { defineComponent, h } from "vue";
-import AccordionItem from "../AccordionItem.vue";
-import AccordionTrigger from "../AccordionTrigger.vue";
-import AccordionContent from "../AccordionContent.vue";
 
 // FIX-COMPOUND-CONTAINER-ANCESTOR-PREDICATE-01 (A2, Vue): trigger click toggles
 // its own item through the openness channel; aria-expanded + region wire from

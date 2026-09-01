@@ -204,8 +204,6 @@ describe("Popover — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
-import PopoverContent from "../PopoverContent.vue";
-import PopoverTrigger from "../PopoverTrigger.vue";
 // F-3B-1-B atom C-equivalent: deep behavioral coverage that proves
 // the substrate generalization from F-3A atom A + F-3B-1-A
 // (boundary-focusout in Vue substrate) works end-to-end for

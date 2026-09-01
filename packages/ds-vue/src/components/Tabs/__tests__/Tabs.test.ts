@@ -92,9 +92,6 @@ import TabsList from "../TabsList.vue";
 import TabsPanel from "../TabsPanel.vue";
 import TabsTab from "../TabsTab.vue";
 import { h, ref } from "vue";
-import TabsList from "../TabsList.vue";
-import TabsTab from "../TabsTab.vue";
-import TabsPanel from "../TabsPanel.vue";
 
 /**
  * Mount a standard two-tab fixture using the render function (h()) API.
