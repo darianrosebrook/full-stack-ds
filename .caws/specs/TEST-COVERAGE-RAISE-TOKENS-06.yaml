@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-TOKENS-06
 title: 'Unit tests for the tokens pipeline: cache, compose, build runner'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Pipeline suites took tokens from 33.40 to 42.35 lines; floor ratchets to 40.'
 created_at: '2026-09-01T04:15:36.926Z'
-updated_at: '2026-09-01T04:15:37.442Z'
+updated_at: '2026-09-01T04:18:19.807Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
