@@ -3,7 +3,6 @@ title: 'Raise showcase coverage via view render-smoke suites'
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: showcase-coverage
 created_at: '2026-09-01T02:41:43.358Z'
 updated_at: '2026-09-01T02:43:11.117Z'
 blast_radius:
