@@ -93,5 +93,19 @@ describe("Details — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import DetailsContent from "../DetailsContent.svelte";
+
+describe("Details — compound parts", () => {
+  it("mounts DetailsContent with tag and base class", () => {
+    const { container } = render(DetailsContent as Component, {
+      props: { "data-testid": "details-detailscontent" },
+    });
+    const root = container.querySelector('[data-testid="details-detailscontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("details__content");
+  });
+});
+
 
 // @custom:end

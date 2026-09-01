@@ -58,5 +58,19 @@ describe("TextField — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TextFieldDescription from "../TextFieldDescription.svelte";
+
+describe("TextField — compound parts", () => {
+  it("mounts TextFieldDescription with tag and base class", () => {
+    const { container } = render(TextFieldDescription as Component, {
+      props: { "data-testid": "textfield-textfielddescription" },
+    });
+    const root = container.querySelector('[data-testid="textfield-textfielddescription"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("p");
+    expect(root!.className.split(/\s+/)).toContain("text-field__description");
+  });
+});
+
 
 // @custom:end

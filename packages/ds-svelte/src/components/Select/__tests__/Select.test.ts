@@ -95,5 +95,41 @@ describe("Select — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import SelectContent from "../SelectContent.svelte";
+import SelectOption from "../SelectOption.svelte";
+import SelectTrigger from "../SelectTrigger.svelte";
+
+describe("Select — compound parts", () => {
+  it("mounts SelectContent with tag and base class", () => {
+    const { container } = render(SelectContent as Component, {
+      props: { "data-testid": "select-selectcontent" },
+    });
+    const root = container.querySelector('[data-testid="select-selectcontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("select__content");
+  });
+
+  it("mounts SelectOption with tag and base class", () => {
+    const { container } = render(SelectOption as Component, {
+      props: { "data-testid": "select-selectoption" },
+    });
+    const root = container.querySelector('[data-testid="select-selectoption"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("li");
+    expect(root!.className.split(/\s+/)).toContain("select__option");
+  });
+
+  it("mounts SelectTrigger with tag and base class", () => {
+    const { container } = render(SelectTrigger as Component, {
+      props: { "data-testid": "select-selecttrigger" },
+    });
+    const root = container.querySelector('[data-testid="select-selecttrigger"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("button");
+    expect(root!.className.split(/\s+/)).toContain("select__trigger");
+  });
+});
+
 
 // @custom:end

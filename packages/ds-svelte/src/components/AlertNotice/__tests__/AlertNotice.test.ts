@@ -98,5 +98,30 @@ describe("AlertNotice — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import AlertNoticeBody from "../AlertNoticeBody.svelte";
+import AlertNoticeTitle from "../AlertNoticeTitle.svelte";
+
+describe("AlertNotice — compound parts", () => {
+  it("mounts AlertNoticeBody with tag and base class", () => {
+    const { container } = render(AlertNoticeBody as Component, {
+      props: { "data-testid": "alertnotice-alertnoticebody" },
+    });
+    const root = container.querySelector('[data-testid="alertnotice-alertnoticebody"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("alert-notice__body");
+  });
+
+  it("mounts AlertNoticeTitle with tag and base class", () => {
+    const { container } = render(AlertNoticeTitle as Component, {
+      props: { "data-testid": "alertnotice-alertnoticetitle" },
+    });
+    const root = container.querySelector('[data-testid="alertnotice-alertnoticetitle"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("h3");
+    expect(root!.className.split(/\s+/)).toContain("alert-notice__title");
+  });
+});
+
 
 // @custom:end

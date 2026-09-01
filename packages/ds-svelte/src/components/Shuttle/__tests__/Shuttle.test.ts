@@ -58,5 +58,19 @@ describe("Shuttle — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import ShuttleItem from "../ShuttleItem.svelte";
+
+describe("Shuttle — compound parts", () => {
+  it("mounts ShuttleItem with tag and base class", () => {
+    const { container } = render(ShuttleItem as Component, {
+      props: { "data-testid": "shuttle-shuttleitem" },
+    });
+    const root = container.querySelector('[data-testid="shuttle-shuttleitem"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("li");
+    expect(root!.className.split(/\s+/)).toContain("shuttle__item");
+  });
+});
+
 
 // @custom:end

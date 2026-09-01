@@ -85,5 +85,41 @@ describe("Command — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import CommandGroup from "../CommandGroup.svelte";
+import CommandItem from "../CommandItem.svelte";
+import CommandList from "../CommandList.svelte";
+
+describe("Command — compound parts", () => {
+  it("mounts CommandGroup with tag and base class", () => {
+    const { container } = render(CommandGroup as Component, {
+      props: { "data-testid": "command-commandgroup" },
+    });
+    const root = container.querySelector('[data-testid="command-commandgroup"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("command__group");
+  });
+
+  it("mounts CommandItem with tag and base class", () => {
+    const { container } = render(CommandItem as Component, {
+      props: { "data-testid": "command-commanditem" },
+    });
+    const root = container.querySelector('[data-testid="command-commanditem"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("li");
+    expect(root!.className.split(/\s+/)).toContain("command__item");
+  });
+
+  it("mounts CommandList with tag and base class", () => {
+    const { container } = render(CommandList as Component, {
+      props: { "data-testid": "command-commandlist" },
+    });
+    const root = container.querySelector('[data-testid="command-commandlist"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("ul");
+    expect(root!.className.split(/\s+/)).toContain("command__list");
+  });
+});
+
 
 // @custom:end

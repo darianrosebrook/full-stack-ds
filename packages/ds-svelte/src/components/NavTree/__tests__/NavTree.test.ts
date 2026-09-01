@@ -75,5 +75,30 @@ describe("NavTree — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import NavTreeItem from "../NavTreeItem.svelte";
+import NavTreeList from "../NavTreeList.svelte";
+
+describe("NavTree — compound parts", () => {
+  it("mounts NavTreeItem with tag and base class", () => {
+    const { container } = render(NavTreeItem as Component, {
+      props: { "data-testid": "navtree-navtreeitem" },
+    });
+    const root = container.querySelector('[data-testid="navtree-navtreeitem"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("li");
+    expect(root!.className.split(/\s+/)).toContain("nav-tree__item");
+  });
+
+  it("mounts NavTreeList with tag and base class", () => {
+    const { container } = render(NavTreeList as Component, {
+      props: { "data-testid": "navtree-navtreelist" },
+    });
+    const root = container.querySelector('[data-testid="navtree-navtreelist"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("ul");
+    expect(root!.className.split(/\s+/)).toContain("nav-tree__list");
+  });
+});
+
 
 // @custom:end

@@ -125,5 +125,41 @@ describe("Toast — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import ToastDescription from "../ToastDescription.svelte";
+import ToastItem from "../ToastItem.svelte";
+import ToastTitle from "../ToastTitle.svelte";
+
+describe("Toast — compound parts", () => {
+  it("mounts ToastDescription with tag and base class", () => {
+    const { container } = render(ToastDescription as Component, {
+      props: { "data-testid": "toast-toastdescription" },
+    });
+    const root = container.querySelector('[data-testid="toast-toastdescription"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("p");
+    expect(root!.className.split(/\s+/)).toContain("toast__description");
+  });
+
+  it("mounts ToastItem with tag and base class", () => {
+    const { container } = render(ToastItem as Component, {
+      props: { "data-testid": "toast-toastitem" },
+    });
+    const root = container.querySelector('[data-testid="toast-toastitem"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("li");
+    expect(root!.className.split(/\s+/)).toContain("toast__item");
+  });
+
+  it("mounts ToastTitle with tag and base class", () => {
+    const { container } = render(ToastTitle as Component, {
+      props: { "data-testid": "toast-toasttitle" },
+    });
+    const root = container.querySelector('[data-testid="toast-toasttitle"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("h3");
+    expect(root!.className.split(/\s+/)).toContain("toast__title");
+  });
+});
+
 
 // @custom:end

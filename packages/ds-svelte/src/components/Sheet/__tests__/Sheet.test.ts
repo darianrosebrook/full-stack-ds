@@ -113,5 +113,74 @@ describe("Sheet — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import SheetBody from "../SheetBody.svelte";
+import SheetContent from "../SheetContent.svelte";
+import SheetDescription from "../SheetDescription.svelte";
+import SheetFooter from "../SheetFooter.svelte";
+import SheetHeader from "../SheetHeader.svelte";
+import SheetTitle from "../SheetTitle.svelte";
+
+describe("Sheet — compound parts", () => {
+  it("mounts SheetBody with tag and base class", () => {
+    const { container } = render(SheetBody as Component, {
+      props: { "data-testid": "sheet-sheetbody" },
+    });
+    const root = container.querySelector('[data-testid="sheet-sheetbody"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("sheet__body");
+  });
+
+  it("mounts SheetContent with tag and base class", () => {
+    const { container } = render(SheetContent as Component, {
+      props: { "data-testid": "sheet-sheetcontent" },
+    });
+    const root = container.querySelector('[data-testid="sheet-sheetcontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("sheet__content");
+  });
+
+  it("mounts SheetDescription with tag and base class", () => {
+    const { container } = render(SheetDescription as Component, {
+      props: { "data-testid": "sheet-sheetdescription" },
+    });
+    const root = container.querySelector('[data-testid="sheet-sheetdescription"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("p");
+    expect(root!.className.split(/\s+/)).toContain("sheet__description");
+  });
+
+  it("mounts SheetFooter with tag and base class", () => {
+    const { container } = render(SheetFooter as Component, {
+      props: { "data-testid": "sheet-sheetfooter" },
+    });
+    const root = container.querySelector('[data-testid="sheet-sheetfooter"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.className.split(/\s+/)).toContain("sheet__footer");
+  });
+
+  it("mounts SheetHeader with tag and base class", () => {
+    const { container } = render(SheetHeader as Component, {
+      props: { "data-testid": "sheet-sheetheader" },
+    });
+    const root = container.querySelector('[data-testid="sheet-sheetheader"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.className.split(/\s+/)).toContain("sheet__header");
+  });
+
+  it("mounts SheetTitle with tag and base class", () => {
+    const { container } = render(SheetTitle as Component, {
+      props: { "data-testid": "sheet-sheettitle" },
+    });
+    const root = container.querySelector('[data-testid="sheet-sheettitle"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("h3");
+    expect(root!.className.split(/\s+/)).toContain("sheet__title");
+  });
+});
+
 
 // @custom:end

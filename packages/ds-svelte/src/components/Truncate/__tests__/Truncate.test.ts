@@ -58,5 +58,19 @@ describe("Truncate — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TruncateContent from "../TruncateContent.svelte";
+
+describe("Truncate — compound parts", () => {
+  it("mounts TruncateContent with tag and base class", () => {
+    const { container } = render(TruncateContent as Component, {
+      props: { "data-testid": "truncate-truncatecontent" },
+    });
+    const root = container.querySelector('[data-testid="truncate-truncatecontent"]');
+    expect(root).toBeTruthy();
+    expect(root!.tagName.toLowerCase()).toBe("div");
+    expect(root!.className.split(/\s+/)).toContain("truncate__content");
+  });
+});
+
 
 // @custom:end
