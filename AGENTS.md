@@ -161,16 +161,16 @@ Non-trivial work is governed by a CAWS spec so its provenance is recorded. The f
 
 **Do not** hand-edit `.caws/specs/*` lifecycle fields, `.caws/events.jsonl`, or `.caws/worktrees.json` — use the CLI. **Do not** `caws specs close` *before* merging and then also run `caws worktree merge` — the double-close is mutually exclusive and fails; the one path is the flow above (`--no-close` merge → evidence → manual close). Never weaken a guard to get past it.
 
-### CAWS runtime hooks govern every session (`.Codex/hooks/`)
+### CAWS runtime hooks govern every session (`.codex/hooks/`)
 
-Separate from the git pre-push hook above, this repo installs the **CAWS Codex hook pack** under `.Codex/hooks/`. These fire on `PreToolUse` / `PostToolUse` / `SessionStart` / `Stop` / `PreCompact` (wired in `.Codex/hooks.json` → `codex/hooks/caws_dispatch/`) and actively gate your work — some **block** tool calls. The ones most likely to stop you:
+Separate from the git pre-push hook above, this repo installs the **CAWS Codex hook pack** under `.codex/hooks/`. These fire on `PreToolUse` / `PostToolUse` / `SessionStart` / `Stop` / `PreCompact` (wired in `.codex/hooks.json` → `codex/hooks/caws_dispatch/`) and actively gate your work — some **block** tool calls. The ones most likely to stop you:
 
 - **block-dangerous.sh** (`Bash`) — denies catastrophic commands and arms a sticky per-session **danger latch** on `ask:confirm`; once latched, all mutating commands block until the user runs `reset-danger-latch.sh`.
 - **scope-guard.sh** (`Write`/`Edit`) — out-of-scope edits escalate by **strike** (advise → ask → block); fix with `caws specs amend-scope`, clear stale strikes with `reset-strikes.sh`.
 - **worktree-guard.sh** / **worktree-write-guard.sh** / **bash-write-guard.sh** — block history-rewriting git and cross-worktree / claimed-path writes via the shared claim oracle.
-- **protected-paths.sh** — hard-blocks `Write`/`Edit` under `.Codex/hooks/*` and to strike-state files.
+- **protected-paths.sh** — hard-blocks `Write`/`Edit` under `.codex/hooks/*` and to strike-state files.
 
-**Full reference (every active hook, the dormant ones, escape hatches, state-file locations): [`.Codex/hooks/README.md`](.Codex/hooks/README.md).** Hook scripts are CAWS-managed (`do_not_edit_directly`) — change them via `caws init`, never by editing in place, and never weaken a guard to get past it.
+**Full reference (every active hook, the dormant ones, escape hatches, state-file locations): [`.codex/hooks/README.md`](.codex/hooks/README.md).** Hook scripts are CAWS-managed (`do_not_edit_directly`) — change them via `caws init`, never by editing in place, and never weaken a guard to get past it.
 
 ## Architecture
 
