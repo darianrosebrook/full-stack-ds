@@ -68,6 +68,10 @@ describe("buildAngularShell", () => {
       "rxjs",
       "rxjs/operators",
       "tslib",
+      // Workspace bare specifier preserved verbatim by the Angular compiler
+      // (NavTree/Icon import resolveIcon) — the iframe resolves it only via
+      // the importmap + vendor proxy.
+      "@full-stack-ds/iconography",
     ]) {
       expect(html).toContain(`"${spec}":`);
     }

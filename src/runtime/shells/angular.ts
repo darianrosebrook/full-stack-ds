@@ -25,6 +25,11 @@ const NG_PLATFORM_BROWSER = `${ANGULAR_VENDOR_URL}/@angular/platform-browser/fes
 const RXJS = `${ANGULAR_VENDOR_URL}/rxjs/dist/esm/index.js`;
 const RXJS_OPERATORS = `${ANGULAR_VENDOR_URL}/rxjs/dist/esm/operators/index.js`;
 const TSLIB = `${ANGULAR_VENDOR_URL}/tslib/tslib.es6.mjs`;
+// Compiled components can carry workspace bare specifiers the Angular
+// compiler preserves verbatim (today: NavTree/Icon import resolveIcon).
+// The iframe has no bundler, so the importmap must map them through the
+// same vendor proxy — index.mjs is self-contained generated ESM.
+const FSDS_ICONOGRAPHY = `${ANGULAR_VENDOR_URL}/@full-stack-ds/iconography/index.mjs`;
 
 /**
  * Builds the in-iframe Angular bootstrap HTML.
@@ -68,7 +73,8 @@ ${css ? `<style data-fsds="component-css">${css.replace(/<\/style>/g, "<\\/style
     "@angular/platform-browser": "${NG_PLATFORM_BROWSER}",
     "rxjs": "${RXJS}",
     "rxjs/operators": "${RXJS_OPERATORS}",
-    "tslib": "${TSLIB}"
+    "tslib": "${TSLIB}",
+    "@full-stack-ds/iconography": "${FSDS_ICONOGRAPHY}"
   }
 }
 </script>
