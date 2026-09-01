@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: custom-region-gate
 created_at: '2026-09-01T19:02:45.728Z'
-updated_at: '2026-09-01T19:03:02.565Z'
+updated_at: '2026-09-01T19:15:02.723Z'
 blast_radius:
   modules:
     - 'scripts/custom-region-audit'
@@ -27,6 +27,8 @@ scope:
     - '.githooks/pre-push'
     - '.github/workflows/ci.yml'
   out: []
+  support:
+    - package.json
 invariants:
   - 'No @custom region in a generated framework artifact carries an authored body unless that file is on the audit''s dated allowlist; the allowlist only ever shrinks.'
   - 'The Blockquote bordered accent is authored once in contract sidecars and lowered by codegen, not hand-replicated per target.'
