@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: custom-region-gate
 created_at: '2026-09-01T19:02:45.728Z'
-updated_at: '2026-09-01T19:15:02.723Z'
+updated_at: '2026-09-01T19:16:45.173Z'
 blast_radius:
   modules:
     - 'scripts/custom-region-audit'
@@ -26,6 +26,7 @@ scope:
     - 'scripts/prepush-scope.mjs'
     - '.githooks/pre-push'
     - '.github/workflows/ci.yml'
+    - scripts/prepush-scope.test.mjs
   out: []
   support:
     - package.json
