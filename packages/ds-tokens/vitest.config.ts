@@ -2,25 +2,25 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
-import vue from "@vitejs/plugin-vue";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const floors = JSON.parse(
   readFileSync(path.resolve(__dirname, "../../coverage-floors.json"), "utf8"),
-).packages.vue;
+).packages.tokens;
 
+// Scoped runner for ds-tokens. The package's executable surface is the
+// build/ pipeline (token graph composition, resolution, validators); the
+// src/ tree is DTCG JSON data, not code, so coverage scopes to build/**.
 export default defineConfig({
-  plugins: [vue()],
   test: {
-    environment: "jsdom",
-    globals: false,
-    setupFiles: ["./src/test-setup.ts"],
-    include: ["src/**/__tests__/**/*.test.ts"],
+    environment: "node",
+    include: ["build/**/*.{test,spec}.{ts,tsx}"],
+    exclude: ["**/node_modules/**", "**/dist/**"],
     coverage: {
       provider: "v8",
-      include: ["src/**"],
+      include: ["build/**/*.{ts,mjs}"],
       reporter: ["text", "json-summary"],
-      reportsDirectory: "tmp/coverage-vue",
+      reportsDirectory: "tmp/coverage-tokens",
       thresholds: {
         statements: floors.statements,
         branches: floors.branches,

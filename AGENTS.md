@@ -60,6 +60,8 @@ pnpm run test:lit
 pnpm run test:react-native
 pnpm run test:frameworks                       # vue → lit → svelte → angular → react-native (sequential)
 pnpm run test:all                              # root + all framework packages
+pnpm run test:coverage                         # All ten scoped coverage suites; thresholds enforced from coverage-floors.json
+pnpm run test:coverage:<pkg>                   # One suite — react/codegen/vue/svelte/lit/angular/react-native/figma-plugin/tokens/showcase
 
 # Single-test invocation
 pnpm exec vitest run path/to/file.test.ts
@@ -126,6 +128,10 @@ markdown file, and `docs:check-claims` derives and enforces it:
 | `<!-- web-framework-list -->` | rail-admitted descriptor ids minus `react-native`, in display order |
 | `<!-- web-framework-count -->` | the length of that derived web-framework list |
 | `<!-- snapshot-updated -->` | the `updated` frontmatter date of `docs/current-implementation-snapshot.md` |
+| `<!-- coverage-floor-lines:<id> -->` | the `lines` floor for `<id>` in `coverage-floors.json` |
+| `<!-- coverage-floor-branches:<id> -->` | the `branches` floor for `<id>` in `coverage-floors.json` |
+| `<!-- coverage-floor-functions:<id> -->` | the `functions` floor for `<id>` in `coverage-floors.json` |
+| `<!-- coverage-vs-target:<id> -->` | `above` when the `<id>` lines floor meets `target.lines` in `coverage-floors.json`, else `below` |
 
 Usage is `<!-- marker -->value`. Count claims govern the integer immediately after the marker;
 `web-framework-list` governs a bare comma list (no terminal "and") and `snapshot-updated` a

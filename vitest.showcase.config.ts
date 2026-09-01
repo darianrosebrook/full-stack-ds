@@ -2,28 +2,37 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const floors = JSON.parse(
-  readFileSync(path.resolve(__dirname, "../../coverage-floors.json"), "utf8"),
-).packages.codegen;
+  readFileSync(path.resolve(__dirname, "coverage-floors.json"), "utf8"),
+).packages.showcase;
 
-// Codegen tests run pure Node logic over contracts/IR/emitters — no DOM,
-// no React. The root vitest.config.ts assumes a jsdom environment + a
-// React-focused setup file resolved relative to the cwd, which breaks
-// when this package's `test` script runs in isolation. This local config
-// keeps the scoped command (`pnpm --filter @full-stack-ds/codegen run
-// test`) green without dragging in jsdom or @testing-library.
+// Scoped runner for the showcase app (src/). Its tests also run under the
+// root vitest config; this config gives the coverage-scoped command its own
+// thresholds (`pnpm exec vitest run -c vitest.showcase.config.ts --coverage`).
 export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@full-stack-ds/react": path.resolve(
+        __dirname,
+        "packages/ds-react/src/index.ts",
+      ),
+    },
+  },
   test: {
-    environment: "node",
+    environment: "jsdom",
+    setupFiles: ["./src/test-setup.ts"],
+    css: true,
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     exclude: ["**/node_modules/**", "**/dist/**"],
     coverage: {
       provider: "v8",
       include: ["src/**"],
       reporter: ["text", "json-summary"],
-      reportsDirectory: "tmp/coverage-codegen",
+      reportsDirectory: "tmp/coverage-showcase",
       thresholds: {
         statements: floors.statements,
         branches: floors.branches,
