@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run test:coverage:codegen exit 0: 76/76 test files, measured 61.65% lines (from 58.35) / 73.4% branches / 77.94% functions"
     recorded_at: "2026-09-01T01:51:00.749Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "coverage-floors.json codegen ratchet 56/70/75/56 -> 59/71/75/59; measured 61.65 leaves 2.65 margin; docs-claims-check 46/46 after the floor marker update"
+    recorded_at: "2026-09-01T01:51:01.136Z"
