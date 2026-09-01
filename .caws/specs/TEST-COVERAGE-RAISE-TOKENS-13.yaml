@@ -38,3 +38,7 @@ evidence:
     status: pass
     evidence_ref: "POLO probe in worktree tokens-burn3 after severance of utils/generator.ts, _oneshot/byte-compare-tokens.ts, generate-palette-ramps.ts, utils/resolver-integration.ts, runners/index.ts: lint 0 errors; typecheck exit 0; tokens:build green; test:coverage:tokens 289/289 exit 0; governed:rail exit 0; tokens:check-brand-refs and tokens:check-contrast both exit 0"
     recorded_at: "2026-09-01T04:52:38.871Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run test:coverage:tokens (worktree tokens-burn3): 289/289 tests pass, exit 0, All files 78.28 lines / 81.75 branches / 94.69 functions — above the previous 73.14/81.65/95.88 and above the ratcheted floors 76/79/92/76"
+    recorded_at: "2026-09-01T04:52:39.344Z"
