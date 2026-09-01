@@ -4,7 +4,7 @@
     "lines": 80
   },
   "packages": {
-    "react": { "statements": 78, "branches": 74, "functions": 70, "lines": 78 },
+    "react": { "statements": 81, "branches": 76, "functions": 70, "lines": 81 },
     "codegen": { "statements": 56, "branches": 70, "functions": 75, "lines": 56 },
     "vue": { "statements": 87, "branches": 76, "functions": 80, "lines": 87 },
     "svelte": { "statements": 87, "branches": 80, "functions": 80, "lines": 87 },
