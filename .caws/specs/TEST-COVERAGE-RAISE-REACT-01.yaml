@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-REACT-01
 title: 'Raise react package line coverage to an 80-certifying floor via tokenizer language-breadth tests'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'React line coverage 79.9 to 83.6 via tokenizer language-breadth suites; floor ratcheted to 81, certifying the 80 target'
 created_at: '2026-09-01T01:19:43.609Z'
-updated_at: '2026-09-01T01:19:44.477Z'
+updated_at: '2026-09-01T01:24:54.038Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
