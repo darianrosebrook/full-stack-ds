@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-RN-02
 title: 'Raise react-native coverage via a second batch of leaf companion suites'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'RN line coverage 47.5 to 63.2 via the second companion batch; floor ratcheted to 61 (next batch closes the gap to 80)'
 created_at: '2026-09-01T02:27:03.345Z'
-updated_at: '2026-09-01T02:27:04.401Z'
+updated_at: '2026-09-01T02:31:30.904Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
