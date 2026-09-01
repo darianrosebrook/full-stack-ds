@@ -1,0 +1,46 @@
+id: TEST-COVERAGE-GATE-01
+title: 'Measure per-package test coverage and wire a coverage threshold gate'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-01T00:00:48.950Z'
+updated_at: '2026-09-01T00:00:48.950Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'package.json'
+    - 'pnpm-lock.yaml'
+    - 'vitest.config.ts'
+    - 'vitest.examples.config.ts'
+    - 'packages/ds-vue/vitest.config.ts'
+    - 'packages/ds-svelte/vitest.config.ts'
+    - 'packages/ds-lit/vitest.config.ts'
+    - 'packages/ds-react-native/vitest.config.ts'
+    - 'packages/ds-angular/jest.config.cjs'
+    - '.github/workflows/ci.yml'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a checkout with deps installed; when the coverage command runs; then every test runner reports coverage for its own sources without provider errors'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given measured per-package coverage; when thresholds are configured; then CI fails if coverage drops below the configured floors'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the measured numbers; when the snapshot claim ledger is updated; then the coverage row states measured aggregates and names the gap to the 80 percent target'
+non_functional: {}
+contracts:
+  - name: 'coverage-thresholds'
+    type: schema
+    path: 'vitest.config.ts'
