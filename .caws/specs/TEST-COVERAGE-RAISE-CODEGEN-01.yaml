@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-CODEGEN-01
 title: 'Raise codegen coverage via in-process CLI main-path suites (guards, validate, dry-run)'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Codegen line coverage 58.4 to 61.7 via in-process CLI main-path suites; floor ratcheted to 59 (still below the 80 target, next slices continue)'
 created_at: '2026-09-01T01:40:25.629Z'
-updated_at: '2026-09-01T01:40:26.657Z'
+updated_at: '2026-09-01T01:51:08.257Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
