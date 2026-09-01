@@ -2,9 +2,11 @@ id: TEST-COVERAGE-RAISE-CODEGEN-03
 title: 'Raise codegen coverage via per-framework surface-emit suites'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Codegen line coverage 62.8 to 68.6 via per-framework surface-emit suites; floor ratcheted to 66 (one more tranche to certify)'
 created_at: '2026-09-01T03:01:36.209Z'
-updated_at: '2026-09-01T03:01:37.353Z'
+updated_at: '2026-09-01T03:06:50.418Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
