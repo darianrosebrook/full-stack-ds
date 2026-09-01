@@ -3,7 +3,6 @@ title: 'Certify codegen at the 80 target via surface-tests and validation CLI su
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: codegen-cert
 created_at: '2026-09-01T03:08:04.311Z'
 updated_at: '2026-09-01T03:08:05.386Z'
 blast_radius:
