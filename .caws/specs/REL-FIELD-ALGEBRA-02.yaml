@@ -147,3 +147,7 @@ evidence:
     status: pass
     evidence_ref: "necessity.test.ts C3: NO_COLLISION (REGION_MAX vs N_TEMP_MEAN under transformation), NOT_MINIMAL (transformation+key), SCHEMA_INVALID (transformation=absolute), plus SAME_OUTCOME, TOO_MANY_COORDINATES, IDENTICAL_STIMULI, unadjudicated side refused, erasure totality."
     recorded_at: "2026-09-02T23:50:04.410Z"
+  - criterion_id: A9
+    status: pass
+    evidence_ref: "removals.json: 22 removed leaves (each with reintroducibleAt 2 or 3), memberMap for merged members, leafMap rollup.op->aggregate.op, factorized field.scale; schemas re-emitted and shrunk (rollup gone, capabilities replace scale); fixtures migrated by tmp/migrate-fixtures.mts from the 5934fd63 corpus (oracle untouched); all 59 re-validate; necessity.test.ts C4: 268 stage-1 coordinates -> 81 ratified / 177 not-yet-admitted (128 stage 2, 49 stage 3) / 10 references, live kernel census == ratified set."
+    recorded_at: "2026-09-02T23:50:04.829Z"
