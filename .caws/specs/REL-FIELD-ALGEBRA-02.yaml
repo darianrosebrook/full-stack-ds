@@ -123,3 +123,7 @@ evidence:
     status: pass
     evidence_ref: "'pnpm run analytical:check-schemas' -> 'emit-schemas --check: OK'; emit-schemas.test.ts (byte equality, draft-07, closed objects, mutated temp dir fails); structure.ts re-exports inferred types only (Observation = ObservationRecord); all 59 fixtures validate (stage1.test.ts A2 ledger clean); relation.contract.schema.json + assertion.schema.json + fixture.schema.json emitted from relation-model.ts."
     recorded_at: "2026-09-02T23:50:01.880Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "stage1.test.ts B3: FX_S_ALONG_IDENTITY yields two PROPORTION_SUM_ACROSS_WHOLES occurrences, one subject shares.share, keys aggregate:sum and aggregate:sum(along=market,year); A1 asserts diagnostics[0].engine === corpus engine for all 19 stage-1 cases (suppression obligation from declaration-missing)."
+    recorded_at: "2026-09-02T23:50:02.316Z"
