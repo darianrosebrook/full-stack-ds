@@ -4,7 +4,7 @@ risk_tier: 3
 mode: feature
 lifecycle_state: draft
 created_at: '2026-09-02T20:55:41.316Z'
-updated_at: '2026-09-02T20:55:41.316Z'
+updated_at: '2026-09-02T20:55:41.854Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/relation.contract.schema.json (relational structure: named relations with identity and declared relationships; recursively closed)'
@@ -21,7 +21,8 @@ scope:
     - 'packages/ds-contracts/package.json'
     - 'packages/ds-codegen/src/analytical'
     - 'docs/architecture'
-  out: []
+  out:
+    - packages/ds-contracts/analytical-pack
 invariants:
   - 'The stage-1 oracle is frozen for the life of this slice: packages/ds-contracts/analytical-pack is scope.out, and closure evidence must show these sha256 prefixes unchanged from activation - corpus.jsonl a426528ed0e657aa, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, and the doctrine''s Diagnostic catalogue plus Vocabulary appendix sections (sed from ''## Diagnostic catalogue'' through ''## Falsification conditions'') c88ad2de6a1667a5. If the engine proves the oracle wrong, this slice stops and is closed as falsified; the correction is a separate governed slice and stage 1 is re-minted against the new baseline.'
   - 'Engine and fixtures are answer-blind: engine sources (excluding corpus-integrity and tests) import nothing from the corpus or corpus-integrity and contain no CASE_ identifier, expected verdict, or per-case expected diagnostic; REL_ codes are the engine''s output vocabulary and are allowed. The fixture schema rejects CASE_, REL_, verdict, diagnostic, obligation, colloquial form names and any open metadata bag; only the binding ledger maps a CASE_ to a fixture, and the fixture knows nothing of the case.'
