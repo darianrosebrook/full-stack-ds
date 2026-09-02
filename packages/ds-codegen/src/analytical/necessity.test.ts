@@ -21,7 +21,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { BASELINE_FILE, checkBaseline, type Baseline } from "./baseline.js";
 import { decodeScale, scaleAliases, type ScaleLabel } from "./capabilities.js";
-import { type Coordinate, loadCensus } from "./census.js";
+import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadCensus } from "./census.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import {
@@ -273,6 +273,38 @@ describe("C6 — conservation: the Phase-A ledger equals the live ledger modulo 
       "FX_S_MIXED_FAULT",
       "FX_S_TWO_CURRENCY_SUMS_TWO_UNKNOWN_GRAINS",
       "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS",
+    ]);
+  });
+});
+
+describe("C8 — the census is derived, exhaustive and exactly-once", () => {
+  const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as Record<string, unknown>;
+
+  it("every coordinate id appears exactly once", () => {
+    const ids = kernel.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+  it("a leaf added to the model appears in the census with no hand edit", () => {
+    const mutated = JSON.parse(JSON.stringify(schema)) as { definitions: Record<string, { properties: Record<string, unknown> }> };
+    mutated.definitions.field.properties.foo = { type: "string" };
+    mutated.definitions.field.properties.mode = { type: "string", enum: ["a", "b", "c"] };
+    const ids = deriveCensus(mutated as Record<string, unknown>).map((c) => c.id);
+    expect(ids).toContain("field.foo");
+    expect(ids).toContain("field.mode");
+    expect(ids.filter((id) => id.startsWith("field.mode:"))).toEqual(["field.mode:a~b", "field.mode:a~c", "field.mode:b~c"]);
+    expect(kernelIds.has("field.foo")).toBe(false);
+  });
+  it("evidence coordinates are the instance-evidence ones and nothing in the declaration is", () => {
+    const instance = kernel.filter((c) => c.role === "instance").map((c) => c.leaf);
+    expect([...new Set(instance)].sort()).toEqual(["evidence.grainWitness", "observation.null", "observation.unit", "observation.value"]);
+    for (const c of kernel) if (c.id.startsWith("field.") || c.id.startsWith("relation.") || c.id.startsWith("assertion.")) expect(c.role).toBe("schema");
+  });
+  it("name references are listed for exhaustiveness and are not coordinates", () => {
+    expect(kernel.filter((c) => c.kind === "reference").map((c) => c.id).sort()).toEqual([
+      "assertion.aggregate.field",
+      "assertion.aggregate.relation",
+      "assertion.ratio-comparison.field",
+      "assertion.ratio-comparison.relation",
     ]);
   });
 });
