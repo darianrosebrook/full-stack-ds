@@ -2,9 +2,11 @@ id: REL-FIELD-ALGEBRA-01
 title: 'Stage 1: the smallest executable representation of analytical data that distinguishes exactly the stage-1 cases'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Closure outcome 1 of 3: every criterion passed; the oracle was not proven wrong and no L3 knowledge, escape hatch, name inference, or cause-merging was needed. Landed 528b2f2f via merge cf05bb00. Non-claims: (1) no necessity witnesses - every L0-L2 axis retained is unproven-necessary until REL-FIELD-ALGEBRA-02 runs the quotient/collision ablations under a bound precommitted at its mint; (2) the judgment subject rel.field#kind:op does not distinguish two assertions on one field that differ only in along, so such a pair collapses to one occurrence; (3) REL_UNIT_SUM_ACROSS_CURRENCY fires for mixed units of any dimension, not only currency; (4) the corpus attributes CASE_SUPPRESSION_PRESENCE_UNKNOWN to declaration-missing while the engine''s rule lives in derivation typing - the judgment carries no engine name so this attribution is untested; (5) a grain witness with no rows discharges grain:declared as a declaration, not as verified evidence; (6) the 15 diagnostics are exercised by 19 cases + 15 neighbours + 8 holdout + probes; mutation score not measured; (7) root vitest in the worktree stays red on FigmaPluginApp (7, symlinked node_modules) and on ds-tokens until the token graph is built - both environmental, tracked by FIX-WORKTREE-NODE-MODULES-ISOLATION-01, none in this lane.'
 created_at: '2026-09-02T20:55:41.316Z'
-updated_at: '2026-09-02T20:55:43.135Z'
+updated_at: '2026-09-02T21:22:09.324Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/relation.contract.schema.json (relational structure: named relations with identity and declared relationships; recursively closed)'
