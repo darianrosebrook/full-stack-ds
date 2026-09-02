@@ -127,3 +127,7 @@ evidence:
     status: pass
     evidence_ref: "stage1.test.ts B3: FX_S_ALONG_IDENTITY yields two PROPORTION_SUM_ACROSS_WHOLES occurrences, one subject shares.share, keys aggregate:sum and aggregate:sum(along=market,year); A1 asserts diagnostics[0].engine === corpus engine for all 19 stage-1 cases (suppression obligation from declaration-missing)."
     recorded_at: "2026-09-02T23:50:02.316Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "holdout.json ruleDigest re-recorded 27701a78 -> 5fc0509d -> 493d9bd2 (Phase A) -> 6b7b2135 (Phase B) with the reason in its re-record log; every item re-derived by hand; Phase B changed only two occurrence KEYS (FX_H_KPI_INDEX_AND_RATE: aggregate:max->aggregate:min, rollup:sum(toGrain=quarter)->aggregate:sum); stage1.test.ts A8 (digest equality + all 8 items) passes."
+    recorded_at: "2026-09-02T23:50:02.741Z"
