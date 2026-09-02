@@ -29,7 +29,11 @@ scope:
     - 'packages/ds-react-native/src'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'A variant-only decoration (status rail, accent stripe) is never declared in a base/root style block; it lives only in the variant selector that motivates it'
+  - 'Two edges of one visual outline never resolve through different semantic token families'
+  - 'A contract whose host element carries UA border defaults (hr, button, input, fieldset) explicitly neutralizes every edge it does not itself style'
+  - 'Any style block that sets a background from an accent/intent token also sets its paired foreground, so text contrast is not left to inheritance'
+  - 'Generated artifacts are regenerated and committed in the same commit as the contract change that produced them'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
