@@ -45,3 +45,9 @@ contracts:
   - name: 'corpus-case-schema'
     type: schema
     path: 'packages/ds-contracts/analytical-pack/corpus-case.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "corpus-case.schema.json and corpus.jsonl replace the illegal-form pair (git rm). 29/29 tests; typecheck (root+codegen) and eslint clean; docs:check-claims OK. Probe verbatim: 'cases: 59  illegal: 54  unproven: 5  diagnostics (corpus): 47  diagnostics (doctrine): 47  findings: 0'. Seven diagnostics are shared by independent cases (ORDINAL_MEAN, SUM_SEMIADDITIVE, NORMALIZE_NONADDITIVE, GRAIN_FANOUT, UNIT_INCOMMENSURABLE_SHARED_SCALE, LOG_SCALE_ZERO_CLAIM, PROVENANCE_LAYOUT_GEOMETRY_CLAIM). Bijection falsifier reached for real: deduplicating the live corpus to one case per diagnostic yields CORPUS_CASE_DIAGNOSTIC_BIJECTION with detail 'exactly one case', and the live corpus does not. Case-id pattern, verdict/diagnostic/obligation if-then rules, stage bounds 1..6, and additionalProperties are each pinned by a mutation that yields CORPUS_SCHEMA_INVALID. Full root suite in the worktree: 13 failures in ds-figma-plugin FigmaPluginApp.test.ts (7), ds-tokens runner-mains.test.ts (5) and cli-spawn.test.ts (1); all three files pass 17/17 on unmodified canonical main and none is in the slice diff; classified as the worktree symlinked-node_modules environment (third occurrence this lane; CI on the previous push was green)."
+    recorded_at: "2026-09-02T19:47:48.368Z"
+    command: "pnpm exec vitest run packages/ds-codegen/src/analytical && pnpm exec tsx tmp/corpus-probe.ts"
