@@ -114,3 +114,8 @@ contracts:
   - name: 'necessity-harness'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Phase-A baseline committed at 5934fd63 (baseline-stage1.json: 8 digests + 59-entry canonical ledger). Phase B (d2eb4800, 297a5247) changed the model/engine/fixtures/schemas ONLY to remove not-yet-admitted coordinates (invariant 2) plus the derived dump and its consumer view; conservation: 'pnpm run analytical:check-baseline' (--check --ledger-only --rewrites) prints 'baseline --check: conserved' and necessity.test.ts C6 pins the ledger modulo the 4 key rewrites in removals.json (only 7 fixtures move without them: those whose occurrence keys carried rollup:/toGrain/max)."
+    recorded_at: "2026-09-02T23:50:01.459Z"
