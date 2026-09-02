@@ -136,3 +136,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A10: alphaRename(weather->w, temperature->foo, revenue->bar, customer_id->measure_7) validates against the closed schemas and judges identically up to renameSubject (REL_MEANINGFULNESS_INTERVAL_SUM on w.foo); FX_S_ADVERSARIAL_NAMES ordinal field named revenue -> REL_MEANINGFULNESS_ORDINAL_MEAN, ratio field named satisfaction_score -> no finding"
     recorded_at: "2026-09-02T21:21:48.939Z"
+  - criterion_id: A11
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A11: FX_P_CATEGORICAL_VS_RATIO, FX_P_BINNED_INTERVAL (ratio field, shape interval), FX_P_OHLC (symbol x period grain, interval-shaped half-open period), FX_P_HIERARCHY (self many-to-one relationship, root parent not-applicable), FX_P_GRAPH_ISOLATED_NODE (node + edge relations, n3 present and unreferenced) all validate with no form-specific field and are admissible"
+    recorded_at: "2026-09-02T21:21:49.372Z"
