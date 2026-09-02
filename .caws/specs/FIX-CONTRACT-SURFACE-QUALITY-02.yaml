@@ -61,3 +61,9 @@ contracts:
   - name: 'component-styles'
     type: schema
     path: 'packages/ds-contracts/component.contract.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Live DOM sweep over 58 component routes at localhost:5174: 171 statusless .card elements, 0 with non-uniform border width or colour (was 171/171 mismatching at 1px|1px|1px|2px with #d0d0d0 left vs #95dafb others). Identical population count across both runs. Emitted CSS: packages/ds-react/src/components/Card/Card.css .card carries border-color + border-width 1px and zero border-inline-start-* declarations."
+    recorded_at: "2026-09-02T23:33:29.919Z"
+    commit_sha: "597c6680"
