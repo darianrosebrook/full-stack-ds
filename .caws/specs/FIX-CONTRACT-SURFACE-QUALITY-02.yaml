@@ -77,3 +77,8 @@ evidence:
     evidence_ref: "getComputedStyle + getBoundingClientRect on /component/Divider/design: horizontal = 886x1 px with top 'solid 1px' and right/bottom/left all 'none 0px' (was 886x2 with 'inset 1px rgb(128,128,128)' on three sides); vertical = 1x14 px with left 'solid 1px' and others 'none 0px' (was a degenerate 2x1 px). The UA-leak probe across all 58 routes no longer lists either HR."
     recorded_at: "2026-09-02T23:33:43.938Z"
     commit_sha: "597c6680"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Opened popover measured live: border 'solid 1px rgb(71,70,71)' uniform on all four sides (was 'solid 1px rgb(229,91,90)' salmon from semantic.color.border.accent), background resolves through semantic.color.background.elevated (#ffffff light / #141414 dark) instead of background.secondary #d0d0d0. Token renamed border.accent to border.default so the label no longer lies; Popover.css line 32 emits var(--fsds-popover-color-border-default, #d0d0d0)."
+    recorded_at: "2026-09-02T23:33:51.859Z"
+    commit_sha: "597c6680"
