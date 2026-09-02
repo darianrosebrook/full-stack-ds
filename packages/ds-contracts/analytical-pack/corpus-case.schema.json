@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "corpus-case.schema.json",
+  "title": "Analytical corpus case (one JSONL line)",
+  "description": "One case of the analytical corpus for ARCH-ANALYTICAL-RELATION-001. A case is an observation the engine must judge: an asserted derivation or projection over a typed relation, the verdict the doctrine expects, and either the causal diagnostic (illegal) or the missing premise (unproven). Case identity and diagnostic identity are separate on purpose: several cases may share one diagnostic, so the count of distinct diagnostics an engine emits is a property of its causal partitioning, not of how many rows were authored. `stage` is the earliest construction stage whose facts decide the case; an engine built to stage N is judged only on cases with stage <= N. `evidence` says whether the relation type alone decides it (schema) or actual rows are needed (instance). Shape only is enforced here; term resolution, form-name leaks, engine coverage, bijection, and doctrine drift are checked by packages/ds-codegen/src/analytical/corpus-integrity.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case", "verdict", "engine", "stage", "evidence", "asserted", "cause", "terms"],
+  "properties": {
+    "case": {
+      "type": "string",
+      "pattern": "^CASE_[A-Z0-9_]+$",
+      "description": "Identity of the observation. Unique within the corpus. Independent of any diagnostic name."
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["illegal", "unproven"],
+      "description": "What a correct engine returns for this case. A legal corpus is a separate file. `unproven` is the third judgment: the admissible set narrows on a missing premise instead of blocking or silently passing."
+    },
+    "diagnostic": {
+      "type": "string",
+      "pattern": "^REL_[A-Z0-9_]+$",
+      "description": "Required when verdict is illegal. The causal diagnostic the engine emits; must be a row of the doctrine's diagnostic catalogue. Many cases may share one diagnostic."
+    },
+    "obligation": {
+      "type": "string",
+      "pattern": "^[a-z-]+:[a-z0-9-]+$",
+      "description": "Required when verdict is unproven. The missing premise, as a vocabulary term, carried forward as an obligation the runtime or the author must discharge."
+    },
+    "engine": {
+      "type": "string",
+      "enum": [
+        "meaningfulness",
+        "additivity",
+        "dimensional",
+        "channel-capacity",
+        "provenance",
+        "task-invariant",
+        "derivation-typing",
+        "declaration-missing"
+      ],
+      "description": "The checkability engine that adjudicates. Must equal vocabulary.json `engines` (drift-gated)."
+    },
+    "stage": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6,
+      "description": "Earliest construction stage (doctrine 'Order of construction') whose facts decide this case: 1 = L0-L2 field algebra, grain, aggregability; 2 = L3 view algebra; 3 = L3.5 task and L4 projection/combinators; 4 = realization; 5 = accessibility projections; 6 = cross-substrate."
+    },
+    "evidence": {
+      "type": "string",
+      "enum": ["schema", "instance"],
+      "description": "schema: decidable from the relation type alone. instance: needs actual rows (values, null kinds, edge weights)."
+    },
+    "asserted": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The derivation or projection being asserted, in L0-L4 vocabulary. Never a form name."
+    },
+    "cause": {
+      "type": "string",
+      "minLength": 1,
+      "description": "For illegal: the fact that makes the assertion ill-typed. For unproven: the premise that is missing. Never a form name. Prose; the mechanical claim is only that `terms` resolve."
+    },
+    "terms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z-]+:[a-z0-9-]+$" },
+      "description": "The namespaced vocabulary references the case declares (namespace:term). Every one must resolve in vocabulary.json. This proves the declared references resolve; it does not prove the prose is exhausted by them."
+    },
+    "colloquial": {
+      "type": "string",
+      "description": "What a practitioner would call this. Exempt from the form-name denylist; exists to show the name is downstream of the cause."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "verdict": { "const": "illegal" } } },
+      "then": { "required": ["diagnostic"], "not": { "required": ["obligation"] } }
+    },
+    {
+      "if": { "properties": { "verdict": { "const": "unproven" } } },
+      "then": { "required": ["obligation"], "not": { "required": ["diagnostic"] } }
+    }
+  ]
+}

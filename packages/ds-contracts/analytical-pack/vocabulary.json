@@ -1,5 +1,5 @@
 {
-  "$comment": "The L0-L4 vocabulary of docs/architecture/analytical-relation-doctrine.md (ARCH-ANALYTICAL-RELATION-001), as namespaced terms. Every illegal-form corpus entry describes its ill-typing cause using only terms from here. If an entry cannot be written without a term this file lacks, the doctrine's vocabulary is incomplete: add the term here AND to the doctrine, never paraphrase the entry around the gap. Engines are the checkability engines a diagnostic is attributed to; the schema's engine enum must equal this list (corpus-integrity checks both directions).",
+  "$comment": "The L0-L4 vocabulary of docs/architecture/analytical-relation-doctrine.md (ARCH-ANALYTICAL-RELATION-001), as namespaced terms. This file must EQUAL the doctrine's 'Vocabulary appendix' table in both directions (corpus-integrity checks it), so a term cannot be added here without the doctrine naming it, and vice versa. Every corpus case declares the vocabulary references it uses in `terms`, and each must resolve here; that proves the declared references resolve, not that the prose is exhausted by them. If a case cannot be written without a term this file lacks, the doctrine's vocabulary is incomplete: add the term to the doctrine appendix AND here, never paraphrase the case around the gap. Engines are the checkability engines a case is attributed to; the schema's engine enum must equal this list.",
   "doctrine": "docs/architecture/analytical-relation-doctrine.md",
   "engines": [
     "meaningfulness",
@@ -54,7 +54,8 @@
       "declared-midpoint",
       "declared-base",
       "shared-ordering",
-      "declared-projection"
+      "declared-projection",
+      "positive-domain"
     ]
   }
 }
