@@ -37,3 +37,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/docs-claims-check.mjs (worktree @ fb174c24/295c925f): exit 0, OK — 54 marked claim(s) match derived values, incl. src-view-count 15, src-view-list 15 modules, src-top-level-dir-count 10, showcase-route-count 12"
     recorded_at: "2026-09-02T21:18:26.718Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "falsification: touch src/views/ZZZFalsify.tsx → docs-claims-check exit 1 with 4 stale claims (16 vs 15 and +ZZZFalsify list drift in AGENTS.md and README.md); rm → exit 0 again (54 claims OK)"
+    recorded_at: "2026-09-02T21:18:27.741Z"
