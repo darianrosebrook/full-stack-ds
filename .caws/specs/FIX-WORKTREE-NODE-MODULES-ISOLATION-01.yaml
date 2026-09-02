@@ -41,3 +41,8 @@ evidence:
     status: pass
     evidence_ref: "worktree full gate: pnpm test 237 files/2810 tests pass exit 0 after pnpm run worktree:install + tokens:build; the 3 symlink-sensitive files (FigmaPluginApp, runner-mains, cli-spawn) 17/17 vs 14 failed pre-fix with 49 rune_outside_svelte"
     recorded_at: "2026-09-02T21:37:45.896Z"
+  - criterion_id: A2
+    status: waived
+    evidence_ref: "CLAUDE.md mirror edit declined by user; mechanism documented in AGENTS.md worktree section (commit e617e08e, on main) and reproducible via single script pnpm run worktree:install / worktree:check"
+    waiver_reason: "CLAUDE.md mirror edit declined by user; mechanism documented in AGENTS.md worktree section (commit e617e08e, on main) and reproducible via single script pnpm run worktree:install / worktree:check"
+    recorded_at: "2026-09-02T21:37:46.318Z"
