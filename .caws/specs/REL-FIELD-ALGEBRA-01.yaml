@@ -140,3 +140,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A11: FX_P_CATEGORICAL_VS_RATIO, FX_P_BINNED_INTERVAL (ratio field, shape interval), FX_P_OHLC (symbol x period grain, interval-shaped half-open period), FX_P_HIERARCHY (self many-to-one relationship, root parent not-applicable), FX_P_GRAPH_ISOLATED_NODE (node + edge relations, n3 present and unreferenced) all validate with no form-specific field and are admissible"
     recorded_at: "2026-09-02T21:21:49.372Z"
+  - criterion_id: A12
+    status: pass
+    evidence_ref: "digests recomputed on main after merge cf05bb00: corpus.jsonl a426528ed0e657aa, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, doctrine catalogue+appendix (sed '## Diagnostic catalogue'..'## Falsification conditions') c88ad2de6a1667a5 - all unchanged; doctrine stage-1 row records judgment shape, answer-blindness, binding ledger, discharge triads, name irrelevance, order independence; necessity witnesses (quotient/collision ablations under a precommitted bound) and scale-as-alias minimization sit in a new stage-1.5 row = REL-FIELD-ALGEBRA-02; status remains draft; docs:check-claims OK"
+    recorded_at: "2026-09-02T21:21:49.806Z"
