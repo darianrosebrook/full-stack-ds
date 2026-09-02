@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "StatesGrid.test.tsx 'renders nothing for a contract without states' (toBeEmptyDOMElement) + DesignView gate stateDimensionsOf().length > 0 (src/views/DesignView.tsx)"
     recorded_at: "2026-09-02T22:39:57.776Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/trace/buildTraceIndex.test.ts (13 passed, incl. states.dimensions.availability resolution and the no-hit/no-throw negative for `button--${loading}`)"
+    recorded_at: "2026-09-02T22:39:58.222Z"
