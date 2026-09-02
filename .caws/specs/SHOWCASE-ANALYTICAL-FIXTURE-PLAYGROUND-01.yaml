@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "smoke suite: censored-qualifier badge renders in evidence rows (3 grain rows); realization panel asserts 'no projection engine exists yet' with zero svg/canvas/img"
     recorded_at: "2026-09-02T21:52:45.029Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims on merged main: OK - 63 marked claim(s) match derived values (dir count 11, view count 16, route count 12)"
+    recorded_at: "2026-09-02T21:52:45.438Z"
