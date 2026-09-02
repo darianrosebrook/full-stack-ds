@@ -34,3 +34,9 @@ acceptance:
     then: 'every entry names the field-algebra, grain, or derivation fact that makes it ill-typed without naming a chart form, or the doctrine records that the vocabulary is incomplete for that entry'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "docs/architecture/analytical-relation-doctrine.md carries authority: architecture, status: draft, and a governs: list of four proposed (non-existent, commented as such) paths. .caws/hooks/doc-frontmatter-check.sh run manually against the file exits 0 with no diagnostic (V3 governs present, V4 verified_at_commit not required for draft). pnpm run docs:check-claims: OK, 46 marked claims match derived values (the doc adds no count markers). docs/README.md layout tree lists analytical-relation-doctrine.md under architecture/ with the (draft) label."
+    recorded_at: "2026-09-02T18:22:08.633Z"
+    command: "pnpm run docs:check-claims"
