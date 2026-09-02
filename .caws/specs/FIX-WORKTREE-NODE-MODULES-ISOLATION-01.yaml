@@ -1,0 +1,37 @@
+id: FIX-WORKTREE-NODE-MODULES-ISOLATION-01
+title: 'Full root vitest is red inside CAWS worktrees (symlinked node_modules) while green on canonical'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-02T20:15:21.281Z'
+updated_at: '2026-09-02T20:15:21.281Z'
+blast_radius:
+  modules:
+    - 'caws worktree create symlink strategy (external CLI) or a post-create install/dedupe step under scripts/'
+    - 'CLAUDE.md worktree section (the documented proving-environment claim)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts'
+    - 'CLAUDE.md'
+    - 'package.json'
+  out: []
+invariants:
+  - 'A full root test run inside a bound worktree is the same evidence as on canonical: a red suite in a worktree names a real regression, not a module-resolution artifact.'
+  - 'Classifying a red worktree suite against canonical main is a diagnostic step, never a standing substitute for a green worktree; three classifications in one lane (2026-09-02) is the defect this spec records.'
+acceptance:
+  - id: A1
+    given: 'a fresh CAWS worktree created from main'
+    when: 'pnpm test runs inside it'
+    then: 'packages/ds-figma-plugin/src/FigmaPluginApp.test.ts, packages/ds-tokens/build/runners/runner-mains.test.ts and packages/ds-tokens/build/runners/cli-spawn.test.ts pass exactly as on canonical (17/17), with no rune_outside_svelte raised from a second svelte instance resolved through ../../../node_modules/.pnpm'
+  - id: A2
+    given: 'the fix'
+    when: 'a worktree is created'
+    then: 'the mechanism (a real frozen install in the worktree, or a resolution that dedupes svelte and vitest to one instance) is documented in the CLAUDE.md worktree section and reproducible by a single pnpm script'
+  - id: A3
+    given: 'the three observed occurrences (lanes REL-ILLEGAL-CORPUS-01 and REL-CORPUS-CONTRACT-REPAIR-01, worktrees illegal-corpus and corpus-repair, 2026-09-02, all files passing on unmodified main)'
+    when: 'the fix lands'
+    then: 'a check or test documents the root cause (duplicate module instances through symlinked node_modules) rather than only the symptom'
+non_functional: {}
+contracts: []
