@@ -1,0 +1,96 @@
+id: REL-FIELD-ALGEBRA-01
+title: 'Stage 1: the smallest executable representation of analytical data that distinguishes exactly the stage-1 cases'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-02T20:55:41.316Z'
+updated_at: '2026-09-02T20:55:41.316Z'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/relation.contract.schema.json (relational structure: named relations with identity and declared relationships; recursively closed)'
+    - 'packages/ds-contracts/analytical-fixtures (answer-free stage-1 fixtures, assertion grammar, binding ledger, legal neighbours, mixed holdout) - the oracle in analytical-pack is scope.out and frozen'
+    - 'packages/ds-codegen/src/analytical (L0-L2 types, three checkability engines, occurrence-bearing judgment, ledger enforcement in corpus-integrity)'
+    - 'docs/architecture/analytical-relation-doctrine.md (stage-1 row only; catalogue and appendix sections are custody-frozen)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-contracts/relations'
+    - 'packages/ds-contracts/relation.contract.schema.json'
+    - 'packages/ds-contracts/package.json'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture'
+  out: []
+invariants:
+  - 'The stage-1 oracle is frozen for the life of this slice: packages/ds-contracts/analytical-pack is scope.out, and closure evidence must show these sha256 prefixes unchanged from activation - corpus.jsonl a426528ed0e657aa, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, and the doctrine''s Diagnostic catalogue plus Vocabulary appendix sections (sed from ''## Diagnostic catalogue'' through ''## Falsification conditions'') c88ad2de6a1667a5. If the engine proves the oracle wrong, this slice stops and is closed as falsified; the correction is a separate governed slice and stage 1 is re-minted against the new baseline.'
+  - 'Engine and fixtures are answer-blind: engine sources (excluding corpus-integrity and tests) import nothing from the corpus or corpus-integrity and contain no CASE_ identifier, expected verdict, or per-case expected diagnostic; REL_ codes are the engine''s output vocabulary and are allowed. The fixture schema rejects CASE_, REL_, verdict, diagnostic, obligation, colloquial form names and any open metadata bag; only the binding ledger maps a CASE_ to a fixture, and the fixture knows nothing of the case.'
+  - 'A judgment is occurrence-bearing: diagnostic occurrences {code, subject, evidenceClass} and obligation occurrences {term, subject, evidenceClass}, where subject is a stable path into the relational structure (relation, field, relationship, operation); status is derived - any diagnostic occurrence is illegal, else any obligation is unproven, else admissible - with no first-match precedence.'
+  - 'The relational-structure schema and the assertion grammar are recursively closed (additionalProperties false throughout, no metadata or extension bags, no free semantic strings); stage-1 assertions are L0-L2 kinds only (such as aggregate, ratio comparison, rollup-to-grain, and null-handling declarations) and fixtures carry no task, channel, coordinate, projection, combinator, or form vocabulary.'
+  - 'Identifier spelling and human-facing labels are referential only; analytical standing derives exclusively from declared typed facts and admitted evidence. Alpha-renaming relation, field and relationship names leaves the judgment identical up to the renaming of subjects; re-declaring semantics under the same names may change it. Vocabulary terms are declared semantics, not labels, and are not subject to renaming.'
+  - 'The normalized judgment is invariant under field, relation, relationship and row declaration order where no semantic order exists, and under rule evaluation order; the canonical serialization is byte-identical across such permutations.'
+  - 'The 15 stage-1 diagnostics are a hypothesis, not a quota. The closure rule has exactly three outcomes: every criterion passes and the slice closes; the engine exposes an oracle or doctrine error and the slice stops without touching the oracle; the engine needs L3 knowledge, an escape hatch, name inference, or cannot separate required causes, and the slice stops as a falsification. Nothing is patched around and no representational coordinate is added to rescue a failing case.'
+  - 'No L3 derivation typing, geometry, projection, or combinator semantics enter the engine; the relational structure is a container of named relations with identity and declared relationships and nothing more.'
+acceptance:
+  - id: A1
+    given: 'the 19 stage-1 cases bound to fixtures'
+    when: 'the engine judges them blind'
+    then: 'each illegal case yields diagnostic codes exactly equal to its expected singleton with no obligations, each unproven case yields obligations exactly equal to its expected singleton with no diagnostics, and for every pair of illegal cases the emitted code sets are equal iff the expected diagnostics are equal - the causal partition is reproduced, not merely the count 15'
+  - id: A2
+    given: 'casesAdjudicableAt(1)'
+    when: 'corpus-integrity checks the binding ledger under analytical-fixtures'
+    then: 'each case binds to exactly one fixture, no fixture is orphaned, every fixture validates against the closed structure and assertion schemas, and an injected CASE_ key or task/channel term inside a fixture is a finding (self-check)'
+  - id: A3
+    given: 'the engine sources'
+    when: 'the corpus-independence scan runs'
+    then: 'no import of the corpus or corpus-integrity and no CASE_ identifier, expected verdict, or per-case expected diagnostic exists outside tests (REL_ output codes are allowed), and the scan fails on an injected corpus import (self-check)'
+  - id: A4
+    given: 'a structure with two independent incommensurable currency sums on different relations and two relations of unknown grain'
+    when: 'judged'
+    then: 'two diagnostic occurrences with different subjects share one code, two obligation occurrences each name their own relation, and the distinct code set has cardinality one'
+  - id: A5
+    given: 'a fixture carrying an unknown premise and an independently provable illegality'
+    when: 'judged under permuted rule order and permuted declaration order'
+    then: 'status is illegal with the obligation still listed and the normalized judgment is byte-identical across every permutation'
+  - id: A6
+    given: 'each stage-1 obligation (grain:declared, unit:commensurable, null:missing-mechanism)'
+    when: 'run with absent, satisfying, and hostile evidence'
+    then: 'the results are the named obligation, admissible, and a specific illegality respectively'
+  - id: A7
+    given: 'for each of the 15 stage-1 causes a near-neighbour legal control that changes only the causal coordinate and holds every other fact stable'
+    when: 'judged'
+    then: 'the diagnostic disappears and no other finding or obligation appears'
+  - id: A8
+    given: 'the engine-rule digest recorded before authoring'
+    when: 'a mixed-verdict holdout (admissible, illegal, unproven cases not used to shape the rules) authored afterwards is judged'
+    then: 'every case matches its expected judgment exactly, and if the rule digest changed after authoring the holdout is discarded and re-authored rather than reused'
+  - id: A9
+    given: 'one field whose observations carry different provenance, null kind and uncertainty states'
+    when: 'represented and judged'
+    then: 'each observation''s qualifier is preserved individually and the fixture is unrepresentable under a column-level qualifier model'
+  - id: A10
+    given: 'a fixture alpha-renamed (temperature to foo, revenue to bar, customer_id to measure_7) and its adversarial inverse (an ordinal field named revenue, a ratio field named satisfaction_score)'
+    when: 'judged'
+    then: 'the renamed fixture''s judgment is identical to the original up to subject renaming, and the inverse''s judgment follows the declared semantics, not the names'
+  - id: A11
+    given: 'a categorical-vs-ratio relation, a binned interval-shaped relation, an OHLC-over-interval relation, a nested hierarchy, and a two-relation node/edge structure with an isolated node'
+    when: 'expressed in relation.contract.schema.json'
+    then: 'all five validate without a form-specific field and the isolated node is representable'
+  - id: A12
+    given: 'closure'
+    when: 'the oracle digests in invariant 1 are recomputed'
+    then: 'they are unchanged, and the doctrine''s stage-1 row records judgment shape, blindness, bindings, discharge triad, name irrelevance and determinism, with necessity ablations (quotient/collision witnesses under a precommitted separating-set bound) and scale-as-alias minimization deferred to REL-FIELD-ALGEBRA-02 and status remaining draft'
+non_functional: {}
+contracts:
+  - name: 'relational-structure-schema'
+    type: schema
+    path: 'packages/ds-contracts/relation.contract.schema.json'
+  - name: 'assertion-grammar'
+    type: schema
+    path: 'packages/ds-contracts/analytical-fixtures/assertion.schema.json'
+  - name: 'analytical-judgment'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/judgment.ts'
+  - name: 'stage1-oracle'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/stage1.test.ts'
