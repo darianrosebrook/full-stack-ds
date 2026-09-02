@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "bindings.json neighbours key + triads[unit:commensurable].hostileDiagnostic renamed; holdout.json ruleDigest re-recorded 27701a78->5fc0509d with reason logged in $comment, all 8 items re-verified by hand (none carries the code); stage1.test.ts A2 ledger block: zero LEDGER_ findings; A8 block: digest equal and every holdout item exact"
     recorded_at: "2026-09-02T22:39:46.513Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "custody digests on main after merge 52588153: corpus.jsonl 6f8edea4f5aabef4, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, doctrine catalogue+appendix (sed '## Diagnostic catalogue'..'## Falsification conditions') 8622d010f131c94f; only corpus and doctrine differ from the -01 values (a426528ed0e657aa, c88ad2de6a1667a5); this is the REL-FIELD-ALGEBRA-02 baseline"
+    recorded_at: "2026-09-02T22:39:46.972Z"
