@@ -45,3 +45,9 @@ contracts:
   - name: 'illegal-form-corpus-schema'
     type: schema
     path: 'packages/ds-contracts/analytical-pack/illegal-form.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "20/20 tests pass; typecheck (root+codegen) and eslint clean on the new files. Probe output verbatim: 'entries: 40  doctrine rows: 40  findings: 0'. Per engine: meaningfulness 2, task-invariant 8, additivity 5, declaration-missing 8, dimensional 3, derivation-typing 6, channel-capacity 6, provenance 2 (40 total, every engine exercised). Schema validity is enforced by Ajv against illegal-form.schema.json; id pattern is pinned by a test where 'rel_lowercase' yields CORPUS_SCHEMA_INVALID; engine membership by a test where engine 'vibes' yields CORPUS_ENGINE_UNKNOWN and CORPUS_SCHEMA_INVALID; schema enum vs vocabulary.engines by a test that slices the enum and gets CORPUS_SCHEMA_ENGINE_DRIFT. Full root suite in the worktree: run 1 failed 13 tests in packages/ds-tokens/build/runners/runner-mains.test.ts, run 2 failed 7 in packages/ds-figma-plugin/src/FigmaPluginApp.test.ts (rune_outside_svelte, stack resolves svelte via ../../../node_modules/.pnpm); both files pass 7/7 on unmodified main and neither path is in the slice diff, so classified as worktree symlinked-node_modules environment, not pre-existing on main and not caused here. CI on canonical is authoritative."
+    recorded_at: "2026-09-02T18:35:47.297Z"
+    command: "pnpm exec vitest run packages/ds-codegen/src/analytical && pnpm exec tsx tmp/corpus-probe.ts"
