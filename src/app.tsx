@@ -19,6 +19,7 @@ import { ComponentStandardsView } from "./views/ComponentStandardsView";
 import { DisplayCaseView } from "./views/DisplayCaseView";
 import { PrimitiveView } from "./views/PrimitiveView";
 import { PropertiesScratchView } from "./views/PropertiesScratchView";
+import { AnalyticalFixturesScratchView } from "./views/AnalyticalFixturesScratchView";
 import { useRoute } from "./router";
 import type { TraceSelection } from "./trace/types";
 
@@ -107,6 +108,9 @@ export function App() {
         )}
         {route.kind === "scratch" && route.name === "properties-panel" && (
           <PropertiesScratchView />
+        )}
+        {route.kind === "scratch" && route.name === "analytical-fixtures" && (
+          <AnalyticalFixturesScratchView />
         )}
         {route.kind === "primitive" && activePrimitive && (
           <PrimitiveView primitive={activePrimitive} />

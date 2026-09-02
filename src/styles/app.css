@@ -1864,3 +1864,202 @@ button {
     flex: 1 1 0;
   }
 }
+
+/* ---- Analytical fixtures scratch view (#/scratch/analytical-fixtures) ---- */
+
+.afx-grid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 280px;
+  gap: var(--fsds-core-spacing-size-05);
+  align-items: start;
+}
+
+.afx-index {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-04);
+  position: sticky;
+  top: var(--fsds-core-spacing-size-05);
+  max-height: calc(100vh - 2 * var(--fsds-core-spacing-size-05));
+  overflow-y: auto;
+}
+
+.afx-filter-input,
+.afx-filter-select {
+  width: 100%;
+  padding: var(--fsds-core-spacing-size-02) var(--fsds-core-spacing-size-03);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: var(--fsds-core-shape-radius-02);
+  background: var(--fsds-semantic-color-background-default);
+  color: var(--fsds-semantic-color-foreground-default);
+  font-size: var(--fsds-core-typography-ramp-0);
+}
+
+.afx-filter-row {
+  display: flex;
+  gap: var(--fsds-core-spacing-size-02);
+}
+
+.afx-index__group-title {
+  margin: var(--fsds-core-spacing-size-03) 0 var(--fsds-core-spacing-size-01);
+  font-size: var(--fsds-core-typography-ramp-0);
+}
+
+.afx-index__group-hint {
+  font-weight: normal;
+  color: var(--fsds-semantic-color-foreground-muted);
+}
+
+.afx-index__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--fsds-core-spacing-size-01) var(--fsds-core-spacing-size-02);
+  border: 1px solid transparent;
+  border-radius: var(--fsds-core-shape-radius-01);
+  background: none;
+  color: inherit;
+  font-family: var(--fsds-core-typography-font-family-mono);
+  font-size: var(--fsds-core-typography-ramp-0);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.afx-index__item:hover {
+  background: var(--fsds-semantic-color-background-hover-subtle);
+}
+
+.afx-index__item--active {
+  border-color: var(--fsds-semantic-color-border-accent);
+  background: var(--fsds-semantic-color-background-accent-subtle);
+}
+
+.afx-detail__id {
+  font-family: var(--fsds-core-typography-font-family-mono);
+}
+
+.afx-section-title {
+  margin-top: var(--fsds-core-spacing-size-05);
+  font-size: var(--fsds-core-typography-ramp-1);
+}
+
+.afx-relation__name {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-02);
+  font-family: var(--fsds-core-typography-font-family-mono);
+}
+
+.afx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fsds-core-typography-ramp-0);
+}
+
+.afx-table th,
+.afx-table td {
+  border: 1px solid var(--fsds-semantic-color-border-subtle);
+  padding: var(--fsds-core-spacing-size-01) var(--fsds-core-spacing-size-02);
+  text-align: left;
+  vertical-align: top;
+}
+
+.afx-fieldname,
+.afx-rownum {
+  font-family: var(--fsds-core-typography-font-family-mono);
+  white-space: nowrap;
+}
+
+.afx-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fsds-core-spacing-size-01);
+}
+
+.afx-badge {
+  display: inline-block;
+  padding: 0 var(--fsds-core-spacing-size-02);
+  border: 1px solid var(--fsds-semantic-color-border-subtle);
+  border-radius: var(--fsds-core-shape-radius-01);
+  background: var(--fsds-semantic-color-background-neutral-subtle);
+  font-family: var(--fsds-core-typography-font-family-mono);
+  font-size: var(--fsds-core-typography-ramp-0);
+}
+
+.afx-badge--null {
+  border-color: var(--fsds-semantic-color-border-warning);
+  color: var(--fsds-semantic-color-foreground-warning);
+}
+
+.afx-badge--prov {
+  border-color: var(--fsds-semantic-color-border-accent);
+  color: var(--fsds-semantic-color-foreground-accent);
+}
+
+.afx-badge--unc,
+.afx-badge--unit,
+.afx-badge--grain,
+.afx-badge--count {
+  color: var(--fsds-semantic-color-foreground-muted);
+}
+
+.afx-obs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--fsds-core-spacing-size-01);
+  align-items: baseline;
+}
+
+.afx-obs__value {
+  font-family: var(--fsds-core-typography-font-family-mono);
+}
+
+.afx-assertions {
+  padding-left: var(--fsds-core-spacing-size-05);
+}
+
+.afx-relationships {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fsds-core-spacing-size-01);
+}
+
+.afx-realization {
+  position: sticky;
+  top: var(--fsds-core-spacing-size-05);
+}
+
+.afx-realization__placeholder {
+  padding: var(--fsds-core-spacing-size-04);
+  border: 1px dashed var(--fsds-semantic-color-border-warning);
+  border-radius: var(--fsds-core-shape-radius-02);
+  color: var(--fsds-semantic-color-foreground-muted);
+  font-size: var(--fsds-core-typography-ramp-0);
+}
+
+.afx-realization__pending ul {
+  padding-left: var(--fsds-core-spacing-size-05);
+  font-size: var(--fsds-core-typography-ramp-0);
+}
+
+@media (max-width: 1200px) {
+  .afx-grid {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+
+  .afx-realization {
+    grid-column: 1 / -1;
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .afx-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .afx-index {
+    position: static;
+    max-height: none;
+  }
+}
