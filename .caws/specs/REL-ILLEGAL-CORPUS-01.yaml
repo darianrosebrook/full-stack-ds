@@ -61,3 +61,8 @@ evidence:
     evidence_ref: "Live corpus: 0 CORPUS_FORM_NAME_LEAK findings across 40 entries' asserted and cause fields against the 36-phrase denylist in form-names.json. Falsifier reached for real: setting one cause to 'looks like a bad stacked bar chart' printed three findings verbatim: form name \"chart\" / \"bar chart\" / \"bar\" appears in cause. Pinned: a form name in asserted leaks; a form name in colloquial does NOT leak (the field exists to carry the downstream name); matching is whole-word so 'barrier' does not match 'bar'. Denylist deliberately omits words that are also L0-L4 vocabulary (graph, area, line, polar, stack) and lists only their form-name phrases."
     recorded_at: "2026-09-02T18:35:48.204Z"
     command: "pnpm exec vitest run packages/ds-codegen/src/analytical -t 'form name'"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "extractDoctrineIds reads only table rows anchored at line start (regex on '| REL_... |'), pinned by a test where a REL_ code mentioned in prose and an indented row are both ignored. Live: doctrine rows 40 == corpus entries 40, symmetric difference empty. Both drift directions reached for real: adding REL_ONLY_IN_DOC to the doctrine id set yields CORPUS_DOC_DRIFT 'not in illegal-forms.jsonl'; adding REL_ONLY_IN_CORPUS to the corpus yields CORPUS_DOC_DRIFT 'not in the doctrine table'. The four entries added during this slice were added to the table and the jsonl in the same commit, which is exactly the coupling this criterion exists to enforce."
+    recorded_at: "2026-09-02T18:35:48.652Z"
+    command: "pnpm exec vitest run packages/ds-codegen/src/analytical -t 'DOC_DRIFT'"
