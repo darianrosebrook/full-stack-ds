@@ -8,6 +8,8 @@
     "components/*/*.json",
     "primitives/*.json",
     "analytical-pack/*.json",
-    "analytical-pack/*.jsonl"
+    "analytical-pack/*.jsonl",
+    "analytical-fixtures/*.json",
+    "analytical-fixtures/*.jsonl"
   ]
 }

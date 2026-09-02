@@ -30,10 +30,21 @@
  *
  * Findings are data, not throws, so a caller can ledger them the way the other
  * realization audits do.
+ *
+ * Stage 1 adds the fixture ledger (`checkFixtureLedger`): fixtures validate
+ * against the closed schemas, carry no answer (no case id, diagnostic code, or
+ * form name anywhere in the line), bind 1:1 to the stage-adjudicable cases
+ * with no orphans, and the holdout's recorded rule digest matches the engine
+ * source it was authored against. The engine never imports this module.
  */
+import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { Ajv } from "ajv";
+import type { EvidenceClass } from "./judgment.js";
+import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
+
+export type { EvidenceClass };
 
 export interface Vocabulary {
   doctrine: string;
@@ -46,7 +57,6 @@ export interface FormNames {
 }
 
 export type Verdict = "illegal" | "unproven";
-export type EvidenceClass = "schema" | "instance";
 
 export interface CorpusCase {
   case: string;
@@ -446,5 +456,208 @@ export function loadCorpusInput(
     >,
     cases: parseJsonl(read("corpus.jsonl")),
     doctrine: extractDoctrineFacts(fs.readFileSync(doctrinePath, "utf-8")),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Stage 1: the fixture ledger.
+// ---------------------------------------------------------------------------
+
+export type LedgerFindingCode =
+  | "LEDGER_FIXTURE_INVALID"
+  | "LEDGER_FIXTURE_DUPLICATE"
+  | "LEDGER_FIXTURE_ANSWER_LEAK"
+  | "LEDGER_FIXTURE_ORPHAN"
+  | "LEDGER_BINDING_TARGET_MISSING"
+  | "LEDGER_CASE_UNBOUND"
+  | "LEDGER_BINDING_CASE_UNKNOWN"
+  | "LEDGER_BINDING_NOT_INJECTIVE"
+  | "LEDGER_NEIGHBOUR_UNKNOWN_DIAGNOSTIC"
+  | "LEDGER_NEIGHBOUR_MISSING"
+  | "LEDGER_HOLDOUT_UNBOUND"
+  | "LEDGER_HOLDOUT_CONTAMINATED"
+  | "LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH";
+
+export interface LedgerFinding {
+  code: LedgerFindingCode;
+  /** The fixture id the finding is about, when there is one. */
+  fixture?: string;
+  detail: string;
+}
+
+export interface TriadBinding {
+  absent: string;
+  satisfying: string;
+  hostile: string;
+  hostileDiagnostic: string;
+}
+
+export interface Bindings {
+  cases: Record<string, string>;
+  neighbours: Record<string, string>;
+  triads: Record<string, TriadBinding>;
+  special: Record<string, string | string[]>;
+  holdout: string[];
+}
+
+/** A judgment in canonical tuple form (see `canonicalJudgment`). */
+export interface HoldoutExpectation {
+  status: "admissible" | "illegal" | "unproven";
+  diagnostics: [string, string, string][];
+  obligations: [string, string, string][];
+}
+
+export interface Holdout {
+  /** sha256 of the engine rule source at the time the expectations were authored. */
+  ruleDigest: string;
+  items: { fixture: string; expected: HoldoutExpectation }[];
+}
+
+export interface LedgerInput {
+  stage: number;
+  cases: CorpusCase[];
+  doctrine: DoctrineFacts;
+  formNames: FormNames;
+  /** Raw lines of fixtures.jsonl, for the answer-leak scan. */
+  fixtureLines: string[];
+  fixtures: Fixture[];
+  validateFixture: (fixture: unknown) => string[];
+  bindings: Bindings;
+  holdout: Holdout;
+  /** sha256 of the engine rule source as it is now. */
+  ruleSourceDigest: string;
+}
+
+export function sha256(text: string): string {
+  return createHash("sha256").update(text).digest("hex");
+}
+
+/** What may never appear in a fixture line: an answer in any spelling. */
+const ANSWER_LEAK_PATTERNS: readonly [string, RegExp][] = [
+  ["case id", /\bCASE_[A-Z0-9_]+/],
+  ["diagnostic code", /\bREL_[A-Z0-9_]+/],
+];
+
+/** Run every ledger check and return the findings (empty = clean). */
+export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
+  const out: LedgerFinding[] = [];
+  const { bindings, holdout, stage } = input;
+
+  const ids = new Set<string>();
+  for (const f of input.fixtures) {
+    const errs = input.validateFixture(f);
+    if (errs.length > 0) {
+      out.push({ code: "LEDGER_FIXTURE_INVALID", fixture: f.id, detail: errs.join("; ") });
+    }
+    if (ids.has(f.id)) {
+      out.push({ code: "LEDGER_FIXTURE_DUPLICATE", fixture: f.id, detail: `duplicate fixture ${f.id}` });
+    }
+    ids.add(f.id);
+  }
+
+  const deny = input.formNames.denylist.map(
+    (phrase) => [phrase, new RegExp(`\\b${escapeRegExp(phrase)}\\b`, "i")] as const,
+  );
+  input.fixtureLines.forEach((line, i) => {
+    if (line.trim() === "") return;
+    const fixture = /"id":"(FX_[A-Z0-9_]+)"/.exec(line)?.[1];
+    for (const [what, re] of ANSWER_LEAK_PATTERNS) {
+      const m = re.exec(line);
+      if (m) out.push({ code: "LEDGER_FIXTURE_ANSWER_LEAK", fixture, detail: `${what} "${m[0]}" on line ${i + 1}` });
+    }
+    for (const [phrase, re] of deny) {
+      if (re.test(line)) out.push({ code: "LEDGER_FIXTURE_ANSWER_LEAK", fixture, detail: `form name "${phrase}" on line ${i + 1}` });
+    }
+  });
+
+  const refs = new Map<string, string[]>();
+  const ref = (id: string, where: string) => refs.set(id, [...(refs.get(id) ?? []), where]);
+  for (const [c, f] of Object.entries(bindings.cases)) ref(f, `cases.${c}`);
+  for (const [d, f] of Object.entries(bindings.neighbours)) ref(f, `neighbours.${d}`);
+  for (const [t, tri] of Object.entries(bindings.triads)) {
+    ref(tri.absent, `triads.${t}.absent`);
+    ref(tri.satisfying, `triads.${t}.satisfying`);
+    ref(tri.hostile, `triads.${t}.hostile`);
+  }
+  for (const [k, v] of Object.entries(bindings.special)) {
+    for (const f of Array.isArray(v) ? v : [v]) ref(f, `special.${k}`);
+  }
+  for (const f of bindings.holdout) ref(f, "holdout");
+  for (const [f, where] of refs) {
+    if (!ids.has(f)) {
+      out.push({ code: "LEDGER_BINDING_TARGET_MISSING", fixture: f, detail: `${where.join(", ")} references missing fixture ${f}` });
+    }
+  }
+  for (const id of ids) {
+    if (!refs.has(id)) out.push({ code: "LEDGER_FIXTURE_ORPHAN", fixture: id, detail: `fixture ${id} is referenced by no ledger section` });
+  }
+
+  const adjudicable = new Map(casesAdjudicableAt(input.cases, stage).map((c) => [c.case, c] as const));
+  for (const id of adjudicable.keys()) {
+    if (!(id in bindings.cases)) out.push({ code: "LEDGER_CASE_UNBOUND", detail: `stage-${stage} case ${id} has no fixture binding` });
+  }
+  const targets = new Map<string, string[]>();
+  for (const [c, f] of Object.entries(bindings.cases)) {
+    if (!adjudicable.has(c)) {
+      out.push({ code: "LEDGER_BINDING_CASE_UNKNOWN", fixture: f, detail: `${c} is not a corpus case adjudicable at stage ${stage}` });
+    }
+    targets.set(f, [...(targets.get(f) ?? []), c]);
+  }
+  for (const [f, cs] of targets) {
+    if (cs.length > 1) out.push({ code: "LEDGER_BINDING_NOT_INJECTIVE", fixture: f, detail: `${cs.join(", ")} all bind to ${f}` });
+  }
+
+  const carried = new Set<string>();
+  for (const c of adjudicable.values()) {
+    if (c.verdict === "illegal" && typeof c.diagnostic === "string") carried.add(c.diagnostic);
+  }
+  for (const d of Object.keys(bindings.neighbours)) {
+    if (!input.doctrine.diagnostics.has(d)) {
+      out.push({ code: "LEDGER_NEIGHBOUR_UNKNOWN_DIAGNOSTIC", detail: `neighbour key ${d} is not in the doctrine catalogue` });
+    }
+  }
+  for (const d of carried) {
+    if (!(d in bindings.neighbours)) out.push({ code: "LEDGER_NEIGHBOUR_MISSING", detail: `${d} has no legal near-neighbour fixture` });
+  }
+
+  const items = new Set(holdout.items.map((i) => i.fixture));
+  const bound = new Set(bindings.holdout);
+  for (const f of items) {
+    if (!bound.has(f)) out.push({ code: "LEDGER_HOLDOUT_UNBOUND", fixture: f, detail: `holdout.json item ${f} is not listed in bindings.holdout` });
+    if (targets.has(f)) out.push({ code: "LEDGER_HOLDOUT_CONTAMINATED", fixture: f, detail: `holdout fixture ${f} is also a case fixture` });
+  }
+  for (const f of bound) {
+    if (!items.has(f)) out.push({ code: "LEDGER_HOLDOUT_UNBOUND", fixture: f, detail: `bindings.holdout lists ${f} but holdout.json has no expectation for it` });
+  }
+  if (holdout.ruleDigest !== input.ruleSourceDigest) {
+    out.push({
+      code: "LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH",
+      detail: `holdout authored against rule digest ${holdout.ruleDigest}; engine source is now ${input.ruleSourceDigest} — re-verify every expectation by hand and re-record`,
+    });
+  }
+
+  return out;
+}
+
+/** Load the fixture ledger, the corpus it binds to, and the engine source digest. */
+export function loadLedgerInput(
+  contractsDir: string,
+  doctrinePath: string,
+  ruleSourcePath: string,
+  stage = 1,
+): LedgerInput {
+  const read = (rel: string) => fs.readFileSync(path.join(contractsDir, rel), "utf-8");
+  const fixtureText = read("analytical-fixtures/fixtures.jsonl");
+  return {
+    stage,
+    cases: parseJsonl(read("analytical-pack/corpus.jsonl")),
+    doctrine: extractDoctrineFacts(fs.readFileSync(doctrinePath, "utf-8")),
+    formNames: JSON.parse(read("analytical-pack/form-names.json")) as FormNames,
+    fixtureLines: fixtureText.split("\n"),
+    fixtures: parseFixtures(fixtureText),
+    validateFixture: loadFixtureValidator(contractsDir),
+    bindings: JSON.parse(read("analytical-fixtures/bindings.json")) as Bindings,
+    holdout: JSON.parse(read("analytical-fixtures/holdout.json")) as Holdout,
+    ruleSourceDigest: sha256(fs.readFileSync(ruleSourcePath, "utf-8")),
   };
 }
