@@ -100,3 +100,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A1: 19 stage-1 cases each yield exactly one occurrence with the case's code/term AND evidence class, no cross-kind finding; pairwise partition equality over all 171 pairs; distinct emitted codes = 15 = catalogue stage-1 set"
     recorded_at: "2026-09-02T21:21:44.888Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A2: checkFixtureLedger(loadLedgerInput) == [] on live input; mutations reach LEDGER_FIXTURE_ANSWER_LEAK (CASE_ string value; form name 'bar chart'), LEDGER_FIXTURE_INVALID (injected task key, closed schema), LEDGER_CASE_UNBOUND, LEDGER_BINDING_TARGET_MISSING, LEDGER_BINDING_NOT_INJECTIVE, LEDGER_BINDING_CASE_UNKNOWN (stage>1 case), LEDGER_FIXTURE_ORPHAN, LEDGER_NEIGHBOUR_MISSING, LEDGER_NEIGHBOUR_UNKNOWN_DIAGNOSTIC, LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH, LEDGER_HOLDOUT_UNBOUND, LEDGER_HOLDOUT_CONTAMINATED"
+    recorded_at: "2026-09-02T21:21:45.334Z"
