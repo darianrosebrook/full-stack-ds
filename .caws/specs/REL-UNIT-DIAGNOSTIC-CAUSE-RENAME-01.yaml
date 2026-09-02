@@ -2,9 +2,10 @@ id: REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01
 title: 'Oracle correction: rename REL_UNIT_SUM_ACROSS_CURRENCY to REL_UNIT_SUM_INCOMMENSURABLE so the diagnostic names its cause'
 risk_tier: 3
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: unit-cause-rename
 created_at: '2026-09-02T22:34:21.616Z'
-updated_at: '2026-09-02T22:34:21.616Z'
+updated_at: '2026-09-02T22:34:35.109Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/analytical-pack/corpus.jsonl (one row: the diagnostic identifier only)'
