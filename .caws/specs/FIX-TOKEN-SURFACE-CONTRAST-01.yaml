@@ -2,9 +2,10 @@ id: FIX-TOKEN-SURFACE-CONTRAST-01
 title: 'Separate neutral surface roles from border roles, repair two brand onColor bugs, and extend the contrast gate over the brand dimension'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: token-surface
 created_at: '2026-09-02T23:44:40.114Z'
-updated_at: '2026-09-02T23:44:40.114Z'
+updated_at: '2026-09-02T23:44:46.541Z'
 blast_radius:
   modules:
     - 'ds-tokens'
