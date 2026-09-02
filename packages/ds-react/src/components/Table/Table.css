@@ -23,7 +23,7 @@
   }
 
   &[aria-selected="true"] {
-    background-color: var(--fsds-table-color-background-selected, #d92d2e);
+    background-color: var(--fsds-table-color-background-selected, #95dafb);
   }
 }
 

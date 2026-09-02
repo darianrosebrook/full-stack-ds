@@ -49,7 +49,7 @@ export class CardElement extends LitElement {
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -118,8 +118,6 @@ export class CardElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
-      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -141,6 +139,36 @@ export class CardElement extends LitElement {
     .card--interactive:active {
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
     }
 
     .card--inset {
@@ -273,7 +301,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -342,8 +370,6 @@ export class CardHeaderElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
-      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -365,6 +391,36 @@ export class CardHeaderElement extends LitElement {
     .card--interactive:active {
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
     }
 
     .card--inset {
@@ -479,7 +535,7 @@ export class CardContentElement extends LitElement {
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -548,8 +604,6 @@ export class CardContentElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
-      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -571,6 +625,36 @@ export class CardContentElement extends LitElement {
     .card--interactive:active {
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
     }
 
     .card--inset {
@@ -685,7 +769,7 @@ export class CardFooterElement extends LitElement {
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -754,8 +838,6 @@ export class CardFooterElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
-      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -777,6 +859,36 @@ export class CardFooterElement extends LitElement {
     .card--interactive:active {
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
     }
 
     .card--inset {
@@ -891,7 +1003,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -960,8 +1072,6 @@ export class CardDescriptionElement extends LitElement {
       border-width: 1px;
       box-sizing: border-box;
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
-      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
-      border-inline-start-color: var(--fsds-card-color-status-accent-default, #d0d0d0);
       transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -983,6 +1093,36 @@ export class CardDescriptionElement extends LitElement {
     .card--interactive:active {
       box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
     }
 
     .card--inset {

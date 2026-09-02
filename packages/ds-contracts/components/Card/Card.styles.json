@@ -142,7 +142,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#3a6614"
+      "fallback": "#b8b8b8"
     }
   },
   "--in-progress": {
@@ -156,7 +156,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#034fd6"
+      "fallback": "#b8b8b8"
     }
   },
   "--planned": {
@@ -170,7 +170,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#b8b8b8"
     }
   },
   "--deprecated": {
@@ -184,7 +184,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#b31b1b"
+      "fallback": "#b8b8b8"
     }
   },
   "--category": {
@@ -198,7 +198,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#d92d2e"
+      "fallback": "#b8b8b8"
     }
   },
   "--complexity": {
@@ -212,7 +212,7 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#8b4b00"
+      "fallback": "#b8b8b8"
     }
   },
   "--inset": {

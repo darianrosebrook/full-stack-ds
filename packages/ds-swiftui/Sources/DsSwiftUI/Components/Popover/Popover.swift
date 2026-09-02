@@ -34,8 +34,8 @@ enum PopoverTokens {
             "popover.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-size-padding-default", name: "popover.size.padding.default", ref: "core.spacing.size.06", fallback: .string("16px")),
             "popover.size.radius.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-size-radius-default", name: "popover.size.radius.default", ref: "semantic.shape.control.radius.default", fallback: .string("6px")),
             "popover.size.gap.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-size-gap-default", name: "popover.size.gap.default", ref: "core.spacing.size.04", fallback: .string("8px")),
-            "popover.color.background.content": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-color-background-content", name: "popover.color.background.content", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
-            "popover.color.border.accent": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-color-border-accent", name: "popover.color.border.accent", ref: "semantic.color.border.accent", fallback: .adaptive(light: "#d92d2e", dark: "#e55b5a")),
+            "popover.color.background.content": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-color-background-content", name: "popover.color.background.content", ref: "semantic.color.background.elevated", fallback: .adaptive(light: "#ffffff", dark: "#141414")),
+            "popover.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-color-border-default", name: "popover.color.border.default", ref: "semantic.color.border.subtle", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
             "popover.elevation.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-elevation-default", name: "popover.elevation.default", ref: "semantic.elevation.surface.popover", fallback: .string("0px 8px 10px #0000000a, 0px 20px 25px #0000001a")),
             "popover.layer.content": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-layer-content", name: "popover.layer.content", ref: "core.layer.dropdown", fallback: .string("1000")),
         ],
@@ -89,6 +89,7 @@ public struct Popover<Trigger: View, Content: View>: View {
         layered.first { $0.key.hasSuffix(suffix) }?.value?.px
     }
 
+    private var borderColor: Color { colorSlot("color.border.default") ?? .clear }
     private var radius: CGFloat { pxSlot("size.radius.default") ?? 0 }
     private var blockPadding: CGFloat { pxSlot("padding-block-start") ?? 0 }
     private var inlinePadding: CGFloat { pxSlot("padding-inline-start") ?? 0 }

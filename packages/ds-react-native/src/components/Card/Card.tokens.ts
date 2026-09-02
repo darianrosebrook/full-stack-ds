@@ -156,8 +156,8 @@ export const cardTokenScopes = {
     "card.color.statusAccent.default": {
       name: "card.color.statusAccent.default",
       cssVar: "--fsds-card-color-status-accent-default",
-      ref: "semantic.color.border.subtle",
-      fallback: "#d0d0d0",
+      ref: "semantic.color.border.light",
+      fallback: "#b8b8b8",
     },
     "card.size.statusAccent.width": {
       name: "card.size.statusAccent.width",
