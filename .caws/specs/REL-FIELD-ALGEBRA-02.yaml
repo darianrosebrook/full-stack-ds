@@ -159,3 +159,7 @@ evidence:
     status: pass
     evidence_ref: "capabilities.ts decodeScale: 8 labels -> 7 states, alias table [[ratio,count]] recorded in removals.json.factorized; necessity.test.ts C5 (every scale distinction ratified via a capability coordinate except ratio~count; kernel carries no scale) and C6 (ledger reproduced modulo key rewrites over all 59 fixtures incl. the 8 holdout items); one authority: capabilities primitive, labels derived."
     recorded_at: "2026-09-02T23:50:05.728Z"
+  - criterion_id: A12
+    status: pass
+    evidence_ref: "Recomputed at closure: corpus.jsonl 6f8edea4f5aabef4, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, doctrine catalogue+appendix 8622d010f131c94f — all equal invariant 1."
+    recorded_at: "2026-09-02T23:50:06.156Z"
