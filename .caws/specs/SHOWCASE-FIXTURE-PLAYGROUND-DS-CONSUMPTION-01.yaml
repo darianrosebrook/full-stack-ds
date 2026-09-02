@@ -3,7 +3,6 @@ title: 'Analytical fixture playground consumes DS controls'
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: fixture-playground-ds
 created_at: '2026-09-02T22:20:11.755Z'
 updated_at: '2026-09-02T22:21:06.566Z'
 blast_radius:
