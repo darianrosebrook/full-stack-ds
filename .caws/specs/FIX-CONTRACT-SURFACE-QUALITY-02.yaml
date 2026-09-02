@@ -2,9 +2,10 @@ id: FIX-CONTRACT-SURFACE-QUALITY-02
 title: 'Repair contract-level surface defects: Card status rail, Popover border/surface, Divider UA leak, Table selected contrast'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: surface-quality
 created_at: '2026-09-02T23:17:48.963Z'
-updated_at: '2026-09-02T23:17:48.963Z'
+updated_at: '2026-09-02T23:17:55.349Z'
 blast_radius:
   modules:
     - 'ds-contracts'
