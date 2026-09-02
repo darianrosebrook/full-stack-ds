@@ -2,9 +2,10 @@ id: SHOWCASE-STATES-GRID-DIMENSIONAL-01
 title: 'Resurrect the Design view States section on the dimensional states model'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: states-grid-dimensional
 created_at: '2026-09-02T22:18:30.157Z'
-updated_at: '2026-09-02T22:18:30.157Z'
+updated_at: '2026-09-02T22:19:20.264Z'
 blast_radius:
   modules:
     - 'src showcase app (Design view States section, StatesGrid section panel, DeveloperView trace index, types mirror)'
