@@ -2,9 +2,11 @@ id: REL-CORPUS-CONTRACT-REPAIR-01
 title: 'Stage 0.5: repair the corpus contract so it cannot bias the stage-1 engine'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Stage 0.5 landed: case identity split from diagnostic identity (59 cases, 47 diagnostics, 7 shared), per-case stage and evidence class, unproven verdict with obligation, vocabulary pinned to the doctrine appendix by exact equality, doctrine reconciled (relational structure, three-valued judgment, task cannot disavow encoding claims, necessity witnesses, completeness bars); known defect recorded: REL-ILLEGAL-CORPUS-01 A1 names the wrong vitest path and is frozen.'
 created_at: '2026-09-02T19:33:23.821Z'
-updated_at: '2026-09-02T19:33:25.224Z'
+updated_at: '2026-09-02T19:48:35.106Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/analytical-pack (schema v2: case/diagnostic split, verdict, stage, evidence; corpus rename; vocabulary)'
