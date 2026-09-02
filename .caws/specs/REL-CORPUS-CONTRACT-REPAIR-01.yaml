@@ -2,9 +2,10 @@ id: REL-CORPUS-CONTRACT-REPAIR-01
 title: 'Stage 0.5: repair the corpus contract so it cannot bias the stage-1 engine'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: corpus-repair
 created_at: '2026-09-02T19:33:23.821Z'
-updated_at: '2026-09-02T19:33:23.821Z'
+updated_at: '2026-09-02T19:33:25.224Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/analytical-pack (schema v2: case/diagnostic split, verdict, stage, evidence; corpus rename; vocabulary)'
