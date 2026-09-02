@@ -2,9 +2,10 @@ id: FIX-WORKTREE-NODE-MODULES-ISOLATION-01
 title: 'Full root vitest is red inside CAWS worktrees (symlinked node_modules) while green on canonical'
 risk_tier: 3
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: worktree-node-isolation
 created_at: '2026-09-02T20:15:21.281Z'
-updated_at: '2026-09-02T20:15:21.281Z'
+updated_at: '2026-09-02T21:25:54.142Z'
 blast_radius:
   modules:
     - 'caws worktree create symlink strategy (external CLI) or a post-create install/dedupe step under scripts/'
