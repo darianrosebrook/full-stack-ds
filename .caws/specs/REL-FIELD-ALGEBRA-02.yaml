@@ -3,6 +3,7 @@ title: 'Stage 1.5: necessity and minimality of the L0-L2 kernel - baseline repai
 risk_tier: 3
 mode: feature
 lifecycle_state: active
+worktree: field-algebra-02b
 created_at: '2026-09-02T22:43:04.038Z'
 updated_at: '2026-09-02T22:58:20.485Z'
 blast_radius:
