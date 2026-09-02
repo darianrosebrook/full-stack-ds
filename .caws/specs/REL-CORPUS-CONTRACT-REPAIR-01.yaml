@@ -1,0 +1,47 @@
+id: REL-CORPUS-CONTRACT-REPAIR-01
+title: 'Stage 0.5: repair the corpus contract so it cannot bias the stage-1 engine'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-02T19:33:23.821Z'
+updated_at: '2026-09-02T19:33:23.821Z'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-pack (schema v2: case/diagnostic split, verdict, stage, evidence; corpus rename; vocabulary)'
+    - 'packages/ds-codegen/src/analytical (corpus-integrity: bijection, stage selector, obligation, doctrine-mention edge)'
+    - 'docs/architecture/analytical-relation-doctrine.md (lifecycle reconciliation, relational structure, three-valued judgment, necessity witnesses, task/encoding intersection, diagnostic catalogue)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-pack'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture'
+  out: []
+invariants:
+  - 'Case identity and diagnostic identity are separate fields, and at least one diagnostic has more than one case, so the distinct-diagnostic metric is a property of the engine''s causal partitioning and not of how many rows were authored.'
+  - 'Every case declares the earliest stage at which it is adjudicable and the evidence class it needs (schema or instance); a stage-N engine is judged only on cases with stage at most N, and later cases are not-yet-adjudicable rather than pass or fail.'
+  - 'Judgments are three-valued: an unproven case carries its missing premise as a vocabulary term, so the admissible set narrows on missing evidence instead of blocking or silently passing.'
+  - 'The stage-0 vocabulary claim is stated as ''declared references resolve'' and every vocabulary term is mentioned by the doctrine; semantic completeness of prose is not claimed.'
+acceptance:
+  - id: A1
+    given: 'corpus-case.schema.json and corpus.jsonl replacing the illegal-form pair'
+    when: 'pnpm exec vitest run packages/ds-codegen/src/analytical'
+    then: 'every case validates, case ids are unique, the set of illegal diagnostics equals the doctrine''s diagnostic catalogue in both directions, and a corpus in which every diagnostic has exactly one case is a finding'
+  - id: A2
+    given: 'each case''s stage and evidence fields'
+    when: 'casesAdjudicableAt(1) is taken'
+    then: 'it returns only stage-1 cases, the set is non-empty, and it includes at least one unproven case whose obligation resolves in vocabulary.json'
+  - id: A3
+    given: 'vocabulary.json and the doctrine'
+    when: 'the doctrine-mention check runs'
+    then: 'every vocabulary term name is mentioned in the doctrine (hyphen/space and plural tolerant), and a term added without a doctrine mention is a finding the test reaches'
+  - id: A4
+    given: 'the doctrine after this slice'
+    when: 'read against the review'
+    then: 'its status paragraph names what exists after stage 0 and a concrete ratification condition, L1 states the relational-structure position, L3.5 states that encoding-induced claims cannot be disavowed by a declared task, the stage-1 row scopes adjudication to stage-1 cases with three-valued judgment and axis-necessity witnesses, and the non-claims include analytical meaning versus denotation'
+non_functional: {}
+contracts:
+  - name: 'corpus-case-schema'
+    type: schema
+    path: 'packages/ds-contracts/analytical-pack/corpus-case.schema.json'
