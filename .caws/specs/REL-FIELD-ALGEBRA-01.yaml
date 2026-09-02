@@ -124,3 +124,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A7: 15 neighbours (one per stage-1 diagnostic, bindings.neighbours) each judge to the empty admissible judgment; corpus-integrity LEDGER_NEIGHBOUR_MISSING pins coverage"
     recorded_at: "2026-09-02T21:21:47.530Z"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A8: holdout.json ruleDigest 27701a78a6fbf0ea... == sha256(engines.ts) enforced in test and by LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH; 8 hand-derived mixed items (5 illegal incl. two-diagnostic payroll and index+rate, 1 admissible with witnessed unknown grain + excluded suppression, 1 unproven per-row unit, 1 multi-currency rows made commensurable by conversions) match exactly; none is a case fixture (LEDGER_HOLDOUT_CONTAMINATED)"
+    recorded_at: "2026-09-02T21:21:48.012Z"
