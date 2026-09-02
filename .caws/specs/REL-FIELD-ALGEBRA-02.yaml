@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: field-algebra-02
 created_at: '2026-09-02T22:43:04.038Z'
-updated_at: '2026-09-02T22:44:08.759Z'
+updated_at: '2026-09-02T22:52:13.932Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical (zod relation+assertion model as the single authority; inferred types; schema emitter with --check; occurrence identity + engine provenance; census derived from the model; external quotient-ablation harness with self-tests; D6 scale factorization)'
@@ -28,6 +28,7 @@ scope:
     - 'scripts/prepush-scope.mjs'
     - 'src/data/analytical-fixtures'
     - 'docs/architecture'
+    - .githooks/pre-push
   out: []
 invariants:
   - 'Oracle frozen at the post-rename baseline: analytical-pack is scope.out and closure must show corpus.jsonl 6f8edea4f5aabef4, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, doctrine catalogue+appendix sections (sed ''## Diagnostic catalogue''..''## Falsification conditions'') 8622d010f131c94f unchanged. If the harness proves the oracle wrong the slice stops untouched.'
