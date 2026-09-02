@@ -51,6 +51,7 @@ docs/
     composer-slot-projection.md          # Named-slot projection across targets
     contract-group-axes.md               # layer / category / morphology / prop-bucket axes
     consumer-projection-doctrine.md      # Boring consumer surface + override doctrine
+    analytical-relation-doctrine.md      # Typed analytical relations + combinatorial projection (draft)
     component-evidence-pages.md          # Component docs as evidence pages
     figma-plugin.md                      # Figma descriptor consumer (historical slice)
     design/
