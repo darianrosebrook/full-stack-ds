@@ -128,3 +128,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A8: holdout.json ruleDigest 27701a78a6fbf0ea... == sha256(engines.ts) enforced in test and by LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH; 8 hand-derived mixed items (5 illegal incl. two-diagnostic payroll and index+rate, 1 admissible with witnessed unknown grain + excluded suppression, 1 unproven per-row unit, 1 multi-currency rows made commensurable by conversions) match exactly; none is a case fixture (LEDGER_HOLDOUT_CONTAMINATED)"
     recorded_at: "2026-09-02T21:21:48.012Z"
+  - criterion_id: A9
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A9: FX_S_HETEROGENEOUS_OBSERVATIONS one column with observed / imputed / censored / measurement-error rows (4 distinct states after normalizeObservation); judgment REL_NULL_CENSORED_AS_OBSERVED (instance) + REL_UNCERTAINTY_UNPROPAGATED (schema); field-level permits[] + per-observation qualifiers is the representation, a column enum could not carry it"
+    recorded_at: "2026-09-02T21:21:48.485Z"
