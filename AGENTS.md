@@ -132,6 +132,10 @@ markdown file, and `docs:check-claims` derives and enforces it:
 | `<!-- coverage-floor-branches:<id> -->` | the `branches` floor for `<id>` in `coverage-floors.json` |
 | `<!-- coverage-floor-functions:<id> -->` | the `functions` floor for `<id>` in `coverage-floors.json` |
 | `<!-- coverage-vs-target:<id> -->` | `above` when the `<id>` lines floor meets `target.lines` in `coverage-floors.json`, else `below` |
+| `<!-- src-view-count -->` | top-level non-test `.tsx` modules under `src/views/` |
+| `<!-- src-view-list -->` | those module names, sorted |
+| `<!-- src-top-level-dir-count -->` | directories directly under `src/` |
+| `<!-- showcase-route-count -->` | the `\| { kind: "…" }` members of the `Route` union in `src/router.tsx` |
 
 Usage is `<!-- marker -->value`. Count claims govern the integer immediately after the marker;
 `web-framework-list` governs a bare comma list (no terminal "and") and `snapshot-updated` a
@@ -228,10 +232,22 @@ packages/
   ds-tokens/            # DTCG token source, build, validation, contrast, usage gates
   ds-figma-plugin/      # Consumes generated figma descriptors
 
-src/                    # React showcase app (Vite)
-  app.tsx
-  views/                # DesignView + DeveloperView + sections/
+src/                    # React showcase app (Vite) — <!-- src-top-level-dir-count -->10 top-level dirs
+  app.tsx               # Shell: Header/Sidebar/TracePanel + route switch
+  router.tsx            # <!-- showcase-route-count -->12 hash routes (the Route union)
+  views/                # <!-- src-view-count -->15 top-level view modules + sections/ evidence panels
+                        #   <!-- src-view-list -->ActivityView, ArchitectureView, ComponentComplexityView, ComponentStandardsView, ComponentTokensView, ComponentViewTabs, DesignView, DeveloperView, DisplayCaseView, Home, PrimitiveView, PropertiesScratchView, SettingsView, TokensPhilosophyView, TokensView
   runtime/              # Framework preview pipeline (per-framework iframe mounts)
+  components/           # App chrome (CommandPalette, CodeViewer, AboutDialog, JsonTreeViewer)
+                        #   + properties-panel/ (governed by docs/architecture/tokens-architecture.md)
+  layout/               # Header, Sidebar, TracePanel
+  consumption/          # Consumption guard tests (package contract, CSS hygiene, Stack layout)
+  lib/                  # Usage-example projection (render-usage.tsx, usage-registry.ts)
+  trace/                # DeveloperView trace index (buildTraceIndex)
+  types/                # Generated bundle loader (bundle.ts, data.ts)
+  styles/               # app.css (shell styles)
+  assets/               # Static images + barrel
+  prefs.ts              # Persisted UI preferences
 
 e2e/runtime-rail.spec.ts  # Playwright runtime fact rail
 ```
