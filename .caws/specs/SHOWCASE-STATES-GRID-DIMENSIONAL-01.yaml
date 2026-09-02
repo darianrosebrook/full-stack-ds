@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/views/sections/StatesGrid.test.tsx (7 passed: per-axis cards render authored category, values, initial marker, effect/suppression flags)"
     recorded_at: "2026-09-02T22:39:57.344Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "StatesGrid.test.tsx 'renders nothing for a contract without states' (toBeEmptyDOMElement) + DesignView gate stateDimensionsOf().length > 0 (src/views/DesignView.tsx)"
+    recorded_at: "2026-09-02T22:39:57.776Z"
