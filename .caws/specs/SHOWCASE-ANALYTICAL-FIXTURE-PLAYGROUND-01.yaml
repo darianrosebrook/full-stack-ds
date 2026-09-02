@@ -1,0 +1,44 @@
+id: SHOWCASE-ANALYTICAL-FIXTURE-PLAYGROUND-01
+title: 'Analytical fixture playground: raw-data scratch surface with realization placeholder'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-02T21:22:55.630Z'
+updated_at: '2026-09-02T21:22:55.630Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'src/data/analytical-fixtures'
+    - 'src/views/AnalyticalFixturesScratchView.tsx'
+    - 'src/views/AnalyticalFixturesScratchView.smoke.test.tsx'
+    - 'src/router.tsx'
+    - 'src/app.tsx'
+    - 'scripts/sync-analytical-fixtures.mjs'
+    - 'AGENTS.md'
+    - 'package.json'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the showcase app; when #/scratch/analytical-fixtures is opened; then the fixture index, each fixture''s relational structure, its evidence rows, and its L0-L2 assertions all render from the generated src/ dump'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given scripts/sync-analytical-fixtures.mjs; when it runs against packages/ds-contracts/analytical-fixtures/fixtures.jsonl; then it regenerates the src/ dump with matching fixture count and no answer-key material (case ids, verdicts, diagnostics, obligations, bindings, holdout)'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a fixture with evidence rows; when selected in the playground; then per-observation qualifiers (null kind, uncertainty, unit, provenance) render as data, and the realization area renders only the explicit no-engine placeholder - no fabricated chart or projection'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the governed doc-claims markers over the showcase structure; when the view and data dir land; then docs:check-claims passes with the updated counts'
+non_functional: {}
+contracts: []
