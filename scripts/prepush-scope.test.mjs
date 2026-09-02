@@ -243,6 +243,31 @@ test("a docs-only push does NOT run the motion rail", () => {
   assert.equal(classify(["docs/x.md"]).RUN_MOTION_AUDIT, false);
 });
 
+// --- analytical derived artifacts (REL-FIELD-ALGEBRA-02) ---------------------
+// Two projections, one authority each: JSON Schemas from the zod model, the
+// showcase dump from fixtures.jsonl. Every input surface and every emitted
+// surface can move a verdict on its own.
+
+test("changing the zod model or its emitter runs the analytical checks", () => {
+  assert.equal(classify(["packages/ds-codegen/src/analytical/relation-model.ts"]).RUN_ANALYTICAL_CHECKS, true);
+  assert.equal(classify(["packages/ds-codegen/src/analytical/emit-schemas.ts"]).RUN_ANALYTICAL_CHECKS, true);
+});
+
+test("hand-editing an emitted schema or the fixture corpus runs the analytical checks", () => {
+  assert.equal(classify(["packages/ds-contracts/relation.contract.schema.json"]).RUN_ANALYTICAL_CHECKS, true);
+  assert.equal(classify(["packages/ds-contracts/analytical-fixtures/fixtures.jsonl"]).RUN_ANALYTICAL_CHECKS, true);
+});
+
+test("touching the showcase dump or the sync script runs the analytical checks", () => {
+  assert.equal(classify(["src/data/analytical-fixtures/fixtures.ts"]).RUN_ANALYTICAL_CHECKS, true);
+  assert.equal(classify(["scripts/sync-analytical-fixtures.mjs"]).RUN_ANALYTICAL_CHECKS, true);
+});
+
+test("a component contract or docs-only push does NOT run the analytical checks", () => {
+  assert.equal(classify(["packages/ds-contracts/components/Dialog/Dialog.contract.json"]).RUN_ANALYTICAL_CHECKS, false);
+  assert.equal(classify(["docs/x.md"]).RUN_ANALYTICAL_CHECKS, false);
+});
+
 test("the custom-region ledger needs no token build", () => {
   // It reads committed source only. If this ever flips true, the audit has
   // grown a dependency on generated token state it does not actually use.

@@ -1,6 +1,7 @@
 /**
- * REL-FIELD-ALGEBRA-01 acceptance: the stage-1 engine against the frozen
- * oracle. Each block names the criterion it discharges. The oracle
+ * Stage-1 acceptance: the engine against the frozen oracle. Blocks A1-A11 are
+ * REL-FIELD-ALGEBRA-01's criteria; the B blocks are REL-FIELD-ALGEBRA-02
+ * Phase A (occurrence identity, engine provenance). The oracle
  * (`analytical-pack/`) is read, never written; expectations for the case
  * fixtures come from the corpus, expectations for the holdout from
  * `holdout.json`, authored by hand against a recorded rule digest.
@@ -10,14 +11,14 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { casesAdjudicableAt, checkFixtureLedger, loadCorpusInput, loadLedgerInput, sha256, type LedgerInput } from "./corpus-integrity.js";
 import { DIAG, OBLIGATION, RULES, judge } from "./engines.js";
-import { canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
+import { assertionKey, canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
 import { alphaRename, normalizeObservation, renameSubject, type Fixture, type RelationalStructure } from "./structure.js";
 
 const CONTRACTS = path.resolve(__dirname, "../../../ds-contracts");
 const PACK = path.join(CONTRACTS, "analytical-pack");
 const DOCTRINE = path.resolve(__dirname, "../../../../docs/architecture/analytical-relation-doctrine.md");
 const ENGINE_SOURCE = path.join(__dirname, "engines.ts");
-const BLIND_SOURCES = ["structure.ts", "judgment.ts", "engines.ts"].map((f) => path.join(__dirname, f));
+const BLIND_SOURCES = ["relation-model.ts", "structure.ts", "judgment.ts", "engines.ts", "emit-schemas.ts"].map((f) => path.join(__dirname, f));
 
 const corpus = loadCorpusInput(PACK, DOCTRINE);
 const stage1Cases = casesAdjudicableAt(corpus.cases, 1);
@@ -38,19 +39,21 @@ describe("A1 — every stage-1 case yields exactly its expected judgment", () =>
   });
 
   for (const c of stage1Cases) {
-    it(`${c.case} → ${c.verdict} ${c.diagnostic ?? c.obligation}`, () => {
+    it(`${c.case} → ${c.verdict} ${c.diagnostic ?? c.obligation} (${c.engine})`, () => {
       const j = judgeFixture(fx(live.bindings.cases[c.case]));
       expect(j.status).toBe(c.verdict);
       if (c.verdict === "illegal") {
-        // exact singleton: one occurrence, that code, no obligation, the case's evidence class
+        // exact singleton: one occurrence, that code, no obligation, the case's evidence class and engine
         expect(j.diagnostics).toHaveLength(1);
         expect(j.diagnostics[0].code).toBe(c.diagnostic);
         expect(j.diagnostics[0].evidenceClass).toBe(c.evidence);
+        expect(j.diagnostics[0].engine).toBe(c.engine);
         expect(j.obligations).toEqual([]);
       } else {
         expect(j.obligations).toHaveLength(1);
         expect(j.obligations[0].term).toBe(c.obligation);
         expect(j.obligations[0].evidenceClass).toBe(c.evidence);
+        expect(j.obligations[0].engine).toBe(c.engine);
         expect(j.diagnostics).toEqual([]);
       }
     });
@@ -190,6 +193,33 @@ describe("A4 — judgments are occurrence-bearing", () => {
   });
 });
 
+describe("B3 — occurrence identity carries the assertion; the engine is provenance", () => {
+  it("two assertions on one field differing only in collapsed dimensions are two occurrences with one subject", () => {
+    const j = judgeFixture(fx(live.bindings.special.alongIdentity as string));
+    expect(j.status).toBe("illegal");
+    expect(j.diagnostics.map((d) => d.code)).toEqual([DIAG.PROPORTION_SUM_ACROSS_WHOLES, DIAG.PROPORTION_SUM_ACROSS_WHOLES]);
+    expect(new Set(j.diagnostics.map((d) => d.subject))).toEqual(new Set(["shares.share"]));
+    expect(j.diagnostics.map((d) => d.assertion).sort()).toEqual(["aggregate:sum", "aggregate:sum(along=market,year)"]);
+    expect(j.diagnostics.every((d) => d.engine === "additivity")).toBe(true);
+  });
+
+  it("assertion identity is order-independent in its set-valued parameters", () => {
+    expect(assertionKey({ kind: "aggregate", relation: "r", field: "f", op: "sum", along: ["year", "market"], nulls: "exclude" })).toBe(
+      "aggregate:sum(along=market,year;nulls=exclude)",
+    );
+    expect(assertionKey({ kind: "rollup", relation: "r", field: "f", op: "mean", toGrain: ["b", "a"] })).toBe("rollup:mean(toGrain=a,b)");
+    expect(assertionKey({ kind: "ratio-comparison", relation: "r", field: "f" })).toBe("ratio-comparison");
+  });
+
+  it("every stage-1 occurrence names one of the vocabulary's engines", () => {
+    const engines = new Set(corpus.vocabulary.engines);
+    for (const c of stage1Cases) {
+      const j = judgeFixture(fx(live.bindings.cases[c.case]));
+      for (const o of [...j.diagnostics, ...j.obligations]) expect(engines.has(o.engine), `${c.case}: ${o.engine}`).toBe(true);
+    }
+  });
+});
+
 describe("A5 — mixed faults and order independence", () => {
   it("an illegal and an unproven fault in one structure report both, status illegal", () => {
     const j = judgeFixture(fx(live.bindings.special.mixedFault as string));
@@ -206,10 +236,11 @@ describe("A5 — mixed faults and order independence", () => {
     ...(s.relationships ? { relationships: [...s.relationships].reverse() } : {}),
   });
 
-  it("every fixture judges byte-identically under reversed assertions, fields, relations, and rules", () => {
+  it("every fixture judges byte-identically under reversed assertions, fields, relations, along, and rules", () => {
     for (const f of live.fixtures) {
       const base = canonicalJudgment(judgeFixture(f));
-      const permuted = canonicalJudgment(judge(permute(f.structure), [...f.assertions].reverse(), f.evidence, [...RULES].reverse()));
+      const assertions = [...f.assertions].reverse().map((a) => (a.kind === "aggregate" && a.along ? { ...a, along: [...a.along].reverse() } : a));
+      const permuted = canonicalJudgment(judge(permute(f.structure), assertions, f.evidence, [...RULES].reverse()));
       expect(permuted, f.id).toBe(base);
     }
   });
@@ -297,15 +328,17 @@ describe("A10 — identifier spelling confers no standing", () => {
     const j1 = judgeFixture(renamed);
     expect(j0.status).toBe("illegal");
     expect(j1.status).toBe(j0.status);
-    expect(j1.diagnostics.map((d) => [d.code, d.subject, d.evidenceClass])).toEqual(
-      j0.diagnostics.map((d) => [d.code, renameSubject(d.subject, map), d.evidenceClass]),
+    expect(j1.diagnostics.map((d) => [d.code, d.subject, d.assertion, d.engine, d.evidenceClass])).toEqual(
+      j0.diagnostics.map((d) => [d.code, renameSubject(d.subject, map), d.assertion, d.engine, d.evidenceClass]),
     );
     expect(j1.obligations).toEqual(j0.obligations);
   });
 
   it("an ordinal field named revenue is still ordinal; a ratio field named satisfaction_score is still ratio", () => {
     const j = judgeFixture(fx(live.bindings.special.adversarialNames as string));
-    expect(j.diagnostics).toEqual([{ code: DIAG.ORDINAL_MEAN, subject: "kpis.revenue#aggregate:mean", evidenceClass: "schema" }]);
+    expect(j.diagnostics).toEqual([
+      { code: DIAG.ORDINAL_MEAN, subject: "kpis.revenue", assertion: "aggregate:mean", engine: "meaningfulness", evidenceClass: "schema" },
+    ]);
   });
 });
 

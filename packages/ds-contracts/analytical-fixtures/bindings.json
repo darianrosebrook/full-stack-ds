@@ -64,6 +64,7 @@
     "heterogeneous": "FX_S_HETEROGENEOUS_OBSERVATIONS",
     "renameOriginal": "FX_S_RENAME_ORIGINAL",
     "adversarialNames": "FX_S_ADVERSARIAL_NAMES",
+    "alongIdentity": "FX_S_ALONG_IDENTITY",
     "probes": ["FX_P_CATEGORICAL_VS_RATIO", "FX_P_BINNED_INTERVAL", "FX_P_OHLC", "FX_P_HIERARCHY", "FX_P_GRAPH_ISOLATED_NODE"]
   },
   "holdout": [

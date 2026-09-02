@@ -1,10 +1,11 @@
 /**
  * Stage-1 relational structure: the L0-L2 representation the engine consumes.
  *
- * Types mirror `packages/ds-contracts/relation.contract.schema.json` and the
- * assertion/fixture schemas under `analytical-fixtures/`. Nothing here knows
- * about the corpus, cases, or expected verdicts; nothing here names a task,
- * channel, coordinate, projection, combinator, or form.
+ * The types are INFERRED from `relation-model.ts` (the single authority) and
+ * re-exported here; the JSON Schemas consumers read are emitted from the same
+ * model. Nothing here knows about the corpus, cases, or expected verdicts;
+ * nothing here names a task, channel, coordinate, projection, combinator, or
+ * form.
  *
  * Type-level vs observation-level: a field's `permits` declares which
  * qualifiers its observations MAY carry; each observation carries which it
@@ -13,107 +14,59 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { Ajv, type ValidateFunction } from "ajv";
+import type {
+  AdditivityDecl,
+  AggregateOp,
+  Assertion,
+  Dimension,
+  Evidence,
+  FieldDecl,
+  Fixture,
+  Name,
+  NullKind,
+  ObservationInput,
+  ObservationRecord,
+  PermitsDecl,
+  Provenance,
+  RelationDecl,
+  RelationalStructure,
+  RelationshipDecl,
+  Scale,
+  Shape,
+  TemporalityDecl,
+  UncertaintyKind,
+  UnitDecl,
+} from "./relation-model.js";
 
-export type Scale = "nominal" | "ordinal" | "cyclic" | "interval" | "ratio" | "count" | "proportion" | "index";
-export type Shape = "scalar" | "interval" | "set" | "distribution" | "point";
-export type NullKind = "absent" | "not-applicable" | "censored" | "suppressed" | "unknown" | "missing-after-join";
-export type Provenance = "observed" | "derived" | "imputed" | "layout-generated";
-export type UncertaintyKind = "none" | "interval" | "distribution" | "measurement-error" | "rounded";
-export type Dimension = "currency" | "time" | "length" | "mass" | "temperature" | "dimensionless";
+export type {
+  AdditivityDecl,
+  AggregateOp,
+  Assertion,
+  Dimension,
+  Evidence,
+  FieldDecl,
+  Fixture,
+  Name,
+  NullKind,
+  ObservationInput,
+  ObservationRecord,
+  PermitsDecl,
+  Provenance,
+  RelationDecl,
+  RelationalStructure,
+  RelationshipDecl,
+  Scale,
+  Shape,
+  TemporalityDecl,
+  UncertaintyKind,
+  UnitDecl,
+};
 
-export interface UnitDecl {
-  dimension: Dimension;
-  unit?: string;
-  units?: string[];
-  perRow?: boolean;
-  conversions?: Record<string, number>;
-  rate?: { numerator: Dimension; denominator: Dimension };
-}
-
-export interface TemporalityDecl {
-  kind: "instant" | "interval" | "duration";
-  closure?: "half-open" | "closed" | "open";
-  grain?: string;
-  calendar?: string;
-}
-
-export type AdditivityDecl =
-  | { kind: "additive" }
-  | { kind: "semi-additive"; nonAdditiveAlong: string[] }
-  | { kind: "non-additive" }
-  | { kind: "ratio-measure"; numerator: string; denominator: string };
-
-export interface PermitsDecl {
-  null?: NullKind[];
-  provenance?: Provenance[];
-  uncertainty?: UncertaintyKind[];
-}
-
-export interface FieldDecl {
-  scale: Scale;
-  shape?: Shape;
-  key?: boolean;
-  unit?: UnitDecl;
-  temporality?: TemporalityDecl;
-  order?: { kind: "total" | "partial"; values?: (string | number)[] };
-  period?: number;
-  whole?: string | { perRow: string };
-  base?: string;
-  additivity?: AdditivityDecl;
-  permits?: PermitsDecl;
-}
-
-export interface RelationDecl {
-  grain: "unknown" | string[];
-  fields: Record<string, FieldDecl>;
-}
-
-export interface RelationshipDecl {
-  from: { relation: string; field: string };
-  to: { relation: string; field: string };
-  cardinality: "one-to-one" | "one-to-many" | "many-to-one" | "many-to-many";
-}
-
-export interface RelationalStructure {
-  relations: Record<string, RelationDecl>;
-  relationships?: RelationshipDecl[];
-}
-
-export type AggregateOp = "sum" | "mean" | "count" | "min" | "max";
-
-export type Assertion =
-  | {
-      kind: "aggregate";
-      relation: string;
-      field: string;
-      op: AggregateOp;
-      along?: string[];
-      nulls?: "exclude" | "as-zero" | "as-observed";
-      uncertainty?: "propagate" | "drop";
-    }
-  | { kind: "ratio-comparison"; relation: string; field: string }
-  | { kind: "rollup"; relation: string; field: string; toGrain: string[]; op: "sum" | "mean" | "rederive" };
-
-export interface Observation {
-  value?: number | string | boolean;
-  unit?: string;
-  null?: NullKind;
+/** An observation after normalization: what it HAS, with defaults made explicit. */
+export type Observation = Omit<ObservationRecord, "provenance" | "uncertainty"> & {
   provenance: Provenance;
-  uncertainty: { kind: UncertaintyKind; error?: number; low?: number; high?: number; level?: number };
-}
-export type ObservationInput = number | string | boolean | Partial<Observation>;
-
-export interface Evidence {
-  rows?: Record<string, Record<string, ObservationInput>[]>;
-  grainWitness?: Record<string, string[]>;
-}
-
-export interface Fixture {
-  id: string;
-  structure: RelationalStructure;
-  assertions: Assertion[];
-  evidence?: Evidence;
-}
+  uncertainty: NonNullable<ObservationRecord["uncertainty"]>;
+};
 
 /** A bare value is an observed, certain scalar; an object carries what it has. */
 export function normalizeObservation(o: ObservationInput): Observation {
@@ -146,15 +99,14 @@ export function parseFixtures(text: string): Fixture[] {
 }
 
 /**
- * Compile the fixture validator from the three closed schemas. Returns a
- * function yielding Ajv error strings (empty = valid).
+ * Compile the fixture validator from the EMITTED fixture schema (self-contained;
+ * a projection of the model). Returns a function yielding Ajv error strings
+ * (empty = valid). Consumers validate against the JSON, never against zod.
  */
 export function loadFixtureValidator(contractsDir: string): (fixture: unknown) => string[] {
-  const read = (p: string) => JSON.parse(fs.readFileSync(path.join(contractsDir, p), "utf-8")) as object;
+  const schema = JSON.parse(fs.readFileSync(path.join(contractsDir, "analytical-fixtures/fixture.schema.json"), "utf-8")) as object;
   const ajv = new Ajv({ allErrors: true, strict: false });
-  ajv.addSchema(read("relation.contract.schema.json"));
-  ajv.addSchema(read("analytical-fixtures/assertion.schema.json"));
-  const validate: ValidateFunction = ajv.compile(read("analytical-fixtures/fixture.schema.json"));
+  const validate: ValidateFunction = ajv.compile(schema);
   return (fixture) =>
     validate(fixture)
       ? []
@@ -214,10 +166,8 @@ export function alphaRename(fixture: Fixture, map: Record<string, string>): Fixt
   return { id: fixture.id, structure: { relations, ...(relationships ? { relationships } : {}) }, assertions, ...(evidence ? { evidence } : {}) };
 }
 
-/** Apply a rename map to a judgment subject (`rel`, `rel.field`, `rel.field#kind:op`). */
+/** Apply a rename map to a judgment subject (`rel`, `rel.field`). */
 export function renameSubject(subject: string, map: Record<string, string>): string {
   const r = rn(map);
-  const [loc, tail] = subject.split("#");
-  const parts = loc.split(".").map(r);
-  return tail === undefined ? parts.join(".") : `${parts.join(".")}#${tail}`;
+  return subject.split(".").map(r).join(".");
 }

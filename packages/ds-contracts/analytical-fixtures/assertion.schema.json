@@ -1,47 +1,129 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "assertion.schema.json",
-  "title": "Stage-1 analytical assertion (L0-L2 grammar)",
-  "description": "The closed set of operations a stage-1 engine can be asked to judge over a relational structure: an aggregate over one field (with optional collapsed dimensions and declared null/uncertainty handling), a ratio comparison over one field, or a rollup of one field to a coarser grain. Nothing here names a task, channel, coordinate, projection, combinator, or form; those are later-stage vocabulary and their presence in a fixture is a leak.",
-  "oneOf": [
-    {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind", "relation", "field", "op"],
-      "properties": {
-        "kind": { "const": "aggregate" },
-        "relation": { "$ref": "#/definitions/name" },
-        "field": { "$ref": "#/definitions/name" },
-        "op": { "enum": ["sum", "mean", "count", "min", "max"] },
-        "along": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/name" } },
-        "nulls": { "enum": ["exclude", "as-zero", "as-observed"] },
-        "uncertainty": { "enum": ["propagate", "drop"] }
-      }
-    },
-    {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind", "relation", "field"],
-      "properties": {
-        "kind": { "const": "ratio-comparison" },
-        "relation": { "$ref": "#/definitions/name" },
-        "field": { "$ref": "#/definitions/name" }
-      }
-    },
-    {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind", "relation", "field", "toGrain", "op"],
-      "properties": {
-        "kind": { "const": "rollup" },
-        "relation": { "$ref": "#/definitions/name" },
-        "field": { "$ref": "#/definitions/name" },
-        "toGrain": { "type": "array", "items": { "$ref": "#/definitions/name" } },
-        "op": { "enum": ["sum", "mean", "rederive"] }
-      }
-    }
-  ],
+  "$ref": "#/definitions/assertion",
   "definitions": {
-    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+    "assertion": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "aggregate"
+            },
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "mean",
+                "count",
+                "min",
+                "max"
+              ]
+            },
+            "along": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            },
+            "nulls": {
+              "type": "string",
+              "enum": [
+                "exclude",
+                "as-zero",
+                "as-observed"
+              ]
+            },
+            "uncertainty": {
+              "type": "string",
+              "enum": [
+                "propagate",
+                "drop"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field",
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ratio-comparison"
+            },
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "rollup"
+            },
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            },
+            "toGrain": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "mean",
+                "rederive"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field",
+            "toGrain",
+            "op"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "title": "Stage-1 analytical assertion (L0-L2 grammar)",
+      "description": "The closed set of operations a stage-1 engine can be asked to judge over a relational structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    }
   }
 }

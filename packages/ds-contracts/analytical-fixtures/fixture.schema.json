@@ -1,68 +1,735 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "fixture.schema.json",
-  "title": "Analytical fixture (one JSONL line of fixtures.jsonl)",
-  "description": "A stimulus for the stage-1 engine: a relational structure, one or more assertions, and optional evidence (rows with per-observation qualifiers, and a grain witness). Fixtures are answer-free by construction: this schema has no place for a case id, verdict, diagnostic, obligation, or colloquial name, and it is recursively closed so none can be smuggled in. The binding ledger (bindings.json) is the only thing that relates a fixture to a corpus case, and the fixture knows nothing of it. Fixtures are also data: structure plus evidence is the interchange shape any consumer that wants real rows can read.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": ["id", "structure", "assertions"],
-  "properties": {
-    "id": { "type": "string", "pattern": "^FX_[A-Z0-9_]+$" },
-    "structure": { "$ref": "relation.contract.schema.json" },
-    "assertions": { "type": "array", "minItems": 1, "items": { "$ref": "assertion.schema.json" } },
-    "evidence": { "$ref": "#/definitions/evidence" }
-  },
+  "$ref": "#/definitions/fixture",
   "definitions": {
-    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "fixture": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^FX_[A-Z0-9_]+$"
+        },
+        "structure": {
+          "$ref": "#/definitions/relationalStructure"
+        },
+        "assertions": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/assertion"
+          }
+        },
+        "evidence": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/evidence"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "structure",
+        "assertions"
+      ],
+      "additionalProperties": false,
+      "title": "Analytical fixture (one JSONL line of fixtures.jsonl)",
+      "description": "A stimulus for the stage-1 engine: a relational structure, one or more assertions, and optional evidence. Answer-free by construction: no place for a case id, verdict, diagnostic, obligation, or form name. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "relationalStructure": {
+      "type": "object",
+      "properties": {
+        "relations": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/definitions/name"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/relation"
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/relationship"
+          }
+        }
+      },
+      "required": [
+        "relations"
+      ],
+      "additionalProperties": false,
+      "title": "Relational structure (L0-L2)",
+      "description": "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001: one or more named relations, each with a declared grain and typed fields, plus declared relationships between them. A single relation is the degenerate structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "grain": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "unknown"
+            },
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            }
+          ]
+        },
+        "fields": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/definitions/name"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/field"
+          }
+        }
+      },
+      "required": [
+        "grain",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "field": {
+      "type": "object",
+      "properties": {
+        "scale": {
+          "type": "string",
+          "enum": [
+            "nominal",
+            "ordinal",
+            "cyclic",
+            "interval",
+            "ratio",
+            "count",
+            "proportion",
+            "index"
+          ]
+        },
+        "shape": {
+          "type": "string",
+          "enum": [
+            "scalar",
+            "interval",
+            "set",
+            "distribution",
+            "point"
+          ]
+        },
+        "key": {
+          "type": "boolean"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/unit"
+            }
+          ]
+        },
+        "temporality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/temporality"
+            }
+          ]
+        },
+        "order": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "total",
+                "partial"
+              ]
+            },
+            "values": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "period": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "whole": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "perRow": {
+                  "$ref": "#/definitions/name"
+                }
+              },
+              "required": [
+                "perRow"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "base": {
+          "type": "string",
+          "minLength": 1
+        },
+        "additivity": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/additivity"
+            }
+          ]
+        },
+        "permits": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/permits"
+            }
+          ]
+        }
+      },
+      "required": [
+        "scale"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "dimension": {
+          "$ref": "#/definitions/dimension"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "units": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "perRow": {
+          "type": "boolean"
+        },
+        "conversions": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+          },
+          "additionalProperties": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "rate": {
+          "type": "object",
+          "properties": {
+            "numerator": {
+              "$ref": "#/definitions/dimension"
+            },
+            "denominator": {
+              "$ref": "#/definitions/dimension"
+            }
+          },
+          "required": [
+            "numerator",
+            "denominator"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "dimension"
+      ],
+      "additionalProperties": false
+    },
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "currency",
+        "time",
+        "length",
+        "mass",
+        "temperature",
+        "dimensionless"
+      ]
+    },
+    "temporality": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "instant",
+            "interval",
+            "duration"
+          ]
+        },
+        "closure": {
+          "type": "string",
+          "enum": [
+            "half-open",
+            "closed",
+            "open"
+          ]
+        },
+        "grain": {
+          "type": "string",
+          "enum": [
+            "second",
+            "minute",
+            "hour",
+            "day",
+            "week",
+            "month",
+            "quarter",
+            "year"
+          ]
+        },
+        "calendar": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "additivity": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "additive"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "semi-additive"
+            },
+            "nonAdditiveAlong": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "nonAdditiveAlong"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "non-additive"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ratio-measure"
+            },
+            "numerator": {
+              "$ref": "#/definitions/name"
+            },
+            "denominator": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "kind",
+            "numerator",
+            "denominator"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "permits": {
+      "type": "object",
+      "properties": {
+        "null": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "absent",
+              "not-applicable",
+              "censored",
+              "suppressed",
+              "unknown",
+              "missing-after-join"
+            ]
+          }
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "derived",
+              "imputed",
+              "layout-generated"
+            ]
+          }
+        },
+        "uncertainty": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "none",
+              "interval",
+              "distribution",
+              "measurement-error",
+              "rounded"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relationship": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "$ref": "#/definitions/ref"
+        },
+        "to": {
+          "$ref": "#/definitions/ref"
+        },
+        "cardinality": {
+          "type": "string",
+          "enum": [
+            "one-to-one",
+            "one-to-many",
+            "many-to-one",
+            "many-to-many"
+          ]
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "cardinality"
+      ],
+      "additionalProperties": false
+    },
+    "ref": {
+      "type": "object",
+      "properties": {
+        "relation": {
+          "$ref": "#/definitions/name"
+        },
+        "field": {
+          "$ref": "#/definitions/name"
+        }
+      },
+      "required": [
+        "relation",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "assertion": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "aggregate"
+            },
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "mean",
+                "count",
+                "min",
+                "max"
+              ]
+            },
+            "along": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            },
+            "nulls": {
+              "type": "string",
+              "enum": [
+                "exclude",
+                "as-zero",
+                "as-observed"
+              ]
+            },
+            "uncertainty": {
+              "type": "string",
+              "enum": [
+                "propagate",
+                "drop"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field",
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ratio-comparison"
+            },
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "rollup"
+            },
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            },
+            "toGrain": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "mean",
+                "rederive"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field",
+            "toGrain",
+            "op"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "title": "Stage-1 analytical assertion (L0-L2 grammar)",
+      "description": "The closed set of operations a stage-1 engine can be asked to judge over a relational structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
     "evidence": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "rows": {
           "type": "object",
-          "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+          "propertyNames": {
+            "$ref": "#/definitions/name"
+          },
           "additionalProperties": {
             "type": "array",
             "items": {
               "type": "object",
-              "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
-              "additionalProperties": { "$ref": "#/definitions/observation" }
+              "propertyNames": {
+                "$ref": "#/definitions/name"
+              },
+              "additionalProperties": {
+                "$ref": "#/definitions/observation"
+              }
             }
           }
         },
         "grainWitness": {
           "type": "object",
-          "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
-          "additionalProperties": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/name" } }
-        }
-      }
-    },
-    "observation": {
-      "oneOf": [
-        { "type": ["number", "string", "boolean"] },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "value": { "type": ["number", "string", "boolean"] },
-            "unit": { "type": "string", "minLength": 1 },
-            "null": { "enum": ["absent", "not-applicable", "censored", "suppressed", "unknown", "missing-after-join"] },
-            "provenance": { "enum": ["observed", "derived", "imputed", "layout-generated"] },
-            "uncertainty": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["kind"],
-              "properties": {
-                "kind": { "enum": ["none", "interval", "distribution", "measurement-error", "rounded"] },
-                "error": { "type": "number", "minimum": 0 },
-                "low": { "type": "number" },
-                "high": { "type": "number" },
-                "level": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
-              }
+          "propertyNames": {
+            "$ref": "#/definitions/name"
+          },
+          "additionalProperties": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/name"
             }
           }
         }
+      },
+      "additionalProperties": false
+    },
+    "observation": {
+      "anyOf": [
+        {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        {
+          "$ref": "#/definitions/observationRecord"
+        }
       ]
+    },
+    "observationRecord": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "null": {
+          "type": "string",
+          "enum": [
+            "absent",
+            "not-applicable",
+            "censored",
+            "suppressed",
+            "unknown",
+            "missing-after-join"
+          ]
+        },
+        "provenance": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "derived",
+            "imputed",
+            "layout-generated"
+          ]
+        },
+        "uncertainty": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/uncertainty"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "uncertainty": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "none",
+            "interval",
+            "distribution",
+            "measurement-error",
+            "rounded"
+          ]
+        },
+        "error": {
+          "type": "number",
+          "minimum": 0
+        },
+        "low": {
+          "type": "number"
+        },
+        "high": {
+          "type": "number"
+        },
+        "level": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
     }
   }
 }
