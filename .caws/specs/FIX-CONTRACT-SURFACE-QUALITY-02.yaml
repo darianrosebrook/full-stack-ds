@@ -72,3 +72,8 @@ evidence:
     evidence_ref: "Same 58-route sweep: .card--in-progress computes left 2px rgb(5,102,254) against top 1px rgb(71,70,71); .card--completed left 2px rgb(73,127,33). Proves the rail moved to the variant rather than being deleted. Card.css lines 51-59 emit border-inline-start-{width,color} only under .card--completed / .card--in-progress and the four other status selectors."
     recorded_at: "2026-09-02T23:33:36.841Z"
     commit_sha: "597c6680"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "getComputedStyle + getBoundingClientRect on /component/Divider/design: horizontal = 886x1 px with top 'solid 1px' and right/bottom/left all 'none 0px' (was 886x2 with 'inset 1px rgb(128,128,128)' on three sides); vertical = 1x14 px with left 'solid 1px' and others 'none 0px' (was a degenerate 2x1 px). The UA-leak probe across all 58 routes no longer lists either HR."
+    recorded_at: "2026-09-02T23:33:43.938Z"
+    commit_sha: "597c6680"
