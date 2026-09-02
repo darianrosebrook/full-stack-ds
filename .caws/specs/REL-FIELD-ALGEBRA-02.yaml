@@ -2,9 +2,11 @@ id: REL-FIELD-ALGEBRA-02
 title: 'Stage 1.5: necessity and minimality of the L0-L2 kernel - baseline repair, leaf-level quotient ablations, scale factorization, bounded promotion to active'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'PASS reached through UNNECESSARY COORDINATES FOUND and FUTURE-ONLY COORDINATE FOUND; no >2-axis dependency. Census of the Phase-A schema (46 leaves, 212 distinctions, 10 references): 81 ratified, 177 not-yet-admitted (128 stage 2, 49 stage 3); kernel 26 leaves + 21 distinctions, every one witnessed (48 witnesses, four minimal 2-sets). D6: capabilities primitive (transformation x cyclic x proportion x index), scale labels derived aliases, count = ratio. rollup merged into aggregate (target grain and rate re-derivation unwitnessed), rederive = count. Phase-A ledger conserved byte-for-byte modulo 4 recorded key rewrites; oracle untouched (5 custody digests equal); doctrine active with ratification bounded to the L0-L2 kernel. NON-CLAIMS: the analytical normal-form candidate, projection completeness and the FSDS thesis are not ratified; three null-handling distinctions are witnessed only with rows; member-vs-absence is not a census coordinate (temporality.interval and additivity.additive are indistinguishable from absence and stay by the precommitted granularity); hand adjudications for 25 patched stimuli rest on catalogue-cause readings, checked against the engine as evidence only; mutation score not measured; the harness''s collision is name-blind canonical JSON, so a coordinate whose necessity would show only through row VALUES beyond null kind and unit is outside what this census can see.'
 created_at: '2026-09-02T22:43:04.038Z'
-updated_at: '2026-09-02T23:43:10.961Z'
+updated_at: '2026-09-02T23:50:47.738Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical (zod relation+assertion model as the single authority; inferred types; schema emitter with --check; occurrence identity + engine provenance; census derived from the model; external quotient-ablation harness with self-tests; D6 scale factorization)'
