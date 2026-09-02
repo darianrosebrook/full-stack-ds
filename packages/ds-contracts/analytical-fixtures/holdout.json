@@ -1,0 +1,72 @@
+{
+  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output.",
+  "ruleDigest": "27701a78a6fbf0ea6d86193cf05dbdbf600fd736ea1a8b2a70e33ea7297e5007",
+  "items": [
+    {
+      "fixture": "FX_H_PAYROLL",
+      "expected": {
+        "status": "illegal",
+        "diagnostics": [
+          ["REL_IDENTITY_AGGREGATED", "employees.emp_id#aggregate:sum", "schema"],
+          ["REL_MEANINGFULNESS_ORDINAL_MEAN", "employees.grade#aggregate:mean", "schema"]
+        ],
+        "obligations": []
+      }
+    },
+    {
+      "fixture": "FX_H_SENSOR_NETWORK",
+      "expected": {
+        "status": "illegal",
+        "diagnostics": [["REL_MEANINGFULNESS_CYCLIC_LINEAR_MEAN", "sensors.hour#aggregate:mean", "schema"]],
+        "obligations": []
+      }
+    },
+    {
+      "fixture": "FX_H_LEDGER_MULTI_CURRENCY_ROWS",
+      "expected": {
+        "status": "illegal",
+        "diagnostics": [["REL_TEMPORAL_INSTANT_SUM", "ledger.posted_at#aggregate:sum", "schema"]],
+        "obligations": []
+      }
+    },
+    {
+      "fixture": "FX_H_CENSUS_CELLS_WITNESSED",
+      "expected": { "status": "admissible", "diagnostics": [], "obligations": [] }
+    },
+    {
+      "fixture": "FX_H_MARKET_SHARE_ROLLUP",
+      "expected": {
+        "status": "illegal",
+        "diagnostics": [["REL_PROPORTION_SUM_ACROSS_WHOLES", "shares.share#aggregate:sum", "schema"]],
+        "obligations": []
+      }
+    },
+    {
+      "fixture": "FX_H_CLINICAL_TRIAL",
+      "expected": {
+        "status": "illegal",
+        "diagnostics": [["REL_NULL_CENSORED_AS_OBSERVED", "subjects.survival_days#aggregate:mean", "instance"]],
+        "obligations": []
+      }
+    },
+    {
+      "fixture": "FX_H_KPI_INDEX_AND_RATE",
+      "expected": {
+        "status": "illegal",
+        "diagnostics": [
+          ["REL_INDEX_BASE_MISSING", "kpis.price_index", "schema"],
+          ["REL_RATIO_MEASURE_AVERAGED", "kpis.cost_per_unit#rollup:sum", "schema"]
+        ],
+        "obligations": []
+      }
+    },
+    {
+      "fixture": "FX_H_INVENTORY_VALUE_UNKNOWN_UNIT",
+      "expected": {
+        "status": "unproven",
+        "diagnostics": [],
+        "obligations": [["unit:commensurable", "stock.value#aggregate:sum", "instance"]]
+      }
+    }
+  ]
+}
