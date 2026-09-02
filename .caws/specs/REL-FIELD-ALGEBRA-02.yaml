@@ -155,3 +155,7 @@ evidence:
     status: pass
     evidence_ref: "'pnpm exec vitest run packages/ds-codegen/src/analytical/' -> 225 tests pass (stage1 83, necessity 107, emit-schemas, fixture-sync, corpus-integrity); 'pnpm run analytical:check-baseline' -> conserved; root tsc --noEmit clean; eslint clean; AnalyticalFixturesScratchView smoke 8/8."
     recorded_at: "2026-09-02T23:50:05.262Z"
+  - criterion_id: A11
+    status: pass
+    evidence_ref: "capabilities.ts decodeScale: 8 labels -> 7 states, alias table [[ratio,count]] recorded in removals.json.factorized; necessity.test.ts C5 (every scale distinction ratified via a capability coordinate except ratio~count; kernel carries no scale) and C6 (ledger reproduced modulo key rewrites over all 59 fixtures incl. the 8 holdout items); one authority: capabilities primitive, labels derived."
+    recorded_at: "2026-09-02T23:50:05.728Z"
