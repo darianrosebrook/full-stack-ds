@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "tmp/ledger-dump.mts run on main before (tmp/ledger-before.txt) and in the worktree after: 58 canonical judgments, raw diff = 3 entries, diff after substituting REL_UNIT_SUM_ACROSS_CURRENCY->REL_UNIT_SUM_INCOMMENSURABLE = exit 0 (byte-identical); analytical suite 107/107; typecheck + eslint clean"
     recorded_at: "2026-09-02T22:39:46.066Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "bindings.json neighbours key + triads[unit:commensurable].hostileDiagnostic renamed; holdout.json ruleDigest re-recorded 27701a78->5fc0509d with reason logged in $comment, all 8 items re-verified by hand (none carries the code); stage1.test.ts A2 ledger block: zero LEDGER_ findings; A8 block: digest equal and every holdout item exact"
+    recorded_at: "2026-09-02T22:39:46.513Z"
