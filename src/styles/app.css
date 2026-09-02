@@ -1951,17 +1951,7 @@ button {
 }
 
 .afx-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--fsds-core-typography-ramp-0);
-}
-
-.afx-table th,
-.afx-table td {
-  border: 1px solid var(--fsds-semantic-color-border-subtle);
-  padding: var(--fsds-core-spacing-size-01) var(--fsds-core-spacing-size-02);
-  text-align: left;
-  vertical-align: top;
+  margin-top: var(--fsds-core-spacing-size-03);
 }
 
 .afx-fieldname,

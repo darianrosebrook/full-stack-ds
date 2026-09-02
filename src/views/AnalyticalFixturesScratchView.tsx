@@ -17,6 +17,14 @@
 //      doctrine forbids. When a real engine lands, its output feeds this panel.
 
 import { useMemo, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from "@full-stack-ds/react";
 import { FIXTURES } from "../data/analytical-fixtures/fixtures";
 import type {
   AnalyticalFixture,
@@ -149,28 +157,30 @@ function EvidenceTable({ fixture }: { fixture: AnalyticalFixture }) {
                 </span>
               )}
             </h4>
-            <table className="afx-table">
-              <thead>
-                <tr>
-                  <th>#</th>
+            <Table ariaLabel={`Evidence rows for ${relation}`} className="afx-table">
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell scope="col">#</TableHeaderCell>
                   {fieldNames.map((f) => (
-                    <th key={f}>{f}</th>
+                    <TableHeaderCell key={f} scope="col">
+                      {f}
+                    </TableHeaderCell>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {rowList.map((row, i) => (
-                  <tr key={i}>
-                    <td className="afx-rownum">{i + 1}</td>
+                  <TableRow key={i}>
+                    <TableCell className="afx-rownum">{i + 1}</TableCell>
                     {fieldNames.map((f) => (
-                      <td key={f}>
+                      <TableCell key={f}>
                         <ObservationCell obs={row[f]} />
-                      </td>
+                      </TableCell>
                     ))}
-                  </tr>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         );
       })}
@@ -318,28 +328,28 @@ export function AnalyticalFixturesScratchView() {
                     grain: {rel.grain === "unknown" ? "unknown" : rel.grain.join(" + ")}
                   </span>
                 </h4>
-                <table className="afx-table">
-                  <thead>
-                    <tr>
-                      <th>field</th>
-                      <th>declared traits</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <Table ariaLabel={`Declared fields of ${name}`} className="afx-table">
+                  <TableHead>
+                    <TableRow>
+                      <TableHeaderCell scope="col">field</TableHeaderCell>
+                      <TableHeaderCell scope="col">declared traits</TableHeaderCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
                     {Object.entries(rel.fields).map(([fieldName, def]) => (
-                      <tr key={fieldName}>
-                        <td className="afx-fieldname">{fieldName}</td>
-                        <td className="afx-traits">
+                      <TableRow key={fieldName}>
+                        <TableCell className="afx-fieldname">{fieldName}</TableCell>
+                        <TableCell className="afx-traits">
                           {fieldTraits(def).map((t) => (
                             <span key={t} className="afx-badge">
                               {t}
                             </span>
                           ))}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                </table>
+                  </TableBody>
+                </Table>
               </div>
             ))}
             {selected.structure.relationships?.length ? (
