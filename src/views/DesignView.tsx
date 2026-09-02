@@ -1,3 +1,4 @@
+import { stateDimensionsOf } from "../types/data";
 import type { ComponentBundle } from "../types/data";
 import { Breadcrumbs, Stack } from "@full-stack-ds/react";
 import { Anatomy } from "./sections/Anatomy";
@@ -96,7 +97,7 @@ export function DesignView({
         </section>
       )}
 
-      {component.contract.states && component.contract.states.length > 0 && (
+      {stateDimensionsOf(component.contract).length > 0 && (
         <section className="section">
           <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
             <h2 className="section-title">States</h2>

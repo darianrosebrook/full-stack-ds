@@ -106,6 +106,58 @@ export interface A11y {
   notes?: string[];
 }
 
+/** Semantic domain of a state axis, mirroring the category enum on the
+ * schema's stateDimension definition. */
+export type StateCategory =
+  | "interaction"
+  | "availability"
+  | "selection"
+  | "validation"
+  | "data"
+  | "visibility"
+  | "motion"
+  | "presentation";
+
+/** One orthogonal state axis, mirroring $defs.stateDimension in
+ * packages/ds-contracts/component.contract.schema.json: a stackable axis
+ * whose values are mutually exclusive unless `exclusive` is false. */
+export interface StateDimension {
+  category: StateCategory;
+  values: string[];
+  /** Base/absence value at first render; excluded from derived selector projections. */
+  initial?: string;
+  /** Whether values are mutually exclusive; defaults to true when omitted. */
+  exclusive?: boolean;
+  /** Whole-dimension effect: restyle | overlay | metadata | channel. */
+  effect?: "restyle" | "overlay" | "metadata" | "channel";
+  description?: string;
+  /** Cross-dimension masking while this dimension holds a non-initial value. */
+  suppresses?: { categories?: StateCategory[]; names?: string[] };
+  /** Authored ARIA projection; semantic values are never fabricated. */
+  a11y?: { attribute: string; values?: Record<string, string | boolean> };
+  /** Per-value lowering overrides from the shared state-to-selector mapping. */
+  derivesFrom?: Record<
+    string,
+    { selector?: string; attr?: string; channel?: string; prop?: string }
+  >;
+}
+
+/** Dimensional states model — the sole authoring form in
+ * packages/ds-contracts/component.contract.schema.json (`states`). */
+export interface ComponentStates {
+  dimensions?: Record<string, StateDimension>;
+  description?: string;
+}
+
+/** Dimensional state entries of a contract, in authored order. Empty when the
+ * contract declares no states. The Design view's States section derives from
+ * this single accessor. */
+export function stateDimensionsOf(
+  contract: Pick<ComponentContract, "states">,
+): Array<[string, StateDimension]> {
+  return Object.entries(contract.states?.dimensions ?? {});
+}
+
 export interface ComponentContract {
   $schema?: string;
   name: string;
@@ -114,7 +166,7 @@ export interface ComponentContract {
   cssPrefix?: string;
   anatomy?: string[] | AnatomyDetailed;
   variants?: Record<string, string[]>;
-  states?: string[];
+  states?: ComponentStates;
   a11y?: A11y;
   tokens?: Record<string, TokenDefinition>;
   props?: Record<string, PropsBlock>;
