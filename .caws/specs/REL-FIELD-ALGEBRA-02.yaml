@@ -131,3 +131,7 @@ evidence:
     status: pass
     evidence_ref: "holdout.json ruleDigest re-recorded 27701a78 -> 5fc0509d -> 493d9bd2 (Phase A) -> 6b7b2135 (Phase B) with the reason in its re-record log; every item re-derived by hand; Phase B changed only two occurrence KEYS (FX_H_KPI_INDEX_AND_RATE: aggregate:max->aggregate:min, rollup:sum(toGrain=quarter)->aggregate:sum); stage1.test.ts A8 (digest equality + all 8 items) passes."
     recorded_at: "2026-09-02T23:50:02.741Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "fixture-sync.test.ts: --check passes on the synced dump, fails DRIFT on a mutated copy (ANALYTICAL_FIXTURES_TARGET) and on a missing dump; scripts/prepush-scope.test.mjs (45 pass) pins RUN_ANALYTICAL_CHECKS for analytical-fixtures changes; .githooks/pre-push runs check-schemas, fixtures:check and check-baseline under it; dump re-synced at sha dc8f8e95."
+    recorded_at: "2026-09-02T23:50:03.157Z"
