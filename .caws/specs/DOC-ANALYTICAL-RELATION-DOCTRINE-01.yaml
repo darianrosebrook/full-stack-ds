@@ -40,3 +40,8 @@ evidence:
     evidence_ref: "docs/architecture/analytical-relation-doctrine.md carries authority: architecture, status: draft, and a governs: list of four proposed (non-existent, commented as such) paths. .caws/hooks/doc-frontmatter-check.sh run manually against the file exits 0 with no diagnostic (V3 governs present, V4 verified_at_commit not required for draft). pnpm run docs:check-claims: OK, 46 marked claims match derived values (the doc adds no count markers). docs/README.md layout tree lists analytical-relation-doctrine.md under architecture/ with the (draft) label."
     recorded_at: "2026-09-02T18:22:08.633Z"
     command: "pnpm run docs:check-claims"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Section 'What this tests that components and iconography could not' quotes normal-form falsification condition 3 verbatim and names properties 1, 4 and 5 as the ones analytical relations extend (contracts carrying constraints not facts; fail-loud boundary as type checker; per-target semantic interpretation). Section 'The residue principle' states the narrower claim as the unfalsifiability guard and invariant 8 / falsification condition 4 operationalise it. 'Order of construction' is a seven-row table (stages 0-6) each with a falsifier and a stop condition; 'Falsification conditions' lists eight, the seventh being condition 3 under direct test at stage 6 and the eighth the composite-special-case test at stage 3."
+    recorded_at: "2026-09-02T18:22:09.053Z"
+    command: "grep -n 'condition 3\\|residue\\|^| [0-6] |\\|^[1-8]\\. \\*\\*' docs/architecture/analytical-relation-doctrine.md"
