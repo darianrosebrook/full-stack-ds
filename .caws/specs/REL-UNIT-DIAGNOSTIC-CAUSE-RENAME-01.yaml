@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "git diff --numstat 3d1e8988^..3d1e8988: corpus.jsonl 1/1, doctrine 1/1 (identifier only in both; catalogue cause text, terms, stage, evidence, engine, vocabulary, denylist untouched); pnpm exec vitest run packages/ds-codegen/src/analytical -> corpus-integrity.test.ts 29/29 incl. CORPUS_DOC_DRIFT both directions clean; merge 52588153"
     recorded_at: "2026-09-02T22:39:45.611Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "tmp/ledger-dump.mts run on main before (tmp/ledger-before.txt) and in the worktree after: 58 canonical judgments, raw diff = 3 entries, diff after substituting REL_UNIT_SUM_ACROSS_CURRENCY->REL_UNIT_SUM_INCOMMENSURABLE = exit 0 (byte-identical); analytical suite 107/107; typecheck + eslint clean"
+    recorded_at: "2026-09-02T22:39:46.066Z"
