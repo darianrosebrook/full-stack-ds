@@ -9,6 +9,7 @@
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
     "dev": "vite",
     "build": "vite build",
+    "fixtures:sync": "node scripts/sync-analytical-fixtures.mjs",
     "generate": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js",
     "generate:all": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=all",
     "generate:react-native": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=react-native",
