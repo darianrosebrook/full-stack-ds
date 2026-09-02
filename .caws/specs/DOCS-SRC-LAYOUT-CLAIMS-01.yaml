@@ -1,0 +1,32 @@
+id: DOCS-SRC-LAYOUT-CLAIMS-01
+title: 'Derived showcase src/ layout claims: gate-governed views/routes/dirs in AGENTS+README'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-02T21:12:15.635Z'
+updated_at: '2026-09-02T21:12:15.635Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/docs-claims-check.mjs'
+    - 'AGENTS.md'
+    - 'README.md'
+    - 'CLAUDE.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the committed src/ tree; when node scripts/docs-claims-check.mjs runs; then the src-view-count, src-view-list, showcase-route-count, and src-top-level-dir-count markers in AGENTS.md and README.md match filesystem-derived values (15 views, 12 routes, 10 top-level dirs today) and the gate exits 0'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a synthetic src/views/ZZZFalsify.tsx; when the gate runs; then it exits 1 naming the view-count/list drift, and exits 0 again after the synthetic file is removed'
+non_functional: {}
+contracts: []
