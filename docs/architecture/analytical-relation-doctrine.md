@@ -26,7 +26,9 @@ It extends `normal-form.md`. Read that first.
 
 Stated as the inversion it is: the usual pipeline is *pick a chart, then shape the data to fit it*. The proposed pipeline is *type the data, declare the task, then enumerate what the data may legally become*. "Bar chart" is what falls out when a relation admits `{one discrete positional field, one ratio-scaled measure with a meaningful zero}` and a magnitude-comparison task asks for a cartesian projection. If the preconditions fail, the form is not "a poor choice" — it is **ill-typed**, and the system says so with a diagnostic.
 
-This is why the substrate cannot be "chart semantics" in the visualization-grammar sense. Grammar-of-graphics systems (Wilkinson; Vega-Lite as its checkable descendant) are more semantic than a chart-component API — they type fields as quantitative / temporal / ordinal / nominal rather than by JS primitive — but their centre of gravity is still the *encoding*. Their data side is thin: no grain, no additivity, no units, no missing-mechanism, no provenance. The semantic-layer lineage (OLAP cubes, Malloy, LookML, MetricFlow) has the measure algebra right and no rendering semantics at all. Nobody has joined the two halves under a projection discipline. That gap is what this doctrine occupies.
+This is why the substrate cannot be "chart semantics" in the visualization-grammar sense. Grammar-of-graphics systems (Wilkinson; Vega-Lite as its checkable descendant) are more semantic than a chart-component API — they type fields as quantitative / temporal / ordinal / nominal rather than by JS primitive — but their centre of gravity is still the *encoding*. Their data side is thin: no grain, no additivity, no units, no missing-mechanism, no provenance. The semantic-layer lineage (OLAP cubes, Malloy, LookML, MetricFlow) has the measure algebra right and no rendering semantics at all.
+
+The two halves *have* been joined before, and the doctrine is honest about where. Polaris / VizQL (Stolte, Tang, Hanrahan) is a table algebra over a relational cube whose nesting operators yield small multiples and nested tables — the closest lineage to what this doctrine calls `nest` and `facet`. Draco (Moritz et al.) encodes expressiveness and effectiveness constraints as a logic program that enumerates and rejects designs — the closest lineage to the enumerator. Both stop short of what is asked for here: neither carries units and dimensional analysis, per-dimension additivity, a nullability or provenance taxonomy, accessibility as a peer projection, or emission across substrates; and in both the rejection is a solver outcome, not a first-class typed artifact with a named cause. The gap this doctrine occupies is the *conjunction* — relation typing strong enough to reject, a projection algebra strong enough to enumerate and compose, and realization across substrates including non-visual ones — not the bare idea of deriving charts from data.
 
 ## What this tests that components and iconography could not
 
@@ -59,10 +61,12 @@ Terms below are used with exactly these meanings. Where a term collides with one
 - **Relation** — a typed tuple set with a declared grain. The authoritative analytical object.
 - **Grain** — the key set that makes a row unique. Every aggregation, fan-out, and navigation hierarchy is defined relative to it.
 - **Field** — a typed column. Carries the full field algebra (below), not a scalar type.
+- **Shape** — the form of a field's value (scalar, interval, set, distribution, point), orthogonal to its scale.
 - **Dimension / Measure** — a field used to partition versus a field used to aggregate. The distinction is a *role in a derivation*, not a property of the field; a field may be a measure in one view and a dimension in another.
 - **Derivation** — a typed operator over relations that yields a relation (filter, aggregate-to-grain, bin, …). Derivations have typing rules.
 - **Task** — the perceptual question a view is meant to answer (compare magnitudes, see a distribution, read composition, trace change, inspect topology, follow flow). A task declares the invariants any projection serving it must preserve.
 - **Projection** — a coordinate space plus a channel assignment plus the invariants it claims to preserve. This is *relation → geometry*. It is a different sense from the `consumer-projection-doctrine.md` use of "projection" (*contract → consumer-facing view*); both are deterministic derivations from an authority, which is why the same word fits, but they are not the same operation.
+- **Combinator** — an operator over projections (`layer`, `facet`, `embed`) with its own typing rule; the reason "combinatorial" means an algebra, not a menu.
 - **Realization** — a projection lowered to a substrate: SVG in a web family, React Native, native drawing, Figma vectors, an HTML table, a navigable hierarchy, a text summary.
 - **Form** — a *named* point in the projection space ("histogram", "candlestick"). Forms are aliases, never primitives.
 - **Pack** — the governed vocabulary the checker consumes: unit dimensions, per-target channel inventories, the form alias catalogue, the illegal-form corpus. Modelled on Sterling's language packs: authoring source compiled into one governed artifact that the realizer reads, never loose files read at runtime.
@@ -76,6 +80,7 @@ Each layer owns a class of facts and is forbidden knowledge of the layers above 
 A field is not `number | string | Date`. It carries:
 
 - **Scale** — `nominal` · `ordinal` (with an explicit order and whether it is total) · **`cyclic`** (with a period: weekday, month, hour, bearing, phase) · `interval` (zero not meaningful: temperature, calendar year) · `ratio` (meaningful zero) · `count` · `proportion` (of a *declared* whole) · `index` (rebased, with a declared base). Cyclic is its own scale because it is the only one that licenses the angle channel.
+- **Shape** — the form of the value, orthogonal to scale: `scalar` · `interval` (a range with declared closure — a price low–high, an age band, a bin) · `set` · `distribution` · `point` (a 2-D or geographic coordinate). Shape is what lets an interval-valued field be a *value* rather than two columns that happen to be related, and it is what a `bin` derivation produces. Uncertainty (below) is metadata *about* a value and stays distinct from an interval-shaped value, which *is* the value.
 - **Unit** — a dimension (currency, time, length, mass, dimensionless, …) and a unit, plus a **rate decomposition** for derived quantities: numerator and denominator dimensions, so that a per-capita measure re-derives on rollup instead of being averaged.
 - **Temporality** — `instant` · `interval` (with declared closure: half-open is the default and matters for binning) · `duration`; calendar and timezone; grain (day, week, fiscal quarter).
 - **Identity** — whether the field is a key, and at what grain. Keys are not nominal categories even though they look like them, and a key may never be encoded to a non-positional channel.
@@ -132,6 +137,18 @@ Channel capacity is a **type rule**, distinct from perceptual effectiveness rank
 
 A **form** is an alias for a region of this space. Forms live in the pack's alias catalogue and are derived, never authored as primitives.
 
+#### Projection combinators
+
+The product space above is the space of *atomic* projections. "Combinatorial" has to mean more than a product of choices: projections compose, and the composition has typing rules of its own.
+
+- **`layer`** — several atomic projections over one coordinate space with **shared scales**. A range mark for low–high under a range mark for open–close is a layer; so is a line with its uncertainty band. Layers declare scale sharing per channel; an unshared positional scale inside one coordinate space is the general form of the dual-axis illegality. Annotations — a target line, a threshold band, an event marker — are *relations* (often single-row) layered in, not decorations: a target line has a unit and must be commensurable with the axis it sits on.
+- **`facet`** — repeat a projection over a `partition`, with a declared scale policy (`shared` or `free`) per channel. Free scales trade comparability for resolution; that trade is a claim, and leaving the policy undeclared is ill-typed.
+- **`embed`** — a projection as the value of a cell in a `tabular` projection (a trend line or a micro-bar inside a nested table). The embedded projection is typed against the cell's **channel budget**: with position only and no baseline or axis it can serve a *trend* task and cannot serve a *magnitude comparison* task. This is what "nested tables" most often means in practice, and it is where the tabular oracle and a visual projection meet in one artifact.
+
+**Admissibility is compositional.** The legality of a composite is derived from the legality of its parts plus the combinator's rule, never from a whole-composite special case. If a composite ever needs a precondition that cannot be written as a rule on the combinator, the algebra is wrong. This is the strongest form of the doctrine's compositional claim and is stated as invariant 13.
+
+**Interaction is derivation.** A brush is a `filter` driven by input; a hover is the textual projection of one tuple; a zoom is a domain re-declaration; a selection is a `partition`. Interactions bind to the same behaviour channels components use (`BehaviorIR.normalizedChannels`) and are typed as derivation + projection, not as a realization feature. Deferred to stage 4b and recorded here so the first visual emitter does not invent it.
+
 ### L5 — Realization targets
 
 - **Visual** — per web family (SVG in the DOM, so the existing a11y tree and runtime rails still apply), React Native, native drawing, Figma vectors.
@@ -158,6 +175,7 @@ Worked decompositions, written so that no form name appears in the preconditions
 
 - **Discrete positional + ratio length, cartesian, comparison task.** Preconditions: one nominal/ordinal field; one ratio measure; zero baseline. *Colloquially:* bar.
 - **… + `partition` to `order` along the length channel.** Adds: additivity over the partition dimension; exhaustive, exclusive parts. *Colloquially:* stacked bar. A `normalize` derivation adds: proportion-of-declared-whole. *Colloquially:* 100% stacked.
+- **Temporal field → position; `partition → order`; measure → thickness (length); baseline `layout-generated`.** Preconditions: additivity over the partition; a non-negative measure or a declared negative split; thickness is readable, absolute position is not — the baseline offset is a layout artifact and carries no claim. *Colloquially:* streamgraph. Unrelated to the graph case below anywhere under L4, which is the point of listing both.
 - **`bin` on a ratio field → interval → position-extent; count (or density) → length.** Preconditions: closure declared; density if unequal. *Colloquially:* histogram.
 - **Proportion → angle, polar, composition task.** Preconditions: exhaustive, exclusive, ratio, declared whole. *Colloquially:* pie. Note the angle channel is licensed here by the *composition* invariant (arcs of a whole), not by cyclic order — the two licences are distinct and the pack records which applies.
 - **Two dimensions → row/column, one measure → luminance, tabular.** Preconditions: near-complete grid or declared sparsity; sequential scale, or diverging with a declared midpoint. *Colloquially:* heat map.
@@ -172,7 +190,7 @@ Requesting a form is therefore an *assertion of its preconditions*. The system d
 
 Each of the following is a claim about the data and belongs in the relation/task/projection contract, never in a token or a style sidecar:
 
-baseline (zero or truncated) · sort order and its source (intrinsic vs by-measure) · binning policy and closure · missing mechanism assumed by interpolation · axis transform (log, sqrt) · normalization (to a declared whole) · stacking order · diverging-scale midpoint · dual-axis pairing · index base · sampling or top-N with remainder · uncertainty dropped.
+baseline (zero or truncated) · sort order and its source (intrinsic vs by-measure) · binning policy and closure · missing mechanism assumed by interpolation · axis transform (log, sqrt) · normalization (to a declared whole) · stacking order · diverging-scale midpoint · dual-axis pairing · index base · sampling or top-N with remainder · uncertainty dropped · declared domain extent (a fixed axis range for cross-view comparability) · facet scale policy · layer scale sharing.
 
 Colour ramps, mark thickness, label typography, animation, and spacing *are* style and flow through the existing token graph. The boundary is: if changing it changes what a careful reader may infer, it is semantic.
 
@@ -186,7 +204,7 @@ This is `codegen-authority.md`'s "no per-component lore in emitters" invariant t
 
 The navigational projection is a second, distinct a11y target. Its hierarchy derives from grain (levels), its traversal order from declared ordering (so a by-measure sort in the visual must be a declared derivation the navigation also consumes — otherwise `REL_ORDER_TRAVERSAL_MISMATCH`), and its announced values from units. It is lossy by declaration, which is correct: semantic conservation does not imply structural conservation.
 
-What is mechanically checkable today, and therefore gateable: contrast between adjacent categorical encodings; non-colour-only distinction (derived from channel capacity); accessible name and description derived from task and relation, never separately authored; keyboard operability derived from grain; target size for interactive marks. What is **not** available: an ARIA ontology for analytical forms. WAI-ARIA Graphics Module 1.0 provides `graphics-document`, `graphics-object`, and `graphics-symbol` and nothing form-specific; the W3C SVG Accessibility Task Force's chart-role proposals (`chart`, `dataset`, `datapoint`, `axis`, `legend`, …) were never standardized. The honest claim is *a11y realization is a peer target with declared coverage*, not *accessible charts*.
+What is mechanically checkable today, and therefore gateable: contrast between adjacent categorical encodings; non-colour-only distinction (derived from channel capacity); accessible name and description derived from task and relation, never separately authored; keyboard operability derived from grain; target size for interactive marks. What is **not** available: an ARIA ontology for analytical forms *in general*. WAI-ARIA Graphics Module 1.0 provides `graphics-document`, `graphics-object`, and `graphics-symbol` and nothing form-specific; the W3C SVG Accessibility Task Force's chart-role proposals (`chart`, `dataset`, `datapoint`, `axis`, `legend`, …) were never standardized. The one coordinate space where the platform *is* prescriptive is `tabular`: native table semantics and the ARIA `table` / `grid` roles carry row and column structure, header scope, spans, indices, counts, and sort state (`aria-sort`, `aria-rowindex`, `aria-colindex`, `aria-rowspan`), and the IR already models the native attributes (`NativeTableAttr` in `ir.ts`). That asymmetry is a second reason the tabular projection is the oracle: it is the one realization whose accessible structure is fully specified by the substrate rather than derived by this design. The honest claim is *a11y realization is a peer target with declared coverage*, not *accessible charts*.
 
 ## The semantic pack
 
@@ -194,6 +212,8 @@ The Sterling analogy is precise in one respect and should be held to it: the **e
 
 - **Engine** (in codegen, deterministic, no I/O — property 2): the field algebra, the derivation typing rules, the three checkability engines, the admissibility judgment, the enumerator. These are axioms and mathematics; they are not configurable per pack.
 - **Pack** (authoring source under contracts, compiled to one governed artifact the engine reads — never loose files at runtime): unit dimensions and conversion declarations; **per-target channel inventories with capacities** (a Figma target has no hover; a sonification target has pitch and not hue; a monochrome print target has luminance and texture but no hue — the inventory is what makes "cross-substrate" mean something); the form alias catalogue; the illegal-form corpus with expected diagnostics.
+
+- **Policy** (pack content, optional): house rules that *narrow* the engine's admissible set — always a zero baseline, no angle encoding of proportions, a fixed categorical hue budget. Policy may only remove forms; it may never license one the engine rejects. This is the analogue of Sterling's `realization_policy`: a realization preference the realizer honours, subordinate to the grammar.
 
 The pack is content-addressed and admitted the way generated artifacts are admitted today: a stale or hand-edited pack is a rail failure, not a warning.
 
@@ -213,6 +233,7 @@ These are the invariants the first slices are asked to encode structurally. Each
 10. **A11y projections are derived, never authored beside the visual.** Name, description, table, navigation, and announced values all come from relation + task. Prevents a second interpretation of the data.
 11. **Emitters do last-mile syntax only.** Same as components: an emitter reading a relation field is a sign the IR is missing a derivation. Prevents per-target semantic interpretation — which is exactly normal-form falsification condition 3, and exactly what this domain is expected to pressure hardest.
 12. **The relation type lives in the contract; rows arrive at runtime with a conformance witness.** Prevents the contract describing data the runtime never checks.
+13. **Admissibility is compositional.** The legality of a layered, faceted, or embedded projection is derived from its parts and the combinator's rule; no composite carries a special case. Prevents the projection algebra collapsing back into a catalogue of composite forms.
 
 ## Cost to the existing architecture
 
@@ -230,10 +251,10 @@ The order is forced by dependencies, which is why it is doctrine rather than sch
 
 | Stage | Builds | Falsifier | Stop condition |
 |---|---|---|---|
-| 0 | This doctrine and the **illegal-form corpus** (machine-readable, ~30 entries, each with an expected `REL_*` diagnostic). No code. | Can every entry be described in L0–L3 vocabulary without a form name? | An entry that can only be described as "a bad *X*-chart" means the vocabulary is incomplete; fix the vocabulary, not the entry. |
+| 0 | This doctrine and the **illegal-form corpus** (machine-readable, seeded from the table below, each entry with an expected `REL_*` diagnostic). No code. | Can every entry be described in L0–L3 vocabulary without a form name? | An entry that can only be described as "a bad *X*-chart" means the vocabulary is incomplete; fix the vocabulary, not the entry. |
 | 1 | L0–L2: field algebra, relation schema, measure aggregability; the three checkability engines as pure functions. | The illegal corpus rejects with the expected diagnostics; a legal corpus accepts. **Metric: count of distinct rejection diagnostics**, not chart types. | Fewer than ~20 distinct diagnostics → the type system is decorative; stop and reassess before any geometry. |
 | 2 | L3 view algebra with typing rules and the five-kind classification. | `bin` on ratio yields interval + count; unequal widths force density; `aggregate-to-grain` refuses non-additive rollups; `graph` enforces conservation. | A derivation whose output type cannot be stated without reference to how it will be drawn. |
-| 3 | L3.5 task table, L4 projection space, the **enumerator**, and the alias catalogue *generated* from it. | For each of four probe relations (a categorical-vs-ratio relation, a binned ratio field, an OHLC-over-interval relation, a nested hierarchy) the enumeration contains the expected forms and excludes the corpus's illegal ones; a graph relation is enumerable only with non-metric position. | An expected form reachable only by adding a form-specific field to any layer below L4. |
+| 3 | L3.5 task table, L4 projection space and **combinators** (`layer`, `facet`, `embed`), the **enumerator**, and the alias catalogue *generated* from it. | For each of four probe relations (a categorical-vs-ratio relation, a binned ratio field, an OHLC-over-interval relation, a nested hierarchy) the enumeration contains the expected forms and excludes the corpus's illegal ones; a graph relation is enumerable only with non-metric position; a layered OHLC and an embedded trend-in-table type-check from their parts. | An expected form reachable only by adding a form-specific field below L4, or a composite that needs its own rule. |
 | 4 | The **tabular** realization first (via `Table`), then one visual realization (SVG in the DOM, one web family). | The lore oracle: every visual assertion is derivable from the table. Then the four probes plus a force layout lowered through the same IR. | A visual assertion with no tabular derivation that is *not* classified perceptual-only. |
 | 5 | Navigational and textual a11y projections; WCAG gates derived from channel capacity; the residue enumeration per family. | Traversal order equals declared order under a by-measure sort; non-colour-only forced by hue capacity; each family's residue listed and non-empty. | Empty residue for any family. |
 | 6 | Cross-substrate: the remaining web families, React Native, then a native target and Figma, each via its pack channel inventory. | Same IR, no per-target semantic interpretation (normal-form condition 3 under direct test). | A target that needs a relation field the IR did not pre-derive — this is the informative outcome, to be recorded as IR growth, not patched in the emitter. |
@@ -276,8 +297,14 @@ The cause column is written in L0–L3 vocabulary only. The colloquial column ex
 | `REL_SORT_AS_RENDER_OPTION` | by-measure sort declared in style, not as a derivation | ordering is semantic | "sort: desc" in a token |
 | `REL_LOG_SCALE_ZERO_CLAIM` | log axis transform on a field containing zero or non-positive values, or under a composition task | transform undefined / additivity lost | log-scaled stacked bar |
 | `REL_NORMALIZED_STACK_ADDITIVITY` | `normalize` then `partition → order` on a non-additive measure | normalization presumes additivity | 100% stacked averages |
+| `REL_STACK_NEGATIVE_UNDECLARED` | `partition → order` along length on a measure with negative values and no declared split | stacked lengths no longer sum to the total | stacked bar with negatives |
+| `REL_PROVENANCE_LAYOUT_BASELINE_CLAIM` | comparison task reading absolute position where the baseline is `layout-generated` | position carries thickness only | reading height off a streamgraph |
+| `REL_LAYER_SCALE_UNSHARED` | `layer` with an undeclared unshared positional scale in one coordinate space | marks in one space imply one scale | a secret second axis |
+| `REL_FACET_SCALE_POLICY_UNDECLARED` | `facet` with no declared shared/free policy per channel | cross-facet comparability is a claim | small multiples, mixed axes |
+| `REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET` | `embed` serving a magnitude-comparison task with no baseline channel in the cell | task invariant unsatisfiable in the budget | sparkline read as a bar |
+| `REL_ANNOTATION_UNIT_MISMATCH` | `layer` of a single-row relation whose unit dimension differs from the axis it sits on | dimensional analysis fails | target line in the wrong unit |
 
-Thirty entries. Stage 0 turns this into a machine-readable corpus; stage 1 must reject every one with the named diagnostic before any projection code exists.
+Thirty-six entries. Stage 0 turns this into a machine-readable corpus; stage 1 must reject every one with the named diagnostic before any projection code exists.
 
 ## Falsification conditions
 
@@ -290,6 +317,7 @@ The doctrine is wrong, and should be narrowed or abandoned, if any of the follow
 5. **Re-grain.** Rolling up a dimension of a relation breaks a projection or its navigational a11y without any change to the projection declaration — meaning the contract encoded a chart, not a relation. (Stage 3–4.)
 6. **Enumeration.** A well-known legal form is reachable only by adding a form-specific field below L4. (Stage 3.)
 7. **Condition 3 of the normal form.** A target requires per-target *semantic* interpretation of the relation rather than IR extension. This one is expected to be pressured hardest at stage 6, and the honest outcomes are recorded either way: IR growth refines the claim; an emitter branch on relation content falsifies it.
+8. **Composite special case.** A layered, faceted, or embedded projection is admitted or rejected only by a rule written for that composite rather than derived from its parts and the combinator. (Stage 3.)
 
 ## What this does not claim
 
