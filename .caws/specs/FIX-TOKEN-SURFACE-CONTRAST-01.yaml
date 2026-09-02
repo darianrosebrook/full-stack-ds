@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: token-surface
 created_at: '2026-09-02T23:44:40.114Z'
-updated_at: '2026-09-02T23:44:46.541Z'
+updated_at: '2026-09-02T23:53:58.485Z'
 blast_radius:
   modules:
     - 'ds-tokens'
@@ -32,6 +32,7 @@ scope:
     - 'packages/ds-figma-plugin/src/generated'
     - 'packages/ds-swiftui/Sources/DsSwiftUI/Components'
     - 'packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components'
+    - packages/ds-contracts/components
   out: []
 invariants:
   - 'The contrast gate evaluates every registered brand in both themes, not only the base instantiation'
