@@ -116,3 +116,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A5: FX_S_MIXED_FAULT -> illegal, codes [REL_MEANINGFULNESS_ORDINAL_MEAN], obligations [grain:declared]; every one of 58 fixtures byte-identical (canonicalJudgment) under reversed assertions, reversed field and relation declaration order, reversed relationships, and reversed RULES; deterministic across runs"
     recorded_at: "2026-09-02T21:21:46.649Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A6: grain:declared absent->unproven / witness+unique rows->admissible / witness+duplicate rows->REL_GRAIN_FANOUT (instance); unit:commensurable absent->unproven / rows one unit->admissible / rows USD+EUR no conversions->REL_UNIT_SUM_ACROSS_CURRENCY (instance); null:missing-mechanism absent->unproven / rows clean->admissible / suppressed row + nulls as-zero->REL_NULL_SUPPRESSED_AS_ZERO (instance)"
+    recorded_at: "2026-09-02T21:21:47.093Z"
