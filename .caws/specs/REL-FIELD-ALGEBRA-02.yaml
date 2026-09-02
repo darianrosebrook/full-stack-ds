@@ -139,3 +139,7 @@ evidence:
     status: pass
     evidence_ref: "census.ts derives leaves, enum-member pairs and name references from the emitted fixture.schema.json; necessity.test.ts C0 pins stage-1 46/212/10 (census-stage1.json derivedFrom == baseline fixture.schema.json digest fb96b85e) and kernel 26/21/4; C8 proves ids are unique, that a leaf and an enum added to the schema appear as field.foo / field.mode + 3 pairs with no hand edit, and that instance-role coordinates are exactly evidence.grainWitness/observation.{value,unit,null}; engines.ts marks the two stage-2 row branches instance-evidence (invariant 9)."
     recorded_at: "2026-09-02T23:50:03.574Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "witnesses.json: 48 witnesses, all hold (necessity.test.ts C2: schema-valid stimuli, oracle-different outcomes, collision under erasure, 2-set minimality); C1: every kernel leaf and pair ratified, no phantom, bound 2 held, exactly four 2-sets (assertion.kind+op, kind:aggregate~ratio-comparison+op, additivity additive~semi-additive+nonAdditiveAlong, semi-additive~ratio-measure+nonAdditiveAlong); no coordinate needed a 3-set."
+    recorded_at: "2026-09-02T23:50:03.987Z"
