@@ -2,9 +2,11 @@ id: DOCS-SRC-LAYOUT-CLAIMS-01
 title: 'Derived showcase src/ layout claims: gate-governed views/routes/dirs in AGENTS+README'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Derived showcase src/ structure into the claims gate (view count/list, top-level dir count, route count); AGENTS.md and README.md layout blocks now tree-governed'
 created_at: '2026-09-02T21:12:15.635Z'
-updated_at: '2026-09-02T21:12:45.898Z'
+updated_at: '2026-09-02T21:19:52.940Z'
 blast_radius:
   modules:
     - 'scripts/docs-claims-check.mjs (new derive functions + CLAIMS rows; additive)'
