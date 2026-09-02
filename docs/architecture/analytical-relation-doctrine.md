@@ -308,7 +308,7 @@ One row per **cause**. Cases — the observations that exhibit a cause, with the
 | `REL_GRAIN_SUBTOTAL_MISMATCH` | additivity | 2 | the subtotal derivation is undefined off the declared grain | nested table with wrong totals |
 | `REL_PROPORTION_SUM_ACROSS_WHOLES` | additivity | 1 | proportions of different wholes are not additive | shares of two markets added |
 | `REL_UNIT_INCOMMENSURABLE_SHARED_SCALE` | dimensional | 3 | dimensional analysis fails across a shared scale | dual-axis line; target line in the wrong unit |
-| `REL_UNIT_SUM_ACROSS_CURRENCY` | dimensional | 1 | values in different units are not summable | total revenue across currencies |
+| `REL_UNIT_SUM_INCOMMENSURABLE` | dimensional | 1 | values in different units are not summable | total revenue across currencies |
 | `REL_PROPORTION_WHOLE_UNDECLARED` | declaration-missing | 1 | the normalization base is absent | percent of what? |
 | `REL_INDEX_BASE_MISSING` | declaration-missing | 1 | a rebased value has no referent | index = 100 with no anchor |
 | `REL_BIN_CLOSURE_UNDECLARED` | declaration-missing | 2 | boundary membership is ambiguous | which bin gets 10.0? |

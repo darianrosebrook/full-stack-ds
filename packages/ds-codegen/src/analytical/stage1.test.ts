@@ -183,7 +183,7 @@ describe("A4 — judgments are occurrence-bearing", () => {
   it("two independent violations of one cause are two occurrences with distinct subjects", () => {
     const j = judgeFixture(fx(live.bindings.special.occurrences as string));
     expect(j.status).toBe("illegal");
-    expect(j.diagnostics.map((d) => d.code)).toEqual([DIAG.UNIT_SUM_ACROSS_CURRENCY, DIAG.UNIT_SUM_ACROSS_CURRENCY]);
+    expect(j.diagnostics.map((d) => d.code)).toEqual([DIAG.UNIT_SUM_INCOMMENSURABLE, DIAG.UNIT_SUM_INCOMMENSURABLE]);
     expect(new Set(j.diagnostics.map((d) => d.subject)).size).toBe(2);
     expect(j.obligations.map((o) => o.term)).toEqual([OBLIGATION.GRAIN_DECLARED, OBLIGATION.GRAIN_DECLARED]);
     expect(new Set(j.obligations.map((o) => o.subject)).size).toBe(2);
