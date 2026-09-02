@@ -2,9 +2,11 @@ id: SHOWCASE-FIXTURE-PLAYGROUND-DS-CONSUMPTION-01
 title: 'Analytical fixture playground consumes DS controls'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Fixture playground controls are DS components now: DS Input search, DS Select filters with visible value captions, DS Button index, DS Badge labels, DS List assertions; guard forbids raw control markup'
 created_at: '2026-09-02T22:20:11.755Z'
-updated_at: '2026-09-02T22:21:06.566Z'
+updated_at: '2026-09-02T22:31:06.714Z'
 blast_radius:
   modules:
     - 'src/views/AnalyticalFixturesScratchView.tsx'
