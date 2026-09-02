@@ -2,9 +2,10 @@ id: REL-FIELD-ALGEBRA-02
 title: 'Stage 1.5: necessity and minimality of the L0-L2 kernel - baseline repair, leaf-level quotient ablations, scale factorization, bounded promotion to active'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: field-algebra-02
 created_at: '2026-09-02T22:43:04.038Z'
-updated_at: '2026-09-02T22:43:04.038Z'
+updated_at: '2026-09-02T22:44:08.759Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical (zod relation+assertion model as the single authority; inferred types; schema emitter with --check; occurrence identity + engine provenance; census derived from the model; external quotient-ablation harness with self-tests; D6 scale factorization)'
