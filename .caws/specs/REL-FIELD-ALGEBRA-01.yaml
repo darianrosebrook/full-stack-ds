@@ -95,3 +95,8 @@ contracts:
   - name: 'stage1-oracle'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/stage1.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A1: 19 stage-1 cases each yield exactly one occurrence with the case's code/term AND evidence class, no cross-kind finding; pairwise partition equality over all 171 pairs; distinct emitted codes = 15 = catalogue stage-1 set"
+    recorded_at: "2026-09-02T21:21:44.888Z"
