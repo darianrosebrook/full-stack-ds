@@ -90,8 +90,8 @@
     "layer": "semantic"
   },
   "table.color.background.selected": {
-    "resolvesTo": "semantic.color.background.accent",
-    "fallback": "#d92d2e",
+    "resolvesTo": "semantic.color.background.accentSubtle",
+    "fallback": "#95dafb",
     "layer": "semantic"
   },
   "table.focus.width": {

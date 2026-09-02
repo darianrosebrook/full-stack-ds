@@ -64,14 +64,6 @@
       "resolvesTo": "card.elevation.resting",
       "fallback": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a"
     },
-    "border-inline-start-width": {
-      "resolvesTo": "card.size.statusAccent.width",
-      "fallback": "2px"
-    },
-    "border-inline-start-color": {
-      "resolvesTo": "card.color.statusAccent.default",
-      "fallback": "#d0d0d0"
-    },
     "transition-property": {
       "literal": "box-shadow, border-color, background-color, transform",
       "platforms": [
@@ -143,11 +135,27 @@
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.success",
       "fallback": "#3a6614"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default",
+      "fallback": "#3a6614"
     }
   },
   "--in-progress": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.info",
+      "fallback": "#034fd6"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default",
       "fallback": "#034fd6"
     }
   },
@@ -155,11 +163,27 @@
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.subtle",
       "fallback": "#d0d0d0"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default",
+      "fallback": "#d0d0d0"
     }
   },
   "--deprecated": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.danger",
+      "fallback": "#b31b1b"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default",
       "fallback": "#b31b1b"
     }
   },
@@ -167,11 +191,27 @@
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.accent",
       "fallback": "#d92d2e"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default",
+      "fallback": "#d92d2e"
     }
   },
   "--complexity": {
     "card.color.statusAccent.default": {
       "resolvesTo": "semantic.color.border.warning",
+      "fallback": "#8b4b00"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width",
+      "fallback": "2px"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default",
       "fallback": "#8b4b00"
     }
   },
