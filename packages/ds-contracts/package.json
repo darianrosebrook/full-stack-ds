@@ -3,5 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "Component and primitive JSON contracts (source of truth for codegen)",
-  "files": ["*.json", "components/*/*.json", "primitives/*.json"]
+  "files": [
+    "*.json",
+    "components/*/*.json",
+    "primitives/*.json",
+    "analytical-pack/*.json",
+    "analytical-pack/*.jsonl"
+  ]
 }
