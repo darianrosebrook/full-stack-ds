@@ -3,7 +3,6 @@ title: 'Full root vitest is red inside CAWS worktrees (symlinked node_modules) w
 risk_tier: 3
 mode: fix
 lifecycle_state: active
-worktree: worktree-node-isolation
 created_at: '2026-09-02T20:15:21.281Z'
 updated_at: '2026-09-02T21:29:14.054Z'
 blast_radius:
