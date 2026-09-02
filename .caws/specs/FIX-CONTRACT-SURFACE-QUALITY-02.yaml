@@ -67,3 +67,8 @@ evidence:
     evidence_ref: "Live DOM sweep over 58 component routes at localhost:5174: 171 statusless .card elements, 0 with non-uniform border width or colour (was 171/171 mismatching at 1px|1px|1px|2px with #d0d0d0 left vs #95dafb others). Identical population count across both runs. Emitted CSS: packages/ds-react/src/components/Card/Card.css .card carries border-color + border-width 1px and zero border-inline-start-* declarations."
     recorded_at: "2026-09-02T23:33:29.919Z"
     commit_sha: "597c6680"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Same 58-route sweep: .card--in-progress computes left 2px rgb(5,102,254) against top 1px rgb(71,70,71); .card--completed left 2px rgb(73,127,33). Proves the rail moved to the variant rather than being deleted. Card.css lines 51-59 emit border-inline-start-{width,color} only under .card--completed / .card--in-progress and the four other status selectors."
+    recorded_at: "2026-09-02T23:33:36.841Z"
+    commit_sha: "597c6680"
