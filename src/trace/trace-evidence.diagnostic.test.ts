@@ -21,7 +21,15 @@ const BUTTON_CONTRACT: ComponentContract = {
     },
   },
   variants: { size: ["small", "medium", "large"], variant: ["primary", "secondary"] },
-  states: ["default", "hover", "disabled"],
+  states: {
+    dimensions: {
+      availability: {
+        category: "availability",
+        values: ["enabled", "disabled"],
+        initial: "enabled",
+      },
+    },
+  },
 };
 
 // Multi-line source with hits on known lines/columns.

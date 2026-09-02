@@ -152,11 +152,15 @@ const REACT_RULES: PatternRule[] = [
           explanation: `BEM modifier emitted from contract.variants.${variantKey}.`,
         };
       }
-      // disabled is a state, not a variant
-      if (contract.states?.includes(variantKey)) {
+      // A state, not a variant. States are dimensional — match the key
+      // against axis names and each axis's authored values.
+      const stateAxis = Object.entries(contract.states?.dimensions ?? {}).find(
+        ([axis, dim]) => axis === variantKey || dim.values.includes(variantKey),
+      );
+      if (stateAxis) {
         return {
-          contractPath: `states`,
-          explanation: `BEM modifier for declared state "${variantKey}".`,
+          contractPath: `states.dimensions.${stateAxis[0]}`,
+          explanation: `BEM modifier for declared state "${variantKey}" on the ${stateAxis[0]} axis.`,
         };
       }
       return null;

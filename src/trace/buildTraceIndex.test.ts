@@ -17,7 +17,16 @@ const BUTTON_CONTRACT: ComponentContract = {
     },
   },
   variants: { size: ["small", "medium", "large"], variant: ["primary", "secondary"] },
-  states: ["default", "hover", "disabled"],
+  states: {
+    dimensions: {
+      availability: {
+        category: "availability",
+        values: ["enabled", "disabled"],
+        initial: "enabled",
+        suppresses: { categories: ["interaction"] },
+      },
+    },
+  },
 };
 
 const REACT_SOURCE = `export function Button({ size, variant, disabled, loading }) {
@@ -25,7 +34,7 @@ const REACT_SOURCE = `export function Button({ size, variant, disabled, loading 
     "button",
     size && \`button--\${size}\`,
     variant && \`button--\${variant}\`,
-    disabled && "button--disabled",
+    disabled && \`button--\${disabled}\`,
   ].filter(Boolean).join(" ");
   return (
     <button className={classNames} disabled={disabled} aria-busy={loading} />
@@ -54,6 +63,19 @@ describe("buildTraceIndex (react)", () => {
     const variantHit = index.hits.find((h) => h.contractPath === "variants.variant");
     expect(sizeHit, "expected variants.size hit").toBeTruthy();
     expect(variantHit, "expected variants.variant hit").toBeTruthy();
+  });
+
+  it("resolves a BEM modifier for a declared state value to its axis", () => {
+    const hit = index.hits.find((h) => h.contractPath === "states.dimensions.availability");
+    expect(hit, "expected `button--${disabled}` to resolve to states.dimensions.availability").toBeTruthy();
+    expect(hit!.explanation).toContain("disabled");
+  });
+
+  it("yields no hit for an interpolation matching no variant or state, without throwing", () => {
+    // `loading` is a prop, not a variant or state value — this resolve path
+    // is the one that used to call .includes on the states object.
+    const idx = buildTraceIndex("react", "Button", "const cls = `button--${loading}`;", BUTTON_CONTRACT);
+    expect(idx.hits).toHaveLength(0);
   });
 });
 
