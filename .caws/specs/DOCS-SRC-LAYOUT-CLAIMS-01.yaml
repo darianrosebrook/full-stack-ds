@@ -32,3 +32,8 @@ acceptance:
     then: 'given a synthetic src/views/ZZZFalsify.tsx; when the gate runs; then it exits 1 naming the view-count/list drift, and exits 0 again after the synthetic file is removed'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node scripts/docs-claims-check.mjs (worktree @ fb174c24/295c925f): exit 0, OK — 54 marked claim(s) match derived values, incl. src-view-count 15, src-view-list 15 modules, src-top-level-dir-count 10, showcase-route-count 12"
+    recorded_at: "2026-09-02T21:18:26.718Z"
