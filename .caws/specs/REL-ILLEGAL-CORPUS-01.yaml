@@ -56,3 +56,8 @@ evidence:
     evidence_ref: "Live corpus: 0 CORPUS_TERM_UNKNOWN findings; every term is namespace:term and resolves in vocabulary.json (143 terms, 21 namespaces). Falsifier reached for real: mutating one entry to add 'scale:vibes' printed {code:CORPUS_TERM_UNKNOWN, id:REL_ADDITIVITY_STACK_SEMIADDITIVE, detail:'term \"scale:vibes\" does not resolve in vocabulary.json'}; an unnamespaced 'ordinal' also fails, pinned. The probe also listed vocabulary terms with no illegal entry: 53 before, 49 after adding four entries (null taxonomy, sequential-on-nominal, geographic projection, temporal grain) to corpus and doctrine together. NON-CLAIM: term membership proves each entry is written in the doctrine's vocabulary, not that its analytical cause is true (oracle problem); truth is stage 1's engine work."
     recorded_at: "2026-09-02T18:35:47.765Z"
     command: pnpm exec tsx tmp/corpus-probe.ts
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Live corpus: 0 CORPUS_FORM_NAME_LEAK findings across 40 entries' asserted and cause fields against the 36-phrase denylist in form-names.json. Falsifier reached for real: setting one cause to 'looks like a bad stacked bar chart' printed three findings verbatim: form name \"chart\" / \"bar chart\" / \"bar\" appears in cause. Pinned: a form name in asserted leaks; a form name in colloquial does NOT leak (the field exists to carry the downstream name); matching is whole-word so 'barrier' does not match 'bar'. Denylist deliberately omits words that are also L0-L4 vocabulary (graph, area, line, polar, stack) and lists only their form-name phrases."
+    recorded_at: "2026-09-02T18:35:48.204Z"
+    command: "pnpm exec vitest run packages/ds-codegen/src/analytical -t 'form name'"
