@@ -51,3 +51,8 @@ acceptance:
     then: 'given the governed doc-claims markers over the showcase structure; when the view and data dir land; then docs:check-claims passes with the updated counts'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/views/AnalyticalFixturesScratchView.smoke.test.tsx (7/7 on merged main ff27599e: index parity with 58-fixture dump, structure table, assertions-as-questions, evidence rows)"
+    recorded_at: "2026-09-02T21:52:44.184Z"
