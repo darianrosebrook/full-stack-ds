@@ -7,7 +7,9 @@ created_at: '2026-09-02T21:12:15.635Z'
 updated_at: '2026-09-02T21:12:15.635Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'scripts/docs-claims-check.mjs (new derive functions + CLAIMS rows; additive)'
+    - 'AGENTS.md + README.md src/ layout blocks (marker adoption only, no doctrine edits)'
+    - 'CLAUDE.md (untracked mirror; marker parity via LOCAL_AGENT_DOCS gating)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,7 +20,7 @@ scope:
     - 'CLAUDE.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Every showcase-structure value stated in a governed doc carries a marker whose value equals its filesystem/router derivation; no derive function exits 0 on a missing authority (loud exit 2 instead).'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
