@@ -2,9 +2,11 @@ id: REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01
 title: 'Oracle correction: rename REL_UNIT_SUM_ACROSS_CURRENCY to REL_UNIT_SUM_INCOMMENSURABLE so the diagnostic names its cause'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Identifier-only oracle correction landed 3d1e8988 via merge 52588153: REL_UNIT_SUM_ACROSS_CURRENCY -> REL_UNIT_SUM_INCOMMENSURABLE in one corpus row and one catalogue row; causal behaviour proven unchanged by a 58-fixture canonical ledger diff that is byte-identical after identifier substitution; holdout digest re-recorded with reason. New custody baseline for REL-FIELD-ALGEBRA-02: corpus 6f8edea4f5aabef4, case schema 0b02d6eedcc3cfd4, vocabulary ba144b63b34c2371, denylist 0564902cf8d7d4ff, doctrine sections 8622d010f131c94f. Non-claim: the closed REL-FIELD-ALGEBRA-01 spec and the gitignored codegen dist still carry the old identifier as frozen history.'
 created_at: '2026-09-02T22:34:21.616Z'
-updated_at: '2026-09-02T22:34:35.109Z'
+updated_at: '2026-09-02T22:40:06.553Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/analytical-pack/corpus.jsonl (one row: the diagnostic identifier only)'
