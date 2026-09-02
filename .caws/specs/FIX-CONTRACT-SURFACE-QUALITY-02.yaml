@@ -1,0 +1,62 @@
+id: FIX-CONTRACT-SURFACE-QUALITY-02
+title: 'Repair contract-level surface defects: Card status rail, Popover border/surface, Divider UA leak, Table selected contrast'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-02T23:17:48.963Z'
+updated_at: '2026-09-02T23:17:48.963Z'
+blast_radius:
+  modules:
+    - 'ds-contracts'
+    - 'ds-react'
+    - 'ds-vue'
+    - 'ds-svelte'
+    - 'ds-angular'
+    - 'ds-lit'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Card'
+    - 'packages/ds-contracts/components/Popover'
+    - 'packages/ds-contracts/components/Divider'
+    - 'packages/ds-contracts/components/Table'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-react-native/src'
+  out: []
+invariants:
+  - 'A variant-only decoration (status rail, accent stripe) is never declared in a base/root style block; it lives only in the variant selector that motivates it'
+  - 'Two edges of one visual outline never resolve through different semantic token families'
+  - 'A contract whose host element carries UA border defaults (hr, button, input) explicitly neutralizes every edge it does not itself style'
+  - 'Any style block that sets a background from an accent/intent token also sets its paired foreground, so text contrast is not left to inheritance'
+  - 'Generated artifacts are regenerated and committed in the same commit as the contract change that produced them'
+acceptance:
+  - id: A1
+    given: 'a Card with no status prop'
+    when: 'rendered in any of the 10 brands x 2 themes'
+    then: 'all four borders are 1px and resolve through a single token family, with no 2px leading rail'
+  - id: A2
+    given: 'a Card with a status prop set'
+    when: 'rendered'
+    then: 'a 2px leading rail appears in that status colour, proving the rail moved to the variant rather than being deleted'
+  - id: A3
+    given: 'a horizontal or vertical Divider'
+    when: 'rendered as its hr host'
+    then: 'only the single intended edge paints, with no UA inset border on the remaining sides, and the vertical rule has non-degenerate height'
+  - id: A4
+    given: 'an open Popover'
+    when: 'rendered'
+    then: 'its content surface uses a neutral border token and an elevated (non-mid-grey) background'
+  - id: A5
+    given: 'a selected Table row'
+    when: 'rendered at the default brand in light theme'
+    then: 'its text meets WCAG AA 4.5:1 against the selected row background'
+non_functional: {}
+contracts:
+  - name: 'component-styles'
+    type: schema
+    path: 'packages/ds-contracts/component.contract.schema.json'
