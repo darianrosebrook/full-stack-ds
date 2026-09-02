@@ -102,14 +102,14 @@ export const popoverTokenScopes = {
     "popover.color.background.content": {
       name: "popover.color.background.content",
       cssVar: "--fsds-popover-color-background-content",
-      ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      ref: "semantic.color.background.elevated",
+      fallback: "#ffffff",
     },
-    "popover.color.border.accent": {
-      name: "popover.color.border.accent",
-      cssVar: "--fsds-popover-color-border-accent",
-      ref: "semantic.color.border.accent",
-      fallback: "#d92d2e",
+    "popover.color.border.default": {
+      name: "popover.color.border.default",
+      cssVar: "--fsds-popover-color-border-default",
+      ref: "semantic.color.border.subtle",
+      fallback: "#d0d0d0",
     },
     "popover.elevation.default": {
       name: "popover.elevation.default",

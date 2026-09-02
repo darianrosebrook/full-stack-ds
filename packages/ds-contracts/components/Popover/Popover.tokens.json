@@ -45,13 +45,13 @@
     "layer": "core"
   },
   "popover.color.background.content": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "resolvesTo": "semantic.color.background.elevated",
+    "fallback": "#ffffff",
     "layer": "semantic"
   },
-  "popover.color.border.accent": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
+  "popover.color.border.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "popover.elevation.default": {

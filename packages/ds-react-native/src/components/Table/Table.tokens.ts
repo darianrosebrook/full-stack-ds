@@ -181,8 +181,8 @@ export const tableTokenScopes = {
     "table.color.background.selected": {
       name: "table.color.background.selected",
       cssVar: "--fsds-table-color-background-selected",
-      ref: "semantic.color.background.accent",
-      fallback: "#d92d2e",
+      ref: "semantic.color.background.accentSubtle",
+      fallback: "#95dafb",
     },
     "table.focus.width": {
       name: "table.focus.width",

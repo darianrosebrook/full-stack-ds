@@ -62,11 +62,11 @@
     },
     "background-color": {
       "resolvesTo": "popover.color.background.content",
-      "fallback": "#d0d0d0"
+      "fallback": "#ffffff"
     },
     "border-color": {
-      "resolvesTo": "popover.color.border.accent",
-      "fallback": "#d92d2e"
+      "resolvesTo": "popover.color.border.default",
+      "fallback": "#d0d0d0"
     },
     "border-radius": {
       "resolvesTo": "popover.size.radius.default",

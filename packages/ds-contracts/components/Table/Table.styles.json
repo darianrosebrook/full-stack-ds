@@ -170,7 +170,7 @@
   "selected": {
     "background-color": {
       "resolvesTo": "table.color.background.selected",
-      "fallback": "#d92d2e"
+      "fallback": "#95dafb"
     }
   }
 }

@@ -52,6 +52,9 @@ export class DividerElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       display: block;
+      border-right-style: none;
+      border-bottom-style: none;
+      border-left-style: none;
       border-top-color: var(--fsds-divider-color-default, #b8b8b8);
       border-top-style: solid;
       border-top-width: var(--fsds-divider-size-thickness, 1px);
@@ -62,6 +65,8 @@ export class DividerElement extends LitElement {
     .divider--vertical {
       width: 1px;
       height: auto;
+      align-self: stretch;
+      min-height: 1em;
       border-top: none;
       border-left-color: var(--fsds-divider-color-default, #b8b8b8);
       border-left-style: solid;

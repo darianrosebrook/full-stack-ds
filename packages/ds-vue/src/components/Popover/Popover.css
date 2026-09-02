@@ -28,8 +28,8 @@
   max-width: calc(100vw - 16px);
   contain: layout paint style;
   animation: popover-enter var(--fsds-core-motion-duration-short, 150ms) var(--fsds-core-motion-easing-emphasized-out, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
-  background-color: var(--fsds-popover-color-background-content, #d0d0d0);
-  border-color: var(--fsds-popover-color-border-accent, #d92d2e);
+  background-color: var(--fsds-popover-color-background-content, #ffffff);
+  border-color: var(--fsds-popover-color-border-default, #d0d0d0);
   border-radius: var(--fsds-popover-size-radius-default, 6px);
   padding: var(--fsds-popover-size-padding-default, 16px);
   gap: var(--fsds-popover-size-gap-default, 8px);

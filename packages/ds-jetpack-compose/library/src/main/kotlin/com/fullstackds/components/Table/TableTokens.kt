@@ -185,8 +185,8 @@ val tableTokenScopes: ComponentTokenScopes = mapOf(
         "table.color.background.selected" to ComponentTokenDefinition(
             name = "table.color.background.selected",
             cssVar = "--fsds-table-color-background-selected",
-            ref = "semantic.color.background.accent",
-            fallback = "#d92d2e",
+            ref = "semantic.color.background.accentSubtle",
+            fallback = "#95dafb",
         ),
         "table.focus.width" to ComponentTokenDefinition(
             name = "table.focus.width",

@@ -90,8 +90,8 @@
     "layer": "semantic"
   },
   "card.color.statusAccent.default": {
-    "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#d0d0d0",
+    "resolvesTo": "semantic.color.border.light",
+    "fallback": "#b8b8b8",
     "layer": "semantic"
   },
   "card.size.statusAccent.width": {

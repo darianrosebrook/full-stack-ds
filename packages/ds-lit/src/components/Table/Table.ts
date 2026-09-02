@@ -52,7 +52,7 @@ export class TableElement extends LitElement {
       --fsds-table-text-weight-head: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-table-text-weight-footer: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-table-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
-      --fsds-table-color-background-selected: var(--fsds-semantic-color-background-accent, #d92d2e);
+      --fsds-table-color-background-selected: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-table-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-table-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-table-focus-offset: var(--fsds-core-spacing-size-01, 1px);
@@ -80,7 +80,7 @@ export class TableElement extends LitElement {
       }
 
       &[aria-selected="true"] {
-        background-color: var(--fsds-table-color-background-selected, #d92d2e);
+        background-color: var(--fsds-table-color-background-selected, #95dafb);
       }
     }
 
