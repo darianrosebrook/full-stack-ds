@@ -1,0 +1,327 @@
+/**
+ * REL-FIELD-ALGEBRA-02 Phase B acceptance: the stage-1.5 necessity census.
+ *
+ * C1  every kernel coordinate carries a holding witness (coverage);
+ * C2  every witness holds: schema-valid stimuli, oracle-different outcomes,
+ *     collision under the claimed erasure, minimality for 2-sets;
+ * C3  the harness is falsified: it rejects a non-collision, a non-minimal
+ *     2-set, an erasure that only produces schema invalidity, a same-outcome
+ *     pair, and a 3-set;
+ * C4  every stage-1 coordinate (census-stage1.json, derived from the frozen
+ *     Phase-A schema) is dispositioned exactly once, and the live kernel census
+ *     equals exactly the ratified set (post-removal equality);
+ * C5  D6: the eight scale labels decode onto the capability basis with exactly
+ *     one alias pair, and every factorized distinction resolves;
+ * C6  conservation: the frozen Phase-A ledger equals the live ledger modulo the
+ *     recorded key rewrites (removals change occurrence keys and nothing else);
+ * C7  the engine agrees with every hand adjudication (evidence, not source).
+ */
+import { describe, expect, it } from "vitest";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { BASELINE_FILE, checkBaseline, type Baseline } from "./baseline.js";
+import { decodeScale, scaleAliases, type ScaleLabel } from "./capabilities.js";
+import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadCensus } from "./census.js";
+import { judge } from "./engines.js";
+import { codesOf, termsOf } from "./judgment.js";
+import {
+  checkWitness,
+  disposition,
+  loadCensusSnapshot,
+  loadOracle,
+  loadRemovals,
+  loadWitnesses,
+  outcomeFrom,
+  ratifiedSet,
+  resolveSide,
+  type Witness,
+} from "./necessity.js";
+import { canonical, erase } from "./quotient.js";
+
+const oracle = loadOracle();
+const kernel = loadCensus();
+const kernelIds = new Set(kernel.map((c) => c.id));
+const stage1 = loadCensusSnapshot();
+const witnesses = loadWitnesses().witnesses;
+const removals = loadRemovals();
+const baseline = JSON.parse(fs.readFileSync(BASELINE_FILE, "utf-8")) as Baseline;
+const isCoordinate = (c: Coordinate) => c.kind !== "reference";
+
+const count = (cs: Coordinate[]) => ({
+  leaves: cs.filter((c) => c.kind === "leaf").length,
+  pairs: cs.filter((c) => c.kind === "member-pair").length,
+  references: cs.filter((c) => c.kind === "reference").length,
+});
+
+describe("C0 — provenance of the two censuses", () => {
+  it("census-stage1.json was derived from the schema the Phase-A baseline froze", () => {
+    expect(stage1.derivedFrom).toBe(baseline.digests["fixture.schema.json"]);
+  });
+  it("the stage-1 census has 46 leaves, 212 member pairs and 10 references", () => {
+    expect(count(stage1.coordinates)).toEqual({ leaves: 46, pairs: 212, references: 10 });
+  });
+  it("the kernel census has 26 leaves, 21 member pairs and 4 references", () => {
+    expect(count(kernel)).toEqual({ leaves: 26, pairs: 21, references: 4 });
+  });
+  it("the kernel is a proper subset of the stage-1 census by identity or recorded mapping", () => {
+    const stage1Ids = new Set(stage1.coordinates.map((c) => c.id));
+    const carried = new Set([...Object.values(removals.leafMap), ...removals.factorized["field.scale"].into]);
+    for (const c of kernel) {
+      if (c.kind === "reference") continue;
+      const known = stage1Ids.has(c.id) || carried.has(c.leaf);
+      expect(known, `${c.id} is a kernel coordinate the stage-1 census never carried`).toBe(true);
+    }
+  });
+});
+
+describe("C2 — every witness holds", () => {
+  for (const w of witnesses) {
+    it(`${w.coordinates.join(" + ")}`, () => {
+      const r = checkWitness(w, kernel, oracle);
+      expect(r.failures, JSON.stringify(r.failures)).toEqual([]);
+      expect(r.ok).toBe(true);
+    });
+  }
+  it("no coordinate set is claimed by more than one witness of the same shape with the same stimuli", () => {
+    const seen = new Set<string>();
+    for (const w of witnesses) {
+      const k = `${w.coordinates.join("+")}|${JSON.stringify(w.a)}|${JSON.stringify(w.b)}`;
+      expect(seen.has(k), k).toBe(false);
+      seen.add(k);
+    }
+  });
+});
+
+describe("C1 — coverage: every kernel coordinate is ratified", () => {
+  const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+  it("every leaf and member pair of the kernel has a holding witness", () => {
+    const missing = kernel.filter(isCoordinate).filter((c) => !ratified.has(c.id)).map((c) => c.id);
+    expect(missing).toEqual([]);
+  });
+  it("no witness names a coordinate the kernel does not have", () => {
+    const phantom = [...ratified].filter((id) => !kernelIds.has(id));
+    expect(phantom).toEqual([]);
+  });
+  it("the separating-set bound is 2 and the 2-sets are exactly the four precommitted shapes", () => {
+    const twoSets = witnesses.filter((w) => w.coordinates.length === 2).map((w) => w.coordinates.join(" + ")).sort();
+    expect(witnesses.every((w) => w.coordinates.length <= 2)).toBe(true);
+    expect(twoSets).toEqual([
+      "assertion.kind + assertion.aggregate.op",
+      "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
+      "field.additivity.kind:additive~semi-additive + field.additivity.semi-additive.nonAdditiveAlong",
+      "field.additivity.kind:semi-additive~ratio-measure + field.additivity.semi-additive.nonAdditiveAlong",
+    ]);
+  });
+  it("witness evidence class: schema-role coordinates witnessed only with rows are exactly the three null-handling distinctions (invariant 9)", () => {
+    const hasRows = (w: Witness) =>
+      [w.a, w.b].some((s) => {
+        const f = resolveSide(s, oracle).fixture;
+        return f.evidence?.rows !== undefined;
+      });
+    const instanceOnly = kernel
+      .filter(isCoordinate)
+      .filter((c) => c.role === "schema")
+      .filter((c) => {
+        const ws = witnesses.filter((w) => w.coordinates.includes(c.id));
+        return ws.length > 0 && ws.every(hasRows);
+      })
+      .map((c) => c.id);
+    // A handling's distinctions are visible only once a missing value is present; the
+    // leaf itself (handling declared or not) has a schema-class witness.
+    expect(instanceOnly).toEqual([
+      "assertion.aggregate.nulls:exclude~as-zero",
+      "assertion.aggregate.nulls:exclude~as-observed",
+      "assertion.aggregate.nulls:as-zero~as-observed",
+    ]);
+  });
+});
+
+describe("C3 — the harness is falsified", () => {
+  const byId = new Map(kernel.map((c) => [c.id, c]));
+  const codes = (w: Witness) => checkWitness(w, kernel, oracle).failures.map((f) => f.code);
+
+  it("rejects a pair that does not collide under the claimed erasure", () => {
+    // FX_REGION_MAX vs FX_N_TEMP_MEAN differ in transformation AND op: erasing transformation alone cannot identify them
+    expect(codes({ coordinates: ["field.transformation"], a: { fixture: "FX_REGION_MAX" }, b: { fixture: "FX_N_TEMP_MEAN" } })).toEqual(["NO_COLLISION"]);
+  });
+  it("rejects a 2-set whose single erasure already collides", () => {
+    expect(
+      codes({ coordinates: ["field.transformation", "field.key"], a: { fixture: "FX_REGION_MAX" }, b: { fixture: "FX_N_ORDINAL_MAX" } }),
+    ).toEqual(["NOT_MINIMAL"]);
+  });
+  it("rejects an erasure that only produces schema invalidity", () => {
+    const w: Witness = {
+      coordinates: ["field.transformation"],
+      a: { fixture: "FX_REGION_MAX" },
+      b: { base: "FX_REGION_MAX", patch: [{ set: "structure.relations.sites.fields.region.transformation", value: "absolute" }], outcome: outcomeFrom("admissible"), cause: "none" },
+    };
+    expect(codes(w)).toContain("SCHEMA_INVALID");
+  });
+  it("rejects a pair the oracle does not tell apart", () => {
+    expect(codes({ coordinates: ["field.transformation:ordinal~interval"], a: { fixture: "FX_N_TEMP_MEAN" }, b: { fixture: "FX_N_SURVEY_MEAN_RATIO_SCORE" } })).toContain("SAME_OUTCOME");
+  });
+  it("rejects a separating set of three", () => {
+    expect(codes({ coordinates: ["field.transformation", "field.key", "relation.grain"], a: { fixture: "FX_REGION_MAX" }, b: { fixture: "FX_N_ORDINAL_MAX" } })).toContain(
+      "TOO_MANY_COORDINATES",
+    );
+  });
+  it("rejects a witness whose stimuli are the same representation", () => {
+    expect(codes({ coordinates: ["field.key"], a: { fixture: "FX_TEMP_SUM" }, b: { base: "FX_TEMP_SUM", patch: [], outcome: outcomeFrom("admissible"), cause: "none" } })).toContain(
+      "IDENTICAL_STIMULI",
+    );
+  });
+  it("a side with no oracle adjudication and no hand adjudication is refused", () => {
+    expect(() => resolveSide({ fixture: "FX_P_OHLC" }, oracle)).toThrow(/no oracle-adjudicated outcome/);
+  });
+  it("erasure is total: a leaf erased leaves no occurrence anywhere in the fixture", () => {
+    const key = byId.get("field.key")!;
+    const f = oracle.fixtures.get("FX_USER_ID_SUM")!;
+    expect(JSON.stringify(erase(f, key))).not.toContain('"key"');
+    expect(canonical(erase(f, key))).not.toContain('"key"');
+  });
+});
+
+describe("C4 — every stage-1 coordinate is dispositioned exactly once; the kernel equals the ratified set", () => {
+  const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+  const dispositions = stage1.coordinates.map((c) => [c, disposition(c, ratified, kernelIds, removals)] as const);
+
+  it("every stage-1 coordinate is ratified, not-yet-admitted, or a name reference", () => {
+    const undecided = dispositions.filter(([, d]) => d.state !== "ratified" && d.state !== "not-yet-admitted" && d.state !== "reference");
+    expect(undecided).toEqual([]);
+  });
+  it("counts: 81 ratified (24 leaves, 57 pairs), 177 not-yet-admitted (128 at stage 2, 49 at stage 3), 10 references", () => {
+    const tally = { ratified: 0, "not-yet-admitted": 0, reference: 0 };
+    const ratifiedKinds = { leaf: 0, "member-pair": 0 };
+    const stages: Record<string, number> = {};
+    for (const [c, d] of dispositions) {
+      tally[d.state]++;
+      if (d.state === "ratified") ratifiedKinds[c.kind as "leaf" | "member-pair"]++;
+      if (d.state === "not-yet-admitted") stages[String(d.reintroducibleAt)] = (stages[String(d.reintroducibleAt)] ?? 0) + 1;
+    }
+    expect(dispositions).toHaveLength(268);
+    expect(tally).toEqual({ ratified: 81, "not-yet-admitted": 177, reference: 10 });
+    // 26 kernel leaves less the four capability leaves the scale leaf factorizes into, plus scale and rollup.op
+    expect(ratifiedKinds).toEqual({ leaf: 24, "member-pair": 57 });
+    expect(stages).toEqual({ "2": 128, "3": 49 });
+  });
+  it("every removal names a real stage-1 leaf that the kernel no longer carries", () => {
+    const stage1Leaves = new Set(stage1.coordinates.filter((c) => c.kind === "leaf").map((c) => c.id));
+    for (const r of removals.removed) {
+      expect(stage1Leaves.has(r.coordinate), r.coordinate).toBe(true);
+      expect(kernelIds.has(r.coordinate), `${r.coordinate} is still in the kernel`).toBe(false);
+      expect(r.reintroducibleAt).toBeGreaterThanOrEqual(2);
+    }
+  });
+  it("no coordinate is both removed and carried (leafMap / memberMap / factorized)", () => {
+    const carried = new Set([...Object.keys(removals.leafMap), ...Object.keys(removals.memberMap), ...Object.keys(removals.factorized)]);
+    for (const r of removals.removed) expect(carried.has(r.coordinate), r.coordinate).toBe(false);
+  });
+  it("every not-yet-admitted coordinate records the stage that may re-earn it", () => {
+    for (const [c, d] of dispositions) {
+      if (d.state === "not-yet-admitted") expect(d.reintroducibleAt, `${c.id}: ${d.reason}`).toBeGreaterThanOrEqual(2);
+    }
+  });
+  it("the live kernel census is exactly the ratified set (post-removal equality)", () => {
+    const live = kernel.filter(isCoordinate).map((c) => c.id).sort();
+    expect(live).toEqual([...ratified].sort());
+  });
+  it("every ratified stage-1 coordinate resolves to a kernel coordinate that exists", () => {
+    for (const [c, d] of dispositions) {
+      if (d.state !== "ratified") continue;
+      for (const via of d.via) expect(kernelIds.has(via), `${c.id} via ${via}`).toBe(true);
+    }
+  });
+});
+
+describe("C5 — D6: capabilities are primitive; scale labels are derived aliases", () => {
+  const labels: ScaleLabel[] = ["nominal", "ordinal", "cyclic", "interval", "ratio", "count", "proportion", "index"];
+  it("eight labels decode onto seven capability states with exactly one alias pair (ratio ≡ count)", () => {
+    const states = new Set(labels.map((l) => JSON.stringify(decodeScale(l))));
+    expect(states.size).toBe(7);
+    const aliases = Object.values(scaleAliases()).filter((g) => g.length > 1);
+    expect(aliases).toEqual([["ratio", "count"]]);
+    expect(removals.factorized["field.scale"].aliases).toEqual([["ratio", "count"]]);
+  });
+  it("every stage-1 scale distinction is ratified through a capability coordinate, except the alias", () => {
+    const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+    const pairs = stage1.coordinates.filter((c) => c.kind === "member-pair" && c.leaf === "field.scale");
+    expect(pairs).toHaveLength(28);
+    const unratified = pairs.map((c) => [c.id, disposition(c, ratified, kernelIds, removals)] as const).filter(([, d]) => d.state !== "ratified");
+    expect(unratified.map(([id]) => id)).toEqual(["field.scale:ratio~count"]);
+  });
+  it("the kernel carries no scale label", () => {
+    expect(kernelIds.has("field.scale")).toBe(false);
+    expect(JSON.stringify(kernel)).not.toContain('"field.scale');
+  });
+});
+
+describe("C6 — conservation: the Phase-A ledger equals the live ledger modulo recorded key rewrites", () => {
+  it("every recorded judgment is reproduced byte-for-byte after the key rewrites", () => {
+    expect(checkBaseline(BASELINE_FILE, { ledgerOnly: true, rewrites: removals.keyRewrites })).toEqual([]);
+  });
+  it("without the rewrites exactly the fixtures whose occurrence KEYS carried a rollup or a max move, and nothing else", () => {
+    // Admissible fixtures carry no key, so a former rollup or max that is admissible does not appear.
+    const moved = checkBaseline(BASELINE_FILE, { ledgerOnly: true })
+      .map((d) => /^judgment moved: (\S+)/.exec(d)?.[1])
+      .filter((x): x is string => x !== undefined)
+      .sort();
+    expect(moved).toEqual([
+      "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+      "FX_H_KPI_INDEX_AND_RATE",
+      "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN",
+      "FX_REGION_MAX",
+      "FX_S_MIXED_FAULT",
+      "FX_S_TWO_CURRENCY_SUMS_TWO_UNKNOWN_GRAINS",
+      "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS",
+    ]);
+  });
+});
+
+describe("C8 — the census is derived, exhaustive and exactly-once", () => {
+  const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as Record<string, unknown>;
+
+  it("every coordinate id appears exactly once", () => {
+    const ids = kernel.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+  it("a leaf added to the model appears in the census with no hand edit", () => {
+    const mutated = JSON.parse(JSON.stringify(schema)) as { definitions: Record<string, { properties: Record<string, unknown> }> };
+    mutated.definitions.field.properties.foo = { type: "string" };
+    mutated.definitions.field.properties.mode = { type: "string", enum: ["a", "b", "c"] };
+    const ids = deriveCensus(mutated as Record<string, unknown>).map((c) => c.id);
+    expect(ids).toContain("field.foo");
+    expect(ids).toContain("field.mode");
+    expect(ids.filter((id) => id.startsWith("field.mode:"))).toEqual(["field.mode:a~b", "field.mode:a~c", "field.mode:b~c"]);
+    expect(kernelIds.has("field.foo")).toBe(false);
+  });
+  it("evidence coordinates are the instance-evidence ones and nothing in the declaration is", () => {
+    const instance = kernel.filter((c) => c.role === "instance").map((c) => c.leaf);
+    expect([...new Set(instance)].sort()).toEqual(["evidence.grainWitness", "observation.null", "observation.unit", "observation.value"]);
+    for (const c of kernel) if (c.id.startsWith("field.") || c.id.startsWith("relation.") || c.id.startsWith("assertion.")) expect(c.role).toBe("schema");
+  });
+  it("name references are listed for exhaustiveness and are not coordinates", () => {
+    expect(kernel.filter((c) => c.kind === "reference").map((c) => c.id).sort()).toEqual([
+      "assertion.aggregate.field",
+      "assertion.aggregate.relation",
+      "assertion.ratio-comparison.field",
+      "assertion.ratio-comparison.relation",
+    ]);
+  });
+});
+
+describe("C7 — the engine agrees with every hand adjudication (evidence, not source)", () => {
+  for (const w of witnesses) {
+    for (const [label, side] of [["a", w.a], ["b", w.b]] as const) {
+      if ("fixture" in side) continue;
+      it(`${w.coordinates.join(" + ")} / ${label}: ${side.cause.slice(0, 60)}`, () => {
+        const r = resolveSide(side, oracle);
+        const j = judge(r.fixture.structure, r.fixture.assertions, r.fixture.evidence);
+        expect({ status: j.status, codes: codesOf(j), terms: termsOf(j) }).toEqual(r.outcome);
+      });
+    }
+  }
+  it("witness files are the committed ones the harness read", () => {
+    expect(fs.existsSync(path.join(path.dirname(BASELINE_FILE), "witnesses.json"))).toBe(true);
+    expect(fs.existsSync(path.join(path.dirname(BASELINE_FILE), "removals.json"))).toBe(true);
+  });
+});

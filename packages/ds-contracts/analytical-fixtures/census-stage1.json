@@ -1,0 +1,2607 @@
+{
+  "$comment": "Pre-removal coordinate census of the stage-1 kernel, derived by census.ts from the emitted fixture schema at the end of REL-FIELD-ALGEBRA-02 Phase A (derivedFrom = that schema's sha256, which baseline-stage1.json also records). Every coordinate here is dispositioned by necessity.test.ts as ratified (a witness in witnesses.json) or not-yet-admitted (an entry in removals.json).",
+  "derivedFrom": "fb96b85e1def733463b3b5d4e143935fd2e4277a42de9ba05d466e806c606004",
+  "coordinates": [
+    {
+      "id": "relation.grain",
+      "kind": "leaf",
+      "leaf": "relation.grain",
+      "role": "schema"
+    },
+    {
+      "id": "field.scale",
+      "kind": "leaf",
+      "leaf": "field.scale",
+      "role": "schema",
+      "enum": [
+        "nominal",
+        "ordinal",
+        "cyclic",
+        "interval",
+        "ratio",
+        "count",
+        "proportion",
+        "index"
+      ]
+    },
+    {
+      "id": "field.scale:nominal~ordinal",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "ordinal"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:nominal~cyclic",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "cyclic"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:nominal~interval",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "interval"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:nominal~ratio",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "ratio"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:nominal~count",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:nominal~proportion",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "proportion"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:nominal~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "nominal",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ordinal~cyclic",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ordinal",
+        "cyclic"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ordinal~interval",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ordinal",
+        "interval"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ordinal~ratio",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ordinal",
+        "ratio"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ordinal~count",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ordinal",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ordinal~proportion",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ordinal",
+        "proportion"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ordinal~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ordinal",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:cyclic~interval",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "cyclic",
+        "interval"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:cyclic~ratio",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "cyclic",
+        "ratio"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:cyclic~count",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "cyclic",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:cyclic~proportion",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "cyclic",
+        "proportion"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:cyclic~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "cyclic",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:interval~ratio",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "interval",
+        "ratio"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:interval~count",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "interval",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:interval~proportion",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "interval",
+        "proportion"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:interval~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "interval",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ratio~count",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ratio",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ratio~proportion",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ratio",
+        "proportion"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:ratio~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "ratio",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:count~proportion",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "count",
+        "proportion"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:count~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "count",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.scale:proportion~index",
+      "kind": "member-pair",
+      "leaf": "field.scale",
+      "members": [
+        "proportion",
+        "index"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape",
+      "kind": "leaf",
+      "leaf": "field.shape",
+      "role": "schema",
+      "enum": [
+        "scalar",
+        "interval",
+        "set",
+        "distribution",
+        "point"
+      ]
+    },
+    {
+      "id": "field.shape:scalar~interval",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "scalar",
+        "interval"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:scalar~set",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "scalar",
+        "set"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:scalar~distribution",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "scalar",
+        "distribution"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:scalar~point",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "scalar",
+        "point"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:interval~set",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "interval",
+        "set"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:interval~distribution",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "interval",
+        "distribution"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:interval~point",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "interval",
+        "point"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:set~distribution",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "set",
+        "distribution"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:set~point",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "set",
+        "point"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.shape:distribution~point",
+      "kind": "member-pair",
+      "leaf": "field.shape",
+      "members": [
+        "distribution",
+        "point"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.key",
+      "kind": "leaf",
+      "leaf": "field.key",
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension",
+      "kind": "leaf",
+      "leaf": "field.unit.dimension",
+      "role": "schema",
+      "enum": [
+        "currency",
+        "time",
+        "length",
+        "mass",
+        "temperature",
+        "dimensionless"
+      ]
+    },
+    {
+      "id": "field.unit.dimension:currency~time",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "currency",
+        "time"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:currency~length",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "currency",
+        "length"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:currency~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "currency",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:currency~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "currency",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:currency~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "currency",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:time~length",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "time",
+        "length"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:time~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "time",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:time~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "time",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:time~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "time",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:length~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "length",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:length~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "length",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:length~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "length",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:mass~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "mass",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:mass~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "mass",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.dimension:temperature~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.dimension",
+      "members": [
+        "temperature",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.unit",
+      "kind": "leaf",
+      "leaf": "field.unit.unit",
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.units",
+      "kind": "leaf",
+      "leaf": "field.unit.units",
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.perRow",
+      "kind": "leaf",
+      "leaf": "field.unit.perRow",
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.conversions",
+      "kind": "leaf",
+      "leaf": "field.unit.conversions",
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator",
+      "kind": "leaf",
+      "leaf": "field.unit.rate.numerator",
+      "role": "schema",
+      "enum": [
+        "currency",
+        "time",
+        "length",
+        "mass",
+        "temperature",
+        "dimensionless"
+      ]
+    },
+    {
+      "id": "field.unit.rate.numerator:currency~time",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "currency",
+        "time"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:currency~length",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "currency",
+        "length"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:currency~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "currency",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:currency~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "currency",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:currency~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "currency",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:time~length",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "time",
+        "length"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:time~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "time",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:time~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "time",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:time~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "time",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:length~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "length",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:length~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "length",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:length~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "length",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:mass~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "mass",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:mass~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "mass",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.numerator:temperature~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.numerator",
+      "members": [
+        "temperature",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator",
+      "kind": "leaf",
+      "leaf": "field.unit.rate.denominator",
+      "role": "schema",
+      "enum": [
+        "currency",
+        "time",
+        "length",
+        "mass",
+        "temperature",
+        "dimensionless"
+      ]
+    },
+    {
+      "id": "field.unit.rate.denominator:currency~time",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "currency",
+        "time"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:currency~length",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "currency",
+        "length"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:currency~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "currency",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:currency~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "currency",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:currency~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "currency",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:time~length",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "time",
+        "length"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:time~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "time",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:time~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "time",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:time~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "time",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:length~mass",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "length",
+        "mass"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:length~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "length",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:length~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "length",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:mass~temperature",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "mass",
+        "temperature"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:mass~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "mass",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.unit.rate.denominator:temperature~dimensionless",
+      "kind": "member-pair",
+      "leaf": "field.unit.rate.denominator",
+      "members": [
+        "temperature",
+        "dimensionless"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.kind",
+      "kind": "leaf",
+      "leaf": "field.temporality.kind",
+      "role": "schema",
+      "enum": [
+        "instant",
+        "interval",
+        "duration"
+      ]
+    },
+    {
+      "id": "field.temporality.kind:instant~interval",
+      "kind": "member-pair",
+      "leaf": "field.temporality.kind",
+      "members": [
+        "instant",
+        "interval"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.kind:instant~duration",
+      "kind": "member-pair",
+      "leaf": "field.temporality.kind",
+      "members": [
+        "instant",
+        "duration"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.kind:interval~duration",
+      "kind": "member-pair",
+      "leaf": "field.temporality.kind",
+      "members": [
+        "interval",
+        "duration"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.closure",
+      "kind": "leaf",
+      "leaf": "field.temporality.closure",
+      "role": "schema",
+      "enum": [
+        "half-open",
+        "closed",
+        "open"
+      ]
+    },
+    {
+      "id": "field.temporality.closure:half-open~closed",
+      "kind": "member-pair",
+      "leaf": "field.temporality.closure",
+      "members": [
+        "half-open",
+        "closed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.closure:half-open~open",
+      "kind": "member-pair",
+      "leaf": "field.temporality.closure",
+      "members": [
+        "half-open",
+        "open"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.closure:closed~open",
+      "kind": "member-pair",
+      "leaf": "field.temporality.closure",
+      "members": [
+        "closed",
+        "open"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain",
+      "kind": "leaf",
+      "leaf": "field.temporality.grain",
+      "role": "schema",
+      "enum": [
+        "second",
+        "minute",
+        "hour",
+        "day",
+        "week",
+        "month",
+        "quarter",
+        "year"
+      ]
+    },
+    {
+      "id": "field.temporality.grain:second~minute",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "minute"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:second~hour",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "hour"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:second~day",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "day"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:second~week",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "week"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:second~month",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "month"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:second~quarter",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "quarter"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:second~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "second",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:minute~hour",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "minute",
+        "hour"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:minute~day",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "minute",
+        "day"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:minute~week",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "minute",
+        "week"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:minute~month",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "minute",
+        "month"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:minute~quarter",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "minute",
+        "quarter"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:minute~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "minute",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:hour~day",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "hour",
+        "day"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:hour~week",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "hour",
+        "week"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:hour~month",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "hour",
+        "month"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:hour~quarter",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "hour",
+        "quarter"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:hour~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "hour",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:day~week",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "day",
+        "week"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:day~month",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "day",
+        "month"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:day~quarter",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "day",
+        "quarter"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:day~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "day",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:week~month",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "week",
+        "month"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:week~quarter",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "week",
+        "quarter"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:week~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "week",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:month~quarter",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "month",
+        "quarter"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:month~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "month",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.grain:quarter~year",
+      "kind": "member-pair",
+      "leaf": "field.temporality.grain",
+      "members": [
+        "quarter",
+        "year"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.temporality.calendar",
+      "kind": "leaf",
+      "leaf": "field.temporality.calendar",
+      "role": "schema"
+    },
+    {
+      "id": "field.order.kind",
+      "kind": "leaf",
+      "leaf": "field.order.kind",
+      "role": "schema",
+      "enum": [
+        "total",
+        "partial"
+      ]
+    },
+    {
+      "id": "field.order.kind:total~partial",
+      "kind": "member-pair",
+      "leaf": "field.order.kind",
+      "members": [
+        "total",
+        "partial"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.order.values",
+      "kind": "leaf",
+      "leaf": "field.order.values",
+      "role": "schema"
+    },
+    {
+      "id": "field.period",
+      "kind": "leaf",
+      "leaf": "field.period",
+      "role": "schema"
+    },
+    {
+      "id": "field.whole",
+      "kind": "leaf",
+      "leaf": "field.whole",
+      "role": "schema"
+    },
+    {
+      "id": "field.whole.perRow",
+      "kind": "leaf",
+      "leaf": "field.whole.perRow",
+      "role": "schema"
+    },
+    {
+      "id": "field.base",
+      "kind": "leaf",
+      "leaf": "field.base",
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.kind",
+      "kind": "leaf",
+      "leaf": "field.additivity.kind",
+      "role": "schema",
+      "enum": [
+        "additive",
+        "semi-additive",
+        "non-additive",
+        "ratio-measure"
+      ]
+    },
+    {
+      "id": "field.additivity.kind:additive~semi-additive",
+      "kind": "member-pair",
+      "leaf": "field.additivity.kind",
+      "members": [
+        "additive",
+        "semi-additive"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.kind:additive~non-additive",
+      "kind": "member-pair",
+      "leaf": "field.additivity.kind",
+      "members": [
+        "additive",
+        "non-additive"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.kind:additive~ratio-measure",
+      "kind": "member-pair",
+      "leaf": "field.additivity.kind",
+      "members": [
+        "additive",
+        "ratio-measure"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.kind:semi-additive~non-additive",
+      "kind": "member-pair",
+      "leaf": "field.additivity.kind",
+      "members": [
+        "semi-additive",
+        "non-additive"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.kind:semi-additive~ratio-measure",
+      "kind": "member-pair",
+      "leaf": "field.additivity.kind",
+      "members": [
+        "semi-additive",
+        "ratio-measure"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.kind:non-additive~ratio-measure",
+      "kind": "member-pair",
+      "leaf": "field.additivity.kind",
+      "members": [
+        "non-additive",
+        "ratio-measure"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.semi-additive.nonAdditiveAlong",
+      "kind": "leaf",
+      "leaf": "field.additivity.semi-additive.nonAdditiveAlong",
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.ratio-measure.numerator",
+      "kind": "leaf",
+      "leaf": "field.additivity.ratio-measure.numerator",
+      "role": "schema"
+    },
+    {
+      "id": "field.additivity.ratio-measure.denominator",
+      "kind": "leaf",
+      "leaf": "field.additivity.ratio-measure.denominator",
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null",
+      "kind": "leaf",
+      "leaf": "field.permits.null",
+      "role": "schema",
+      "enum": [
+        "absent",
+        "not-applicable",
+        "censored",
+        "suppressed",
+        "unknown",
+        "missing-after-join"
+      ]
+    },
+    {
+      "id": "field.permits.null:absent~not-applicable",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "absent",
+        "not-applicable"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:absent~censored",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "absent",
+        "censored"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:absent~suppressed",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "absent",
+        "suppressed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:absent~unknown",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "absent",
+        "unknown"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:absent~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "absent",
+        "missing-after-join"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:not-applicable~censored",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "not-applicable",
+        "censored"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:not-applicable~suppressed",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "not-applicable",
+        "suppressed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:not-applicable~unknown",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "not-applicable",
+        "unknown"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:not-applicable~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "not-applicable",
+        "missing-after-join"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:censored~suppressed",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "censored",
+        "suppressed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:censored~unknown",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "censored",
+        "unknown"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:censored~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "censored",
+        "missing-after-join"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:suppressed~unknown",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "suppressed",
+        "unknown"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:suppressed~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "suppressed",
+        "missing-after-join"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.null:unknown~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "field.permits.null",
+      "members": [
+        "unknown",
+        "missing-after-join"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.provenance",
+      "kind": "leaf",
+      "leaf": "field.permits.provenance",
+      "role": "schema",
+      "enum": [
+        "observed",
+        "derived",
+        "imputed",
+        "layout-generated"
+      ]
+    },
+    {
+      "id": "field.permits.provenance:observed~derived",
+      "kind": "member-pair",
+      "leaf": "field.permits.provenance",
+      "members": [
+        "observed",
+        "derived"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.provenance:observed~imputed",
+      "kind": "member-pair",
+      "leaf": "field.permits.provenance",
+      "members": [
+        "observed",
+        "imputed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.provenance:observed~layout-generated",
+      "kind": "member-pair",
+      "leaf": "field.permits.provenance",
+      "members": [
+        "observed",
+        "layout-generated"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.provenance:derived~imputed",
+      "kind": "member-pair",
+      "leaf": "field.permits.provenance",
+      "members": [
+        "derived",
+        "imputed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.provenance:derived~layout-generated",
+      "kind": "member-pair",
+      "leaf": "field.permits.provenance",
+      "members": [
+        "derived",
+        "layout-generated"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.provenance:imputed~layout-generated",
+      "kind": "member-pair",
+      "leaf": "field.permits.provenance",
+      "members": [
+        "imputed",
+        "layout-generated"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty",
+      "kind": "leaf",
+      "leaf": "field.permits.uncertainty",
+      "role": "schema",
+      "enum": [
+        "none",
+        "interval",
+        "distribution",
+        "measurement-error",
+        "rounded"
+      ]
+    },
+    {
+      "id": "field.permits.uncertainty:none~interval",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "none",
+        "interval"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:none~distribution",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "none",
+        "distribution"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:none~measurement-error",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "none",
+        "measurement-error"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:none~rounded",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "none",
+        "rounded"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:interval~distribution",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "interval",
+        "distribution"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:interval~measurement-error",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "interval",
+        "measurement-error"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:interval~rounded",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "interval",
+        "rounded"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:distribution~measurement-error",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "distribution",
+        "measurement-error"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:distribution~rounded",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "distribution",
+        "rounded"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "field.permits.uncertainty:measurement-error~rounded",
+      "kind": "member-pair",
+      "leaf": "field.permits.uncertainty",
+      "members": [
+        "measurement-error",
+        "rounded"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "relationship.from.relation",
+      "kind": "reference",
+      "leaf": "relationship.from.relation",
+      "role": "schema"
+    },
+    {
+      "id": "relationship.from.field",
+      "kind": "reference",
+      "leaf": "relationship.from.field",
+      "role": "schema"
+    },
+    {
+      "id": "relationship.to.relation",
+      "kind": "reference",
+      "leaf": "relationship.to.relation",
+      "role": "schema"
+    },
+    {
+      "id": "relationship.to.field",
+      "kind": "reference",
+      "leaf": "relationship.to.field",
+      "role": "schema"
+    },
+    {
+      "id": "relationship.cardinality",
+      "kind": "leaf",
+      "leaf": "relationship.cardinality",
+      "role": "schema",
+      "enum": [
+        "one-to-one",
+        "one-to-many",
+        "many-to-one",
+        "many-to-many"
+      ]
+    },
+    {
+      "id": "relationship.cardinality:one-to-one~one-to-many",
+      "kind": "member-pair",
+      "leaf": "relationship.cardinality",
+      "members": [
+        "one-to-one",
+        "one-to-many"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "relationship.cardinality:one-to-one~many-to-one",
+      "kind": "member-pair",
+      "leaf": "relationship.cardinality",
+      "members": [
+        "one-to-one",
+        "many-to-one"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "relationship.cardinality:one-to-one~many-to-many",
+      "kind": "member-pair",
+      "leaf": "relationship.cardinality",
+      "members": [
+        "one-to-one",
+        "many-to-many"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "relationship.cardinality:one-to-many~many-to-one",
+      "kind": "member-pair",
+      "leaf": "relationship.cardinality",
+      "members": [
+        "one-to-many",
+        "many-to-one"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "relationship.cardinality:one-to-many~many-to-many",
+      "kind": "member-pair",
+      "leaf": "relationship.cardinality",
+      "members": [
+        "one-to-many",
+        "many-to-many"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "relationship.cardinality:many-to-one~many-to-many",
+      "kind": "member-pair",
+      "leaf": "relationship.cardinality",
+      "members": [
+        "many-to-one",
+        "many-to-many"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.kind",
+      "kind": "leaf",
+      "leaf": "assertion.kind",
+      "role": "schema",
+      "enum": [
+        "aggregate",
+        "ratio-comparison",
+        "rollup"
+      ]
+    },
+    {
+      "id": "assertion.kind:aggregate~ratio-comparison",
+      "kind": "member-pair",
+      "leaf": "assertion.kind",
+      "members": [
+        "aggregate",
+        "ratio-comparison"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.kind:aggregate~rollup",
+      "kind": "member-pair",
+      "leaf": "assertion.kind",
+      "members": [
+        "aggregate",
+        "rollup"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.kind:ratio-comparison~rollup",
+      "kind": "member-pair",
+      "leaf": "assertion.kind",
+      "members": [
+        "ratio-comparison",
+        "rollup"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.relation",
+      "kind": "reference",
+      "leaf": "assertion.aggregate.relation",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.field",
+      "kind": "reference",
+      "leaf": "assertion.aggregate.field",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op",
+      "kind": "leaf",
+      "leaf": "assertion.aggregate.op",
+      "role": "schema",
+      "enum": [
+        "sum",
+        "mean",
+        "count",
+        "min",
+        "max"
+      ]
+    },
+    {
+      "id": "assertion.aggregate.op:sum~mean",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "sum",
+        "mean"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:sum~count",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "sum",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:sum~min",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "sum",
+        "min"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:sum~max",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "sum",
+        "max"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:mean~count",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "mean",
+        "count"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:mean~min",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "mean",
+        "min"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:mean~max",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "mean",
+        "max"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:count~min",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "count",
+        "min"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:count~max",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "count",
+        "max"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.op:min~max",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.op",
+      "members": [
+        "min",
+        "max"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.along",
+      "kind": "leaf",
+      "leaf": "assertion.aggregate.along",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.nulls",
+      "kind": "leaf",
+      "leaf": "assertion.aggregate.nulls",
+      "role": "schema",
+      "enum": [
+        "exclude",
+        "as-zero",
+        "as-observed"
+      ]
+    },
+    {
+      "id": "assertion.aggregate.nulls:exclude~as-zero",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.nulls",
+      "members": [
+        "exclude",
+        "as-zero"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.nulls:exclude~as-observed",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.nulls",
+      "members": [
+        "exclude",
+        "as-observed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.nulls:as-zero~as-observed",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.nulls",
+      "members": [
+        "as-zero",
+        "as-observed"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.aggregate.uncertainty",
+      "kind": "leaf",
+      "leaf": "assertion.aggregate.uncertainty",
+      "role": "schema",
+      "enum": [
+        "propagate",
+        "drop"
+      ]
+    },
+    {
+      "id": "assertion.aggregate.uncertainty:propagate~drop",
+      "kind": "member-pair",
+      "leaf": "assertion.aggregate.uncertainty",
+      "members": [
+        "propagate",
+        "drop"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.ratio-comparison.relation",
+      "kind": "reference",
+      "leaf": "assertion.ratio-comparison.relation",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.ratio-comparison.field",
+      "kind": "reference",
+      "leaf": "assertion.ratio-comparison.field",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.rollup.relation",
+      "kind": "reference",
+      "leaf": "assertion.rollup.relation",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.rollup.field",
+      "kind": "reference",
+      "leaf": "assertion.rollup.field",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.rollup.toGrain",
+      "kind": "leaf",
+      "leaf": "assertion.rollup.toGrain",
+      "role": "schema"
+    },
+    {
+      "id": "assertion.rollup.op",
+      "kind": "leaf",
+      "leaf": "assertion.rollup.op",
+      "role": "schema",
+      "enum": [
+        "sum",
+        "mean",
+        "rederive"
+      ]
+    },
+    {
+      "id": "assertion.rollup.op:sum~mean",
+      "kind": "member-pair",
+      "leaf": "assertion.rollup.op",
+      "members": [
+        "sum",
+        "mean"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.rollup.op:sum~rederive",
+      "kind": "member-pair",
+      "leaf": "assertion.rollup.op",
+      "members": [
+        "sum",
+        "rederive"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "assertion.rollup.op:mean~rederive",
+      "kind": "member-pair",
+      "leaf": "assertion.rollup.op",
+      "members": [
+        "mean",
+        "rederive"
+      ],
+      "role": "schema"
+    },
+    {
+      "id": "observation.value",
+      "kind": "leaf",
+      "leaf": "observation.value",
+      "role": "instance"
+    },
+    {
+      "id": "observation.unit",
+      "kind": "leaf",
+      "leaf": "observation.unit",
+      "role": "instance"
+    },
+    {
+      "id": "observation.null",
+      "kind": "leaf",
+      "leaf": "observation.null",
+      "role": "instance",
+      "enum": [
+        "absent",
+        "not-applicable",
+        "censored",
+        "suppressed",
+        "unknown",
+        "missing-after-join"
+      ]
+    },
+    {
+      "id": "observation.null:absent~not-applicable",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "absent",
+        "not-applicable"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:absent~censored",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "absent",
+        "censored"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:absent~suppressed",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "absent",
+        "suppressed"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:absent~unknown",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "absent",
+        "unknown"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:absent~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "absent",
+        "missing-after-join"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:not-applicable~censored",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "not-applicable",
+        "censored"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:not-applicable~suppressed",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "not-applicable",
+        "suppressed"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:not-applicable~unknown",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "not-applicable",
+        "unknown"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:not-applicable~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "not-applicable",
+        "missing-after-join"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:censored~suppressed",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "censored",
+        "suppressed"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:censored~unknown",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "censored",
+        "unknown"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:censored~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "censored",
+        "missing-after-join"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:suppressed~unknown",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "suppressed",
+        "unknown"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:suppressed~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "suppressed",
+        "missing-after-join"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.null:unknown~missing-after-join",
+      "kind": "member-pair",
+      "leaf": "observation.null",
+      "members": [
+        "unknown",
+        "missing-after-join"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.provenance",
+      "kind": "leaf",
+      "leaf": "observation.provenance",
+      "role": "instance",
+      "enum": [
+        "observed",
+        "derived",
+        "imputed",
+        "layout-generated"
+      ]
+    },
+    {
+      "id": "observation.provenance:observed~derived",
+      "kind": "member-pair",
+      "leaf": "observation.provenance",
+      "members": [
+        "observed",
+        "derived"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.provenance:observed~imputed",
+      "kind": "member-pair",
+      "leaf": "observation.provenance",
+      "members": [
+        "observed",
+        "imputed"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.provenance:observed~layout-generated",
+      "kind": "member-pair",
+      "leaf": "observation.provenance",
+      "members": [
+        "observed",
+        "layout-generated"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.provenance:derived~imputed",
+      "kind": "member-pair",
+      "leaf": "observation.provenance",
+      "members": [
+        "derived",
+        "imputed"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.provenance:derived~layout-generated",
+      "kind": "member-pair",
+      "leaf": "observation.provenance",
+      "members": [
+        "derived",
+        "layout-generated"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.provenance:imputed~layout-generated",
+      "kind": "member-pair",
+      "leaf": "observation.provenance",
+      "members": [
+        "imputed",
+        "layout-generated"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind",
+      "kind": "leaf",
+      "leaf": "observation.uncertainty.kind",
+      "role": "instance",
+      "enum": [
+        "none",
+        "interval",
+        "distribution",
+        "measurement-error",
+        "rounded"
+      ]
+    },
+    {
+      "id": "observation.uncertainty.kind:none~interval",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "none",
+        "interval"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:none~distribution",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "none",
+        "distribution"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:none~measurement-error",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "none",
+        "measurement-error"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:none~rounded",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "none",
+        "rounded"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:interval~distribution",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "interval",
+        "distribution"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:interval~measurement-error",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "interval",
+        "measurement-error"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:interval~rounded",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "interval",
+        "rounded"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:distribution~measurement-error",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "distribution",
+        "measurement-error"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:distribution~rounded",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "distribution",
+        "rounded"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.kind:measurement-error~rounded",
+      "kind": "member-pair",
+      "leaf": "observation.uncertainty.kind",
+      "members": [
+        "measurement-error",
+        "rounded"
+      ],
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.error",
+      "kind": "leaf",
+      "leaf": "observation.uncertainty.error",
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.low",
+      "kind": "leaf",
+      "leaf": "observation.uncertainty.low",
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.high",
+      "kind": "leaf",
+      "leaf": "observation.uncertainty.high",
+      "role": "instance"
+    },
+    {
+      "id": "observation.uncertainty.level",
+      "kind": "leaf",
+      "leaf": "observation.uncertainty.level",
+      "role": "instance"
+    },
+    {
+      "id": "evidence.grainWitness",
+      "kind": "leaf",
+      "leaf": "evidence.grainWitness",
+      "role": "instance"
+    }
+  ]
+}

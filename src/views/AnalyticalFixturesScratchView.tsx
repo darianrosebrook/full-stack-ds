@@ -4,12 +4,13 @@
 //   1. Fixture index — the answer-free corpus dumped from
 //      packages/ds-contracts/analytical-fixtures/fixtures.jsonl by
 //      scripts/sync-analytical-fixtures.mjs, grouped by id family,
-//      filterable by scale and assertion kind.
+//      filterable by transformation class and assertion kind.
 //   2. Raw data — the selected fixture's relational structure, its evidence
-//      rows with per-observation qualifiers (null kind, provenance,
-//      uncertainty, unit), and its L0-L2 assertions rendered as the questions
-//      being asked. This zone shows the stimulus, never an expected answer:
-//      the binding ledger and holdout stay engine-side.
+//      rows with per-observation qualifiers (null kind, unit), and its L0-L2
+//      assertions rendered as the questions being asked. This zone shows the
+//      stimulus, never an expected answer: the binding ledger and holdout
+//      stay engine-side. The shape is the stage-1.5 kernel (types.ts mirrors
+//      the emitted schemas): only witnessed coordinates exist to display.
 //   3. Realization — deliberately empty. No projection engine exists yet
 //      (view algebra, projection space, and realization are later stages of
 //      ARCH-ANALYTICAL-RELATION-001). This panel draws no chart, because a
@@ -67,49 +68,33 @@ function describeAssertion(a: Assertion): string {
     }
     case "ratio-comparison":
       return `ratio comparison over ${a.relation}.${a.field}`;
-    case "rollup":
-      return `${a.op === "rederive" ? "rederive" : `${a.op} of`} ${a.relation}.${a.field} rolled up to grain ${a.toGrain.join(", ")}`;
   }
 }
 
 /** Every declared trait of a field, as compact labeled chips. */
 function fieldTraits(f: FieldDef): string[] {
-  const t: string[] = [f.scale];
-  if (f.shape) t.push(`shape: ${f.shape}`);
+  const t: string[] = [f.transformation];
+  if (f.cyclic) t.push("cyclic");
+  if (f.proportion) t.push("proportion");
+  if (f.index) t.push("index");
   if (f.key) t.push("key");
   if (f.unit) {
-    t.push(`dimension: ${f.unit.dimension}`);
-    if (f.unit.unit) t.push(`unit: ${f.unit.unit}`);
-    else if (f.unit.units) t.push(`units: ${f.unit.units.join(" | ")}`);
-    if (f.unit.perRow) t.push("per-row");
-    if (f.unit.rate) t.push(`rate: ${f.unit.rate.numerator}/${f.unit.rate.denominator}`);
-    const conversions = Object.entries(f.unit.conversions ?? {});
-    if (conversions.length) {
-      t.push(`conversions: ${conversions.map(([u, k]) => `${u}×${k}`).join(", ")}`);
-    }
+    if (f.unit.units) t.push(`units: ${f.unit.units.join(" | ")}`);
+    if (f.unit.perRow) t.push("per-row unit");
+    if (f.unit.conversions?.length) t.push(`convertible: ${f.unit.conversions.join(", ")}`);
   }
-  if (f.temporality) {
-    t.push(`time: ${f.temporality.kind}${f.temporality.grain ? ` (${f.temporality.grain})` : ""}`);
-    if (f.temporality.closure) t.push(`closure: ${f.temporality.closure}`);
-  }
-  if (f.order) {
-    t.push(`order: ${f.order.kind}${f.order.values ? ` [${f.order.values.join(", ")}]` : ""}`);
-  }
-  if (f.period) t.push(`period: ${f.period}`);
-  if (f.whole) t.push(`whole: ${typeof f.whole === "string" ? f.whole : `perRow ${f.whole.perRow}`}`);
-  if (f.base) t.push(`base: ${f.base}`);
+  if (f.temporality) t.push(`time: ${f.temporality.kind}`);
+  if (f.whole) t.push(`whole: ${typeof f.whole === "string" ? f.whole : `per row ${f.whole.perRow}`}`);
+  if (f.base) t.push("base declared");
   if (f.additivity) {
     t.push(
       f.additivity.kind === "semi-additive"
         ? `additivity: semi-additive (non-additive along ${f.additivity.nonAdditiveAlong.join(", ")})`
-        : f.additivity.kind === "ratio-measure"
-          ? `additivity: ratio-measure (${f.additivity.numerator}/${f.additivity.denominator})`
-          : `additivity: ${f.additivity.kind}`,
+        : `additivity: ${f.additivity.kind}`,
     );
   }
-  if (f.permits?.null?.length) t.push(`permits null: ${f.permits.null.join(", ")}`);
-  if (f.permits?.provenance?.length) t.push(`permits provenance: ${f.permits.provenance.join(", ")}`);
-  if (f.permits?.uncertainty?.length) t.push(`permits uncertainty: ${f.permits.uncertainty.join(", ")}`);
+  if (f.permits?.null) t.push("permits null");
+  if (f.permits?.uncertainty) t.push("permits uncertainty");
   return t;
 }
 
@@ -130,20 +115,6 @@ function ObservationCell({ obs }: { obs: Observation | undefined }) {
       {obs.null && (
         <Badge size="sm" variant="tag" className="afx-badge--null">
           {obs.null}
-        </Badge>
-      )}
-      {obs.provenance && (
-        <Badge size="sm" variant="tag" className="afx-badge--prov">
-          {obs.provenance}
-        </Badge>
-      )}
-      {obs.uncertainty && obs.uncertainty.kind !== "none" && (
-        <Badge size="sm" variant="tag" className="afx-badge--unc">
-          {obs.uncertainty.kind === "interval" && obs.uncertainty.low !== undefined
-            ? `±[${obs.uncertainty.low}, ${obs.uncertainty.high}]`
-            : obs.uncertainty.kind === "measurement-error" && obs.uncertainty.error !== undefined
-              ? `±${obs.uncertainty.error}`
-              : obs.uncertainty.kind}
         </Badge>
       )}
     </span>
@@ -205,22 +176,13 @@ function EvidenceTable({ fixture }: { fixture: AnalyticalFixture }) {
   );
 }
 
-const SCALES = [
-  "nominal",
-  "ordinal",
-  "cyclic",
-  "interval",
-  "ratio",
-  "count",
-  "proportion",
-  "index",
-] as const;
+const TRANSFORMATIONS = ["nominal", "ordinal", "interval", "ratio"] as const;
 
-const ASSERTION_KINDS = ["aggregate", "ratio-comparison", "rollup"] as const;
+const ASSERTION_KINDS = ["aggregate", "ratio-comparison"] as const;
 
 export function AnalyticalFixturesScratchView() {
   const [query, setQuery] = useState("");
-  const [scale, setScale] = useState<string>("all");
+  const [transformation, setTransformation] = useState<string>("all");
   const [assertionKind, setAssertionKind] = useState<string>("all");
   const [selectedId, setSelectedId] = useState<string>(FIXTURES[0]?.id ?? "");
 
@@ -228,18 +190,18 @@ export function AnalyticalFixturesScratchView() {
     const q = query.trim().toLowerCase();
     return FIXTURES.filter((f) => {
       if (q && !f.id.toLowerCase().includes(q)) return false;
-      if (scale !== "all") {
-        const scales = Object.values(f.structure.relations).flatMap((r) =>
-          Object.values(r.fields).map((fd) => fd.scale),
+      if (transformation !== "all") {
+        const classes = Object.values(f.structure.relations).flatMap((r) =>
+          Object.values(r.fields).map((fd) => fd.transformation),
         );
-        if (!scales.includes(scale as (typeof SCALES)[number])) return false;
+        if (!classes.includes(transformation as (typeof TRANSFORMATIONS)[number])) return false;
       }
       if (assertionKind !== "all" && !f.assertions.some((a) => a.kind === assertionKind)) {
         return false;
       }
       return true;
     });
-  }, [query, scale, assertionKind]);
+  }, [query, transformation, assertionKind]);
 
   const selected = filtered.find((f) => f.id === selectedId) ?? filtered[0] ?? null;
 
@@ -288,15 +250,15 @@ export function AnalyticalFixturesScratchView() {
                 className="afx-filter-select"
                 size="sm"
                 defaultOpen={false}
-                aria-label="Filter by field scale"
+                aria-label="Filter by transformation class"
                 options={[
-                  { value: "all", label: "scale: all" },
-                  ...SCALES.map((s) => ({ value: s, label: `scale: ${s}` })),
+                  { value: "all", label: "transformation: all" },
+                  ...TRANSFORMATIONS.map((s) => ({ value: s, label: `transformation: ${s}` })),
                 ]}
-                value={scale}
-                onChange={(v) => setScale(String(v))}
+                value={transformation}
+                onChange={(v) => setTransformation(String(v))}
               />
-              <p className="afx-filter-value">current: {scale}</p>
+              <p className="afx-filter-value">current: {transformation}</p>
             </div>
             <div className="afx-filter">
               <Select
@@ -380,16 +342,6 @@ export function AnalyticalFixturesScratchView() {
                 </Table>
               </div>
             ))}
-            {selected.structure.relationships?.length ? (
-              <p className="afx-relationships">
-                {selected.structure.relationships.map((r, i) => (
-                  <Badge key={i} size="sm" variant="tag">
-                    {r.from.relation}.{r.from.field} → {r.to.relation}.{r.to.field} ({r.cardinality})
-                  </Badge>
-                ))}
-              </p>
-            ) : null}
-
             <h3 className="afx-section-title">Assertions — the questions being asked</h3>
             <List className="afx-assertions">
               {selected.assertions.map((a, i) => (

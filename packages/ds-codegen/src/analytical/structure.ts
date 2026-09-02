@@ -18,7 +18,6 @@ import type {
   AdditivityDecl,
   AggregateOp,
   Assertion,
-  Dimension,
   Evidence,
   FieldDecl,
   Fixture,
@@ -27,14 +26,10 @@ import type {
   ObservationInput,
   ObservationRecord,
   PermitsDecl,
-  Provenance,
   RelationDecl,
   RelationalStructure,
-  RelationshipDecl,
-  Scale,
-  Shape,
   TemporalityDecl,
-  UncertaintyKind,
+  Transformation,
   UnitDecl,
 } from "./relation-model.js";
 
@@ -42,7 +37,6 @@ export type {
   AdditivityDecl,
   AggregateOp,
   Assertion,
-  Dimension,
   Evidence,
   FieldDecl,
   Fixture,
@@ -51,34 +45,23 @@ export type {
   ObservationInput,
   ObservationRecord,
   PermitsDecl,
-  Provenance,
   RelationDecl,
   RelationalStructure,
-  RelationshipDecl,
-  Scale,
-  Shape,
   TemporalityDecl,
-  UncertaintyKind,
+  Transformation,
   UnitDecl,
 };
 
-/** An observation after normalization: what it HAS, with defaults made explicit. */
-export type Observation = Omit<ObservationRecord, "provenance" | "uncertainty"> & {
-  provenance: Provenance;
-  uncertainty: NonNullable<ObservationRecord["uncertainty"]>;
-};
+/** An observation after normalization: what it HAS, in record form. */
+export type Observation = ObservationRecord;
 
-/** A bare value is an observed, certain scalar; an object carries what it has. */
+/** A bare value is an observed scalar; an object carries what it has. */
 export function normalizeObservation(o: ObservationInput): Observation {
-  if (o === null || typeof o !== "object") {
-    return { value: o, provenance: "observed", uncertainty: { kind: "none" } };
-  }
+  if (o === null || typeof o !== "object") return { value: o };
   return {
     ...(o.value !== undefined ? { value: o.value } : {}),
     ...(o.unit !== undefined ? { unit: o.unit } : {}),
     ...(o.null !== undefined ? { null: o.null } : {}),
-    provenance: o.provenance ?? "observed",
-    uncertainty: o.uncertainty ?? { kind: "none" },
   };
 }
 
@@ -122,30 +105,25 @@ const rn = (map: Record<string, string>) => (s: string) => map[s] ?? s;
  */
 export function alphaRename(fixture: Fixture, map: Record<string, string>): Fixture {
   const r = rn(map);
+  // Tolerant of erased leaves: a quotiented fixture (quotient.ts) may lack any of them.
+  const names = (xs: unknown) => (Array.isArray(xs) ? (xs as string[]).map(r) : xs);
   const relations: Record<string, RelationDecl> = {};
   for (const [name, rel] of Object.entries(fixture.structure.relations)) {
     const fields: Record<string, FieldDecl> = {};
-    for (const [fname, f] of Object.entries(rel.fields)) {
+    for (const [fname, f] of Object.entries(rel.fields ?? {})) {
       const g: FieldDecl = { ...f };
-      if (f.additivity?.kind === "semi-additive") {
-        g.additivity = { kind: "semi-additive", nonAdditiveAlong: f.additivity.nonAdditiveAlong.map(r) };
-      } else if (f.additivity?.kind === "ratio-measure") {
-        g.additivity = { kind: "ratio-measure", numerator: r(f.additivity.numerator), denominator: r(f.additivity.denominator) };
+      if (f.additivity && "nonAdditiveAlong" in f.additivity) {
+        g.additivity = { ...f.additivity, nonAdditiveAlong: names(f.additivity.nonAdditiveAlong) } as AdditivityDecl;
       }
-      if (typeof f.whole === "object") g.whole = { perRow: r(f.whole.perRow) };
+      if (typeof f.whole === "object" && typeof f.whole.perRow === "string") g.whole = { perRow: r(f.whole.perRow) };
       fields[r(fname)] = g;
     }
-    relations[r(name)] = { grain: rel.grain === "unknown" ? "unknown" : rel.grain.map(r), fields };
+    const grain = rel.grain === undefined ? undefined : rel.grain === "unknown" ? "unknown" : names(rel.grain);
+    relations[r(name)] = { ...(grain !== undefined ? { grain } : {}), fields } as RelationDecl;
   }
-  const relationships = fixture.structure.relationships?.map((x) => ({
-    from: { relation: r(x.from.relation), field: r(x.from.field) },
-    to: { relation: r(x.to.relation), field: r(x.to.field) },
-    cardinality: x.cardinality,
-  }));
   const assertions = fixture.assertions.map((a) => {
-    const base = { ...a, relation: r(a.relation), field: r(a.field) };
-    if (a.kind === "aggregate" && a.along) return { ...base, along: a.along.map(r) } as Assertion;
-    if (a.kind === "rollup") return { ...base, toGrain: a.toGrain.map(r) } as Assertion;
+    const base = { ...a, ...(a.relation !== undefined ? { relation: r(a.relation) } : {}), ...(a.field !== undefined ? { field: r(a.field) } : {}) };
+    if ("along" in a && a.along) return { ...base, along: names(a.along) } as Assertion;
     return base as Assertion;
   });
   let evidence: Evidence | undefined;
@@ -163,7 +141,7 @@ export function alphaRename(fixture: Fixture, map: Record<string, string>): Fixt
       );
     }
   }
-  return { id: fixture.id, structure: { relations, ...(relationships ? { relationships } : {}) }, assertions, ...(evidence ? { evidence } : {}) };
+  return { id: fixture.id, structure: { relations }, assertions, ...(evidence ? { evidence } : {}) };
 }
 
 /** Apply a rename map to a judgment subject (`rel`, `rel.field`). */

@@ -144,20 +144,20 @@ describe("AnalyticalFixturesScratchView", () => {
     );
   });
 
-  it("scale filter via DS Select narrows the index exactly as the data implies", () => {
+  it("transformation filter via DS Select narrows the index exactly as the data implies", () => {
     render(<AnalyticalFixturesScratchView />);
-    const withCount = FIXTURES.filter((f) =>
+    const withOrdinal = FIXTURES.filter((f) =>
       Object.values(f.structure.relations).some((r) =>
-        Object.values(r.fields).some((fd) => fd.scale === "count"),
+        Object.values(r.fields).some((fd) => fd.transformation === "ordinal"),
       ),
     );
-    expect(withCount.length).toBeGreaterThan(0);
-    expect(withCount.length).toBeLessThan(FIXTURES.length);
-    chooseFilter("Filter by field scale", "count");
-    expect(indexButtons().length).toBe(withCount.length);
+    expect(withOrdinal.length).toBeGreaterThan(0);
+    expect(withOrdinal.length).toBeLessThan(FIXTURES.length);
+    chooseFilter("Filter by transformation class", "ordinal");
+    expect(indexButtons().length).toBe(withOrdinal.length);
     // The generated trigger shows no selection, so the current value is
     // echoed in a visible caption (A3).
-    expect(document.querySelector(".afx-filter-value")?.textContent).toContain("count");
+    expect(document.querySelector(".afx-filter-value")?.textContent).toContain("ordinal");
   });
 
   it("the scratch URL resolves the analytical-fixtures route (URL-only surface)", () => {

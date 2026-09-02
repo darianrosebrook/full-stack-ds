@@ -7,7 +7,19 @@
  * - `relation.contract.schema.json`, `assertion.schema.json` and
  *   `fixture.schema.json` are EMITTED from it by `emit-schemas.ts` and
  *   drift-gated; consumers read the JSON and never import zod;
- * - the coordinate census (`census.ts`) is walked from it.
+ * - the coordinate census (`census.ts`) is walked from its emission.
+ *
+ * This is the stage-1.5 KERNEL: every coordinate here is ratified by a
+ * necessity witness (`witnesses.json`); every coordinate the stage-1 draft
+ * carried without one was removed (`removals.json`) and may be re-earned by
+ * a later stage with its own witness. In particular:
+ * - a field's measurement standing is factorized (D6): `transformation` is the
+ *   admissible-transformation class, and `cyclic`, `proportion`, `index` are
+ *   independent capability claims. The eight scale labels are derived aliases
+ *   (`capabilities.ts`); `count` decodes to `ratio` (discreteness unwitnessed);
+ * - declared relationships, shape, order, period, unit dimension/rate, temporal
+ *   closure/grain/calendar, provenance, and observation-level uncertainty are
+ *   not yet admitted.
  *
  * Recursively closed: every object is `strictObject`, no metadata bags, no
  * free semantic strings. A field's `permits` declares which observation-level
@@ -22,30 +34,23 @@ export const Name = z
   .regex(/^[a-z][a-z0-9_]*$/)
   .meta({ id: "name" });
 
-export const Scale = z.enum(["nominal", "ordinal", "cyclic", "interval", "ratio", "count", "proportion", "index"]);
-export const Shape = z.enum(["scalar", "interval", "set", "distribution", "point"]);
-export const NullKind = z.enum(["absent", "not-applicable", "censored", "suppressed", "unknown", "missing-after-join"]);
-export const Provenance = z.enum(["observed", "derived", "imputed", "layout-generated"]);
-export const UncertaintyKind = z.enum(["none", "interval", "distribution", "measurement-error", "rounded"]);
-export const Dimension = z.enum(["currency", "time", "length", "mass", "temperature", "dimensionless"]).meta({ id: "dimension" });
+/** Admissible-transformation class (Stevens): what arithmetic the values license. */
+export const Transformation = z.enum(["nominal", "ordinal", "interval", "ratio"]);
 
 export const Unit = z
   .strictObject({
-    dimension: Dimension,
-    unit: z.string().min(1).optional(),
+    /** Units the field's values may be expressed in; more than one needs conversions. */
     units: z.array(z.string().min(1)).min(1).optional(),
+    /** Each observation carries its own unit (instance evidence decides commensurability). */
     perRow: z.boolean().optional(),
-    conversions: z.record(z.string().regex(/^[A-Za-z][A-Za-z0-9]*$/), z.number().positive()).optional(),
-    rate: z.strictObject({ numerator: Dimension, denominator: Dimension }).optional(),
+    /** Units convertible into the field's base unit. */
+    conversions: z.array(z.string().min(1)).min(1).optional(),
   })
   .meta({ id: "unit" });
 
 export const Temporality = z
   .strictObject({
-    kind: z.enum(["instant", "interval", "duration"]),
-    closure: z.enum(["half-open", "closed", "open"]).optional(),
-    grain: z.enum(["second", "minute", "hour", "day", "week", "month", "quarter", "year"]).optional(),
-    calendar: z.string().min(1).optional(),
+    kind: z.enum(["instant", "interval"]),
   })
   .meta({ id: "temporality" });
 
@@ -53,35 +58,34 @@ export const Additivity = z
   .discriminatedUnion("kind", [
     z.strictObject({ kind: z.literal("additive") }),
     z.strictObject({ kind: z.literal("semi-additive"), nonAdditiveAlong: z.array(Name).min(1) }),
-    z.strictObject({ kind: z.literal("non-additive") }),
-    z.strictObject({ kind: z.literal("ratio-measure"), numerator: Name, denominator: Name }),
+    z.strictObject({ kind: z.literal("ratio-measure") }),
   ])
   .meta({ id: "additivity" });
 
 export const Permits = z
   .strictObject({
-    null: z.array(NullKind).optional(),
-    provenance: z.array(Provenance).optional(),
-    uncertainty: z.array(UncertaintyKind).optional(),
+    /** Observations may be missing (any null kind). */
+    null: z.literal(true).optional(),
+    /** Observations may carry uncertainty. */
+    uncertainty: z.literal(true).optional(),
   })
   .meta({ id: "permits" });
 
 export const Field = z
   .strictObject({
-    scale: Scale,
-    shape: Shape.optional(),
+    transformation: Transformation,
+    /** Values wrap around (angle, hour, weekday): a linear mean is meaningless. */
+    cyclic: z.literal(true).optional(),
+    /** Claims to be a proportion of a whole; the whole must be declared. */
+    proportion: z.literal(true).optional(),
+    /** Claims to be an index rebased to a base; the base must be declared. */
+    index: z.literal(true).optional(),
     key: z.boolean().optional(),
     unit: Unit.optional(),
     temporality: Temporality.optional(),
-    order: z
-      .strictObject({
-        kind: z.enum(["total", "partial"]),
-        values: z.array(z.union([z.string(), z.number()])).min(2).optional(),
-      })
-      .optional(),
-    period: z.number().positive().optional(),
-    whole: z.union([z.string().min(1), z.strictObject({ perRow: Name })]).optional(),
-    base: z.string().min(1).optional(),
+    /** The declared whole: fixed for the field, or the row's value of another field. */
+    whole: z.union([z.literal("fixed"), z.strictObject({ perRow: Name })]).optional(),
+    base: z.literal(true).optional(),
     additivity: Additivity.optional(),
     permits: Permits.optional(),
   })
@@ -94,36 +98,33 @@ export const Relation = z
   })
   .meta({ id: "relation" });
 
-export const Ref = z.strictObject({ relation: Name, field: Name }).meta({ id: "ref" });
-
-export const Relationship = z
-  .strictObject({
-    from: Ref,
-    to: Ref,
-    cardinality: z.enum(["one-to-one", "one-to-many", "many-to-one", "many-to-many"]),
-  })
-  .meta({ id: "relationship" });
-
 export const RelationalStructure = z
   .strictObject({
     relations: z.record(Name, Relation),
-    relationships: z.array(Relationship).optional(),
   })
   .meta({
     id: "relationalStructure",
-    title: "Relational structure (L0-L2)",
+    title: "Relational structure (L0-L2 kernel)",
     description:
-      "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001: one or more named relations, each with a declared grain and typed fields, plus declared relationships between them. A single relation is the degenerate structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand.",
+      "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001 at stage 1.5: one or more named relations, each with a declared grain and typed fields. Every coordinate carries a necessity witness. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand.",
   });
 
+/**
+ * Combining rows, at whatever grain results. A rollup (combining to a named
+ * coarser grain) is not distinguishable from an aggregate at stage 1: the
+ * target grain and the rate's numerator/denominator are not-yet-admitted, and
+ * `rederive` (always admissible without them) is an alias of `count`.
+ */
 export const AggregateAssertion = z.strictObject({
   kind: z.literal("aggregate"),
   relation: Name,
   field: Name,
-  op: z.enum(["sum", "mean", "count", "min", "max"]),
+  /** `min` stands for any order statistic (max is its alias at stage 1). */
+  op: z.enum(["sum", "mean", "count", "min"]),
   along: z.array(Name).min(1).optional(),
   nulls: z.enum(["exclude", "as-zero", "as-observed"]).optional(),
-  uncertainty: z.enum(["propagate", "drop"]).optional(),
+  /** Uncertainty handling is declared (propagate); dropping is its alias at stage 1. */
+  uncertainty: z.literal("propagate").optional(),
 });
 
 export const RatioComparisonAssertion = z.strictObject({
@@ -132,16 +133,8 @@ export const RatioComparisonAssertion = z.strictObject({
   field: Name,
 });
 
-export const RollupAssertion = z.strictObject({
-  kind: z.literal("rollup"),
-  relation: Name,
-  field: Name,
-  toGrain: z.array(Name),
-  op: z.enum(["sum", "mean", "rederive"]),
-});
-
 export const Assertion = z
-  .discriminatedUnion("kind", [AggregateAssertion, RatioComparisonAssertion, RollupAssertion])
+  .discriminatedUnion("kind", [AggregateAssertion, RatioComparisonAssertion])
   .meta({
     id: "assertion",
     title: "Stage-1 analytical assertion (L0-L2 grammar)",
@@ -149,25 +142,14 @@ export const Assertion = z
       "The closed set of operations a stage-1 engine can be asked to judge over a relational structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand.",
   });
 
-export const Uncertainty = z
-  .strictObject({
-    kind: UncertaintyKind,
-    error: z.number().min(0).optional(),
-    low: z.number().optional(),
-    high: z.number().optional(),
-    level: z.number().gt(0).max(1).optional(),
-  })
-  .meta({ id: "uncertainty" });
-
 export const Scalar = z.union([z.number(), z.string(), z.boolean()]);
 
 export const ObservationRecord = z
   .strictObject({
     value: Scalar.optional(),
     unit: z.string().min(1).optional(),
-    null: NullKind.optional(),
-    provenance: Provenance.optional(),
-    uncertainty: Uncertainty.optional(),
+    /** censored: a bound, not a measurement; absent: any other missing kind. */
+    null: z.enum(["absent", "censored"]).optional(),
   })
   .meta({ id: "observationRecord" });
 
@@ -196,22 +178,17 @@ export const Fixture = z
   });
 
 export type Name = z.infer<typeof Name>;
-export type Scale = z.infer<typeof Scale>;
-export type Shape = z.infer<typeof Shape>;
-export type NullKind = z.infer<typeof NullKind>;
-export type Provenance = z.infer<typeof Provenance>;
-export type UncertaintyKind = z.infer<typeof UncertaintyKind>;
-export type Dimension = z.infer<typeof Dimension>;
+export type Transformation = z.infer<typeof Transformation>;
 export type UnitDecl = z.infer<typeof Unit>;
 export type TemporalityDecl = z.infer<typeof Temporality>;
 export type AdditivityDecl = z.infer<typeof Additivity>;
 export type PermitsDecl = z.infer<typeof Permits>;
 export type FieldDecl = z.infer<typeof Field>;
 export type RelationDecl = z.infer<typeof Relation>;
-export type RelationshipDecl = z.infer<typeof Relationship>;
 export type RelationalStructure = z.infer<typeof RelationalStructure>;
 export type AggregateOp = z.infer<typeof AggregateAssertion>["op"];
 export type Assertion = z.infer<typeof Assertion>;
+export type NullKind = NonNullable<z.infer<typeof ObservationRecord>["null"]>;
 export type ObservationRecord = z.infer<typeof ObservationRecord>;
 export type ObservationInput = z.infer<typeof ObservationInput>;
 export type Evidence = z.infer<typeof Evidence>;

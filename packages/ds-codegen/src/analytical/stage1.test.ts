@@ -95,11 +95,14 @@ describe("A2 — the binding ledger", () => {
     return checkFixtureLedger(input).map((f) => f.code);
   };
 
+  // The kernel's only free strings are unit codes and observation values; a leak has to ride on one of them.
   it("flags a case id smuggled into a string value as an answer leak", () => {
     const codes = mutate((i) => {
-      const leak = JSON.stringify({ ...fx("FX_N_INDEX_MEAN_WITH_BASE"), id: "FX_LEAK_A" });
-      i.fixtureLines.push(leak.replace('"base":"2020=100"', '"base":"CASE_INDEX_WITHOUT_ANCHOR"'));
-      i.fixtures.push(JSON.parse(i.fixtureLines.at(-1)!));
+      const source = JSON.stringify(fx("FX_SALES_SUM_MIXED_UNITS_DECLARED"));
+      expect(source).toContain('"units":["USD","EUR"]');
+      const leak = source.replace('"units":["USD","EUR"]', '"units":["CASE_INDEX_WITHOUT_ANCHOR","EUR"]').replace(/"id":"[^"]+"/, '"id":"FX_LEAK_A"');
+      i.fixtureLines.push(leak);
+      i.fixtures.push(JSON.parse(leak));
       i.bindings.special.leak = "FX_LEAK_A";
     });
     expect(codes).toContain("LEDGER_FIXTURE_ANSWER_LEAK");
@@ -107,9 +110,11 @@ describe("A2 — the binding ledger", () => {
 
   it("flags a form name in a fixture line as an answer leak", () => {
     const codes = mutate((i) => {
-      const leak = JSON.stringify({ ...fx("FX_N_PCT_MEAN_WITH_WHOLE"), id: "FX_LEAK_B" });
-      i.fixtureLines.push(leak.replace('"whole":"respondents"', '"whole":"the bar chart total"'));
-      i.fixtures.push(JSON.parse(i.fixtureLines.at(-1)!));
+      const source = JSON.stringify(fx("FX_T_CURRENCY_ROWS_ONE_UNIT"));
+      expect(source).toContain('"unit":"USD"');
+      const leak = source.replace('"unit":"USD"', '"unit":"the bar chart total"').replace(/"id":"[^"]+"/, '"id":"FX_LEAK_B"');
+      i.fixtureLines.push(leak);
+      i.fixtures.push(JSON.parse(leak));
       i.bindings.special.leak = "FX_LEAK_B";
     });
     expect(codes).toContain("LEDGER_FIXTURE_ANSWER_LEAK");
@@ -207,7 +212,7 @@ describe("B3 — occurrence identity carries the assertion; the engine is proven
     expect(assertionKey({ kind: "aggregate", relation: "r", field: "f", op: "sum", along: ["year", "market"], nulls: "exclude" })).toBe(
       "aggregate:sum(along=market,year;nulls=exclude)",
     );
-    expect(assertionKey({ kind: "rollup", relation: "r", field: "f", op: "mean", toGrain: ["b", "a"] })).toBe("rollup:mean(toGrain=a,b)");
+    expect(assertionKey({ kind: "aggregate", relation: "r", field: "f", op: "count" })).toBe("aggregate:count");
     expect(assertionKey({ kind: "ratio-comparison", relation: "r", field: "f" })).toBe("ratio-comparison");
   });
 
@@ -233,7 +238,6 @@ describe("A5 — mixed faults and order independence", () => {
     relations: reverseKeys(
       Object.fromEntries(Object.entries(s.relations).map(([n, r]) => [n, { ...r, fields: reverseKeys(r.fields) }])),
     ),
-    ...(s.relationships ? { relationships: [...s.relationships].reverse() } : {}),
   });
 
   it("every fixture judges byte-identically under reversed assertions, fields, relations, along, and rules", () => {
@@ -301,11 +305,15 @@ describe("A8 — holdout authored against the recorded rule digest", () => {
 });
 
 describe("A9 — per-observation heterogeneity survives", () => {
-  it("one column carries observed, imputed, censored, and uncertain rows and each is judged as itself", () => {
+  it("one column carries observed values beside a censored bound and each is judged as itself", () => {
+    // Observation-level provenance and uncertainty are not-yet-admitted (stage 3); the
+    // heterogeneity the kernel retains is value-vs-null-kind per observation, and the
+    // uncertainty finding comes from the field's permission, in the schema evidence class.
     const f = fx(live.bindings.special.heterogeneous as string);
     const rows = f.evidence!.rows!.readings.map((r) => normalizeObservation(r.temp));
-    const states = new Set(rows.map((o) => `${o.provenance}|${o.null ?? "-"}|${o.uncertainty.kind}`));
-    expect(states.size).toBeGreaterThanOrEqual(4);
+    const states = new Set(rows.map((o) => o.null ?? "value"));
+    expect(states).toEqual(new Set(["value", "censored"]));
+    expect(rows.filter((o) => o.null === undefined).length).toBeGreaterThanOrEqual(2);
     const j = judgeFixture(f);
     expect(codesOf(j)).toEqual([DIAG.NULL_CENSORED_AS_OBSERVED, DIAG.UNCERTAINTY_UNPROPAGATED]);
     expect(j.diagnostics.find((d) => d.code === DIAG.NULL_CENSORED_AS_OBSERVED)?.evidenceClass).toBe("instance");
@@ -343,6 +351,9 @@ describe("A10 — identifier spelling confers no standing", () => {
 });
 
 describe("A11 — the five probes express in the closed grammar", () => {
+  // The kernel (stage 1.5) carries only witnessed coordinates: value shape, temporal
+  // closure and declared relationships are not-yet-admitted, so the probes express
+  // through grain, transformation class and per-observation null kind alone.
   const probes = live.bindings.special.probes as string[];
   it("there are five and all validate against the closed schemas", () => {
     expect(probes).toHaveLength(5);
@@ -350,26 +361,24 @@ describe("A11 — the five probes express in the closed grammar", () => {
   });
   it("categorical-vs-ratio: a nominal key beside a ratio measure", () => {
     const f = fx("FX_P_CATEGORICAL_VS_RATIO").structure.relations.sales;
-    expect(f.fields.region).toMatchObject({ scale: "nominal", key: true });
-    expect(f.fields.amount.scale).toBe("ratio");
+    expect(f.fields.region).toMatchObject({ transformation: "nominal", key: true });
+    expect(f.fields.amount.transformation).toBe("ratio");
   });
-  it("binned distribution: a ratio field of interval shape beside a count", () => {
+  it("binned distribution: a ratio bucket field beside a ratio count (count is an alias of ratio at stage 1)", () => {
     const f = fx("FX_P_BINNED_INTERVAL").structure.relations.bins;
-    expect(f.fields.bucket).toMatchObject({ scale: "ratio", shape: "interval" });
-    expect(f.fields.n.scale).toBe("count");
+    expect(f.fields.bucket.transformation).toBe("ratio");
+    expect(f.fields.n.transformation).toBe("ratio");
   });
-  it("OHLC: one relation at symbol×period grain with an interval-shaped, interval-temporality period", () => {
+  it("OHLC: one relation at symbol×period grain with an interval-temporality period", () => {
     const f = fx("FX_P_OHLC").structure.relations.candles;
     expect(f.grain).toEqual(["symbol", "period"]);
-    expect(f.fields.period).toMatchObject({ shape: "interval", temporality: { kind: "interval", closure: "half-open" } });
-    for (const k of ["open", "high", "low", "close"]) expect(f.fields[k].scale).toBe("ratio");
+    expect(f.fields.period).toMatchObject({ temporality: { kind: "interval" } });
+    for (const k of ["open", "high", "low", "close"]) expect(f.fields[k].transformation).toBe("ratio");
   });
-  it("hierarchy: a relation plus a parent→key relationship on itself; the root's parent is not-applicable", () => {
+  it("hierarchy: a relation whose parent field permits a null; the root's parent is absent", () => {
     const f = fx("FX_P_HIERARCHY");
-    expect(f.structure.relationships).toEqual([
-      { from: { relation: "accounts", field: "parent" }, to: { relation: "accounts", field: "id" }, cardinality: "many-to-one" },
-    ]);
-    const root = f.evidence!.rows!.accounts.find((r) => normalizeObservation(r.parent).null === "not-applicable");
+    expect(f.structure.relations.accounts.fields.parent).toMatchObject({ transformation: "nominal", permits: { null: true } });
+    const root = f.evidence!.rows!.accounts.find((r) => normalizeObservation(r.parent).null === "absent");
     expect(root).toBeDefined();
   });
   it("graph: node and edge relations; an isolated node is representable and present", () => {

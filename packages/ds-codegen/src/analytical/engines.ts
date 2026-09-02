@@ -9,17 +9,20 @@
  * verdict, and nothing from the corpus. Each rule is named by the vocabulary
  * engine it implements, and every occurrence carries that name as provenance.
  *
+ * The engine reads the kernel's capability coordinates (transformation,
+ * cyclic, proportion, index), never a scale label (D6).
+ *
  * What each engine knows (and only that):
  * - meaningfulness: which statistics are invariant under the admissible
- *   transformations of a scale (Stevens; Luce/Narens), keys have no
+ *   transformations of a field (Stevens; Luce/Narens), keys have no
  *   arithmetic standing, instants are interval-scaled in time;
  * - additivity: grain must be declared before rows are combined; a
  *   semi-additive measure cannot be summed along its non-additive dimension;
- *   a rate re-derives from numerator and denominator; proportions of
- *   different wholes do not add;
+ *   a rate re-derives rather than sums or averages; proportions of different
+ *   wholes do not add;
  * - dimensional: values in incommensurable units are not combinable;
  * - declaration-missing: proportion needs a whole, index needs a base, a
- *   permitted null kind needs a declared handling before rows are seen;
+ *   permitted null needs a declared handling before rows are seen;
  * - derivation typing: an aggregate over uncertain values must carry or
  *   declare the loss; a declared null handling is unproven without rows; a
  *   censored value is a bound not a measurement; coercing a missing value to
@@ -97,48 +100,40 @@ const diag = (out: Findings, ctx: RuleContext, engine: Engine, code: string, evi
 const oblig = (out: Findings, ctx: RuleContext, engine: Engine, term: string, evidenceClass: EvidenceClass, subject = ctx.subject) =>
   out.obligations.push({ term, subject, assertion: ctx.assertionKey, engine, evidenceClass });
 
-/** How much arithmetic a scale's admissible transformations preserve. */
-const ARITHMETIC_RANK: Record<FieldDecl["scale"], number> = {
+/** How much arithmetic a transformation class preserves. */
+const ARITHMETIC_RANK: Record<FieldDecl["transformation"], number> = {
   nominal: 0,
   ordinal: 1,
-  cyclic: 1,
   interval: 2,
   ratio: 3,
-  count: 3,
-  proportion: 3,
-  index: 3,
 };
 
 /** Does the assertion combine rows (so grain and additivity matter)? */
-const combines = (a: Assertion) => a.kind === "aggregate" || a.kind === "rollup";
-/** The op an aggregate or rollup performs, if any. */
+const combines = (a: Assertion) => a.kind === "aggregate";
+/** The op an aggregate performs, if any. */
 const opOf = (a: Assertion) => ("op" in a ? a.op : undefined);
 /** Does the assertion combine VALUES (not just count rows)? */
-const combinesValues = (a: Assertion) => {
-  const op = opOf(a);
-  return combines(a) && op !== "count" && op !== "rederive";
-};
+const combinesValues = (a: Assertion) => combines(a) && opOf(a) !== "count";
 
 export const meaningfulness: Rule = {
   name: "meaningfulness",
   apply(ctx, out) {
     const E = "meaningfulness";
     const { assertion: a, field: f } = ctx;
-    const rank = ARITHMETIC_RANK[f.scale];
+    const rank = ARITHMETIC_RANK[f.transformation];
     if (a.kind === "ratio-comparison") {
       if (rank < 3) diag(out, ctx, E, DIAG.INTERVAL_RATIO, "schema");
       return;
     }
     const op = opOf(a);
-    if (op === "rederive") return;
-    // A key has no arithmetic standing at all; scale rules are vacuous for it.
+    // A key has no arithmetic standing at all; transformation rules are vacuous for it.
     if (f.key) {
       if (op !== "count") diag(out, ctx, E, DIAG.IDENTITY_AGGREGATED, "schema");
       return;
     }
     if (op === "count") return;
     if (op === "mean") {
-      if (f.scale === "cyclic") diag(out, ctx, E, DIAG.CYCLIC_LINEAR_MEAN, "schema");
+      if (f.cyclic) diag(out, ctx, E, DIAG.CYCLIC_LINEAR_MEAN, "schema");
       else if (rank < 2) diag(out, ctx, E, DIAG.ORDINAL_MEAN, "schema");
       return;
     }
@@ -147,8 +142,8 @@ export const meaningfulness: Rule = {
       else if (rank < 3) diag(out, ctx, E, DIAG.INTERVAL_SUM, "schema");
       return;
     }
-    if (op === "min" || op === "max") {
-      if (f.scale === "nominal") diag(out, ctx, E, DIAG.NOMINAL_ORDER_STAT, "schema");
+    if (op === "min") {
+      if (f.transformation === "nominal") diag(out, ctx, E, DIAG.NOMINAL_ORDER_STAT, "schema");
     }
   },
 };
@@ -181,10 +176,11 @@ export const additivity: Rule = {
       const blocked = f.additivity.nonAdditiveAlong;
       if (!along || along.some((d) => blocked.includes(d))) diag(out, ctx, E, DIAG.SUM_SEMIADDITIVE, "schema");
     }
-    if (a.kind === "rollup" && f.additivity?.kind === "ratio-measure" && op !== "rederive") {
+    // A rate combined by sum or mean is averaged rather than re-derived at the resulting grain.
+    if (a.kind === "aggregate" && f.additivity?.kind === "ratio-measure" && (op === "sum" || op === "mean")) {
       diag(out, ctx, E, DIAG.RATIO_MEASURE_AVERAGED, "schema");
     }
-    if (a.kind === "aggregate" && op === "sum" && f.scale === "proportion" && typeof f.whole === "object") {
+    if (a.kind === "aggregate" && op === "sum" && f.proportion && typeof f.whole === "object") {
       const wholeField = f.whole.perRow;
       if (!a.along || a.along.includes(wholeField)) diag(out, ctx, E, DIAG.PROPORTION_SUM_ACROSS_WHOLES, "schema");
     }
@@ -199,9 +195,10 @@ export const dimensional: Rule = {
     if (!combinesValues(a)) return;
     const u = f.unit;
     if (!u) return;
-    // Commensurable when at most one unit has no conversion (that one is the base);
+    // Commensurable when at most one unit lacks a conversion (that one is the base);
     // independent of declaration or row order.
-    const covered = (units: string[]) => units.filter((x) => u.conversions?.[x] === undefined).length <= 1;
+    const convertible = new Set(u.conversions ?? []);
+    const covered = (units: string[]) => units.filter((x) => !convertible.has(x)).length <= 1;
     if (u.units && u.units.length > 1 && !covered(u.units)) {
       diag(out, ctx, E, DIAG.UNIT_SUM_INCOMMENSURABLE, "schema");
       return;
@@ -222,12 +219,12 @@ export const declarationMissing: Rule = {
   apply(ctx, out) {
     const E = "declaration-missing";
     const { assertion: a, field: f } = ctx;
-    if (f.scale === "proportion" && f.whole === undefined) diag(out, ctx, E, DIAG.PROPORTION_WHOLE_UNDECLARED, "schema");
-    if (f.scale === "index" && f.base === undefined) diag(out, ctx, E, DIAG.INDEX_BASE_MISSING, "schema");
-    // A permitted null kind with no declared handling, before any row is seen:
+    if (f.proportion && f.whole === undefined) diag(out, ctx, E, DIAG.PROPORTION_WHOLE_UNDECLARED, "schema");
+    if (f.index && f.base === undefined) diag(out, ctx, E, DIAG.INDEX_BASE_MISSING, "schema");
+    // A permitted null with no declared handling, before any row is seen:
     // whether a row is missing is an instance fact, and the mechanism is undeclared.
     if (!combinesValues(a)) return;
-    if ((f.permits?.null ?? []).length === 0) return;
+    if (!f.permits?.null) return;
     const handling = a.kind === "aggregate" ? a.nulls : undefined;
     if (handling === undefined && !ctx.rows) oblig(out, ctx, E, OBLIGATION.NULL_MISSING_MECHANISM, "instance");
   },
@@ -240,11 +237,10 @@ export const derivationTyping: Rule = {
     const { assertion: a, field: f, fieldName } = ctx;
     if (!combinesValues(a)) return;
     const op = opOf(a);
-    const uncertain = (f.permits?.uncertainty ?? []).some((k) => k !== "none");
-    if (uncertain && a.kind === "aggregate" && (op === "sum" || op === "mean") && a.uncertainty === undefined) {
+    if (f.permits?.uncertainty && a.kind === "aggregate" && (op === "sum" || op === "mean") && a.uncertainty === undefined) {
       diag(out, ctx, E, DIAG.UNCERTAINTY_UNPROPAGATED, "schema");
     }
-    if ((f.permits?.null ?? []).length === 0) return;
+    if (!f.permits?.null) return;
     const handling = a.kind === "aggregate" ? a.nulls : undefined;
     if (handling === "exclude") return;
     if (!ctx.rows) {
