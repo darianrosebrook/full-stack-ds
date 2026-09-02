@@ -112,3 +112,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A4: FX_S_TWO_CURRENCY_SUMS_TWO_UNKNOWN_GRAINS -> 2 x REL_UNIT_SUM_ACROSS_CURRENCY with subjects a.amount#aggregate:sum / b.amount#aggregate:sum, 2 x grain:declared with subjects c / d; distinct code set size 1"
     recorded_at: "2026-09-02T21:21:46.215Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical/stage1.test.ts (107/107 with corpus-integrity.test.ts; merge cf05bb00) block A5: FX_S_MIXED_FAULT -> illegal, codes [REL_MEANINGFULNESS_ORDINAL_MEAN], obligations [grain:declared]; every one of 58 fixtures byte-identical (canonicalJudgment) under reversed assertions, reversed field and relation declaration order, reversed relationships, and reversed RULES; deterministic across runs"
+    recorded_at: "2026-09-02T21:21:46.649Z"
