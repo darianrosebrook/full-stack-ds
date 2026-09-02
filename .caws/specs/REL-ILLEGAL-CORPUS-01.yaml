@@ -1,0 +1,46 @@
+id: REL-ILLEGAL-CORPUS-01
+title: 'Machine-readable illegal-form corpus and vocabulary for the analytical-relation doctrine'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-02T18:23:05.810Z'
+updated_at: '2026-09-02T18:23:05.810Z'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-pack (new: vocabulary, schema, corpus, test)'
+    - 'packages/ds-contracts/package.json (files field)'
+    - 'docs/architecture/analytical-relation-doctrine.md (only if the vocabulary falsifier fires)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-pack'
+    - 'packages/ds-contracts/package.json'
+    - 'docs/architecture'
+  out: []
+invariants:
+  - 'Every corpus entry''s terms are drawn from vocabulary.json, which is the doctrine''s L0-L4 vocabulary; an entry that needs a term outside it fails the test rather than being paraphrased around.'
+  - 'No form-name token appears outside the colloquial field of any entry; the denylist is pack data, not test code.'
+  - 'The corpus carries no engine, no relation schema, and no geometry; stage 0 is data plus a test that can fail for the right reason.'
+acceptance:
+  - id: A1
+    given: 'vocabulary.json, illegal-form.schema.json and illegal-forms.jsonl mirroring the doctrine''s corpus table'
+    when: 'pnpm exec vitest run packages/ds-contracts/analytical-pack'
+    then: 'every line validates against the schema, ids are unique and match ^REL_[A-Z0-9_]+$, and each entry''s engine is one of the declared engines'
+  - id: A2
+    given: 'each entry''s terms list'
+    when: 'the test runs'
+    then: 'every term resolves in vocabulary.json, so an entry describable only with a term the doctrine lacks fails and names the term'
+  - id: A3
+    given: 'the form-name denylist in the pack'
+    when: 'the test scans asserted and cause fields'
+    then: 'no denylisted token appears, and a mutated entry carrying a form name in cause fails for that reason (self-check pins the falsifier)'
+  - id: A4
+    given: 'the doctrine''s corpus table'
+    when: 'the test extracts its REL_ ids'
+    then: 'the table''s id set equals the jsonl''s id set, so doc and corpus cannot drift silently'
+non_functional: {}
+contracts:
+  - name: 'illegal-form-corpus-schema'
+    type: schema
+    path: 'packages/ds-contracts/analytical-pack/illegal-form.schema.json'
