@@ -43,8 +43,9 @@ export type Route =
   | { kind: "complexity"; tab: ComplexityTab }
   | { kind: "standards"; tab: StandardsTab }
   // Scratch surfaces — reachable by URL only, not in the Sidebar nav. Used to
-  // design UI (e.g. the properties panel) before it lands in the app.
-  | { kind: "scratch"; name: "properties-panel" };
+  // design UI (e.g. the properties panel) and to house data playgrounds (e.g.
+  // the analytical-fixture corpus) before they land in the app.
+  | { kind: "scratch"; name: "properties-panel" | "analytical-fixtures" };
 
 const TOKENS_TABS = new Set<TokensTab>([
   "overview",
@@ -97,6 +98,9 @@ function parseHash(hash: string): Route {
   }
   if (parts[0] === "scratch" && parts[1] === "properties-panel") {
     return { kind: "scratch", name: "properties-panel" };
+  }
+  if (parts[0] === "scratch" && parts[1] === "analytical-fixtures") {
+    return { kind: "scratch", name: "analytical-fixtures" };
   }
   if (parts[0] === "settings") return { kind: "settings" };
   if (parts[0] === "activity") return { kind: "activity" };
