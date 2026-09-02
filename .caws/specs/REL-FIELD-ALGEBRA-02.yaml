@@ -163,3 +163,7 @@ evidence:
     status: pass
     evidence_ref: "Recomputed at closure: corpus.jsonl 6f8edea4f5aabef4, corpus-case.schema.json 0b02d6eedcc3cfd4, vocabulary.json ba144b63b34c2371, form-names.json 0564902cf8d7d4ff, doctrine catalogue+appendix 8622d010f131c94f — all equal invariant 1."
     recorded_at: "2026-09-02T23:50:06.156Z"
+  - criterion_id: A13
+    status: pass
+    evidence_ref: "analytical-relation-doctrine.md: status active; header paragraph bounds ratification to 'the L0-L2 kernel survives construction and subtraction' and names the four outcomes (PASS via UNNECESSARY COORDINATES FOUND + FUTURE-ONLY COORDINATE FOUND, no >2-axis dependency); stage-1.5 row records 46/212/10 -> 81 ratified, 177 not-yet-admitted, kernel 26/21, alias count/ratio; falsification condition 9 marked discharged for the kernel; L0/L1/L2 state what the kernel carries; catalogue+appendix digest unchanged (8622d010); docs:check-claims and docs:check-links OK."
+    recorded_at: "2026-09-02T23:50:06.581Z"
