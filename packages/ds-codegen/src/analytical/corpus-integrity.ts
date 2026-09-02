@@ -500,11 +500,11 @@ export interface Bindings {
   holdout: string[];
 }
 
-/** A judgment in canonical tuple form (see `canonicalJudgment`). */
+/** A judgment in canonical tuple form (see `canonicalJudgment`): [code|term, subject, assertion, engine, evidenceClass]. */
 export interface HoldoutExpectation {
   status: "admissible" | "illegal" | "unproven";
-  diagnostics: [string, string, string][];
-  obligations: [string, string, string][];
+  diagnostics: [string, string, string, string, string][];
+  obligations: [string, string, string, string, string][];
 }
 
 export interface Holdout {

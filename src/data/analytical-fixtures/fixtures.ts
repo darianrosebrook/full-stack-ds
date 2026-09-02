@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: 58d98701659173f1c2c02ab29b2c30095aca6e7fddd16108a593dda8fee4940d
+// Source sha256: da49baeb18fe25585dbcad0f96a87a249091dab19f35a5b75e29b82047f2fd6f
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -2825,6 +2825,68 @@ export const FIXTURES: AnalyticalFixture[] = [
         "op": "sum",
         "along": [
           "sku"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "FX_S_ALONG_IDENTITY",
+    "structure": {
+      "relations": {
+        "shares": {
+          "grain": [
+            "company",
+            "market",
+            "year"
+          ],
+          "fields": {
+            "company": {
+              "scale": "nominal"
+            },
+            "market": {
+              "scale": "nominal"
+            },
+            "year": {
+              "scale": "interval",
+              "temporality": {
+                "kind": "instant",
+                "grain": "year"
+              }
+            },
+            "share": {
+              "scale": "proportion",
+              "whole": {
+                "perRow": "market"
+              }
+            }
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "shares",
+        "field": "share",
+        "op": "sum"
+      },
+      {
+        "kind": "aggregate",
+        "relation": "shares",
+        "field": "share",
+        "op": "sum",
+        "along": [
+          "market",
+          "year"
+        ]
+      },
+      {
+        "kind": "aggregate",
+        "relation": "shares",
+        "field": "share",
+        "op": "sum",
+        "along": [
+          "company"
         ]
       }
     ]

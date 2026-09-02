@@ -14,7 +14,8 @@
     "generate": "node dist/cli.js"
   },
   "dependencies": {
-    "ajv": "^8.18.0"
+    "ajv": "^8.18.0",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^25.5.2",

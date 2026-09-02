@@ -1,14 +1,14 @@
 {
-  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output. Re-record log: 27701a78... (authored) -> 5fc0509d... after REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01 renamed the identifier REL_UNIT_SUM_ACROSS_CURRENCY to REL_UNIT_SUM_INCOMMENSURABLE; every item re-verified by hand, none carries that code, so no expectation changed.",
-  "ruleDigest": "5fc0509d6af2fc1115505409e70c6fa3d9947c5e687971793123f40599c8d6f1",
+  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, assertion, engine, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output. Re-record log: 27701a78... (authored) -> 5fc0509d... after REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01 (identifier rename; no expectation changed) -> 493d9bd2... after REL-FIELD-ALGEBRA-02 Phase A (occurrence identity gained the assertion key and the emitting engine; the suppression obligation moved to declaration-missing; subjects lost the '#kind:op' suffix). Every item re-derived by hand in the new form; no code, subject locus, or evidence class changed.",
+  "ruleDigest": "493d9bd2b527ea0f4297bc12568b320b4ebe78b26cc222495f34229185aa44b0",
   "items": [
     {
       "fixture": "FX_H_PAYROLL",
       "expected": {
         "status": "illegal",
         "diagnostics": [
-          ["REL_IDENTITY_AGGREGATED", "employees.emp_id#aggregate:sum", "schema"],
-          ["REL_MEANINGFULNESS_ORDINAL_MEAN", "employees.grade#aggregate:mean", "schema"]
+          ["REL_IDENTITY_AGGREGATED", "employees.emp_id", "aggregate:sum", "meaningfulness", "schema"],
+          ["REL_MEANINGFULNESS_ORDINAL_MEAN", "employees.grade", "aggregate:mean", "meaningfulness", "schema"]
         ],
         "obligations": []
       }
@@ -17,7 +17,7 @@
       "fixture": "FX_H_SENSOR_NETWORK",
       "expected": {
         "status": "illegal",
-        "diagnostics": [["REL_MEANINGFULNESS_CYCLIC_LINEAR_MEAN", "sensors.hour#aggregate:mean", "schema"]],
+        "diagnostics": [["REL_MEANINGFULNESS_CYCLIC_LINEAR_MEAN", "sensors.hour", "aggregate:mean", "meaningfulness", "schema"]],
         "obligations": []
       }
     },
@@ -25,7 +25,7 @@
       "fixture": "FX_H_LEDGER_MULTI_CURRENCY_ROWS",
       "expected": {
         "status": "illegal",
-        "diagnostics": [["REL_TEMPORAL_INSTANT_SUM", "ledger.posted_at#aggregate:sum", "schema"]],
+        "diagnostics": [["REL_TEMPORAL_INSTANT_SUM", "ledger.posted_at", "aggregate:sum", "meaningfulness", "schema"]],
         "obligations": []
       }
     },
@@ -37,7 +37,7 @@
       "fixture": "FX_H_MARKET_SHARE_ROLLUP",
       "expected": {
         "status": "illegal",
-        "diagnostics": [["REL_PROPORTION_SUM_ACROSS_WHOLES", "shares.share#aggregate:sum", "schema"]],
+        "diagnostics": [["REL_PROPORTION_SUM_ACROSS_WHOLES", "shares.share", "aggregate:sum(along=market)", "additivity", "schema"]],
         "obligations": []
       }
     },
@@ -45,7 +45,7 @@
       "fixture": "FX_H_CLINICAL_TRIAL",
       "expected": {
         "status": "illegal",
-        "diagnostics": [["REL_NULL_CENSORED_AS_OBSERVED", "subjects.survival_days#aggregate:mean", "instance"]],
+        "diagnostics": [["REL_NULL_CENSORED_AS_OBSERVED", "subjects.survival_days", "aggregate:mean(nulls=as-observed)", "derivation-typing", "instance"]],
         "obligations": []
       }
     },
@@ -54,8 +54,8 @@
       "expected": {
         "status": "illegal",
         "diagnostics": [
-          ["REL_INDEX_BASE_MISSING", "kpis.price_index", "schema"],
-          ["REL_RATIO_MEASURE_AVERAGED", "kpis.cost_per_unit#rollup:sum", "schema"]
+          ["REL_INDEX_BASE_MISSING", "kpis.price_index", "aggregate:max", "declaration-missing", "schema"],
+          ["REL_RATIO_MEASURE_AVERAGED", "kpis.cost_per_unit", "rollup:sum(toGrain=quarter)", "additivity", "schema"]
         ],
         "obligations": []
       }
@@ -65,7 +65,7 @@
       "expected": {
         "status": "unproven",
         "diagnostics": [],
-        "obligations": [["unit:commensurable", "stock.value#aggregate:sum", "instance"]]
+        "obligations": [["unit:commensurable", "stock.value", "aggregate:sum(along=sku)", "dimensional", "instance"]]
       }
     }
   ]

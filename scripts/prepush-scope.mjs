@@ -74,6 +74,12 @@ const PATTERNS = {
   // it from every component at once).
   motionAudit:
     /^(packages\/ds-(contracts|codegen|react|tokens)\/|scripts\/motion-realization-audit\/|scripts\/lib\/ledger-ratchet)/,
+  // analytical derived artifacts (REL-FIELD-ALGEBRA-02). Two drift gates: the
+  // JSON Schemas are emitted from the zod model, and the showcase fixture dump
+  // is emitted from fixtures.jsonl. Inputs are the model + emitter, the emitted
+  // files, the fixture corpus, the sync script, and the dump itself.
+  analytical:
+    /^(packages\/ds-codegen\/src\/analytical\/|packages\/ds-contracts\/(analytical-fixtures\/|relation\.contract\.schema\.json)|scripts\/sync-analytical-fixtures\.mjs|src\/data\/analytical-fixtures\/)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -101,6 +107,7 @@ export function classify(files, opts = {}) {
   const typed = full || has("typed");
   const testable = full || has("testable");
   const docs = full || has("docs");
+  const analytical = full || has("analytical");
 
   // generate:check + governed:rail run when a contract/codegen/token/generated
   // input could change emitted output or the resolvesTo graph.
@@ -151,6 +158,11 @@ export function classify(files, opts = {}) {
     // tokens.css declares, and without the build every reference would read as
     // dangling — failing loudly, but for the wrong reason.
     RUN_MOTION_AUDIT: motionAudit,
+    // analytical derived-artifact drift gates (REL-FIELD-ALGEBRA-02):
+    // analytical:check-schemas (model -> JSON Schema) and fixtures:check
+    // (fixtures.jsonl -> showcase dump). Own flag: neither needs the token
+    // graph or regeneration, and a fixture-only change moves both verdicts.
+    RUN_ANALYTICAL_CHECKS: analytical,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)

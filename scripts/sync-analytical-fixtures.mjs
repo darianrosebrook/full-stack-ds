@@ -29,7 +29,11 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "..");
 const SOURCE = resolve(ROOT, "packages/ds-contracts/analytical-fixtures/fixtures.jsonl");
-const TARGET = resolve(ROOT, "src/data/analytical-fixtures/fixtures.ts");
+const TARGET = process.env.ANALYTICAL_FIXTURES_TARGET
+  ? resolve(process.env.ANALYTICAL_FIXTURES_TARGET)
+  : resolve(ROOT, "src/data/analytical-fixtures/fixtures.ts");
+/** `--check`: the dump is a derived artifact; report drift instead of writing. */
+const CHECK = process.argv.includes("--check");
 
 const ALLOWED_TOP_LEVEL = new Set(["id", "structure", "assertions", "evidence"]);
 
@@ -122,7 +126,22 @@ import type { AnalyticalFixture } from "./types";
 export const FIXTURES: AnalyticalFixture[] = `;
 
 const body = JSON.stringify(fixtures, null, 2);
-writeFileSync(TARGET, `${header}${body};\n`);
+const output = `${header}${body};\n`;
 
-console.log(`fixtures: wrote ${fixtures.length} fixtures -> ${TARGET}`);
-console.log(`fixtures: source sha256 ${sourceSha}`);
+if (CHECK) {
+  let current = "";
+  try {
+    current = readFileSync(TARGET, "utf8");
+  } catch {
+    current = "";
+  }
+  if (current !== output) {
+    console.error(`fixtures --check: DRIFT — ${TARGET} does not match fixtures.jsonl (source sha256 ${sourceSha}); run pnpm run fixtures:sync and commit`);
+    process.exit(1);
+  }
+  console.log(`fixtures --check: OK — dump matches source sha256 ${sourceSha}`);
+} else {
+  writeFileSync(TARGET, output);
+  console.log(`fixtures: wrote ${fixtures.length} fixtures -> ${TARGET}`);
+  console.log(`fixtures: source sha256 ${sourceSha}`);
+}

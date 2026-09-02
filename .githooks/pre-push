@@ -289,5 +289,17 @@ if [ "${RUN_MOTION_AUDIT:-false}" = true ]; then
   pnpm run audit:motion-realization
 else say "skip motion-realization ledger"; fi
 
+# Analytical derived artifacts (REL-FIELD-ALGEBRA-02). Two drift gates with one
+# authority each: the relational-structure / assertion / fixture JSON Schemas
+# are emitted from the zod model, and the showcase fixture dump is emitted from
+# fixtures.jsonl. A hand edit to either projection is drift. Reads committed
+# source only; needs neither the token graph nor a build.
+if [ "${RUN_ANALYTICAL_CHECKS:-false}" = true ]; then
+  echo ""; say "analytical:check-schemas"
+  pnpm run analytical:check-schemas
+  echo ""; say "fixtures:check"
+  pnpm run fixtures:check
+else say "skip analytical derived-artifact checks"; fi
+
 echo ""
 say "all selected checks passed; proceeding with push"
