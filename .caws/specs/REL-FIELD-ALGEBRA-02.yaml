@@ -143,3 +143,7 @@ evidence:
     status: pass
     evidence_ref: "witnesses.json: 48 witnesses, all hold (necessity.test.ts C2: schema-valid stimuli, oracle-different outcomes, collision under erasure, 2-set minimality); C1: every kernel leaf and pair ratified, no phantom, bound 2 held, exactly four 2-sets (assertion.kind+op, kind:aggregate~ratio-comparison+op, additivity additive~semi-additive+nonAdditiveAlong, semi-additive~ratio-measure+nonAdditiveAlong); no coordinate needed a 3-set."
     recorded_at: "2026-09-02T23:50:03.987Z"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "necessity.test.ts C3: NO_COLLISION (REGION_MAX vs N_TEMP_MEAN under transformation), NOT_MINIMAL (transformation+key), SCHEMA_INVALID (transformation=absolute), plus SAME_OUTCOME, TOO_MANY_COORDINATES, IDENTICAL_STIMULI, unadjudicated side refused, erasure totality."
+    recorded_at: "2026-09-02T23:50:04.410Z"
