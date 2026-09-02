@@ -303,8 +303,12 @@ The cause column is written in L0–L3 vocabulary only. The colloquial column ex
 | `REL_FACET_SCALE_POLICY_UNDECLARED` | `facet` with no declared shared/free policy per channel | cross-facet comparability is a claim | small multiples, mixed axes |
 | `REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET` | `embed` serving a magnitude-comparison task with no baseline channel in the cell | task invariant unsatisfiable in the budget | sparkline read as a bar |
 | `REL_ANNOTATION_UNIT_MISMATCH` | `layer` of a single-row relation whose unit dimension differs from the axis it sits on | dimensional analysis fails | target line in the wrong unit |
+| `REL_NULL_SUPPRESSED_AS_ZERO` | a `suppressed` or `absent` null encoded as the value zero on length or position | a missing value is not a measured zero; the null kind is collapsed with no declared mechanism | privacy-suppressed cells drawn as zero |
+| `REL_SEQUENTIAL_ON_NOMINAL` | `nominal` field → sequential luminance ramp | a sequential ramp implies an order the scale lacks | regions shaded light-to-dark by alphabet |
+| `REL_GEO_AREA_NON_EQUAL_AREA` | comparison task reading area in a `geographic` space with no declared equal-area projection | the projection distorts area, so area carries no ratio | comparing countries by size on a Mercator map |
+| `REL_TEMPORAL_GRAIN_MIXED` | `lane` coordinate carrying two series at different temporal grains with no `aggregate-to-grain` | values at different grains are not co-registered | daily and monthly series on one axis |
 
-Thirty-six entries. Stage 0 turns this into a machine-readable corpus; stage 1 must reject every one with the named diagnostic before any projection code exists.
+Forty entries. Stage 0 turns this into a machine-readable corpus; stage 1 must reject every one with the named diagnostic before any projection code exists.
 
 ## Falsification conditions
 
