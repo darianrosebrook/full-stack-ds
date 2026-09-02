@@ -44,3 +44,8 @@ acceptance:
     then: 'The raw-control guard bites on pasted raw markup and stays silent on DS component tags (capitalized <Input>/<Select>/<Button>).'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "src/consumption/consumption-guard.test.ts: SHOWCASE-FIXTURE-PLAYGROUND-DS-CONSUMPTION-01 A1 test - view imports DS Input/Select/Button/Badge/List and contains zero raw <input>/<select>/<button> (verified 15/15 on merged main 35582a2)"
+    recorded_at: "2026-09-02T22:30:52.479Z"
