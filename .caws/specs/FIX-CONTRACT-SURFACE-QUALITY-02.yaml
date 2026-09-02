@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: surface-quality
 created_at: '2026-09-02T23:17:48.963Z'
-updated_at: '2026-09-02T23:17:55.349Z'
+updated_at: '2026-09-02T23:34:32.995Z'
 blast_radius:
   modules:
     - 'ds-contracts'
@@ -28,6 +28,9 @@ scope:
     - 'packages/ds-angular/src'
     - 'packages/ds-lit/src'
     - 'packages/ds-react-native/src'
+    - packages/ds-figma-plugin/src/generated
+    - packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components
+    - packages/ds-swiftui/Sources/DsSwiftUI/Components
   out: []
 invariants:
   - 'A variant-only decoration (status rail, accent stripe) is never declared in a base/root style block; it lives only in the variant selector that motivates it'
