@@ -1,0 +1,46 @@
+id: SHOWCASE-STATES-GRID-DIMENSIONAL-01
+title: 'Resurrect the Design view States section on the dimensional states model'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-02T22:18:30.157Z'
+updated_at: '2026-09-02T22:18:30.157Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'src/types/data.ts'
+    - 'src/views/DesignView.tsx'
+    - 'src/views/sections/StatesGrid.tsx'
+    - 'src/views/sections/StatesGrid.test.tsx'
+    - 'src/trace/buildTraceIndex.ts'
+    - 'src/trace/buildTraceIndex.test.ts'
+    - 'src/trace/trace-evidence.diagnostic.test.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'a contract with dimensional states (Button''s pointer/focus/availability axes)'
+    when: 'the Design view renders'
+    then: 'the States section appears and renders one card per declared axis with its authored category, values, and initial-value marker'
+  - id: A2
+    given: 'a contract with no states'
+    when: 'the States section gate evaluates'
+    then: 'the section is absent and StatesGrid renders nothing without crashing'
+  - id: A3
+    given: 'a generated source with a BEM modifier interpolated from a declared state value'
+    when: 'buildTraceIndex runs'
+    then: 'the modifier resolves to states.dimensions.<axis> and an unknown key yields no hit without throwing'
+  - id: A4
+    given: 'the completed slice'
+    when: 'pnpm run typecheck && pnpm test && pnpm run lint && pnpm run governed:rail in the worktree'
+    then: 'all four are green'
+non_functional: {}
+contracts:
+  - name: 'states-model'
+    type: schema
+    path: 'packages/ds-contracts/component.contract.schema.json'
