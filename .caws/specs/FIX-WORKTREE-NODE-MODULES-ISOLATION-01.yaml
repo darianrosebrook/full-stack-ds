@@ -36,3 +36,8 @@ acceptance:
     then: 'a check or test documents the root cause (duplicate module instances through symlinked node_modules) rather than only the symptom'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "worktree full gate: pnpm test 237 files/2810 tests pass exit 0 after pnpm run worktree:install + tokens:build; the 3 symlink-sensitive files (FigmaPluginApp, runner-mains, cli-spawn) 17/17 vs 14 failed pre-fix with 49 rune_outside_svelte"
+    recorded_at: "2026-09-02T21:37:45.896Z"
