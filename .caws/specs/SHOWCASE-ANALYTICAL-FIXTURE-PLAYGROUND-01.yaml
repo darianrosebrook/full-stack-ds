@@ -2,9 +2,11 @@ id: SHOWCASE-ANALYTICAL-FIXTURE-PLAYGROUND-01
 title: 'Analytical fixture playground: raw-data scratch surface with realization placeholder'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Answer-free analytical fixture playground shipped at #/scratch/analytical-fixtures: typed dump of 58 fixtures, index/raw-data/realization-placeholder view, leak guards, governed counts'
 created_at: '2026-09-02T21:22:55.630Z'
-updated_at: '2026-09-02T21:40:37.828Z'
+updated_at: '2026-09-02T21:53:57.027Z'
 blast_radius:
   modules:
     - 'src/data/analytical-fixtures (new: generated fixture dump + hand-authored types)'
