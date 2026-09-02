@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/views/AnalyticalFixturesScratchView.smoke.test.tsx (7/7 on merged main ff27599e: index parity with 58-fixture dump, structure table, assertions-as-questions, evidence rows)"
     recorded_at: "2026-09-02T21:52:44.184Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node scripts/sync-analytical-fixtures.mjs regenerates byte-identical (sha256 58d98701...), count parity asserted (58), leak guard + committed-bytes leak test pass"
+    recorded_at: "2026-09-02T21:52:44.606Z"
