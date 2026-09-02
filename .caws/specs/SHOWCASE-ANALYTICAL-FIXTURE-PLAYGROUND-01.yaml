@@ -7,7 +7,11 @@ created_at: '2026-09-02T21:22:55.630Z'
 updated_at: '2026-09-02T21:22:55.630Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'src/data/analytical-fixtures (new: generated fixture dump + hand-authored types)'
+    - 'src/views/AnalyticalFixturesScratchView.tsx (new: URL-only scratch playground)'
+    - 'src/router.tsx + src/app.tsx (scratch route wiring only)'
+    - 'scripts/sync-analytical-fixtures.mjs (new: the only writer of the dump)'
+    - 'AGENTS.md + package.json (governed count markers; sync script entry)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -22,7 +26,10 @@ scope:
     - 'package.json'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Answer-blind showcase: the src/ dump and the playground carry no answer-key material - no corpus case ids, verdicts, diagnostics, obligations, bindings.json content, or holdout.json content; fixtures only.'
+  - 'No fabricated realization: the playground draws no chart, projection, or derived output that no engine produced; the realization area renders only an explicit no-engine placeholder until a real projection feeds it.'
+  - 'The dump is generated, never hand-edited: scripts/sync-analytical-fixtures.mjs is the only writer of src/data/analytical-fixtures/, derived from packages/ds-contracts/analytical-fixtures/fixtures.jsonl.'
+  - 'Read-only toward the governed pack: this slice imports nothing from and writes nothing to packages/ds-contracts/analytical-pack, packages/ds-contracts/analytical-fixtures, or packages/ds-codegen/src/analytical.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
