@@ -7,6 +7,8 @@
   "packageManager": "pnpm@10.14.0",
   "scripts": {
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
+    "worktree:install": "node scripts/worktree-install.mjs",
+    "worktree:check": "node scripts/worktree-install.mjs --check",
     "dev": "vite",
     "build": "vite build",
     "generate": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js",
