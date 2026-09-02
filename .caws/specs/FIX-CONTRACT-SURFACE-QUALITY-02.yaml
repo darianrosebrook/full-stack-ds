@@ -82,3 +82,8 @@ evidence:
     evidence_ref: "Opened popover measured live: border 'solid 1px rgb(71,70,71)' uniform on all four sides (was 'solid 1px rgb(229,91,90)' salmon from semantic.color.border.accent), background resolves through semantic.color.background.elevated (#ffffff light / #141414 dark) instead of background.secondary #d0d0d0. Token renamed border.accent to border.default so the label no longer lies; Popover.css line 32 emits var(--fsds-popover-color-border-default, #d0d0d0)."
     recorded_at: "2026-09-02T23:33:51.859Z"
     commit_sha: "597c6680"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "WCAG ratio recomputed in-browser from resolved custom properties (sRGB relative luminance): default brand light theme foreground.primary on the selected-row background goes 3.83:1 (FAIL) to 12.02:1 (PASS) after re-pointing table.color.background.selected from semantic.color.background.accent to background.accentSubtle. Across all 20 brand x theme combinations, failures drop from 10 to 1. The single residual, light/forest = 1.09, is a PRE-EXISTING brand-authoring defect outside this AC: forest.tokens.json hardcodes background.accentSubtle to #00230a in BOTH themes while every sibling brand flips light/dark, and it already broke accentSubtle's documented consumer (NavList current item) before this change. Logged for the token-graph slice."
+    recorded_at: "2026-09-02T23:34:00.676Z"
+    commit_sha: "597c6680"
