@@ -99,6 +99,25 @@ describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress",
     );
   });
 
+  it("SHOWCASE-FIXTURE-PLAYGROUND-DS-CONSUMPTION-01 A1: AnalyticalFixturesScratchView consumes DS controls — no raw <input>/<select>/<button>", () => {
+    const src = read("views/AnalyticalFixturesScratchView.tsx");
+    const dsImport =
+      src.match(
+        /import\s*\{([^}]*)\}\s*from\s*["']@full-stack-ds\/react["']/,
+      )?.[1] ?? "";
+    for (const name of ["Input", "Select", "Button", "Badge", "List"]) {
+      expect(
+        dsImport,
+        `AnalyticalFixturesScratchView must import DS ${name}`,
+      ).toMatch(new RegExp(`\\b${name}\\b`));
+    }
+    // Every control in the playground is a DS component; raw control markup
+    // must not come back. (Case-sensitive on purpose: <Input> ≠ <input>.)
+    expect(src, "must not render a raw <input> (use DS Input)").not.toMatch(/<input[\s/>]/);
+    expect(src, "must not render a raw <select> (use DS Select)").not.toMatch(/<select[\s/>]/);
+    expect(src, "must not render a raw <button> (use DS Button)").not.toMatch(/<button[\s/>]/);
+  });
+
   it("SHOWCASE-CONSUMPTION-03 A3: app.css does not declare a bare `.chip {}` rule (collides with DS Chip.css)", () => {
     const css = stripCssComments(read("styles/app.css"));
     const hits = css.match(BARE_CHIP_RULE) ?? [];
@@ -147,5 +166,14 @@ describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress",
         RAW_DATA_TABLE_TAG,
       ),
     ).toBeNull();
+
+    // The raw-control guard (SHOWCASE-FIXTURE-PLAYGROUND-DS-CONSUMPTION-01)
+    // fires on raw <input>/<select>/<button> and stays silent on the DS tags.
+    expect(`<input type="search">`.match(/<input[\s/>]/)).not.toBeNull();
+    expect(`<select>`.match(/<select[\s/>]/)).not.toBeNull();
+    expect(`<button type="button">`.match(/<button[\s/>]/)).not.toBeNull();
+    expect(`<Input type="search">`.match(/<input[\s/>]/)).toBeNull();
+    expect(`<Select options={o}>`.match(/<select[\s/>]/)).toBeNull();
+    expect(`<Button variant="ghost">`.match(/<button[\s/>]/)).toBeNull();
   });
 });
