@@ -54,12 +54,12 @@
       },
       "onColor": {
         "$type": "color",
-        "$value": "{color.mode.dark}",
+        "$value": "{color.mode.light}",
         "$extensions": {
-          "fsds.light": "{color.mode.dark}",
+          "fsds.light": "{color.mode.light}",
           "fsds.dark": "{color.mode.light}"
         },
-        "$description": "Text on colored fills — white on neutral.800+ fills (both modes AA-safe)"
+        "$description": "Text on colored fills — light in both modes, because background.accent is a dark neutral in both (neutral.800 light / neutral.700 dark). The light variant previously read color.mode.dark, inverting the pairing to 1.42:1."
       }
     },
     "background": {

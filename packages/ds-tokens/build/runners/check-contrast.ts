@@ -13,9 +13,13 @@ import {
   extractCanonicalPairs,
   validateContrastPair,
 } from "../w3c/w3c-contrast-validator.js";
+import { overlayBrand } from "../w3c/brand-overlay.js";
+import { loadBrandTokens } from "../generators/global.js";
 import { PATHS } from "../core/index.js";
 
 interface Failure {
+  /** Brand instantiation this pair was evaluated in; "base" is the un-branded tree. */
+  brand: string;
   theme: "light" | "dark";
   context: string;
   foreground: string;
@@ -38,8 +42,29 @@ export async function main(): Promise<void> {
   const failures: Failure[] = [];
   let totalChecks = 0;
 
+  // Every registered brand is a distinct instantiation of the semantic layer.
+  // Checking only the base tree leaves 9 of 10 unproven — see brand-overlay.ts.
+  const brands = loadBrandTokens();
+  const instantiations: Array<{ brand: string; tree: unknown }> = [
+    { brand: "base", tree },
+  ];
+
   for (const theme of ["light", "dark"] as const) {
-    const pairs = extractCanonicalPairs(tree, theme);
+    for (const inst of instantiations) {
+      const pairs = extractCanonicalPairs(inst.tree, theme);
+      collect(pairs, inst.brand, theme);
+    }
+    for (const [brandId, overrides] of brands) {
+      const branded = overlayBrand(tree, overrides, theme);
+      collect(extractCanonicalPairs(branded, theme), brandId, theme);
+    }
+  }
+
+  function collect(
+    pairs: ReturnType<typeof extractCanonicalPairs>,
+    brand: string,
+    theme: "light" | "dark",
+  ): void {
     for (const p of pairs) {
       const result = validateContrastPair(p.foreground, p.background, {
         level: p.level,
@@ -48,6 +73,7 @@ export async function main(): Promise<void> {
       totalChecks++;
       if (!result.isValid) {
         failures.push({
+          brand,
           theme,
           context: p.context,
           foreground: p.foreground,
@@ -60,7 +86,11 @@ export async function main(): Promise<void> {
     }
   }
 
-  console.log(`🎨 Contrast check — ${totalChecks} pair(s) evaluated`);
+  console.log(
+    `🎨 Contrast check — ${totalChecks} pair(s) evaluated across ${
+      brands.size + 1
+    } instantiation(s) (base + ${brands.size} brand(s)) x 2 theme(s)`,
+  );
   if (failures.length === 0) {
     console.log(`  ✅ All pairs meet their declared WCAG level.`);
     process.exit(0);
@@ -69,7 +99,7 @@ export async function main(): Promise<void> {
   console.error(`  ❌ ${failures.length} pair(s) fail:`);
   for (const f of failures) {
     console.error(
-      `    [${f.theme}] ${f.context}`,
+      `    [${f.brand} / ${f.theme}] ${f.context}`,
     );
     console.error(
       `      ratio ${f.ratio.toFixed(2)}:1 < required ${f.required}:1 (${f.level})`,
