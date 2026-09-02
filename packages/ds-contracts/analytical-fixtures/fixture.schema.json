@@ -48,20 +48,14 @@
           "additionalProperties": {
             "$ref": "#/definitions/relation"
           }
-        },
-        "relationships": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/relationship"
-          }
         }
       },
       "required": [
         "relations"
       ],
       "additionalProperties": false,
-      "title": "Relational structure (L0-L2)",
-      "description": "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001: one or more named relations, each with a declared grain and typed fields, plus declared relationships between them. A single relation is the degenerate structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+      "title": "Relational structure (L0-L2 kernel)",
+      "description": "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001 at stage 1.5: one or more named relations, each with a declared grain and typed fields. Every coordinate carries a necessity witness. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
     },
     "name": {
       "type": "string",
@@ -104,28 +98,26 @@
     "field": {
       "type": "object",
       "properties": {
-        "scale": {
+        "transformation": {
           "type": "string",
           "enum": [
             "nominal",
             "ordinal",
-            "cyclic",
             "interval",
-            "ratio",
-            "count",
-            "proportion",
-            "index"
+            "ratio"
           ]
         },
-        "shape": {
-          "type": "string",
-          "enum": [
-            "scalar",
-            "interval",
-            "set",
-            "distribution",
-            "point"
-          ]
+        "cyclic": {
+          "type": "boolean",
+          "const": true
+        },
+        "proportion": {
+          "type": "boolean",
+          "const": true
+        },
+        "index": {
+          "type": "boolean",
+          "const": true
         },
         "key": {
           "type": "boolean"
@@ -144,41 +136,11 @@
             }
           ]
         },
-        "order": {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "type": "string",
-              "enum": [
-                "total",
-                "partial"
-              ]
-            },
-            "values": {
-              "minItems": 2,
-              "type": "array",
-              "items": {
-                "type": [
-                  "string",
-                  "number"
-                ]
-              }
-            }
-          },
-          "required": [
-            "kind"
-          ],
-          "additionalProperties": false
-        },
-        "period": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
         "whole": {
           "anyOf": [
             {
               "type": "string",
-              "minLength": 1
+              "const": "fixed"
             },
             {
               "type": "object",
@@ -195,8 +157,8 @@
           ]
         },
         "base": {
-          "type": "string",
-          "minLength": 1
+          "type": "boolean",
+          "const": true
         },
         "additivity": {
           "allOf": [
@@ -214,20 +176,13 @@
         }
       },
       "required": [
-        "scale"
+        "transformation"
       ],
       "additionalProperties": false
     },
     "unit": {
       "type": "object",
       "properties": {
-        "dimension": {
-          "$ref": "#/definitions/dimension"
-        },
-        "unit": {
-          "type": "string",
-          "minLength": 1
-        },
         "units": {
           "minItems": 1,
           "type": "array",
@@ -240,48 +195,15 @@
           "type": "boolean"
         },
         "conversions": {
-          "type": "object",
-          "propertyNames": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
             "type": "string",
-            "pattern": "^[A-Za-z][A-Za-z0-9]*$"
-          },
-          "additionalProperties": {
-            "type": "number",
-            "exclusiveMinimum": 0
+            "minLength": 1
           }
-        },
-        "rate": {
-          "type": "object",
-          "properties": {
-            "numerator": {
-              "$ref": "#/definitions/dimension"
-            },
-            "denominator": {
-              "$ref": "#/definitions/dimension"
-            }
-          },
-          "required": [
-            "numerator",
-            "denominator"
-          ],
-          "additionalProperties": false
         }
       },
-      "required": [
-        "dimension"
-      ],
       "additionalProperties": false
-    },
-    "dimension": {
-      "type": "string",
-      "enum": [
-        "currency",
-        "time",
-        "length",
-        "mass",
-        "temperature",
-        "dimensionless"
-      ]
     },
     "temporality": {
       "type": "object",
@@ -290,34 +212,8 @@
           "type": "string",
           "enum": [
             "instant",
-            "interval",
-            "duration"
+            "interval"
           ]
-        },
-        "closure": {
-          "type": "string",
-          "enum": [
-            "half-open",
-            "closed",
-            "open"
-          ]
-        },
-        "grain": {
-          "type": "string",
-          "enum": [
-            "second",
-            "minute",
-            "hour",
-            "day",
-            "week",
-            "month",
-            "quarter",
-            "year"
-          ]
-        },
-        "calendar": {
-          "type": "string",
-          "minLength": 1
         }
       },
       "required": [
@@ -366,32 +262,11 @@
           "properties": {
             "kind": {
               "type": "string",
-              "const": "non-additive"
+              "const": "ratio-measure"
             }
           },
           "required": [
             "kind"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "type": "string",
-              "const": "ratio-measure"
-            },
-            "numerator": {
-              "$ref": "#/definitions/name"
-            },
-            "denominator": {
-              "$ref": "#/definitions/name"
-            }
-          },
-          "required": [
-            "kind",
-            "numerator",
-            "denominator"
           ],
           "additionalProperties": false
         }
@@ -401,87 +276,14 @@
       "type": "object",
       "properties": {
         "null": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "absent",
-              "not-applicable",
-              "censored",
-              "suppressed",
-              "unknown",
-              "missing-after-join"
-            ]
-          }
-        },
-        "provenance": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "observed",
-              "derived",
-              "imputed",
-              "layout-generated"
-            ]
-          }
+          "type": "boolean",
+          "const": true
         },
         "uncertainty": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "none",
-              "interval",
-              "distribution",
-              "measurement-error",
-              "rounded"
-            ]
-          }
+          "type": "boolean",
+          "const": true
         }
       },
-      "additionalProperties": false
-    },
-    "relationship": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "$ref": "#/definitions/ref"
-        },
-        "to": {
-          "$ref": "#/definitions/ref"
-        },
-        "cardinality": {
-          "type": "string",
-          "enum": [
-            "one-to-one",
-            "one-to-many",
-            "many-to-one",
-            "many-to-many"
-          ]
-        }
-      },
-      "required": [
-        "from",
-        "to",
-        "cardinality"
-      ],
-      "additionalProperties": false
-    },
-    "ref": {
-      "type": "object",
-      "properties": {
-        "relation": {
-          "$ref": "#/definitions/name"
-        },
-        "field": {
-          "$ref": "#/definitions/name"
-        }
-      },
-      "required": [
-        "relation",
-        "field"
-      ],
       "additionalProperties": false
     },
     "assertion": {
@@ -505,8 +307,7 @@
                 "sum",
                 "mean",
                 "count",
-                "min",
-                "max"
+                "min"
               ]
             },
             "along": {
@@ -526,10 +327,7 @@
             },
             "uncertainty": {
               "type": "string",
-              "enum": [
-                "propagate",
-                "drop"
-              ]
+              "const": "propagate"
             }
           },
           "required": [
@@ -558,43 +356,6 @@
             "kind",
             "relation",
             "field"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "type": "string",
-              "const": "rollup"
-            },
-            "relation": {
-              "$ref": "#/definitions/name"
-            },
-            "field": {
-              "$ref": "#/definitions/name"
-            },
-            "toGrain": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/name"
-              }
-            },
-            "op": {
-              "type": "string",
-              "enum": [
-                "sum",
-                "mean",
-                "rederive"
-              ]
-            }
-          },
-          "required": [
-            "kind",
-            "relation",
-            "field",
-            "toGrain",
-            "op"
           ],
           "additionalProperties": false
         }
@@ -671,64 +432,10 @@
           "type": "string",
           "enum": [
             "absent",
-            "not-applicable",
-            "censored",
-            "suppressed",
-            "unknown",
-            "missing-after-join"
-          ]
-        },
-        "provenance": {
-          "type": "string",
-          "enum": [
-            "observed",
-            "derived",
-            "imputed",
-            "layout-generated"
-          ]
-        },
-        "uncertainty": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/uncertainty"
-            }
+            "censored"
           ]
         }
       },
-      "additionalProperties": false
-    },
-    "uncertainty": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": [
-            "none",
-            "interval",
-            "distribution",
-            "measurement-error",
-            "rounded"
-          ]
-        },
-        "error": {
-          "type": "number",
-          "minimum": 0
-        },
-        "low": {
-          "type": "number"
-        },
-        "high": {
-          "type": "number"
-        },
-        "level": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "maximum": 1
-        }
-      },
-      "required": [
-        "kind"
-      ],
       "additionalProperties": false
     }
   }

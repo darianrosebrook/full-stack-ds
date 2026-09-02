@@ -1,6 +1,6 @@
 {
-  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, assertion, engine, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output. Re-record log: 27701a78... (authored) -> 5fc0509d... after REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01 (identifier rename; no expectation changed) -> 493d9bd2... after REL-FIELD-ALGEBRA-02 Phase A (occurrence identity gained the assertion key and the emitting engine; the suppression obligation moved to declaration-missing; subjects lost the '#kind:op' suffix). Every item re-derived by hand in the new form; no code, subject locus, or evidence class changed.",
-  "ruleDigest": "493d9bd2b527ea0f4297bc12568b320b4ebe78b26cc222495f34229185aa44b0",
+  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, assertion, engine, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output. Re-record log: 27701a78... (authored) -> 5fc0509d... after REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01 (identifier rename; no expectation changed) -> 493d9bd2... after REL-FIELD-ALGEBRA-02 Phase A (occurrence identity gained the assertion key and the emitting engine; the suppression obligation moved to declaration-missing; subjects lost the '#kind:op' suffix). Every item re-derived by hand in the new form; no code, subject locus, or evidence class changed. -> 6b7b2135... after REL-FIELD-ALGEBRA-02 Phase B (the kernel: capabilities replace scale labels, rollup is an aggregate, max is min's alias, target grain gone). Every item re-derived by hand against the kernel engine description; only two occurrence KEYS changed, both in FX_H_KPI_INDEX_AND_RATE (aggregate:max -> aggregate:min; rollup:sum(toGrain=quarter) -> aggregate:sum); no code, subject, engine, or evidence class changed.",
+  "ruleDigest": "6b7b2135712ac06f1ee96ca9d19f743ec498fbf85d66b637cd84f9edc36d97c5",
   "items": [
     {
       "fixture": "FX_H_PAYROLL",
@@ -54,8 +54,8 @@
       "expected": {
         "status": "illegal",
         "diagnostics": [
-          ["REL_INDEX_BASE_MISSING", "kpis.price_index", "aggregate:max", "declaration-missing", "schema"],
-          ["REL_RATIO_MEASURE_AVERAGED", "kpis.cost_per_unit", "rollup:sum(toGrain=quarter)", "additivity", "schema"]
+          ["REL_INDEX_BASE_MISSING", "kpis.price_index", "aggregate:min", "declaration-missing", "schema"],
+          ["REL_RATIO_MEASURE_AVERAGED", "kpis.cost_per_unit", "aggregate:sum", "additivity", "schema"]
         ],
         "obligations": []
       }

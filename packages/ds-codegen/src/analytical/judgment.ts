@@ -55,8 +55,6 @@ export function assertionKey(a: Assertion): string {
     if (a.along) params.push(`along=${[...a.along].sort().join(",")}`);
     if (a.nulls) params.push(`nulls=${a.nulls}`);
     if (a.uncertainty) params.push(`uncertainty=${a.uncertainty}`);
-  } else {
-    params.push(`toGrain=${[...a.toGrain].sort().join(",")}`);
   }
   return `${a.kind}:${a.op}${params.length ? `(${params.join(";")})` : ""}`;
 }

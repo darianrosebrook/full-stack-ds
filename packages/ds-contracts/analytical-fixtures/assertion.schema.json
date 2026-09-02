@@ -24,8 +24,7 @@
                 "sum",
                 "mean",
                 "count",
-                "min",
-                "max"
+                "min"
               ]
             },
             "along": {
@@ -45,10 +44,7 @@
             },
             "uncertainty": {
               "type": "string",
-              "enum": [
-                "propagate",
-                "drop"
-              ]
+              "const": "propagate"
             }
           },
           "required": [
@@ -77,43 +73,6 @@
             "kind",
             "relation",
             "field"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "type": "string",
-              "const": "rollup"
-            },
-            "relation": {
-              "$ref": "#/definitions/name"
-            },
-            "field": {
-              "$ref": "#/definitions/name"
-            },
-            "toGrain": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/name"
-              }
-            },
-            "op": {
-              "type": "string",
-              "enum": [
-                "sum",
-                "mean",
-                "rederive"
-              ]
-            }
-          },
-          "required": [
-            "kind",
-            "relation",
-            "field",
-            "toGrain",
-            "op"
           ],
           "additionalProperties": false
         }

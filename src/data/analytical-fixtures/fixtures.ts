@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: da49baeb18fe25585dbcad0f96a87a249091dab19f35a5b75e29b82047f2fd6f
+// Source sha256: dc8f8e95e8d629e19916a6c843d9334321a0386d582e3676c0bafe6c5a0d018a
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -18,21 +18,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "respondent": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "satisfaction": {
-              "scale": "ordinal",
-              "order": {
-                "kind": "total",
-                "values": [
-                  1,
-                  2,
-                  3,
-                  4,
-                  5
-                ]
-              }
+              "transformation": "ordinal"
             }
           }
         }
@@ -57,21 +47,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "response_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "code": {
-              "scale": "ordinal",
-              "order": {
-                "kind": "total",
-                "values": [
-                  1,
-                  2,
-                  3,
-                  4,
-                  5
-                ]
-              }
+              "transformation": "ordinal"
             }
           }
         }
@@ -96,15 +76,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "city": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "temp": {
-              "scale": "interval",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "celsius"
-              }
+              "transformation": "interval"
             }
           }
         }
@@ -128,15 +104,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "city": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "temp": {
-              "scale": "interval",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "celsius"
-              }
+              "transformation": "interval"
             }
           }
         }
@@ -161,11 +133,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "site_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "region": {
-              "scale": "nominal"
+              "transformation": "nominal"
             }
           }
         }
@@ -176,7 +148,7 @@ export const FIXTURES: AnalyticalFixture[] = [
         "kind": "aggregate",
         "relation": "sites",
         "field": "region",
-        "op": "max"
+        "op": "min"
       }
     ]
   },
@@ -190,12 +162,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "login_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "hour": {
-              "scale": "cyclic",
-              "period": 24
+              "transformation": "ordinal",
+              "cyclic": true
             }
           }
         }
@@ -220,11 +192,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "user_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "plan": {
-              "scale": "nominal"
+              "transformation": "nominal"
             }
           }
         }
@@ -249,14 +221,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "event_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "at": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "second"
+                "kind": "instant"
               }
             }
           }
@@ -283,17 +254,16 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "product": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "date": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "day"
+                "kind": "instant"
               }
             },
             "on_hand": {
-              "scale": "count",
+              "transformation": "ratio",
               "additivity": {
                 "kind": "semi-additive",
                 "nonAdditiveAlong": [
@@ -328,39 +298,24 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "region": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "year": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "year"
+                "kind": "instant"
               }
             },
             "gdp": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "population": {
-              "scale": "count"
+              "transformation": "ratio"
             },
             "gdp_per_capita": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD",
-                "rate": {
-                  "numerator": "currency",
-                  "denominator": "dimensionless"
-                }
-              },
+              "transformation": "ratio",
               "additivity": {
-                "kind": "ratio-measure",
-                "numerator": "gdp",
-                "denominator": "population"
+                "kind": "ratio-measure"
               }
             }
           }
@@ -369,12 +324,9 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "regions",
         "field": "gdp_per_capita",
-        "toGrain": [
-          "year"
-        ],
         "op": "mean"
       }
     ]
@@ -390,13 +342,14 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "company": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "market": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "share": {
-              "scale": "proportion",
+              "transformation": "ratio",
+              "proportion": true,
               "whole": {
                 "perRow": "market"
               }
@@ -424,13 +377,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sale_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "units": [
                   "USD",
                   "EUR"
@@ -460,11 +412,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "metric_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "pct": {
-              "scale": "proportion"
+              "transformation": "ratio",
+              "proportion": true
             }
           }
         }
@@ -489,11 +442,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "price_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "idx": {
-              "scale": "index"
+              "transformation": "ratio",
+              "index": true
             }
           }
         }
@@ -518,19 +472,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "reading_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "mass": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "mass",
-                "unit": "kg"
-              },
+              "transformation": "ratio",
               "permits": {
-                "uncertainty": [
-                  "measurement-error"
-                ]
+                "uncertainty": true
               }
             }
           }
@@ -556,19 +504,16 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "subject_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "days": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "temporality": {
-                "kind": "duration",
-                "grain": "day"
+                "kind": "interval"
               },
               "permits": {
-                "null": [
-                  "censored"
-                ]
+                "null": true
               }
             }
           }
@@ -612,10 +557,10 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "order_id": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "amount": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
@@ -623,10 +568,9 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "orders",
         "field": "amount",
-        "toGrain": [],
         "op": "sum"
       }
     ]
@@ -641,13 +585,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sale_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "perRow": true
               }
             }
@@ -674,15 +617,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "cell_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "n": {
-              "scale": "count",
+              "transformation": "ratio",
               "permits": {
-                "null": [
-                  "suppressed"
-                ]
+                "null": true
               }
             }
           }
@@ -708,11 +649,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "respondent": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "score": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
@@ -737,15 +678,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "city": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "temp_k": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "kelvin"
-              }
+              "transformation": "ratio"
             }
           }
         }
@@ -769,15 +706,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "city": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "temp": {
-              "scale": "interval",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "celsius"
-              }
+              "transformation": "interval"
             }
           }
         }
@@ -802,19 +735,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "garment_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "size": {
-              "scale": "ordinal",
-              "order": {
-                "kind": "total",
-                "values": [
-                  "S",
-                  "M",
-                  "L"
-                ]
-              }
+              "transformation": "ordinal"
             }
           }
         }
@@ -825,7 +750,7 @@ export const FIXTURES: AnalyticalFixture[] = [
         "kind": "aggregate",
         "relation": "garments",
         "field": "size",
-        "op": "max"
+        "op": "min"
       }
     ]
   },
@@ -839,12 +764,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "login_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "hour": {
-              "scale": "cyclic",
-              "period": 24
+              "transformation": "ordinal",
+              "cyclic": true
             }
           }
         }
@@ -869,11 +794,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "user_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "plan": {
-              "scale": "nominal"
+              "transformation": "nominal"
             }
           }
         }
@@ -898,18 +823,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "session_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "length": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "temporality": {
-                "kind": "duration",
-                "grain": "second"
-              },
-              "unit": {
-                "dimension": "time",
-                "unit": "s"
+                "kind": "interval"
               }
             }
           }
@@ -936,17 +856,16 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "product": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "date": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "day"
+                "kind": "instant"
               }
             },
             "on_hand": {
-              "scale": "count",
+              "transformation": "ratio",
               "additivity": {
                 "kind": "semi-additive",
                 "nonAdditiveAlong": [
@@ -981,39 +900,24 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "region": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "year": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "year"
+                "kind": "instant"
               }
             },
             "gdp": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "population": {
-              "scale": "count"
+              "transformation": "ratio"
             },
             "gdp_per_capita": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD",
-                "rate": {
-                  "numerator": "currency",
-                  "denominator": "dimensionless"
-                }
-              },
+              "transformation": "ratio",
               "additivity": {
-                "kind": "ratio-measure",
-                "numerator": "gdp",
-                "denominator": "population"
+                "kind": "ratio-measure"
               }
             }
           }
@@ -1022,13 +926,10 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "regions",
         "field": "gdp_per_capita",
-        "toGrain": [
-          "year"
-        ],
-        "op": "rederive"
+        "op": "count"
       }
     ]
   },
@@ -1043,13 +944,14 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "company": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "market": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "share": {
-              "scale": "proportion",
+              "transformation": "ratio",
+              "proportion": true,
               "whole": {
                 "perRow": "market"
               }
@@ -1080,20 +982,19 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sale_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "units": [
                   "USD",
                   "EUR"
                 ],
-                "conversions": {
-                  "EUR": 1.08
-                }
+                "conversions": [
+                  "EUR"
+                ]
               }
             }
           }
@@ -1119,12 +1020,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "metric_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "pct": {
-              "scale": "proportion",
-              "whole": "respondents"
+              "transformation": "ratio",
+              "proportion": true,
+              "whole": "fixed"
             }
           }
         }
@@ -1149,12 +1051,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "price_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "idx": {
-              "scale": "index",
-              "base": "2020=100"
+              "transformation": "ratio",
+              "index": true,
+              "base": true
             }
           }
         }
@@ -1179,19 +1082,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "reading_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "mass": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "mass",
-                "unit": "kg"
-              },
+              "transformation": "ratio",
               "permits": {
-                "uncertainty": [
-                  "measurement-error"
-                ]
+                "uncertainty": true
               }
             }
           }
@@ -1218,19 +1115,16 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "subject_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "days": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "temporality": {
-                "kind": "duration",
-                "grain": "day"
+                "kind": "interval"
               },
               "permits": {
-                "null": [
-                  "censored"
-                ]
+                "null": true
               }
             }
           }
@@ -1275,10 +1169,10 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "order_id": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "amount": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
@@ -1286,19 +1180,13 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "orders",
         "field": "amount",
-        "toGrain": [],
         "op": "sum"
       }
     ],
     "evidence": {
-      "grainWitness": {
-        "orders": [
-          "order_id"
-        ]
-      },
       "rows": {
         "orders": [
           {
@@ -1314,6 +1202,11 @@ export const FIXTURES: AnalyticalFixture[] = [
             "amount": 7
           }
         ]
+      },
+      "grainWitness": {
+        "orders": [
+          "order_id"
+        ]
       }
     }
   },
@@ -1325,10 +1218,10 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "order_id": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "amount": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
@@ -1336,19 +1229,13 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "orders",
         "field": "amount",
-        "toGrain": [],
         "op": "sum"
       }
     ],
     "evidence": {
-      "grainWitness": {
-        "orders": [
-          "order_id"
-        ]
-      },
       "rows": {
         "orders": [
           {
@@ -1364,6 +1251,11 @@ export const FIXTURES: AnalyticalFixture[] = [
             "amount": 25
           }
         ]
+      },
+      "grainWitness": {
+        "orders": [
+          "order_id"
+        ]
       }
     }
   },
@@ -1377,13 +1269,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sale_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "perRow": true
               }
             }
@@ -1430,13 +1321,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sale_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "perRow": true
               }
             }
@@ -1483,15 +1373,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "cell_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "n": {
-              "scale": "count",
+              "transformation": "ratio",
               "permits": {
-                "null": [
-                  "suppressed"
-                ]
+                "null": true
               }
             }
           }
@@ -1531,15 +1419,13 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "cell_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "n": {
-              "scale": "count",
+              "transformation": "ratio",
               "permits": {
-                "null": [
-                  "suppressed"
-                ]
+                "null": true
               }
             }
           }
@@ -1565,7 +1451,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           {
             "cell_id": "c2",
             "n": {
-              "null": "suppressed"
+              "null": "absent"
             }
           }
         ]
@@ -1582,13 +1468,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "units": [
                   "USD",
                   "EUR"
@@ -1603,13 +1488,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "units": [
                   "GBP",
                   "JPY"
@@ -1622,7 +1506,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "total": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         },
@@ -1630,7 +1514,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "total": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
@@ -1650,17 +1534,15 @@ export const FIXTURES: AnalyticalFixture[] = [
         "op": "sum"
       },
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "c",
         "field": "total",
-        "toGrain": [],
         "op": "sum"
       },
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "d",
         "field": "total",
-        "toGrain": [],
         "op": "sum"
       }
     ]
@@ -1673,7 +1555,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "total": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         },
@@ -1683,19 +1565,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "rating": {
-              "scale": "ordinal",
-              "order": {
-                "kind": "total",
-                "values": [
-                  1,
-                  2,
-                  3
-                ]
-              }
+              "transformation": "ordinal"
             }
           }
         }
@@ -1703,10 +1577,9 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "p",
         "field": "total",
-        "toGrain": [],
         "op": "sum"
       },
       {
@@ -1727,27 +1600,14 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "reading_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "temp": {
-              "scale": "interval",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "celsius"
-              },
+              "transformation": "interval",
               "permits": {
-                "provenance": [
-                  "observed",
-                  "imputed"
-                ],
-                "null": [
-                  "censored"
-                ],
-                "uncertainty": [
-                  "none",
-                  "measurement-error"
-                ]
+                "null": true,
+                "uncertainty": true
               }
             }
           }
@@ -1772,8 +1632,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           {
             "reading_id": "r2",
             "temp": {
-              "value": 21,
-              "provenance": "imputed"
+              "value": 21
             }
           },
           {
@@ -1785,11 +1644,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           {
             "reading_id": "r4",
             "temp": {
-              "value": 19.2,
-              "uncertainty": {
-                "kind": "measurement-error",
-                "error": 0.3
-              }
+              "value": 19.2
             }
           }
         ]
@@ -1806,22 +1661,14 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "customer_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "temperature": {
-              "scale": "interval",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "celsius"
-              }
+              "transformation": "interval"
             },
             "revenue": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             }
           }
         }
@@ -1858,24 +1705,14 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "revenue": {
-              "scale": "ordinal",
-              "order": {
-                "kind": "total",
-                "values": [
-                  1,
-                  2,
-                  3,
-                  4,
-                  5
-                ]
-              }
+              "transformation": "ordinal"
             },
             "satisfaction_score": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
@@ -1906,15 +1743,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "region": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             }
           }
         }
@@ -1957,15 +1790,10 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "bucket": {
-              "scale": "ratio",
-              "shape": "interval",
-              "unit": {
-                "dimension": "time",
-                "unit": "year"
-              }
+              "transformation": "ratio"
             },
             "n": {
-              "scale": "count"
+              "transformation": "ratio"
             }
           }
         }
@@ -2009,47 +1837,28 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "symbol": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "period": {
-              "scale": "interval",
-              "shape": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "interval",
-                "closure": "half-open",
-                "grain": "day"
+                "kind": "interval"
               }
             },
             "open": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "high": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "low": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "close": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "volume": {
-              "scale": "count"
+              "transformation": "ratio"
             }
           }
         }
@@ -2060,7 +1869,7 @@ export const FIXTURES: AnalyticalFixture[] = [
         "kind": "aggregate",
         "relation": "candles",
         "field": "high",
-        "op": "max"
+        "op": "min"
       }
     ],
     "evidence": {
@@ -2098,43 +1907,24 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "parent": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "permits": {
-                "null": [
-                  "not-applicable"
-                ]
+                "null": true
               }
             },
             "name": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "balance": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             }
           }
         }
-      },
-      "relationships": [
-        {
-          "from": {
-            "relation": "accounts",
-            "field": "parent"
-          },
-          "to": {
-            "relation": "accounts",
-            "field": "id"
-          },
-          "cardinality": "many-to-one"
-        }
-      ]
+      }
     },
     "assertions": [
       {
@@ -2150,7 +1940,7 @@ export const FIXTURES: AnalyticalFixture[] = [
           {
             "id": "root",
             "parent": {
-              "null": "not-applicable"
+              "null": "absent"
             },
             "name": "All",
             "balance": 0
@@ -2187,11 +1977,11 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "label": {
-              "scale": "nominal"
+              "transformation": "nominal"
             }
           }
         },
@@ -2202,41 +1992,17 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "src": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "dst": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "weight": {
-              "scale": "ratio"
+              "transformation": "ratio"
             }
           }
         }
-      },
-      "relationships": [
-        {
-          "from": {
-            "relation": "edges",
-            "field": "src"
-          },
-          "to": {
-            "relation": "nodes",
-            "field": "id"
-          },
-          "cardinality": "many-to-one"
-        },
-        {
-          "from": {
-            "relation": "edges",
-            "field": "dst"
-          },
-          "to": {
-            "relation": "nodes",
-            "field": "id"
-          },
-          "cardinality": "many-to-one"
-        }
-      ]
+      }
     },
     "assertions": [
       {
@@ -2282,38 +2048,23 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "emp_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "dept": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "salary": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "tenure_years": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "temporality": {
-                "kind": "duration",
-                "grain": "year"
+                "kind": "interval"
               }
             },
             "grade": {
-              "scale": "ordinal",
-              "order": {
-                "kind": "total",
-                "values": [
-                  1,
-                  2,
-                  3,
-                  4,
-                  5
-                ]
-              }
+              "transformation": "ordinal"
             }
           }
         }
@@ -2330,7 +2081,7 @@ export const FIXTURES: AnalyticalFixture[] = [
         "kind": "aggregate",
         "relation": "employees",
         "field": "grade",
-        "op": "max"
+        "op": "min"
       },
       {
         "kind": "aggregate",
@@ -2357,27 +2108,22 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sensor_id": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "hour": {
-              "scale": "cyclic",
-              "period": 24
+              "transformation": "ordinal",
+              "cyclic": true
             },
             "temp": {
-              "scale": "interval",
-              "unit": {
-                "dimension": "temperature",
-                "unit": "celsius"
-              },
+              "transformation": "interval",
               "permits": {
-                "uncertainty": [
-                  "measurement-error"
-                ]
+                "uncertainty": true
               }
             },
             "humidity": {
-              "scale": "proportion",
-              "whole": "saturation"
+              "transformation": "ratio",
+              "proportion": true,
+              "whole": "fixed"
             }
           }
         }
@@ -2401,7 +2147,7 @@ export const FIXTURES: AnalyticalFixture[] = [
         "kind": "aggregate",
         "relation": "sensors",
         "field": "humidity",
-        "op": "max"
+        "op": "min"
       }
     ]
   },
@@ -2415,24 +2161,22 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "entry_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "amount": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "perRow": true,
-                "conversions": {
-                  "EUR": 1.08
-                }
+                "conversions": [
+                  "EUR"
+                ]
               }
             },
             "posted_at": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "second"
+                "kind": "instant"
               }
             }
           }
@@ -2492,14 +2236,12 @@ export const FIXTURES: AnalyticalFixture[] = [
           "grain": "unknown",
           "fields": {
             "tract": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "pop": {
-              "scale": "count",
+              "transformation": "ratio",
               "permits": {
-                "null": [
-                  "suppressed"
-                ]
+                "null": true
               }
             }
           }
@@ -2516,11 +2258,6 @@ export const FIXTURES: AnalyticalFixture[] = [
       }
     ],
     "evidence": {
-      "grainWitness": {
-        "cells": [
-          "tract"
-        ]
-      },
       "rows": {
         "cells": [
           {
@@ -2530,13 +2267,18 @@ export const FIXTURES: AnalyticalFixture[] = [
           {
             "tract": "t02",
             "pop": {
-              "null": "suppressed"
+              "null": "absent"
             }
           },
           {
             "tract": "t03",
             "pop": 980
           }
+        ]
+      },
+      "grainWitness": {
+        "cells": [
+          "tract"
         ]
       }
     }
@@ -2553,20 +2295,20 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "company": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "market": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "year": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "year"
+                "kind": "instant"
               }
             },
             "share": {
-              "scale": "proportion",
+              "transformation": "ratio",
+              "proportion": true,
               "whole": {
                 "perRow": "market"
               }
@@ -2603,34 +2345,25 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "subject_id": {
-              "scale": "nominal",
+              "transformation": "nominal",
               "key": true
             },
             "arm": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "survival_days": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "temporality": {
-                "kind": "duration",
-                "grain": "day"
+                "kind": "interval"
               },
               "permits": {
-                "null": [
-                  "censored"
-                ]
+                "null": true
               }
             },
             "dose": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "mass",
-                "unit": "mg"
-              },
+              "transformation": "ratio",
               "permits": {
-                "uncertainty": [
-                  "rounded"
-                ]
+                "uncertainty": true
               }
             }
           }
@@ -2650,7 +2383,7 @@ export const FIXTURES: AnalyticalFixture[] = [
         "relation": "subjects",
         "field": "dose",
         "op": "sum",
-        "uncertainty": "drop"
+        "uncertainty": "propagate"
       },
       {
         "kind": "aggregate",
@@ -2667,10 +2400,7 @@ export const FIXTURES: AnalyticalFixture[] = [
             "arm": "treatment",
             "survival_days": 210,
             "dose": {
-              "value": 50,
-              "uncertainty": {
-                "kind": "rounded"
-              }
+              "value": 50
             }
           },
           {
@@ -2680,10 +2410,7 @@ export const FIXTURES: AnalyticalFixture[] = [
               "null": "censored"
             },
             "dose": {
-              "value": 0,
-              "uncertainty": {
-                "kind": "rounded"
-              }
+              "value": 0
             }
           },
           {
@@ -2691,10 +2418,7 @@ export const FIXTURES: AnalyticalFixture[] = [
             "arm": "treatment",
             "survival_days": 365,
             "dose": {
-              "value": 50,
-              "uncertainty": {
-                "kind": "rounded"
-              }
+              "value": 50
             }
           }
         ]
@@ -2712,39 +2436,29 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "region": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "quarter": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "quarter"
+                "kind": "instant"
               }
             },
             "cost": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              }
+              "transformation": "ratio"
             },
             "units": {
-              "scale": "count"
+              "transformation": "ratio"
             },
             "cost_per_unit": {
-              "scale": "ratio",
-              "unit": {
-                "dimension": "currency",
-                "unit": "USD"
-              },
+              "transformation": "ratio",
               "additivity": {
-                "kind": "ratio-measure",
-                "numerator": "cost",
-                "denominator": "units"
+                "kind": "ratio-measure"
               }
             },
             "price_index": {
-              "scale": "index"
+              "transformation": "ratio",
+              "index": true
             }
           }
         }
@@ -2752,19 +2466,16 @@ export const FIXTURES: AnalyticalFixture[] = [
     },
     "assertions": [
       {
-        "kind": "rollup",
+        "kind": "aggregate",
         "relation": "kpis",
         "field": "cost_per_unit",
-        "toGrain": [
-          "quarter"
-        ],
         "op": "sum"
       },
       {
         "kind": "aggregate",
         "relation": "kpis",
         "field": "price_index",
-        "op": "max"
+        "op": "min"
       }
     ]
   },
@@ -2779,17 +2490,16 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "sku": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "day": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "day"
+                "kind": "instant"
               }
             },
             "on_hand": {
-              "scale": "count",
+              "transformation": "ratio",
               "additivity": {
                 "kind": "semi-additive",
                 "nonAdditiveAlong": [
@@ -2798,9 +2508,8 @@ export const FIXTURES: AnalyticalFixture[] = [
               }
             },
             "value": {
-              "scale": "ratio",
+              "transformation": "ratio",
               "unit": {
-                "dimension": "currency",
                 "perRow": true
               }
             }
@@ -2841,20 +2550,20 @@ export const FIXTURES: AnalyticalFixture[] = [
           ],
           "fields": {
             "company": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "market": {
-              "scale": "nominal"
+              "transformation": "nominal"
             },
             "year": {
-              "scale": "interval",
+              "transformation": "interval",
               "temporality": {
-                "kind": "instant",
-                "grain": "year"
+                "kind": "instant"
               }
             },
             "share": {
-              "scale": "proportion",
+              "transformation": "ratio",
+              "proportion": true,
               "whole": {
                 "perRow": "market"
               }
