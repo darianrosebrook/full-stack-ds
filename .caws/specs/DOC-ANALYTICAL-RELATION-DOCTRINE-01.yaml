@@ -1,0 +1,36 @@
+id: DOC-ANALYTICAL-RELATION-DOCTRINE-01
+title: 'Doctrine for typed analytical relations with combinatorial projection'
+risk_tier: 3
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-02T18:03:05.877Z'
+updated_at: '2026-09-02T18:03:05.877Z'
+blast_radius:
+  modules:
+    - 'docs/architecture (doctrine draft) and docs/README.md (layout registration)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture'
+    - 'docs/README.md'
+    - 'docs/internal'
+  out: []
+invariants:
+  - 'The doctrine admits no chart-form name as a primitive below the projection layer; every named form is defined as a bundle of preconditions over a typed relation plus a projection.'
+  - 'Every claim in the doctrine is labelled draft or proposed; nothing is stated as implemented and the doc carries no verified_at_commit until a slice lands code.'
+acceptance:
+  - id: A1
+    given: 'the doctrine draft at docs/architecture/analytical-relation-doctrine.md'
+    when: 'the doc-frontmatter hook and pnpm run docs:check-claims run'
+    then: 'the doc carries authority architecture, status draft, a governs list naming the proposed paths, and is registered in the docs/README.md layout tree'
+  - id: A2
+    given: 'the seven properties and three falsification conditions in docs/normal-form.md'
+    when: 'the doctrine is read against them'
+    then: 'it names which properties analytical relations extend, states falsification condition 3 as the condition under test, and lists stage-ordered falsifiers with the residue principle as a guard against unfalsifiability'
+  - id: A3
+    given: 'the illegal-form catalogue in the doctrine'
+    when: 'each entry is read'
+    then: 'every entry names the field-algebra, grain, or derivation fact that makes it ill-typed without naming a chart form, or the doctrine records that the vocabulary is incomplete for that entry'
+non_functional: {}
+contracts: []
