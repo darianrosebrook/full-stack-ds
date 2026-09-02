@@ -1,6 +1,6 @@
 {
-  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output.",
-  "ruleDigest": "27701a78a6fbf0ea6d86193cf05dbdbf600fd736ea1a8b2a70e33ea7297e5007",
+  "$comment": "Holdout expectations, derived by hand from the doctrine's engine descriptions AFTER ruleDigest (sha256 of packages/ds-codegen/src/analytical/engines.ts) was recorded, and never tuned to the engine's output. Each expectation is a judgment in canonical tuple form: [code|term, subject, evidenceClass]. If engines.ts changes, the digest check fails; the remedy is to re-derive every expectation by hand and re-record, not to copy the engine's output. Re-record log: 27701a78... (authored) -> 5fc0509d... after REL-UNIT-DIAGNOSTIC-CAUSE-RENAME-01 renamed the identifier REL_UNIT_SUM_ACROSS_CURRENCY to REL_UNIT_SUM_INCOMMENSURABLE; every item re-verified by hand, none carries that code, so no expectation changed.",
+  "ruleDigest": "5fc0509d6af2fc1115505409e70c6fa3d9947c5e687971793123f40599c8d6f1",
   "items": [
     {
       "fixture": "FX_H_PAYROLL",

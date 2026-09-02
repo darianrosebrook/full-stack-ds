@@ -39,7 +39,7 @@ export const DIAG = {
   RATIO_MEASURE_AVERAGED: "REL_RATIO_MEASURE_AVERAGED",
   GRAIN_FANOUT: "REL_GRAIN_FANOUT",
   PROPORTION_SUM_ACROSS_WHOLES: "REL_PROPORTION_SUM_ACROSS_WHOLES",
-  UNIT_SUM_ACROSS_CURRENCY: "REL_UNIT_SUM_ACROSS_CURRENCY",
+  UNIT_SUM_INCOMMENSURABLE: "REL_UNIT_SUM_INCOMMENSURABLE",
   PROPORTION_WHOLE_UNDECLARED: "REL_PROPORTION_WHOLE_UNDECLARED",
   INDEX_BASE_MISSING: "REL_INDEX_BASE_MISSING",
   UNCERTAINTY_UNPROPAGATED: "REL_UNCERTAINTY_UNPROPAGATED",
@@ -179,7 +179,7 @@ export const dimensional: Rule = {
     // independent of declaration or row order.
     const covered = (units: string[]) => units.filter((x) => u.conversions?.[x] === undefined).length <= 1;
     if (u.units && u.units.length > 1 && !covered(u.units)) {
-      diag(out, DIAG.UNIT_SUM_ACROSS_CURRENCY, subject, "schema");
+      diag(out, DIAG.UNIT_SUM_INCOMMENSURABLE, subject, "schema");
       return;
     }
     if (u.perRow) {
@@ -188,7 +188,7 @@ export const dimensional: Rule = {
         return;
       }
       const seen = [...new Set(ctx.rows.map((r) => r[fieldName]?.unit).filter((x): x is string => typeof x === "string"))];
-      if (seen.length > 1 && !covered(seen)) diag(out, DIAG.UNIT_SUM_ACROSS_CURRENCY, subject, "instance");
+      if (seen.length > 1 && !covered(seen)) diag(out, DIAG.UNIT_SUM_INCOMMENSURABLE, subject, "instance");
     }
   },
 };
