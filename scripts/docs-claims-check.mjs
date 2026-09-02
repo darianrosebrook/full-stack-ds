@@ -43,6 +43,12 @@
  *   coverage-floors.json — the same authority every runner config
  *   enforces as its coverage thresholds.)
  *
+ * Showcase-structure claims derive from the src/ tree itself:
+ *   <!-- src-view-count -->15          (top-level non-test .tsx modules in src/views/)
+ *   <!-- src-view-list -->ActivityView (those module names, sorted)
+ *   <!-- src-top-level-dir-count -->10 (directories directly under src/)
+ *   <!-- showcase-route-count -->12    (the `kind:` union members of Route in src/router.tsx)
+ *
  * Usage:
  *   node scripts/docs-claims-check.mjs            # check, exit 1 on drift
  *   node scripts/docs-claims-check.mjs --fix      # rewrite marked values in place
@@ -63,6 +69,9 @@ const TARGET_REGISTRY = join(REPO_ROOT, "fsds.targets.json");
 const ICONS_DIR = join(REPO_ROOT, "packages", "ds-iconography", "icons");
 const SNAPSHOT_DOC = join(REPO_ROOT, "docs", "current-implementation-snapshot.md");
 const COVERAGE_FLOORS_FILE = join(REPO_ROOT, "coverage-floors.json");
+const SHOWCASE_SRC_DIR = join(REPO_ROOT, "src");
+const SHOWCASE_VIEWS_DIR = join(SHOWCASE_SRC_DIR, "views");
+const SHOWCASE_ROUTER = join(SHOWCASE_SRC_DIR, "router.tsx");
 
 const FIX = process.argv.includes("--fix");
 
@@ -75,6 +84,10 @@ const CLAIMS = {
   "web-framework-list": { derive: deriveWebFrameworkList, format: "list" },
   "web-framework-count": { derive: deriveWebFrameworkCount },
   "snapshot-updated": { derive: deriveSnapshotUpdated, format: "date" },
+  "src-view-count": { derive: deriveShowcaseViewCount },
+  "src-view-list": { derive: deriveShowcaseViewList, format: "list" },
+  "src-top-level-dir-count": { derive: deriveShowcaseTopLevelDirCount },
+  "showcase-route-count": { derive: deriveShowcaseRouteCount },
 };
 
 const TARGET_COMPONENT_COUNT_PREFIX = "target-component-count:";
@@ -350,6 +363,64 @@ function deriveSnapshotUpdated() {
     process.exit(2);
   }
   return match[1];
+}
+
+/**
+ * Showcase app structure — the src/ layout blocks in AGENTS.md/README.md
+ * derive from the tree the same way the corpus count derives from the
+ * loader. They rotted once already: views/ was described as
+ * "DesignView + DeveloperView + sections/" while the 2026-08-17 router
+ * slice grew it to 15 routed modules, and the enumeration sat unchecked
+ * because no gate could see it. These claims make the tree authoritative.
+ */
+
+/** Top-level, non-test view modules under src/views/ — sorted for determinism. */
+function showcaseViewModules() {
+  if (!existsSync(SHOWCASE_VIEWS_DIR)) {
+    console.error(`docs-claims-check: showcase views dir not found at ${SHOWCASE_VIEWS_DIR}`);
+    process.exit(2);
+  }
+  return readdirSync(SHOWCASE_VIEWS_DIR)
+    .filter((name) => name.endsWith(".tsx") && !name.includes(".test."))
+    .map((name) => name.slice(0, -".tsx".length))
+    .sort();
+}
+
+function deriveShowcaseViewCount() {
+  return showcaseViewModules().length;
+}
+
+function deriveShowcaseViewList() {
+  return showcaseViewModules().join(", ");
+}
+
+/** Directories directly under src/ — a tripwire for subsystem add/remove. */
+function deriveShowcaseTopLevelDirCount() {
+  if (!existsSync(SHOWCASE_SRC_DIR)) {
+    console.error(`docs-claims-check: showcase src/ dir not found at ${SHOWCASE_SRC_DIR}`);
+    process.exit(2);
+  }
+  let count = 0;
+  for (const name of readdirSync(SHOWCASE_SRC_DIR)) {
+    if (statSync(join(SHOWCASE_SRC_DIR, name)).isDirectory()) count += 1;
+  }
+  return count;
+}
+
+/**
+ * Hash routes — the `| { kind: "..." }` members of the `Route` union in
+ * src/router.tsx. Scoped to the union-member shape on purpose: the other
+ * unions in that file are bare string literals, and object returns carry
+ * no leading `|` — mirroring how scanRailAdmittedIds matches the
+ * descriptor export shape rather than a bare type mention.
+ */
+function deriveShowcaseRouteCount() {
+  if (!existsSync(SHOWCASE_ROUTER)) {
+    console.error(`docs-claims-check: showcase router not found at ${SHOWCASE_ROUTER}`);
+    process.exit(2);
+  }
+  const text = readFileSync(SHOWCASE_ROUTER, "utf8");
+  return (text.match(/\|\s*\{\s*kind:\s*"/g) ?? []).length;
 }
 
 // Claim names are lowercase-with-hyphens, optionally parametric through a
