@@ -2,9 +2,11 @@ id: DOC-ANALYTICAL-RELATION-DOCTRINE-01
 title: 'Doctrine for typed analytical relations with combinatorial projection'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Draft doctrine ARCH-ANALYTICAL-RELATION-001 merged at a563566f: L0-L5 stack with Shape and provenance axes, layer/facet/embed combinators with compositional admissibility, three checkability engines, 13 design invariants, the residue principle, stage-ordered falsifiers, and a 36-entry illegal-form corpus seed; status draft, nothing implemented.'
 created_at: '2026-09-02T18:03:05.877Z'
-updated_at: '2026-09-02T18:03:12.438Z'
+updated_at: '2026-09-02T18:22:10.043Z'
 blast_radius:
   modules:
     - 'docs/architecture (doctrine draft) and docs/README.md (layout registration)'
