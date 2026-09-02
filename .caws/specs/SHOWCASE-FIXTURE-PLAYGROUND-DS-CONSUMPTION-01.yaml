@@ -53,3 +53,7 @@ evidence:
     status: pass
     evidence_ref: "smoke test 'renders evidence rows with per-observation DS Badge qualifiers': censored qualifier is [data-fsds-component=badge]; 'renders structure and assertions through DS List': .afx-assertions carries DS ul.list"
     recorded_at: "2026-09-02T22:30:53.622Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "smoke tests: search via DS Input narrows index by id substring (exact id list asserted); scale filter via DS Select combobox interaction (trigger click + option pick) narrows exactly as data implies; .afx-filter-value caption shows current value"
+    recorded_at: "2026-09-02T22:30:54.987Z"
