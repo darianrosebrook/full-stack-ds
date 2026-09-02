@@ -1,8 +1,11 @@
 // Render-smoke + leak guards for the analytical fixture playground.
-// A1: the view renders index/structure/assertions/evidence from the dump.
+// A1: the view renders index/structure/assertions/evidence from the dump, and
+//     every control is a DS component (Input/Select/Button) — filters are
+//     exercised through the DS Select's real combobox interaction.
 // A2: the dump itself carries zero answer-key material (mirrors the sync
 //     script's refusal — this asserts the COMMITTED bytes, not the writer).
-// A3: qualifier badges render; the realization area is placeholder only.
+// A3: qualifier badges render as DS Badge; the realization area is
+//     placeholder only.
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, renderHook, screen } from "@testing-library/react";
 import { FIXTURES } from "../data/analytical-fixtures/fixtures";
@@ -55,6 +58,21 @@ function indexButtons(): HTMLElement[] {
   return Array.from(list!.querySelectorAll("button"));
 }
 
+/**
+ * Drive the DS Select's real interaction: open its trigger, then pick an
+ * option. Options live inside the combobox's own subtree, so two selects on
+ * the page never cross-contaminate.
+ */
+function chooseFilter(label: string, value: string): void {
+  const combo = screen.getByRole("combobox", { name: label });
+  const trigger = combo.querySelector<HTMLButtonElement>(".select__trigger");
+  expect(trigger, `select trigger for "${label}" is rendered`).toBeTruthy();
+  fireEvent.click(trigger!);
+  const option = combo.querySelector<HTMLElement>(`.select__option[data-value="${value}"]`);
+  expect(option, `option "${value}" is offered by "${label}"`).toBeTruthy();
+  fireEvent.click(option!);
+}
+
 describe("AnalyticalFixturesScratchView", () => {
   it("renders one index entry per dumped fixture, grouped by family", () => {
     render(<AnalyticalFixturesScratchView />);
@@ -68,24 +86,36 @@ describe("AnalyticalFixturesScratchView", () => {
     expect(document.querySelector(".afx-index__group")).toBeTruthy();
   });
 
-  it("renders structure and assertions for the default selection", () => {
+  it("renders structure and assertions for the default selection through DS List", () => {
     render(<AnalyticalFixturesScratchView />);
     const first = FIXTURES[0];
     expect(document.querySelector(".afx-detail__id")?.textContent).toBe(first.id);
     // The relation name and every assertion rendered as the question being asked.
     expect(document.body.textContent).toContain("survey");
     expect(document.body.textContent).toContain("mean of survey.satisfaction");
+    const assertionList = document.querySelector(".afx-assertions");
+    // DS List renders ul.list; the plain <ul> it replaced is gone.
+    expect(assertionList?.classList.contains("list")).toBe(true);
     const items = document.querySelectorAll(".afx-assertions li");
     expect(items.length).toBe(first.assertions.length);
   });
 
-  it("renders evidence rows with per-observation qualifier badges", () => {
+  it("renders evidence rows with per-observation DS Badge qualifiers", () => {
     render(<AnalyticalFixturesScratchView />);
     // The survival fixture carries a censored observation; select it.
     fireEvent.click(
       screen.getByRole("button", { name: "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS" }),
     );
     expect(document.body.textContent).toContain("censored");
+    // The qualifier is a DS Badge, not a hand-rolled span.
+    const evidenceBadges = document.querySelectorAll(
+      '.afx-evidence [data-fsds-component="badge"]',
+    );
+    expect(evidenceBadges.length).toBeGreaterThan(0);
+    expect(
+      Array.from(evidenceBadges).some((b) => b.textContent === "censored"),
+      "the censored qualifier is its own DS Badge",
+    ).toBe(true);
     // Its evidence table has one row per grain member (s1, s2, s3).
     const cells = document.querySelectorAll(".afx-evidence tbody tr");
     expect(cells.length).toBe(3);
@@ -100,7 +130,21 @@ describe("AnalyticalFixturesScratchView", () => {
     expect(panel?.textContent).toContain("mean of survey.satisfaction");
   });
 
-  it("scale filter narrows the index exactly as the data implies", () => {
+  it("search via DS Input narrows the index by id substring", () => {
+    render(<AnalyticalFixturesScratchView />);
+    const expected = FIXTURES.filter((f) => f.id.toLowerCase().includes("survival"));
+    expect(expected.length).toBeGreaterThan(0);
+    expect(expected.length).toBeLessThan(FIXTURES.length);
+    const input = screen.getByLabelText("Filter fixtures by id") as HTMLInputElement;
+    // DS Input's onChange receives the value itself, not an event.
+    fireEvent.change(input, { target: { value: "survival" } });
+    expect(indexButtons().length).toBe(expected.length);
+    expect(Array.from(indexButtons()).map((b) => b.textContent)).toEqual(
+      expected.map((f) => f.id),
+    );
+  });
+
+  it("scale filter via DS Select narrows the index exactly as the data implies", () => {
     render(<AnalyticalFixturesScratchView />);
     const withCount = FIXTURES.filter((f) =>
       Object.values(f.structure.relations).some((r) =>
@@ -109,10 +153,11 @@ describe("AnalyticalFixturesScratchView", () => {
     );
     expect(withCount.length).toBeGreaterThan(0);
     expect(withCount.length).toBeLessThan(FIXTURES.length);
-    fireEvent.change(screen.getByLabelText("Filter by field scale"), {
-      target: { value: "count" },
-    });
+    chooseFilter("Filter by field scale", "count");
     expect(indexButtons().length).toBe(withCount.length);
+    // The generated trigger shows no selection, so the current value is
+    // echoed in a visible caption (A3).
+    expect(document.querySelector(".afx-filter-value")?.textContent).toContain("count");
   });
 
   it("the scratch URL resolves the analytical-fixtures route (URL-only surface)", () => {

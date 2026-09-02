@@ -1884,20 +1884,27 @@ button {
   overflow-y: auto;
 }
 
+/* DS Input/Select/Button/Badge carry their own chrome; app.css only lays
+   them out and keeps the qualifier color coding. */
 .afx-filter-input,
 .afx-filter-select {
   width: 100%;
-  padding: var(--fsds-core-spacing-size-02) var(--fsds-core-spacing-size-03);
-  border: 1px solid var(--fsds-semantic-color-border-default);
-  border-radius: var(--fsds-core-shape-radius-02);
-  background: var(--fsds-semantic-color-background-default);
-  color: var(--fsds-semantic-color-foreground-default);
-  font-size: var(--fsds-core-typography-ramp-0);
 }
 
 .afx-filter-row {
   display: flex;
   gap: var(--fsds-core-spacing-size-02);
+}
+
+.afx-filter {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.afx-filter-value {
+  margin: var(--fsds-core-spacing-size-01) 0 0;
+  font-size: var(--fsds-core-typography-ramp-0);
+  color: var(--fsds-semantic-color-foreground-muted);
 }
 
 .afx-index__group-title {
@@ -1910,27 +1917,18 @@ button {
   color: var(--fsds-semantic-color-foreground-muted);
 }
 
+/* DS ghost Button carries the control chrome; app.css keeps the entry
+   full-width, left-aligned, and monospaced like the rest of the raw data. */
 .afx-index__item {
-  display: block;
   width: 100%;
+  justify-content: flex-start;
   text-align: left;
-  padding: var(--fsds-core-spacing-size-01) var(--fsds-core-spacing-size-02);
-  border: 1px solid transparent;
-  border-radius: var(--fsds-core-shape-radius-01);
-  background: none;
-  color: inherit;
   font-family: var(--fsds-core-typography-font-family-mono);
-  font-size: var(--fsds-core-typography-ramp-0);
-  cursor: pointer;
   overflow-wrap: anywhere;
 }
 
-.afx-index__item:hover {
-  background: var(--fsds-semantic-color-background-hover-subtle);
-}
-
-.afx-index__item--active {
-  border-color: var(--fsds-semantic-color-border-accent);
+.afx-index__item--active,
+.afx-index__item--active:hover {
   background: var(--fsds-semantic-color-background-accent-subtle);
 }
 
@@ -1966,23 +1964,12 @@ button {
   gap: var(--fsds-core-spacing-size-01);
 }
 
-.afx-badge {
-  display: inline-block;
-  padding: 0 var(--fsds-core-spacing-size-02);
-  border: 1px solid var(--fsds-semantic-color-border-subtle);
-  border-radius: var(--fsds-core-shape-radius-01);
-  background: var(--fsds-semantic-color-background-neutral-subtle);
-  font-family: var(--fsds-core-typography-font-family-mono);
-  font-size: var(--fsds-core-typography-ramp-0);
-}
-
+/* Qualifier color coding layered over DS Badge; the base look is the DS's. */
 .afx-badge--null {
-  border-color: var(--fsds-semantic-color-border-warning);
   color: var(--fsds-semantic-color-foreground-warning);
 }
 
 .afx-badge--prov {
-  border-color: var(--fsds-semantic-color-border-accent);
   color: var(--fsds-semantic-color-foreground-accent);
 }
 
@@ -2005,7 +1992,7 @@ button {
 }
 
 .afx-assertions {
-  padding-left: var(--fsds-core-spacing-size-05);
+  font-size: var(--fsds-core-typography-ramp-0);
 }
 
 .afx-relationships {

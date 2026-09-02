@@ -18,6 +18,11 @@
 
 import { useMemo, useState } from "react";
 import {
+  Badge,
+  Button,
+  Input,
+  List,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -108,7 +113,7 @@ function fieldTraits(f: FieldDef): string[] {
   return t;
 }
 
-/** One observation cell: the value plus its carried qualifiers as badges. */
+/** One observation cell: the value plus its carried qualifiers as DS Badges. */
 function ObservationCell({ obs }: { obs: Observation | undefined }) {
   if (obs === undefined) return <span className="muted">—</span>;
   if (typeof obs !== "object" || obs === null) {
@@ -117,17 +122,29 @@ function ObservationCell({ obs }: { obs: Observation | undefined }) {
   return (
     <span className="afx-obs">
       {obs.value !== undefined && <span className="afx-obs__value">{String(obs.value)}</span>}
-      {obs.unit && <span className="afx-badge afx-badge--unit">{obs.unit}</span>}
-      {obs.null && <span className="afx-badge afx-badge--null">{obs.null}</span>}
-      {obs.provenance && <span className="afx-badge afx-badge--prov">{obs.provenance}</span>}
+      {obs.unit && (
+        <Badge size="sm" variant="tag" className="afx-badge--unit">
+          {obs.unit}
+        </Badge>
+      )}
+      {obs.null && (
+        <Badge size="sm" variant="tag" className="afx-badge--null">
+          {obs.null}
+        </Badge>
+      )}
+      {obs.provenance && (
+        <Badge size="sm" variant="tag" className="afx-badge--prov">
+          {obs.provenance}
+        </Badge>
+      )}
       {obs.uncertainty && obs.uncertainty.kind !== "none" && (
-        <span className="afx-badge afx-badge--unc">
+        <Badge size="sm" variant="tag" className="afx-badge--unc">
           {obs.uncertainty.kind === "interval" && obs.uncertainty.low !== undefined
             ? `±[${obs.uncertainty.low}, ${obs.uncertainty.high}]`
             : obs.uncertainty.kind === "measurement-error" && obs.uncertainty.error !== undefined
               ? `±${obs.uncertainty.error}`
               : obs.uncertainty.kind}
-        </span>
+        </Badge>
       )}
     </span>
   );
@@ -152,9 +169,9 @@ function EvidenceTable({ fixture }: { fixture: AnalyticalFixture }) {
             <h4 className="afx-evidence__title">
               rows · {relation}
               {fixture.evidence?.grainWitness?.[relation] && (
-                <span className="afx-badge afx-badge--grain">
+                <Badge size="sm" variant="tag" className="afx-badge--grain">
                   grain: {fixture.evidence.grainWitness[relation].join(" + ")}
-                </span>
+                </Badge>
               )}
             </h4>
             <Table ariaLabel={`Evidence rows for ${relation}`} className="afx-table">
@@ -255,59 +272,70 @@ export function AnalyticalFixturesScratchView() {
 
       <div className="afx-grid">
         <nav className="afx-index" aria-label="Fixture index">
-          <input
+          <Input
             className="afx-filter-input"
             type="search"
             placeholder="Filter by id…"
             aria-label="Filter fixtures by id"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={setQuery}
           />
           <div className="afx-filter-row">
-            <select
-              className="afx-filter-select"
-              aria-label="Filter by field scale"
-              value={scale}
-              onChange={(e) => setScale(e.target.value)}
-            >
-              <option value="all">scale: all</option>
-              {SCALES.map((s) => (
-                <option key={s} value={s}>
-                  scale: {s}
-                </option>
-              ))}
-            </select>
-            <select
-              className="afx-filter-select"
-              aria-label="Filter by assertion kind"
-              value={assertionKind}
-              onChange={(e) => setAssertionKind(e.target.value)}
-            >
-              <option value="all">assertion: all</option>
-              {ASSERTION_KINDS.map((k) => (
-                <option key={k} value={k}>
-                  assertion: {k}
-                </option>
-              ))}
-            </select>
+            <div className="afx-filter">
+              {/* DS Select's generated trigger does not display the selected
+                  label, so the current value is echoed in a visible caption. */}
+              <Select
+                className="afx-filter-select"
+                size="sm"
+                defaultOpen={false}
+                aria-label="Filter by field scale"
+                options={[
+                  { value: "all", label: "scale: all" },
+                  ...SCALES.map((s) => ({ value: s, label: `scale: ${s}` })),
+                ]}
+                value={scale}
+                onChange={(v) => setScale(String(v))}
+              />
+              <p className="afx-filter-value">current: {scale}</p>
+            </div>
+            <div className="afx-filter">
+              <Select
+                className="afx-filter-select"
+                size="sm"
+                defaultOpen={false}
+                aria-label="Filter by assertion kind"
+                options={[
+                  { value: "all", label: "assertion: all" },
+                  ...ASSERTION_KINDS.map((k) => ({ value: k, label: `assertion: ${k}` })),
+                ]}
+                value={assertionKind}
+                onChange={(v) => setAssertionKind(String(v))}
+              />
+              <p className="afx-filter-value">current: {assertionKind}</p>
+            </div>
           </div>
           <div className="afx-index__list">
             {grouped.map((group) => (
               <div key={group.label} className="afx-index__group">
                 <h3 className="afx-index__group-title">
                   {group.label}
-                  <span className="afx-badge afx-badge--count">{group.fixtures.length}</span>
+                  <Badge size="sm" variant="counter" className="afx-badge--count">
+                    {group.fixtures.length}
+                  </Badge>
                   {group.hint && <span className="afx-index__group-hint"> — {group.hint}</span>}
                 </h3>
                 {group.fixtures.map((f) => (
-                  <button
+                  <Button
                     key={f.id}
                     type="button"
+                    variant="ghost"
+                    size="small"
                     className={`afx-index__item${selected?.id === f.id ? " afx-index__item--active" : ""}`}
+                    ariaPressed={selected?.id === f.id}
                     onClick={() => setSelectedId(f.id)}
                   >
                     {f.id}
-                  </button>
+                  </Button>
                 ))}
               </div>
             ))}
@@ -324,9 +352,9 @@ export function AnalyticalFixturesScratchView() {
               <div key={name} className="afx-relation">
                 <h4 className="afx-relation__name">
                   {name}
-                  <span className="afx-badge afx-badge--grain">
+                  <Badge size="sm" variant="tag" className="afx-badge--grain">
                     grain: {rel.grain === "unknown" ? "unknown" : rel.grain.join(" + ")}
-                  </span>
+                  </Badge>
                 </h4>
                 <Table ariaLabel={`Declared fields of ${name}`} className="afx-table">
                   <TableHead>
@@ -341,9 +369,9 @@ export function AnalyticalFixturesScratchView() {
                         <TableCell className="afx-fieldname">{fieldName}</TableCell>
                         <TableCell className="afx-traits">
                           {fieldTraits(def).map((t) => (
-                            <span key={t} className="afx-badge">
+                            <Badge key={t} size="sm" variant="tag">
                               {t}
-                            </span>
+                            </Badge>
                           ))}
                         </TableCell>
                       </TableRow>
@@ -355,19 +383,19 @@ export function AnalyticalFixturesScratchView() {
             {selected.structure.relationships?.length ? (
               <p className="afx-relationships">
                 {selected.structure.relationships.map((r, i) => (
-                  <span key={i} className="afx-badge">
+                  <Badge key={i} size="sm" variant="tag">
                     {r.from.relation}.{r.from.field} → {r.to.relation}.{r.to.field} ({r.cardinality})
-                  </span>
+                  </Badge>
                 ))}
               </p>
             ) : null}
 
             <h3 className="afx-section-title">Assertions — the questions being asked</h3>
-            <ul className="afx-assertions">
+            <List className="afx-assertions">
               {selected.assertions.map((a, i) => (
                 <li key={i}>{describeAssertion(a)}</li>
               ))}
-            </ul>
+            </List>
 
             <h3 className="afx-section-title">Evidence rows</h3>
             <EvidenceTable fixture={selected} />
@@ -386,11 +414,11 @@ export function AnalyticalFixturesScratchView() {
           {selected && (
             <div className="afx-realization__pending">
               <h4>Queries a future projection must answer for {selected.id}:</h4>
-              <ul>
+              <List>
                 {selected.assertions.map((a, i) => (
                   <li key={i}>{describeAssertion(a)}</li>
                 ))}
-              </ul>
+              </List>
             </div>
           )}
         </aside>
