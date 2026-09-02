@@ -46,3 +46,7 @@ evidence:
     evidence_ref: "CLAUDE.md mirror edit declined by user; mechanism documented in AGENTS.md worktree section (commit e617e08e, on main) and reproducible via single script pnpm run worktree:install / worktree:check"
     waiver_reason: "CLAUDE.md mirror edit declined by user; mechanism documented in AGENTS.md worktree section (commit e617e08e, on main) and reproducible via single script pnpm run worktree:install / worktree:check"
     recorded_at: "2026-09-02T21:37:46.318Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "scripts/worktree-install.mjs verifyIsolation: fails while any node_modules artifact is a symlink and asserts svelte+vitest realpath inside the worktree, naming duplicate module instances through symlinked node_modules (rune_outside_svelte) as root cause; check passed post-install"
+    recorded_at: "2026-09-02T21:37:46.732Z"
