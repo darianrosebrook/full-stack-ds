@@ -2,9 +2,11 @@ id: REL-ILLEGAL-CORPUS-01
 title: 'Machine-readable illegal-form corpus and vocabulary for the analytical-relation doctrine'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Stage 0 landed: analytical-pack (vocabulary, form-name denylist, schema, 40-entry illegal-form corpus) plus the codegen corpus-integrity checker with 20 tests reaching every finding code; corpus and doctrine table drift-gated both ways; probe surfaced and closed four falsifier-free vocabulary families.'
 created_at: '2026-09-02T18:23:05.810Z'
-updated_at: '2026-09-02T18:24:41.873Z'
+updated_at: '2026-09-02T18:36:05.526Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/analytical-pack (new: vocabulary, schema, corpus, test)'
