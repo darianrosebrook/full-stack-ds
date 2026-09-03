@@ -3,7 +3,6 @@ title: 'Separate neutral surface roles from border roles, repair two brand onCol
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: token-surface
 created_at: '2026-09-02T23:44:40.114Z'
 updated_at: '2026-09-03T00:04:27.614Z'
 blast_radius:
