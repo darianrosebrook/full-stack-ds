@@ -27,6 +27,7 @@ import { codesOf, termsOf } from "./judgment.js";
 import {
   checkWitness,
   disposition,
+  FIXTURES_DIR,
   loadCensusSnapshot,
   loadOracle,
   loadRemovals,
@@ -47,6 +48,21 @@ const removals = loadRemovals();
 const baseline = JSON.parse(fs.readFileSync(BASELINE_FILE, "utf-8")) as Baseline;
 const isCoordinate = (c: Coordinate) => c.kind !== "reference";
 
+/**
+ * REL-VIEW-ALGEBRA-01 admitted the L3 derivation coordinates before any rule or
+ * fixture can witness them. `pending-stage2.json` is the ledger of exactly
+ * those, and the slice may not close with it non-empty. Every assertion below
+ * that would otherwise refuse an unwitnessed kernel coordinate subtracts this
+ * set and nothing else, so the guard is narrowed by an auditable list rather
+ * than relaxed.
+ */
+const pending = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, "pending-stage2.json"), "utf-8")) as {
+  count: number;
+  pending: string[];
+};
+const pendingIds = new Set(pending.pending);
+const ratifiedIds = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+
 const count = (cs: Coordinate[]) => ({
   leaves: cs.filter((c) => c.kind === "leaf").length,
   pairs: cs.filter((c) => c.kind === "member-pair").length,
@@ -60,8 +76,16 @@ describe("C0 — provenance of the two censuses", () => {
   it("the stage-1 census has 46 leaves, 212 member pairs and 10 references", () => {
     expect(count(stage1.coordinates)).toEqual({ leaves: 46, pairs: 212, references: 10 });
   });
-  it("the kernel census has 26 leaves, 21 member pairs and 4 references", () => {
-    expect(count(kernel)).toEqual({ leaves: 26, pairs: 21, references: 4 });
+  it("the kernel census is the stage-1.5 kernel plus the stage-2 admission, and every addition is ledgered", () => {
+    // Stage 1.5 closed at 26 leaves / 21 pairs / 4 references. Stage 2 admits
+    // the L3 derivation algebra; the growth is only legitimate while every
+    // added coordinate is either witnessed or in the pending ledger.
+    expect(count(kernel)).toEqual({ leaves: 32, pairs: 55, references: 20 });
+    const unaccounted = kernel
+      .filter(isCoordinate)
+      .filter((c) => !ratifiedIds.has(c.id) && !pendingIds.has(c.id))
+      .map((c) => c.id);
+    expect(unaccounted).toEqual([]);
   });
   it("the kernel is a proper subset of the stage-1 census by identity or recorded mapping", () => {
     const stage1Ids = new Set(stage1.coordinates.map((c) => c.id));
@@ -70,20 +94,20 @@ describe("C0 — provenance of the two censuses", () => {
       if (c.kind === "reference") continue;
       // member-absence is a coordinate CLASS the stage-1 census could not
       // express, not a new kernel fact: the schema it walked is unchanged, so
-      // these ids have no stage-1 counterpart by construction. They are
-      // dispositioned against the stage-2 oracle below, not here.
-      if (c.kind === "member-absence") continue;
+      // these ids have no stage-1 counterpart by construction. Stage-2
+      // admissions likewise post-date that snapshot. Both are dispositioned
+      // against the stage-2 oracle via the pending ledger, not here.
+      if (c.kind === "member-absence" || pendingIds.has(c.id)) continue;
       const known = stage1Ids.has(c.id) || carried.has(c.leaf);
       expect(known, `${c.id} is a kernel coordinate the stage-1 census never carried`).toBe(true);
     }
   });
-  it("the refined census adds member-absence only as a new class over the same schema", () => {
-    const absence = kernel.filter((c) => c.kind === "member-absence");
-    // Every one belongs to a leaf the kernel already carries: refining the
-    // census must not smuggle in a new leaf.
-    for (const c of absence) expect(kernelIds.has(c.leaf), `${c.id} has no kernel leaf`).toBe(true);
-    expect(count(kernel)).toEqual({ leaves: 26, pairs: 21, references: 4 });
-    expect(absence).toHaveLength(10);
+  it("every member-absence coordinate belongs to a leaf the kernel already carries", () => {
+    // Refining the census must not smuggle in a new leaf under cover of the
+    // new class.
+    for (const c of kernel.filter((c) => c.kind === "member-absence")) {
+      expect(kernelIds.has(c.leaf), `${c.id} has no kernel leaf`).toBe(true);
+    }
   });
 });
 
@@ -110,7 +134,7 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
   it("every leaf and member pair of the kernel has a holding witness", () => {
     const missing = kernel
       .filter(isCoordinate)
-      .filter((c) => c.kind !== "member-absence")
+      .filter((c) => !pendingIds.has(c.id))
       .filter((c) => !ratified.has(c.id))
       .map((c) => c.id);
     expect(missing).toEqual([]);
@@ -124,26 +148,26 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
    * cannot separate may be separable once the stage-2 derivations exist, and
    * ablating before that would remove something the next commit re-earns.
    */
-  it("the member-absence class is undispositioned, and it is exactly these ten", () => {
-    const pending = kernel
-      .filter((c) => c.kind === "member-absence")
+  it("the pending set equals the committed stage-2 ledger, exactly", () => {
+    const live = kernel
+      .filter(isCoordinate)
       .filter((c) => !ratified.has(c.id))
       .map((c) => c.id)
       .sort();
-    expect(pending).toEqual(
-      [
-        "assertion.aggregate.nulls:as-observed~<absent>",
-        "assertion.aggregate.nulls:as-zero~<absent>",
-        "assertion.aggregate.nulls:exclude~<absent>",
-        "field.additivity.kind:additive~<absent>",
-        "field.additivity.kind:ratio-measure~<absent>",
-        "field.additivity.kind:semi-additive~<absent>",
-        "field.temporality.kind:instant~<absent>",
-        "field.temporality.kind:interval~<absent>",
-        "observation.null:absent~<absent>",
-        "observation.null:censored~<absent>",
-      ].sort(),
-    );
+    const ledger = JSON.parse(
+      fs.readFileSync(path.join(FIXTURES_DIR, "pending-stage2.json"), "utf-8"),
+    ) as { count: number; pending: string[] };
+    expect(live).toEqual([...ledger.pending].sort());
+    expect(ledger.count).toBe(ledger.pending.length);
+  });
+  it("nothing already ratified is listed as pending, and every pending id is a real kernel coordinate", () => {
+    const ledger = JSON.parse(
+      fs.readFileSync(path.join(FIXTURES_DIR, "pending-stage2.json"), "utf-8"),
+    ) as { pending: string[] };
+    for (const id of ledger.pending) {
+      expect(kernelIds.has(id), `${id} is pending but not in the kernel`).toBe(true);
+      expect(ratified.has(id), `${id} is pending but already ratified`).toBe(false);
+    }
   });
   it("no witness names a coordinate the kernel does not have", () => {
     const phantom = [...ratified].filter((id) => !kernelIds.has(id));
@@ -251,13 +275,33 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
     expect(ratifiedKinds).toEqual({ leaf: 24, "member-pair": 57 });
     expect(stages).toEqual({ "2": 128, "3": 49 });
   });
-  it("every removal names a real stage-1 leaf that the kernel no longer carries", () => {
+  it("every removal names a real stage-1 leaf that the kernel no longer carries, or has been re-admitted and ledgered", () => {
     const stage1Leaves = new Set(stage1.coordinates.filter((c) => c.kind === "leaf").map((c) => c.id));
     for (const r of removals.removed) {
       expect(stage1Leaves.has(r.coordinate), r.coordinate).toBe(true);
-      expect(kernelIds.has(r.coordinate), `${r.coordinate} is still in the kernel`).toBe(false);
       expect(r.reintroducibleAt).toBeGreaterThanOrEqual(2);
+      if (!kernelIds.has(r.coordinate)) continue;
+      // Re-admission is the point of `reintroducibleAt`, but it is only lawful
+      // when the coordinate is carrying its own new witness or is on the
+      // pending ledger awaiting one. A removal that reappears silently would
+      // mean stage 1.5's subtraction had been undone by drift.
+      expect(r.reintroducibleAt, `${r.coordinate} re-admitted before its stage`).toBeLessThanOrEqual(2);
+      expect(
+        ratified.has(r.coordinate) || pendingIds.has(r.coordinate),
+        `${r.coordinate} is back in the kernel with neither a witness nor a pending entry`,
+      ).toBe(true);
     }
+  });
+  it("stage 2 re-admitted exactly the coordinates its cases demand", () => {
+    const back = removals.removed.filter((r) => kernelIds.has(r.coordinate)).map((r) => r.coordinate).sort();
+    // temporal grain (daily vs monthly resolved together) and the suppressed
+    // null kind (a withheld value is not zero) are the only stage-1.5 removals
+    // a stage-2 case demands back. Rate re-derivation is NOT here: no stage-2
+    // case requires unit numerator/denominator, so it stays out until stage 3
+    // regardless of it having been named as a pressure point beforehand.
+    expect(back).toEqual(["field.temporality.grain"]);
+    expect(kernelIds.has("field.unit.numerator")).toBe(false);
+    expect(kernelIds.has("field.unit.denominator")).toBe(false);
   });
   it("no coordinate is both removed and carried (leafMap / memberMap / factorized)", () => {
     const carried = new Set([...Object.keys(removals.leafMap), ...Object.keys(removals.memberMap), ...Object.keys(removals.factorized)]);
@@ -268,9 +312,10 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
       if (d.state === "not-yet-admitted") expect(d.reintroducibleAt, `${c.id}: ${d.reason}`).toBeGreaterThanOrEqual(2);
     }
   });
-  it("the live kernel census is exactly the ratified set, less the undispositioned member-absence class", () => {
-    const live = kernel.filter(isCoordinate).filter((c) => c.kind !== "member-absence").map((c) => c.id).sort();
-    expect(live).toEqual([...ratified].sort());
+  it("the live kernel census is exactly the ratified set plus the pending ledger, with no overlap", () => {
+    const live = kernel.filter(isCoordinate).map((c) => c.id).sort();
+    expect(live).toEqual([...new Set([...ratified, ...pendingIds])].sort());
+    expect([...ratified].filter((id) => pendingIds.has(id))).toEqual([]);
   });
   it("every ratified stage-1 coordinate resolves to a kernel coordinate that exists", () => {
     for (const [c, d] of dispositions) {
@@ -384,12 +429,36 @@ describe("C8 — the census is derived, exhaustive and exactly-once", () => {
     for (const c of kernel) if (c.id.startsWith("field.") || c.id.startsWith("relation.") || c.id.startsWith("assertion.")) expect(c.role).toBe("schema");
   });
   it("name references are listed for exhaustiveness and are not coordinates", () => {
+    // A derivation's operands are names in the same sense as an assertion's:
+    // they say WHICH relation or fields participate, never anything about
+    // measurement standing, so alpha-renaming them yields the same
+    // representation and they confer no necessity.
     expect(kernel.filter((c) => c.kind === "reference").map((c) => c.id).sort()).toEqual([
       "assertion.aggregate.field",
       "assertion.aggregate.relation",
       "assertion.ratio-comparison.field",
       "assertion.ratio-comparison.relation",
+      "relation.derivedBy.aggregate-to-grain.from",
+      "relation.derivedBy.aggregate-to-grain.toGrain",
+      "relation.derivedBy.bin.field",
+      "relation.derivedBy.bin.from",
+      "relation.derivedBy.graph.edgeFrom",
+      "relation.derivedBy.graph.edgeTo",
+      "relation.derivedBy.graph.from",
+      "relation.derivedBy.graph.value",
+      "relation.derivedBy.join.from",
+      "relation.derivedBy.join.with",
+      "relation.derivedBy.nest.from",
+      "relation.derivedBy.nest.levels",
+      "relation.derivedBy.normalize.field",
+      "relation.derivedBy.normalize.from",
+      "relation.derivedBy.project.from",
+      "relation.derivedBy.project.keep",
     ]);
+    // `structure.peers` is NOT a reference: its contents are names but the
+    // grouping is a claim, so erasing it removes an assertion about the world.
+    expect(kernelIds.has("structure.peers[]")).toBe(true);
+    expect(kernel.find((c) => c.id === "structure.peers[]")!.kind).not.toBe("reference");
   });
 });
 

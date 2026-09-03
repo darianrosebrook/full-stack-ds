@@ -83,8 +83,21 @@ export function label(rawPath: string): string {
   return p;
 }
 
-/** Name references: an assertion's or relationship's target. Names confer no standing. */
-const REFERENCE_RE = /^(assertion(\.[a-z-]+)?\.(relation|field)|relationship\.(from|to)\.(relation|field))$/;
+/**
+ * Name references: a target named by an assertion, a relationship, or a
+ * derivation. Names confer no standing (the alpha-renaming invariant), so
+ * these are listed for exhaustiveness and are not coordinates. A derivation's
+ * operands are names in exactly this sense: `join.from`, `nest.levels`,
+ * `project.keep` and `aggregate-to-grain.toGrain` say WHICH relation or fields
+ * participate, never anything about their measurement standing, and a fixture
+ * that renames them is the same representation.
+ *
+ * `structure.peers` is deliberately NOT here. Its contents are names, but the
+ * grouping is a claim — "these two relations speak for the same authority" —
+ * and erasing it removes that claim rather than renaming anything.
+ */
+const REFERENCE_RE =
+  /^(assertion(\.[a-z-]+)?\.(relation|field)|relationship\.(from|to)\.(relation|field)|relation\.derivedBy\.[a-z-]+\.(from|with|toGrain|levels|field|keep|edgeFrom|edgeTo|value))$/;
 
 const PRIMITIVE_TYPES = new Set(["string", "number", "integer", "boolean"]);
 function isPrimitive(n: Node): boolean {
@@ -113,7 +126,16 @@ export function deriveCensus(schema: Node): Coordinate[] {
   const seen = new Set<string>();
   const role = (p: string): "schema" | "instance" => (p.startsWith("evidence") ? "instance" : "schema");
 
-  const addLeaf = (rawPath: string, enumMembers?: string[], optional = false) => {
+  /**
+   * `self`: the leaf may be omitted from its immediate parent.
+   * `holder`: that parent may itself be absent.
+   * They are not the same permission and the difference decides whether a
+   * member-absence coordinate exists at all — see `addLeaf`.
+   */
+  type Opt = { self: boolean; holder: boolean };
+  const OPT_REQUIRED: Opt = { self: false, holder: false };
+
+  const addLeaf = (rawPath: string, enumMembers?: string[], optional: Opt = OPT_REQUIRED) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
@@ -128,13 +150,22 @@ export function deriveCensus(schema: Node): Coordinate[] {
           out.push({ id: `${id}:${enumMembers[i]}~${enumMembers[k]}`, kind: "member-pair", leaf: id, members: [enumMembers[i], enumMembers[k]], role: role(rawPath) });
         }
       }
-      // Absence is only a distinguishable state where the schema admits it. A
-      // required leaf cannot be absent, so it has no member-absence coordinate.
-      // Nor does a single-member leaf (`z.literal(true).optional()`): there,
-      // "the one member vs absent" IS the leaf coordinate — the same erasure
-      // under two ids — and emitting both would double-count the distinction
-      // and let one id ratify the other.
-      if (optional && enumMembers.length > 1) {
+      // Absence must be a state the representation can actually reach, or the
+      // coordinate is unwitnessable by construction and only ever yields
+      // SCHEMA_INVALID. Three exclusions, each load-bearing:
+      //
+      // - a single-member leaf (`z.literal(true).optional()`): "the one member
+      //   vs absent" IS the leaf coordinate — the same erasure under two ids,
+      //   each able to ratify the other;
+      // - a leaf required in its immediate parent, UNLESS it is the parent's
+      //   discriminator: deleting `join.cardinality` leaves an invalid join,
+      //   whereas deleting `additivity.kind` or `temporality.kind` drops the
+      //   whole (optional) declaration, which is exactly what absence means;
+      // - a discriminator whose holder is itself required: then there is no
+      //   absence to reach either.
+      const isDiscriminator = rawPath.endsWith(".kind");
+      const absenceReachable = optional.self || (isDiscriminator && optional.holder);
+      if (absenceReachable && enumMembers.length > 1) {
         for (const m of enumMembers) {
           out.push({ id: `${id}:${m}~${ABSENT}`, kind: "member-absence", leaf: id, members: [m, ABSENT], role: role(rawPath) });
         }
@@ -142,7 +173,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
     }
   };
 
-  const walk = (raw: Node, rawPath: string, optional = false): void => {
+  const walk = (raw: Node, rawPath: string, optional: Opt = OPT_REQUIRED): void => {
     const n = resolve(raw);
     if (Array.isArray(n.enum)) return addLeaf(rawPath, n.enum as string[], optional);
     if (n.const !== undefined) return addLeaf(rawPath, [String(n.const)], optional);
@@ -159,7 +190,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
         for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) {
           // A property of an optional holder is itself absent whenever the
           // holder is: `additivity.kind` is absent if `additivity` is.
-          walk(v, rawPath ? `${rawPath}.${k}` : k, optional || !required.has(k));
+          walk(v, rawPath ? `${rawPath}.${k}` : k, { self: !required.has(k), holder: optional.self || optional.holder });
         }
         return;
       }
@@ -174,7 +205,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
     throw new Error(`census: unhandled schema node at ${rawPath}: ${JSON.stringify(n).slice(0, 80)}`);
   };
 
-  const walkUnion = (branches: Node[], rawPath: string, optional = false): void => {
+  const walkUnion = (branches: Node[], rawPath: string, optional: Opt = OPT_REQUIRED): void => {
     const resolved = branches.map(resolve);
     const objects = resolved.filter((b) => b.type === "object" && b.properties);
     const discriminated =
@@ -187,7 +218,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
       objects.forEach((b, i) => {
         const req = new Set((Array.isArray(b.required) ? b.required : []) as string[]);
         for (const [k, v] of Object.entries(b.properties as Record<string, Node>)) {
-          if (k !== "kind") walk(v, `${rawPath}.${kinds[i]}.${k}`, optional || !req.has(k));
+          if (k !== "kind") walk(v, `${rawPath}.${kinds[i]}.${k}`, { self: !req.has(k), holder: optional.self || optional.holder });
         }
       });
       return;
