@@ -436,12 +436,12 @@ function emitImports(ir: ComponentIR): string {
   if (usesLinking(ir.dom)) rnValueImports.add("Linking");
   if (
     (!usesNativeToggle(ir) && hasChildrenSlotUnderNonTextParent(ir.dom)) ||
-    isCheckboxRootPattern(ir)
+    isCheckboxControl(ir)
   ) {
     rnValueImports.add("Text as RNText");
   }
-  if (isCheckboxRootPattern(ir)) rnValueImports.add("View");
-  if (isCheckboxRootPattern(ir)) rnValueImports.add("Pressable");
+  if (isCheckboxControl(ir)) rnValueImports.add("View");
+  if (isCheckboxControl(ir)) rnValueImports.add("Pressable");
   if (rootPressableAcceptsOnPress(ir)) rnTypeImports.add("GestureResponderEvent");
   if (treeHasBindingName(ir.dom, "role")) rnTypeImports.add("AccessibilityRole");
   const surfaceLowering = rnSurfaceLowering(ir);
@@ -463,7 +463,7 @@ function emitImports(ir: ComponentIR): string {
   }
   if (
     !usesNativeToggle(ir) &&
-    !isCheckboxRootPattern(ir) &&
+    !isCheckboxControl(ir) &&
     ir.dom &&
     !rootIsTextComponent(ir) &&
     rootRendersTextWrapper(ir) &&
@@ -691,7 +691,7 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     return usage;
   }
 
-  if (isCheckboxRootPattern(ir)) {
+  if (isCheckboxControl(ir)) {
     const channel = ir.behavior.normalizedChannels[0];
     if (channel) {
       usage.channels.add(channel.name);
@@ -914,7 +914,7 @@ function emitComponent(ir: ComponentIR): string {
     lines.push(...emitAnchoredSurfaceReturn(ir, anchoredSurface));
   } else if (usesNativeToggle(ir)) {
     lines.push(...emitNativeToggleReturn(ir));
-  } else if (isCheckboxRootPattern(ir)) {
+  } else if (isCheckboxControl(ir)) {
     lines.push(...emitCheckboxReturn(ir));
   } else {
     lines.push(...emitVariantStyleConsts(ir));
@@ -1020,7 +1020,10 @@ function emitCheckboxReturn(ir: ComponentIR): string[] {
   lines.push(`${INDENT}return (`);
   lines.push(`${INDENT}${INDENT}<Pressable`);
   lines.push(`${INDENT}${INDENT}${INDENT}testID={testID}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}style={[styles.input, style]}`);
+  // `input` collapses into the root Pressable (RN has no native checkbox
+  // element), so the collapsed node carries BOTH parts' styles — a collapse
+  // must not drop a part's declared styling.
+  lines.push(`${INDENT}${INDENT}${INDENT}style={[styles.root, styles.input, style]}`);
   lines.push(`${INDENT}${INDENT}${INDENT}disabled={${disabledProp}}`);
   lines.push(`${INDENT}${INDENT}${INDENT}onPress={() => ${setterName}(!${valueName})}`);
   lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`);
@@ -2114,7 +2117,7 @@ function emitIteration(node: DomNodeIR, ir: ComponentIR, depth: number): string 
 function generateReactNativeStylesFile(ir: ComponentIR): string {
   const keys = new Set<string>(["root"]);
   for (const part of ir.parts) keys.add(styleKeyForPart(part.name));
-  if (isCheckboxRootPattern(ir)) {
+  if (isCheckboxControl(ir)) {
     keys.add("indicator_checked");
     keys.add("indicatorMark");
     keys.add("label");
@@ -2622,7 +2625,13 @@ function nativeStyleForKey(ir: ComponentIR, key: string): string {
   const entries: string[] = [];
   const scope = key.includes("_") ? key.slice(0, key.indexOf("_")) : key;
   if (key === "root" || key === "input" || key === "control") {
-    const isCheckboxInput = key === "input" && isCheckboxRootPattern(ir);
+    // Under the checkbox lowering the interactive Pressable is a ROW holding
+    // the indicator box and the label; the box-model padding, colors and
+    // border belong to `indicator`, not the row. Both `root` (the contract's
+    // <label> wrapper) and `input` (the native control the RN Pressable
+    // collapses) are that same row.
+    const isCheckboxInput =
+      (key === "input" || key === "root") && isCheckboxControl(ir);
     if (!isCheckboxInput) {
       pushStyle(entries, "paddingTop", tokenNumberAccessForStyle(ir, scope, "box-model.padding-block-start"));
       pushStyle(entries, "paddingBottom", tokenNumberAccessForStyle(ir, scope, "box-model.padding-block-end"));
@@ -2668,7 +2677,7 @@ function nativeStyleForKey(ir: ComponentIR, key: string): string {
   if (key === "root" && rnComponentForNode(ir.dom ?? fallbackViewNode()) === "Pressable") {
     entries.push("alignItems: \"center\"", "justifyContent: \"center\"");
   }
-  if (key === "input" && isCheckboxRootPattern(ir)) {
+  if ((key === "input" || key === "root") && isCheckboxControl(ir)) {
     entries.push("alignItems: \"center\"", "flexDirection: \"row\"");
   }
   if (key === "indicator") {
@@ -2845,8 +2854,25 @@ function usesNativeToggle(ir: ComponentIR): boolean {
   return collectCollapseIntents(ir).has("native-toggle-affordance");
 }
 
-function isCheckboxRootPattern(ir: ComponentIR): boolean {
-  return ir.dom?.tag === "input" && ir.dom.attrs.type === "checkbox";
+/**
+ * True when the contract declares a checkbox form control that no native
+ * toggle primitive covers — RN has no native checkbox, so this drives the
+ * Pressable + indicator lowering below.
+ *
+ * Keyed on `behavior.form.inputType`, the contract's own declaration, NOT on the root
+ * `anatomy.dom` tag. The tag probe was a proxy that held only while the input
+ * happened to be the root element: giving Checkbox a `<label>` wrapper (so its
+ * `input`/`indicator` style carriers become reachable on the web) silently
+ * flipped RN off this lowering onto the generic DOM walk, dropping the
+ * indicator mark, the label text, and the testID from the interactive node. A
+ * web-side anatomy repair must not be able to decide whether RN has a checkbox.
+ *
+ * Switch and ToggleSwitch also declare `inputType: "checkbox"` but collapse to
+ * the native toggle primitive, so they are excluded here and handled by
+ * `usesNativeToggle` earlier in the dispatch chain.
+ */
+function isCheckboxControl(ir: ComponentIR): boolean {
+  return ir.behavior.form?.inputType === "checkbox" && !usesNativeToggle(ir);
 }
 
 /**

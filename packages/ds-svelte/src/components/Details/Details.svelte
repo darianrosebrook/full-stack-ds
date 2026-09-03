@@ -29,7 +29,7 @@ interface Props {
   children?: import('svelte').Snippet;
 }
 
-let { summary, open, defaultOpen, onOpenChange, disabled, variant, icon, class: className, children }: Props = $props();
+let { summary, open, defaultOpen, onOpenChange, disabled, variant = "default", icon = "left", class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start hook

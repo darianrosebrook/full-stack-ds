@@ -63,6 +63,9 @@ const classNames = computed(() => [
 
 <template>
   <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']" data-fsds-component="button">
-    <slot />
+    <span v-if="props.loading" :class="'button__spinner'" aria-hidden="true"></span>
+    <span :class="'button__loadingText'">
+      <slot />
+    </span>
   </button>
 </template>

@@ -189,6 +189,10 @@ export class ButtonElement extends LitElement {
         background-color: var(--fsds-button-color-background-disabled, #b8b8b8);
         color: var(--fsds-button-color-foreground-disabled, #727272);
       }
+
+      &[aria-busy="true"] .button__loadingText {
+        opacity: 0.7;
+      }
     }
 
     .button__spinner {
@@ -201,7 +205,6 @@ export class ButtonElement extends LitElement {
 
     .button__loadingText {
       display: inline-block;
-      opacity: 0.7;
     }
 
     @keyframes spin {
@@ -243,7 +246,12 @@ export class ButtonElement extends LitElement {
 
   override render() {
     return html`<button class="${this.computeClasses()}" @click=${this.onClick} type=${ifDefined((this.type ?? "button"))} ?disabled=${this.disabled ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-expanded=${ifDefined(this.ariaExpanded === undefined ? undefined : (this.ariaExpanded ? 'true' : 'false'))} aria-pressed=${ifDefined(this.ariaPressed === undefined ? undefined : (this.ariaPressed ? 'true' : 'false'))} aria-busy=${ifDefined(this.loading === undefined ? undefined : (this.loading ? 'true' : 'false'))}>
-  <slot></slot>
+  ${this.loading ? html`
+  <span class=${'button__spinner'} aria-hidden="true"></span>
+  ` : nothing}
+  <span class=${'button__loadingText'}>
+    <slot></slot>
+  </span>
 </button>`;
   }
 }

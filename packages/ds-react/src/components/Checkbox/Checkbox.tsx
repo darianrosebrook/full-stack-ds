@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type InputHTMLAttributes, type ReactNode, useEffect, useRef } from "react";
+import { type LabelHTMLAttributes, type ReactNode, useEffect, useRef } from "react";
 import { Stack } from "../../primitives";
 import { useCheckbox } from "./useCheckbox";
 import "./Checkbox.css";
@@ -18,7 +18,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "indeterminate" | "name" | "onChange" | "size" | "value"> {
+export interface CheckboxProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>, "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "indeterminate" | "name" | "onChange" | "size" | "value"> {
   size?: CheckboxSize;
   checked?: boolean;
   defaultChecked?: boolean;
@@ -74,7 +74,10 @@ export function Checkbox({
   }, [indeterminate]);
 
   return (
-  <Stack layout="native" as="input" className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} role="checkbox" data-testid={testId} data-fsds-component="checkbox" {...rest} ref={inputRef} />
+  <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} data-fsds-component="checkbox" {...rest}>
+    <input className="checkbox__input" type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} ref={inputRef} />
+    <span className="checkbox__indicator" aria-hidden="true" />
+  </Stack>
   );
 }
 // @generated:end

@@ -402,9 +402,11 @@ function isStaticContent(ir: ComponentIR): boolean {
   if (hasInstance) return false;
   if (ir.dom.tag === "img") return false;
   if (childrenLeaves === 1) return true;
-  // Decorative box: no children leaf at all, no content binding — a pure
-  // chrome surface (Skeleton).
-  if (childrenLeaves === 0 && !ir.dom.content && (ir.dom.children ?? []).length === 0) {
+  // Decorative box: no consumer content leaf at all and no content binding —
+  // a pure chrome surface (Skeleton). Purely internal decorative children do
+  // not change that; see the twin comment in the swiftui emitter for why
+  // requiring an empty child list here was a web-topology proxy.
+  if (childrenLeaves === 0 && !ir.dom.content) {
     return true;
   }
   return false;
@@ -1123,10 +1125,24 @@ function isProgressIndicator(ir: ComponentIR): boolean {
   const role = ir.root?.effectiveRole;
   if (role === "progressbar") return true;
   if (role === "status") {
-    // A status-role indicator leaf must carry a visual child (Spinner's
-    // aria-hidden visual part). The empty decorative box (Skeleton) stays on
-    // the static-content path.
-    if ((ir.dom.children ?? []).length === 0) return false;
+    // A status-role indicator must BE a single animated mark: exactly one
+    // child, that child a leaf, and its part declared `decoration` (Spinner's
+    // aria-hidden `visual`). Skeleton is also role status but is a placeholder
+    // — its single child is the `group`-role `stack` holding one row per
+    // `lines`, so it stays on the static-content path.
+    //
+    // This used to test only `children.length === 0`, treating "has any dom
+    // children" as the Spinner/Skeleton discriminator. That is a web-topology
+    // proxy for a semantic distinction: realizing Skeleton's declared
+    // stack/row/shape parts on the web silently reclassified it as a spinning
+    // progress indicator here and dropped its `content` parameter.
+    const kids = ir.dom.children ?? [];
+    if (kids.length !== 1) return false;
+    const only = kids[0]!;
+    if ((only.children ?? []).length > 0) return false;
+    const roleOfChild = ir.parts.find((part) => part.name === only.part)
+      ?.details?.role;
+    if (roleOfChild !== "decoration") return false;
     let childrenLeaves = 0;
     const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
       if (node.tag === "children" && (node.children ?? []).length === 0) childrenLeaves += 1;

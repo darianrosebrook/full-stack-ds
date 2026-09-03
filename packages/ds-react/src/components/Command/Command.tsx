@@ -136,10 +136,10 @@ export function Command({
   return (
     renderInPortal(
     <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} data-fsds-component="command" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
-      {open && (
+      {open ? (
         <div className="command__overlay" aria-hidden="true" />
-      )}
-      {open && (
+      ) : null}
+      {open ? (
         <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label} aria-labelledby={ariaLabelledBy}>
           <div className="command__inputWrapper">
             <span className="command__searchIcon" aria-hidden="true" />
@@ -162,7 +162,7 @@ export function Command({
             <div className="command__separator" role="separator" aria-hidden="true" />
           </div>
         </div>
-      )}
+      ) : null}
     </Stack>
     )
   );

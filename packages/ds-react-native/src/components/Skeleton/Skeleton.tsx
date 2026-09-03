@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { AccessibilityRole, StyleProp, ViewStyle } from "react-native";
-import { Text as RNText, View } from "react-native";
+import { View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSkeletonStyles } from "./Skeleton.styles";
@@ -11,7 +11,6 @@ export type SkeletonVariant = "block" | "text" | "avatar" | "media" | "dataviz" 
 export type SkeletonAnimate = "shimmer" | "wipe" | "pulse" | "none";
 export type SkeletonDensity = "compact" | "regular" | "spacious";
 export type SkeletonRadius = "sm" | "md" | "lg";
-export type SkeletonLines = number | { min: number; max: number };
 // @generated:end
 
 // @generated:start props
@@ -20,7 +19,7 @@ export interface SkeletonProps {
   animate?: SkeletonAnimate;
   density?: SkeletonDensity;
   aspectRatio?: string;
-  lines?: SkeletonLines;
+  lines?: number;
   radius?: SkeletonRadius;
   decorative?: boolean;
   ariaLabel?: string;
@@ -36,9 +35,9 @@ export interface SkeletonProps {
 export function Skeleton({
   variant = "block",
   animate = "shimmer",
+  lines,
   decorative = true,
   ariaLabel,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -58,7 +57,23 @@ export function Skeleton({
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityState={{ busy: String((decorative ? "false" : "true")) === "true" }}
     >
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {lines ? (
+      <View
+        style={styles.stack}
+      >
+        {Array.from({ length: Number(lines ?? 0) }).map((_, index) => (
+            <View
+              key={index}
+              style={styles.row}
+            >
+              <View
+                style={styles.shape}
+                accessible={false}
+              />
+            </View>
+          ))}
+      </View>
+      ) : null}
     </View>
   );
 }

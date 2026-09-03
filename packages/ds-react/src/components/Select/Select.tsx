@@ -146,13 +146,13 @@ export function Select({
     <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled} aria-controls={`${instanceId}-options`}>
       <span className="select__text" />
     </button>
-    {open && (
+    {open ? (
       <div className="select__content" role="listbox" id="fsds-select-listbox">
-        {searchable && (
+        {searchable ? (
           <div className="select__search">
             <input type="text" />
           </div>
-        )}
+        ) : null}
         <div className="select__options" id={`${instanceId}-options`}>
           {(options ?? []).map((item, index) => (
             <div className="select__option" role="option" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
@@ -162,11 +162,11 @@ export function Select({
             </div>
           ))}
         </div>
-        {empty && (
+        {empty ? (
           <div className="select__emptyState" />
-        )}
+        ) : null}
       </div>
-    )}
+    ) : null}
   </Stack>
   );
 }

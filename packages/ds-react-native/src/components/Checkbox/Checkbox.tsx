@@ -53,7 +53,7 @@ export function Checkbox({
   return (
     <Pressable
       testID={testID}
-      style={[styles.input, style]}
+      style={[styles.root, styles.input, style]}
       disabled={disabled}
       onPress={() => setCheckedValue(!checked)}
       accessibilityLabel={accessibilityLabel}

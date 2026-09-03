@@ -274,15 +274,43 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
  * The projected-children action class: a native action affordance whose
  * entire content is the consumer's projected children.
  */
-/** Exported for cross-framework reuse (jetpack-compose action path) — the IR owns this fact. */
+/**
+ * The class fact is *consumer content shape*, not literal child arity: an
+ * action root the consumer fills with exactly one content region and no
+ * named slots. Internal chrome around that region (Button's `spinner` and
+ * `loadingText` parts) is not part of the class test, because these targets
+ * synthesize their own loading affordance from the `loading` prop rather
+ * than from `anatomy.dom` — see `labelContent` in the emitted SwiftUI.
+ *
+ * The predicate previously required the root's sole child to be a bare
+ * `children` node. That held only while the web DOM happened to project
+ * children directly off the root; giving Button the spinner/loadingText
+ * elements its contract has always declared (so those style carriers become
+ * reachable) dropped Button out of every native emission class and made
+ * `--target=all` throw. Web anatomy must not decide whether SwiftUI has a
+ * button.
+ *
+ * Named slots and a second content region are still rejected — those are
+ * genuinely different composition classes, handled by the composer paths.
+ *
+ * Exported for cross-framework reuse (jetpack-compose action path) — the IR
+ * owns this fact.
+ */
 export function isProjectedChildrenAction(ir: ComponentIR): boolean {
   if (!ir.dom || ir.root.element !== "button") return false;
-  const children = ir.dom.children ?? [];
-  return (
-    children.length === 1 &&
-    children[0]!.tag === "children" &&
-    (children[0]!.children ?? []).length === 0
-  );
+  // `ir.root.element` is derived from `a11y.role`, not from the dom — Chip
+  // declares role "button" on a `<span>` root that owns two Button instances.
+  // The action class needs the host to really be a button element.
+  if (ir.dom.tag !== "button") return false;
+  let contentRegions = 0;
+  let namedSlots = 0;
+  const walk = (node: DomNodeIR): void => {
+    if (node.tag === "children") contentRegions += 1;
+    if (node.tag === "slot") namedSlots += 1;
+    for (const child of node.children ?? []) walk(child);
+  };
+  for (const child of ir.dom.children ?? []) walk(child);
+  return contentRegions === 1 && namedSlots === 0;
 }
 
 /**
@@ -292,10 +320,52 @@ export function isProjectedChildrenAction(ir: ComponentIR): boolean {
  * controllable-state pattern (Binding + @State + onChange).
  */
 function isTextValueControl(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.dom.tag !== "input") return false;
-  if (ir.surface != null) return false;
-  if ((ir.dom.children ?? []).length > 0) return false;
+  if (!ir.dom || ir.surface != null) return false;
+  if (soleInputElement(ir.dom) === null) return false;
   return soleValueChannel(ir) !== null;
+}
+
+/**
+ * The dom's single `input` element, when the tree holds exactly one and
+ * projects no consumer content — the shape a native scalar control can
+ * absorb whole. Returns null otherwise.
+ *
+ * The input need not be the root. Checkbox wraps its input in a `<label>`
+ * beside a visual `indicator` span so those parts carry real style hooks on
+ * the web; SwiftUI collapses that whole group into one `Toggle`, so the
+ * wrapper is immaterial to the class. Requiring an input *root* made a web
+ * anatomy repair silently drop Checkbox out of every native emission class.
+ *
+ * Three conditions, each with its own witness:
+ *
+ * 1. The input is the root or a *direct* child of it. An input buried deeper
+ *    belongs to some inner structure, not to this component as a whole —
+ *    OTP's `field` sits under a `group` wrapper and Select's under its
+ *    listbox search box. Neither is a scalar control the way Checkbox and
+ *    Input are, and admitting them would swap their realization for a Toggle.
+ * 2. The tree projects no consumer content. TextField pairs a direct-child
+ *    input with named slot regions; it is a composer, and the composer class
+ *    further down the chain is what knows how to place those regions.
+ * 3. That input is not iterated. A single iterated input renders N controls;
+ *    collapsing it to one native Toggle would silently drop N-1 of them. No
+ *    corpus contract has this shape today, so the falsifier is synthetic.
+ */
+function soleInputElement(dom: DomNodeIR): DomNodeIR | null {
+  const candidates =
+    dom.tag === "input"
+      ? [dom]
+      : (dom.children ?? []).filter((child) => child.tag === "input");
+  if (candidates.length !== 1) return null;
+  const input = candidates[0]!;
+  if (input.iteration !== undefined) return null;
+
+  let projections = 0;
+  const walk = (node: DomNodeIR): void => {
+    if (node.tag === "children" || node.tag === "slot") projections += 1;
+    for (const child of node.children ?? []) walk(child);
+  };
+  walk(dom);
+  return projections === 0 ? input : null;
 }
 
 /**
@@ -2358,9 +2428,17 @@ function isStaticContent(ir: ComponentIR): boolean {
   if (hasInstance) return false;
   if (ir.dom.tag === "img") return false;
   if (childrenLeaves === 1) return true;
-  // Decorative box: no children leaf at all, no content binding — a pure
-  // chrome surface (Skeleton).
-  if (childrenLeaves === 0 && !ir.dom.content && (ir.dom.children ?? []).length === 0) {
+  // Decorative box: no consumer content leaf at all and no content binding —
+  // a pure chrome surface (Skeleton). Purely internal decorative children do
+  // not change that: Skeleton's `stack`/`row`/`shape` exist so the web can
+  // paint one bar per `lines`, and requiring an empty child list here made
+  // that web realization drop Skeleton out of every emission class.
+  //
+  // SwiftUI's realization is unchanged by those children — the decorative box
+  // it emits does not honor `lines`, exactly as before. That gap is
+  // pre-existing and out of this class's reach, not a regression; the native
+  // targets prove compilation, not component correctness.
+  if (childrenLeaves === 0 && !ir.dom.content) {
     return true;
   }
   return false;

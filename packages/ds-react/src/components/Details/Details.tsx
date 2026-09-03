@@ -60,8 +60,8 @@ export function Details({
   open: controlledOpen,
   defaultOpen,
   onOpenChange,
-  variant,
-  icon,
+  variant = "default",
+  icon = "left",
   disabled,
   className,
   "data-testid": testId,
@@ -98,11 +98,11 @@ export function Details({
         </span>
       </span>
     </summary>
-    {open && (
+    {open ? (
       <div className="details__content" id={`${instanceId}-content`}>
         {children}
       </div>
-    )}
+    ) : null}
   </Stack>
   );
 }

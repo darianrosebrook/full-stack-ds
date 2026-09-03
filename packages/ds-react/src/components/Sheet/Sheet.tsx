@@ -187,10 +187,10 @@ export function Sheet({
   return (
     renderInPortal(
     <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} role="dialog" data-testid={testId} data-fsds-component="sheet" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
-      {openness && (
+      {openness ? (
         <div className="sheet__overlay" aria-hidden="true" />
-      )}
-      {openness && (
+      ) : null}
+      {openness ? (
         <div className="sheet__content" role="dialog" aria-modal="true" aria-labelledby={"sheet-title-id"} aria-describedby={"sheet-description-id"} data-side={side} aria-label={ariaLabel}>
           <div className="sheet__header">
             <h2 className="sheet__title" id={`${instanceId}-title`}>
@@ -206,7 +206,7 @@ export function Sheet({
           </div>
           <div className="sheet__footer" />
         </div>
-      )}
+      ) : null}
     </Stack>
     )
   );

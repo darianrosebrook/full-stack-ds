@@ -125,11 +125,11 @@ export function Field({
         <span className="field__error" id={`${instanceId}-error`}>
           {slots?.error}
         </span>
-        {validating && (
+        {validating ? (
           <span className="field__validatingIndicator">
             {slots?.validatingIndicator}
           </span>
-        )}
+        ) : null}
       </div>
     </Stack>
   </FieldAssociationContext.Provider>

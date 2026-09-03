@@ -133,24 +133,24 @@ export function Toast({
   return (
     renderInPortal(
     <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} data-fsds-component="toast" {...autoDismissPauseProps} {...rest}>
-      {open && (
+      {open ? (
         <div className="toast__item" role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
           <div className="toast__row">
-            {title && (
+            {title ? (
               <div className="toast__title" id={`${instanceId}-title`}>
                 {title}
               </div>
-            )}
+            ) : null}
             <div className="toast__description">
               {children}
             </div>
-            {action && (
+            {action ? (
               <div className="toast__action" />
-            )}
+            ) : null}
             <button className="toast__close" type="button" aria-label="Dismiss" onClick={() => setOpen(!open)} />
           </div>
         </div>
-      )}
+      ) : null}
     </Stack>
     )
   );

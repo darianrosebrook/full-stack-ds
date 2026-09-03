@@ -51,7 +51,21 @@
       },
       "children": [
         {
-          "tag": "children"
+          "tag": "span",
+          "part": "spinner",
+          "if": "loading",
+          "attrs": {
+            "aria-hidden": "true"
+          }
+        },
+        {
+          "tag": "span",
+          "part": "loadingText",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
         }
       ]
     }

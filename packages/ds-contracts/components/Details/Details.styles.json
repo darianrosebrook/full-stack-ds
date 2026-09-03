@@ -261,7 +261,7 @@
       "fallback": "#d0d0d0"
     }
   },
-  ".details--icon-none .details__icon": {
+  ".details--none .details__icon": {
     "display": {
       "literal": "none",
       "platforms": [
@@ -269,7 +269,7 @@
       ]
     }
   },
-  ".details--icon-right .details__icon": {
+  ".details--right .details__icon": {
     "order": {
       "literal": "1",
       "platforms": [

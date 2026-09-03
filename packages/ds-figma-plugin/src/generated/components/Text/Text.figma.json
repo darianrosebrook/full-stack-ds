@@ -451,18 +451,6 @@
         "declarations": {
           "text-transform": "capitalize"
         }
-      },
-      {
-        "selector": ".text__error",
-        "declarations": {
-          "color": "var(--fsds-semantic-color-feedback-foreground-danger-default, #d92d2e)"
-        }
-      },
-      {
-        "selector": ".text__success",
-        "declarations": {
-          "color": "var(--fsds-semantic-color-feedback-foreground-success-default, #497f21)"
-        }
       }
     ],
     "keyframes": []

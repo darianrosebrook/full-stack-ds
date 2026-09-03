@@ -283,14 +283,6 @@ export class TextElement extends LitElement {
     .text--capitalize {
       text-transform: capitalize;
     }
-
-    .text__error {
-      color: var(--fsds-semantic-color-feedback-foreground-danger-default, #d92d2e);
-    }
-
-    .text__success {
-      color: var(--fsds-semantic-color-feedback-foreground-success-default, #497f21);
-    }
   `;
 
   @property({ type: String }) as?: TextAs;

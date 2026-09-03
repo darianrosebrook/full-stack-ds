@@ -32,7 +32,7 @@ export interface DetailsProps {
 export function Details({
   summary,
   open: controlledOpen,
-  variant,
+  variant = "default",
   defaultOpen = false,
   children,
   style,

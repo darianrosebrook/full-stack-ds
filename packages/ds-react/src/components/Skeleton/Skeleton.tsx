@@ -16,8 +16,6 @@ export type SkeletonAnimate = "shimmer" | "wipe" | "pulse" | "none";
 export type SkeletonDensity = "compact" | "regular" | "spacious";
 
 export type SkeletonRadius = "sm" | "md" | "lg";
-
-export type SkeletonLines = number | { min: number; max: number };
 // @generated:end
 
 // @custom:start types
@@ -30,7 +28,7 @@ export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, "ani
   animate?: SkeletonAnimate;
   density?: SkeletonDensity;
   aspectRatio?: string;
-  lines?: SkeletonLines;
+  lines?: number;
   radius?: SkeletonRadius;
   decorative?: boolean;
   ariaLabel?: string;
@@ -68,7 +66,17 @@ export function Skeleton({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} data-fsds-component="skeleton" {...rest} />
+  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} data-fsds-component="skeleton" {...rest}>
+    {lines ? (
+      <div className="skeleton__stack">
+        {Array.from({ length: lines }, (_, index) => (
+          <div className="skeleton__row" key={index}>
+            <div className="skeleton__shape" aria-hidden="true" />
+          </div>
+        ))}
+      </div>
+    ) : null}
+  </Stack>
   );
 }
 // @generated:end

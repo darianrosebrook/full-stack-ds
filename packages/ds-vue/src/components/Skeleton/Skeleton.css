@@ -20,6 +20,17 @@
   transition-duration: var(--fsds-skeleton-anim-duration, 400ms);
   transition-timing-function: var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1));
   animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+
+  &:has(.skeleton__stack) {
+    background-color: transparent;
+    animation: none;
+    height: auto;
+  }
+
+  &:has(.skeleton__stack) .skeleton__shape {
+    height: var(--fsds-skeleton-shape-height-text, 1rem);
+    animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+  }
 }
 
 .skeleton__shape {
@@ -120,6 +131,7 @@
 /* @generated:start reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .skeleton,
+  .skeleton:has(.skeleton__stack) .skeleton__shape,
   .skeleton--shimmer,
   .skeleton--wipe::after,
   .skeleton--pulse {

@@ -600,6 +600,12 @@ export function generateLitTest(ir: ComponentIR): string {
   // fact pattern gets this test for free.
   const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
   if (indeterminateFact) {
+    // `shadowRoot.firstElementChild` is the ROOT. When the fact sits on a
+    // nested part (Checkbox's `<label>` > `<input>` composite) the root does
+    // not carry the property, and the proof silently asserts `undefined`.
+    const indeterminateEl = indeterminateFact.part
+      ? `element.shadowRoot?.querySelector(".${ir.classRecipe.base}__${indeterminateFact.part}") as HTMLInputElement`
+      : `element.shadowRoot?.firstElementChild as HTMLInputElement`;
     lines.push(``);
     lines.push(
       `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", async () => {`,
@@ -608,7 +614,7 @@ export function generateLitTest(ir: ComponentIR): string {
       `    const { element } = await renderElement("${elementName}", { "${indeterminateFact.propertyKey}": true });`,
     );
     lines.push(
-      `    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;`,
+      `    const el = ${indeterminateEl};`,
     );
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
@@ -632,7 +638,7 @@ export function generateLitTest(ir: ComponentIR): string {
       `    const { element } = await renderElement("${elementName}", { "${indeterminateFact.propertyKey}": true });`,
     );
     lines.push(
-      `    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;`,
+      `    const el = ${indeterminateEl};`,
     );
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(

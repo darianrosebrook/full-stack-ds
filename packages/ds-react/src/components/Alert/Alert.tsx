@@ -97,15 +97,15 @@ export function Alert({
 
   return (
   <Stack layout="native" className={`${classNames}`} role="alert" data-testid={testId} data-fsds-component="alert" {...rest}>
-    {icon && (
+    {icon ? (
       <span className="alert__icon" aria-hidden="true">
         {icon}
       </span>
-    )}
+    ) : null}
     {children}
-    {dismissible && (
+    {dismissible ? (
       <Button className="alert__dismiss" type="button" onClick={onDismiss} ariaLabel={dismissLabel} />
-    )}
+    ) : null}
   </Stack>
   );
 }

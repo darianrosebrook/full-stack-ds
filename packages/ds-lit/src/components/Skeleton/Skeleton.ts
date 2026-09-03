@@ -12,7 +12,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 export type SkeletonVariant = "block" | "text" | "avatar" | "media" | "dataviz" | "actions";
 export type SkeletonAnimate = "shimmer" | "wipe" | "pulse" | "none";
 export type SkeletonDensity = "compact" | "regular" | "spacious";
-export type SkeletonLines = number | { min: number; max: number };
 export type SkeletonRadius = "sm" | "md" | "lg";
 // @generated:end
 
@@ -114,6 +113,17 @@ export class SkeletonElement extends LitElement {
       transition-duration: var(--fsds-skeleton-anim-duration, 400ms);
       transition-timing-function: var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1));
       animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+
+      &:has(.skeleton__stack) {
+        background-color: transparent;
+        animation: none;
+        height: auto;
+      }
+
+      &:has(.skeleton__stack) .skeleton__shape {
+        height: var(--fsds-skeleton-shape-height-text, 1rem);
+        animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+      }
     }
 
     .skeleton__shape {
@@ -214,7 +224,7 @@ export class SkeletonElement extends LitElement {
   _animate?: SkeletonAnimate = "shimmer";
   @property({ type: String }) density?: SkeletonDensity = "regular";
   @property({ type: String }) aspectRatio?: string;
-  @property({ attribute: false }) lines?: SkeletonLines;
+  @property({ type: Number }) lines?: number;
   @property({ type: String }) radius?: SkeletonRadius;
   @property({ type: Boolean }) decorative?: boolean = true;
   @property({ attribute: 'aria-label', reflect: true })
@@ -235,7 +245,17 @@ export class SkeletonElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" .role=${((this.decorative ?? true) ? "presentation" : "status")} aria-busy=${((this.decorative ?? true) ? "false" : "true")} aria-hidden=${((this.decorative ?? true) ? "true" : "false")} aria-label=${ifDefined(this.ariaLabel ?? undefined)}></div>`;
+    return html`<div class="${this.computeClasses()}" .role=${((this.decorative ?? true) ? "presentation" : "status")} aria-busy=${((this.decorative ?? true) ? "false" : "true")} aria-hidden=${((this.decorative ?? true) ? "true" : "false")} aria-label=${ifDefined(this.ariaLabel ?? undefined)}>
+  ${this.lines ? html`
+  <div class=${'skeleton__stack'}>
+    ${Array.from({ length: this.lines ?? 0 }, (_, index) => html`
+    <div class=${'skeleton__row'}>
+      <div class=${'skeleton__shape'} aria-hidden="true"></div>
+    </div>
+    `)}
+  </div>
+  ` : nothing}
+</div>`;
   }
 }
 

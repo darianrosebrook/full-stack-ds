@@ -372,17 +372,5 @@
         "web"
       ]
     }
-  },
-  "error": {
-    "color": {
-      "resolvesTo": "semantic.color.feedback.foreground.danger.default",
-      "fallback": "#d92d2e"
-    }
-  },
-  "success": {
-    "color": {
-      "resolvesTo": "semantic.color.feedback.foreground.success.default",
-      "fallback": "#497f21"
-    }
   }
 }

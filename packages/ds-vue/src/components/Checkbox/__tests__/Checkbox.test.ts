@@ -41,14 +41,14 @@ describe("Checkbox — unit", () => {
 
   it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {
     const wrapper = mount(Checkbox as Component, { props: { "indeterminate": true }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
-    const el = wrapper.element as HTMLInputElement;
+    const el = wrapper.element.querySelector(".checkbox__input") as HTMLInputElement;
     expect(el.indeterminate).toBe(true);
     expect(el.getAttribute("aria-checked")).toBe("mixed");
   });
 
   it("re-applies .indeterminate when the prop changes from true to false, and aria-checked reflects checked state again", async () => {
     const wrapper = mount(Checkbox as Component, { props: { "indeterminate": true }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
-    const el = wrapper.element as HTMLInputElement;
+    const el = wrapper.element.querySelector(".checkbox__input") as HTMLInputElement;
     expect(el.indeterminate).toBe(true);
     await wrapper.setProps({ indeterminate: false });
     expect(el.indeterminate).toBe(false);

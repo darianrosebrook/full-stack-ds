@@ -178,10 +178,24 @@ export function canClickToToggle(ir: ComponentIR): boolean {
  */
 export interface IndeterminateAriaCheckedNode {
   propertyKey: string;
+  /**
+   * The anatomy part carrying the fact, when it is NOT the root node.
+   *
+   * The finder has always recursed into children, but every framework's test
+   * generator assumed the fact sat on the root and reached for it with
+   * `getByTestId(testId)` — the test id only ever lands on the root. That held
+   * while Checkbox's whole realization WAS the bare `<input>`; the moment its
+   * composite topology was restored (`<label>` > `<input>` + indicator) the
+   * generated proof read `.indeterminate` off a `<label>` and got `undefined`.
+   * Carrying the part lets each generator address the element that actually
+   * holds the property instead of guessing it is the host.
+   */
+  part: string | undefined;
 }
 
 export function findIndeterminateAriaCheckedFact(
   node: DomNodeIR | null | undefined,
+  isRoot = true,
 ): IndeterminateAriaCheckedNode | undefined {
   if (!node) return undefined;
   const hasIndeterminateProperty = Object.keys(node.propertyBindings).some(
@@ -193,10 +207,10 @@ export function findIndeterminateAriaCheckedFact(
     ariaChecked.kind === "conditional" &&
     isMixedLiteral(ariaChecked.whenTrue, ariaChecked.whenFalse);
   if (hasIndeterminateProperty && hasMixedConditional) {
-    return { propertyKey: "indeterminate" };
+    return { propertyKey: "indeterminate", part: isRoot ? undefined : node.part };
   }
   for (const child of node.children) {
-    const found = findIndeterminateAriaCheckedFact(child);
+    const found = findIndeterminateAriaCheckedFact(child, false);
     if (found) return found;
   }
   return undefined;

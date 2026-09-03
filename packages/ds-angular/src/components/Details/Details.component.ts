@@ -49,8 +49,8 @@ export class DetailsComponent {
   @Input() defaultOpen?: boolean;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() disabled?: boolean;
-  @Input() variant?: DetailsVariant;
-  @Input() icon?: DetailsIcon;
+  @Input() variant?: DetailsVariant = "default";
+  @Input() icon?: DetailsIcon = "left";
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-details-${nextInstanceId++}`;
@@ -66,8 +66,8 @@ export class DetailsComponent {
   classes = computed(() =>
     [
       "details",
-      this.variant ? `details--${this.variant}` : null,
-      this.icon ? `details--${this.icon}` : null,
+      (this.variant ?? "default") ? `details--${(this.variant ?? "default")}` : null,
+      (this.icon ?? "left") ? `details--${(this.icon ?? "left")}` : null,
       this.behavior.open() ? "details--open" : null,
       this.disabled ? "details--disabled" : null,
       this.class,

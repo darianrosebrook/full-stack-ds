@@ -109,7 +109,7 @@
       "type": "DetailsVariant",
       "required": false,
       "description": "Visual variant.",
-      "defaultExpr": null,
+      "defaultExpr": "\"default\"",
       "nodeKind": null
     },
     {
@@ -118,7 +118,7 @@
       "type": "DetailsIcon",
       "required": false,
       "description": "Icon position or absence.",
-      "defaultExpr": null,
+      "defaultExpr": "\"left\"",
       "nodeKind": null
     }
   ],
@@ -199,11 +199,13 @@
     "valueModifiers": [
       {
         "propName": "variant",
-        "safeName": "variant"
+        "safeName": "variant",
+        "defaultExpr": "\"default\""
       },
       {
         "propName": "icon",
-        "safeName": "icon"
+        "safeName": "icon",
+        "defaultExpr": "\"left\""
       }
     ],
     "booleanModifiers": [
@@ -391,13 +393,13 @@
         }
       },
       {
-        "selector": ".details--icon-none .details__icon",
+        "selector": ".details--none .details__icon",
         "declarations": {
           "display": "none"
         }
       },
       {
-        "selector": ".details--icon-right .details__icon",
+        "selector": ".details--right .details__icon",
         "declarations": {
           "order": "1",
           "margin-inline-start": "auto"

@@ -84,7 +84,7 @@
   background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
 }
 
-.tabs--vertical .tabs__root {
+.tabs--vertical {
   flex-direction: row;
 }
 

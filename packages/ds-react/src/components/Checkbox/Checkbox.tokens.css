@@ -28,14 +28,14 @@
   &:hover .checkbox__indicator {
     --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-hover, #888889);
   }
-}
 
-:has(.checkbox__input:checked) .checkbox__indicator {
-  --fsds-checkbox-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
-}
+  &:has(.checkbox__input:checked) .checkbox__indicator {
+    --fsds-checkbox-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
+  }
 
-:has(.checkbox__input:disabled) .checkbox__indicator {
-  --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #d0d0d0);
+  &:has(.checkbox__input:disabled) .checkbox__indicator {
+    --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #d0d0d0);
+  }
 }
 /* @generated:end */
 

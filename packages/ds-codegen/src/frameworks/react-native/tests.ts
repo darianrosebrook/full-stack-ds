@@ -735,11 +735,18 @@ function isNativeToggle(ir: ComponentIR): boolean {
 }
 
 function isTextInput(ir: ComponentIR): boolean {
-  return ir.dom?.tag === "input" && ir.dom.attrs.type !== "checkbox" && Boolean(ir.behavior.normalizedChannels[0]);
+  return ir.dom?.tag === "input" && ir.behavior.form?.inputType !== "checkbox" && Boolean(ir.behavior.normalizedChannels[0]);
 }
 
+/**
+ * Mirrors `isCheckboxControl` in component-source.ts — the test plan and the
+ * component lowering must agree on what a checkbox is, and both read the
+ * contract's `form.inputType` (via `ir.behavior.form`) rather than probing the root DOM tag.
+ */
 function isCheckbox(ir: ComponentIR): boolean {
-  return ir.dom?.tag === "input" && ir.dom.attrs.type === "checkbox";
+  return (
+    ir.behavior.form?.inputType === "checkbox" && !isNativeToggle(ir)
+  );
 }
 
 function isButton(ir: ComponentIR): boolean {

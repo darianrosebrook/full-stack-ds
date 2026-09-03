@@ -47,7 +47,28 @@
         "aria-busy": "conditional:prop:decorative|literal:false|literal:true",
         "aria-hidden": "conditional:prop:decorative|literal:true|literal:false",
         "aria-label": "prop:ariaLabel"
-      }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "part": "stack",
+          "if": "lines",
+          "children": [
+            {
+              "tag": "div",
+              "part": "row",
+              "iterate": { "source": "prop:lines", "kind": "count" },
+              "children": [
+                {
+                  "tag": "div",
+                  "part": "shape",
+                  "attrs": { "aria-hidden": "true" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   "props": {
@@ -78,8 +99,8 @@
         },
         {
           "name": "lines",
-          "propType": { "kind": "ref", "to": "SkeletonLines" },
-          "description": "Number of lines to render for text variant. Pass a number or {min, max} range."
+          "propType": { "kind": "number" },
+          "description": "Number of line rows to render. When set, the root becomes a container for that many rows instead of a single shape."
         },
         {
           "name": "radius",
@@ -136,10 +157,6 @@
         "md",
         "lg"
       ]
-    },
-    "SkeletonLines": {
-      "kind": "alias",
-      "alias": "number | { min: number; max: number }"
     }
   },
   "variants": {
