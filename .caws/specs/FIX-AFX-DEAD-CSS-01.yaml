@@ -2,9 +2,10 @@ id: FIX-AFX-DEAD-CSS-01
 title: 'Remove analytical-fixture CSS rules orphaned by the stage-1.5 kernel removals'
 risk_tier: 3
 mode: chore
-lifecycle_state: draft
+lifecycle_state: active
+worktree: afx-dead-css
 created_at: '2026-09-03T00:20:23.939Z'
-updated_at: '2026-09-03T00:20:23.939Z'
+updated_at: '2026-09-03T00:20:29.838Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
