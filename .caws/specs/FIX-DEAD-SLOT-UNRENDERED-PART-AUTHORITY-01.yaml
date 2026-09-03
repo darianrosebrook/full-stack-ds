@@ -85,3 +85,10 @@ evidence:
     command: node scripts/dead-slot-audit/disposition.test.mjs
     exit_code: 0
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Case 'A4: the deletion disposition survives on contract-sourced evidence' passes renderedParts:new Set() and still gets disposition==delete from rule 5b, then asserts doesNotMatch(evidence, /render|emitted source/) — proving the surviving deletion ground never consults the generated output. The three 5b boundary controls (enum prop, leaf==prop name, coincidental prefix) still assert notEqual delete."
+    recorded_at: "2026-09-03T17:11:48.573Z"
+    command: node scripts/dead-slot-audit/disposition.test.mjs
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
