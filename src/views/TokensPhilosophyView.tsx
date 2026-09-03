@@ -1,4 +1,4 @@
-import { Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Links, NavList, NavListItem, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
 import { buildHref, type TokensTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -6,24 +6,49 @@ interface TokensPhilosophyViewProps {
   tab: TokensTab;
 }
 
-const TABS: { value: TokensTab; label: string }[] = [
-  { value: "overview", label: "Philosophy" },
-  { value: "core-vs-semantic", label: "Core vs semantic" },
-  { value: "box-model-primitive", label: "Box-model primitive" },
-  { value: "variant-redirection", label: "Variant redirection" },
-  { value: "token-naming", label: "Naming" },
-  { value: "theming", label: "Multi-brand theming" },
-  { value: "dtcg-formats", label: "DTCG formats" },
-  { value: "resolver-module", label: "Resolver" },
-  { value: "schema-validation", label: "Schema & validation" },
-  { value: "build-outputs", label: "Build outputs" },
-  { value: "accessibility", label: "Accessibility" },
+// Eleven peer topics overflow any single tab row (flex shrink wrapped every
+// label mid-phrase), and route-level navigation is a nav, not a tablist.
+// The view presents the topics as a grouped rail: sticky beside the article
+// on wide viewports, wrapping clusters on narrow ones. Grouping is visual
+// only — the router's flat TokensTab values and hash deep links are
+// unchanged.
+const TOPIC_GROUPS: {
+  label: string;
+  items: { value: TokensTab; label: string }[];
+}[] = [
+  {
+    label: "The model",
+    items: [
+      { value: "overview", label: "Philosophy" },
+      { value: "core-vs-semantic", label: "Core vs semantic" },
+      { value: "token-naming", label: "Naming" },
+    ],
+  },
+  {
+    label: "Slots & variants",
+    items: [
+      { value: "box-model-primitive", label: "Box-model primitive" },
+      { value: "variant-redirection", label: "Variant redirection" },
+    ],
+  },
+  {
+    label: "Theming",
+    items: [{ value: "theming", label: "Multi-brand theming" }],
+  },
+  {
+    label: "Build pipeline",
+    items: [
+      { value: "dtcg-formats", label: "DTCG formats" },
+      { value: "resolver-module", label: "Resolver" },
+      { value: "schema-validation", label: "Schema & validation" },
+      { value: "build-outputs", label: "Build outputs" },
+    ],
+  },
+  {
+    label: "Accessibility",
+    items: [{ value: "accessibility", label: "Contrast, motion & focus" }],
+  },
 ];
-
-function handleTabChange(next: string) {
-  const tab = next as TokensTab;
-  window.location.hash = buildHref({ kind: "tokens-philosophy", tab }).slice(1);
-}
 
 export function TokensPhilosophyView({ tab }: TokensPhilosophyViewProps) {
   return (
@@ -36,34 +61,41 @@ export function TokensPhilosophyView({ tab }: TokensPhilosophyViewProps) {
         consistent design decisions without rewriting components.
       </p>
 
-      <Tabs
-        appearance="pills"
-        value={tab}
-        onValueChange={handleTabChange}
-        aria-label="Tokens topic"
-        className="fw-tabs"
-      >
-        <TabsList>
-          {TABS.map((t) => (
-            <TabsTab key={t.value} value={t.value} className="fw-tab">
-              {t.label}
-            </TabsTab>
+      <div className="topic-layout">
+        <NavList ariaLabel="Tokens philosophy topics" className="topic-rail">
+          {TOPIC_GROUPS.map((group) => (
+            <NavListItem key={group.label} className="topic-group-host">
+              <p className="topic-group-label">{group.label}</p>
+              <ul className="topic-group-items">
+                {group.items.map((topic) => (
+                  <li key={topic.value}>
+                    <Links
+                      href={buildHref({ kind: "tokens-philosophy", tab: topic.value })}
+                      className={`topic-link${tab === topic.value ? " topic-link--active" : ""}`}
+                      aria-current={tab === topic.value ? "page" : undefined}
+                    >
+                      {topic.label}
+                    </Links>
+                  </li>
+                ))}
+              </ul>
+            </NavListItem>
           ))}
-        </TabsList>
-      </Tabs>
+        </NavList>
 
-      <div style={{ marginTop: "var(--fsds-core-spacing-size-07)" }}>
-        {tab === "overview" && <OverviewPanel />}
-        {tab === "core-vs-semantic" && <CoreVsSemanticPanel />}
-        {tab === "box-model-primitive" && <BoxModelPrimitivePanel />}
-        {tab === "variant-redirection" && <VariantRedirectionPanel />}
-        {tab === "token-naming" && <TokenNamingPanel />}
-        {tab === "theming" && <ThemingPanel />}
-        {tab === "dtcg-formats" && <DtcgFormatsPanel />}
-        {tab === "resolver-module" && <ResolverModulePanel />}
-        {tab === "schema-validation" && <SchemaValidationPanel />}
-        {tab === "build-outputs" && <BuildOutputsPanel />}
-        {tab === "accessibility" && <A11yTokensPanel />}
+        <div className="topic-content">
+          {tab === "overview" && <OverviewPanel />}
+          {tab === "core-vs-semantic" && <CoreVsSemanticPanel />}
+          {tab === "box-model-primitive" && <BoxModelPrimitivePanel />}
+          {tab === "variant-redirection" && <VariantRedirectionPanel />}
+          {tab === "token-naming" && <TokenNamingPanel />}
+          {tab === "theming" && <ThemingPanel />}
+          {tab === "dtcg-formats" && <DtcgFormatsPanel />}
+          {tab === "resolver-module" && <ResolverModulePanel />}
+          {tab === "schema-validation" && <SchemaValidationPanel />}
+          {tab === "build-outputs" && <BuildOutputsPanel />}
+          {tab === "accessibility" && <A11yTokensPanel />}
+        </div>
       </div>
     </div>
   );
