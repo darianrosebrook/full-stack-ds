@@ -2,9 +2,11 @@ id: REL-A11Y-CORPUS-EXTEND-01
 title: 'Extend the analytical oracle with accessibility conservation obligations, licensed by external standards'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Oracle extended with 11 peer-projection conservation cases across five families, licensed by WCAG/ARIA (normative) and APG (guidance) citations in a new source field; corpus 59->70 cases, catalogue 47->57 causes; stage<=1 unchanged at 19/15/3 and checkFixtureLedger(stage=1) empty, stage<=2 28/22/4 -> 30/24/4 with two new LEDGER_CASE_UNBOUND obligations for REL-VIEW-ALGEBRA-01. New custody baseline: corpus 86f2b03a9fe7affe, case schema e961af232d3ede45, vocabulary 5bd9dfddab19dc33, denylist 0564902cf8d7d4ff unchanged, doctrine catalogue+appendix 123e73dfc61ab2ab. NON-CLAIMS: no engine implements any of these obligations, so nothing here is proven checkable - only authored and licensed; the citations are my readings of the standards, unreviewed by an accessibility specialist; case-to-stage placement is a judgment about where each defect originates and stage 2/3 may relocate one; the two stage-2 cases have no fixtures yet, which is the intended obligation rather than a discharged criterion; no fixture, engine rule, mutation score or runtime a11y check exists for the family; engine attribution reuses the existing eight and may be re-partitioned at stage 5.'
 created_at: '2026-09-03T00:25:27.769Z'
-updated_at: '2026-09-03T00:25:33.875Z'
+updated_at: '2026-09-03T00:42:25.074Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/analytical-pack (corpus cases, case schema gains a source citation, vocabulary gains a projection namespace and conservation invariants)'
