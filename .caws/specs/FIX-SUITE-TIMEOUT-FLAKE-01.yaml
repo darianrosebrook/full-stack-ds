@@ -40,3 +40,7 @@ evidence:
     status: pass
     evidence_ref: "6 consecutive 'pnpm test' runs on canonical main post-merge 82520551, all exit=0 at 2978/2978 (tmp/postfix-1..6.txt); 'grep -l \"Test timed out\" tmp/postfix-*.txt' returns NONE. Pre-fix baseline on the same tree: 6 runs failing 2,1,0,1,0,3 tests (tmp/loadrun-*.txt, tmp/full-suite-run3.txt)."
     recorded_at: "2026-09-03T01:07:53.712Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "'grep -l from_html tmp/postfix-*.txt' returns NONE across all 6 post-fix runs. Correlation established pre-fix: the cascaded 'from_html is not a function' appeared only in tmp/loadrun-3.txt, the one run where 'mounts the plugin app into the #app root' timed out, and never independently across the other 5 runs. NON-CLAIM: the cascade is removed by removing its trigger, not by structurally decoupling the two ui.test.ts cases; a timeout that did fire could still corrupt the sibling registry."
+    recorded_at: "2026-09-03T01:08:01.011Z"
