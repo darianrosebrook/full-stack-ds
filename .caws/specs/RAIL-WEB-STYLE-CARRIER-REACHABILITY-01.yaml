@@ -141,3 +141,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "Case 'a data-* marked surface part passes WITHOUT manufacturing a __part class': an anchored tooltip fixture with partsDeterminate=true resolves content to '.tooltip [data-tooltip-content]', has classes.has('tooltip__content')===false, and validates clean. Falsified: forcing marker=undefined in deriveWebDomCarriers -> the key lowers to .tooltip__content, is adjudicated, and the case fails, 15/16."
+    recorded_at: "2026-09-03T18:10:31.686Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
