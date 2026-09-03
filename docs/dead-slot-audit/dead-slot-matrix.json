@@ -5337,8 +5337,8 @@
           "status": "consumed"
         },
         {
-          "slot": "popover.color.border.accent",
-          "cssVar": "--fsds-popover-color-border-accent",
+          "slot": "popover.color.border.default",
+          "cssVar": "--fsds-popover-color-border-default",
           "source": "tokens",
           "status": "consumed"
         },
