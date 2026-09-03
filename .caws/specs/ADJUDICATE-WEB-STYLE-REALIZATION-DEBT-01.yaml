@@ -154,3 +154,7 @@ evidence:
     status: pass
     evidence_ref: "adjudication.md 'Card: five carriers of unknown topology (audit only)'. Realization gap on contract-sourced evidence (a2ui.usageHints name Card.Link/Actions/Media). Cause: hardcoded COMPOUND_PARTS allowlist in semantics.ts. Repair deferred with measured blast radius: Card is the only dom-less component affected, but isCompoundPart applies to all 29 slot-bearing components"
     recorded_at: "2026-09-03T22:38:13.596Z"
+  - criterion_id: A10
+    status: pass
+    evidence_ref: "adjudication.md 'Card's historical badge-slot deletion, re-audited'. Commit 571efd96 cited the withdrawn ground verbatim. Deletion STANDS on rule 5b's contract-sourced ground: Card declares no success/warning/info/error/neutral vocabulary in variants, types or props"
+    recorded_at: "2026-09-03T22:38:14.023Z"
