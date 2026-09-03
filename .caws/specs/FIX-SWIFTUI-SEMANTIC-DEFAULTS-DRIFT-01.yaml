@@ -66,3 +66,9 @@ evidence:
     evidence_ref: ".github/workflows/ci.yml adds the 'Verify SwiftUI semantic-defaults table is up-to-date' step (pnpm run swiftui:semantic-defaults:check) in the gate job immediately after tokens:build:check and before the macOS Swift test"
     recorded_at: "2026-09-03T22:05:12.063Z"
     commit_sha: "33b1a99d"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "swift test --package-path packages/ds-swiftui: Executed 40 tests, 4 skipped (AX interaction), 0 failures — FsdsSemanticDefaultsTests passes against the regenerated 204-entry table"
+    recorded_at: "2026-09-03T22:05:14.327Z"
+    command: swift test --package-path packages/ds-swiftui
+    exit_code: 0
