@@ -122,3 +122,7 @@ evidence:
     status: pass
     evidence_ref: docs/carrier-reachability-audit/adjudication.md — 18 forward rows normalized to 11 carriers with witness selectors preserved; per-carrier adjudication and outcome
     recorded_at: "2026-09-03T22:37:39.929Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Forward ledger 18 -> 0. node scripts/carrier-reachability-audit/audit.mjs: 51 components, 0 unreachable carriers, findings=0 ledgered=0 unledgered=0 stale=0, PASS"
+    recorded_at: "2026-09-03T22:37:49.572Z"
