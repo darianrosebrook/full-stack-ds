@@ -1,0 +1,54 @@
+id: REL-A11Y-CORPUS-EXTEND-01
+title: 'Extend the analytical oracle with accessibility conservation obligations, licensed by external standards'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-03T00:25:27.769Z'
+updated_at: '2026-09-03T00:25:27.769Z'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-pack (corpus cases, case schema gains a source citation, vocabulary gains a projection namespace and conservation invariants)'
+    - 'packages/ds-codegen/src/analytical/corpus-integrity.ts (source-citation check; stage-scoped ledger obligation surfaced at stage 2)'
+    - 'docs/architecture/analytical-relation-doctrine.md (diagnostic catalogue rows, vocabulary appendix, stage-5 prose; new custody baseline)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-pack/corpus.jsonl'
+    - 'packages/ds-contracts/analytical-pack/corpus-case.schema.json'
+    - 'packages/ds-contracts/analytical-pack/vocabulary.json'
+    - 'packages/ds-codegen/src/analytical/corpus-integrity.ts'
+    - 'packages/ds-codegen/src/analytical/corpus-integrity.test.ts'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+  out: []
+invariants:
+  - 'Accessibility cases describe semantic obligations a lawful projection must preserve. ARIA, HTML and APG details are EVIDENCE for those obligations, cited per case, never vocabulary admitted into the analytical relation: no aria/role/html namespace may enter vocabulary.json.'
+  - 'No stage-1 behaviour change. engines.ts, relation-model.ts, judgment.ts, structure.ts, the fixtures, witnesses.json and removals.json are scope.out; the stage-1 adjudicable set stays 19 cases over 15 diagnostics, the holdout ruleDigest stays 6b7b2135, and stage1.test.ts plus necessity.test.ts pass unmodified.'
+  - 'Oracle extension only: this slice implements no engine rule for the new obligations. A new case confers an obligation on a later stage, never a passing behaviour now.'
+  - 'Every case that declares a projection-conservation term must cite at least one external source with its normative-vs-guidance status; corpus-integrity refuses an uncited one.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the corpus carries one accessibility case at stage 5; when cases are added across information, order, structure, interaction and representation-independence conservation; then each names the standard that licenses it and its stage is the earliest stage whose facts decide it'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given ARIA and APG are external evidence; when the new cases are written; then no aria/role/html term enters vocabulary.json and the form-name denylist still reports no leak'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given corpus-integrity requires catalogue-case bijection; when new diagnostics are added; then the doctrine catalogue and the illegal-case diagnostic set are equal in both directions and every engine stays exercised'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a stage-2 case must be adjudicable at stage 2; when checkLedger runs at stage 2; then each new stage-2 case reports LEDGER_CASE_UNBOUND as an obligation for REL-VIEW-ALGEBRA-01 rather than passing silently'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the oracle changes; when the slice closes; then a new custody baseline is recorded for corpus.jsonl, corpus-case.schema.json, vocabulary.json, form-names.json and the doctrine catalogue plus appendix'
+non_functional: {}
+contracts:
+  - name: 'corpus-case'
+    type: schema
+    path: 'packages/ds-contracts/analytical-pack/corpus-case.schema.json'
