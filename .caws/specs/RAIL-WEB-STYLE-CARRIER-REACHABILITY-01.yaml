@@ -120,3 +120,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "ownedClassTokens matches only the component's own BEM namespace (.base, .base--mod, .base__part); everything else in an expanded selector is left unadjudicated. Case 'does not adjudicate selector material this component does not own' (.test .some-consumer-class -> no issues). A part-scoped modifier (tabs__tab--active) is reduced to its PART carrier because classRecipe describes root modifiers only; the modifier suffix is not guessed at."
+    recorded_at: "2026-09-03T18:10:13.499Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
