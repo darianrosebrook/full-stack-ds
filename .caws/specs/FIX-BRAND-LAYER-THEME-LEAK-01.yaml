@@ -3,7 +3,6 @@ title: 'Default brand''s unscoped :root dark block overrides an explicit light t
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: brand-theme-leak
 created_at: '2026-09-03T00:21:31.163Z'
 updated_at: '2026-09-03T00:21:39.923Z'
 blast_radius:
