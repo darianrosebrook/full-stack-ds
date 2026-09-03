@@ -2,9 +2,11 @@ id: RAIL-WEB-STYLE-CARRIER-REACHABILITY-01
 title: 'Web-DOM style-carrier reachability: authored selectors may claim only carriers the IR can produce'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'deriveWebDomCarriers is the single Web-DOM carrier authority; forward reachability validator lands in validation/styles.ts (18 ledgered, not yet a generate:check gate) and the inverse census drops stylingIntent as an admission rule (1 to 47 findings, 41 previously invisible).'
 created_at: '2026-09-03T17:46:54.335Z'
-updated_at: '2026-09-03T17:47:00.839Z'
+updated_at: '2026-09-03T18:11:32.415Z'
 created_by_session: 'd97cce86-6592-41ba-857f-a6ec646948c1'
 blast_radius:
   modules:
