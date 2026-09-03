@@ -126,3 +126,7 @@ evidence:
     status: pass
     evidence_ref: "Forward ledger 18 -> 0. node scripts/carrier-reachability-audit/audit.mjs: 51 components, 0 unreachable carriers, findings=0 ledgered=0 unledgered=0 stale=0, PASS"
     recorded_at: "2026-09-03T22:37:49.572Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Text error/success are the only contract retirements; justified from the contract alone (no error/success variant, prop or token). Details/Tabs resolved by selector repair, not deletion. adjudication.md forward table"
+    recorded_at: "2026-09-03T22:37:49.991Z"
