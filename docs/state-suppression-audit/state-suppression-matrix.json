@@ -31,7 +31,7 @@
     },
     {
       "component": "Checkbox",
-      "rootTag": "input",
+      "rootTag": "label",
       "guarded": false,
       "suppressedProps": [],
       "leaks": []

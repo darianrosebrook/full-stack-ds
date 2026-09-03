@@ -36,6 +36,8 @@ const props = withDefaults(defineProps<Props>(), {
   open: undefined,
   defaultOpen: undefined,
   disabled: undefined,
+  variant: "default",
+  icon: "left",
 });
 // @generated:end
 

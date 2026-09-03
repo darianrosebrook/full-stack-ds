@@ -8,7 +8,10 @@
       "carrier": "accordion--multiple",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Selection cardinality (single vs multiple open panels), not appearance.",
+      "remedy": "None.",
+      "note": "structural-behavioral — Selection cardinality (single vs multiple open panels), not appearance. Remedy: None."
     },
     {
       "component": "Badge",
@@ -17,7 +20,10 @@
       "carrier": "badge--default",
       "disposition": "styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "stale-vocabulary",
+      "evidence": "The variant prop declares no default, so the audit treats no value as base-covered and flags the de-facto default. Unlike its painted peers counter/tag, `default` IS the base rule.",
+      "remedy": "Declare \"default\": \"default\" on the variant prop. No styling owed.",
+      "note": "stale-vocabulary — The variant prop declares no default, so the audit treats no value as base-covered and flags the de-facto default. Unlike its painted peers counter/tag, `default` IS the base rule. Remedy: Declare \"default\": \"default\" on the variant prop. No styling owed."
     },
     {
       "component": "Badge",
@@ -26,7 +32,10 @@
       "carrier": "badge--status",
       "disposition": "styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "counter and tag are painted; status is the unpainted peer of an otherwise painted vocabulary, so the axis does claim a visual distinction here.",
+      "remedy": "Author the --status block.",
+      "note": "visual-obligation — counter and tag are painted; status is the unpainted peer of an otherwise painted vocabulary, so the axis does claim a visual distinction here. Remedy: Author the --status block."
     },
     {
       "component": "Calendar",
@@ -35,7 +44,10 @@
       "carrier": "calendar--range",
       "disposition": "styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Selection semantics (single date vs range), not appearance.",
+      "remedy": "None for the axis carrier. Range selection may later owe in-range day styling, which is a state surface rather than this variant carrier.",
+      "note": "structural-behavioral — Selection semantics (single date vs range), not appearance. Remedy: None for the axis carrier. Range selection may later owe in-range day styling, which is a state surface rather than this variant carrier."
     },
     {
       "component": "Checkbox",
@@ -44,7 +56,10 @@
       "carrier": "checkbox--sm",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No --sm/--md/--lg block and no per-value token in Checkbox.styles.json; a browser measures sm/md/lg as identical.",
+      "remedy": "Author per-size box-model and indicator dimensions.",
+      "note": "visual-obligation — No --sm/--md/--lg block and no per-value token in Checkbox.styles.json; a browser measures sm/md/lg as identical. Remedy: Author per-size box-model and indicator dimensions."
     },
     {
       "component": "Checkbox",
@@ -53,7 +68,10 @@
       "carrier": "checkbox--lg",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No --sm/--md/--lg block and no per-value token in Checkbox.styles.json; a browser measures sm/md/lg as identical.",
+      "remedy": "Author per-size box-model and indicator dimensions.",
+      "note": "visual-obligation — No --sm/--md/--lg block and no per-value token in Checkbox.styles.json; a browser measures sm/md/lg as identical. Remedy: Author per-size box-model and indicator dimensions."
     },
     {
       "component": "Chip",
@@ -62,43 +80,10 @@
       "carrier": "chip--default",
       "disposition": "styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
-    },
-    {
-      "component": "Details",
-      "axis": "variant",
-      "value": "default",
-      "carrier": "details--default",
-      "disposition": "styling-intent",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
-    },
-    {
-      "component": "Details",
-      "axis": "icon",
-      "value": "left",
-      "carrier": "details--left",
-      "disposition": "no-styling-intent",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
-    },
-    {
-      "component": "Details",
-      "axis": "icon",
-      "value": "right",
-      "carrier": "details--right",
-      "disposition": "no-styling-intent",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
-    },
-    {
-      "component": "Details",
-      "axis": "icon",
-      "value": "none",
-      "carrier": "details--none",
-      "disposition": "no-styling-intent",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "stale-vocabulary",
+      "evidence": "The variant prop declares no default, so the de-facto default is flagged. selected and dismissible are painted; `default` IS the base rule.",
+      "remedy": "Declare \"default\": \"default\" on the variant prop. No styling owed.",
+      "note": "stale-vocabulary — The variant prop declares no default, so the de-facto default is flagged. selected and dismissible are painted; `default` IS the base rule. Remedy: Declare \"default\": \"default\" on the variant prop. No styling owed."
     },
     {
       "component": "Divider",
@@ -107,7 +92,10 @@
       "carrier": "divider--horizontal",
       "disposition": "styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "stale-vocabulary",
+      "evidence": "The orientation prop declares no default. --vertical is painted; horizontal is the base <hr> rule.",
+      "remedy": "Declare \"default\": \"horizontal\" on the orientation prop.",
+      "note": "stale-vocabulary — The orientation prop declares no default. --vertical is painted; horizontal is the base <hr> rule. Remedy: Declare \"default\": \"horizontal\" on the orientation prop."
     },
     {
       "component": "List",
@@ -116,7 +104,10 @@
       "carrier": "list--ul",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Realized by the polymorphic root, not by CSS: the generated source reads `const As = as ?? \"ul\"` and renders `<Stack as={As}>`. The value changes the element.",
+      "remedy": "None for styling. The redundant list--<tag> carrier could be suppressed for polymorphic-tag axes.",
+      "note": "structural-behavioral — Realized by the polymorphic root, not by CSS: the generated source reads `const As = as ?? \"ul\"` and renders `<Stack as={As}>`. The value changes the element. Remedy: None for styling. The redundant list--<tag> carrier could be suppressed for polymorphic-tag axes."
     },
     {
       "component": "List",
@@ -125,7 +116,10 @@
       "carrier": "list--ol",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Realized by the polymorphic root, not by CSS: the generated source reads `const As = as ?? \"ul\"` and renders `<Stack as={As}>`. The value changes the element.",
+      "remedy": "None for styling. The redundant list--<tag> carrier could be suppressed for polymorphic-tag axes.",
+      "note": "structural-behavioral — Realized by the polymorphic root, not by CSS: the generated source reads `const As = as ?? \"ul\"` and renders `<Stack as={As}>`. The value changes the element. Remedy: None for styling. The redundant list--<tag> carrier could be suppressed for polymorphic-tag axes."
     },
     {
       "component": "List",
@@ -134,7 +128,10 @@
       "carrier": "list--dl",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Realized by the polymorphic root, not by CSS: the generated source reads `const As = as ?? \"ul\"` and renders `<Stack as={As}>`. The value changes the element.",
+      "remedy": "None for styling. The redundant list--<tag> carrier could be suppressed for polymorphic-tag axes.",
+      "note": "structural-behavioral — Realized by the polymorphic root, not by CSS: the generated source reads `const As = as ?? \"ul\"` and renders `<Stack as={As}>`. The value changes the element. Remedy: None for styling. The redundant list--<tag> carrier could be suppressed for polymorphic-tag axes."
     },
     {
       "component": "NavList",
@@ -143,7 +140,10 @@
       "carrier": "nav-list--horizontal",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "The `list` part hard-codes flex-direction: column, so orientation=horizontal still renders a column. The nav-list--horizontal carrier is emitted and selected by nothing.",
+      "remedy": "Author .nav-list--horizontal .nav-list__list { flex-direction: row }.",
+      "note": "visual-obligation — The `list` part hard-codes flex-direction: column, so orientation=horizontal still renders a column. The nav-list--horizontal carrier is emitted and selected by nothing. Remedy: Author .nav-list--horizontal .nav-list__list { flex-direction: row }."
     },
     {
       "component": "NavTree",
@@ -152,7 +152,10 @@
       "carrier": "nav-tree--md",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No per-size block; md and sm render the same glyph box.",
+      "remedy": "Author the md icon dimensions.",
+      "note": "visual-obligation — No per-size block; md and sm render the same glyph box. Remedy: Author the md icon dimensions."
     },
     {
       "component": "OTP",
@@ -161,7 +164,10 @@
       "carrier": "otp--alphanumeric",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Drives the field inputmode/pattern — an input-method fact.",
+      "remedy": "None.",
+      "note": "structural-behavioral — Drives the field inputmode/pattern — an input-method fact. Remedy: None."
     },
     {
       "component": "Popover",
@@ -170,7 +176,10 @@
       "carrier": "popover--top",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed.",
+      "remedy": "None. A CSS modifier here would be actively wrong, not merely absent.",
+      "note": "structural-behavioral — surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed. Remedy: None. A CSS modifier here would be actively wrong, not merely absent."
     },
     {
       "component": "Popover",
@@ -179,7 +188,10 @@
       "carrier": "popover--bottom",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed.",
+      "remedy": "None. A CSS modifier here would be actively wrong, not merely absent.",
+      "note": "structural-behavioral — surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed. Remedy: None. A CSS modifier here would be actively wrong, not merely absent."
     },
     {
       "component": "Popover",
@@ -188,7 +200,10 @@
       "carrier": "popover--left",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed.",
+      "remedy": "None. A CSS modifier here would be actively wrong, not merely absent.",
+      "note": "structural-behavioral — surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed. Remedy: None. A CSS modifier here would be actively wrong, not merely absent."
     },
     {
       "component": "Popover",
@@ -197,7 +212,10 @@
       "carrier": "popover--right",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed.",
+      "remedy": "None. A CSS modifier here would be actively wrong, not merely absent.",
+      "note": "structural-behavioral — surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed. Remedy: None. A CSS modifier here would be actively wrong, not merely absent."
     },
     {
       "component": "Popover",
@@ -206,7 +224,10 @@
       "carrier": "popover--auto",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed.",
+      "remedy": "None. A CSS modifier here would be actively wrong, not merely absent.",
+      "note": "structural-behavioral — surface.positioning declares strategy=anchored, placementProp=placement, collision=flip-shift. Placement is resolved at runtime and applied as coordinates; under collision flipping a --top class would assert a side the runtime has already changed. Remedy: None. A CSS modifier here would be actively wrong, not merely absent."
     },
     {
       "component": "Postcard",
@@ -215,7 +236,10 @@
       "carrier": "postcard--image",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "image/video/audio name distinct media kinds, but the contract renders no per-kind element and authors no per-kind chrome. Nothing in the contract says whether the axis owes a different element, different styling, or neither.",
+      "remedy": "Decide what type means before painting it — per-kind media element (structural) or per-kind chrome (visual). Retire the axis if neither.",
+      "note": "unresolved-contract-semantics — image/video/audio name distinct media kinds, but the contract renders no per-kind element and authors no per-kind chrome. Nothing in the contract says whether the axis owes a different element, different styling, or neither. Remedy: Decide what type means before painting it — per-kind media element (structural) or per-kind chrome (visual). Retire the axis if neither."
     },
     {
       "component": "Postcard",
@@ -224,7 +248,10 @@
       "carrier": "postcard--video",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "image/video/audio name distinct media kinds, but the contract renders no per-kind element and authors no per-kind chrome. Nothing in the contract says whether the axis owes a different element, different styling, or neither.",
+      "remedy": "Decide what type means before painting it — per-kind media element (structural) or per-kind chrome (visual). Retire the axis if neither.",
+      "note": "unresolved-contract-semantics — image/video/audio name distinct media kinds, but the contract renders no per-kind element and authors no per-kind chrome. Nothing in the contract says whether the axis owes a different element, different styling, or neither. Remedy: Decide what type means before painting it — per-kind media element (structural) or per-kind chrome (visual). Retire the axis if neither."
     },
     {
       "component": "Postcard",
@@ -233,7 +260,10 @@
       "carrier": "postcard--audio",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "image/video/audio name distinct media kinds, but the contract renders no per-kind element and authors no per-kind chrome. Nothing in the contract says whether the axis owes a different element, different styling, or neither.",
+      "remedy": "Decide what type means before painting it — per-kind media element (structural) or per-kind chrome (visual). Retire the axis if neither.",
+      "note": "unresolved-contract-semantics — image/video/audio name distinct media kinds, but the contract renders no per-kind element and authors no per-kind chrome. Nothing in the contract says whether the axis owes a different element, different styling, or neither. Remedy: Decide what type means before painting it — per-kind media element (structural) or per-kind chrome (visual). Retire the axis if neither."
     },
     {
       "component": "Progress",
@@ -242,7 +272,10 @@
       "carrier": "progress--linear",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "circular cannot be delivered by a modifier class over the linear anatomy; it needs a different subtree (an SVG arc). The carrier is emitted, so the axis claims a distinction the current anatomy cannot express.",
+      "remedy": "Either give Progress a per-variant anatomy (a contract change, and the honest fix) or retire circular.",
+      "note": "unresolved-contract-semantics — circular cannot be delivered by a modifier class over the linear anatomy; it needs a different subtree (an SVG arc). The carrier is emitted, so the axis claims a distinction the current anatomy cannot express. Remedy: Either give Progress a per-variant anatomy (a contract change, and the honest fix) or retire circular."
     },
     {
       "component": "Progress",
@@ -251,7 +284,10 @@
       "carrier": "progress--circular",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "circular cannot be delivered by a modifier class over the linear anatomy; it needs a different subtree (an SVG arc). The carrier is emitted, so the axis claims a distinction the current anatomy cannot express.",
+      "remedy": "Either give Progress a per-variant anatomy (a contract change, and the honest fix) or retire circular.",
+      "note": "unresolved-contract-semantics — circular cannot be delivered by a modifier class over the linear anatomy; it needs a different subtree (an SVG arc). The carrier is emitted, so the axis claims a distinction the current anatomy cannot express. Remedy: Either give Progress a per-variant anatomy (a contract change, and the honest fix) or retire circular."
     },
     {
       "component": "Progress",
@@ -260,7 +296,10 @@
       "carrier": "progress--sm",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No per-size block or token; bar thickness is fixed across sm/md/lg.",
+      "remedy": "Author per-size track thickness.",
+      "note": "visual-obligation — No per-size block or token; bar thickness is fixed across sm/md/lg. Remedy: Author per-size track thickness."
     },
     {
       "component": "Progress",
@@ -269,7 +308,10 @@
       "carrier": "progress--md",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No per-size block or token; bar thickness is fixed across sm/md/lg.",
+      "remedy": "Author per-size track thickness.",
+      "note": "visual-obligation — No per-size block or token; bar thickness is fixed across sm/md/lg. Remedy: Author per-size track thickness."
     },
     {
       "component": "Progress",
@@ -278,7 +320,10 @@
       "carrier": "progress--lg",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No per-size block or token; bar thickness is fixed across sm/md/lg.",
+      "remedy": "Author per-size track thickness.",
+      "note": "visual-obligation — No per-size block or token; bar thickness is fixed across sm/md/lg. Remedy: Author per-size track thickness."
     },
     {
       "component": "Select",
@@ -287,7 +332,10 @@
       "carrier": "select--bottom",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "The string \"position\" occurs exactly once in Select's contract — the axis declaration itself. No prop binding, no surface.positioning block, no style block. Unlike the anchored family, Select declares no positioning for a runtime to consume.",
+      "remedy": "Either declare surface.positioning so the listbox side is runtime-resolved (matching Popover/Tooltip/Walkthrough) or retire the axis.",
+      "note": "unresolved-contract-semantics — The string \"position\" occurs exactly once in Select's contract — the axis declaration itself. No prop binding, no surface.positioning block, no style block. Unlike the anchored family, Select declares no positioning for a runtime to consume. Remedy: Either declare surface.positioning so the listbox side is runtime-resolved (matching Popover/Tooltip/Walkthrough) or retire the axis."
     },
     {
       "component": "Select",
@@ -296,7 +344,10 @@
       "carrier": "select--top",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "The string \"position\" occurs exactly once in Select's contract — the axis declaration itself. No prop binding, no surface.positioning block, no style block. Unlike the anchored family, Select declares no positioning for a runtime to consume.",
+      "remedy": "Either declare surface.positioning so the listbox side is runtime-resolved (matching Popover/Tooltip/Walkthrough) or retire the axis.",
+      "note": "unresolved-contract-semantics — The string \"position\" occurs exactly once in Select's contract — the axis declaration itself. No prop binding, no surface.positioning block, no style block. Unlike the anchored family, Select declares no positioning for a runtime to consume. Remedy: Either declare surface.positioning so the listbox side is runtime-resolved (matching Popover/Tooltip/Walkthrough) or retire the axis."
     },
     {
       "component": "Select",
@@ -305,7 +356,10 @@
       "carrier": "select--auto",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "unresolved-contract-semantics",
+      "evidence": "The string \"position\" occurs exactly once in Select's contract — the axis declaration itself. No prop binding, no surface.positioning block, no style block. Unlike the anchored family, Select declares no positioning for a runtime to consume.",
+      "remedy": "Either declare surface.positioning so the listbox side is runtime-resolved (matching Popover/Tooltip/Walkthrough) or retire the axis.",
+      "note": "unresolved-contract-semantics — The string \"position\" occurs exactly once in Select's contract — the axis declaration itself. No prop binding, no surface.positioning block, no style block. Unlike the anchored family, Select declares no positioning for a runtime to consume. Remedy: Either declare surface.positioning so the listbox side is runtime-resolved (matching Popover/Tooltip/Walkthrough) or retire the axis."
     },
     {
       "component": "Tabs",
@@ -314,7 +368,10 @@
       "carrier": "tabs--manual",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Keyboard activation semantics (automatic vs manual), not appearance.",
+      "remedy": "None.",
+      "note": "structural-behavioral — Keyboard activation semantics (automatic vs manual), not appearance. Remedy: None."
     },
     {
       "component": "Toast",
@@ -323,7 +380,10 @@
       "carrier": "toast--assertive",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Lowered to aria-live and bound in anatomy.dom — an assistive-technology fact with no visual counterpart.",
+      "remedy": "None.",
+      "note": "structural-behavioral — Lowered to aria-live and bound in anatomy.dom — an assistive-technology fact with no visual counterpart. Remedy: None."
     },
     {
       "component": "ToggleSwitch",
@@ -332,7 +392,10 @@
       "carrier": "toggle-switch--small",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No per-size block or token; small/medium/large render identically.",
+      "remedy": "Author per-size track and thumb dimensions.",
+      "note": "visual-obligation — No per-size block or token; small/medium/large render identically. Remedy: Author per-size track and thumb dimensions."
     },
     {
       "component": "ToggleSwitch",
@@ -341,7 +404,10 @@
       "carrier": "toggle-switch--large",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "visual-obligation",
+      "evidence": "No per-size block or token; small/medium/large render identically.",
+      "remedy": "Author per-size track and thumb dimensions.",
+      "note": "visual-obligation — No per-size block or token; small/medium/large render identically. Remedy: Author per-size track and thumb dimensions."
     },
     {
       "component": "Tooltip",
@@ -350,7 +416,10 @@
       "carrier": "tooltip--top",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Tooltip",
@@ -359,7 +428,10 @@
       "carrier": "tooltip--bottom",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Tooltip",
@@ -368,7 +440,10 @@
       "carrier": "tooltip--left",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Tooltip",
@@ -377,7 +452,10 @@
       "carrier": "tooltip--right",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Tooltip",
@@ -386,7 +464,10 @@
       "carrier": "tooltip--auto",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration as Popover; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Walkthrough",
@@ -395,7 +476,10 @@
       "carrier": "walkthrough--top",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Walkthrough",
@@ -404,7 +488,10 @@
       "carrier": "walkthrough--bottom",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Walkthrough",
@@ -413,7 +500,10 @@
       "carrier": "walkthrough--left",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     },
     {
       "component": "Walkthrough",
@@ -422,7 +512,10 @@
       "carrier": "walkthrough--right",
       "disposition": "no-styling-intent",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+      "adjudication": "structural-behavioral",
+      "evidence": "Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved.",
+      "remedy": "None. A CSS modifier here would be actively wrong.",
+      "note": "structural-behavioral — Same anchored/flip-shift positioning declaration; the rendered side is runtime-resolved. Remedy: None. A CSS modifier here would be actively wrong."
     }
   ]
 }

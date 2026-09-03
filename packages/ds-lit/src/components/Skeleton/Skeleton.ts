@@ -114,13 +114,13 @@ export class SkeletonElement extends LitElement {
       transition-timing-function: var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1));
       animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
 
-      &:has(> .skeleton__stack) {
+      &:has(.skeleton__stack) {
         background-color: transparent;
         animation: none;
         height: auto;
       }
 
-      &:has(> .skeleton__stack) .skeleton__shape {
+      &:has(.skeleton__stack) .skeleton__shape {
         height: var(--fsds-skeleton-shape-height-text, 1rem);
         animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
       }

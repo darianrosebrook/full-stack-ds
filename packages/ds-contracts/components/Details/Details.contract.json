@@ -122,12 +122,14 @@
         {
           "name": "variant",
           "type": "DetailsVariant",
-          "description": "Visual variant."
+          "description": "Visual variant.",
+          "default": "default"
         },
         {
           "name": "icon",
           "type": "DetailsIcon",
-          "description": "Icon position or absence."
+          "description": "Icon position or absence.",
+          "default": "left"
         }
       ]
     }

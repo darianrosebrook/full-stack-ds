@@ -45,7 +45,7 @@
       "fallback": "8px"
     }
   },
-  ".skeleton:has(> .skeleton__stack)": {
+  ".skeleton:has(.skeleton__stack)": {
     "background-color": {
       "literal": "transparent",
       "platforms": [
@@ -65,7 +65,7 @@
       ]
     }
   },
-  ".skeleton:has(> .skeleton__stack) .skeleton__shape": {
+  ".skeleton:has(.skeleton__stack) .skeleton__shape": {
     "height": {
       "resolvesTo": "skeleton.shape.height.text",
       "fallback": "1rem"
