@@ -150,3 +150,7 @@ evidence:
     status: pass
     evidence_ref: "Rail mutation proof, both directions: restoring the retired Text error block -> FAIL 1 unledgered (Text error -> .text__error); removing Skeleton's realized shape child -> FAIL 2 unledgered. Both revert to PASS. Plus per-guard unit mutations in swiftui component-source.test.ts (dom-tag guard -> Chip; projection guard -> TextField; locality guard -> Select x3; iteration guard -> synthetic)"
     recorded_at: "2026-09-03T22:38:13.182Z"
+  - criterion_id: A9
+    status: pass
+    evidence_ref: "adjudication.md 'Card: five carriers of unknown topology (audit only)'. Realization gap on contract-sourced evidence (a2ui.usageHints name Card.Link/Actions/Media). Cause: hardcoded COMPOUND_PARTS allowlist in semantics.ts. Repair deferred with measured blast radius: Card is the only dom-less component affected, but isCompoundPart applies to all 29 slot-bearing components"
+    recorded_at: "2026-09-03T22:38:13.596Z"
