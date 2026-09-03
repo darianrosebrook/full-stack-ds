@@ -55,3 +55,9 @@ evidence:
     recorded_at: "2026-09-03T22:05:00.599Z"
     command: swift test --package-path packages/ds-swiftui
     exit_code: 0
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "negative probe: corrupted semantic.color.background.secondary light to #000000; swiftui:semantic-defaults:check exited 1 and printed the exact diff plus the regeneration command"
+    recorded_at: "2026-09-03T22:05:09.816Z"
+    command: node scripts/generate-swiftui-semantic-defaults.mjs --check
+    exit_code: 1
