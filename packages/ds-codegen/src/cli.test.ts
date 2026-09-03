@@ -6,6 +6,14 @@
 // contracts corpus; generation paths use --dry-run so nothing is written.
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+// Every case resets the module registry and re-imports cli.ts against the real
+// contracts corpus, so the import graph is rebuilt per test rather than shared:
+// ~2.6s for the file alone, ~12.5s under the root suite's 244-file parallel
+// load. Individual cases overrun vitest's 5s default there, so the budget is
+// raised for this file only — the re-import is what makes the module-level
+// main() observable and cannot be amortised away.
+vi.setConfig({ testTimeout: 20000 });
+
 const PROCESS_EXIT = "PROCESS_EXIT";
 
 function prepare(args: string[]) {
