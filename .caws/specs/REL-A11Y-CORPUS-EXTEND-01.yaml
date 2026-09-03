@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "No accessibility technology entered the analytical relation. vocabulary.json gains only semantic terms: namespace projection [peer visual textual structural navigational interactive] and five conservation invariants. corpus-integrity.test.ts 'no accessibility technology enters the vocabulary' asserts namespaces excludes aria/role/html/wcag/apg and that every term a projection case declares resolves in a semantic namespace. Form-name denylist unchanged (form-names.json digest 0564902cf8d7d4ff identical) and checkCorpus on the live pack returns [] so CORPUS_FORM_NAME_LEAK did not fire on any new asserted/cause text."
     recorded_at: "2026-09-03T00:42:10.511Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Catalogue-case bijection holds both directions with 10 new diagnostics: 'pnpm exec tsx tmp/probe-a11y.mts' prints 'checkCorpus findings: []' with 70 cases against 57 catalogue rows, and checkCorpus enforces CORPUS_DOC_DRIFT in both directions plus CORPUS_ENGINE_UNEXERCISED. New diagnostics reuse existing engines only (task-invariant, declaration-missing, derivation-typing) - no engine was added, so the engine enum, vocabulary.engines and CORPUS_SCHEMA_ENGINE_DRIFT are untouched. REL_ORDER_TRAVERSAL_MISMATCH is now shared by two independent cases, strengthening CORPUS_CASE_DIAGNOSTIC_BIJECTION rather than weakening it."
+    recorded_at: "2026-09-03T00:42:10.981Z"
