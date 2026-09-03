@@ -36,7 +36,35 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export type CoordinateKind = "leaf" | "member-pair" | "member-absence" | "reference";
+export type CoordinateKind = "leaf" | "member-pair" | "member-absence" | "reference-topology" | "reference";
+
+/**
+ * Identity-free structure of a name reference. Reference SPELLING confers no
+ * standing — that is the alpha-renaming invariant — but reference STRUCTURE
+ * can: `toGrain=[region]` and `toGrain=[region, product]` are not equivalent
+ * under any consistent renaming, nor are `levels=[country, state]` and
+ * `levels=[state, country]`, nor is a graph with `edgeFrom`/`edgeTo` bound one
+ * way versus the other. Each facet names an erasure that destroys exactly that
+ * structure while leaving the representation schema-valid.
+ */
+export type ReferenceFacet =
+  /** How many names the reference carries. Erased by truncating to one. */
+  | "arity"
+  /** Whether their sequence is semantic. Erased by sorting. */
+  | "order"
+  /**
+   * Which OTHER references this one shares names with — the incidence of the
+   * reference graph. Erased by rewriting every name at this path to one
+   * reserved token, so all sharing through this slot becomes unobservable
+   * while every other reference keeps its identity.
+   *
+   * This is the facet the stage-1 witnesses actually needed: two fixtures that
+   * sum along `date` versus along `product`, against a measure declared
+   * non-additive along `date`, differ in nothing but whether the assertion's
+   * reference set MEETS the declaration's. No renaming makes them equal, and
+   * neither arity nor order sees it.
+   */
+  | "incidence";
 
 /**
  * The pseudo-member a `member-absence` coordinate pairs a real member against.
@@ -60,6 +88,10 @@ export interface Coordinate {
   role: "schema" | "instance";
   /** Enum members of the leaf, when it is an enum. */
   enum?: string[];
+  /** For `reference-topology`, which identity-free structure it isolates. */
+  facet?: ReferenceFacet;
+  /** For `binding`, the sibling reference slots whose assignment is at stake. */
+  slots?: string[];
 }
 
 type Node = Record<string, unknown>;
@@ -84,20 +116,31 @@ export function label(rawPath: string): string {
 }
 
 /**
- * Name references: a target named by an assertion, a relationship, or a
- * derivation. Names confer no standing (the alpha-renaming invariant), so
- * these are listed for exhaustiveness and are not coordinates. A derivation's
- * operands are names in exactly this sense: `join.from`, `nest.levels`,
- * `project.keep` and `aggregate-to-grain.toGrain` say WHICH relation or fields
- * participate, never anything about their measurement standing, and a fixture
- * that renames them is the same representation.
+ * A name reference is detected STRUCTURALLY — a property whose value type is
+ * the `name` definition — rather than matched by a hand-maintained path
+ * pattern. A new Name-valued property therefore joins the census with no hand
+ * edit, which is the same property the leaf walk already guarantees, and the
+ * old regex could not: it had to be extended by hand for every derivation
+ * operand and would silently misclassify the next one.
  *
- * `structure.peers` is deliberately NOT here. Its contents are names, but the
- * grouping is a claim — "these two relations speak for the same authority" —
- * and erasing it removes that claim rather than renaming anything.
+ * The spelling of a reference confers no standing. Its structure may:
+ * `reference-topology` coordinates carry arity, order and slot binding, and
+ * the reference itself is listed for exhaustiveness. Presence is separate
+ * again — an OPTIONAL reference also gets a `leaf` coordinate, because whether
+ * it is declared at all is a degree of freedom its spelling is not.
  */
-const REFERENCE_RE =
-  /^(assertion(\.[a-z-]+)?\.(relation|field)|relationship\.(from|to)\.(relation|field)|relation\.derivedBy\.[a-z-]+\.(from|with|toGrain|levels|field|keep|edgeFrom|edgeTo|value))$/;
+const NAME_REF = "#/definitions/name";
+function nameRefOf(raw: Node): boolean {
+  let cur = raw;
+  for (let i = 0; i < 4; i++) {
+    if (Array.isArray(cur.allOf) && cur.allOf.length === 1 && Object.keys(cur).length === 1) {
+      cur = cur.allOf[0] as Node;
+      continue;
+    }
+    return cur.$ref === NAME_REF;
+  }
+  return false;
+}
 
 const PRIMITIVE_TYPES = new Set(["string", "number", "integer", "boolean"]);
 function isPrimitive(n: Node): boolean {
@@ -135,14 +178,34 @@ export function deriveCensus(schema: Node): Coordinate[] {
   type Opt = { self: boolean; holder: boolean };
   const OPT_REQUIRED: Opt = { self: false, holder: false };
 
+  /**
+   * A Name-valued property. Its spelling is not a coordinate; its structure is.
+   * `list` decides which facets apply: a single slot has no arity or order to
+   * vary, only which sibling slot binds it.
+   */
+  const addReference = (rawPath: string, list: boolean, optional: Opt) => {
+    const id = label(rawPath);
+    if (id === "id" || seen.has(id)) return;
+    seen.add(id);
+    const r = role(rawPath);
+    out.push({ id, kind: "reference", leaf: id, role: r });
+    // Presence is a degree of freedom the spelling is not. Reachable absence
+    // is the same test the member-absence class uses: the reference may be
+    // omitted, or its holder may be, and `field.whole.perRow` is the case that
+    // forces the second disjunct — it is required inside `{perRow}` while that
+    // object is one branch of an optional union, so dropping it is lawful and
+    // is exactly what its witness erases.
+    if (optional.self || optional.holder) out.push({ id: `${id}#present`, kind: "leaf", leaf: id, role: r });
+    const facets: ReferenceFacet[] = list ? ["arity", "order", "incidence"] : ["incidence"];
+    for (const facet of facets) {
+      out.push({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet });
+    }
+  };
+
   const addLeaf = (rawPath: string, enumMembers?: string[], optional: Opt = OPT_REQUIRED) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
-    if (REFERENCE_RE.test(id)) {
-      out.push({ id, kind: "reference", leaf: id, role: role(rawPath) });
-      return;
-    }
     out.push({ id, kind: "leaf", leaf: id, role: role(rawPath), ...(enumMembers ? { enum: enumMembers } : {}) });
     if (enumMembers) {
       for (let i = 0; i < enumMembers.length; i++) {
@@ -174,7 +237,10 @@ export function deriveCensus(schema: Node): Coordinate[] {
   };
 
   const walk = (raw: Node, rawPath: string, optional: Opt = OPT_REQUIRED): void => {
+    // Detected BEFORE resolution: after it a name is just a patterned string.
+    if (nameRefOf(raw)) return addReference(rawPath, false, optional);
     const n = resolve(raw);
+    if (n.type === "array" && nameRefOf((n.items ?? {}) as Node)) return addReference(rawPath, true, optional);
     if (Array.isArray(n.enum)) return addLeaf(rawPath, n.enum as string[], optional);
     if (n.const !== undefined) return addLeaf(rawPath, [String(n.const)], optional);
     if (Array.isArray(n.anyOf)) return walkUnion(n.anyOf as Node[], rawPath, optional);
@@ -182,7 +248,18 @@ export function deriveCensus(schema: Node): Coordinate[] {
     if (n.type === "array") {
       const items = resolve((n.items ?? {}) as Node);
       if (isPrimitive(items) || Array.isArray(items.enum)) return addLeaf(rawPath, Array.isArray(items.enum) ? (items.enum as string[]) : undefined, optional);
-      return walk(items, `${rawPath}[]`);
+      // An optional array of composites carries one fact its elements cannot:
+      // whether the declaration is made at all. `structure.peers` is the case
+      // — its elements are name references whose arity and membership are
+      // their own coordinates, but "there is a peer claim here" is not.
+      if (optional.self || optional.holder) {
+        const id = label(rawPath);
+        if (!seen.has(`${id}#present`)) {
+          seen.add(`${id}#present`);
+          out.push({ id: `${id}#present`, kind: "leaf", leaf: id, role: role(rawPath) });
+        }
+      }
+      return walk(items, `${rawPath}[]`, { self: false, holder: optional.self || optional.holder });
     }
     if (n.type === "object") {
       if (n.properties) {
@@ -195,9 +272,15 @@ export function deriveCensus(schema: Node): Coordinate[] {
         return;
       }
       if (n.additionalProperties && typeof n.additionalProperties === "object") {
+        // A record's entries are absent whenever the record is, so its
+        // optionality has to reach them — dropping it here left
+        // `evidence.grainWitness` with no presence coordinate for its own
+        // witness to name.
+        const inner: Opt = { self: false, holder: optional.self || optional.holder };
         const v = resolve(n.additionalProperties as Node);
-        if (isPrimitive(v)) return addLeaf(rawPath);
-        return walk(v, `${rawPath}.*`);
+        if (isPrimitive(v)) return addLeaf(rawPath, undefined, inner);
+        if (nameRefOf(n.additionalProperties as Node)) return addReference(rawPath, false, inner);
+        return walk(v, `${rawPath}.*`, inner);
       }
       return addLeaf(rawPath);
     }

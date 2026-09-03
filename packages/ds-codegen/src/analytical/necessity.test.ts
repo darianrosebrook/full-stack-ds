@@ -80,7 +80,7 @@ describe("C0 — provenance of the two censuses", () => {
     // Stage 1.5 closed at 26 leaves / 21 pairs / 4 references. Stage 2 admits
     // the L3 derivation algebra; the growth is only legitimate while every
     // added coordinate is either witnessed or in the pending ledger.
-    expect(count(kernel)).toEqual({ leaves: 32, pairs: 55, references: 20 });
+    expect(count(kernel)).toEqual({ leaves: 49, pairs: 55, references: 25 });
     const unaccounted = kernel
       .filter(isCoordinate)
       .filter((c) => !ratifiedIds.has(c.id) && !pendingIds.has(c.id))
@@ -97,7 +97,9 @@ describe("C0 — provenance of the two censuses", () => {
       // these ids have no stage-1 counterpart by construction. Stage-2
       // admissions likewise post-date that snapshot. Both are dispositioned
       // against the stage-2 oracle via the pending ledger, not here.
-      if (c.kind === "member-absence" || pendingIds.has(c.id)) continue;
+      // A `#facet` id is a refinement of a stage-1 leaf, not a new kernel
+      // fact; `removals.leafMap` records which successor carries it.
+      if (c.kind === "member-absence" || c.id.includes("#") || pendingIds.has(c.id)) continue;
       const known = stage1Ids.has(c.id) || carried.has(c.leaf);
       expect(known, `${c.id} is a kernel coordinate the stage-1 census never carried`).toBe(true);
     }
@@ -179,8 +181,8 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
     expect(twoSets).toEqual([
       "assertion.kind + assertion.aggregate.op",
       "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
-      "field.additivity.kind:additive~semi-additive + field.additivity.semi-additive.nonAdditiveAlong",
-      "field.additivity.kind:semi-additive~ratio-measure + field.additivity.semi-additive.nonAdditiveAlong",
+      "field.additivity.kind:additive~semi-additive + field.additivity.semi-additive.nonAdditiveAlong#present",
+      "field.additivity.kind:semi-additive~ratio-measure + field.additivity.semi-additive.nonAdditiveAlong#present",
     ]);
   });
   it("witness evidence class: schema-role coordinates witnessed only with rows are exactly the three null-handling distinctions (invariant 9)", () => {
@@ -425,19 +427,29 @@ describe("C8 — the census is derived, exhaustive and exactly-once", () => {
   });
   it("evidence coordinates are the instance-evidence ones and nothing in the declaration is", () => {
     const instance = kernel.filter((c) => c.role === "instance").map((c) => c.leaf);
-    expect([...new Set(instance)].sort()).toEqual(["evidence.grainWitness", "observation.null", "observation.unit", "observation.value"]);
+    expect([...new Set(instance)].sort()).toEqual([
+      "evidence.grainWitness",
+      "evidence.rows.*",
+      "observation.null",
+      "observation.unit",
+      "observation.value",
+    ]);
     for (const c of kernel) if (c.id.startsWith("field.") || c.id.startsWith("relation.") || c.id.startsWith("assertion.")) expect(c.role).toBe("schema");
   });
   it("name references are listed for exhaustiveness and are not coordinates", () => {
-    // A derivation's operands are names in the same sense as an assertion's:
-    // they say WHICH relation or fields participate, never anything about
-    // measurement standing, so alpha-renaming them yields the same
-    // representation and they confer no necessity.
+    // References are detected structurally — a property whose value type is
+    // `name` — so a new one joins the census with no hand edit. Their SPELLING
+    // confers no standing; their structure does, and that lives in the
+    // `reference-topology` coordinates beside each.
     expect(kernel.filter((c) => c.kind === "reference").map((c) => c.id).sort()).toEqual([
+      "assertion.aggregate.along",
       "assertion.aggregate.field",
       "assertion.aggregate.relation",
       "assertion.ratio-comparison.field",
       "assertion.ratio-comparison.relation",
+      "evidence.grainWitness",
+      "field.additivity.semi-additive.nonAdditiveAlong",
+      "field.whole.perRow",
       "relation.derivedBy.aggregate-to-grain.from",
       "relation.derivedBy.aggregate-to-grain.toGrain",
       "relation.derivedBy.bin.field",
@@ -454,11 +466,16 @@ describe("C8 — the census is derived, exhaustive and exactly-once", () => {
       "relation.derivedBy.normalize.from",
       "relation.derivedBy.project.from",
       "relation.derivedBy.project.keep",
+      "structure.peers[]",
     ]);
-    // `structure.peers` is NOT a reference: its contents are names but the
-    // grouping is a claim, so erasing it removes an assertion about the world.
-    expect(kernelIds.has("structure.peers[]")).toBe(true);
-    expect(kernel.find((c) => c.id === "structure.peers[]")!.kind).not.toBe("reference");
+    // Every reference carries an incidence coordinate; only list-valued ones
+    // carry arity and order, because a single slot has neither to vary.
+    const facetsOf = (leaf: string) =>
+      kernel.filter((c) => c.kind === "reference-topology" && c.leaf === leaf).map((c) => c.facet).sort();
+    expect(facetsOf("assertion.aggregate.relation")).toEqual(["incidence"]);
+    expect(facetsOf("relation.derivedBy.nest.levels")).toEqual(["arity", "incidence", "order"]);
+    // The peer declaration's presence is a claim its elements cannot carry.
+    expect(kernelIds.has("structure.peers#present")).toBe(true);
   });
 });
 

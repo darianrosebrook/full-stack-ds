@@ -17,6 +17,9 @@ import { alphaRename, type Fixture } from "./structure.js";
 
 type Json = Record<string, unknown>;
 
+/** The single name every reference at an incidence-erased path collapses to. */
+const INCIDENCE_TOKEN = "zz_erased_reference";
+
 /** Visit every labelled node of a fixture; `visit` may mutate `parent[key]`. */
 function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: string) => void): void {
   const obj = (v: unknown): v is Json => typeof v === "object" && v !== null && !Array.isArray(v);
@@ -66,7 +69,32 @@ function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: 
 export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
   const copy = JSON.parse(JSON.stringify(fixture)) as Json;
   const cleanup: Json[] = [];
+  // A reference coordinate's id carries a `#facet` suffix; the walk labels
+  // nodes by their base path, so match on the leaf.
+  const isPresence = coordinate.kind === "leaf" && coordinate.id.endsWith("#present");
   walkFixture(copy, (id, parent, key) => {
+    if (coordinate.kind === "reference-topology" && id === coordinate.leaf) {
+      const v = parent[key];
+      if (coordinate.facet === "arity" && Array.isArray(v)) {
+        // How MANY names are bound stops being expressible.
+        parent[key] = v.slice(0, 1);
+      } else if (coordinate.facet === "order" && Array.isArray(v)) {
+        // Their sequence stops being expressible; membership survives.
+        parent[key] = [...v].sort();
+      } else if (coordinate.facet === "incidence") {
+        // Every name at this path collapses to one reserved token, so which
+        // other references it meets becomes unobservable while every other
+        // reference keeps its identity. The token is a lawful Name so the
+        // erased form stays inside the grammar.
+        parent[key] = Array.isArray(v) ? [INCIDENCE_TOKEN] : INCIDENCE_TOKEN;
+      }
+      return;
+    }
+    if (isPresence && id === coordinate.leaf) {
+      delete parent[key];
+      cleanup.push(parent);
+      return;
+    }
     if (coordinate.kind === "leaf" && id === coordinate.leaf) {
       // a bare scalar observation IS its value, so erasing the value erases the observation,
       // exactly as `{value}` erased to `{}` is dropped below.

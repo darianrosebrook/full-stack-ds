@@ -25,7 +25,11 @@
     { "coordinate": "observation.uncertainty.level", "reason": "observation-level uncertainty is stage 3", "reintroducibleAt": 3 }
   ],
   "leafMap": {
-    "assertion.rollup.op": "assertion.aggregate.op"
+    "assertion.rollup.op": "assertion.aggregate.op",
+    "assertion.aggregate.along": "assertion.aggregate.along#incidence",
+    "field.whole.perRow": "field.whole.perRow#incidence",
+    "field.additivity.semi-additive.nonAdditiveAlong": "field.additivity.semi-additive.nonAdditiveAlong#present",
+    "evidence.grainWitness": "evidence.grainWitness#present"
   },
   "memberMap": {
     "field.temporality.kind": { "duration": "interval" },
