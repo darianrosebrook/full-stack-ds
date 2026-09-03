@@ -78,3 +78,10 @@ evidence:
     command: node scripts/dead-slot-audit/disposition.test.mjs
     exit_code: 0
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Case 'Checkbox-shaped fixture: declared indicator, bare-input realization' feeds renderedPartsOf('<input type=\"checkbox\" className=\"checkbox checkbox--md\" />','checkbox') (empty set) against anatomy.parts [root,input,indicator]; asserts topology-conflict and notEqual delete. Fails under the reverted rule 5."
+    recorded_at: "2026-09-03T17:11:31.985Z"
+    command: node scripts/dead-slot-audit/disposition.test.mjs
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
