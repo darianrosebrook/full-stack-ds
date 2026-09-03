@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: view-algebra-2
 created_at: '2026-09-03T00:45:23.014Z'
-updated_at: '2026-09-03T00:45:53.904Z'
+updated_at: '2026-09-03T17:32:08.554Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical (zod model gains the L3 derivation algebra; engines gain the stage-2 rules; census gains member-vs-absence; necessity harness gains stage-2 witnesses)'
@@ -22,6 +22,10 @@ scope:
     - 'src/data/analytical-fixtures'
     - 'src/views/AnalyticalFixturesScratchView.tsx'
   out: []
+  support:
+    - docs/current-implementation-snapshot.md
+    - docs/README.md
+    - docs/architecture/adr/0001-structural-freeze-doctrine.md
 invariants:
   - 'The oracle is frozen: packages/ds-contracts/analytical-pack is scope.out and closure must show corpus.jsonl 86f2b03a9fe7affe, corpus-case.schema.json e961af232d3ede45, vocabulary.json 5bd9dfddab19dc33, form-names.json 0564902cf8d7d4ff and the doctrine catalogue+appendix 123e73dfc61ab2ab unchanged. If the engine cannot reproduce a case, the case wins until the user rules otherwise.'
   - 'A coordinate re-enters the kernel only with a necessity witness whose outcome comes from a stage-2 oracle case, neighbour, triad or holdout item - never from engine output. necessity.test.ts already refuses an unwitnessed kernel coordinate and must keep passing.'
