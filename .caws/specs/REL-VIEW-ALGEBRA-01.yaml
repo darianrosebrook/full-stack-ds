@@ -1,0 +1,59 @@
+id: REL-VIEW-ALGEBRA-01
+title: 'Stage 2: the L3 view algebra - derivations as typed operators, re-earning only the coordinates the stage-2 cases demand'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-03T00:45:23.014Z'
+updated_at: '2026-09-03T00:45:23.014Z'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical (zod model gains the L3 derivation algebra; engines gain the stage-2 rules; census gains member-vs-absence; necessity harness gains stage-2 witnesses)'
+    - 'packages/ds-contracts/analytical-fixtures (stage-2 case fixtures, near-neighbours, discharge triads, re-derived holdout)'
+    - 'src/data/analytical-fixtures + AnalyticalFixturesScratchView (derived dump re-synced)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-contracts/relation.contract.schema.json'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'src/data/analytical-fixtures'
+    - 'src/views/AnalyticalFixturesScratchView.tsx'
+  out: []
+invariants:
+  - 'The oracle is frozen: packages/ds-contracts/analytical-pack is scope.out and closure must show corpus.jsonl 86f2b03a9fe7affe, corpus-case.schema.json e961af232d3ede45, vocabulary.json 5bd9dfddab19dc33, form-names.json 0564902cf8d7d4ff and the doctrine catalogue+appendix 123e73dfc61ab2ab unchanged. If the engine cannot reproduce a case, the case wins until the user rules otherwise.'
+  - 'A coordinate re-enters the kernel only with a necessity witness whose outcome comes from a stage-2 oracle case, neighbour, triad or holdout item - never from engine output. necessity.test.ts already refuses an unwitnessed kernel coordinate and must keep passing.'
+  - 'Only coordinates a stage-2 adjudicable case DEMANDS may be re-admitted. Rate re-derivation (unit numerator/denominator) has no stage-2 case and stays not-yet-admitted until stage 3, notwithstanding that it was named as a pressure point before the corpus was consulted; the same test applies to every other removal in removals.json.'
+  - 'Stage 1 must not regress: the stage-1 adjudicable set stays 19 cases / 15 diagnostics with its expected judgments, the Phase-A ledger still reproduces modulo recorded key rewrites, and any engines.ts edit forces the holdout ruleDigest to be re-derived by hand and re-recorded with a reason line.'
+  - 'Scope stops below L4. No projection space, no channels, no enumerator, no alias catalogue: the seven stage-3 peer-projection cases and the two stage-5 ones stay not-yet-adjudicable, and an engine rule that fires on them is out of scope even if it would pass.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the kernel has no derivation algebra; when L3 derivations are added to the single zod authority; then a derivation of a relation is itself a relation, the schemas are emitted and drift-gated, and every derivation carries its derivation-kind classification'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the stage-2 answer key is 30 cases over 24 diagnostics and 4 obligations; when the engine is judged at stage 2; then every case returns exactly its expected judgment in its evidence class, with the engine importing nothing from the corpus and naming no case'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the L0-L2 kernel was minimized to 26 leaves and 21 distinctions; when a coordinate is reintroduced for a stage-2 case; then it carries a witness pair against the minimized kernel and no coordinate without a demanding case is re-admitted'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given stage 1.5 could not tell an explicitly present enum member from an absent leaf; when the census is refined to treat member-vs-absence as a coordinate; then the refined census is re-derived and each default member either earns a witness or leaves the kernel'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given checkFixtureLedger at stage 2 currently reports unbound cases and missing neighbours; when the stage-2 fixtures are authored answer-free; then every stage-2 case binds 1:1, every stage-2 diagnostic has a legal near-neighbour, every obligation has a discharge triad, and the check returns empty at stage 2'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the slice changes the engine; when it closes; then the stage-1 ledger is conserved modulo recorded rewrites, the holdout is re-derived by hand and re-recorded with a reason, and the five oracle custody digests are unchanged'
+non_functional: {}
+contracts:
+  - name: 'view-algebra'
+    type: schema
+    path: 'packages/ds-contracts/relation.contract.schema.json'
