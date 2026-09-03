@@ -136,13 +136,21 @@ export function normalizeJudgment(j: {
   return { status: deriveStatus(diagnostics, obligations, derivations), diagnostics, obligations, derivations };
 }
 
-/** Byte-stable form for digests, ledgers, and permutation tests. */
+/**
+ * Byte-stable form for digests, ledgers, and permutation tests.
+ *
+ * Every domain appears. A canonical form that omitted one would make the
+ * ledger and the permutation test blind to it: a rule that emitted only into
+ * the missing domain could change its output, or depend on declaration order,
+ * without moving a single recorded byte.
+ */
 export function canonicalJudgment(j: Judgment): string {
   const n = normalizeJudgment(j);
   return JSON.stringify({
     status: n.status,
     diagnostics: n.diagnostics.map((d) => [d.code, d.subject, d.assertion, d.engine, d.evidenceClass]),
     obligations: n.obligations.map((o) => [o.term, o.subject, o.assertion, o.engine, o.evidenceClass]),
+    derivations: n.derivations.map((d) => [d.kind, d.code ?? d.term, d.subject, d.derivation, d.engine, d.evidenceClass]),
   });
 }
 

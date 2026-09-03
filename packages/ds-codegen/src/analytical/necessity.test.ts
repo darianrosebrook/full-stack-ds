@@ -49,6 +49,11 @@ const stage1 = loadCensusSnapshot();
 const witnesses = loadWitnesses().witnesses;
 const removals = loadRemovals();
 const baseline = JSON.parse(fs.readFileSync(BASELINE_FILE, "utf-8")) as Baseline;
+const bindings = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, "bindings.json"), "utf-8")) as {
+  cases: Record<string, string>;
+  neighbours: Record<string, string>;
+  triads: Record<string, { absent: string; satisfying: string; hostile: string }>;
+};
 const isCoordinate = (c: Coordinate) => c.kind !== "reference";
 
 /**
@@ -400,7 +405,26 @@ describe("C5 — D6: capabilities are primitive; scale labels are derived aliase
 
 describe("C6 — conservation: the Phase-A ledger equals the live ledger modulo recorded key rewrites", () => {
   it("every recorded judgment is reproduced byte-for-byte after the key rewrites", () => {
-    expect(checkBaseline(BASELINE_FILE, { ledgerOnly: true, rewrites: removals.keyRewrites })).toEqual([]);
+    // The Phase-A record is a freeze, so fixtures added by later stages are
+    // additions rather than movements and are excluded here. A movement inside
+    // a recorded judgment is a regression under any option, and that is what
+    // this asserts.
+    expect(checkBaseline(BASELINE_FILE, { ledgerOnly: true, rewrites: removals.keyRewrites, ignoreAdditions: true })).toEqual([]);
+  });
+
+  it("still reports a fixture added since the freeze, so the exclusion is a choice and not a blind spot", () => {
+    const added = checkBaseline(BASELINE_FILE, { ledgerOnly: true, rewrites: removals.keyRewrites })
+      .filter((d) => d.startsWith("fixture added since baseline:"))
+      .map((d) => d.replace("fixture added since baseline: ", ""));
+    expect(added.length).toBeGreaterThan(0);
+    // Every one of them is a stage-2 fixture the binding ledger accounts for,
+    // which is where new fixtures are governed.
+    const bound = new Set([
+      ...Object.values(bindings.cases),
+      ...Object.values(bindings.neighbours),
+      ...Object.values(bindings.triads).flatMap((t) => [t.absent, t.satisfying, t.hostile]),
+    ]);
+    for (const id of added) expect(bound.has(id), `${id} is not bound by any ledger section`).toBe(true);
   });
   it("without the rewrites exactly the fixtures whose occurrence KEYS carried a rollup or a max move, and nothing else", () => {
     // Admissible fixtures carry no key, so a former rollup or max that is admissible does not appear.

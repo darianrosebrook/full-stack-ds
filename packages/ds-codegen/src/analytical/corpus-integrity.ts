@@ -641,11 +641,22 @@ export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
   for (const id of adjudicable.keys()) {
     if (!(id in bindings.cases)) out.push({ code: "LEDGER_CASE_UNBOUND", detail: `stage-${stage} case ${id} has no fixture binding` });
   }
+  // One binding ledger serves every stage, so a view at stage N sees bindings
+  // for cases that only become adjudicable later. That is not a defect: the
+  // stage-N claim is that the ledger RESTRICTED to stage-N cases is complete
+  // and injective, which the two checks around this one establish. What is a
+  // defect is a binding to a case the corpus does not contain at all — the
+  // typo this rule exists to catch, and the only thing "unknown" can mean once
+  // a later stage exists.
+  const known = new Set(input.cases.map((c) => c.case));
   const targets = new Map<string, string[]>();
   for (const [c, f] of Object.entries(bindings.cases)) {
-    if (!adjudicable.has(c)) {
-      out.push({ code: "LEDGER_BINDING_CASE_UNKNOWN", fixture: f, detail: `${c} is not a corpus case adjudicable at stage ${stage}` });
+    if (!known.has(c)) {
+      out.push({ code: "LEDGER_BINDING_CASE_UNKNOWN", fixture: f, detail: `${c} is not a corpus case` });
     }
+    // Injectivity and holdout contamination are stage-independent: two cases
+    // sharing one stimulus makes them indistinguishable whichever stages they
+    // belong to, so every binding is recorded here regardless of `stage`.
     targets.set(f, [...(targets.get(f) ?? []), c]);
   }
   for (const [f, cs] of targets) {

@@ -241,13 +241,13 @@ describe("REL_PEER_GRAIN_DIVERGENCE — the table totals by month, the picture b
   });
 });
 
-describe("REL_FLOW_NOT_CONSERVED and the conservation obligation — leaking sankey", () => {
+describe("REL_FLOW_NOT_CONSERVED and the conservation obligation — leaking flow_graph", () => {
   // `requiresConservation` is a REQUIREMENT, never evidence. Declaring it can
   // only raise the question; the edge values answer it.
   const flow = () => ({
     relations: {
       edges: { grain: ["src", "dst"], fields: { src: key, dst: key, amount: ratio } },
-      sankey: {
+      flow_graph: {
         grain: ["src", "dst"],
         fields: { src: key, dst: key, amount: ratio },
         derivedBy: { kind: "graph", from: "edges", edgeFrom: "src", edgeTo: "dst", value: "amount", requiresConservation: true },
@@ -276,7 +276,7 @@ describe("REL_FLOW_NOT_CONSERVED and the conservation obligation — leaking san
   it("refuses rows that leak at a node which is neither source nor sink", () => {
     const f = boundary(flow(), rows(7));
     expect(f.map((x) => x.code)).toEqual([DIAG.FLOW_NOT_CONSERVED]);
-    expect(f[0].subject).toBe("sankey.b");
+    expect(f[0].subject).toBe("flow_graph.b");
     expect(f[0].evidenceClass).toBe("instance");
     expect(f[0].detail).toContain("flow into b is 10 but flow out is 7");
   });
@@ -294,7 +294,7 @@ describe("REL_FLOW_NOT_CONSERVED and the conservation obligation — leaking san
 
   it("stays out of the way of a graph that claims nothing", () => {
     const s = flow();
-    delete (s.relations.sankey.derivedBy as { requiresConservation?: true }).requiresConservation;
+    delete (s.relations.flow_graph.derivedBy as { requiresConservation?: true }).requiresConservation;
     expect(boundaryCodes(s)).toEqual([]);
   });
 });
@@ -386,7 +386,7 @@ describe("every stage-2 rule reaches the judgment it belongs in", () => {
     const leak = valid({
       relations: {
         edges: { grain: ["src", "dst"], fields: { src: key, dst: key, amount: ratio } },
-        sankey: {
+        flow_graph: {
           grain: ["src", "dst"],
           fields: { src: key, dst: key, amount: ratio },
           derivedBy: { kind: "graph", from: "edges", edgeFrom: "src", edgeTo: "dst", value: "amount", requiresConservation: true },

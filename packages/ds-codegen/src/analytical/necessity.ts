@@ -50,6 +50,12 @@ export const RULE_SOURCES: readonly string[] = [
   path.join(HERE, "engines.ts"),
   path.join(HERE, "derivation.ts"),
   path.join(HERE, "codes.ts"),
+  // `deriveStatus` decides what a set of occurrences MEANS, and
+  // `normalizeObservation` decides what a row says. Both move judgments as
+  // surely as a rule does. `relation-model.ts` is deliberately absent: it
+  // decides which structures are well-formed, not what any of them yields.
+  path.join(HERE, "judgment.ts"),
+  path.join(HERE, "structure.ts"),
 ];
 
 /** The oracle-required outcome of a stimulus: status and the set of codes/terms. */

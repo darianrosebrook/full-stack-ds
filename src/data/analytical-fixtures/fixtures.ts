@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: dc8f8e95e8d629e19916a6c843d9334321a0386d582e3676c0bafe6c5a0d018a
+// Source sha256: 9d46ad1877c3648d86e9bc0ceb9c14e4c41abca905eec3391d10ea383dfac0cc
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -2599,5 +2599,1534 @@ export const FIXTURES: AnalyticalFixture[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "FX_SHARE_OF_AVERAGE_SCORE",
+    "structure": {
+      "relations": {
+        "regions": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "avg_score": {
+              "transformation": "ratio",
+              "additivity": {
+                "kind": "non-additive"
+              }
+            }
+          }
+        },
+        "shares": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "avg_score": {
+              "transformation": "ratio",
+              "additivity": {
+                "kind": "non-additive"
+              }
+            }
+          },
+          "derivedBy": {
+            "kind": "normalize",
+            "from": "regions",
+            "field": "avg_score"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "regions",
+        "field": "avg_score",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+    "structure": {
+      "relations": {
+        "orders": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "lines": {
+          "grain": [
+            "line_id"
+          ],
+          "fields": {
+            "line_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "qty": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "order_lines": {
+          "grain": [
+            "line_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "line_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            },
+            "qty": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "join",
+            "from": "orders",
+            "with": "lines",
+            "cardinality": "one-to-many"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "order_lines",
+        "field": "revenue",
+        "op": "sum"
+      }
+    ]
+  },
+  {
+    "id": "FX_ORDER_COUNT_AFTER_LINE_JOIN",
+    "structure": {
+      "relations": {
+        "orders": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "lines": {
+          "grain": [
+            "line_id"
+          ],
+          "fields": {
+            "line_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "qty": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "order_lines": {
+          "grain": [
+            "line_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "line_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            },
+            "qty": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "join",
+            "from": "orders",
+            "with": "lines",
+            "cardinality": "one-to-many"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "order_lines",
+        "field": "order_id",
+        "op": "count"
+      }
+    ]
+  },
+  {
+    "id": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+    "structure": {
+      "relations": {
+        "sales": {
+          "grain": [
+            "country",
+            "state"
+          ],
+          "fields": {
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "hierarchy": {
+          "grain": [
+            "country",
+            "state"
+          ],
+          "fields": {
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "nest",
+            "from": "sales",
+            "levels": [
+              "country",
+              "state"
+            ]
+          }
+        },
+        "subtotals": {
+          "grain": [
+            "state"
+          ],
+          "fields": {
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "hierarchy",
+            "toGrain": [
+              "state"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "sales",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_READINGS_BINNED_NO_CLOSURE",
+    "structure": {
+      "relations": {
+        "readings": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "celsius": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "bucketed": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "celsius": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "bin",
+            "from": "readings",
+            "field": "celsius"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "readings",
+        "field": "celsius",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_CELLS_SUM_SUPPRESSED_AS_ZERO",
+    "structure": {
+      "relations": {
+        "cells": {
+          "grain": [
+            "cell_id"
+          ],
+          "fields": {
+            "cell_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "count_value": {
+              "transformation": "ratio",
+              "permits": {
+                "null": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "cells",
+        "field": "count_value",
+        "op": "sum",
+        "nulls": "as-zero"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "cells": [
+          {
+            "cell_id": "a",
+            "count_value": {
+              "value": 5
+            }
+          },
+          {
+            "cell_id": "b",
+            "count_value": {
+              "null": "suppressed"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+    "structure": {
+      "relations": {
+        "daily": {
+          "grain": [
+            "day"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true,
+              "temporality": {
+                "kind": "instant",
+                "grain": "day"
+              }
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "other": {
+          "grain": [
+            "period"
+          ],
+          "fields": {
+            "period": {
+              "transformation": "nominal",
+              "key": true,
+              "temporality": {
+                "kind": "instant",
+                "grain": "month"
+              }
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        }
+      },
+      "peers": [
+        [
+          "daily",
+          "other"
+        ]
+      ]
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "daily",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+    "structure": {
+      "relations": {
+        "edges": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "routed": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "graph",
+            "from": "edges",
+            "edgeFrom": "src",
+            "edgeTo": "dst",
+            "value": "amount",
+            "requiresConservation": true
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "edges",
+        "field": "amount",
+        "op": "min"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "edges": [
+          {
+            "src": "a",
+            "dst": "b",
+            "amount": 10
+          },
+          {
+            "src": "b",
+            "dst": "c",
+            "amount": 7
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_FLOW_DECLARED_CONSERVED_NO_ROWS",
+    "structure": {
+      "relations": {
+        "edges": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "routed": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "graph",
+            "from": "edges",
+            "edgeFrom": "src",
+            "edgeTo": "dst",
+            "value": "amount",
+            "requiresConservation": true
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "edges",
+        "field": "amount",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS",
+    "structure": {
+      "relations": {
+        "events": {
+          "grain": [
+            "day",
+            "product"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "product": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "by_day": {
+          "grain": [
+            "day"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "events",
+            "toGrain": [
+              "day"
+            ]
+          }
+        },
+        "by_other": {
+          "grain": [
+            "product"
+          ],
+          "fields": {
+            "product": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "events",
+            "toGrain": [
+              "product"
+            ]
+          }
+        }
+      },
+      "peers": [
+        [
+          "by_day",
+          "by_other"
+        ]
+      ]
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "events",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_PROJECT_DROPS_NEST_LEVEL",
+    "structure": {
+      "relations": {
+        "sales": {
+          "grain": [
+            "sale_id"
+          ],
+          "fields": {
+            "sale_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "hierarchy": {
+          "grain": [
+            "sale_id"
+          ],
+          "fields": {
+            "sale_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "nest",
+            "from": "sales",
+            "levels": [
+              "country",
+              "state"
+            ]
+          }
+        },
+        "flat": {
+          "grain": [
+            "sale_id"
+          ],
+          "fields": {
+            "sale_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "project",
+            "from": "hierarchy",
+            "keep": [
+              "sale_id",
+              "state",
+              "revenue"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "sales",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_SHARE_OF_ADDITIVE_TOTAL",
+    "structure": {
+      "relations": {
+        "regions": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "avg_score": {
+              "transformation": "ratio",
+              "additivity": {
+                "kind": "additive"
+              }
+            }
+          }
+        },
+        "shares": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "avg_score": {
+              "transformation": "ratio",
+              "additivity": {
+                "kind": "additive"
+              }
+            }
+          },
+          "derivedBy": {
+            "kind": "normalize",
+            "from": "regions",
+            "field": "avg_score"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "regions",
+        "field": "avg_score",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_LINE_QTY_SUMMED_AFTER_JOIN",
+    "structure": {
+      "relations": {
+        "orders": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "lines": {
+          "grain": [
+            "line_id"
+          ],
+          "fields": {
+            "line_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "qty": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "order_lines": {
+          "grain": [
+            "line_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "line_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            },
+            "qty": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "join",
+            "from": "orders",
+            "with": "lines",
+            "cardinality": "one-to-many"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "order_lines",
+        "field": "qty",
+        "op": "sum"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+    "structure": {
+      "relations": {
+        "sales": {
+          "grain": [
+            "country",
+            "state"
+          ],
+          "fields": {
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "hierarchy": {
+          "grain": [
+            "country",
+            "state"
+          ],
+          "fields": {
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "nest",
+            "from": "sales",
+            "levels": [
+              "country",
+              "state"
+            ]
+          }
+        },
+        "subtotals": {
+          "grain": [
+            "country"
+          ],
+          "fields": {
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "hierarchy",
+            "toGrain": [
+              "country"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "sales",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_READINGS_BINNED_LEFT_CLOSED",
+    "structure": {
+      "relations": {
+        "readings": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "celsius": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "bucketed": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "celsius": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "bin",
+            "from": "readings",
+            "field": "celsius",
+            "closure": "left-closed"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "readings",
+        "field": "celsius",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_CELLS_SUM_EXCLUDING_SUPPRESSED",
+    "structure": {
+      "relations": {
+        "cells": {
+          "grain": [
+            "cell_id"
+          ],
+          "fields": {
+            "cell_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "count_value": {
+              "transformation": "ratio",
+              "permits": {
+                "null": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "cells",
+        "field": "count_value",
+        "op": "sum",
+        "nulls": "exclude"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "cells": [
+          {
+            "cell_id": "a",
+            "count_value": {
+              "value": 5
+            }
+          },
+          {
+            "cell_id": "b",
+            "count_value": {
+              "null": "suppressed"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN",
+    "structure": {
+      "relations": {
+        "daily": {
+          "grain": [
+            "day"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true,
+              "temporality": {
+                "kind": "instant",
+                "grain": "day"
+              }
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "other": {
+          "grain": [
+            "period"
+          ],
+          "fields": {
+            "period": {
+              "transformation": "nominal",
+              "key": true,
+              "temporality": {
+                "kind": "instant",
+                "grain": "day"
+              }
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        }
+      },
+      "peers": [
+        [
+          "daily",
+          "other"
+        ]
+      ]
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "daily",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_FLOW_EDGES_BALANCED",
+    "structure": {
+      "relations": {
+        "edges": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "routed": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "graph",
+            "from": "edges",
+            "edgeFrom": "src",
+            "edgeTo": "dst",
+            "value": "amount",
+            "requiresConservation": true
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "edges",
+        "field": "amount",
+        "op": "min"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "edges": [
+          {
+            "src": "a",
+            "dst": "b",
+            "amount": 10
+          },
+          {
+            "src": "b",
+            "dst": "c",
+            "amount": 10
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_N_PEERS_AGGREGATE_TO_ONE_TARGET",
+    "structure": {
+      "relations": {
+        "events": {
+          "grain": [
+            "day",
+            "product"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "product": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "by_day": {
+          "grain": [
+            "day"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "events",
+            "toGrain": [
+              "day"
+            ]
+          }
+        },
+        "by_other": {
+          "grain": [
+            "day"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "events",
+            "toGrain": [
+              "day"
+            ]
+          }
+        }
+      },
+      "peers": [
+        [
+          "by_day",
+          "by_other"
+        ]
+      ]
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "events",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_N_PROJECT_KEEPS_NEST_LEVELS",
+    "structure": {
+      "relations": {
+        "sales": {
+          "grain": [
+            "sale_id"
+          ],
+          "fields": {
+            "sale_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "hierarchy": {
+          "grain": [
+            "sale_id"
+          ],
+          "fields": {
+            "sale_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "revenue": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "nest",
+            "from": "sales",
+            "levels": [
+              "country",
+              "state"
+            ]
+          }
+        },
+        "flat": {
+          "grain": [
+            "sale_id"
+          ],
+          "fields": {
+            "sale_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            }
+          },
+          "derivedBy": {
+            "kind": "project",
+            "from": "hierarchy",
+            "keep": [
+              "sale_id",
+              "country",
+              "state"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "sales",
+        "field": "revenue",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_T_FLOW_ROWS_BALANCED",
+    "structure": {
+      "relations": {
+        "edges": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "routed": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "graph",
+            "from": "edges",
+            "edgeFrom": "src",
+            "edgeTo": "dst",
+            "value": "amount",
+            "requiresConservation": true
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "edges",
+        "field": "amount",
+        "op": "min"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "edges": [
+          {
+            "src": "a",
+            "dst": "b",
+            "amount": 10
+          },
+          {
+            "src": "b",
+            "dst": "c",
+            "amount": 10
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_T_FLOW_ROWS_LEAKING",
+    "structure": {
+      "relations": {
+        "edges": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "routed": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "graph",
+            "from": "edges",
+            "edgeFrom": "src",
+            "edgeTo": "dst",
+            "value": "amount",
+            "requiresConservation": true
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "edges",
+        "field": "amount",
+        "op": "min"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "edges": [
+          {
+            "src": "a",
+            "dst": "b",
+            "amount": 10
+          },
+          {
+            "src": "b",
+            "dst": "c",
+            "amount": 3
+          }
+        ]
+      }
+    }
   }
 ];
