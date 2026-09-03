@@ -101,24 +101,6 @@
       "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
     },
     {
-      "component": "Details",
-      "key": ".details--icon-none .details__icon",
-      "carrier": "details--icon-none",
-      "kind": "modifier",
-      "selector": ".details--icon-none .details__icon",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
-    },
-    {
-      "component": "Details",
-      "key": ".details--icon-right .details__icon",
-      "carrier": "details--icon-right",
-      "kind": "modifier",
-      "selector": ".details--icon-right .details__icon",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
-    },
-    {
       "component": "Skeleton",
       "key": "shape",
       "carrier": "skeleton__shape",
@@ -133,33 +115,6 @@
       "carrier": "skeleton__stack",
       "kind": "part",
       "selector": ".skeleton__stack",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
-    },
-    {
-      "component": "Tabs",
-      "key": "--vertical __root",
-      "carrier": "tabs__root",
-      "kind": "part",
-      "selector": ".tabs--vertical .tabs__root",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
-    },
-    {
-      "component": "Text",
-      "key": "error",
-      "carrier": "text__error",
-      "kind": "part",
-      "selector": ".text__error",
-      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
-      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
-    },
-    {
-      "component": "Text",
-      "key": "success",
-      "carrier": "text__success",
-      "kind": "part",
-      "selector": ".text__success",
       "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
       "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
     }

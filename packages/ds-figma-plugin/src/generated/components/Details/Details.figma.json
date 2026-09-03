@@ -391,13 +391,13 @@
         }
       },
       {
-        "selector": ".details--icon-none .details__icon",
+        "selector": ".details--none .details__icon",
         "declarations": {
           "display": "none"
         }
       },
       {
-        "selector": ".details--icon-right .details__icon",
+        "selector": ".details--right .details__icon",
         "declarations": {
           "order": "1",
           "margin-inline-start": "auto"

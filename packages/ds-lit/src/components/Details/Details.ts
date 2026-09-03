@@ -152,11 +152,11 @@ export class DetailsElement extends LitElement {
       line-height: var(--fsds-details-typography-line-height-body, 1.5);
     }
 
-    .details--icon-none .details__icon {
+    .details--none .details__icon {
       display: none;
     }
 
-    .details--icon-right .details__icon {
+    .details--right .details__icon {
       order: 1;
       margin-inline-start: auto;
     }
@@ -344,11 +344,11 @@ export class DetailsContentElement extends LitElement {
       line-height: var(--fsds-details-typography-line-height-body, 1.5);
     }
 
-    .details--icon-none .details__icon {
+    .details--none .details__icon {
       display: none;
     }
 
-    .details--icon-right .details__icon {
+    .details--right .details__icon {
       order: 1;
       margin-inline-start: auto;
     }

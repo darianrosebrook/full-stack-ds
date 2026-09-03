@@ -161,7 +161,7 @@ export class TabsElement extends LitElement {
       background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
-    .tabs--vertical .tabs__root {
+    .tabs--vertical {
       flex-direction: row;
     }
 
@@ -403,7 +403,7 @@ export class TabsListElement extends LitElement {
       background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
-    .tabs--vertical .tabs__root {
+    .tabs--vertical {
       flex-direction: row;
     }
 
@@ -630,7 +630,7 @@ export class TabsTabElement extends LitElement {
       background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
-    .tabs--vertical .tabs__root {
+    .tabs--vertical {
       flex-direction: row;
     }
 
@@ -846,7 +846,7 @@ export class TabsPanelElement extends LitElement {
       background-color: var(--fsds-tabs-color-underline-active, #d92d2e);
     }
 
-    .tabs--vertical .tabs__root {
+    .tabs--vertical {
       flex-direction: row;
     }
 

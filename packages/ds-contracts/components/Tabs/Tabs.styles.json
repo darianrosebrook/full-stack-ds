@@ -241,7 +241,7 @@
       "fallback": "#d92d2e"
     }
   },
-  "--vertical __root": {
+  "--vertical": {
     "flex-direction": {
       "literal": "row",
       "platforms": [

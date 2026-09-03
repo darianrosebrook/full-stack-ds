@@ -8,7 +8,7 @@
 
 **Direction.** This rail asks only whether authored CSS demands an impossible carrier. An emitted variant class with no matching CSS rule is the inverse problem and lives in `scripts/variant-style-audit/`.
 
-Findings: **18** across **6** component(s).
+Findings: **13** across **3** component(s).
 
 | component | styles key | expands to | unreachable carrier | kind |
 |---|---|---|---|---|
@@ -23,10 +23,5 @@ Findings: **18** across **6** component(s).
 | Checkbox | `:has(.checkbox__input:disabled) .checkbox__indicator` | `:has(.checkbox__input:disabled) .checkbox__indicator` | `.checkbox__indicator` | part |
 | Checkbox | `:has(.checkbox__input:focus-visible) .checkbox__indicator` | `:has(.checkbox__input:focus-visible) .checkbox__indicator` | `.checkbox__input` | part |
 | Checkbox | `:has(.checkbox__input:focus-visible) .checkbox__indicator` | `:has(.checkbox__input:focus-visible) .checkbox__indicator` | `.checkbox__indicator` | part |
-| Details | `.details--icon-none .details__icon` | `.details--icon-none .details__icon` | `.details--icon-none` | modifier |
-| Details | `.details--icon-right .details__icon` | `.details--icon-right .details__icon` | `.details--icon-right` | modifier |
 | Skeleton | `shape` | `.skeleton__shape` | `.skeleton__shape` | part |
 | Skeleton | `stack` | `.skeleton__stack` | `.skeleton__stack` | part |
-| Tabs | `--vertical __root` | `.tabs--vertical .tabs__root` | `.tabs__root` | part |
-| Text | `error` | `.text__error` | `.text__error` | part |
-| Text | `success` | `.text__success` | `.text__success` | part |

@@ -404,7 +404,7 @@
         }
       },
       {
-        "selector": ".tabs--vertical .tabs__root",
+        "selector": ".tabs--vertical",
         "declarations": {
           "flex-direction": "row"
         }
