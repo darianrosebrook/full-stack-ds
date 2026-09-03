@@ -38,7 +38,7 @@ import {
   resolveSide,
   type Witness,
 } from "./necessity.js";
-import { canonical, erase } from "./quotient.js";
+import { canonical, collides, erase } from "./quotient.js";
 import type { RelationalStructure } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
 
@@ -305,6 +305,43 @@ describe("C3 — the harness is falsified", () => {
     const f = oracle.fixtures.get("FX_USER_ID_SUM")!;
     expect(JSON.stringify(erase(f, key))).not.toContain('"key"');
     expect(canonical(erase(f, key))).not.toContain('"key"');
+  });
+
+  it("the canonical form carries every part of a fixture a coordinate can name", () => {
+    // `canonical` decides what "the same representation" means, so anything it
+    // drops is a distinction no witness can ever be required to erase — every
+    // coordinate under that key would collide with everything, and NO_COLLISION
+    // would pass without the erasure doing any work. `alphaRename` rebuilt each
+    // relation as {grain, fields} and each structure as {relations}, silently
+    // dropping `derivedBy` and `peers`, which is exactly the surface stage 2
+    // adjudicates.
+    for (const f of oracle.fixtures.values()) {
+      const shown = canonical(f);
+      for (const [name, rel] of Object.entries(f.structure.relations)) {
+        if (rel.derivedBy) expect(shown, `${f.id}: ${name}.derivedBy is invisible to canonical()`).toContain('"derivedBy"');
+      }
+      if (f.structure.peers) expect(shown, `${f.id}: structure.peers is invisible to canonical()`).toContain('"peers"');
+    }
+  });
+
+  it("two fixtures differing only in their derivation are NOT the same representation", () => {
+    // The direct consequence: before the repair these two collided under an
+    // erasure that touches neither of them.
+    const a = oracle.fixtures.get("FX_READINGS_BINNED_NO_CLOSURE")!;
+    const b = oracle.fixtures.get("FX_N_READINGS_BINNED_LEFT_CLOSED")!;
+    expect(canonical(a)).not.toBe(canonical(b));
+    const unrelated = byId.get("relation.derivedBy.kind:aggregate-to-grain~project")!;
+    expect(collides(a, b, unrelated)).toBe(false);
+  });
+
+  it("a derivation's operands are renamed, and its closed-vocabulary values are not", () => {
+    const f = oracle.fixtures.get("FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN")!;
+    const shown = canonical(f);
+    // Operand spelling is gone (relations became r1.., fields f1..) while the
+    // cardinality — a value, not an identifier — survives verbatim. Renaming it
+    // would make a spelling confer standing rather than removing it.
+    expect(shown).not.toContain('"orders"');
+    expect(shown).toContain('"one-to-many"');
   });
 });
 

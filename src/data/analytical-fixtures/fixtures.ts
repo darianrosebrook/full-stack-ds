@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: 9d46ad1877c3648d86e9bc0ceb9c14e4c41abca905eec3391d10ea383dfac0cc
+// Source sha256: c1d0450ab89ce8786ee30c41cf8314bf00ffbdb66b26f79e16b6b8ef86e6e0d6
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -4041,12 +4041,17 @@ export const FIXTURES: AnalyticalFixture[] = [
           {
             "src": "a",
             "dst": "b",
-            "amount": 10
+            "amount": 6
           },
           {
             "src": "b",
             "dst": "c",
-            "amount": 10
+            "amount": 6
+          },
+          {
+            "src": "c",
+            "dst": "d",
+            "amount": 6
           }
         ]
       }

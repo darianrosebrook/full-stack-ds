@@ -20,9 +20,11 @@ type Json = Record<string, unknown>;
 /** The single name every reference at an incidence-erased path collapses to. */
 const INCIDENCE_TOKEN = "zz_erased_reference";
 
+/** A plain object: a HOLDER of nodes, never a reference or a list of them. */
+const obj = (v: unknown): v is Json => typeof v === "object" && v !== null && !Array.isArray(v);
+
 /** Visit every labelled node of a fixture; `visit` may mutate `parent[key]`. */
 function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: string) => void): void {
-  const obj = (v: unknown): v is Json => typeof v === "object" && v !== null && !Array.isArray(v);
   // A `kind`-discriminated object labels its other properties by branch, as the census does.
   const props = (node: Json, prefix: string) => {
     const branch = typeof node.kind === "string" ? `${prefix}.${node.kind}` : prefix;
@@ -67,7 +69,19 @@ function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: 
         }
       }
     }
-    if ("grainWitness" in evidence) visit("evidence.grainWitness", evidence, "grainWitness");
+    if ("grainWitness" in evidence) {
+      // Two visits, because two different things live at this path. The MAP is
+      // what may be absent, so the presence coordinate erases it here. The
+      // reference list is per relation, so the topology facets have to reach
+      // each relation's list — visiting only the map left `#arity` and
+      // `#order` silently un-erasable (a no-op erasure can never collide two
+      // distinct fixtures, so those coordinates were unwitnessable for a walk
+      // reason rather than a semantic one) and let `#incidence` replace the
+      // whole map with a scalar token, a shape nothing downstream can read.
+      visit("evidence.grainWitness", evidence, "grainWitness");
+      const witness = evidence.grainWitness as Record<string, unknown>;
+      if (obj(witness)) for (const rel of Object.keys(witness)) visit("evidence.grainWitness", witness, rel);
+    }
   }
 }
 
@@ -94,9 +108,11 @@ export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
         // untouched. Collapsing the list to a single token would erase arity
         // and order too, and a quotient that destroys three coordinates at
         // once cannot support a claim that any one of them is necessary.
-        parent[key] = Array.isArray(v)
-          ? v.map((_, i) => `${INCIDENCE_TOKEN}_${i}`)
-          : `${INCIDENCE_TOKEN}_0`;
+        // A reference is a name or a list of names. A RECORD at this path is a
+        // holder of references, not one itself; rewriting it to a token would
+        // destroy its entries rather than their co-reference.
+        if (Array.isArray(v)) parent[key] = v.map((_, i) => `${INCIDENCE_TOKEN}_${i}`);
+        else if (!obj(v)) parent[key] = `${INCIDENCE_TOKEN}_0`;
       }
       return;
     }
