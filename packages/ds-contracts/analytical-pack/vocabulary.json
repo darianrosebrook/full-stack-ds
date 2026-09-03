@@ -1,5 +1,5 @@
 {
-  "$comment": "The L0-L4 vocabulary of docs/architecture/analytical-relation-doctrine.md (ARCH-ANALYTICAL-RELATION-001), as namespaced terms. This file must EQUAL the doctrine's 'Vocabulary appendix' table in both directions (corpus-integrity checks it), so a term cannot be added here without the doctrine naming it, and vice versa. Every corpus case declares the vocabulary references it uses in `terms`, and each must resolve here; that proves the declared references resolve, not that the prose is exhausted by them. If a case cannot be written without a term this file lacks, the doctrine's vocabulary is incomplete: add the term to the doctrine appendix AND here, never paraphrase the case around the gap. Engines are the checkability engines a case is attributed to; the schema's engine enum must equal this list.",
+  "$comment": "The L0-L4 vocabulary of docs/architecture/analytical-relation-doctrine.md (ARCH-ANALYTICAL-RELATION-001), as namespaced terms. This file must EQUAL the doctrine's 'Vocabulary appendix' table in both directions (corpus-integrity checks it), so a term cannot be added here without the doctrine naming it, and vice versa. Every corpus case declares the vocabulary references it uses in `terms`, and each must resolve here; that proves the declared references resolve, not that the prose is exhausted by them. If a case cannot be written without a term this file lacks, the doctrine's vocabulary is incomplete: add the term to the doctrine appendix AND here, never paraphrase the case around the gap. Engines are the checkability engines a case is attributed to; the schema's engine enum must equal this list. Accessibility obligations enter as SEMANTIC terms only — `projection` names which realization family an obligation ranges over, and the conservation invariants name what a lawful projection must preserve. ARIA roles, states, HTML elements and APG pattern names are evidence cited in a case's `source`, never terms here: if an obligation cannot be stated without naming an accessibility technology, it is a realization detail and does not belong in the analytical relation.",
   "doctrine": "docs/architecture/analytical-relation-doctrine.md",
   "engines": [
     "meaningfulness",
@@ -31,6 +31,7 @@
     "channel": ["position", "length", "area", "angle", "hue", "luminance", "shape", "texture", "connection", "containment", "order", "text"],
     "capacity": ["nominal-only", "ordinal", "ratio-only", "cyclic-only", "zero-baseline", "sequential", "diverging"],
     "combinator": ["layer", "facet", "embed"],
+    "projection": ["peer", "visual", "textual", "structural", "navigational", "interactive"],
     "transform": ["log", "sqrt"],
     "invariant": [
       "meaningful-zero",
@@ -55,7 +56,12 @@
       "declared-base",
       "shared-ordering",
       "declared-projection",
-      "positive-domain"
+      "positive-domain",
+      "essential-information",
+      "representation-independence",
+      "structure-preserved",
+      "state-reachable",
+      "population-declared"
     ]
   }
 }

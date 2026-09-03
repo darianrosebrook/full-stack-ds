@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "corpus-case.schema.json",
   "title": "Analytical corpus case (one JSONL line)",
-  "description": "One case of the analytical corpus for ARCH-ANALYTICAL-RELATION-001. A case is an observation the engine must judge: an asserted derivation or projection over a typed relation, the verdict the doctrine expects, and either the causal diagnostic (illegal) or the missing premise (unproven). Case identity and diagnostic identity are separate on purpose: several cases may share one diagnostic, so the count of distinct diagnostics an engine emits is a property of its causal partitioning, not of how many rows were authored. `stage` is the earliest construction stage whose facts decide the case; an engine built to stage N is judged only on cases with stage <= N. `evidence` says whether the relation type alone decides it (schema) or actual rows are needed (instance). Shape only is enforced here; term resolution, form-name leaks, engine coverage, bijection, and doctrine drift are checked by packages/ds-codegen/src/analytical/corpus-integrity.ts.",
+  "description": "One case of the analytical corpus for ARCH-ANALYTICAL-RELATION-001. A case is an observation the engine must judge: an asserted derivation or projection over a typed relation, the verdict the doctrine expects, and either the causal diagnostic (illegal) or the missing premise (unproven). Case identity and diagnostic identity are separate on purpose: several cases may share one diagnostic, so the count of distinct diagnostics an engine emits is a property of its causal partitioning, not of how many rows were authored. `stage` is the earliest construction stage whose facts decide the case; an engine built to stage N is judged only on cases with stage <= N. `evidence` says whether the relation type alone decides it (schema) or actual rows are needed (instance). Shape only is enforced here; term resolution, form-name leaks, engine coverage, bijection, source citation, and doctrine drift are checked by packages/ds-codegen/src/analytical/corpus-integrity.ts.",
   "type": "object",
   "additionalProperties": false,
   "required": ["case", "verdict", "engine", "stage", "evidence", "asserted", "cause", "terms"],
@@ -72,6 +72,34 @@
     "colloquial": {
       "type": "string",
       "description": "What a practitioner would call this. Exempt from the form-name denylist; exists to show the name is downstream of the cause."
+    },
+    "source": {
+      "type": "array",
+      "minItems": 1,
+      "description": "External standards that license this case's obligation. The obligation is semantic and belongs to the relation; the standard is EVIDENCE that the obligation is real and not self-authored. Citing a standard here never admits its vocabulary into the analytical relation — no aria/role/html term may appear in `terms`. Required by corpus-integrity for any case declaring a `projection:` term (CORPUS_SOURCE_UNCITED); optional otherwise, because most cases are licensed by measurement theory rather than by a published standard.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["standard", "status", "ref"],
+        "properties": {
+          "standard": {
+            "type": "string",
+            "enum": ["wcag", "aria", "apg"],
+            "description": "wcag: Web Content Accessibility Guidelines success criteria. aria: the WAI-ARIA specification. apg: the ARIA Authoring Practices Guide."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["normative", "guidance"],
+            "description": "normative: the citation is a requirement of a W3C Recommendation (a WCAG success criterion, an ARIA attribute definition). guidance: it is advisory (APG is explicitly non-normative and can itself recommend patterns that override otherwise-correct semantics). A guidance-only obligation is weaker evidence and is recorded as such rather than excluded."
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The citation as a reader would look it up, e.g. 'WCAG 2.2 SC 1.3.1 Info and Relationships' or 'APG Table Pattern'."
+          },
+          "url": { "type": "string", "minLength": 1 }
+        }
+      }
     }
   },
   "allOf": [

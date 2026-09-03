@@ -19,9 +19,11 @@ import { resolve } from "node:path";
 import {
   casesAdjudicableAt,
   checkCorpus,
+  checkFixtureLedger,
   extractDoctrineDiagnostics,
   extractDoctrineVocabulary,
   loadCorpusInput,
+  loadLedgerInput,
   parseJsonl,
   type CorpusInput,
 } from "./corpus-integrity.js";
@@ -344,5 +346,135 @@ describe("parseJsonl", () => {
       parseJsonl('{"case":"CASE_X"}\n\n{"case":"CASE_Y"}\n').map((e) => e.case),
     ).toEqual(["CASE_X", "CASE_Y"]);
     expect(() => parseJsonl('{"case":"CASE_X"}\n{not json}')).toThrow(/line 2/);
+  });
+});
+
+/**
+ * Peer-projection conservation (REL-A11Y-CORPUS-EXTEND-01).
+ *
+ * These obligations are the only ones in the corpus we did not derive
+ * ourselves, which is exactly what makes them useful: a later stage cannot
+ * design its projection algebra around them and then declare victory. The
+ * tests below pin the three properties that keep them external — every one
+ * cites a standard, none of them smuggles an accessibility technology into the
+ * vocabulary, and the two that originate in derivation semantics land as
+ * unbound obligations on the stage-2 engine rather than as prose.
+ */
+const projectionCases = () =>
+  live().cases.filter((c) => c.terms.some((t) => t.startsWith("projection:")));
+
+describe("peer-projection conservation cases", () => {
+  it("every case declaring a projection: term cites at least one external standard with its normative status", () => {
+    const cases = projectionCases();
+    expect(cases.length).toBeGreaterThanOrEqual(10);
+    for (const c of cases) {
+      expect(c.source, `${c.case} cites no source`).toBeDefined();
+      expect(c.source!.length).toBeGreaterThanOrEqual(1);
+      for (const s of c.source!) {
+        expect(["wcag", "aria", "apg"]).toContain(s.standard);
+        expect(["normative", "guidance"]).toContain(s.status);
+        expect(s.ref.length).toBeGreaterThan(0);
+      }
+    }
+    // The family must not rest on advisory guidance alone: APG is explicitly
+    // non-normative, so a corpus citing only APG would be an answer key we
+    // effectively wrote ourselves.
+    const normative = cases.filter((c) =>
+      c.source!.some((s) => s.status === "normative"),
+    );
+    expect(normative).toHaveLength(cases.length);
+  });
+
+  it("an uncited projection case is refused, and a case with no projection: term is not asked for one", () => {
+    const uncited = mutate((input) => {
+      const c = input.cases.find((x) => x.case === "CASE_PEER_TEXT_NAMES_THE_FORM")!;
+      delete c.source;
+    });
+    expect(codes(uncited)).toContain("CORPUS_SOURCE_UNCITED");
+
+    // A measurement-theory case carries no projection: term and no source; the
+    // check must stay silent about it or every legacy case would be flagged.
+    const legacy = live().cases.filter(
+      (c) => !c.terms.some((t) => t.startsWith("projection:")),
+    );
+    expect(legacy.every((c) => c.source === undefined)).toBe(true);
+    expect(codes(checkCorpus(live()))).not.toContain("CORPUS_SOURCE_UNCITED");
+  });
+
+  it("no accessibility technology enters the vocabulary: obligations are stated over projections, not over roles or elements", () => {
+    const input = live();
+    const namespaces = Object.keys(input.vocabulary.namespaces ?? {});
+    for (const banned of ["aria", "role", "html", "wcag", "apg"]) {
+      expect(namespaces).not.toContain(banned);
+    }
+    // Every term a projection case declares resolves in the semantic
+    // vocabulary — the source citation is the only place a standard is named.
+    for (const c of projectionCases()) {
+      for (const t of c.terms) {
+        expect(t).toMatch(/^[a-z-]+:[a-z0-9-]+$/);
+        expect(namespaces).toContain(t.split(":")[0]);
+      }
+    }
+  });
+
+  it("the five conservation invariants are each carried by a case, so the family did not collapse into one cause", () => {
+    const declared = new Set(projectionCases().flatMap((c) => c.terms));
+    for (const inv of [
+      "invariant:essential-information",
+      "invariant:representation-independence",
+      "invariant:structure-preserved",
+      "invariant:state-reachable",
+      "invariant:population-declared",
+      "invariant:shared-ordering",
+    ]) {
+      expect(declared, `${inv} has no case`).toContain(inv);
+    }
+    // Distinct causes, not one cause renamed five times.
+    const diagnostics = new Set(
+      projectionCases()
+        .filter((c) => c.verdict === "illegal")
+        .map((c) => c.diagnostic!),
+    );
+    expect(diagnostics.size).toBeGreaterThanOrEqual(10);
+  });
+
+  it("adding them left the stage-1 answer key untouched", () => {
+    const input = live();
+    const stage1 = casesAdjudicableAt(input.cases, 1);
+    expect(stage1).toHaveLength(19);
+    const stage1Diagnostics = new Set(
+      stage1.filter((c) => c.verdict === "illegal").map((c) => c.diagnostic!),
+    );
+    expect(stage1Diagnostics.size).toBe(15);
+    expect(
+      stage1.some((c) => c.terms.some((t) => t.startsWith("projection:"))),
+    ).toBe(false);
+  });
+
+  it("the two derivation-origin cases arrive at stage 2 as unbound obligations, not as prose", () => {
+    const CONTRACTS = resolve(__dirname, "../../../ds-contracts");
+    const ENGINE_SOURCE = resolve(__dirname, "engines.ts");
+    const atStage2 = loadLedgerInput(CONTRACTS, DOCTRINE, ENGINE_SOURCE, 2);
+    const unbound = checkFixtureLedger(atStage2)
+      .filter((f) => f.code === "LEDGER_CASE_UNBOUND")
+      .map((f) => f.detail);
+
+    // REL-VIEW-ALGEBRA-01 cannot close while these have no fixture: the
+    // obligation is mechanical, which is the whole point of authoring them
+    // before the stage that must satisfy them.
+    expect(unbound.some((d) => d.includes("CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN"))).toBe(true);
+    expect(
+      unbound.some((d) => d.includes("CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP")),
+    ).toBe(true);
+
+    // And they are genuinely stage-2 facts: both are decided by a derivation,
+    // before any projection is chosen.
+    const stage2New = live().cases.filter(
+      (c) => c.stage === 2 && c.terms.some((t) => t.startsWith("projection:")),
+    );
+    expect(stage2New.map((c) => c.engine)).toEqual([
+      "derivation-typing",
+      "derivation-typing",
+    ]);
   });
 });

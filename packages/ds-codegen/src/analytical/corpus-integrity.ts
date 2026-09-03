@@ -58,6 +58,21 @@ export interface FormNames {
 
 export type Verdict = "illegal" | "unproven";
 
+/**
+ * An external standard that licenses a case's obligation. Evidence, never
+ * vocabulary: `standard` names who requires it and `status` whether that
+ * requirement is normative (a WCAG success criterion, an ARIA attribute
+ * definition) or advisory (the ARIA Authoring Practices Guide, which is
+ * explicitly non-normative). A guidance-only obligation is weaker evidence and
+ * is marked as such rather than excluded.
+ */
+export interface CaseSource {
+  standard: "wcag" | "aria" | "apg";
+  status: "normative" | "guidance";
+  ref: string;
+  url?: string;
+}
+
 export interface CorpusCase {
   case: string;
   verdict: Verdict;
@@ -70,6 +85,7 @@ export interface CorpusCase {
   cause: string;
   terms: string[];
   colloquial?: string;
+  source?: CaseSource[];
 }
 
 export type CorpusFindingCode =
@@ -82,6 +98,7 @@ export type CorpusFindingCode =
   | "CORPUS_ENGINE_UNEXERCISED"
   | "CORPUS_TERM_UNKNOWN"
   | "CORPUS_FORM_NAME_LEAK"
+  | "CORPUS_SOURCE_UNCITED"
   | "CORPUS_DOC_DRIFT"
   | "CORPUS_CASE_DIAGNOSTIC_BIJECTION";
 
@@ -381,6 +398,25 @@ export function checkCorpus(input: CorpusInput): CorpusFinding[] {
         c.diagnostic,
         (casesPerDiagnostic.get(c.diagnostic) ?? 0) + 1,
       );
+    }
+
+    // A peer-projection conservation obligation is an external claim: it says
+    // one projection of a relation must preserve what another carries. We did
+    // not derive it from measurement theory, so the corpus must name who did.
+    // Without this the family degenerates into obligations we invented and
+    // then satisfied — the failure the whole answer-key discipline exists to
+    // prevent. Terms are semantic on purpose; the standard is evidence, which
+    // is why it lives here and not in vocabulary.json.
+    if ((c.terms ?? []).some((t) => String(t).startsWith("projection:"))) {
+      const cited = Array.isArray(c.source) ? c.source.length : 0;
+      if (cited === 0) {
+        out.push({
+          code: "CORPUS_SOURCE_UNCITED",
+          case: id,
+          detail:
+            "declares a projection: term but cites no external source; a projection-conservation obligation must name the standard that licenses it",
+        });
+      }
     }
 
     for (const field of ["asserted", "cause"] as const) {
