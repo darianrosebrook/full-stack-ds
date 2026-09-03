@@ -190,3 +190,10 @@ evidence:
     command: node scripts/variant-style-audit/realization.test.mjs
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A13
+    status: pass
+    evidence_ref: "Forward asks 'selector requirement -> produced carrier?' via validateStylesCarrierReachability; inverse asks 'produced variant carrier -> reachable style rule?' via classify(). Both call deriveWebDomCarriers; the inverse additionally reads taintedAxesFromIR off classRecipe. No naming algorithm survives outside ir.ts — the deleted computeTaintedAxes copy was the last one."
+    recorded_at: "2026-09-03T18:11:09.065Z"
+    command: grep -n deriveWebDomCarriers scripts/variant-style-audit/audit.mjs packages/ds-codegen/src/validation/styles.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
