@@ -2,9 +2,11 @@ id: FIX-BRAND-LAYER-THEME-LEAK-01
 title: 'Default brand''s unscoped :root dark block overrides an explicit light theme because @layer brand outranks @layer theme'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Default brand''s unscoped dark :root in @layer brand now pairs with an unscoped light guard, so an explicit data-theme=light on a dark-preference OS no longer resolves to dark values.'
 created_at: '2026-09-03T00:21:31.163Z'
-updated_at: '2026-09-03T00:21:39.923Z'
+updated_at: '2026-09-03T00:29:12.424Z'
 blast_radius:
   modules:
     - 'ds-tokens'
