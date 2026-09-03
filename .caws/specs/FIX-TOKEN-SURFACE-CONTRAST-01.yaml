@@ -86,3 +86,8 @@ evidence:
     evidence_ref: "card.color.background.hover re-bound from semantic.color.background.secondary to semantic.color.background.hover (it was pointing at the wrong role), and background.hover itself moved neutral.200 -> neutral.50. Hover surface is now #f7f7f7 against the card's own border at #d0d0d0/#b8b8b8, so the hover tint is lighter than the border rather than a mid-grey darker than it. Previously the hover swapped the card to #d0d0d0. Emitted CSS carries the refreshed fallback: Card.css .card--interactive:hover background-color var(--fsds-card-color-background-hover, #f7f7f7)."
     recorded_at: "2026-09-03T00:21:09.877Z"
     commit_sha: "73b1f3ac"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "All gates green in the worktree before merge: tokens:check-contrast 484 pairs / 11 instantiations OK; tokens:check-brand-refs exit 0; tokens:check-usage:gate exit 0 (unused 396 -> 395, neutral.50 went from dead to consumed; baseline re-recorded); generate:check exit 0 after 55 cascaded fallbacks were refreshed to a fixpoint from the gate's own output; governed:rail exit 0 with overall pass; test:frameworks 698/514+2skip/654/150. Root vitest on the canonical checkout post-merge: 242 files / 2960 tests pass, 1 pre-existing failure in src/consumption/css-hygiene.test.ts that belongs to a peer's analytical lane (afx-* dead selectors, added by 771af7dd) and is unrelated to this spec - my merge 73b1f3ac changed zero files under src/."
+    recorded_at: "2026-09-03T00:21:10.420Z"
+    commit_sha: "73b1f3ac"
