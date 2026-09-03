@@ -5,13 +5,13 @@
     "name": "Checkbox",
     "cssPrefix": "checkbox",
     "rootElement": "div",
-    "effectiveRole": "checkbox"
+    "effectiveRole": null
   },
   "anatomy": [
     {
       "name": "root",
       "semanticElement": null,
-      "nativeTag": null,
+      "nativeTag": "label",
       "isCompound": false,
       "isRootOnly": true,
       "layoutVariant": null
@@ -27,7 +27,7 @@
     {
       "name": "indicator",
       "semanticElement": null,
-      "nativeTag": null,
+      "nativeTag": "span",
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
@@ -196,8 +196,6 @@
   },
   "root": {
     "element": "div",
-    "explicitRole": "checkbox",
-    "effectiveRole": "checkbox",
     "labeling": [
       "aria-label",
       "aria-labelledby",

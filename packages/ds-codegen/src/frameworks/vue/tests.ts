@@ -187,6 +187,12 @@ export function generateVueTest(ir: ComponentIR): string {
   // this test for free.
   const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
   if (indeterminateFact) {
+    // The mount wrapper's element is the ROOT. When the fact sits on a
+    // nested part (Checkbox's `<label>` > `<input>` composite) the root does
+    // not carry the property, and the proof silently asserts `undefined`.
+    const indeterminateEl = indeterminateFact.part
+      ? `wrapper.element.querySelector(".${ir.classRecipe.base}__${indeterminateFact.part}") as HTMLInputElement`
+      : `wrapper.element as HTMLInputElement`;
     lines.push(``);
     lines.push(
       `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
@@ -195,7 +201,7 @@ export function generateVueTest(ir: ComponentIR): string {
       `    const wrapper = ${mountExpression(plan.name, plan, { props: { [indeterminateFact.propertyKey]: true } })};`,
     );
     lines.push(
-      `    const el = wrapper.element as HTMLInputElement;`,
+      `    const el = ${indeterminateEl};`,
     );
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
@@ -218,7 +224,7 @@ export function generateVueTest(ir: ComponentIR): string {
       `    const wrapper = ${mountExpression(plan.name, plan, { props: { [indeterminateFact.propertyKey]: true } })};`,
     );
     lines.push(
-      `    const el = wrapper.element as HTMLInputElement;`,
+      `    const el = ${indeterminateEl};`,
     );
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(

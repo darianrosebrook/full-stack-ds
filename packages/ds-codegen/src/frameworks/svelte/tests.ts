@@ -184,6 +184,12 @@ export function generateSvelteTest(ir: ComponentIR): string {
   // pattern gets this test for free.
   const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
   if (indeterminateFact) {
+    // `container.firstElementChild` is the ROOT. When the fact sits on a
+    // nested part (Checkbox's `<label>` > `<input>` composite) the root does
+    // not carry the property, and the proof silently asserts `undefined`.
+    const indeterminateEl = indeterminateFact.part
+      ? `container.querySelector(".${ir.classRecipe.base}__${indeterminateFact.part}") as HTMLInputElement`
+      : `container.firstElementChild as HTMLInputElement`;
     lines.push(``);
     lines.push(
       `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
@@ -192,7 +198,7 @@ export function generateSvelteTest(ir: ComponentIR): string {
       `    const { container } = ${renderExpression(plan.name, plan, { [indeterminateFact.propertyKey]: true })};`,
     );
     lines.push(
-      `    const el = container.firstElementChild as HTMLInputElement;`,
+      `    const el = ${indeterminateEl};`,
     );
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
@@ -216,7 +222,7 @@ export function generateSvelteTest(ir: ComponentIR): string {
       `    const { container, rerender } = ${renderExpression(plan.name, plan, { [indeterminateFact.propertyKey]: true })};`,
     );
     lines.push(
-      `    const el = container.firstElementChild as HTMLInputElement;`,
+      `    const el = ${indeterminateEl};`,
     );
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(

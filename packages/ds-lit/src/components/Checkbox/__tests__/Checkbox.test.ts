@@ -48,14 +48,14 @@ describe("Checkbox — unit", () => {
 
   it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", async () => {
     const { element } = await renderElement("fsds-checkbox", { "indeterminate": true });
-    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;
+    const el = element.shadowRoot?.querySelector(".checkbox__input") as HTMLInputElement;
     expect(el.indeterminate).toBe(true);
     expect(el.getAttribute("aria-checked")).toBe("mixed");
   });
 
   it("re-applies .indeterminate when the property changes from true to false, and aria-checked reflects checked state again", async () => {
     const { element } = await renderElement("fsds-checkbox", { "indeterminate": true });
-    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;
+    const el = element.shadowRoot?.querySelector(".checkbox__input") as HTMLInputElement;
     expect(el.indeterminate).toBe(true);
     (element as unknown as Record<string, boolean>)["indeterminate"] = false;
     (element as LitTestElement).requestUpdate?.();

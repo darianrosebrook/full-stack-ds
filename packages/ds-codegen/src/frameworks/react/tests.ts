@@ -281,16 +281,23 @@ export function generateReactTest(ir: ComponentIR): string {
   // future contract with this same fact pattern gets this test for free.
   const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
   if (indeterminateFact) {
+    // The test id lands on the ROOT. When the fact sits on a nested part —
+    // Checkbox's `<label>` > `<input>` composite — reaching for the test id
+    // reads the property off the host, which does not have it, and the proof
+    // silently asserts `undefined`. Address the part carrier instead.
+    const indeterminatePart = indeterminateFact.part;
+    const renderPrefix = indeterminatePart ? `const { container } = ` : ``;
+    const elementQuery = indeterminatePart
+      ? `container.querySelector(".${ir.classRecipe.base}__${indeterminatePart}") as HTMLInputElement`
+      : `screen.getByTestId("${plan.testId}") as HTMLInputElement`;
     lines.push(``);
     lines.push(
       `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
     );
     lines.push(
-      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
+      `    ${renderPrefix}render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
     );
-    lines.push(
-      `    const el = screen.getByTestId("${plan.testId}") as HTMLInputElement;`,
-    );
+    lines.push(`    const el = ${elementQuery};`);
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
     lines.push(`  });`);
@@ -307,11 +314,9 @@ export function generateReactTest(ir: ComponentIR): string {
       `  it("re-applies .${indeterminateFact.propertyKey} when the prop changes from true to false, and aria-checked reflects checked state again", () => {`,
     );
     lines.push(
-      `    const { rerender } = render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
+      `    const { ${indeterminatePart ? "container, " : ""}rerender } = render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
     );
-    lines.push(
-      `    const el = screen.getByTestId("${plan.testId}") as HTMLInputElement;`,
-    );
+    lines.push(`    const el = ${elementQuery};`);
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(
       `    rerender(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs}${closer});`,

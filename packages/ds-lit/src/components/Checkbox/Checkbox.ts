@@ -144,7 +144,10 @@ export class CheckboxElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} aria-checked=${(this.indeterminate ? "mixed" : this.behavior.checked)} .indeterminate=${this.indeterminate ?? false} />`;
+    return html`<label class="${this.computeClasses()}">
+  <input class=${'checkbox__input'} type="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} aria-checked=${(this.indeterminate ? "mixed" : this.behavior.checked)} .indeterminate=${this.indeterminate ?? false} />
+  <span class=${'checkbox__indicator'} aria-hidden="true"></span>
+</label>`;
   }
 }
 

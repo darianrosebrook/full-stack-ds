@@ -28,24 +28,37 @@
       }
     },
     "dom": {
-      "tag": "input",
-      "part": "input",
-      "attrs": {
-        "type": "checkbox"
-      },
-      "bindings": {
-        "checked": "channel:checked.value",
-        "disabled": "prop:disabled",
-        "name": "prop:name",
-        "value": "prop:value",
-        "aria-checked": "conditional:prop:indeterminate|literal:mixed|channel:checked.value"
-      },
-      "properties": {
-        "indeterminate": "prop:indeterminate"
-      },
-      "events": {
-        "change": "channel:checked.onChange"
-      }
+      "tag": "label",
+      "part": "root",
+      "children": [
+        {
+          "tag": "input",
+          "part": "input",
+          "attrs": {
+            "type": "checkbox"
+          },
+          "bindings": {
+            "checked": "channel:checked.value",
+            "disabled": "prop:disabled",
+            "name": "prop:name",
+            "value": "prop:value",
+            "aria-checked": "conditional:prop:indeterminate|literal:mixed|channel:checked.value"
+          },
+          "properties": {
+            "indeterminate": "prop:indeterminate"
+          },
+          "events": {
+            "change": "channel:checked.onChange"
+          }
+        },
+        {
+          "tag": "span",
+          "part": "indicator",
+          "attrs": {
+            "aria-hidden": "true"
+          }
+        }
+      ]
     }
   },
   "props": {
@@ -236,7 +249,6 @@
     "flipIcon": false
   },
   "a11y": {
-    "role": "checkbox",
     "labeling": [
       "aria-label",
       "aria-labelledby",

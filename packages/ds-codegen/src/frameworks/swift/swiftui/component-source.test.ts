@@ -523,3 +523,100 @@ describe("generateSwiftUIComponentSource — final five", () => {
     expect(source).not.toContain("locale:");
   });
 });
+
+/**
+ * Emission-class assignment must follow contract semantics, not incidental web
+ * DOM topology. Repairing a web style carrier changes `anatomy.dom`; that must
+ * neither drop a component out of every class (a hard emit failure) nor pull an
+ * unrelated component into an earlier, broader class in the ordered dispatch
+ * chain (a silent realization swap).
+ *
+ * Each negative below pins a distinct guard, so removing any one guard turns
+ * exactly one of these red.
+ */
+describe("generateSwiftUIComponentSource — emission-class assignment", () => {
+  function emit(name: string): string {
+    const contract = loadContract(name) as Parameters<
+      typeof buildComponentIR
+    >[0];
+    return generateSwiftUIComponentSource(buildComponentIR(contract));
+  }
+
+  const ACTION = "Emitted through the projected-children action path";
+  const BOOLEAN_CONTROL = "Emitted through the boolean-channel control path";
+
+  it("Button takes the action path despite spinner/loadingText chrome around its content region", () => {
+    expect(emit("Button")).toContain(ACTION);
+  });
+
+  it("Checkbox takes the boolean-control path with its input nested under a label root", () => {
+    expect(emit("Checkbox")).toContain(BOOLEAN_CONTROL);
+  });
+
+  it("Chip is a dual-action composite, not an action — its role is button but its root element is not", () => {
+    const source = emit("Chip");
+    expect(source).toContain("Emitted through the dual-action chip path");
+    expect(source).not.toContain(ACTION);
+  });
+
+  it("ShowMore is expandable content, not an action — role button over a div root", () => {
+    const source = emit("ShowMore");
+    expect(source).toContain("Emitted through the expandable-content path");
+    expect(source).not.toContain(ACTION);
+  });
+
+  it("OTP is a count-iterated field group, not a scalar control — its input is iterated", () => {
+    const source = emit("OTP");
+    expect(source).toContain("Emitted through the count-iterated field-group path");
+    expect(source).not.toContain(BOOLEAN_CONTROL);
+    expect(source).not.toContain("Emitted through the value-channel text-control path");
+  });
+
+  it("Select is a selection control, not a scalar control — its input belongs to the listbox search", () => {
+    const source = emit("Select");
+    expect(source).toContain("Emitted through the selection-control path");
+    expect(source).not.toContain(BOOLEAN_CONTROL);
+  });
+
+  it("an iterated direct-child input is not a scalar control — collapsing it to one Toggle would drop N-1 fields", () => {
+    // No corpus contract pairs an iterated input with a sole scalar channel,
+    // so this shape is synthetic. Without the iteration guard the IR below
+    // reaches the boolean-control path and emits a single Toggle for a
+    // control the contract says renders `count` times.
+    const ir = buildComponentIR({
+      name: "IteratedToggle",
+      description: "test",
+      anatomy: {
+        parts: ["root", "field"],
+        details: { root: { tag: "div" }, field: { tag: "input" } },
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "input",
+              part: "field",
+              iterate: { source: "prop:count", kind: "count" },
+              attrs: { type: "checkbox" },
+              bindings: { checked: "channel:checked.value" },
+            },
+          ],
+        },
+      },
+      props: {
+        designed: {
+          members: [
+            { name: "count", propType: { kind: "number" }, description: "n" },
+            { name: "checked", propType: { kind: "boolean" }, description: "c" },
+          ],
+        },
+      },
+      channels: {
+        checked: { value: "checked", valueType: "boolean", description: "c" },
+      },
+    } as unknown as Parameters<typeof buildComponentIR>[0]);
+    expect(() => generateSwiftUIComponentSource(ir)).toThrow(
+      /no emission class matches/,
+    );
+  });
+});

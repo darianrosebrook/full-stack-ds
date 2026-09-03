@@ -56,4 +56,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<input class={classes} type="checkbox" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : behavior.checked)} indeterminate={indeterminate} data-fsds-component="checkbox" role="checkbox" />
+<label class={classes} data-fsds-component="checkbox">
+  <input class={'checkbox__input'} type="checkbox" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : behavior.checked)} indeterminate={indeterminate} />
+  <span class={'checkbox__indicator'} aria-hidden="true"></span>
+</label>
