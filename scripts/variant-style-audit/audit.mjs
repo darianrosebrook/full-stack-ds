@@ -94,6 +94,14 @@ function hasVariantSelector(cssText, prefix, suffix) {
  * they are now DERIVED from the prefixes the IR assigned, not from a second
  * pass over `variants`.
  */
+export function taintedAxesFromIR(ir) {
+  const tainted = new Set();
+  for (const vm of ir.classRecipe.valueModifiers) {
+    if (vm.valuePrefix) tainted.add(vm.propName);
+  }
+  return tainted;
+}
+
 const LEDGER_PATH = resolve(HERE, "known-unrealized.json");
 
 const INVERSE_LEDGER_COMMENT =
@@ -102,14 +110,6 @@ const INVERSE_LEDGER_COMMENT =
 /** Ledger identity for an unrealized variant value. */
 export function unrealizedId(row) {
   return `${row.component}.${row.axis}=${row.value}`;
-}
-
-export function taintedAxesFromIR(ir) {
-  const tainted = new Set();
-  for (const vm of ir.classRecipe.valueModifiers) {
-    if (vm.valuePrefix) tainted.add(vm.propName);
-  }
-  return tainted;
 }
 
 /** Values shared by two or more axes, for the collision table in the report. */
