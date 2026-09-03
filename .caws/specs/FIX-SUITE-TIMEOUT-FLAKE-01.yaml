@@ -35,3 +35,8 @@ acceptance:
     then: 'given the timeout budgets are raised; when a test genuinely hangs; then it still fails rather than hanging the runner, and the raised budget is scoped to the three affected files only'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "6 consecutive 'pnpm test' runs on canonical main post-merge 82520551, all exit=0 at 2978/2978 (tmp/postfix-1..6.txt); 'grep -l \"Test timed out\" tmp/postfix-*.txt' returns NONE. Pre-fix baseline on the same tree: 6 runs failing 2,1,0,1,0,3 tests (tmp/loadrun-*.txt, tmp/full-suite-run3.txt)."
+    recorded_at: "2026-09-03T01:07:53.712Z"
