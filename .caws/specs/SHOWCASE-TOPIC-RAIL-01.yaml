@@ -44,3 +44,7 @@ evidence:
     status: pass
     evidence_ref: "node tmp/topic-rail-verify.mjs <dev-server> — Playwright geometry audit at 360/640/820/1024/1280/1440px: 11/11 topic links single-line (uniform 29px height), zero mid-phrase wraps, zero horizontal overflow (was: every label wrapped, 44-62px pills)"
     recorded_at: "2026-09-03T01:02:15.434Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/views/views-smoke.test.tsx — 'topics are a grouped link nav, not a tablist' asserts nav[aria-label=Tokens philosophy topics], 11 links, aria-current=page on active topic, no [role=tablist]"
+    recorded_at: "2026-09-03T01:02:15.872Z"
