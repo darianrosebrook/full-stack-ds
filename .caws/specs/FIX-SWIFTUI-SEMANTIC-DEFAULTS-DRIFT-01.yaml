@@ -48,3 +48,10 @@ contracts:
   - name: 'swiftui-semantic-defaults'
     type: contract-test
     path: 'scripts/generate-swiftui-semantic-defaults.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: node scripts/generate-swiftui-semantic-defaults.mjs regenerates FsdsSemanticDefaults.light to 204 entries (126 string + 78 adaptive) with all six drifted light halves corrected; swift test passes
+    recorded_at: "2026-09-03T22:05:00.599Z"
+    command: swift test --package-path packages/ds-swiftui
+    exit_code: 0
