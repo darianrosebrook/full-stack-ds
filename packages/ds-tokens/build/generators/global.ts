@@ -985,9 +985,25 @@ export function generateBrandLayerCSS(
       // Default brand's dark overrides also apply unconditionally so the
       // unbranded page state honors dark theme. Mirrors the :root block
       // added above for light overrides.
+      //
+      // The unscoped `:root` MUST be followed, inside the same media query, by
+      // an unscoped light guard. `@layer brand` outranks `@layer theme`, so a
+      // bare `:root` here beats the theme layer's own `[data-theme="light"]`
+      // rule regardless of specificity — without the guard, a page that
+      // explicitly selects light on a dark-preference OS resolves every
+      // default-brand-overridden token to its DARK value. The brand-scoped
+      // light guard emitted above cannot cover this: it requires
+      // [data-brand="default"], which an unbranded page does not carry. This
+      // mirrors the theme layer's own `:root` + `.light, [data-theme="light"]`
+      // pairing inside the same media query.
       if (brandId === "default") {
+        const lightGuardProps = Object.entries(overrides.lightVars)
+          .map(([p, v]) => `      ${p}: ${v};`)
+          .join("\n");
         blocks.push(
-          `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n  }`,
+          lightGuardProps
+            ? `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n    .light, [data-theme="light"] {\n${lightGuardProps}\n    }\n  }`
+            : `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n  }`,
         );
         blocks.push(
           `  .dark, [data-theme="dark"] {\n${darkProps}\n  }`,
