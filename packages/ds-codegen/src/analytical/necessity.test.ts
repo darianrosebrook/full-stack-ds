@@ -39,7 +39,7 @@ import {
   type Witness,
 } from "./necessity.js";
 import { canonical, collides, erase } from "./quotient.js";
-import { orphanedCoordinates } from "./experiments.js";
+import { loadBases, orphanedCoordinates } from "./experiments.js";
 import { loadSubtraction, verdictDrift } from "./subtraction.js";
 import type { RelationalStructure } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
@@ -69,7 +69,16 @@ const isCoordinate = (c: Coordinate) => c.kind !== "reference";
  * coordinate a later stage admits does not slip through it either.
  */
 const subtraction = loadSubtraction();
-const pendingIds = new Set(subtraction.basis.candidates);
+// Accounting is basis MEMBERSHIP: every registered experiment's candidates are
+// propositions somebody has opened. (Ownership — who is still on the hook — is
+// the narrower `unresolved` question, and lives in experiments.ts.)
+const pendingIds = new Set(loadBases().flatMap((b) => b.candidates));
+/** Candidates a verdict has already removed from the kernel. */
+const removedByVerdict = new Set(
+  Object.entries(subtraction.verdicts)
+    .filter(([, v]) => v.disposition === "representation-artifact" || v.disposition === "not-yet-admitted")
+    .map(([id]) => id),
+);
 const ratifiedIds = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
 
 const count = (cs: Coordinate[]) => ({
@@ -89,7 +98,11 @@ describe("C0 — provenance of the two censuses", () => {
     // Stage 1.5 closed at 26 leaves / 21 pairs / 4 references. Stage 2 admits
     // the L3 derivation algebra; the growth is only legitimate while every
     // added coordinate is either witnessed or in the pending ledger.
-    expect(count(kernel)).toEqual({ leaves: 49, pairs: 55, references: 25 });
+    // 49 -> 52 leaves: the discriminator normal form replaced 13 member-absence
+    // cross-terms with the three holder-presence facts they were spelling
+    // (`relation.derivedBy`, `field.additivity`, `field.temporality`), which
+    // are owned by their own basis rather than appended to the frozen 118.
+    expect(count(kernel)).toEqual({ leaves: 52, pairs: 55, references: 25 });
     const unaccounted = kernel
       .filter(isCoordinate)
       .filter((c) => !ratifiedIds.has(c.id) && !pendingIds.has(c.id))
@@ -277,6 +290,20 @@ describe("C3 — the harness is falsified", () => {
     expect(new Set(after.assertions[0].along).size).toBe(before.length);
     expect(isolationViolation(fixture, coord)).toBeUndefined();
   });
+  /**
+   * A discriminator member-absence coordinate. Built rather than looked up: the
+   * census no longer emits this class (it is the cross-term of holder presence
+   * and branch identity), but the erasure rule that refuses it must stay
+   * falsifiable, or retiring the class would have deleted its own guard.
+   */
+  const absenceCoord = (leaf: string, member: string): Coordinate => ({
+    id: `${leaf}:${member}~<absent>`,
+    kind: "member-absence",
+    leaf,
+    members: [member, "<absent>"],
+    role: "schema",
+  });
+
   it("rejects a member-absence erasure that empties a payload-carrying branch", () => {
     // `erase` spells "member m vs absent" by emptying the holder, because a
     // branch stripped of its tag is neither absence nor schema-valid. For
@@ -294,8 +321,7 @@ describe("C3 — the harness is falsified", () => {
       },
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
-    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.kind:project~<absent>")!;
-    expect(coord).toBeDefined();
+    const coord = absenceCoord("relation.derivedBy.kind", "project");
     const violation = isolationViolation(fixture, coord);
     expect(violation).toMatch(/holder presence/);
     // The message must name what was destroyed, or it cannot be adjudicated.
@@ -319,8 +345,7 @@ describe("C3 — the harness is falsified", () => {
       },
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
-    const coord = loadCensus().find((c) => c.id === "field.additivity.kind:additive~<absent>")!;
-    expect(coord).toBeDefined();
+    const coord = absenceCoord("field.additivity.kind", "additive");
     expect(isolationViolation(fixture, coord)).toBeUndefined();
   });
 
@@ -342,7 +367,7 @@ describe("C3 — the harness is falsified", () => {
         },
         assertions: [],
       }) as unknown as Fixture;
-    const coord = loadCensus().find((c) => c.id === "field.temporality.kind:instant~<absent>")!;
+    const coord = absenceCoord("field.temporality.kind", "instant");
     expect(isolationViolation(fieldWith({ kind: "instant" }), coord)).toBeUndefined();
     expect(isolationViolation(fieldWith({ kind: "instant", grain: "day" }), coord)).toMatch(/holder presence/);
   });
@@ -482,7 +507,11 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
   });
   it("the live kernel census is exactly the ratified set plus the pending ledger, with no overlap", () => {
     const live = kernel.filter(isCoordinate).map((c) => c.id).sort();
-    expect(live).toEqual([...new Set([...ratified, ...pendingIds])].sort());
+    // A candidate whose verdict removed it is no longer expected in the kernel,
+    // so the equality doubles as a check that the removal actually took effect:
+    // a `representation-artifact` still present would show up as a surplus here.
+    const expected = [...new Set([...ratified, ...pendingIds])].filter((id) => !removedByVerdict.has(id)).sort();
+    expect(live).toEqual(expected);
     expect([...ratified].filter((id) => pendingIds.has(id))).toEqual([]);
   });
   it("every ratified stage-1 coordinate resolves to a kernel coordinate that exists", () => {

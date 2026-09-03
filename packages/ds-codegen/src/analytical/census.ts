@@ -202,6 +202,19 @@ export function deriveCensus(schema: Node): Coordinate[] {
     }
   };
 
+  /**
+   * Existence of an optional TAGGED holder — the degree of freedom the
+   * discriminator's member-absence cross-terms were standing in for. Emitted
+   * once per holder rather than once per branch.
+   */
+  const addHolderPresence = (rawPath: string, optional: Opt) => {
+    if (!(optional.self || optional.holder)) return;
+    const id = `${label(rawPath)}#present`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    out.push({ id, kind: "leaf", leaf: label(rawPath), role: role(rawPath) });
+  };
+
   const addLeaf = (rawPath: string, enumMembers?: string[], optional: Opt = OPT_REQUIRED) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
@@ -215,19 +228,23 @@ export function deriveCensus(schema: Node): Coordinate[] {
       }
       // Absence must be a state the representation can actually reach, or the
       // coordinate is unwitnessable by construction and only ever yields
-      // SCHEMA_INVALID. Three exclusions, each load-bearing:
+      // SCHEMA_INVALID. Two exclusions, each load-bearing:
       //
       // - a single-member leaf (`z.literal(true).optional()`): "the one member
       //   vs absent" IS the leaf coordinate — the same erasure under two ids,
       //   each able to ratify the other;
-      // - a leaf required in its immediate parent, UNLESS it is the parent's
-      //   discriminator: deleting `join.cardinality` leaves an invalid join,
-      //   whereas deleting `additivity.kind` or `temporality.kind` drops the
-      //   whole (optional) declaration, which is exactly what absence means;
-      // - a discriminator whose holder is itself required: then there is no
-      //   absence to reach either.
+      // - a DISCRIMINATOR, always. This once read "deleting `additivity.kind`
+      //   drops the whole (optional) declaration, which is exactly what absence
+      //   means" — which is what HOLDER absence means, not what "this member
+      //   versus absent" means. An optional tagged holder has two independent
+      //   degrees of freedom, existence (`holder#present`) and branch identity
+      //   (`kind:A~B`); "member vs absent" is their cross-term. On a tag-only
+      //   branch it merely duplicates the presence coordinate, and on a
+      //   payload-carrying branch it erases presence and payload together, so
+      //   it cannot isolate the distinction it claims (isolationViolation
+      //   refuses exactly that). Neither is a semantic coordinate.
       const isDiscriminator = rawPath.endsWith(".kind");
-      const absenceReachable = optional.self || (isDiscriminator && optional.holder);
+      const absenceReachable = optional.self && !isDiscriminator;
       if (absenceReachable && enumMembers.length > 1) {
         for (const m of enumMembers) {
           out.push({ id: `${id}:${m}~${ABSENT}`, kind: "member-absence", leaf: id, members: [m, ABSENT], role: role(rawPath) });
@@ -264,6 +281,10 @@ export function deriveCensus(schema: Node): Coordinate[] {
     if (n.type === "object") {
       if (n.properties) {
         const required = new Set((Array.isArray(n.required) ? n.required : []) as string[]);
+        // Tagged but not a union (`temporality`): its `kind` reaches addLeaf
+        // directly, so its holder needs the presence coordinate here.
+        const kindProp = (n.properties as Record<string, Node>).kind;
+        if (kindProp && Array.isArray(resolve(kindProp).enum)) addHolderPresence(rawPath, optional);
         for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) {
           // A property of an optional holder is itself absent whenever the
           // holder is: `additivity.kind` is absent if `additivity` is.
@@ -295,6 +316,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
       objects.length === resolved.length && objects.every((b) => (b.properties as Record<string, Node>).kind?.const !== undefined);
     if (discriminated) {
       const kinds = objects.map((b) => String((b.properties as Record<string, Node>).kind.const));
+      addHolderPresence(rawPath, optional);
       addLeaf(`${rawPath}.kind`, kinds, optional);
       // Every branch property is qualified by its branch, so a coordinate's id does not
       // depend on which sibling branches happen to exist (removing `rollup` must not rename `op`).

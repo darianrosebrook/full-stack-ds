@@ -65,13 +65,38 @@ export interface ConstructorEntry {
   removableWhen: string;
 }
 
+/**
+ * The rule the subtraction is adjudicated under, recorded before any verdict
+ * cites it. Deliberately NOT part of `dispositions`: a disposition says what a
+ * verdict means, this says what may be concluded at all.
+ */
+export interface AdjudicationPolicy {
+  $comment?: string;
+  retention: string;
+  independentlyGrounded: string[];
+  constructorSeparation: string;
+  kindInterpretation: { proves: string; doesNotProve: string; openQuestion: string };
+}
+
+/** A condition on the VALIDITY of the experiment, not on any single verdict. */
+export interface CloseCondition {
+  id: string;
+  condition: string;
+  why: string;
+}
+
 export interface SubtractionLedger {
   $comment?: string;
   $authorityNote?: string;
   /** The slice that opened this obligation. */
   spec?: string;
   dispositions: Record<string, string>;
-  basis: { frozenAt: string; reason: string; digest: string; count: number; candidates: string[] };
+  /** Present on the ledger that OWNS the policy; a derived basis carries `policyRef` instead. */
+  adjudicationPolicy?: AdjudicationPolicy;
+  closeConditions?: CloseCondition[];
+  /** Path#anchor of the ledger whose `adjudicationPolicy` governs this basis. */
+  policyRef?: string;
+  basis: { frozenAt: string; reason: string; digest?: string; count: number; candidates: string[]; supersedes?: string[] };
   constructors: Record<string, ConstructorEntry>;
   verdicts: Record<string, CoordinateVerdict>;
 }

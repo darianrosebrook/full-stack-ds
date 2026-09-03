@@ -20,6 +20,8 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadCensus } from "./census.js";
+import { loadBases } from "./experiments.js";
+import { FIXTURES_DIR } from "./necessity.js";
 import { Derivation } from "./relation-model.js";
 import {
   checkSubtraction,
@@ -211,6 +213,70 @@ describe("constructor existence is governed separately from coordinate necessity
       expect(c.disposition, `${name}`).toBe("required");
       expect(c.removableWhen, `${name}`).toMatch(/disposition/);
       expect(c.removableWhen, `${name}`).toMatch(/no coordinate verdict/);
+    }
+  });
+});
+
+describe("the rule is on disk before any verdict cites it", () => {
+  // A subtraction whose governing rule lives only in the conversation that
+  // produced it cannot constrain a verdict recorded after a context reset, and
+  // nothing would report the absence. So the policy is an artifact, and these
+  // assert the parts that actually do work rather than that a key exists.
+  const policy = live.adjudicationPolicy!;
+
+  it("records the retention test in terms of erasure, not of engine agreement", () => {
+    expect(policy).toBeDefined();
+    expect(policy.retention).toMatch(/unexpressible/);
+    expect(policy.retention).toMatch(/primitive standing/i);
+  });
+
+  it("keeps all four grounds on what counts as independently grounded", () => {
+    // Losing any one of these re-opens a specific way to certify more than the
+    // corpus supports: engine self-agreement, schema-shaped necessity,
+    // non-isolating substitution, and inventing authority to fill a gap.
+    expect(policy.independentlyGrounded).toHaveLength(4);
+    const joined = policy.independentlyGrounded.join(" ");
+    for (const ground of ["Engine behavior is evidence, never authority", "Schema invalidity", "isolate", "never permission"]) {
+      expect(joined, `the "${ground}" ground is missing`).toContain(ground);
+    }
+  });
+
+  it("precommits what a surviving kind distinction may and may not be read as", () => {
+    expect(policy.kindInterpretation.proves).toContain("same structural operand signature");
+    expect(policy.kindInterpretation.doesNotProve).toContain("primitive analytical semantic axis");
+    // The bare leaf is an open question, not an automatic survivor.
+    expect(policy.kindInterpretation.openQuestion).toContain("relation.derivedBy.kind");
+  });
+
+  it("states the closure conditions as validity constraints, each with its reason", () => {
+    const ids = (live.closeConditions ?? []).map((c) => c.id).sort();
+    expect(ids).toEqual(["final-quotient", "operator-law-locus", "ruledigest-boundary"]);
+    for (const c of live.closeConditions ?? []) {
+      expect(c.condition.trim().length, `${c.id} states no condition`).toBeGreaterThan(0);
+      expect(c.why.trim().length, `${c.id} gives no reason`).toBeGreaterThan(0);
+    }
+  });
+
+  it("the final-quotient condition is simultaneous, not sequential", () => {
+    // The distinction is load-bearing: adjudicating one at a time lets two
+    // coordinates each be declared carried by the other, both be removed, and
+    // collectively erase the distinction — subtraction ORDER would then decide
+    // the normal form.
+    const fq = (live.closeConditions ?? []).find((c) => c.id === "final-quotient")!;
+    expect(fq.condition).toMatch(/SIMULTANEOUSLY|simultaneous/);
+    expect(fq.condition).toMatch(/not sequentially|as a whole/);
+  });
+
+  it("every derived basis names the ledger whose policy governs it", () => {
+    // A second basis with its own copy of the rule would be a second authority
+    // for what the rule says.
+    for (const b of loadBases()) {
+      const l = loadSubtraction(path.join(FIXTURES_DIR, b.file));
+      if (l.adjudicationPolicy) continue;
+      expect(l.policyRef, `${b.file} has neither a policy nor a policyRef`).toBeTruthy();
+      const [file, anchor] = l.policyRef!.split("#");
+      expect(fs.existsSync(path.join(FIXTURES_DIR, file)), `${b.file} policyRef names a missing ${file}`).toBe(true);
+      expect(loadSubtraction(path.join(FIXTURES_DIR, file))[anchor as "adjudicationPolicy"]).toBeDefined();
     }
   });
 });

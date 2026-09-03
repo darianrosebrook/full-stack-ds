@@ -7,6 +7,39 @@
     "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
     "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it"
   },
+  "adjudicationPolicy": {
+    "$comment": "The rule this subtraction is adjudicated under, recorded BEFORE any verdict cites it. It is not a meaning of an individual disposition — it constrains what may be concluded at all — so it is kept out of `dispositions`.",
+    "retention": "Retain a candidate coordinate iff an independently grounded Stage-2 cause requires a distinction that becomes unexpressible when exactly that coordinate is erased. Otherwise remove the coordinate from the Stage-2 kernel. A coordinate failing necessity loses PRIMITIVE STANDING; it never by itself means a thing that coordinate names must disappear.",
+    "independentlyGrounded": [
+      "Engine behavior is evidence, never authority: the outcome must be adjudicable from the frozen corpus and doctrine without consulting the implementation result, and each verdict's reason must point backward to that authority.",
+      "Schema invalidity does not establish semantic necessity: if changing a value merely makes the union invalid, that proves the encoding requires the tag, not that the semantics do.",
+      "Substitution must isolate the claimed distinction: if testing a pair requires also exchanging another slot or changing operand arity, the evidence is that two constructors differ, not a witness for that pair.",
+      "Failure to find a witness is a RESULT, never permission to invent new corpus authority. A new {base, patch} stimulus is admissible only where its judgment follows mechanically from an already-existing Stage-2 cause."
+    ],
+    "constructorSeparation": "Constructor necessity ('does Stage 2 require this constructor at all?') is adjudicated separately from discriminator necessity ('does Stage 2 require this encoding coordinate?'). Only the first can retire an operator; the second means remodel or quotient the representation. No coordinate verdict can reach the `constructors` ledger — they do not share a key.",
+    "kindInterpretation": {
+      "proves": "A discriminant is necessary to distinguish two constructors with the same structural operand signature.",
+      "doesNotProve": "`derivedBy.kind` is a primitive analytical semantic axis.",
+      "openQuestion": "Under the discriminator normal form, branch identity is carried by the `kind:A~B` pairs and holder existence by `relation.derivedBy#present`. What independent degree of freedom the BARE `relation.derivedBy.kind` leaf then represents is an explicit remaining question, not an automatic survivor: a `bin~normalize` witness may make the leaf look necessary because erasing the tag collapses them, while the pair establishes the same distinction. Test it after the 21 pair adjudications."
+    }
+  },
+  "closeConditions": [
+    {
+      "id": "final-quotient",
+      "condition": "Every `representation-artifact` verdict must remain redundant after SIMULTANEOUSLY removing every coordinate adjudicated out of the kernel — evaluated over the final retained set as a whole, not after its own erasure and not sequentially in adjudication order.",
+      "why": "Otherwise two coordinates can each be declared carried by the other, both be removed, and collectively erase the distinction. That is the cyclic-redundancy form of the same instrument problem the isolation rule closes for single erasures, and it would let subtraction ORDER determine the normal form."
+    },
+    {
+      "id": "operator-law-locus",
+      "condition": "One authoritative locus states the per-operator transition law.",
+      "why": "Today it is three-way: the doctrine names the operator set and two illustrative typing rules, relation-model.ts declares each signature, derivation.ts implements the certification law. Deliberately NOT fixed before the `kind` pass — centralizing the laws first would risk designing the abstraction the subtraction is supposed to discover. Sequence: finish subtraction, observe the surviving operator normal form, then establish the locus from that result."
+    },
+    {
+      "id": "ruledigest-boundary",
+      "condition": "The `holdout.ruleDigest` claim boundary is explicitly settled in words.",
+      "why": "Excluding relation-model.ts is correct if the digest means 'judgment law over already-admitted structures'. If the holdout claim is end-to-end — fixture bytes through structural admission through judgment — then a well-formedness change can alter the holdout without moving the digest, and relation-model.ts is material despite not deciding the semantic result. Settle the wording rather than reflexively digesting the file."
+    }
+  ],
   "basis": {
     "frozenAt": "bb742e8f",
     "reason": "the commit at which the Stage-2 rules and fixtures were complete and the ledger was clean at stage 2, so the candidate set is the one the experiment actually opened",
@@ -275,22 +308,26 @@
       "disposition": "unresolved"
     },
     "field.additivity.kind:additive~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "field.additivity.kind:additive~non-additive": {
       "disposition": "unresolved"
     },
     "field.additivity.kind:non-additive~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "field.additivity.kind:non-additive~ratio-measure": {
       "disposition": "unresolved"
     },
     "field.additivity.kind:ratio-measure~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "field.additivity.kind:semi-additive~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires nonAdditiveAlong besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by field.additivity#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "field.additivity.kind:semi-additive~non-additive": {
       "disposition": "unresolved"
@@ -314,10 +351,12 @@
       "disposition": "unresolved"
     },
     "field.temporality.kind:instant~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.temporality#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "field.temporality.kind:interval~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.temporality#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "observation.null:absent~<absent>": {
       "disposition": "unresolved"
@@ -440,7 +479,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:aggregate-to-grain~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, toGrain besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:aggregate-to-grain~bin": {
       "disposition": "unresolved"
@@ -461,7 +501,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:bin~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, field besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:bin~graph": {
       "disposition": "unresolved"
@@ -473,10 +514,12 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:graph~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, edgeFrom, edgeTo besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:join~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, with, cardinality besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:join~bin": {
       "disposition": "unresolved"
@@ -494,7 +537,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:nest~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, levels besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:nest~bin": {
       "disposition": "unresolved"
@@ -509,7 +553,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:normalize~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, field besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:normalize~graph": {
       "disposition": "unresolved"
@@ -518,7 +563,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:project~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, keep besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
     },
     "relation.derivedBy.kind:project~graph": {
       "disposition": "unresolved"
