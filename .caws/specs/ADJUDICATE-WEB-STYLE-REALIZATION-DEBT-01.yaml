@@ -117,3 +117,8 @@ contracts:
   - name: 'determinate-forward-zero'
     type: behavior
     path: 'scripts/carrier-reachability-audit/audit.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: docs/carrier-reachability-audit/adjudication.md — 18 forward rows normalized to 11 carriers with witness selectors preserved; per-carrier adjudication and outcome
+    recorded_at: "2026-09-03T22:37:39.929Z"
