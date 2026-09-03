@@ -1969,11 +1969,6 @@ button {
   color: var(--fsds-semantic-color-foreground-warning);
 }
 
-.afx-badge--prov {
-  color: var(--fsds-semantic-color-foreground-accent);
-}
-
-.afx-badge--unc,
 .afx-badge--unit,
 .afx-badge--grain,
 .afx-badge--count {
@@ -1993,12 +1988,6 @@ button {
 
 .afx-assertions {
   font-size: var(--fsds-core-typography-ramp-0);
-}
-
-.afx-relationships {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--fsds-core-spacing-size-01);
 }
 
 .afx-realization {
