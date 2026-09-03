@@ -63,3 +63,11 @@ contracts:
   - name: 'dead-slot-disposition'
     type: behavior
     path: 'scripts/dead-slot-audit/disposition.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Case 'generated absence NEVER yields delete, however the slot is shaped' loops three declared-part/absent-realization slots (card.color.badge.*, checkbox.color.indicator.*, button.size.spinner.*) and asserts none reaches delete. Mutation-falsified: reverting rule 5's return to disposition:'delete' fails this case plus 3 others; restored run is 25/25 ok."
+    recorded_at: "2026-09-03T17:11:31.072Z"
+    command: node scripts/dead-slot-audit/disposition.test.mjs
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
