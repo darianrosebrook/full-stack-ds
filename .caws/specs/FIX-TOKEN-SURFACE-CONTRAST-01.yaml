@@ -71,3 +71,8 @@ evidence:
     evidence_ref: "pnpm run tokens:check-contrast now reports '484 pair(s) evaluated across 11 instantiation(s) (base + 10 brand(s)) x 2 theme(s)'; previously it evaluated 44 pairs against the base tree only. New module build/w3c/brand-overlay.ts reconstructs the per-brand/per-theme tree. Falsified live: enabling the brand dimension turned the gate RED on two pre-existing defects (corporate 3.99:1 light and dark, monochrome 1.42:1 light) and GREEN after fixing them. 15 unit tests; verified non-vacuous by mutation (stubbing overlayBrand to return the base tree unchanged is killed by 4 of them)."
     recorded_at: "2026-09-03T00:20:36.716Z"
     commit_sha: "73b1f3ac"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "corporate foreground.onColor re-bound neutral.50 -> color.mode.white: 3.99:1 -> 4.84:1 against background.accent (blue.500), in BOTH themes. monochrome re-bound color.mode.dark -> color.mode.light in light: 1.42:1 -> 13.01:1 against background.accent (neutral.800). Both contradicted their own $description before the fix. Confirmed three independent ways: an audit computing sRGB luminance from palette source, in-browser measurement against the document root, and the brand-aware gate - all three agreed on 3.99 and 1.42. tokens:check-contrast now green across all 11 instantiations x 2 themes."
+    recorded_at: "2026-09-03T00:20:44.925Z"
+    commit_sha: "73b1f3ac"
