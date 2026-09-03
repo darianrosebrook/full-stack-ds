@@ -76,3 +76,8 @@ evidence:
     evidence_ref: "corporate foreground.onColor re-bound neutral.50 -> color.mode.white: 3.99:1 -> 4.84:1 against background.accent (blue.500), in BOTH themes. monochrome re-bound color.mode.dark -> color.mode.light in light: 1.42:1 -> 13.01:1 against background.accent (neutral.800). Both contradicted their own $description before the fix. Confirmed three independent ways: an audit computing sRGB luminance from palette source, in-browser measurement against the document root, and the brand-aware gate - all three agreed on 3.99 and 1.42. tokens:check-contrast now green across all 11 instantiations x 2 themes."
     recorded_at: "2026-09-03T00:20:44.925Z"
     commit_sha: "73b1f3ac"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "PARTIAL AGAINST THE LITERAL CLAUSE - read the exception. Measured in-browser at the document root in light theme: background.secondary/.subtle/.hover and interaction.background.hover all resolve to #f7f7f7; border.subtle #d0d0d0, border.light #b8b8b8. The content-surface tier is disjoint from and strictly lighter than every border, and background.secondary is lighter than border.subtle (clause 2 fully holds). EXCEPTION to clause 1: background.tertiary and background.disabled remain at #d0d0d0, which border.subtle also uses. That is deliberate - they are border-weight surfaces by role, and the reference system behaves the same way (eBay Evo binds background-tertiary and border-subtle both to neutral-300 #e5e5e5). Full disjointness would need a ramp step that does not exist. Before: six roles collapsed on #d0d0d0 (secondary, subtle, disabled, placeholder, readOnly, border.subtle) and three on #b8b8b8."
+    recorded_at: "2026-09-03T00:20:55.534Z"
+    commit_sha: "73b1f3ac"
