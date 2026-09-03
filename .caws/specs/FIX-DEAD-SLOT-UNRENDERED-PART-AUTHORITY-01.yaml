@@ -106,3 +106,10 @@ evidence:
     command: "git show --name-only --format= 5695ee9b | grep -cE '^packages/ds-(contracts|react|vue|svelte|angular|lit|react-native)/'"
     exit_code: 1
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "Case 'A7 falsifier: rendering the part makes the conflict stop reproducing' holds contract and slot fixed and varies ONLY the render source: renderedPartsOf('<input className=\"checkbox\" />') -> topology-conflict; renderedPartsOf('<span className=\"checkbox\"><span className=\"checkbox__indicator\" /></span>') -> review (asserted notEqual topology-conflict). The classifier tracks the observed contradiction, not component identity or slot spelling. Companion control 'a slot on a part that DOES render is not a topology conflict' pins the same boundary for Card."
+    recorded_at: "2026-09-03T17:12:07.204Z"
+    command: node scripts/dead-slot-audit/disposition.test.mjs
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
