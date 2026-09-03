@@ -162,3 +162,10 @@ evidence:
     command: "pnpm run audit:carrier-reachability && pnpm run audit:pseudo-state && pnpm run audit:dead-slots"
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A9
+    status: pass
+    evidence_ref: "Two-directional ratchet via the shared scripts/lib/ledger-ratchet.mjs (loadLedger/diffLedger/reportRatchet): unledgered=current-ledger fails, stale=ledger-current fails. Identity is 'component key -> .carrier', so the carrier is part of the id and repairing one carrier of a two-carrier key surfaces as one burned entry plus one survivor rather than a silently re-pointed row. Seeded from the live corpus by --reseed (18 entries), not from a frozen count: '[carrier-reachability] findings=18 (ledgered=18) unledgered=0 stale=0 / PASS'."
+    recorded_at: "2026-09-03T18:10:48.837Z"
+    command: node scripts/carrier-reachability-audit/audit.mjs
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
