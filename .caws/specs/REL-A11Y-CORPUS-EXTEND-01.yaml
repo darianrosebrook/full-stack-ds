@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "checkFixtureLedger(stage=2) on main reports LEDGER_CASE_UNBOUND for CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN and CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP (beside the 9 pre-existing stage-2 cases) and LEDGER_NEIGHBOUR_MISSING for REL_PEER_GRAIN_DIVERGENCE and REL_DERIVATION_DISCARDS_MEMBERSHIP; checkFixtureLedger(stage=1) returns [] - the stage-1 ledger is provably undisturbed. Pinned by corpus-integrity.test.ts 'the two derivation-origin cases arrive at stage 2 as unbound obligations, not as prose', which also asserts both are engine derivation-typing, i.e. decided by the derivation before any projection is chosen."
     recorded_at: "2026-09-03T00:42:11.439Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "New custody baseline for REL-VIEW-ALGEBRA-01, recomputed on main after merge 3163d8ec: corpus.jsonl 86f2b03a9fe7affe (was 6f8edea4f5aabef4), corpus-case.schema.json e961af232d3ede45 (was 0b02d6eedcc3cfd4), vocabulary.json 5bd9dfddab19dc33 (was ba144b63b34c2371), form-names.json 0564902cf8d7d4ff (UNCHANGED), doctrine catalogue+appendix 123e73dfc61ab2ab (was 8622d010f131c94f). Gates on main: root suite 244 files / 2973 tests pass; analytical suite 231 pass (corpus-integrity 29->35); pnpm run typecheck clean (root + codegen); lint 0 errors, 24 pre-existing warnings none in touched files; docs:check-claims OK 54 claims; docs:check-links OK 66 links."
+    recorded_at: "2026-09-03T00:42:11.890Z"
