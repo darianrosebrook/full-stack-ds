@@ -1,0 +1,38 @@
+id: FIX-BRAND-LAYER-THEME-LEAK-01
+title: 'Default brand''s unscoped :root dark block overrides an explicit light theme because @layer brand outranks @layer theme'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-03T00:21:31.163Z'
+updated_at: '2026-09-03T00:21:31.163Z'
+blast_radius:
+  modules:
+    - 'ds-tokens'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-tokens/build'
+    - 'packages/ds-tokens/generated'
+  out: []
+invariants:
+  - 'An unscoped :root block emitted inside a prefers-color-scheme media query is always paired with an unscoped light guard in the same query, so an explicit data-theme wins over the OS preference'
+  - 'A higher cascade layer never silently overrides an explicit theme selection made in a lower one'
+acceptance:
+  - id: A1
+    given: 'a page with data-theme=light, no data-brand, on a dark-preference OS'
+    when: 'semantic.color.border.light is resolved at the document root'
+    then: 'it returns the LIGHT value (neutral.200 #b8b8b8), not the dark value (neutral.700 #474647)'
+  - id: A2
+    given: 'the same page'
+    when: 'every semantic token the default brand overrides is compared against its light-theme value'
+    then: 'none resolves to its dark-theme value'
+  - id: A3
+    given: 'a page with data-theme=dark on a light-preference OS'
+    when: 'the same tokens are resolved'
+    then: 'they still return dark values, proving the fix did not invert the bug'
+non_functional: {}
+contracts:
+  - name: 'brand-layer-css'
+    type: behavior
+    path: 'packages/ds-tokens/build/generators/global.ts'
