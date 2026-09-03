@@ -18,7 +18,9 @@ scope:
     - 'packages/ds-codegen/src/cli.test.ts'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'No production or non-test source is modified: the fix is confined to test-harness timeout budgets in the three affected test files.'
+  - 'The raised budget is per-file, never a global testTimeout change — the other 241 root-suite files keep the 5s default so genuine hangs still fail fast.'
+  - 'No assertion is weakened, skipped, or deleted to obtain green; the three files keep every test and every expectation they have today.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
