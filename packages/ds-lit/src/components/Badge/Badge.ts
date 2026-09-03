@@ -36,8 +36,8 @@ export class BadgeElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-max-height: none;
-      --fsds-badge-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-badge-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-badge-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
+      --fsds-badge-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-md-gap, 4px);
@@ -130,7 +130,7 @@ export class BadgeElement extends LitElement {
       justify-content: center;
       white-space: nowrap;
       border-style: solid;
-      background-color: var(--fsds-badge-color-background-default, #d0d0d0);
+      background-color: var(--fsds-badge-color-background-default, #f7f7f7);
       color: var(--fsds-badge-color-foreground-primary, #141414);
       border-color: var(--fsds-badge-color-border-default, #d0d0d0);
       border-width: var(--fsds-badge-size-border, 1px);
@@ -142,7 +142,7 @@ export class BadgeElement extends LitElement {
       line-height: 1;
 
       &:hover {
-        background-color: var(--fsds-badge-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-badge-color-background-hover, #f7f7f7);
       }
     }
 
@@ -213,8 +213,8 @@ export class BadgeContentElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-max-height: none;
-      --fsds-badge-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
-      --fsds-badge-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-badge-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
+      --fsds-badge-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-md-gap, 4px);
@@ -307,7 +307,7 @@ export class BadgeContentElement extends LitElement {
       justify-content: center;
       white-space: nowrap;
       border-style: solid;
-      background-color: var(--fsds-badge-color-background-default, #d0d0d0);
+      background-color: var(--fsds-badge-color-background-default, #f7f7f7);
       color: var(--fsds-badge-color-foreground-primary, #141414);
       border-color: var(--fsds-badge-color-border-default, #d0d0d0);
       border-width: var(--fsds-badge-size-border, 1px);
@@ -319,7 +319,7 @@ export class BadgeContentElement extends LitElement {
       line-height: 1;
 
       &:hover {
-        background-color: var(--fsds-badge-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-badge-color-background-hover, #f7f7f7);
       }
     }
 

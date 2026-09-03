@@ -91,7 +91,7 @@ export const blockquoteTokenScopes = {
       name: "blockquote.color.background.default",
       cssVar: "--fsds-blockquote-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "blockquote.color.border.default": {
       name: "blockquote.color.border.default",
@@ -165,7 +165,7 @@ export const blockquoteTokenScopes = {
       name: "blockquote.color.background.default",
       cssVar: "--fsds-blockquote-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
   },
   "variant_bordered": {

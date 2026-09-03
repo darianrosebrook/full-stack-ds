@@ -85,7 +85,7 @@ export const otpTokenScopes = {
       name: "otp.color.background.default",
       cssVar: "--fsds-otp-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "otp.color.foreground.primary": {
       name: "otp.color.foreground.primary",

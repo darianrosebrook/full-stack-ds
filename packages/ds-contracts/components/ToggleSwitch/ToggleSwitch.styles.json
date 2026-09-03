@@ -14,7 +14,7 @@
     },
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "toggle-switch.color.foreground.default",
@@ -60,7 +60,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   "[aria-checked=\"true\"]": {

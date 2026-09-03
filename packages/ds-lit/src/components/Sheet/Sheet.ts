@@ -55,7 +55,7 @@ export class SheetElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {
@@ -324,7 +324,7 @@ export class SheetContentElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {
@@ -515,7 +515,7 @@ export class SheetHeaderElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {
@@ -706,7 +706,7 @@ export class SheetTitleElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {
@@ -897,7 +897,7 @@ export class SheetDescriptionElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {
@@ -1088,7 +1088,7 @@ export class SheetBodyElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {
@@ -1279,7 +1279,7 @@ export class SheetFooterElement extends LitElement {
       --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-sheet-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-sheet-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .sheet {

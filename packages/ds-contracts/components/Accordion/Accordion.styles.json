@@ -148,7 +148,7 @@
   ".accordion__trigger:hover": {
     "background-color": {
       "resolvesTo": "accordion.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "accordion.color.textHover",

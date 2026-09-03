@@ -118,7 +118,7 @@
     },
     "background-color": {
       "resolvesTo": "tabs.color.hover.bg",
-      "fallback": "#b8b8b8"
+      "fallback": "#f7f7f7"
     }
   },
   "tab--active": {
@@ -128,7 +128,7 @@
     },
     "background-color": {
       "resolvesTo": "tabs.color.active-bg",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   ".tabs__tab:disabled": {
@@ -352,7 +352,7 @@
   "--pills __tab--active": {
     "background-color": {
       "resolvesTo": "tabs.color.active-bg",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "tabs.color.active-fg",

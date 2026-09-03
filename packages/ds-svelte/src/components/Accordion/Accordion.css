@@ -51,7 +51,7 @@
 }
 
 .accordion__trigger:hover:not([aria-disabled="true"]) {
-  background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+  background-color: var(--fsds-accordion-color-background-hover, #f7f7f7);
   color: var(--fsds-accordion-color-text-hover, #474647);
 }
 

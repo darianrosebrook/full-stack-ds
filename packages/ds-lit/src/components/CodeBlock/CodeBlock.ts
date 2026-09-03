@@ -36,7 +36,7 @@ export class CodeBlockElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-code-block-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-code-block-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-code-block-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-code-block-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-code-block-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -67,7 +67,7 @@ export class CodeBlockElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-code-block-color-background-default, #d0d0d0);
+      background-color: var(--fsds-code-block-color-background-default, #f7f7f7);
       border-color: var(--fsds-code-block-color-border-default, #d0d0d0);
       border-style: solid;
       border-width: var(--fsds-code-block-size-border-default, 1px);

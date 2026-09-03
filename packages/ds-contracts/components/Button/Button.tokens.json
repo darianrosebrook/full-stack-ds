@@ -41,12 +41,12 @@
   },
   "button.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "button.color.background.active": {
     "resolvesTo": "semantic.interaction.background.active",
-    "fallback": "#b8b8b8",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "button.color.background.disabled": {

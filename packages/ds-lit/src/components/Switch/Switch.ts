@@ -38,7 +38,7 @@ export class SwitchElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
       --fsds-switch-motion-easing: var(--fsds-semantic-motion-interaction-press-easing, cubic-bezier(0.4, 0, 0.2, 1));
-      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #b8b8b8);
+      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #d0d0d0);
       --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
@@ -105,7 +105,7 @@ export class SwitchElement extends LitElement {
 
     .switch__track {
       transition: background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing);
-      background-color: var(--fsds-switch-color-track-background-default, #b8b8b8);
+      background-color: var(--fsds-switch-color-track-background-default, #d0d0d0);
       border-color: var(--fsds-switch-color-track-border-default, #d0d0d0);
       width: var(--fsds-switch-size-md-track-width, 48px);
       height: var(--fsds-switch-size-md-track-height, 24px);

@@ -31,7 +31,7 @@
   },
   "otp.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "otp.color.foreground.primary": {

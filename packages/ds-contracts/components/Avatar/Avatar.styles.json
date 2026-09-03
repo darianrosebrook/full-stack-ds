@@ -36,7 +36,7 @@
     },
     "background-color": {
       "resolvesTo": "avatar.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "avatar.color.foreground.primary",

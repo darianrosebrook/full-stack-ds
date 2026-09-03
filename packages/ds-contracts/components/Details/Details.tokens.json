@@ -26,7 +26,7 @@
   },
   "details.color.background.hover": {
     "resolvesTo": "semantic.color.background.hover",
-    "fallback": "#b8b8b8",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "details.color.foreground.primary": {

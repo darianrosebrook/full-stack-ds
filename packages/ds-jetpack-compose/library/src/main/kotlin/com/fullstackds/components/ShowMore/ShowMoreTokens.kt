@@ -90,7 +90,7 @@ val showMoreTokenScopes: ComponentTokenScopes = mapOf(
             name = "show-more.color.background.default",
             cssVar = "--fsds-show-more-color-background-default",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "show-more.color.foreground.primary" to ComponentTokenDefinition(
             name = "show-more.color.foreground.primary",

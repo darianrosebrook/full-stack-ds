@@ -122,7 +122,7 @@
   },
   "sheet.color.backgroundHover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   }
 }

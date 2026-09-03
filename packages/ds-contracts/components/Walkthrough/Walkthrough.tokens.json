@@ -6,7 +6,7 @@
   },
   "walkthrough.surface.bg": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "walkthrough.surface.border": {

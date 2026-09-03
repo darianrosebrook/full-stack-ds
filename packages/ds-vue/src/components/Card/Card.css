@@ -38,7 +38,7 @@
 }
 
 .card--interactive:hover {
-  background-color: var(--fsds-card-color-background-hover, #d0d0d0);
+  background-color: var(--fsds-card-color-background-hover, #f7f7f7);
   box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
   transform: translateY(-1px);
 }

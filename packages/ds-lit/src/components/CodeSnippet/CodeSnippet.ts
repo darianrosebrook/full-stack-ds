@@ -34,7 +34,7 @@ export class CodeSnippetElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-code-snippet-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-code-snippet-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-code-snippet-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-code-snippet-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-code-snippet-size-padding-inline: var(--fsds-core-spacing-size-02, 2px);
@@ -58,7 +58,7 @@ export class CodeSnippetElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-code-snippet-color-background-default, #d0d0d0);
+      background-color: var(--fsds-code-snippet-color-background-default, #f7f7f7);
       border-color: var(--fsds-code-snippet-color-border-default, #d0d0d0);
       border-style: solid;
       border-width: var(--fsds-code-snippet-size-border-default, 1px);

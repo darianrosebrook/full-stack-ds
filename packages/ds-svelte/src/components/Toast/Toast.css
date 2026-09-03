@@ -23,7 +23,7 @@
 }
 
 .toast__item {
-  background-color: var(--fsds-toast-surface-bg, #d0d0d0);
+  background-color: var(--fsds-toast-surface-bg, #f7f7f7);
   border-color: var(--fsds-toast-surface-border, #d0d0d0);
   border-style: solid;
   border-width: 1px;

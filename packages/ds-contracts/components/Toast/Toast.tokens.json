@@ -31,7 +31,7 @@
   },
   "toast.surface.bg": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "toast.surface.border": {
@@ -61,7 +61,7 @@
   },
   "toast.color.intent.bg": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "toast.color.intent.border": {

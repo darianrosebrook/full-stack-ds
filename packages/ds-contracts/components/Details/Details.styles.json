@@ -58,7 +58,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "details.color.background.hover",
-      "fallback": "#b8b8b8"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "details.color.border.hover",
@@ -110,7 +110,7 @@
   ".details__summary:hover": {
     "details.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#b8b8b8"
+      "fallback": "#f7f7f7"
     }
   },
   ".details__summary:focus-visible": {
@@ -254,7 +254,7 @@
     },
     "details.color.background.default": {
       "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "details.color.border.default": {
       "resolvesTo": "semantic.color.border.subtle",

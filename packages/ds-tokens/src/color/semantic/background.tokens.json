@@ -13,18 +13,18 @@
       },
       "secondary": {
         "$type": "color",
-        "$value": "{color.palette.neutral.100}",
+        "$value": "{color.palette.neutral.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.light": "{color.palette.neutral.50}",
           "fsds.dark": "{color.palette.neutral.800}"
         },
         "$description": "Secondary background color"
       },
       "tertiary": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.light": "{color.palette.neutral.100}",
           "fsds.dark": "{color.palette.neutral.700}"
         },
         "$description": "Tertiary background color"
@@ -49,9 +49,9 @@
       },
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.light": "{color.palette.neutral.50}",
           "fsds.dark": "{color.palette.neutral.700}"
         },
         "$description": "Hover background color"
@@ -220,9 +220,9 @@
       },
       "active": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.light": "{color.palette.neutral.100}",
           "fsds.dark": "{color.palette.neutral.600}"
         },
         "$description": "Active state background color"
@@ -238,18 +238,18 @@
       },
       "placeholder": {
         "$type": "color",
-        "$value": "{color.palette.neutral.100}",
+        "$value": "{color.palette.neutral.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.light": "{color.palette.neutral.50}",
           "fsds.dark": "{color.palette.neutral.800}"
         },
         "$description": "Placeholder background color"
       },
       "readOnly": {
         "$type": "color",
-        "$value": "{color.palette.neutral.100}",
+        "$value": "{color.palette.neutral.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.light": "{color.palette.neutral.50}",
           "fsds.dark": "{color.palette.neutral.800}"
         },
         "$description": "Read-only background color"
@@ -278,9 +278,9 @@
       },
       "subtle": {
         "$type": "color",
-        "$value": "{color.palette.neutral.100}",
+        "$value": "{color.palette.neutral.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.light": "{color.palette.neutral.50}",
           "fsds.dark": "{color.palette.neutral.800}"
         },
         "$description": "Subtle background tint — used for hover states on otherwise-transparent surfaces (NavList item hover)."

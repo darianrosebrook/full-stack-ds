@@ -6,7 +6,7 @@
     },
     "background-color": {
       "resolvesTo": "blockquote.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "blockquote.color.border.default",
@@ -54,7 +54,7 @@
   "--default": {
     "blockquote.color.background.default": {
       "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-width": {
       "literal": "0",

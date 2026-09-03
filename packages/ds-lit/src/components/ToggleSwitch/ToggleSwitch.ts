@@ -36,12 +36,12 @@ export class ToggleSwitchElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toggle-switch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toggle-switch-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-toggle-switch-border-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-toggle-switch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-toggle-switch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
       --fsds-toggle-switch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #d0d0d0);
       --fsds-toggle-switch-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
@@ -64,7 +64,7 @@ export class ToggleSwitchElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-toggle-switch-color-background-default, #d0d0d0);
+      background-color: var(--fsds-toggle-switch-color-background-default, #f7f7f7);
       color: var(--fsds-toggle-switch-color-foreground-default, #141414);
       border-color: var(--fsds-toggle-switch-color-border-default, #b8b8b8);
       border-radius: var(--fsds-toggle-switch-border-radius-default, 9999px);
@@ -75,7 +75,7 @@ export class ToggleSwitchElement extends LitElement {
       box-sizing: border-box;
 
       &:hover:not(:disabled) {
-        background-color: var(--fsds-toggle-switch-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-toggle-switch-color-background-hover, #f7f7f7);
       }
 
       &[aria-checked="true"] {

@@ -20,7 +20,7 @@
     },
     "background-color": {
       "resolvesTo": "walkthrough.surface.bg",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "walkthrough.surface.border",

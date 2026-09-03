@@ -49,7 +49,7 @@ enum SheetTokens {
             "sheet.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-shadow", name: "sheet.shadow", ref: "semantic.elevation.surface.floating", fallback: .string("0px 2px 4px #0000000f, 0px 4px 8px #0000001a")),
             "sheet.focus.width": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-focus-width", name: "sheet.focus.width", ref: "semantic.shape.control.border.focusWidth", fallback: .string("2px")),
             "sheet.focus.color": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-focus-color", name: "sheet.focus.color", ref: "semantic.color.border.accent", fallback: .adaptive(light: "#d92d2e", dark: "#e55b5a")),
-            "sheet.color.backgroundHover": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-color-background-hover", name: "sheet.color.backgroundHover", ref: "semantic.interaction.background.hover", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "sheet.color.backgroundHover": FsdsComponentTokenDefinition(cssVar: "--fsds-sheet-color-background-hover", name: "sheet.color.backgroundHover", ref: "semantic.interaction.background.hover", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
         ],
     ]
 }

@@ -83,7 +83,7 @@ val skeletonTokenScopes: ComponentTokenScopes = mapOf(
             name = "skeleton.color.base",
             cssVar = "--fsds-skeleton-color-base",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "skeleton.color.highlight" to ComponentTokenDefinition(
             name = "skeleton.color.highlight",
@@ -95,7 +95,7 @@ val skeletonTokenScopes: ComponentTokenScopes = mapOf(
             name = "skeleton.color.static",
             cssVar = "--fsds-skeleton-color-static",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "skeleton.radius.sm" to ComponentTokenDefinition(
             name = "skeleton.radius.sm",
@@ -217,7 +217,7 @@ val skeletonTokenScopes: ComponentTokenScopes = mapOf(
             name = "skeleton.color.base",
             cssVar = "--fsds-skeleton-color-base",
             ref = "semantic.color.background.tertiary",
-            fallback = "#b8b8b8",
+            fallback = "#d0d0d0",
         ),
     ),
     "variant_compact" to mapOf(

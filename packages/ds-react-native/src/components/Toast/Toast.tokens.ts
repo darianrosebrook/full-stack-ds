@@ -85,7 +85,7 @@ export const toastTokenScopes = {
       name: "toast.surface.bg",
       cssVar: "--fsds-toast-surface-bg",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "toast.surface.border": {
       name: "toast.surface.border",
@@ -121,7 +121,7 @@ export const toastTokenScopes = {
       name: "toast.color.intent.bg",
       cssVar: "--fsds-toast-color-intent-bg",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "toast.color.intent.border": {
       name: "toast.color.intent.border",

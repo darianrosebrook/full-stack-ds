@@ -179,7 +179,7 @@ export const commandTokenScopes = {
       name: "command.color.backgroundHover",
       cssVar: "--fsds-command-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
   },
 } satisfies ComponentTokenScopes;

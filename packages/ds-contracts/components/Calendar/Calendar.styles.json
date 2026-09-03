@@ -146,7 +146,7 @@
   ".calendar__nav:hover": {
     "background-color": {
       "resolvesTo": "calendar.color.day.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary",
@@ -332,7 +332,7 @@
   ".calendar__day:hover": {
     "background-color": {
       "resolvesTo": "calendar.color.day.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   ".calendar__day:focus-visible": {

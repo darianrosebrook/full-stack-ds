@@ -64,7 +64,7 @@ enum DialogTokens {
             "dialog.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-foreground-default", name: "dialog.color.foreground.default", ref: "semantic.color.foreground.secondary", fallback: .adaptive(light: "#474647", dark: "#a0a0a1")),
         ],
         "hover": [
-            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", ref: "semantic.color.background.hover", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
+            "dialog.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-dialog-color-background-default", name: "dialog.color.background.default", ref: "semantic.color.background.hover", fallback: .adaptive(light: "#f7f7f7", dark: "#474647")),
         ],
     ]
 }

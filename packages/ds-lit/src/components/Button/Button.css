@@ -32,12 +32,12 @@
   transition-timing-function: var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 
   &:hover:not(:disabled) {
-    background-color: var(--fsds-button-color-background-hover, #d0d0d0);
+    background-color: var(--fsds-button-color-background-hover, #f7f7f7);
     border-color: var(--fsds-button-color-border-hover, #888889);
   }
 
   &:active:not(:disabled) {
-    background-color: var(--fsds-button-color-background-active, #b8b8b8);
+    background-color: var(--fsds-button-color-background-active, #d0d0d0);
   }
 
   &:focus-visible:not(:disabled) {

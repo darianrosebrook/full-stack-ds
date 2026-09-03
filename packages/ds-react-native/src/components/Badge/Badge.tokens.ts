@@ -80,13 +80,13 @@ export const badgeTokenScopes = {
       name: "badge.color.background.default",
       cssVar: "--fsds-badge-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "badge.color.background.hover": {
       name: "badge.color.background.hover",
       cssVar: "--fsds-badge-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "badge.color.foreground.primary": {
       name: "badge.color.foreground.primary",

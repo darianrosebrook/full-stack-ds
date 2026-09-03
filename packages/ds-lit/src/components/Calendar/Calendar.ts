@@ -40,7 +40,7 @@ export class CalendarElement extends LitElement {
       --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-calendar-color-day-selected-foreground: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
@@ -107,7 +107,7 @@ export class CalendarElement extends LitElement {
     }
 
     .calendar__nav:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
+      background-color: var(--fsds-calendar-color-day-hover, #f7f7f7);
       color: var(--fsds-calendar-color-foreground-primary, #141414);
     }
 
@@ -159,7 +159,7 @@ export class CalendarElement extends LitElement {
     }
 
     .calendar__day:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
+      background-color: var(--fsds-calendar-color-day-hover, #f7f7f7);
     }
 
     .calendar__day:focus-visible:not([aria-disabled="true"]) {
@@ -260,7 +260,7 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d92d2e);
-      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-calendar-color-day-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-calendar-color-day-selected-background: var(--fsds-semantic-color-background-accent, #d92d2e);
       --fsds-calendar-color-day-selected-foreground: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-calendar-color-day-range-background: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
@@ -327,7 +327,7 @@ export class CalendarHeaderElement extends LitElement {
     }
 
     .calendar__nav:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
+      background-color: var(--fsds-calendar-color-day-hover, #f7f7f7);
       color: var(--fsds-calendar-color-foreground-primary, #141414);
     }
 
@@ -379,7 +379,7 @@ export class CalendarHeaderElement extends LitElement {
     }
 
     .calendar__day:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
+      background-color: var(--fsds-calendar-color-day-hover, #f7f7f7);
     }
 
     .calendar__day:focus-visible:not([aria-disabled="true"]) {

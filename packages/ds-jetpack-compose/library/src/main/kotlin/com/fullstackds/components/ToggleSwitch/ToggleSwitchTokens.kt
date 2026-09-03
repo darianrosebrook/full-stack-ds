@@ -90,7 +90,7 @@ val toggleSwitchTokenScopes: ComponentTokenScopes = mapOf(
             name = "toggle-switch.color.background.default",
             cssVar = "--fsds-toggle-switch-color-background-default",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "toggle-switch.color.foreground.default" to ComponentTokenDefinition(
             name = "toggle-switch.color.foreground.default",
@@ -120,7 +120,7 @@ val toggleSwitchTokenScopes: ComponentTokenScopes = mapOf(
             name = "toggle-switch.color.background.hover",
             cssVar = "--fsds-toggle-switch-color-background-hover",
             ref = "semantic.interaction.background.hover",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "toggle-switch.color.background.checked" to ComponentTokenDefinition(
             name = "toggle-switch.color.background.checked",

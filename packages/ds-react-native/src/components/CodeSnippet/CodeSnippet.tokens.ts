@@ -84,7 +84,7 @@ export const codeSnippetTokenScopes = {
       name: "code-snippet.color.background.default",
       cssVar: "--fsds-code-snippet-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "code-snippet.color.foreground.primary": {
       name: "code-snippet.color.foreground.primary",

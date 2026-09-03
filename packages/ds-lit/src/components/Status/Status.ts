@@ -34,7 +34,7 @@ export class StatusElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-status-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-status-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-status-size-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
@@ -93,7 +93,7 @@ export class StatusElement extends LitElement {
       box-sizing: border-box;
       white-space: nowrap;
       border-style: solid;
-      background-color: var(--fsds-status-color-background-default, #d0d0d0);
+      background-color: var(--fsds-status-color-background-default, #f7f7f7);
       color: var(--fsds-status-color-foreground-primary, #474647);
       border-color: var(--fsds-status-color-border-default, #d0d0d0);
       border-width: var(--fsds-status-size-border-default, 1px);

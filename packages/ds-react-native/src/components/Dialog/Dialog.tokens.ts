@@ -233,7 +233,7 @@ export const dialogTokenScopes = {
       name: "dialog.color.background.default",
       cssVar: "--fsds-dialog-color-background-default",
       ref: "semantic.color.background.hover",
-      fallback: "#b8b8b8",
+      fallback: "#f7f7f7",
     },
   },
 } satisfies ComponentTokenScopes;

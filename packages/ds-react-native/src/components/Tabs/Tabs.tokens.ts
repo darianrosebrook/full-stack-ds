@@ -133,7 +133,7 @@ export const tabsTokenScopes = {
       name: "tabs.color.hover.bg",
       cssVar: "--fsds-tabs-color-hover-bg",
       ref: "semantic.color.background.hover",
-      fallback: "#b8b8b8",
+      fallback: "#f7f7f7",
     },
     "tabs.color.hover.fg": {
       name: "tabs.color.hover.fg",
@@ -151,7 +151,7 @@ export const tabsTokenScopes = {
       name: "tabs.color.active-bg",
       cssVar: "--fsds-tabs-color-active-bg",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "tabs.color.focus": {
       name: "tabs.color.focus",

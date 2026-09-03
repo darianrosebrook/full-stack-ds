@@ -53,7 +53,7 @@ export class CommandElement extends LitElement {
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .command {
@@ -185,11 +185,11 @@ export class CommandElement extends LitElement {
     }
 
     .command__item:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
       color: var(--fsds-command-color-text, #141414);
     }
 
@@ -374,7 +374,7 @@ export class CommandListElement extends LitElement {
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .command {
@@ -506,11 +506,11 @@ export class CommandListElement extends LitElement {
     }
 
     .command__item:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
       color: var(--fsds-command-color-text, #141414);
     }
 
@@ -599,7 +599,7 @@ export class CommandGroupElement extends LitElement {
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .command {
@@ -731,11 +731,11 @@ export class CommandGroupElement extends LitElement {
     }
 
     .command__item:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
       color: var(--fsds-command-color-text, #141414);
     }
 
@@ -824,7 +824,7 @@ export class CommandItemElement extends LitElement {
       --fsds-command-text-size-small: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
-      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-command-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
     }
 
     .command {
@@ -956,11 +956,11 @@ export class CommandItemElement extends LitElement {
     }
 
     .command__item:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
     }
 
     .command__item[aria-selected="true"] {
-      background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-command-color-background-hover, #f7f7f7);
       color: var(--fsds-command-color-text, #141414);
     }
 

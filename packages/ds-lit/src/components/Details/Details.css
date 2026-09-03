@@ -25,7 +25,7 @@
   color: var(--fsds-details-color-foreground-primary, #141414);
 
   &:hover:not([aria-disabled="true"]) {
-    background-color: var(--fsds-details-color-background-hover, #b8b8b8);
+    background-color: var(--fsds-details-color-background-hover, #f7f7f7);
     border-color: var(--fsds-details-color-border-hover, #888889);
   }
 

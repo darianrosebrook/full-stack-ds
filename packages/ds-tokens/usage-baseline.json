@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-18T00:44:29.594Z",
-  "unusedCount": 396,
+  "generatedAt": "2026-09-02T23:53:29.529Z",
+  "unusedCount": 395,
   "unusedTokens": [
     "core.color.datavis.categorical.1",
     "core.color.datavis.categorical.2",
@@ -154,7 +154,6 @@
     "core.motion.dwell.long",
     "core.motion.dwell.short",
     "core.motion.easing.continuous",
-    "core.motion.easing.emphasizedOut",
     "core.motion.keyframes.fadeIn",
     "core.motion.keyframes.pulse",
     "core.motion.keyframes.scaleIn",

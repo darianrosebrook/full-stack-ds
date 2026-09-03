@@ -373,7 +373,7 @@
           "--fsds-command-text-size-small": "var(--fsds-semantic-typography-body-04, 12px)",
           "--fsds-command-shadow": "var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a)",
           "--fsds-command-opacity-disabled": "var(--fsds-semantic-interaction-disabled-opacity, 0.5)",
-          "--fsds-command-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #d0d0d0)",
+          "--fsds-command-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #f7f7f7)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -528,13 +528,13 @@
       {
         "selector": ".command__item:hover:not([aria-disabled=\"true\"])",
         "declarations": {
-          "background-color": "var(--fsds-command-color-background-hover, #d0d0d0)"
+          "background-color": "var(--fsds-command-color-background-hover, #f7f7f7)"
         }
       },
       {
         "selector": ".command__item[aria-selected=\"true\"]",
         "declarations": {
-          "background-color": "var(--fsds-command-color-background-hover, #d0d0d0)",
+          "background-color": "var(--fsds-command-color-background-hover, #f7f7f7)",
           "color": "var(--fsds-command-color-text, #141414)"
         }
       },

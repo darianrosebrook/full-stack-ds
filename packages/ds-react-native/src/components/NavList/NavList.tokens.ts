@@ -104,7 +104,7 @@ export const navListTokenScopes = {
       name: "nav-list.color.background.hover",
       cssVar: "--fsds-nav-list-color-background-hover",
       ref: "semantic.color.background.subtle",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "nav-list.stateLayer.hover": {
       name: "nav-list.stateLayer.hover",

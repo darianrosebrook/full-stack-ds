@@ -84,7 +84,7 @@ export const statusTokenScopes = {
       name: "status.color.background.default",
       cssVar: "--fsds-status-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "status.color.foreground.primary": {
       name: "status.color.foreground.primary",

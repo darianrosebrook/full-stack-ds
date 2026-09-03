@@ -394,7 +394,7 @@
   ".dialog__closeButton:hover": {
     "dialog.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#b8b8b8"
+      "fallback": "#f7f7f7"
     }
   },
   ".dialog--sm .dialog__modal": {

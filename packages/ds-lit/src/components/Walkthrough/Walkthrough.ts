@@ -38,7 +38,7 @@ export class WalkthroughElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -78,7 +78,7 @@ export class WalkthroughElement extends LitElement {
       position: relative;
       display: flex;
       flex-direction: column;
-      background-color: var(--fsds-walkthrough-surface-bg, #d0d0d0);
+      background-color: var(--fsds-walkthrough-surface-bg, #f7f7f7);
       border-color: var(--fsds-walkthrough-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;
@@ -310,7 +310,7 @@ export class WalkthroughContentElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -350,7 +350,7 @@ export class WalkthroughContentElement extends LitElement {
       position: relative;
       display: flex;
       flex-direction: column;
-      background-color: var(--fsds-walkthrough-surface-bg, #d0d0d0);
+      background-color: var(--fsds-walkthrough-surface-bg, #f7f7f7);
       border-color: var(--fsds-walkthrough-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;
@@ -468,7 +468,7 @@ export class WalkthroughTitleElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -508,7 +508,7 @@ export class WalkthroughTitleElement extends LitElement {
       position: relative;
       display: flex;
       flex-direction: column;
-      background-color: var(--fsds-walkthrough-surface-bg, #d0d0d0);
+      background-color: var(--fsds-walkthrough-surface-bg, #f7f7f7);
       border-color: var(--fsds-walkthrough-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;
@@ -626,7 +626,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
@@ -666,7 +666,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       position: relative;
       display: flex;
       flex-direction: column;
-      background-color: var(--fsds-walkthrough-surface-bg, #d0d0d0);
+      background-color: var(--fsds-walkthrough-surface-bg, #f7f7f7);
       border-color: var(--fsds-walkthrough-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;

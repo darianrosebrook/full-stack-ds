@@ -16,7 +16,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--fsds-walkthrough-surface-bg, #d0d0d0);
+  background-color: var(--fsds-walkthrough-surface-bg, #f7f7f7);
   border-color: var(--fsds-walkthrough-surface-border, #d0d0d0);
   border-style: solid;
   border-width: 1px;

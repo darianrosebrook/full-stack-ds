@@ -2,7 +2,7 @@
   "root": {
     "background-color": {
       "resolvesTo": "code-block.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "code-block.color.border.default",

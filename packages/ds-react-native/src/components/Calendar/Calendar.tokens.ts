@@ -110,7 +110,7 @@ export const calendarTokenScopes = {
       name: "calendar.color.day.hover",
       cssVar: "--fsds-calendar-color-day-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "calendar.color.day.selected.background": {
       name: "calendar.color.day.selected.background",

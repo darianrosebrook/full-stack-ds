@@ -50,7 +50,7 @@
   },
   "tabs.color.hover.bg": {
     "resolvesTo": "semantic.color.background.hover",
-    "fallback": "#b8b8b8",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "tabs.color.hover.fg": {
@@ -65,7 +65,7 @@
   },
   "tabs.color.active-bg": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "tabs.color.focus": {

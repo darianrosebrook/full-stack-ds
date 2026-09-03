@@ -46,7 +46,7 @@
   },
   "switch.color.track.background.default": {
     "resolvesTo": "semantic.color.background.tertiary",
-    "fallback": "#b8b8b8",
+    "fallback": "#d0d0d0",
     "layer": "semantic"
   },
   "switch.color.track.border.default": {

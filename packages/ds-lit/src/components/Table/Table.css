@@ -19,7 +19,7 @@
   overflow-x: auto;
 
   &:hover {
-    background-color: var(--fsds-table-color-background-hover, #d0d0d0);
+    background-color: var(--fsds-table-color-background-hover, #f7f7f7);
   }
 
   &[aria-selected="true"] {
@@ -42,11 +42,11 @@
 }
 
 .table__head {
-  background-color: var(--fsds-table-color-background-footer, #d0d0d0);
+  background-color: var(--fsds-table-color-background-footer, #f7f7f7);
 }
 
 .table__footer {
-  background-color: var(--fsds-table-color-background-footer, #d0d0d0);
+  background-color: var(--fsds-table-color-background-footer, #f7f7f7);
   font-weight: var(--fsds-table-text-weight-footer, 500);
 }
 
