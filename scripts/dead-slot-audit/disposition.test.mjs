@@ -174,8 +174,13 @@ check("a leaf naming a declared STATE value is also `wire`", () => {
   assert.equal(r.disposition, "wire");
 });
 
-// --- delete ----------------------------------------------------------------
-check("a slot on an anatomy part that never renders is `delete`", () => {
+// --- topology-conflict -----------------------------------------------------
+// FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01. This shape used to return
+// `delete`. It cannot: the generated component is the artifact under
+// evaluation, so its silence is not testimony that the contract is stale.
+// Deleting on it lets a deficient realization become self-consistent by
+// erasing the requirement it violates.
+check("a declared anatomy part absent from the realization is `topology-conflict`", () => {
   const r = classifyDisposition(
     "card.color.badge.success.background",
     ctx({
@@ -184,12 +189,99 @@ check("a slot on an anatomy part that never renders is `delete`", () => {
       renderedParts: new Set(["root"]),
     }),
   );
-  assert.equal(r.disposition, "delete");
-  assert.match(r.evidence, /never renders/);
+  assert.equal(r.disposition, "topology-conflict");
 });
 
-check("a slot on a part that DOES render is not `delete`", () => {
-  // Control: deletion requires positive evidence the part is absent.
+check("generated absence NEVER yields `delete`, however the slot is shaped", () => {
+  // The invariant itself, stated as an assertion rather than implied by the
+  // positive case above: no combination of declared-part + absent-realization
+  // may reach the deletion disposition.
+  for (const slot of [
+    "card.color.badge.success.background",
+    "checkbox.color.indicator.default",
+    "button.size.spinner.diameter",
+  ]) {
+    const part = slot.split(".")[2];
+    const r = classifyDisposition(
+      slot,
+      ctx({
+        prefix: slot.split(".")[0],
+        contract: { anatomy: { parts: ["root", part] } },
+        renderedParts: new Set(["root"]),
+      }),
+    );
+    assert.notEqual(r.disposition, "delete", `${slot} reached delete on generated absence alone`);
+  }
+});
+
+check("the conflict evidence names the contradiction, not just the absence", () => {
+  // The evidence string becomes the ledger note, so it has to carry the causal
+  // fact a later reader needs: BOTH sides, and that neither one wins by
+  // default. `review` would lose exactly this.
+  const r = classifyDisposition(
+    "card.color.badge.success.background",
+    ctx({
+      prefix: "card",
+      contract: { anatomy: { parts: ["root", "badge"] } },
+      renderedParts: new Set(["root"]),
+    }),
+  );
+  assert.match(r.evidence, /contract declares anatomy part "badge"/);
+  assert.match(r.evidence, /measured realization lacks it/);
+  assert.match(r.evidence, /do NOT infer the contract is stale/);
+});
+
+// A3: the Checkbox shape that settles the direction of the inference. Its
+// contract declares `indicator` and describes the visual checked mark; the
+// realization is a bare `<input>`. Under the old rule this classified as
+// `delete` — i.e. the audit would have proposed removing the declaration that
+// proves the realization incomplete.
+check("Checkbox-shaped fixture: declared `indicator`, bare-input realization", () => {
+  const checkboxSource = '<input type="checkbox" className="checkbox checkbox--md" />';
+  const r = classifyDisposition(
+    "checkbox.color.indicator.background.checked",
+    ctx({
+      prefix: "checkbox",
+      contract: { anatomy: { parts: ["root", "input", "indicator"] } },
+      renderedParts: renderedPartsOf(checkboxSource, "checkbox"),
+    }),
+  );
+  assert.equal(r.disposition, "topology-conflict");
+  assert.notEqual(r.disposition, "delete");
+});
+
+// A7: the falsifier. The classifier must be responding to the observed
+// contradiction, not to component identity or slot spelling — so making the
+// part present must make the conflict stop reproducing.
+check("A7 falsifier: rendering the part makes the conflict stop reproducing", () => {
+  const contract = { anatomy: { parts: ["root", "input", "indicator"] } };
+  const slot = "checkbox.color.indicator.background.checked";
+
+  const absent = classifyDisposition(
+    slot,
+    ctx({
+      prefix: "checkbox",
+      contract,
+      renderedParts: renderedPartsOf('<input className="checkbox" />', "checkbox"),
+    }),
+  );
+  const present = classifyDisposition(
+    slot,
+    ctx({
+      prefix: "checkbox",
+      contract,
+      renderedParts: renderedPartsOf(
+        '<span className="checkbox"><span className="checkbox__indicator" /></span>',
+        "checkbox",
+      ),
+    }),
+  );
+  assert.equal(absent.disposition, "topology-conflict");
+  assert.notEqual(present.disposition, "topology-conflict");
+});
+
+check("a slot on a part that DOES render is not a topology conflict", () => {
+  // Control: the conflict requires positive evidence the part is absent.
   const r = classifyDisposition(
     "card.color.badge.success.background",
     ctx({
@@ -198,7 +290,7 @@ check("a slot on a part that DOES render is not `delete`", () => {
       renderedParts: new Set(["root", "badge"]),
     }),
   );
-  assert.notEqual(r.disposition, "delete");
+  assert.notEqual(r.disposition, "topology-conflict");
 });
 
 // --- review (the residual) -------------------------------------------------
@@ -215,6 +307,32 @@ check("an unmatched slot is `review`, NOT `delete`", () => {
 // leaf that concatenates a FREEFORM prop's name with a value suffix names an
 // axis the component's design surface does not have — positive evidence, so
 // it deletes. Every near-miss below must NOT delete.
+//
+// A4 (FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01): this rule is why that slice
+// narrows the deletion ground rather than removing the disposition. Its
+// evidence is entirely contract-sourced — a declared prop, its declared
+// propType, and the leaf's decomposition onto that prop name — and the
+// classifier reaches it without consulting `renderedParts` at all. A contract
+// that contradicts itself can still be cleaned up mechanically; a contract the
+// realization merely fails to satisfy cannot.
+check("A4: the deletion disposition survives on contract-sourced evidence", () => {
+  const r = classifyDisposition(
+    "divider.size.thicknessThick",
+    ctx({
+      prefix: "divider",
+      // No renderedParts at all: if `delete` still fires, the rule provably
+      // does not depend on what the generator emitted.
+      renderedParts: new Set(),
+      contract: {
+        anatomy: { parts: ["root"] },
+        props: { designed: { members: [{ name: "thickness", propType: { kind: "string" } }] } },
+      },
+    }),
+  );
+  assert.equal(r.disposition, "delete");
+  assert.doesNotMatch(r.evidence, /render|emitted source/);
+});
+
 check("5b: a preset of a freeform string prop is `delete`, with evidence naming the prop", () => {
   const r = classifyDisposition(
     "divider.size.thicknessThick",
@@ -271,6 +389,30 @@ check("5b boundary: a leaf that IS the prop name (no preset suffix) is NOT a 5b 
     }),
   );
   assert.notEqual(r.disposition, "delete");
+});
+
+// A8 (FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01): 5b's authority audit. The
+// worry is that 5b is the same bug one level down — reading "the prop is typed
+// freeform" as retirement authority when the contract's own `variants` block
+// says the vocabulary exists. It is not, and this pins why: rule 4 evaluates
+// `declaredAxisValues` (variants ∪ state dimensions) BEFORE 5b, so a leaf the
+// contract declares as an axis value can never reach the deletion rule, even
+// when a freeform prop of the same name would otherwise decompose it. When the
+// two disagree, the declared vocabulary wins and the slot is `wire`.
+check("A8: a declared axis value outranks a freeform prop of the same name", () => {
+  const r = classifyDisposition(
+    "postcard.size.typeImage",
+    ctx({
+      prefix: "postcard",
+      contract: {
+        anatomy: { parts: ["root"] },
+        variants: { type: ["typeImage", "typeVideo"] },
+        props: { designed: { members: [{ name: "type", propType: { kind: "string" } }] } },
+      },
+    }),
+  );
+  assert.notEqual(r.disposition, "delete");
+  assert.equal(r.disposition, "wire");
 });
 
 check("5b boundary: a leaf starting with a freeform prop name by coincidence is only reviewed", () => {

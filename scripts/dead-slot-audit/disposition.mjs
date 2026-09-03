@@ -43,12 +43,28 @@
  *   wire              The leaf names a real axis value and NO block redefines
  *                     the slot — genuinely missing consumption, to be authored.
  *
- *   delete            POSITIVE evidence of an overclaim: the slot hangs off an
- *                     anatomy part that the generated component never renders,
- *                     so nothing can consume it as declared. Removed rather
- *                     than "fixed" (the FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01 A4
- *                     precedent). Card's `card.color.badge.*` is the canonical
- *                     case — `badge` is a declared part that renders nowhere.
+ *   topology-conflict The contract declares an anatomy part, the slot hangs off
+ *                     it, and the generated component does not render it. Two
+ *                     readings fit that shape and this classifier cannot tell
+ *                     them apart: the contract over-promises a part nobody
+ *                     wants, or the realization under-delivers a part the
+ *                     contract requires. Checkbox is the case that settles the
+ *                     direction — it declares `input` and `indicator` and
+ *                     describes the composite control, while `anatomy.dom`
+ *                     collapses to a bare `<input>`; Button declares `spinner`
+ *                     and `loadingText` and its contract says `loading`
+ *                     "replaces content with a spinner"; Card's A2UI guidance
+ *                     tells consumers "Use Card.Link". The generated component
+ *                     is the artifact under suspicion, so its silence is not
+ *                     testimony about the contract. Needs adjudication against
+ *                     the contract's own semantics, never mechanical removal.
+ *
+ *   delete            POSITIVE evidence of an overclaim, sourced INDEPENDENTLY
+ *                     of the generated output: the leaf is a preset on an axis
+ *                     the component's design surface does not have (rule 5b —
+ *                     a freeform `string`/`number` prop can never select it).
+ *                     The contract contradicts itself and says so on its own;
+ *                     no appeal to what the emitter happened to render.
  *
  *   review            The residual: no rule matched. This is deliberately NOT
  *                     folded into `delete`. A fall-through is the absence of a
@@ -62,6 +78,15 @@
  * Every disposition carries `evidence` — the concrete reason, naming the block
  * or value that decided it. That string becomes the ledger `note`, so a later
  * reader can re-derive the call instead of re-litigating it.
+ *
+ * The governing constraint on any rule that returns `delete`
+ * (FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01): **absence from a generated
+ * realization is evidence of a realization mismatch, never sufficient evidence
+ * that the declaring contract surface is stale.** A classifier that infers
+ * retirement authority from the artifact it is evaluating can make a deficient
+ * realization internally consistent by deleting the contract material that
+ * proves it deficient. So a deletion rule must cite evidence the contract
+ * carries on its own — a self-contradiction, not a silence downstream.
  */
 
 /** Slot path → its parent path and leaf segment. */
@@ -228,16 +253,21 @@ export function classifyDisposition(slot, { tokens, styles, contract, prefix, re
     };
   }
 
-  // 5. delete — POSITIVE evidence only: the slot names an anatomy part that the
-  //    generated component never renders, so no rule can ever reach it.
+  // 5. topology-conflict — the contract declares the part, the realization
+  //    lacks it. This used to return `delete`, reasoning that an unrendered
+  //    part is positive evidence of an overclaim. It is not: the generated
+  //    component is the artifact under evaluation, so its silence cannot
+  //    authorize removing the contract material it disagrees with. The
+  //    contradiction is real and worth surfacing — which of the two sides is
+  //    wrong is a semantic judgment this classifier has no access to.
   const parts = Array.isArray(contract?.anatomy?.parts) ? contract.anatomy.parts : [];
   const segments = slot.split(".");
   for (const part of parts) {
     if (part === "root" || !segments.includes(part)) continue;
     if (!renderedParts.has(part)) {
       return {
-        disposition: "delete",
-        evidence: `slot hangs off anatomy part "${part}", which the generated component never renders (no .${prefix}__${part} in the emitted source); nothing can consume it`,
+        disposition: "topology-conflict",
+        evidence: `contract declares anatomy part "${part}" and this slot hangs off it, but the measured realization lacks it (no .${prefix}__${part} in the emitted source); the contract and the realization disagree — adjudicate which side is wrong, do NOT infer the contract is stale from the realization's silence`,
       };
     }
   }
