@@ -1,0 +1,547 @@
+{
+  "$comment": "The Stage-2 subtraction (REL-VIEW-ALGEBRA-01). This file is NOT a freeze over the live kernel and must never be read as one. It is the frozen BASIS of one experiment plus its verdicts, in the sense of ADR-0001: freeze the basis needed to make a claim reproducible; do not freeze the evolving system merely because you measured it. `basis` fixes the candidate ids as they stood at the recorded commit and is never re-derived from the live census, so a coordinate a later stage admits creates a LATER stage's obligation and cannot reopen this one. The close condition is that no candidate remains `unresolved` — every proposition opened here has a verdict — which is terminal for the slice, not a standing repository invariant: after Stage 2 closes this ledger is historical evidence and its gate must not participate in ordinary repo admission. `constructors` is a SEPARATE governed disposition on the algebra's vocabulary, and coordinate subtraction cannot reach it: a constructor may leave the admitted algebra only through an explicit vocabulary-evolution disposition showing that its semantic transition law is no longer required by active authority. That separation is what keeps deletion from being the cheap discharge — a coordinate failing necessity loses primitive standing, which never by itself means a thing that coordinate names disappears.",
+  "dispositions": {
+    "unresolved": "not yet adjudicated; the close condition is zero of these",
+    "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
+    "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it"
+  },
+  "basis": {
+    "frozenAt": "bb742e8f",
+    "reason": "the commit at which the Stage-2 rules and fixtures were complete and the ledger was clean at stage 2, so the candidate set is the one the experiment actually opened",
+    "digest": "e64972726a8dd2f72740be1c37fbffd7c6b9f5d5ec31784161960c458b7f1661",
+    "count": 118,
+    "candidates": [
+      "assertion.aggregate.along#arity",
+      "assertion.aggregate.along#order",
+      "assertion.aggregate.along#present",
+      "assertion.aggregate.field#incidence",
+      "assertion.aggregate.nulls:as-observed~<absent>",
+      "assertion.aggregate.nulls:as-zero~<absent>",
+      "assertion.aggregate.nulls:exclude~<absent>",
+      "assertion.aggregate.relation#incidence",
+      "assertion.ratio-comparison.field#incidence",
+      "assertion.ratio-comparison.relation#incidence",
+      "evidence.grainWitness#arity",
+      "evidence.grainWitness#incidence",
+      "evidence.grainWitness#order",
+      "evidence.rows.*#present",
+      "field.additivity.kind:additive~<absent>",
+      "field.additivity.kind:additive~non-additive",
+      "field.additivity.kind:non-additive~<absent>",
+      "field.additivity.kind:non-additive~ratio-measure",
+      "field.additivity.kind:ratio-measure~<absent>",
+      "field.additivity.kind:semi-additive~<absent>",
+      "field.additivity.kind:semi-additive~non-additive",
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
+      "field.additivity.semi-additive.nonAdditiveAlong#order",
+      "field.temporality.grain",
+      "field.temporality.grain:day~<absent>",
+      "field.temporality.grain:day~month",
+      "field.temporality.grain:month~<absent>",
+      "field.temporality.kind:instant~<absent>",
+      "field.temporality.kind:interval~<absent>",
+      "observation.null:absent~<absent>",
+      "observation.null:absent~suppressed",
+      "observation.null:censored~<absent>",
+      "observation.null:censored~suppressed",
+      "observation.null:suppressed~<absent>",
+      "relation.derivedBy.aggregate-to-grain.from#incidence",
+      "relation.derivedBy.aggregate-to-grain.from#present",
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.aggregate-to-grain.toGrain#present",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "relation.derivedBy.bin.closure:left-closed~right-closed",
+      "relation.derivedBy.bin.closure:right-closed~<absent>",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.bin.field#present",
+      "relation.derivedBy.bin.from#incidence",
+      "relation.derivedBy.bin.from#present",
+      "relation.derivedBy.graph.edgeFrom#incidence",
+      "relation.derivedBy.graph.edgeFrom#present",
+      "relation.derivedBy.graph.edgeTo#incidence",
+      "relation.derivedBy.graph.edgeTo#present",
+      "relation.derivedBy.graph.from#incidence",
+      "relation.derivedBy.graph.from#present",
+      "relation.derivedBy.graph.requiresConservation",
+      "relation.derivedBy.graph.value#incidence",
+      "relation.derivedBy.graph.value#present",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+      "relation.derivedBy.join.from#incidence",
+      "relation.derivedBy.join.from#present",
+      "relation.derivedBy.join.with#incidence",
+      "relation.derivedBy.join.with#present",
+      "relation.derivedBy.kind",
+      "relation.derivedBy.kind:aggregate-to-grain~<absent>",
+      "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:aggregate-to-grain~join",
+      "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "relation.derivedBy.kind:aggregate-to-grain~project",
+      "relation.derivedBy.kind:bin~<absent>",
+      "relation.derivedBy.kind:bin~graph",
+      "relation.derivedBy.kind:bin~normalize",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:graph~<absent>",
+      "relation.derivedBy.kind:join~<absent>",
+      "relation.derivedBy.kind:join~bin",
+      "relation.derivedBy.kind:join~graph",
+      "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:join~normalize",
+      "relation.derivedBy.kind:join~project",
+      "relation.derivedBy.kind:nest~<absent>",
+      "relation.derivedBy.kind:nest~bin",
+      "relation.derivedBy.kind:nest~graph",
+      "relation.derivedBy.kind:nest~normalize",
+      "relation.derivedBy.kind:nest~project",
+      "relation.derivedBy.kind:normalize~<absent>",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.kind:project~<absent>",
+      "relation.derivedBy.kind:project~graph",
+      "relation.derivedBy.nest.from#incidence",
+      "relation.derivedBy.nest.from#present",
+      "relation.derivedBy.nest.levels#arity",
+      "relation.derivedBy.nest.levels#incidence",
+      "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.nest.levels#present",
+      "relation.derivedBy.normalize.field#incidence",
+      "relation.derivedBy.normalize.field#present",
+      "relation.derivedBy.normalize.from#incidence",
+      "relation.derivedBy.normalize.from#present",
+      "relation.derivedBy.project.from#incidence",
+      "relation.derivedBy.project.from#present",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+      "relation.derivedBy.project.keep#order",
+      "relation.derivedBy.project.keep#present",
+      "structure.peers#present",
+      "structure.peers[]#arity",
+      "structure.peers[]#incidence",
+      "structure.peers[]#order",
+      "structure.peers[]#present"
+    ]
+  },
+  "constructors": {
+    "aggregate-to-grain": {
+      "disposition": "required",
+      "cases": [
+        "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
+        "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN",
+        "CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS"
+      ],
+      "transitionLaw": "Combines rows to a named coarser grain. The result's grain IS the target grain; the target must be drawn from the input, and every surviving field must come from it."
+    },
+    "join": {
+      "disposition": "required",
+      "cases": [
+        "CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN",
+        "CASE_ORDER_COUNT_AFTER_LINE_JOIN"
+      ],
+      "transitionLaw": "Relates two relations at a declared cardinality. The cardinality names which side survives at row granularity; the other side's values are repeated once per match, and no field of the result may come from outside the two inputs."
+    },
+    "nest": {
+      "disposition": "required",
+      "cases": [
+        "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
+        "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"
+      ],
+      "transitionLaw": "Imposes a hierarchy without combining rows. Its prefixes are the grains it declares, and its levels must survive into the result or the hierarchy it declares is unrecoverable."
+    },
+    "bin": {
+      "disposition": "required",
+      "cases": [
+        "CASE_WHICH_BIN_GETS_TEN"
+      ],
+      "transitionLaw": "Partitions a field's range into intervals. The closure decides which side of each boundary owns a value that lands on it; binning a grain column coarsens the row set in a way the declaration does not pin down."
+    },
+    "normalize": {
+      "disposition": "required",
+      "cases": [
+        "CASE_NORMALIZED_AVERAGES"
+      ],
+      "transitionLaw": "Rescales a field against a whole, which presumes the parts sum to that whole. The row set is unchanged."
+    },
+    "project": {
+      "disposition": "required",
+      "cases": [
+        "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"
+      ],
+      "transitionLaw": "Keeps exactly the named fields. The grain survives iff every grain column is kept; the membership of a nested input is lost with any dropped level, before any projection is chosen."
+    },
+    "graph": {
+      "disposition": "required",
+      "cases": [
+        "CASE_LEAKING_FLOW",
+        "CASE_FLOW_CONSERVATION_EDGE_VALUES_UNSEEN"
+      ],
+      "transitionLaw": "Reads a relation as directed edges without changing which rows exist. A declared conservation requirement is a claim about edge VALUES and is discharged only by rows, never by the declaration."
+    }
+  },
+  "verdicts": {
+    "assertion.aggregate.along#arity": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.along#order": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.along#present": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.nulls:as-observed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.nulls:as-zero~<absent>": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.nulls:exclude~<absent>": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.relation#incidence": {
+      "disposition": "unresolved"
+    },
+    "assertion.ratio-comparison.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "assertion.ratio-comparison.relation#incidence": {
+      "disposition": "unresolved"
+    },
+    "evidence.grainWitness#arity": {
+      "disposition": "unresolved"
+    },
+    "evidence.grainWitness#incidence": {
+      "disposition": "unresolved"
+    },
+    "evidence.grainWitness#order": {
+      "disposition": "unresolved"
+    },
+    "evidence.rows.*#present": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:additive~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:additive~non-additive": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:non-additive~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:non-additive~ratio-measure": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:ratio-measure~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:semi-additive~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:semi-additive~non-additive": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#arity": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#order": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain:day~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain:day~month": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain:month~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.kind:instant~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.kind:interval~<absent>": {
+      "disposition": "unresolved"
+    },
+    "observation.null:absent~<absent>": {
+      "disposition": "unresolved"
+    },
+    "observation.null:absent~suppressed": {
+      "disposition": "unresolved"
+    },
+    "observation.null:censored~<absent>": {
+      "disposition": "unresolved"
+    },
+    "observation.null:censored~suppressed": {
+      "disposition": "unresolved"
+    },
+    "observation.null:suppressed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#arity": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#order": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure:left-closed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure:left-closed~right-closed": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure:right-closed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.field#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.edgeFrom#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.edgeFrom#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.edgeTo#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.edgeTo#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.requiresConservation": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.value#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.value#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-one": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-one": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~one-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.with#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.with#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~bin": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~join": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~nest": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:bin~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:bin~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:bin~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:bin~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:graph~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~bin": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~nest": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~bin": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:normalize~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:normalize~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:normalize~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:project~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:project~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#arity": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#order": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.normalize.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.normalize.field#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.normalize.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.normalize.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.from#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#arity": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#order": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#present": {
+      "disposition": "unresolved"
+    },
+    "structure.peers#present": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#arity": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#incidence": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#order": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#present": {
+      "disposition": "unresolved"
+    }
+  }
+}

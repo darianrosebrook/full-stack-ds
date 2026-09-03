@@ -39,6 +39,7 @@ import {
   type Witness,
 } from "./necessity.js";
 import { canonical, collides, erase } from "./quotient.js";
+import { loadSubtraction, unaccounted, verdictDrift } from "./subtraction.js";
 import type { RelationalStructure } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
 
@@ -58,17 +59,16 @@ const isCoordinate = (c: Coordinate) => c.kind !== "reference";
 
 /**
  * REL-VIEW-ALGEBRA-01 admitted the L3 derivation coordinates before any rule or
- * fixture can witness them. `pending-stage2.json` is the ledger of exactly
- * those, and the slice may not close with it non-empty. Every assertion below
- * that would otherwise refuse an unwitnessed kernel coordinate subtracts this
- * set and nothing else, so the guard is narrowed by an auditable list rather
- * than relaxed.
+ * fixture can witness them. `subtraction-stage2.json` freezes exactly that set
+ * as the basis of one experiment, and the slice may not claim ratification
+ * while any of them is unadjudicated. Every assertion below that would
+ * otherwise refuse an unwitnessed kernel coordinate subtracts this FROZEN set
+ * and nothing else, so the guard is narrowed by an auditable list rather than
+ * relaxed — and, because the list is frozen rather than re-derived, a
+ * coordinate a later stage admits does not slip through it either.
  */
-const pending = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, "pending-stage2.json"), "utf-8")) as {
-  count: number;
-  pending: string[];
-};
-const pendingIds = new Set(pending.pending);
+const subtraction = loadSubtraction();
+const pendingIds = new Set(subtraction.basis.candidates);
 const ratifiedIds = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
 
 const count = (cs: Coordinate[]) => ({
@@ -158,26 +158,18 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
    * cannot separate may be separable once the stage-2 derivations exist, and
    * ablating before that would remove something the next commit re-earns.
    */
-  it("the pending set equals the committed stage-2 ledger, exactly", () => {
-    const live = kernel
-      .filter(isCoordinate)
-      .filter((c) => !ratified.has(c.id))
-      .map((c) => c.id)
-      .sort();
-    const ledger = JSON.parse(
-      fs.readFileSync(path.join(FIXTURES_DIR, "pending-stage2.json"), "utf-8"),
-    ) as { count: number; pending: string[] };
-    expect(live).toEqual([...ledger.pending].sort());
-    expect(ledger.count).toBe(ledger.pending.length);
+  it("every live kernel coordinate is accounted for: ratified, or a candidate of the frozen experiment", () => {
+    // The invariant that survives growth. It does not say the kernel must
+    // contain exactly these coordinates; it says none may be unaccounted. A
+    // coordinate a later stage admits fails this until that stage opens its own
+    // candidate set, which is where the obligation belongs.
+    expect(unaccounted(subtraction)).toEqual([]);
   });
-  it("nothing already ratified is listed as pending, and every pending id is a real kernel coordinate", () => {
-    const ledger = JSON.parse(
-      fs.readFileSync(path.join(FIXTURES_DIR, "pending-stage2.json"), "utf-8"),
-    ) as { pending: string[] };
-    for (const id of ledger.pending) {
-      expect(kernelIds.has(id), `${id} is pending but not in the kernel`).toBe(true);
-      expect(ratified.has(id), `${id} is pending but already ratified`).toBe(false);
-    }
+
+  it("every recorded verdict is true of the live tree", () => {
+    // Keyed to the frozen basis, never to the census: it asks only whether the
+    // verdicts this experiment recorded have actually taken effect.
+    expect(verdictDrift(subtraction, kernelIds, ratified)).toEqual([]);
   });
   it("no witness names a coordinate the kernel does not have", () => {
     const phantom = [...ratified].filter((id) => !kernelIds.has(id));
