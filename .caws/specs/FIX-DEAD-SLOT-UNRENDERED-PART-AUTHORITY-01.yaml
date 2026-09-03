@@ -92,3 +92,10 @@ evidence:
     command: node scripts/dead-slot-audit/disposition.test.mjs
     exit_code: 0
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "Re-derived, not grandfathered: --reseed recomputed all 98 entries; git diff on known-dead.json = 1 file changed, 1 insertion, 1 deletion, and that single line is the _meta $comment. Every entry's disposition is byte-identical. Distribution unchanged before and after: review=65 wire=14 unconsumed-vocabulary=3 shadowed=16, delete=0. The corpus has had no delete finding since the 114->98 burn, so reclassification alters no live entry — the fix is preventive. Ratchet green: '[dead-slot] findings=98 (ledgered=98) unledgered=0 stale=0 / PASS'."
+    recorded_at: "2026-09-03T17:11:49.065Z"
+    command: "node scripts/dead-slot-audit/audit.mjs --reseed && git diff --stat scripts/dead-slot-audit/known-dead.json"
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
