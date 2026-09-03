@@ -71,7 +71,12 @@ export function Button({
 
   return (
   <Stack layout="native" as="button" className={`${classNames}`} onClick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} data-fsds-component="button" {...rest}>
-    {children}
+    {loading && (
+      <span className="button__spinner" aria-hidden="true" />
+    )}
+    <span className="button__loadingText">
+      {children}
+    </span>
   </Stack>
   );
 }

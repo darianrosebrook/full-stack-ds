@@ -8,12 +8,10 @@
 
 **Direction.** This rail asks only whether authored CSS demands an impossible carrier. An emitted variant class with no matching CSS rule is the inverse problem and lives in `scripts/variant-style-audit/`.
 
-Findings: **13** across **3** component(s).
+Findings: **11** across **2** component(s).
 
 | component | styles key | expands to | unreachable carrier | kind |
 |---|---|---|---|---|
-| Button | `spinner` | `.button__spinner` | `.button__spinner` | part |
-| Button | `loadingText` | `.button__loadingText` | `.button__loadingText` | part |
 | Checkbox | `.checkbox:hover .checkbox__indicator` | `.checkbox:hover .checkbox__indicator` | `.checkbox__indicator` | part |
 | Checkbox | `input` | `.checkbox__input` | `.checkbox__input` | part |
 | Checkbox | `indicator` | `.checkbox__indicator` | `.checkbox__indicator` | part |

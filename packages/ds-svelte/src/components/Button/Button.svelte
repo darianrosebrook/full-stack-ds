@@ -54,5 +54,10 @@ const classes = $derived(
 </script>
 
 <button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-fsds-component="button">
-  {@render children?.()}
+  {#if loading}
+  <span class={'button__spinner'} aria-hidden="true"></span>
+  {/if}
+  <span class={'button__loadingText'}>
+    {@render children?.()}
+  </span>
 </button>

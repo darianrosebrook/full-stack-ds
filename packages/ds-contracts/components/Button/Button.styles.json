@@ -425,7 +425,9 @@
       "platforms": [
         "web"
       ]
-    },
+    }
+  },
+  ".button[aria-busy=\"true\"] .button__loadingText": {
     "opacity": {
       "literal": "0.7",
       "platforms": [

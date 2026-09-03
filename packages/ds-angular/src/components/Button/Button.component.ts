@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgIf } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -21,10 +21,15 @@ export type ButtonType = "button" | "submit" | "reset";
 @Component({
   selector: "fsds-button",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, NgIf],
   host: { "data-fsds-component": "button" },
   template: `<button [ngClass]="classes()" (click)="onClick && onClick()" [type]="(type ?? 'button')" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
-  <ng-content />
+  <ng-container *ngIf="loading">
+    <span [ngClass]="'button__spinner'" aria-hidden="true"></span>
+  </ng-container>
+  <span [ngClass]="'button__loadingText'">
+    <ng-content />
+  </span>
 </button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
