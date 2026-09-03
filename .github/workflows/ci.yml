@@ -81,6 +81,15 @@ jobs:
       - name: Verify token build is up-to-date
         run: pnpm run tokens:build:check
 
+      # SwiftUI semantic-defaults table — drift gate. The
+      # FsdsSemanticDefaults.light table in FsdsTheme.swift is generated from
+      # the committed resolved graph plus the Swift corpus's emitted refs. A
+      # token change that regenerates the web trees but leaves this table
+      # stale fails here, with the regeneration command named, before the
+      # macOS Swift test ever runs (FIX-SWIFTUI-SEMANTIC-DEFAULTS-DRIFT-01).
+      - name: Verify SwiftUI semantic-defaults table is up-to-date
+        run: pnpm run swiftui:semantic-defaults:check
+
       # Design tokens — WCAG contrast gate. Loads resolved.tokens.json
       # and checks the curated semantic foreground × background pair
       # list (extractCanonicalPairs in build/w3c/w3c-contrast-validator.ts)

@@ -199,7 +199,12 @@ final class FsdsSemanticDefaultsTests: XCTestCase {
 
     func testEveryDefaultsEntryEqualsItsGraphValue() throws {
         let graph = try loadGraph()
-        XCTAssertEqual(FsdsSemanticDefaults.light.count, 168)
+        // Completeness (the table equals the graph-derived ref set, with no
+        // missing entries) is enforced by the `swiftui:semantic-defaults:check`
+        // drift gate in CI — this test only proves every present entry matches
+        // the committed graph. The count is a generated function of the Swift
+        // corpus refs, so it is intentionally not pinned here.
+        XCTAssertFalse(FsdsSemanticDefaults.light.isEmpty, "semantic-defaults table must not be empty")
         for (ref, token) in FsdsSemanticDefaults.light {
             let raw = try graphRawValue(ref, graph: graph)
             switch token {
