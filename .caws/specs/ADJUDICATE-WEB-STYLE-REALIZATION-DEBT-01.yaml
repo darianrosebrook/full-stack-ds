@@ -166,3 +166,7 @@ evidence:
     status: pass
     evidence_ref: "visual-obligation (10): Checkbox.size, ToggleSwitch.size, Progress.size, NavTree.iconSize, NavList.orientation=horizontal (the list part hard-codes flex-direction: column), Badge.variant=status (unpainted peer of painted counter/tag)"
     recorded_at: "2026-09-03T22:38:25.068Z"
+  - criterion_id: A13
+    status: pass
+    evidence_ref: "structural-behavioral (22): Popover/Tooltip/Walkthrough placement are anchored+flip-shift, so a CSS modifier would assert a runtime-flipped side — wrong, not merely absent; List.as is realized by the polymorphic root (const As = as ?? 'ul'); Accordion.type, Calendar.mode, OTP.mode, Tabs.activationMode, Toast.politeness are behavior/a11y facts"
+    recorded_at: "2026-09-03T22:38:25.499Z"
