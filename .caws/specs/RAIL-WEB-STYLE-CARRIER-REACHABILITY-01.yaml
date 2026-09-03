@@ -113,3 +113,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Producible parts = anatomy.dom walk + PartIR.isCompound subcomponents + content-transform vocabularies (MarkdownTransformIR blockParts/markParts, HighlightTransformIR tokenPart), minus root and the dom root's own part. Calibrated corpus-wide: a dom-walk-only rule MISSED 12 carriers the React emitter places (CodeBlock token, Markdown's 11). Case 'a declared part the dom tree never renders is NOT a produced carrier' pins that anatomy.parts alone is insufficient; 'every part class the React emitter places is a derived carrier' pins the whole corpus. Falsified: deleting the isCompound path -> the corpus case fails, 15/16."
+    recorded_at: "2026-09-03T18:10:13.079Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
