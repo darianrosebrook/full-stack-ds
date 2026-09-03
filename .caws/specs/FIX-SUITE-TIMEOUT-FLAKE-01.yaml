@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: suite-timeout
 created_at: '2026-09-03T00:58:52.201Z'
-updated_at: '2026-09-03T00:59:22.564Z'
+updated_at: '2026-09-03T01:00:39.604Z'
 blast_radius:
   modules:
     - 'ds-figma-plugin'
@@ -15,7 +15,6 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'packages/ds-figma-plugin/src/ui.test.ts'
-    - 'packages/ds-figma-plugin/src/plugin.test.ts'
     - 'packages/ds-codegen/src/cli.test.ts'
   out: []
 invariants:
