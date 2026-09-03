@@ -1,0 +1,64 @@
+id: FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01
+title: 'Generated absence cannot authorize contract deletion in the dead-slot classifier'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-03T17:02:39.850Z'
+updated_at: '2026-09-03T17:02:39.850Z'
+blast_radius:
+  modules:
+    - 'dead-slot-audit disposition classifier'
+    - 'derived-obligation ledger ratchet'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/dead-slot-audit/disposition.mjs'
+    - 'scripts/dead-slot-audit/disposition.test.mjs'
+    - 'scripts/dead-slot-audit/classification.test.mjs'
+    - 'scripts/dead-slot-audit/audit.mjs'
+    - 'scripts/dead-slot-audit/known-dead.json'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'Absence from a generated realization is evidence of a realization mismatch, never sufficient evidence that the declaring contract surface is stale'
+  - 'A cleanup classifier never derives retirement authority from the artifact it is evaluating'
+  - 'Every disposition that authorizes deletion cites evidence independent of the generated output'
+acceptance:
+  - id: A1
+    given: 'a declared slot whose path names a declared anatomy part the generated component does not render'
+    when: 'the dead-slot disposition classifier runs'
+    then: 'the slot is never assigned delete on the strength of that absence alone'
+  - id: A2
+    given: 'that same slot'
+    when: 'it is classified'
+    then: 'it carries a topology-conflict disposition whose evidence states that the contract declares the part while the measured realization lacks it'
+  - id: A3
+    given: 'a synthetic Checkbox-shaped fixture declaring an indicator anatomy part with no __indicator in the emitted source'
+    when: 'it is classified'
+    then: 'the disposition is topology-conflict and never delete'
+  - id: A4
+    given: 'a slot carrying deletion evidence independent of generated absence'
+    when: 'it is classified'
+    then: 'delete is still returned, so the fix narrows the rule rather than eliminating the disposition'
+  - id: A5
+    given: 'the committed known-dead ledger'
+    when: 'the audit re-runs'
+    then: 'dispositions produced by the old rule are re-derived rather than grandfathered, and the ratchet demands any resulting ledger change'
+  - id: A6
+    given: 'the merged slice'
+    when: 'the corpus is inspected'
+    then: 'no component contract, styles sidecar, or generated package is modified and no orphaned part is realized or retired'
+  - id: A7
+    given: 'the synthetic fixture'
+    when: 'its emitted source is mutated so the part IS rendered'
+    then: 'the topology-conflict stops reproducing, proving the classifier responds to the observed contradiction and not to component identity'
+  - id: A8
+    given: 'classifier rule 5b (a preset of a freeform string prop is delete)'
+    when: 'it is audited before closure'
+    then: 'it is shown to rest on evidence independent of nothing-currently-realizes-this-vocabulary, or scope is amended to repair the same authority bug'
+non_functional: {}
+contracts:
+  - name: 'dead-slot-disposition'
+    type: behavior
+    path: 'scripts/dead-slot-audit/disposition.mjs'
