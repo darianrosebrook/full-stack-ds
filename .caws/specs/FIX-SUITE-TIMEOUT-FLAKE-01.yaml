@@ -44,3 +44,7 @@ evidence:
     status: pass
     evidence_ref: "'grep -l from_html tmp/postfix-*.txt' returns NONE across all 6 post-fix runs. Correlation established pre-fix: the cascaded 'from_html is not a function' appeared only in tmp/loadrun-3.txt, the one run where 'mounts the plugin app into the #app root' timed out, and never independently across the other 5 runs. NON-CLAIM: the cascade is removed by removing its trigger, not by structurally decoupling the two ui.test.ts cases; a timeout that did fire could still corrupt the sibling registry."
     recorded_at: "2026-09-03T01:08:01.011Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Falsification that vi.setConfig is load-bearing and not inert: setting testTimeout to 1 in cli.test.ts made its cases fail with 'Test timed out in 1ms', proving the file-scoped override controls these tests and that a genuine hang still fails rather than hanging the runner. Scope proven by 'git show --stat 3feea501' = 2 files (packages/ds-codegen/src/cli.test.ts, packages/ds-figma-plugin/src/ui.test.ts); no vitest.config.ts change, so the other 242 root-suite files keep the 5s default. plugin.test.ts was dropped from scope on evidence (26 tests in 242ms, no Svelte compile, no risk) rather than widened without cause."
+    recorded_at: "2026-09-03T01:08:08.946Z"
