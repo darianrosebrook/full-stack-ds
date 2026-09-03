@@ -71,3 +71,10 @@ evidence:
     command: node scripts/dead-slot-audit/disposition.test.mjs
     exit_code: 0
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Cases 'a declared anatomy part absent from the realization is topology-conflict' and 'the conflict evidence names the contradiction, not just the absence' assert disposition==topology-conflict and match the evidence on /contract declares anatomy part \"badge\"/, /measured realization lacks it/, /do NOT infer the contract is stale/. Falsified by rewriting the evidence string to the old 'nothing can consume it' text -> FAILED (1)."
+    recorded_at: "2026-09-03T17:11:31.503Z"
+    command: node scripts/dead-slot-audit/disposition.test.mjs
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
