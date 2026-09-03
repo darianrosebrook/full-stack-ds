@@ -48,3 +48,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/views/views-smoke.test.tsx — 'topics are a grouped link nav, not a tablist' asserts nav[aria-label=Tokens philosophy topics], 11 links, aria-current=page on active topic, no [role=tablist]"
     recorded_at: "2026-09-03T01:02:15.872Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/views/all-tabs.smoke.test.tsx — all 11 TokensTab values render; router.tsx untouched in merge 9defdd37; verify-script click test navigates #/tokens-philosophy/core-vs-semantic and renders 'The stable contract'"
+    recorded_at: "2026-09-03T01:02:16.308Z"
