@@ -378,6 +378,18 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
       ).toBe(true);
     }
   });
+  it("every removal says WHY, so absence is adjudicated rather than merely recorded", () => {
+    // `reintroducibleAt` keeps absence re-earnable; the reason is what makes it
+    // a verdict. A removal whose only message is that the coordinate is gone is
+    // a bare enumeration, and a later stage reading it cannot tell whether the
+    // distinction was unnecessary or merely unwitnessed at the time.
+    for (const r of removals.removed) {
+      expect(r.reason?.trim(), `${r.coordinate} was removed with no reason`).toBeTruthy();
+      expect(r.reason, `${r.coordinate}: reason restates the coordinate instead of naming an authority`).not.toBe(
+        r.coordinate,
+      );
+    }
+  });
   it("stage 2 re-admitted exactly the coordinates its cases demand", () => {
     const back = removals.removed.filter((r) => kernelIds.has(r.coordinate)).map((r) => r.coordinate).sort();
     // temporal grain (daily vs monthly resolved together) and the suppressed
