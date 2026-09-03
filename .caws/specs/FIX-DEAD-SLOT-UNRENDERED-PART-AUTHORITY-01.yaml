@@ -2,9 +2,10 @@ id: FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01
 title: 'Generated absence cannot authorize contract deletion in the dead-slot classifier'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: dead-slot-authority
 created_at: '2026-09-03T17:02:39.850Z'
-updated_at: '2026-09-03T17:02:39.850Z'
+updated_at: '2026-09-03T17:02:56.054Z'
 blast_radius:
   modules:
     - 'dead-slot-audit disposition classifier'
