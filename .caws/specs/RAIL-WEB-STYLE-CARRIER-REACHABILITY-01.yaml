@@ -169,3 +169,10 @@ evidence:
     command: node scripts/carrier-reachability-audit/audit.mjs
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A10
+    status: pass
+    evidence_ref: "The ledger $comment states the meaning and the limit verbatim: an entry means authored CSS requires a carrier the current realization does not produce; it does NOT mean the contract surface is stale; deletion is one of three resolutions (selector repair, realization repair, independently justified contract retirement) and requires evidence sourced independently of the generated output, citing FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01. The same text appears in the report header and the validator docblock."
+    recorded_at: "2026-09-03T18:10:49.253Z"
+    command: "jq -r '.$comment' scripts/carrier-reachability-audit/known-unreachable.json"
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
