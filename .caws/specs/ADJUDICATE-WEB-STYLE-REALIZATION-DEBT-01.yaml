@@ -162,3 +162,7 @@ evidence:
     status: pass
     evidence_ref: "All 43 inverse findings across 20 axes carry adjudication/evidence/remedy, stamped by scripts/variant-style-audit/apply-adjudication.mjs which throws on any unruled finding. Counts: 22 structural-behavioral, 10 visual-obligation, 8 unresolved-contract-semantics, 3 stale-vocabulary"
     recorded_at: "2026-09-03T22:38:24.632Z"
+  - criterion_id: A12
+    status: pass
+    evidence_ref: "visual-obligation (10): Checkbox.size, ToggleSwitch.size, Progress.size, NavTree.iconSize, NavList.orientation=horizontal (the list part hard-codes flex-direction: column), Badge.variant=status (unpainted peer of painted counter/tag)"
+    recorded_at: "2026-09-03T22:38:25.068Z"
