@@ -178,3 +178,7 @@ evidence:
     status: pass
     evidence_ref: "unresolved-contract-semantics (8): Progress.variant=circular needs a different subtree (SVG arc), not a modifier class; Select.position occurs exactly once in its contract (the axis declaration) with no surface.positioning to consume it; Postcard.type names media kinds the contract renders no differently"
     recorded_at: "2026-09-03T22:38:37.180Z"
+  - criterion_id: A16
+    status: pass
+    evidence_ref: "validateStylesCarrierReachability is still NOT wired into generate:check; promotion at the now-zero baseline is a separate slice. Recorded in adjudication.md Non-claims and the snapshot row"
+    recorded_at: "2026-09-03T22:38:37.600Z"
