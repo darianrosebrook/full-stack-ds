@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/views/all-tabs.smoke.test.tsx — all 11 TokensTab values render; router.tsx untouched in merge 9defdd37; verify-script click test navigates #/tokens-philosophy/core-vs-semantic and renders 'The stable contract'"
     recorded_at: "2026-09-03T01:02:16.308Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "full worktree gate exit 0: pnpm run governed:rail (Overall PASS, 6 frameworks) && pnpm test (244 files / 2974 tests) && pnpm run test:frameworks (vue/lit/svelte/angular/react-native all green)"
+    recorded_at: "2026-09-03T01:02:16.746Z"
