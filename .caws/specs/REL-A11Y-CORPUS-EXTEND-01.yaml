@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "Catalogue-case bijection holds both directions with 10 new diagnostics: 'pnpm exec tsx tmp/probe-a11y.mts' prints 'checkCorpus findings: []' with 70 cases against 57 catalogue rows, and checkCorpus enforces CORPUS_DOC_DRIFT in both directions plus CORPUS_ENGINE_UNEXERCISED. New diagnostics reuse existing engines only (task-invariant, declaration-missing, derivation-typing) - no engine was added, so the engine enum, vocabulary.engines and CORPUS_SCHEMA_ENGINE_DRIFT are untouched. REL_ORDER_TRAVERSAL_MISMATCH is now shared by two independent cases, strengthening CORPUS_CASE_DIAGNOSTIC_BIJECTION rather than weakening it."
     recorded_at: "2026-09-03T00:42:10.981Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "checkFixtureLedger(stage=2) on main reports LEDGER_CASE_UNBOUND for CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN and CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP (beside the 9 pre-existing stage-2 cases) and LEDGER_NEIGHBOUR_MISSING for REL_PEER_GRAIN_DIVERGENCE and REL_DERIVATION_DISCARDS_MEMBERSHIP; checkFixtureLedger(stage=1) returns [] - the stage-1 ledger is provably undisturbed. Pinned by corpus-integrity.test.ts 'the two derivation-origin cases arrive at stage 2 as unbound obligations, not as prose', which also asserts both are engine derivation-typing, i.e. decided by the derivation before any projection is chosen."
+    recorded_at: "2026-09-03T00:42:11.439Z"
