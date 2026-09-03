@@ -197,3 +197,10 @@ evidence:
     command: grep -n deriveWebDomCarriers scripts/variant-style-audit/audit.mjs packages/ds-codegen/src/validation/styles.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A14
+    status: pass
+    evidence_ref: "Four mutations, each killing exactly one dedicated case (baseline 16/16). M1 break valuePrefix consumption (vm.valuePrefix ?? \"\" -> \"\") kills 'a colliding axis is namespaced --<axis>-<value>, and only that form'. M2 remove the compound-subcomponent part path kills 'every part class the React emitter places is a derived carrier'. M3 remove the surface data-* marker carrier kills 'a data-* marked surface part passes WITHOUT manufacturing a __part class'. M4 suppress the modifier diagnostic kills 'reports the Details defect'. Each run reported 'Tests 1 failed | 15 passed (16)'; restored run 16/16."
+    recorded_at: "2026-09-03T18:11:24.626Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
