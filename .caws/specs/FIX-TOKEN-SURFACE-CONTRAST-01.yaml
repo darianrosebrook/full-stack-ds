@@ -65,3 +65,9 @@ contracts:
   - name: 'contrast-gate'
     type: behavior
     path: 'packages/ds-tokens/build/runners/check-contrast.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run tokens:check-contrast now reports '484 pair(s) evaluated across 11 instantiation(s) (base + 10 brand(s)) x 2 theme(s)'; previously it evaluated 44 pairs against the base tree only. New module build/w3c/brand-overlay.ts reconstructs the per-brand/per-theme tree. Falsified live: enabling the brand dimension turned the gate RED on two pre-existing defects (corporate 3.99:1 light and dark, monochrome 1.42:1 light) and GREEN after fixing them. 15 unit tests; verified non-vacuous by mutation (stubbing overlayBrand to return the base tree unchanged is killed by 4 of them)."
+    recorded_at: "2026-09-03T00:20:36.716Z"
+    commit_sha: "73b1f3ac"
