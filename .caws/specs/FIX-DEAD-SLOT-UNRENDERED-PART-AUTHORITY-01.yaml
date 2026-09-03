@@ -113,3 +113,10 @@ evidence:
     command: node scripts/dead-slot-audit/disposition.test.mjs
     exit_code: 0
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "Rule 5b audited and left alone — its authority is independent. Read of scripts/dead-slot-audit/disposition.mjs rule 5b: decision inputs are contract.props.designed.members[].name, .propType.kind (string|number), .propType.values/.ref, and the leaf's decomposition onto the prop name; renderedParts is never read on that path (pinned by A4's empty-set fixture). The residual worry — that a freeform propType could outrank a vocabulary the contract declares elsewhere — is closed by rule ordering: rule 4 evaluates declaredAxisValues (variants union state dimensions) first and returns wire/unconsumed-vocabulary, so a declared axis value never reaches 5b. Pinned by case 'A8: a declared axis value outranks a freeform prop of the same name' (variants.type declares typeImage AND a freeform designed prop 'type' exists -> wire, not delete), mutation-falsified by making declaredAxisValues return an empty Set -> FAILED (5) including A8. No scope amendment needed. Latent note, not repaired here: 5b's hasVocabulary probes propType.ref while the corpus spells ref-kind props {kind:'ref', to:'X'} — dead code today because the kind!=='string'&&kind!=='number' guard returns first."
+    recorded_at: "2026-09-03T17:12:07.696Z"
+    command: node scripts/dead-slot-audit/disposition.test.mjs
+    exit_code: 0
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
