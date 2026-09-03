@@ -1,0 +1,115 @@
+id: ADJUDICATE-WEB-STYLE-REALIZATION-DEBT-01
+title: 'Adjudicate web style-realization debt: burn the determinate forward carriers, decide the inverse axes'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-03T19:21:26.605Z'
+updated_at: '2026-09-03T19:21:26.605Z'
+created_by_session: 'd97cce86-6592-41ba-857f-a6ec646948c1'
+blast_radius:
+  modules:
+    - 'carrier-reachability adjudication record'
+    - 'contract corpus (Button/Checkbox/Details/Skeleton/Text/Tabs/Card)'
+    - 'generated web + react-native trees'
+    - 'variant-realization inverse census'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/carrier-reachability-audit'
+    - 'scripts/variant-style-audit'
+    - 'docs/carrier-reachability-audit'
+    - 'docs/current-implementation-snapshot.md'
+    - 'packages/ds-contracts/components/Button'
+    - 'packages/ds-contracts/components/Checkbox'
+    - 'packages/ds-contracts/components/Details'
+    - 'packages/ds-contracts/components/Skeleton'
+    - 'packages/ds-contracts/components/Text'
+    - 'packages/ds-contracts/components/Tabs'
+    - 'packages/ds-contracts/components/Card'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-react-native/src'
+    - 'e2e'
+  out: []
+invariants:
+  - 'A reachability or realization finding is evidence of disagreement, not authority about which side is wrong'
+  - 'Multiple selector occurrences requiring the same impossible carrier are ONE topology obligation with multiple witnesses'
+  - 'An unrealized variant value is censused independently of styling intent, but classifying it as visual, structural, behavioral or stale requires evidence independent of the absence of styling itself'
+  - 'known-impossible, known-reachable and unknown-topology are three distinct states; a zero forward ledger claims only that every carrier whose production topology is DETERMINATE is reachable'
+acceptance:
+  - id: A1
+    given: 'the 18 forward rows'
+    when: 'they are adjudicated'
+    then: 'they normalize into 11 unique carrier obligations with every selector occurrence preserved as a witness, and the machine-derived census is not rewritten by the adjudication record'
+  - id: A2
+    given: 'each determinate forward carrier'
+    when: 'it is adjudicated'
+    then: 'it carries exactly one terminal disposition of selector-repair, realization-repair or contract-retirement, with no generic review or accept bucket counting as closure'
+  - id: A3
+    given: 'a contract-retirement disposition'
+    when: 'it is recorded'
+    then: 'its evidence is independent of generated absence, per FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01'
+  - id: A4
+    given: 'Details icon-none and icon-right'
+    when: 'adjudicated'
+    then: 'the resolution is selector repair to the classRecipe-authoritative bare forms rather than an emitter rename, and browser evidence shows none removes the 12x12 icon carrier and right changes its order/margin — without claiming the empty indicator became functionally complete'
+  - id: A5
+    given: 'Button spinner and loadingText and the contract statement that loading replaces content with a spinner'
+    when: 'adjudicated'
+    then: 'realization is supplied if that statement stands, and deletion is inadmissible on the ground that generation omitted the parts'
+  - id: A6
+    given: 'Checkbox input and indicator and its composite-control contract semantics'
+    when: 'adjudicated'
+    then: 'the repair proves the carrier topology exists and that checked/unchecked/focus/disabled selectors attach, with native-checkbox sameness as the negative baseline'
+  - id: A7
+    given: 'Skeleton shape/stack, Text error/success and Tabs root'
+    when: 'adjudicated'
+    then: 'each receives independent semantic adjudication before any mutation, and current absence alone never chooses realization or retirement'
+  - id: A8
+    given: 'the implemented dispositions'
+    when: 'the forward rail runs'
+    then: 'its ledger is zero for every partsDeterminate component, and a mutation restoring one impossible selector or removing one repaired carrier makes the rail fail'
+  - id: A9
+    given: 'Card with partsDeterminate false'
+    when: 'the forward ledger reaches zero'
+    then: 'its five historical part selectors are separately adjudicated and the absence of anatomy.dom is recorded as epistemic incompleteness, never hidden by that zero'
+  - id: A10
+    given: 'the Card badge slot deletion from the 114-to-98 burn'
+    when: 'it is re-audited from history'
+    then: 'it is either re-earned without the withdrawn generated-part-absent ground or recorded as unresolved historical contract loss, never retroactively blessed'
+  - id: A11
+    given: 'the 47 inverse findings'
+    when: 'they are adjudicated'
+    then: 'they are grouped primarily by their 22 axes, with value-level dispositions retained only where values within an axis differ materially'
+  - id: A12
+    given: 'each inverse axis'
+    when: 'adjudicated'
+    then: 'it carries a visual-obligation, structural-behavioral, stale-vocabulary or unresolved-contract-semantics disposition with concrete evidence, and stylingIntent may be reported but never decides it'
+  - id: A13
+    given: 'Checkbox.size, Progress.size, Progress.variant and ToggleSwitch.size'
+    when: 'the slice closes'
+    then: 'their computed-style sameness remains recorded as a positive falsifier of the old heuristic even where their semantic disposition differs'
+  - id: A14
+    given: 'a structural or behavioral disposition'
+    when: 'it is recorded'
+    then: 'it rests on positive semantic evidence from the contract or the realization mechanism, and the absence of a selector or token is explicitly invalid evidence for non-visuality'
+  - id: A15
+    given: 'the inverse ledger at close'
+    when: 'it is inspected'
+    then: 'it is still two-directional and still retains adjudicated non-visual entries, so non-visual is not synonymous with removed-from-census'
+  - id: A16
+    given: 'this slice'
+    when: 'it closes'
+    then: 'no visual-intent boolean or enum has been added to the contract schema, and any demonstrated need for one is handed to a following schema/IR slice; the forward validator is NOT promoted into generate:check here'
+non_functional: {}
+contracts:
+  - name: 'carrier-adjudication-record'
+    type: schema
+    path: 'docs/carrier-reachability-audit/adjudication.md'
+  - name: 'determinate-forward-zero'
+    type: behavior
+    path: 'scripts/carrier-reachability-audit/audit.mjs'
