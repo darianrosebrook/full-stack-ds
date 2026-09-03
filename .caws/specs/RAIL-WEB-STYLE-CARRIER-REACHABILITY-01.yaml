@@ -155,3 +155,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "Non-claims are written into the validator docblock, the rail script header, the generated report header and the ledger $comment: reachability proves a producible attachment point only — not cascade victory, not computed-style change, not required content, not visual distinction (Details' __icon span is empty, so selector repair is necessary and not sufficient). Pseudo-class host satisfiability, aria truth and suppression guards are named as staying with the element-awareness and pseudo-state rails; neither is touched — audit:pseudo-state still 17/17 ledgered PASS and audit:dead-slots still 98/98 ledgered PASS after the change."
+    recorded_at: "2026-09-03T18:10:48.440Z"
+    command: "pnpm run audit:carrier-reachability && pnpm run audit:pseudo-state && pnpm run audit:dead-slots"
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
