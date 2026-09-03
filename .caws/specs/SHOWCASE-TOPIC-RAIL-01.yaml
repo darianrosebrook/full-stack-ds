@@ -2,9 +2,11 @@ id: SHOWCASE-TOPIC-RAIL-01
 title: 'Grouped topic rail for tokens philosophy view'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Tokens philosophy view swaps the overflowed 11-pill tab row for a grouped sticky topic rail with link semantics; deep links unchanged'
 created_at: '2026-09-03T00:48:50.776Z'
-updated_at: '2026-09-03T00:49:00.978Z'
+updated_at: '2026-09-03T01:02:23.043Z'
 blast_radius:
   modules:
     - 'showcase-app'
