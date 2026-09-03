@@ -960,6 +960,132 @@ button {
   color: #41b883;
 }
 
+/* Topic rail — sectioned in-page navigation for the tokens philosophy docs
+   view. Eleven peer topics overflow any single pill row (flex shrink wrapped
+   every label mid-phrase), so the view renders a grouped rail instead:
+   sticky beside the article on wide viewports, wrapping clusters on narrow
+   ones. Selectors qualify `a.topic-link` under `.topic-rail` to out-rank the
+   DS Links anchor defaults (`.links` underline/accent) without !important.
+   Named .topic-* to keep the DS-owned .nav-list/.tabs namespaces clean;
+   joins .view-tabs/.fw-tabs as app chrome over DS structures. */
+.topic-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: var(--fsds-core-spacing-size-09);
+  align-items: start;
+}
+
+.topic-rail {
+  position: sticky;
+  top: var(--fsds-core-spacing-size-05);
+  max-height: calc(100dvh - var(--fsds-core-spacing-size-08));
+  overflow-y: auto;
+  scrollbar-width: thin;
+  /* The DS nav-list item chrome (padding, hover fill, aria-current wash)
+     belongs to leaf links; the rail uses items purely as group hosts. */
+}
+
+/* Child combinators (not .nav-list__* class tokens) keep the css-hygiene
+   dead-selector guard's src scan honest: the DS renders exactly one ul >
+   li pair under the rail nav, and the app never names those internals. */
+.topic-rail > ul {
+  gap: var(--fsds-core-spacing-size-06);
+}
+
+.topic-rail > ul > li,
+.topic-rail > ul > li:hover {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.topic-group-label {
+  margin: 0 0 var(--fsds-core-spacing-size-03);
+  font-size: var(--fsds-core-typography-ramp-1);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.topic-group-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--fsds-core-spacing-size-02);
+}
+
+.topic-rail a.topic-link {
+  display: block;
+  padding: var(--fsds-core-spacing-size-03) var(--fsds-core-spacing-size-05);
+  border-radius: var(--fsds-core-shape-radius-03);
+  border-inline-start: 2px solid transparent;
+  font-size: var(--fsds-core-typography-ramp-3);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium);
+  color: var(--fsds-semantic-color-foreground-secondary);
+  text-decoration-line: none;
+  white-space: nowrap;
+  transition:
+    background var(--fsds-app-transition-fast),
+    color var(--fsds-app-transition-fast);
+}
+
+.topic-rail a.topic-link:hover,
+.topic-rail a.topic-link:visited {
+  color: var(--fsds-semantic-color-foreground-primary);
+  text-decoration-line: none;
+}
+
+.topic-rail a.topic-link:hover {
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
+.topic-rail a.topic-link--active,
+.topic-rail a.topic-link--active:visited {
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border-inline-start-color: var(--fsds-semantic-color-foreground-accent);
+}
+
+/* Narrow viewports: the rail becomes stacked groups of wrapping pill
+   clusters above the article. nowrap + wrap guarantees no label ever
+   breaks mid-phrase at any width. */
+@media (max-width: 960px) {
+  .topic-layout {
+    grid-template-columns: 1fr;
+    gap: var(--fsds-core-spacing-size-07);
+  }
+
+  .topic-rail {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .topic-rail > ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fsds-core-spacing-size-05);
+  }
+
+  .topic-group-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fsds-core-spacing-size-03);
+  }
+
+  .topic-rail a.topic-link {
+    border: 1px solid var(--fsds-semantic-color-border-subtle);
+    border-radius: var(--fsds-core-shape-radius-full);
+    padding: var(--fsds-core-spacing-size-03) var(--fsds-core-spacing-size-05);
+  }
+
+  .topic-rail a.topic-link--active {
+    border-color: var(--fsds-semantic-color-foreground-accent);
+  }
+}
+
 /* Trace panel */
 .trace-empty {
   padding: var(--fsds-core-spacing-size-08) var(--fsds-core-spacing-size-06);

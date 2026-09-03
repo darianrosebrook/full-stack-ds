@@ -40,6 +40,20 @@ describe("showcase views — render smoke", () => {
     expect(document.body.textContent).toContain("Philosophy");
   });
 
+  it("TokensPhilosophyView topics are a grouped link nav, not a tablist", () => {
+    render(<TokensPhilosophyView tab="accessibility" />);
+    const nav = document.querySelector('nav[aria-label="Tokens philosophy topics"]');
+    expect(nav).toBeTruthy();
+    // Every topic remains reachable: 11 links across the grouped rail.
+    expect(nav?.querySelectorAll("a")).toHaveLength(11);
+    // Route-level navigation marks the current topic, and must not
+    // masquerade as a tablist (no tab panels exist to control).
+    expect(nav?.querySelector('[aria-current="page"]')?.textContent).toContain(
+      "Contrast, motion & focus",
+    );
+    expect(document.querySelector('[role="tablist"]')).toBeNull();
+  });
+
   it("ComponentStandardsView renders the standards tabs", () => {
     render(<ComponentStandardsView tab="overview" />);
     expect(document.querySelector("h1")).toBeTruthy();
