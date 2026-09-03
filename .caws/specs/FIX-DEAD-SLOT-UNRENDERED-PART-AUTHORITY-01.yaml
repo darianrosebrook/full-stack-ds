@@ -99,3 +99,10 @@ evidence:
     command: "node scripts/dead-slot-audit/audit.mjs --reseed && git diff --stat scripts/dead-slot-audit/known-dead.json"
     exit_code: 0
     commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "Slice commit 5695ee9b touches 6 files: scripts/dead-slot-audit/{disposition.mjs,disposition.test.mjs,audit.mjs,known-dead.json}, docs/dead-slot-audit/dead-slot-matrix.md, docs/current-implementation-snapshot.md. grep for any packages/ds-* path returns 0 matches — no component contract, styles sidecar, or generated package modified; none of the 14 orphaned part carriers realized or retired."
+    recorded_at: "2026-09-03T17:11:49.531Z"
+    command: "git show --name-only --format= 5695ee9b | grep -cE '^packages/ds-(contracts|react|vue|svelte|angular|lit|react-native)/'"
+    exit_code: 1
+    commit_sha: f469da1709d65a16234cbda28338bac8d79d4da7
