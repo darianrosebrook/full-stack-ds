@@ -2,9 +2,10 @@ id: REL-VIEW-ALGEBRA-01
 title: 'Stage 2: the L3 view algebra - derivations as typed operators, re-earning only the coordinates the stage-2 cases demand'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: view-algebra
 created_at: '2026-09-03T00:45:23.014Z'
-updated_at: '2026-09-03T00:45:23.014Z'
+updated_at: '2026-09-03T00:45:53.904Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical (zod model gains the L3 derivation algebra; engines gain the stage-2 rules; census gains member-vs-absence; necessity harness gains stage-2 witnesses)'
