@@ -2,9 +2,11 @@ id: FIX-AFX-DEAD-CSS-01
 title: 'Remove analytical-fixture CSS rules orphaned by the stage-1.5 kernel removals'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Deleted three app.css rules orphaned when REL-FIELD-ALGEBRA-02 phase B removed provenance, observation-level uncertainty and declared relationships from the kernel; css-hygiene guard green on main. NON-CLAIM: only the dead-selector guard was re-run plus the consumption suite and the scratch-view smoke test, not the full root suite.'
 created_at: '2026-09-03T00:20:23.939Z'
-updated_at: '2026-09-03T00:20:29.838Z'
+updated_at: '2026-09-03T00:22:12.790Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
