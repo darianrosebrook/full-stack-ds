@@ -176,3 +176,10 @@ evidence:
     command: "jq -r '.$comment' scripts/carrier-reachability-audit/known-unreachable.json"
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A11
+    status: pass
+    evidence_ref: "The census predicate is now 'gap = !realized && !isDefault' — stylingIntent removed from it and demoted to a per-value disposition field. Effect measured: fully-dead axes 1 -> 18, ledgered findings 47, of which 41 carry disposition=no-styling-intent and would not have existed under the old rule. The runtime-confirmed dead knobs now enter: Checkbox.size sm/lg, Progress.size sm/md/lg, Progress.variant linear/circular, ToggleSwitch.size small/large. Three locked cases that asserted behavioral axes are NOT flagged were rewritten to assert they ARE censused with a disposition; locked test 34 passed, 0 failed (it was 32/1 on main before this slice — Calendar.mode had been red because Calendar's tokens carry a 'range' segment, so the old discriminator misfired on its own canonical example)."
+    recorded_at: "2026-09-03T18:11:08.250Z"
+    command: "pnpm run audit:variant-realization"
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
