@@ -127,15 +127,44 @@ check("Button has no realization gaps (variants scope vars in tokens.css)", () =
   assert.deepEqual(gaps, [], `Button unexpectedly flagged: ${JSON.stringify(gaps)}`);
 });
 
-console.log("\nbehavioral false-positive control — behavioral axes have no styling intent:");
+// RAIL-WEB-STYLE-CARRIER-REACHABILITY-01 replaced these three cases. They used
+// to assert that a behavioral axis has no styling intent and is therefore NOT
+// censused — the admission rule that made Checkbox.size, Progress.size/variant
+// and ToggleSwitch.size invisible to this gate while a browser measured them as
+// dead knobs. Styling intent cannot decide whether a finding EXISTS, because
+// the artifact it looks for is exactly what is missing when nobody authored the
+// styling. It is now a disposition.
+//
+// Calendar.mode is the case that shows the old predicate was never even
+// self-consistent: it asserted `stylingIntent === false` for a behavioral axis
+// and had been RED on `main` before this slice, because Calendar's tokens
+// happen to carry a `range` segment. A discriminator that misfires on its own
+// canonical example is not one a gate should have been admitting on.
+console.log("\nbehavioral axes are CENSUSED with a disposition, not excluded:");
 for (const [c, d] of [["Calendar", "mode"], ["NavList", "orientation"], ["OTP", "mode"]]) {
-  check(`${c}.${d} is behavioral (no styling intent) -> not flagged`, () => {
+  check(`${c}.${d} non-default values are censused and carry a disposition`, () => {
     const x = dim(c, d);
     assert.ok(x, `no ${c}.${d} axis`);
-    assert.equal(x.stylingIntent, false, `expected no styling intent for behavioral ${c}.${d}`);
-    assert.deepEqual(x.gaps, [], `${c}.${d} should not be flagged`);
+    assert.ok(
+      x.gaps.length > 0,
+      `${c}.${d} has unrealized non-default values; the census must record them so triage can adjudicate them as non-visual`,
+    );
+    for (const row of x.values) {
+      assert.ok(
+        row.disposition === "styling-intent" || row.disposition === "no-styling-intent",
+        `${c}.${d}=${row.value} must carry a disposition for triage`,
+      );
+    }
   });
 }
+
+check("the axis DEFAULT is never a gap — the base rule realizes it", () => {
+  // The one false-positive control that survives: dropping it would flood the
+  // ledger with every default value in the corpus.
+  const x = dim("NavList", "orientation");
+  assert.equal(x.default, "vertical");
+  assert.ok(!x.gaps.includes("vertical"), "the default must not be censused as a gap");
+});
 
 console.log("\nVARIANT-CLASS-NAMESPACE-COLLISION-01 — collision detection (A1):");
 check("List: size × spacing collide on sm/md/lg (locked fixture); variant/marker/spacing/size tainted, as clean", () => {

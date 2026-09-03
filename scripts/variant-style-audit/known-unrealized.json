@@ -1,0 +1,428 @@
+{
+  "$comment": "Inverse (variant-realization) ledger. An entry means: the component emits this variant carrier and no CSS rule selects it, so choosing that value changes nothing. The census predicate is exactly that — RAIL-WEB-STYLE-CARRIER-REACHABILITY-01 removed the old `stylingIntent` admission rule, under which an axis only counted if someone had ALREADY authored a per-value token or `--<value>` block. That made the evidence of intent the artifact missing precisely when nobody authored the styling, and hid the worst debt (Checkbox.size, Progress.size/variant, ToggleSwitch.size all read intent=false, realized=0/n and never entered the failing set while a browser measured them as identical). `disposition` keeps that signal as TRIAGE only: `no-styling-intent` marks values likely to be structural or behavioral (placement, `as`, politeness) rather than visual debt. Until a contract fact declares a visual obligation, this ledger is a ratchet and not a semantic rejection rule — a row may be resolved by painting the value OR by establishing that the axis is non-visual and retiring the overclaim. Two-directional: a new dead knob fails, a burned entry left on the books fails. Re-derive with --reseed.",
+  "gaps": [
+    {
+      "component": "Accordion",
+      "axis": "type",
+      "value": "multiple",
+      "carrier": "accordion--multiple",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Badge",
+      "axis": "variant",
+      "value": "default",
+      "carrier": "badge--default",
+      "disposition": "styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Badge",
+      "axis": "variant",
+      "value": "status",
+      "carrier": "badge--status",
+      "disposition": "styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Calendar",
+      "axis": "mode",
+      "value": "range",
+      "carrier": "calendar--range",
+      "disposition": "styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Checkbox",
+      "axis": "size",
+      "value": "sm",
+      "carrier": "checkbox--sm",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Checkbox",
+      "axis": "size",
+      "value": "lg",
+      "carrier": "checkbox--lg",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Chip",
+      "axis": "variant",
+      "value": "default",
+      "carrier": "chip--default",
+      "disposition": "styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Details",
+      "axis": "variant",
+      "value": "default",
+      "carrier": "details--default",
+      "disposition": "styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Details",
+      "axis": "icon",
+      "value": "left",
+      "carrier": "details--left",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Details",
+      "axis": "icon",
+      "value": "right",
+      "carrier": "details--right",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Details",
+      "axis": "icon",
+      "value": "none",
+      "carrier": "details--none",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Divider",
+      "axis": "orientation",
+      "value": "horizontal",
+      "carrier": "divider--horizontal",
+      "disposition": "styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "List",
+      "axis": "as",
+      "value": "ul",
+      "carrier": "list--ul",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "List",
+      "axis": "as",
+      "value": "ol",
+      "carrier": "list--ol",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "List",
+      "axis": "as",
+      "value": "dl",
+      "carrier": "list--dl",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "NavList",
+      "axis": "orientation",
+      "value": "horizontal",
+      "carrier": "nav-list--horizontal",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "NavTree",
+      "axis": "iconSize",
+      "value": "md",
+      "carrier": "nav-tree--md",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "OTP",
+      "axis": "mode",
+      "value": "alphanumeric",
+      "carrier": "otp--alphanumeric",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Popover",
+      "axis": "placement",
+      "value": "top",
+      "carrier": "popover--top",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Popover",
+      "axis": "placement",
+      "value": "bottom",
+      "carrier": "popover--bottom",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Popover",
+      "axis": "placement",
+      "value": "left",
+      "carrier": "popover--left",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Popover",
+      "axis": "placement",
+      "value": "right",
+      "carrier": "popover--right",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Popover",
+      "axis": "placement",
+      "value": "auto",
+      "carrier": "popover--auto",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Postcard",
+      "axis": "type",
+      "value": "image",
+      "carrier": "postcard--image",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Postcard",
+      "axis": "type",
+      "value": "video",
+      "carrier": "postcard--video",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Postcard",
+      "axis": "type",
+      "value": "audio",
+      "carrier": "postcard--audio",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Progress",
+      "axis": "variant",
+      "value": "linear",
+      "carrier": "progress--linear",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Progress",
+      "axis": "variant",
+      "value": "circular",
+      "carrier": "progress--circular",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Progress",
+      "axis": "size",
+      "value": "sm",
+      "carrier": "progress--sm",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Progress",
+      "axis": "size",
+      "value": "md",
+      "carrier": "progress--md",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Progress",
+      "axis": "size",
+      "value": "lg",
+      "carrier": "progress--lg",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Select",
+      "axis": "position",
+      "value": "bottom",
+      "carrier": "select--bottom",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Select",
+      "axis": "position",
+      "value": "top",
+      "carrier": "select--top",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Select",
+      "axis": "position",
+      "value": "auto",
+      "carrier": "select--auto",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Tabs",
+      "axis": "activationMode",
+      "value": "manual",
+      "carrier": "tabs--manual",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Toast",
+      "axis": "politeness",
+      "value": "assertive",
+      "carrier": "toast--assertive",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "ToggleSwitch",
+      "axis": "size",
+      "value": "small",
+      "carrier": "toggle-switch--small",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "ToggleSwitch",
+      "axis": "size",
+      "value": "large",
+      "carrier": "toggle-switch--large",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Tooltip",
+      "axis": "placement",
+      "value": "top",
+      "carrier": "tooltip--top",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Tooltip",
+      "axis": "placement",
+      "value": "bottom",
+      "carrier": "tooltip--bottom",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Tooltip",
+      "axis": "placement",
+      "value": "left",
+      "carrier": "tooltip--left",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Tooltip",
+      "axis": "placement",
+      "value": "right",
+      "carrier": "tooltip--right",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Tooltip",
+      "axis": "placement",
+      "value": "auto",
+      "carrier": "tooltip--auto",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Walkthrough",
+      "axis": "placement",
+      "value": "top",
+      "carrier": "walkthrough--top",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Walkthrough",
+      "axis": "placement",
+      "value": "bottom",
+      "carrier": "walkthrough--bottom",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Walkthrough",
+      "axis": "placement",
+      "value": "left",
+      "carrier": "walkthrough--left",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    },
+    {
+      "component": "Walkthrough",
+      "axis": "placement",
+      "value": "right",
+      "carrier": "walkthrough--right",
+      "disposition": "no-styling-intent",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim."
+    }
+  ]
+}

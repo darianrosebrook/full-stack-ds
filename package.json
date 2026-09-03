@@ -94,6 +94,8 @@
     "audit:token-resolvability": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/token-resolvability-audit/selfcheck.mjs && node scripts/token-resolvability-audit/audit.mjs",
     "audit:custom-regions": "node scripts/lib/ledger-ratchet.test.mjs && node scripts/custom-region-audit/selfcheck.mjs && node scripts/custom-region-audit/audit.mjs",
     "audit:motion-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/motion-realization-audit/selfcheck.mjs && node scripts/motion-realization-audit/audit.mjs",
+    "audit:carrier-reachability": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts && node scripts/carrier-reachability-audit/audit.mjs",
+    "audit:variant-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/variant-style-audit/realization.test.mjs && node scripts/variant-style-audit/audit.mjs",
     "parity:compose-tokens": "node scripts/compose-parity-diff.mjs"
   },
   "dependencies": {

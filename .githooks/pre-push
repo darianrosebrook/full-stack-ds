@@ -289,6 +289,21 @@ if [ "${RUN_MOTION_AUDIT:-false}" = true ]; then
   pnpm run audit:motion-realization
 else say "skip motion-realization ledger"; fi
 
+# Carrier reachability, both directions off one IR authority
+# (RAIL-WEB-STYLE-CARRIER-REACHABILITY-01). Forward: authored CSS that requires
+# a component-owned carrier the Web-DOM IR never produces (Details' sidecar
+# names `.details--icon-none` while the disjoint axis emits `details--none`, so
+# the rule matches nothing in all five packages). Inverse: a non-default variant
+# value whose emitted carrier no rule selects. Both read `deriveWebDomCarriers`;
+# neither re-derives modifier spelling. Shares the styling-rail trigger set —
+# contracts, codegen and generated CSS all move these.
+if [ "${RUN_STYLING_AUDITS:-false}" = true ]; then
+  echo ""; say "audit:carrier-reachability"
+  pnpm run audit:carrier-reachability
+  echo ""; say "audit:variant-realization"
+  pnpm run audit:variant-realization
+else say "skip carrier-reachability + variant-realization ledgers"; fi
+
 # Analytical derived artifacts (REL-FIELD-ALGEBRA-02). Two drift gates with one
 # authority each: the relational-structure / assertion / fixture JSON Schemas
 # are emitted from the zod model, and the showcase fixture dump is emitted from

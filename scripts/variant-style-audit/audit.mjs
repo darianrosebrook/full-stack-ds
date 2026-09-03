@@ -29,6 +29,9 @@ import { readFileSync, readdirSync, existsSync, statSync, mkdirSync, writeFileSy
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { diffLedger, loadLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
+import { buildComponentIR, deriveWebDomCarriers } from "../../packages/ds-codegen/dist/ir.js";
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "../..");
 const CONTRACTS = resolve(REPO, "packages/ds-contracts/components");
@@ -77,16 +80,40 @@ function hasVariantSelector(cssText, prefix, suffix) {
 }
 
 /**
- * Returns the set of variant axes that COLLIDE within a component — i.e. share
- * at least one value with another axis (e.g. List `size:[sm,md,lg]` ×
- * `spacing:[none,sm,md,lg]` collide on sm/md/lg). A colliding axis emits the
- * namespaced class `.<prefix>--<axis>-<value>` (the codegen does the same via
- * `computeTaintedAxes` in ir.ts), so a bare `.<prefix>--<value>` selector is
- * ambiguous and must NOT be treated as realizing such an axis. Pure function of
- * the contract `variants`; mirrors the codegen so the audit and the generator
- * agree on which axes are namespaced.
+ * Which axes are namespaced, read off the IR rather than recomputed.
+ *
+ * This function used to carry its own copy of `computeTaintedAxes`, described
+ * in its own comment as "mirrors the codegen so the audit and the generator
+ * agree". A mirror agrees right up until it doesn't, and two copies of a naming
+ * rule is how a rail and its generator drift while both stay green
+ * (RAIL-WEB-STYLE-CARRIER-REACHABILITY-01). `classRecipe.valueModifiers[].
+ * valuePrefix` is the generator's own answer: present means the axis collides
+ * and emits `--<axis>-<value>`, absent means the bare `--<value>` shape.
+ *
+ * Collisions are still reported, because they are useful to a reader — but
+ * they are now DERIVED from the prefixes the IR assigned, not from a second
+ * pass over `variants`.
  */
-export function computeTaintedAxes(variants) {
+const LEDGER_PATH = resolve(HERE, "known-unrealized.json");
+
+const INVERSE_LEDGER_COMMENT =
+  "Inverse (variant-realization) ledger. An entry means: the component emits this variant carrier and no CSS rule selects it, so choosing that value changes nothing. The census predicate is exactly that — RAIL-WEB-STYLE-CARRIER-REACHABILITY-01 removed the old `stylingIntent` admission rule, under which an axis only counted if someone had ALREADY authored a per-value token or `--<value>` block. That made the evidence of intent the artifact missing precisely when nobody authored the styling, and hid the worst debt (Checkbox.size, Progress.size/variant, ToggleSwitch.size all read intent=false, realized=0/n and never entered the failing set while a browser measured them as identical). `disposition` keeps that signal as TRIAGE only: `no-styling-intent` marks values likely to be structural or behavioral (placement, `as`, politeness) rather than visual debt. Until a contract fact declares a visual obligation, this ledger is a ratchet and not a semantic rejection rule — a row may be resolved by painting the value OR by establishing that the axis is non-visual and retiring the overclaim. Two-directional: a new dead knob fails, a burned entry left on the books fails. Re-derive with --reseed.";
+
+/** Ledger identity for an unrealized variant value. */
+export function unrealizedId(row) {
+  return `${row.component}.${row.axis}=${row.value}`;
+}
+
+export function taintedAxesFromIR(ir) {
+  const tainted = new Set();
+  for (const vm of ir.classRecipe.valueModifiers) {
+    if (vm.valuePrefix) tainted.add(vm.propName);
+  }
+  return tainted;
+}
+
+/** Values shared by two or more axes, for the collision table in the report. */
+export function collisionsOf(variants) {
   const valueToAxes = new Map();
   for (const [axis, values] of Object.entries(variants)) {
     if (!Array.isArray(values)) continue;
@@ -96,15 +123,11 @@ export function computeTaintedAxes(variants) {
       valueToAxes.get(key).add(axis);
     }
   }
-  const tainted = new Set();
-  const collisions = []; // { value, axes }
+  const collisions = [];
   for (const [value, axes] of valueToAxes) {
-    if (axes.size >= 2) {
-      collisions.push({ value, axes: [...axes].sort() });
-      for (const a of axes) tainted.add(a);
-    }
+    if (axes.size >= 2) collisions.push({ value, axes: [...axes].sort() });
   }
-  return { tainted, collisions };
+  return collisions;
 }
 
 export function classify(component) {
@@ -132,22 +155,38 @@ export function classify(component) {
     if (m) styleVariantNames.add(m[1]);
   }
 
-  // Collision substrate: a colliding axis is realized by `.<prefix>--<axis>-<value>`,
-  // not the ambiguous bare `.<prefix>--<value>`. The audit checks the same form
-  // the generator emits, and separately flags any realization still authored
-  // against the bare form on a colliding axis (which a styling fix must not do).
-  const { tainted: taintedAxes, collisions } = computeTaintedAxes(variants);
+  // Collision substrate, read off the IR the generator built: a colliding axis
+  // is realized by `.<prefix>--<axis>-<value>`, a disjoint one by the bare
+  // `.<prefix>--<value>`. Both forms come from `classRecipe`, so the audit and
+  // the emitters cannot disagree about spelling.
+  const ir = buildComponentIR(contract);
+  const carriers = deriveWebDomCarriers(ir, contract);
+  const taintedAxes = taintedAxesFromIR(ir);
+  const collisions = collisionsOf(variants);
 
   const dims = [];
   for (const [dim, values] of Object.entries(variants)) {
     if (!Array.isArray(values)) continue;
     const def = variantDefault(contract, dim);
     const tainted = taintedAxes.has(dim);
+    // STYLING INTENT IS NO LONGER THE CENSUS PREDICATE
+    // (RAIL-WEB-STYLE-CARRIER-REACHABILITY-01, AC11). It used to gate whether
+    // a gap EXISTED: an axis only counted if some value already had a per-value
+    // token or `--<value>` styles block. That made the evidence of intent the
+    // artifact that is missing precisely when nobody ever authored the styling,
+    // so the axes with the worst debt were invisible to the gate — Checkbox
+    // `size`, Progress `size`/`variant`, ToggleSwitch `size` all read
+    // `intent=false, realized=0/n` and never entered `failing`, while a browser
+    // measured three identical checkboxes, three identical progress bars and
+    // three identical switches. It survives as a DISPOSITION: useful triage for
+    // which findings are likely visual debt versus behavioral axes, and useless
+    // as an admission criterion.
     const stylingIntent = values.some((v) => tokenSegments.has(String(v)) || styleVariantNames.has(String(v)));
     const rows = values.map((value) => {
       const v = String(value);
-      // For a tainted axis only the namespaced selector counts as realization;
-      // for a clean axis the bare selector does, exactly as the codegen emits.
+      // The carrier the emitters actually place for this axis value, taken from
+      // the IR — not reconstructed from the axis name and a guess at namespacing.
+      const carrier = tainted ? `${prefix}--${dim}-${v}` : `${prefix}--${v}`;
       const namespacedRealized = tainted && hasVariantSelector(both, prefix, `${dim}-${v}`);
       const bareRealized = hasVariantSelector(both, prefix, v);
       const realized = tainted ? namespacedRealized : bareRealized;
@@ -155,16 +194,22 @@ export function classify(component) {
       // selector can be matched by another axis's identical value.
       const ambiguousRealization = tainted && bareRealized && !namespacedRealized;
       const isDefault = def !== null && v === def;
-      // a genuine gap: a non-default value with no consuming selector, on an
-      // axis that has styling intent (token/styles per-value). The default is
-      // realized by the base rule; no-styling-intent axes are behavioral.
-      const gap = !realized && !isDefault && stylingIntent;
+      // The census: a non-default value whose emitted carrier no rule selects.
+      // The default is realized by the base rule and is not a gap.
+      const gap = !realized && !isDefault;
+      const disposition = stylingIntent ? "styling-intent" : "no-styling-intent";
+      // The carrier must be one the IR says this component produces. If it is
+      // not, the audit is asking about a class nothing ever carries, and the
+      // finding would be about its own arithmetic rather than the corpus.
+      const carrierProduced = carriers.classes.has(carrier);
       return {
         value: v,
-        class: tainted ? `${prefix}--${dim}-${v}` : `${prefix}--${v}`,
+        class: carrier,
+        carrierProduced,
         realized,
         isDefault,
         gap,
+        disposition,
         ...(ambiguousRealization ? { ambiguousRealization: true } : {}),
       };
     });
@@ -311,4 +356,72 @@ if (RUN_DIRECTLY) {
     for (const f of ambiguousFindings) console.log(`  - ${f.component}.${f.dim}: ${f.values.join(", ")}`);
   }
   console.log(`\nReport: ${resolve(OUT_DIR, "variant-style-matrix.md")}`);
+
+  // --- inverse ledger (RAIL-WEB-STYLE-CARRIER-REACHABILITY-01) --------------
+  // One row per non-default variant value whose emitted carrier no rule
+  // selects. Ratcheted like the sibling styling rails so new dead knobs cannot
+  // land silently and burned ones cannot linger as fiction. The `disposition`
+  // rides along as triage — `no-styling-intent` marks the values most likely to
+  // be structural/behavioral (placement, `as`, politeness) rather than visual
+  // debt — and it decides NOTHING about whether the row exists.
+  const gapRows = [];
+  for (const c of components) {
+    for (const d of c.dims) {
+      for (const row of d.values) {
+        if (!row.gap) continue;
+        gapRows.push({
+          component: c.component,
+          axis: d.dim,
+          value: row.value,
+          carrier: row.class,
+          disposition: row.disposition,
+        });
+      }
+    }
+  }
+
+  if (process.argv.includes("--reseed")) {
+    const prior = existsSync(LEDGER_PATH)
+      ? new Map(
+          (JSON.parse(readFileSync(LEDGER_PATH, "utf8")).gaps ?? []).map((g) => [unrealizedId(g), g]),
+        )
+      : new Map();
+    writeFileSync(
+      LEDGER_PATH,
+      JSON.stringify(
+        {
+          $comment: INVERSE_LEDGER_COMMENT,
+          gaps: gapRows.map((r) => {
+            const p = prior.get(unrealizedId(r));
+            return {
+              ...r,
+              spec: p?.spec ?? "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+              note:
+                p?.note ??
+                "Censused at the predicate change; not yet adjudicated. Paint it, or establish that the axis is structural/behavioral and retire the visual claim.",
+            };
+          }),
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    console.log(`[variant-realization] reseeded ${gapRows.length} ledger entr(ies).`);
+  }
+
+  const ledger = loadLedger(LEDGER_PATH, ["component", "axis", "value", "carrier"]);
+  const { unledgered, stale } = diffLedger({
+    current: gapRows,
+    ledger,
+    idOf: unrealizedId,
+  });
+  process.exit(
+    reportRatchet({
+      label: "variant-realization",
+      current: gapRows,
+      unledgered,
+      stale,
+      idOf: unrealizedId,
+    }),
+  );
 }
