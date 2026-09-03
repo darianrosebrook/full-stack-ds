@@ -1,6 +1,10 @@
 /**
- * Checkbox composite-carrier runtime rail
- * (ADJUDICATE-WEB-STYLE-REALIZATION-DEBT-01, AC6).
+ * Style-carrier realization runtime rail
+ * (ADJUDICATE-WEB-STYLE-REALIZATION-DEBT-01).
+ *
+ * Covers the two components whose unreachable style carriers were resolved by
+ * REALIZING the declared anatomy rather than retiring the declaration:
+ * Checkbox (`input` / `indicator`) and Skeleton (`stack` / `shape`).
  *
  * Checkbox declared `input` and `indicator` anatomy parts with authored style
  * blocks while `anatomy.dom` emitted a bare `<input>`, so `.checkbox__input`
@@ -42,12 +46,18 @@ const FRAMEWORKS: readonly Framework[] = [
   "angular",
 ];
 
-async function gotoCheckbox(page: Page, framework: Framework): Promise<void> {
-  await page.goto(`/preview/${framework}/Checkbox`, {
+async function gotoComponent(
+  page: Page,
+  framework: Framework,
+  component: string,
+  props?: Record<string, string | number | boolean>,
+): Promise<void> {
+  const block = component.toLowerCase();
+  await page.goto(`/preview/${framework}/${component}`, {
     waitUntil: "domcontentloaded",
   });
   const selector =
-    framework === "lit" ? `fsds-checkbox >> .checkbox` : `.checkbox`;
+    framework === "lit" ? `fsds-${block} >> .${block}` : `.${block}`;
   await page
     .locator(selector)
     .first()
@@ -55,7 +65,19 @@ async function gotoCheckbox(page: Page, framework: Framework): Promise<void> {
   await page
     .locator("body[data-fsds-ready]")
     .waitFor({ state: "attached", timeout: 30_000 });
+  if (props) {
+    await page.evaluate((next) => {
+      window.postMessage(
+        { type: "fsds:config", props: next, tokenCss: "" },
+        "*",
+      );
+    }, props);
+    await page.waitForTimeout(0);
+  }
 }
+
+const gotoCheckbox = (page: Page, framework: Framework): Promise<void> =>
+  gotoComponent(page, framework, "Checkbox");
 
 test.describe("Runtime rail — Checkbox composite carriers", () => {
   for (const framework of FRAMEWORKS) {
@@ -146,6 +168,94 @@ test.describe("Runtime rail — Checkbox composite carriers", () => {
       // under the same ancestor keeps the unchecked paint. This is the
       // assertion that a subject-less `:has()` fails.
       expect(paint!.sibling).toBe(paint!.baseline);
+    });
+  }
+});
+
+/**
+ * Skeleton declared `stack`, `row` and `shape` anatomy parts, authored style
+ * blocks for `stack` and `shape`, and a `lines` prop whose curated usage
+ * example documents "a two-to-four line paragraph" — while `anatomy.dom` was a
+ * childless `<div>`. Every framework rendered exactly one box for any `lines`
+ * value, so both carriers named nothing and the prop was inert.
+ *
+ * That is why the adjudication realized the topology rather than retiring the
+ * carriers: the evidence that the declaration was live came from the contract
+ * and its usage sidecar, never from the generated output.
+ */
+test.describe("Runtime rail — Skeleton line rows", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: lines=3 renders three rows, each carrying one shape`, async ({
+      page,
+    }) => {
+      await gotoComponent(page, framework, "Skeleton", { lines: 3 });
+
+      const counts = await page.evaluate((isLit) => {
+        const root: Document | ShadowRoot | null = isLit
+          ? (document.querySelector("fsds-skeleton") as HTMLElement)
+              ?.shadowRoot ?? null
+          : document;
+        const host = root?.querySelector(".skeleton");
+        if (!host) return null;
+        return {
+          stacks: host.querySelectorAll(".skeleton__stack").length,
+          rows: host.querySelectorAll(".skeleton__row").length,
+          shapes: host.querySelectorAll(".skeleton__shape").length,
+          shapesUnderRows: host.querySelectorAll(
+            ".skeleton__row > .skeleton__shape",
+          ).length,
+        };
+      }, framework === "lit");
+
+      expect(counts).toEqual({
+        stacks: 1,
+        rows: 3,
+        shapes: 3,
+        shapesUnderRows: 3,
+      });
+    });
+
+    test(`${framework}: no lines renders the bare root with no stack`, async ({
+      page,
+    }) => {
+      await gotoComponent(page, framework, "Skeleton");
+
+      const counts = await page.evaluate((isLit) => {
+        const root: Document | ShadowRoot | null = isLit
+          ? (document.querySelector("fsds-skeleton") as HTMLElement)
+              ?.shadowRoot ?? null
+          : document;
+        const host = root?.querySelector(".skeleton");
+        if (!host) return null;
+        return {
+          stacks: host.querySelectorAll(".skeleton__stack").length,
+          shapes: host.querySelectorAll(".skeleton__shape").length,
+        };
+      }, framework === "lit");
+
+      // Without `lines` the root itself is the single painted shape — the
+      // pre-existing behavior the realization had to preserve.
+      expect(counts).toEqual({ stacks: 0, shapes: 0 });
+    });
+
+    test(`${framework}: lines=0 renders nothing, not a literal "0"`, async ({
+      page,
+    }) => {
+      await gotoComponent(page, framework, "Skeleton", { lines: 0 });
+
+      const text = await page.evaluate((isLit) => {
+        const root: Document | ShadowRoot | null = isLit
+          ? (document.querySelector("fsds-skeleton") as HTMLElement)
+              ?.shadowRoot ?? null
+          : document;
+        const host = root?.querySelector(".skeleton") as HTMLElement | null;
+        return host === null ? null : host.textContent;
+      }, framework === "lit");
+
+      // React renders a falsy NUMBER as text, so a `{lines && …}` guard paints
+      // "0" here. The codegen emits a ternary with an explicit null branch
+      // precisely so this stays empty; reverting it turns this red for react.
+      expect(text?.trim()).toBe("");
     });
   }
 });

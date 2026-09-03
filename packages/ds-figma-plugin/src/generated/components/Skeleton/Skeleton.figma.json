@@ -19,7 +19,7 @@
     {
       "name": "stack",
       "semanticElement": null,
-      "nativeTag": null,
+      "nativeTag": "div",
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
@@ -27,7 +27,7 @@
     {
       "name": "row",
       "semanticElement": null,
-      "nativeTag": null,
+      "nativeTag": "div",
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
@@ -35,7 +35,7 @@
     {
       "name": "shape",
       "semanticElement": null,
-      "nativeTag": null,
+      "nativeTag": "div",
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
@@ -81,9 +81,9 @@
     {
       "name": "lines",
       "safeName": "lines",
-      "type": "SkeletonLines",
+      "type": "number",
       "required": false,
-      "description": "Number of lines to render for text variant. Pass a number or {min, max} range.",
+      "description": "Number of line rows to render. When set, the root becomes a container for that many rows instead of a single shape.",
       "defaultExpr": null,
       "nodeKind": null
     },
@@ -238,6 +238,21 @@
           "display": "block",
           "background-color": "var(--fsds-skeleton-color-base, #f7f7f7)",
           "border-radius": "var(--fsds-skeleton-radius-md, 8px)"
+        }
+      },
+      {
+        "selector": ".skeleton:has(> .skeleton__stack)",
+        "declarations": {
+          "background-color": "transparent",
+          "animation": "none",
+          "height": "auto"
+        }
+      },
+      {
+        "selector": ".skeleton:has(> .skeleton__stack) .skeleton__shape",
+        "declarations": {
+          "height": "var(--fsds-skeleton-shape-height-text, 1rem)",
+          "animation": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite"
         }
       },
       {

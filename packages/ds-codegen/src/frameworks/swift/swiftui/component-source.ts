@@ -2428,9 +2428,17 @@ function isStaticContent(ir: ComponentIR): boolean {
   if (hasInstance) return false;
   if (ir.dom.tag === "img") return false;
   if (childrenLeaves === 1) return true;
-  // Decorative box: no children leaf at all, no content binding — a pure
-  // chrome surface (Skeleton).
-  if (childrenLeaves === 0 && !ir.dom.content && (ir.dom.children ?? []).length === 0) {
+  // Decorative box: no consumer content leaf at all and no content binding —
+  // a pure chrome surface (Skeleton). Purely internal decorative children do
+  // not change that: Skeleton's `stack`/`row`/`shape` exist so the web can
+  // paint one bar per `lines`, and requiring an empty child list here made
+  // that web realization drop Skeleton out of every emission class.
+  //
+  // SwiftUI's realization is unchanged by those children — the decorative box
+  // it emits does not honor `lines`, exactly as before. That gap is
+  // pre-existing and out of this class's reach, not a regression; the native
+  // targets prove compilation, not component correctness.
+  if (childrenLeaves === 0 && !ir.dom.content) {
     return true;
   }
   return false;

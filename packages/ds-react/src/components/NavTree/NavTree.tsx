@@ -96,7 +96,7 @@ export function NavTree({
   return (
   <Stack layout="native" as="li" className={`${classNames}`} role="listitem" data-testid={testId} data-fsds-component="nav-tree" {...rest}>
     <div className="nav-tree__heading">
-      {icon && (
+      {icon ? (
         <span className="nav-tree__icon" aria-hidden="true">
           {iconGlyph ? (
             <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon={iconGlyph.name} viewBox={iconGlyph.viewBox} width={iconGlyphPx ?? iconGlyph.size} height={iconGlyphPx ?? iconGlyph.size}>
@@ -106,17 +106,17 @@ export function NavTree({
             </svg>
           ) : null}
         </span>
-      )}
-      {href && (
+      ) : null}
+      {href ? (
         <a className="nav-tree__headingLink" href={href}>
           {label}
         </a>
-      )}
-      {!href && (
+      ) : null}
+      {!href ? (
         <span className="nav-tree__headingLabel">
           {label}
         </span>
-      )}
+      ) : null}
     </div>
     <ul className="nav-tree__list">
       {children}

@@ -2901,7 +2901,12 @@ function renderReactDomNode(
       guard = matchingChannel ? matchingChannel.name : node.ifProp;
     }
     const condition = node.ifNegated ? `!${guard}` : guard;
-    withIfGuard = `${pad}{${condition} && (\n${body.replace(/^/gm, "  ")}\n${pad})}`;
+    // A ternary, not `&&`. React renders a falsy NUMBER as text, so
+    // `{lines && <div/>}` with `lines={0}` paints a stray "0" — the other four
+    // web frameworks' conditionals discard falsy values instead. Skeleton's
+    // `if: "lines"` is the corpus's first numeric guard; the ternary is
+    // equivalent for boolean and string guards and correct for numeric ones.
+    withIfGuard = `${pad}{${condition} ? (\n${body.replace(/^/gm, "  ")}\n${pad}) : null}`;
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: iteration wrap is the outermost layer

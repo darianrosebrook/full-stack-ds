@@ -8,9 +8,7 @@
 
 **Direction.** This rail asks only whether authored CSS demands an impossible carrier. An emitted variant class with no matching CSS rule is the inverse problem and lives in `scripts/variant-style-audit/`.
 
-Findings: **2** across **1** component(s).
+Findings: **0** across **0** component(s).
 
 | component | styles key | expands to | unreachable carrier | kind |
 |---|---|---|---|---|
-| Skeleton | `shape` | `.skeleton__shape` | `.skeleton__shape` | part |
-| Skeleton | `stack` | `.skeleton__stack` | `.skeleton__stack` | part |

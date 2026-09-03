@@ -86,11 +86,11 @@ export function Truncate({
     <span className="truncate__content" style={{ "--fsds-truncate-content-lines": lines } as CSSProperties}>
       {children}
     </span>
-    {expandable && (
+    {expandable ? (
       <button className="truncate__toggle" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
         {(expanded ? collapseText : expandText)}
       </button>
-    )}
+    ) : null}
   </Stack>
   );
 }

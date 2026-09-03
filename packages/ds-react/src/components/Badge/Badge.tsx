@@ -78,9 +78,9 @@ export function Badge({
 
   return (
   <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="badge" {...rest}>
-    {icon && (
+    {icon ? (
       <span className="badge__icon" aria-hidden="true" />
-    )}
+    ) : null}
     <span className="badge__content">
       {children}
     </span>

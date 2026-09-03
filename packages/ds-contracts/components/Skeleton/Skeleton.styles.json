@@ -45,6 +45,38 @@
       "fallback": "8px"
     }
   },
+  ".skeleton:has(> .skeleton__stack)": {
+    "background-color": {
+      "literal": "transparent",
+      "platforms": [
+        "web"
+      ]
+    },
+    "animation": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "height": {
+      "literal": "auto",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".skeleton:has(> .skeleton__stack) .skeleton__shape": {
+    "height": {
+      "resolvesTo": "skeleton.shape.height.text",
+      "fallback": "1rem"
+    },
+    "animation": {
+      "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
   "stack": {
     "display": {
       "literal": "flex",

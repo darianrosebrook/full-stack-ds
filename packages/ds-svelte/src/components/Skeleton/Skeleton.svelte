@@ -11,7 +11,6 @@
 type SkeletonVariant = "block" | "text" | "avatar" | "media" | "dataviz" | "actions";
 type SkeletonAnimate = "shimmer" | "wipe" | "pulse" | "none";
 type SkeletonDensity = "compact" | "regular" | "spacious";
-type SkeletonLines = number | { min: number; max: number };
 type SkeletonRadius = "sm" | "md" | "lg";
 // @generated:end
 
@@ -25,7 +24,7 @@ interface Props {
   animate?: SkeletonAnimate;
   density?: SkeletonDensity;
   aspectRatio?: string;
-  lines?: SkeletonLines;
+  lines?: number;
   radius?: SkeletonRadius;
   decorative?: boolean;
   ariaLabel?: string;
@@ -52,4 +51,14 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="skeleton"></div>
+<div class={classes} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="skeleton">
+  {#if lines}
+  <div class={'skeleton__stack'}>
+    {#each Array(lines) as _, index (index)}
+    <div class={'skeleton__row'}>
+      <div class={'skeleton__shape'} aria-hidden="true"></div>
+    </div>
+    {/each}
+  </div>
+  {/if}
+</div>

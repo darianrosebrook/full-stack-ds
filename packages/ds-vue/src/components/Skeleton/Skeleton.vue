@@ -11,7 +11,6 @@ import { computed } from "vue";
 export type SkeletonVariant = "block" | "text" | "avatar" | "media" | "dataviz" | "actions";
 export type SkeletonAnimate = "shimmer" | "wipe" | "pulse" | "none";
 export type SkeletonDensity = "compact" | "regular" | "spacious";
-export type SkeletonLines = number | { min: number; max: number };
 export type SkeletonRadius = "sm" | "md" | "lg";
 // @generated:end
 
@@ -25,7 +24,7 @@ interface Props {
   animate?: SkeletonAnimate;
   density?: SkeletonDensity;
   aspectRatio?: string;
-  lines?: SkeletonLines;
+  lines?: number;
   radius?: SkeletonRadius;
   decorative?: boolean;
   ariaLabel?: string;
@@ -59,5 +58,11 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :role="(props.decorative ? 'presentation' : 'status')" :aria-busy="(props.decorative ? 'false' : 'true')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="skeleton"></div>
+  <div :class="classNames" :role="(props.decorative ? 'presentation' : 'status')" :aria-busy="(props.decorative ? 'false' : 'true')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="skeleton">
+    <div v-if="props.lines" :class="'skeleton__stack'">
+      <div v-for="(_, index) in Array(props.lines)" :key="index" :class="'skeleton__row'">
+        <div :class="'skeleton__shape'" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
 </template>

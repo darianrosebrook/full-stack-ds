@@ -68,11 +68,11 @@ export function Progress({
     <span className="progress__track" aria-hidden="true">
       <span className="progress__fill" style={{ "--fsds-progress-fill-width": value } as CSSProperties} />
     </span>
-    {showValue && (
+    {showValue ? (
       <span className="progress__value">
         {children}
       </span>
-    )}
+    ) : null}
   </Stack>
   );
 }

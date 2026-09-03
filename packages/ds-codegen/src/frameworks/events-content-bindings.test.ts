@@ -101,10 +101,24 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
     });
 
     it("guards both new bindings with their declared if-prop", () => {
+      // A ternary with an explicit `null` branch, not `&&` — React renders a
+      // falsy NUMBER as text, so `&&` paints a stray "0" for numeric guards.
+      // Both branches are pinned so a guard that drops its else arm fails.
       // Icon span only renders when `icon` is truthy.
-      expect(src).toMatch(/\{icon &&[\s\S]*<span[^>]*aria-hidden/);
+      expect(src).toMatch(/\{icon \?[\s\S]*<span[^>]*aria-hidden[\s\S]*\) : null\}/);
       // Dismiss button only renders when `dismissible` is truthy.
-      expect(src).toMatch(/\{dismissible &&[\s\S]*<button[^>]*aria-label/);
+      expect(src).toMatch(
+        /\{dismissible \?[\s\S]*<button[^>]*aria-label[\s\S]*\) : null\}/,
+      );
+    });
+
+    it("emits no bare `&&` render guard, which would paint a falsy number", () => {
+      // The reason the guard above is a ternary. `{lines && <div/>}` with
+      // `lines={0}` renders the text "0" in React; the other four web
+      // frameworks discard falsy conditionals. Skeleton's `if: "lines"` is
+      // the corpus's first numeric guard. This assertion is what stops a
+      // future refactor quietly restoring `&&`.
+      expect(src).not.toMatch(/\{\s*!?\w+\s+&&\s*\(/);
     });
   });
 
