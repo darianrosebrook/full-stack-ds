@@ -20,25 +20,34 @@ const tmpLedger = (body: unknown): string => {
   return file;
 };
 
+/**
+ * The gate's BEHAVIOUR is tested against synthetic kernels, never against the
+ * live debt. Otherwise finishing the slice — driving 118 pending coordinates to
+ * zero — would require editing a green falsifier test, and the definition of
+ * "the gate works" would move with the data it is supposed to judge. Going to
+ * zero should change data only. The live state is certified by the command
+ * `pnpm run analytical:pending:gate`, not by these tests.
+ */
 describe("the pending close gate", () => {
-  it("refuses while any kernel coordinate carries no witness", () => {
-    const live = derivePending();
-    // This is the live state mid-slice; if it ever becomes empty the slice is
-    // ready to close and the assertion below documents why this test changes.
-    expect(live.length).toBeGreaterThan(0);
-    const r = checkPending();
+  it("refuses when a coordinate carries no witness", () => {
+    const r = checkPending(tmpLedger({ count: 2, pending: ["synthetic.a", "synthetic.b"] }), () => ["synthetic.a", "synthetic.b"]);
     expect(r.ok).toBe(false);
     expect(r.message).toContain("carry no necessity witness");
     expect(r.message).toContain("cannot close");
   });
 
-  it("passes only when the ledger is empty AND the kernel agrees", () => {
-    // An empty ledger against a kernel with outstanding coordinates is DRIFT,
-    // not success: a stale file saying zero must not pass a gate whose whole
-    // purpose is to refuse that.
-    const empty = checkPending(tmpLedger({ count: 0, pending: [] }));
-    expect(empty.ok).toBe(false);
-    expect(empty.message).toContain("LEDGER DRIFT");
+  it("passes when the ledger is empty AND the kernel agrees", () => {
+    const r = checkPending(tmpLedger({ count: 0, pending: [] }), () => []);
+    expect(r.ok).toBe(true);
+    expect(r.message).toContain("every kernel coordinate carries a necessity witness");
+  });
+
+  it("refuses an empty ledger while the kernel still has outstanding coordinates", () => {
+    // A stale file saying zero must not pass a gate whose whole purpose is to
+    // refuse that; the mismatch is reported as drift, not success.
+    const r = checkPending(tmpLedger({ count: 0, pending: [] }), () => ["synthetic.a"]);
+    expect(r.ok).toBe(false);
+    expect(r.message).toContain("LEDGER DRIFT");
   });
 
   it("detects a coordinate quietly dropped from the ledger", () => {

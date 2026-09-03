@@ -544,7 +544,16 @@ export interface HoldoutExpectation {
 }
 
 export interface Holdout {
-  /** sha256 of the engine rule source at the time the expectations were authored. */
+  /**
+   * sha256 of the RULE SOURCE at the time the expectations were authored.
+   *
+   * "Rule source" is every module that can move a judgment, concatenated in
+   * `RULE_SOURCES` order — not one file. Stage 2 split the rules across two
+   * modules (`engines.ts` and the derivation boundary), and a digest over only
+   * the first would let the second's semantics change while the holdout still
+   * reported itself authoritative, which is the one thing this digest exists to
+   * prevent.
+   */
   ruleDigest: string;
   items: { fixture: string; expected: HoldoutExpectation }[];
 }
@@ -560,7 +569,7 @@ export interface LedgerInput {
   validateFixture: (fixture: unknown) => string[];
   bindings: Bindings;
   holdout: Holdout;
-  /** sha256 of the engine rule source as it is now. */
+  /** sha256 of the rule source as it is now (see `Holdout.ruleDigest`). */
   ruleSourceDigest: string;
 }
 
@@ -668,7 +677,7 @@ export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
   if (holdout.ruleDigest !== input.ruleSourceDigest) {
     out.push({
       code: "LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH",
-      detail: `holdout authored against rule digest ${holdout.ruleDigest}; engine source is now ${input.ruleSourceDigest} — re-verify every expectation by hand and re-record`,
+      detail: `holdout authored against rule digest ${holdout.ruleDigest}; rule source is now ${input.ruleSourceDigest} — re-verify every expectation by hand and re-record`,
     });
   }
 
@@ -679,7 +688,7 @@ export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
 export function loadLedgerInput(
   contractsDir: string,
   doctrinePath: string,
-  ruleSourcePath: string,
+  ruleSourcePaths: string | readonly string[],
   stage = 1,
 ): LedgerInput {
   const read = (rel: string) => fs.readFileSync(path.join(contractsDir, rel), "utf-8");
@@ -694,6 +703,12 @@ export function loadLedgerInput(
     validateFixture: loadFixtureValidator(contractsDir),
     bindings: JSON.parse(read("analytical-fixtures/bindings.json")) as Bindings,
     holdout: JSON.parse(read("analytical-fixtures/holdout.json")) as Holdout,
-    ruleSourceDigest: sha256(fs.readFileSync(ruleSourcePath, "utf-8")),
+    // Concatenated in the caller's order: the digest names the whole rule
+    // surface, so moving a rule between modules still moves it.
+    ruleSourceDigest: sha256(
+      (typeof ruleSourcePaths === "string" ? [ruleSourcePaths] : ruleSourcePaths)
+        .map((p) => fs.readFileSync(p, "utf-8"))
+        .join(""),
+    ),
   };
 }

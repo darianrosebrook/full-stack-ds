@@ -27,6 +27,7 @@ import {
   parseJsonl,
   type CorpusInput,
 } from "./corpus-integrity.js";
+import { RULE_SOURCES } from "./necessity.js";
 
 const PACK_DIR = resolve(__dirname, "../../../ds-contracts/analytical-pack");
 const DOCTRINE = resolve(
@@ -453,8 +454,7 @@ describe("peer-projection conservation cases", () => {
 
   it("the two derivation-origin cases arrive at stage 2 as unbound obligations, not as prose", () => {
     const CONTRACTS = resolve(__dirname, "../../../ds-contracts");
-    const ENGINE_SOURCE = resolve(__dirname, "engines.ts");
-    const atStage2 = loadLedgerInput(CONTRACTS, DOCTRINE, ENGINE_SOURCE, 2);
+    const atStage2 = loadLedgerInput(CONTRACTS, DOCTRINE, RULE_SOURCES, 2);
     const unbound = checkFixtureLedger(atStage2)
       .filter((f) => f.code === "LEDGER_CASE_UNBOUND")
       .map((f) => f.detail);

@@ -21,7 +21,9 @@ import { fileURLToPath } from "node:url";
 import { decodeScale, type ScaleLabel } from "./capabilities.js";
 import type { Coordinate } from "./census.js";
 import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity.js";
-import { canonical, collides, eraseAll } from "./quotient.js";
+import { checkDerivations } from "./derivation.js";
+import { canonical, collides, erase, eraseAll } from "./quotient.js";
+import type { RelationalStructure } from "./relation-model.js";
 import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -31,6 +33,17 @@ export const WITNESSES_FILE = path.join(FIXTURES_DIR, "witnesses.json");
 export const REMOVALS_FILE = path.join(FIXTURES_DIR, "removals.json");
 export const CENSUS_STAGE1_FILE = path.join(FIXTURES_DIR, "census-stage1.json");
 const DOCTRINE = path.resolve(HERE, "../../../../docs/architecture/analytical-relation-doctrine.md");
+
+/**
+ * Every module that can move a judgment, in the order the holdout's rule
+ * digest concatenates them.
+ *
+ * One list, exported, because the holdout guarantee is only as wide as this
+ * array: a rule that lives in a module absent from it can change while the
+ * holdout still claims to have been authored against the current rules. Adding
+ * a rule module here is part of adding the module, not a follow-up.
+ */
+export const RULE_SOURCES: readonly string[] = [path.join(HERE, "engines.ts"), path.join(HERE, "derivation.ts")];
 
 /** The oracle-required outcome of a stimulus: status and the set of codes/terms. */
 export interface Outcome {
@@ -185,7 +198,8 @@ export type WitnessFailure =
   | "NOT_MINIMAL"
   | "TOO_MANY_COORDINATES"
   | "UNKNOWN_COORDINATE"
-  | "IDENTICAL_STIMULI";
+  | "IDENTICAL_STIMULI"
+  | "ERASURE_NOT_ISOLATED";
 
 export interface WitnessCheck {
   ok: boolean;
@@ -230,7 +244,77 @@ export function checkWitness(w: Witness, census: Coordinate[], oracle: Oracle): 
       if (collides(a.fixture, b.fixture, c)) failures.push({ code: "NOT_MINIMAL", detail: `${c.id} alone already identifies the stimuli` });
     }
   }
+  for (const [label, side] of [["a", a], ["b", b]] as const) {
+    for (const c of coords) {
+      const violation = isolationViolation(side.fixture, c);
+      if (violation) failures.push({ code: "ERASURE_NOT_ISOLATED", detail: `${label}/${c.id}: ${violation}` });
+    }
+  }
   return { ok: failures.length === 0, failures, a, b };
+}
+
+/**
+ * A quotient must remove ONE degree of freedom. If erasing a coordinate also
+ * changes arity, or reorders, or manufactures a defect that was not there, a
+ * collision proves nothing about the coordinate it claims to be about: the
+ * stimuli may have been identified by the collateral damage.
+ *
+ * The specific trap this closes: replacing a resolvable reference with a token
+ * can create a dangling reference, and a witness would then "hold" because
+ * erasure introduced REL_DERIVATION_INPUT_MISSING, not because the incidence
+ * relation was necessary.
+ *
+ * Returns a description of the violation, or undefined when the erasure is
+ * isolated.
+ */
+export function isolationViolation(fixture: Fixture, c: Coordinate): string | undefined {
+  const before = fixture as unknown as Record<string, unknown>;
+  const after = erase(fixture, c) as unknown as Record<string, unknown>;
+
+  // Erasure may not manufacture a derivation-boundary defect.
+  const structureOf = (f: Record<string, unknown>) => f.structure as RelationalStructure | undefined;
+  const sBefore = structureOf(before);
+  const sAfter = structureOf(after);
+  if (sBefore && sAfter) {
+    const codesBefore = checkDerivations(sBefore).map((d) => `${d.code}@${d.subject}`).sort();
+    const codesAfter = checkDerivations(sAfter).map((d) => `${d.code}@${d.subject}`).sort();
+    const introduced = codesAfter.filter((x) => !codesBefore.includes(x));
+    if (introduced.length > 0) {
+      return `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`;
+    }
+  }
+
+  // Arity and order of every reference list must survive unless they ARE the target.
+  const listsOf = (f: Record<string, unknown>): Map<string, string> => {
+    const out = new Map<string, string>();
+    const walk = (node: unknown, path: string): void => {
+      if (Array.isArray(node)) {
+        if (node.every((x) => typeof x === "string")) out.set(path, JSON.stringify(node));
+        else node.forEach((x, i) => walk(x, `${path}[${i}]`));
+        return;
+      }
+      if (node && typeof node === "object") {
+        for (const [k, v] of Object.entries(node as Record<string, unknown>)) walk(v, `${path}.${k}`);
+      }
+    };
+    walk(f, "");
+    return out;
+  };
+  const lb = listsOf(before);
+  const la = listsOf(after);
+  for (const [path, bJson] of lb) {
+    const aJson = la.get(path);
+    if (aJson === undefined) continue; // the list was legitimately removed
+    const bArr = JSON.parse(bJson) as string[];
+    const aArr = JSON.parse(aJson) as string[];
+    if (bArr.length !== aArr.length && c.facet !== "arity" && c.kind !== "leaf" && c.kind !== "member-absence") {
+      return `erasure changed the arity of ${path} (${bArr.length} -> ${aArr.length}) but the target facet is ${c.facet ?? c.kind}`;
+    }
+    if (c.facet === "incidence" && bArr.length !== aArr.length) {
+      return `incidence erasure changed the arity of ${path} (${bArr.length} -> ${aArr.length}); it must preserve how many positions there are`;
+    }
+  }
+  return undefined;
 }
 
 export function loadWitnesses(file = WITNESSES_FILE): WitnessFile {

@@ -30,9 +30,15 @@ function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: 
   };
   const structure = fixture.structure as Json | undefined;
   if (structure) {
+    if ("peers" in structure) visit("structure.peers", structure, "peers");
     const relations = (structure.relations ?? {}) as Record<string, Json>;
     for (const rel of Object.values(relations)) {
       if ("grain" in rel) visit("relation.grain", rel, "grain");
+      // The derivation is part of the relation's declaration, so the quotient
+      // must reach it: without this every coordinate the L3 algebra admits is
+      // un-erasable, and a witness naming one could only fail NO_COLLISION or
+      // pass for the wrong reason.
+      if (obj(rel.derivedBy)) props(rel.derivedBy as Json, "relation.derivedBy");
       const fields = (rel.fields ?? {}) as Record<string, Json>;
       for (const f of Object.values(fields)) {
         for (const key of Object.keys(f)) {
@@ -82,11 +88,15 @@ export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
         // Their sequence stops being expressible; membership survives.
         parent[key] = [...v].sort();
       } else if (coordinate.facet === "incidence") {
-        // Every name at this path collapses to one reserved token, so which
-        // other references it meets becomes unobservable while every other
-        // reference keeps its identity. The token is a lawful Name so the
-        // erased form stays inside the grammar.
-        parent[key] = Array.isArray(v) ? [INCIDENCE_TOKEN] : INCIDENCE_TOKEN;
+        // What incidence erases is CO-REFERENCE: which reference positions
+        // name the same thing. Each position therefore gets its own token, so
+        // no position co-refers with any other while arity and sequence are
+        // untouched. Collapsing the list to a single token would erase arity
+        // and order too, and a quotient that destroys three coordinates at
+        // once cannot support a claim that any one of them is necessary.
+        parent[key] = Array.isArray(v)
+          ? v.map((_, i) => `${INCIDENCE_TOKEN}_${i}`)
+          : `${INCIDENCE_TOKEN}_0`;
       }
       return;
     }

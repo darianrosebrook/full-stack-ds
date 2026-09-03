@@ -12,17 +12,19 @@ import * as path from "node:path";
 import { casesAdjudicableAt, checkFixtureLedger, loadCorpusInput, loadLedgerInput, sha256, type LedgerInput } from "./corpus-integrity.js";
 import { DIAG, OBLIGATION, RULES, judge } from "./engines.js";
 import { assertionKey, canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
+import { RULE_SOURCES } from "./necessity.js";
 import { alphaRename, normalizeObservation, renameSubject, type Fixture, type RelationalStructure } from "./structure.js";
 
 const CONTRACTS = path.resolve(__dirname, "../../../ds-contracts");
 const PACK = path.join(CONTRACTS, "analytical-pack");
 const DOCTRINE = path.resolve(__dirname, "../../../../docs/architecture/analytical-relation-doctrine.md");
-const ENGINE_SOURCE = path.join(__dirname, "engines.ts");
-const BLIND_SOURCES = ["relation-model.ts", "structure.ts", "judgment.ts", "engines.ts", "emit-schemas.ts"].map((f) => path.join(__dirname, f));
+const BLIND_SOURCES = ["relation-model.ts", "structure.ts", "judgment.ts", "engines.ts", "derivation.ts", "emit-schemas.ts"].map((f) =>
+  path.join(__dirname, f),
+);
 
 const corpus = loadCorpusInput(PACK, DOCTRINE);
 const stage1Cases = casesAdjudicableAt(corpus.cases, 1);
-const ledger = () => loadLedgerInput(CONTRACTS, DOCTRINE, ENGINE_SOURCE, 1);
+const ledger = () => loadLedgerInput(CONTRACTS, DOCTRINE, RULE_SOURCES, 1);
 const live = ledger();
 const byId = new Map(live.fixtures.map((f) => [f.id, f]));
 const fx = (id: string): Fixture => {
@@ -289,8 +291,25 @@ describe("A7 — a legal near-neighbour per diagnostic is admissible", () => {
 });
 
 describe("A8 — holdout authored against the recorded rule digest", () => {
-  it("the recorded digest is the digest of engines.ts as it is now", () => {
-    expect(live.holdout.ruleDigest).toBe(sha256(fs.readFileSync(ENGINE_SOURCE, "utf-8")));
+  it("the recorded digest is the digest of the whole rule surface as it is now", () => {
+    expect(live.holdout.ruleDigest).toBe(sha256(RULE_SOURCES.map((p) => fs.readFileSync(p, "utf-8")).join("")));
+  });
+
+  it("the rule surface is every module a judgment can come from, not just the one it started in", () => {
+    // A digest over a subset would let a rule move into an undigested module
+    // and change freely while the holdout still reported itself current. Every
+    // module `judge` reaches for a RULE (not for a type or a path) belongs here.
+    expect(RULE_SOURCES.map((p) => path.basename(p)).sort()).toEqual(["derivation.ts", "engines.ts"]);
+    for (const p of RULE_SOURCES) expect(fs.existsSync(p), p).toBe(true);
+  });
+
+  it("every rule source is reviewable text", () => {
+    // A single NUL byte makes git classify a source file as binary and stop
+    // emitting its diff. A rule the reviewer cannot see change is the same
+    // hazard the digest exists to close, reached from the other side.
+    for (const p of RULE_SOURCES) {
+      expect(fs.readFileSync(p, "utf-8").includes("\0"), `${path.basename(p)} contains a NUL byte`).toBe(false);
+    }
   });
   it("holds out at least six mixed fixtures, none reused from the case set", () => {
     expect(live.holdout.items.length).toBeGreaterThanOrEqual(6);

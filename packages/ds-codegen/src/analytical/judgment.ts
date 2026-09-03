@@ -48,7 +48,10 @@ export interface ObligationOccurrence extends OccurrenceBase {
  * (`derivationKey`), the analogue of `assertionKey`.
  */
 export interface DerivationOccurrence {
-  code: string;
+  /** `diagnostic`: the declared result is refuted. `obligation`: undecided. */
+  kind: "diagnostic" | "obligation";
+  code?: string;
+  term?: string;
   subject: string;
   derivation: string;
   engine: Engine;
@@ -85,10 +88,13 @@ export function deriveStatus(
   obligations: readonly ObligationOccurrence[],
   derivations: readonly DerivationOccurrence[] = [],
 ): Status {
-  // An uncertified derivation is a proven illegality of the structure, not a
-  // missing premise: the declared result is one the operator cannot produce.
-  if (diagnostics.length > 0 || derivations.length > 0) return "illegal";
-  if (obligations.length > 0) return "unproven";
+  // A REFUTED derivation is a proven illegality: the declared result is one
+  // the operator cannot produce. An UNDECIDED one is a missing premise and
+  // narrows rather than blocks, exactly like every other obligation — which is
+  // why the boundary must distinguish the two rather than treating silence as
+  // certification.
+  if (diagnostics.length > 0 || derivations.some((d) => d.kind === "diagnostic")) return "illegal";
+  if (obligations.length > 0 || derivations.some((d) => d.kind === "obligation")) return "unproven";
   return "admissible";
 }
 
@@ -110,7 +116,8 @@ export function normalizeJudgment(j: {
   const obligations = dedupe(j.obligations);
   // A derivation occurrence is keyed by its own identity, so one malformed
   // join referenced by three assertions is one finding, not three.
-  const dkey = (d: DerivationOccurrence) => `${d.code}|${d.subject}|${d.derivation}|${d.engine}|${d.evidenceClass}`;
+  const dkey = (d: DerivationOccurrence) =>
+    `${d.kind}|${d.code ?? d.term}|${d.subject}|${d.derivation}|${d.engine}|${d.evidenceClass}`;
   const seenD = new Map<string, DerivationOccurrence>();
   for (const d of j.derivations ?? []) seenD.set(dkey(d), d);
   const derivations = [...seenD.values()].sort((a, b) => dkey(a).localeCompare(dkey(b)));
@@ -132,10 +139,20 @@ export function codesOf(j: Judgment): string[] {
   // Both domains normalise into one answer: a caller asking what is wrong with
   // a structure should not have to know whether the defect was exposed by an
   // assertion or by the derivation boundary.
-  return [...new Set([...j.diagnostics.map((d) => d.code), ...j.derivations.map((d) => d.code)])].sort();
+  return [
+    ...new Set([
+      ...j.diagnostics.map((d) => d.code),
+      ...j.derivations.filter((d) => d.kind === "diagnostic").map((d) => d.code!),
+    ]),
+  ].sort();
 }
 
 /** The distinct obligation terms in a judgment. */
 export function termsOf(j: Judgment): string[] {
-  return [...new Set(j.obligations.map((o) => o.term))].sort();
+  return [
+    ...new Set([
+      ...j.obligations.map((o) => o.term),
+      ...j.derivations.filter((d) => d.kind === "obligation").map((d) => d.term!),
+    ]),
+  ].sort();
 }

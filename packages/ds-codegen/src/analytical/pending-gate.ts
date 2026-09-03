@@ -51,8 +51,8 @@ export interface GateResult {
   message: string;
 }
 
-export function checkPending(file = PENDING_FILE): GateResult {
-  const live = derivePending();
+export function checkPending(file = PENDING_FILE, pendingOf: () => string[] = derivePending): GateResult {
+  const live = [...pendingOf()].sort();
   const ledger = loadPending(file);
   const recorded = new Set(ledger.pending);
   const drift = [

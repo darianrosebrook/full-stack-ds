@@ -28,6 +28,7 @@ import {
   checkWitness,
   disposition,
   FIXTURES_DIR,
+  isolationViolation,
   loadCensusSnapshot,
   loadOracle,
   loadRemovals,
@@ -38,6 +39,8 @@ import {
   type Witness,
 } from "./necessity.js";
 import { canonical, erase } from "./quotient.js";
+import type { RelationalStructure } from "./relation-model.js";
+import type { Fixture } from "./structure.js";
 
 const oracle = loadOracle();
 const kernel = loadCensus();
@@ -229,6 +232,52 @@ describe("C3 — the harness is falsified", () => {
       b: { base: "FX_REGION_MAX", patch: [{ set: "structure.relations.sites.fields.region.transformation", value: "absolute" }], outcome: outcomeFrom("admissible"), cause: "none" },
     };
     expect(codes(w)).toContain("SCHEMA_INVALID");
+  });
+  it("rejects an erasure that manufactures a derivation defect instead of isolating its coordinate", () => {
+    // A structure whose derived relation is lawful. Erasing the incidence of
+    // `derivedBy.project.from` replaces a resolvable relation name with a
+    // token, which dangles — so any collision would be that dangling reference
+    // rather than the co-reference relation the coordinate is about.
+    const structure = {
+      relations: {
+        src: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } },
+        out: {
+          grain: ["k"],
+          fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } },
+          derivedBy: { kind: "project", from: "src", keep: ["k", "v"] },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
+    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.project.from#incidence")!;
+    expect(coord).toBeDefined();
+    expect(isolationViolation(fixture, coord)).toMatch(/introduced derivation defect/);
+  });
+  it("incidence erasure preserves arity and order, so it isolates co-reference alone", () => {
+    const before = ["region", "product", "region"];
+    const coord = loadCensus().find((c) => c.id === "assertion.aggregate.along#incidence")!;
+    const fixture = {
+      id: "fx_probe",
+      structure: {
+        relations: {
+          r: {
+            grain: ["region"],
+            fields: {
+              region: { transformation: "nominal", key: true },
+              product: { transformation: "nominal", key: true },
+              v: { transformation: "ratio" },
+            },
+          },
+        },
+      },
+      assertions: [{ kind: "aggregate", relation: "r", field: "v", op: "sum", along: before }],
+    } as unknown as Fixture;
+    const after = erase(fixture, coord) as unknown as { assertions: { along: string[] }[] };
+    expect(after.assertions[0].along).toHaveLength(before.length);
+    // Every position distinct: co-reference (region appearing twice) is gone,
+    // which is exactly and only what incidence means.
+    expect(new Set(after.assertions[0].along).size).toBe(before.length);
+    expect(isolationViolation(fixture, coord)).toBeUndefined();
   });
   it("rejects a pair the oracle does not tell apart", () => {
     expect(codes({ coordinates: ["field.transformation:ordinal~interval"], a: { fixture: "FX_N_TEMP_MEAN" }, b: { fixture: "FX_N_SURVEY_MEAN_RATIO_SCORE" } })).toContain("SAME_OUTCOME");

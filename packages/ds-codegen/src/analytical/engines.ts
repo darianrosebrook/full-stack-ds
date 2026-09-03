@@ -32,7 +32,7 @@
  * REL_NULL_SUPPRESSED_AS_ZERO). They are instance-evidence behaviour: they
  * confer no stage-1 schema necessity (REL-FIELD-ALGEBRA-02, invariant 9).
  */
-import { checkDerivations } from "./derivation.js";
+import { checkDerivations, inputsOf } from "./derivation.js";
 import type { Assertion, Evidence, FieldDecl, RelationDecl, RelationalStructure } from "./relation-model.js";
 import { normalizeObservation, type Observation } from "./structure.js";
 import {
@@ -272,7 +272,25 @@ export function judge(
   rules: readonly Rule[] = RULES,
 ): Judgment {
   const out: Findings = { diagnostics: [], obligations: [] };
+  // The boundary runs FIRST, and its verdict gates what may be asserted. An
+  // assertion over a relation whose derivation was not admitted would be a
+  // semantic finding about a result that has no standing yet — downstream
+  // meaning acquiring authority before its premise. Evaluating everything and
+  // then appending the structural defect prevents laundering only at the
+  // headline; the occurrences underneath would still have been manufactured.
+  const boundary = checkDerivations(structure);
+  // Only REFUTATION removes standing. An undecided derivation narrows what can
+  // be concluded but does not block, so its assertions still evaluate and carry
+  // the obligation forward — the doctrine's rule that unproven preconditions
+  // narrow rather than block, applied at the new authority boundary.
+  const ungrounded = ungroundedRelations(
+    structure,
+    boundary.filter((b) => b.kind === "diagnostic").map((b) => b.subject),
+  );
   for (const a of assertions) {
+    // Failure of one derived relation must not silence assertions over
+    // relations that are grounded: only this one's premise failed.
+    if (ungrounded.has(a.relation)) continue;
     const relation = structure.relations[a.relation];
     if (!relation) throw new Error(`assertion names unknown relation "${a.relation}"`);
     const field = relation.fields[a.field];
@@ -294,15 +312,32 @@ export function judge(
     };
     for (const r of rules) r.apply(ctx, out);
   }
-  // The derivation boundary runs over the STRUCTURE, independently of any
-  // assertion. That is what makes the assertion rules' blindness to
-  // base-versus-derived sound: an assertion may treat a derived relation as
-  // authoritative only because the boundary certified it first. Structures
-  // with no derivations produce an empty set and are unaffected.
-  const derivations = checkDerivations(structure).map((o) => ({
+  const derivations = boundary.map((o) => ({
     ...o,
     engine: "derivation-typing" as const,
     evidenceClass: "schema" as const,
   }));
   return normalizeJudgment({ ...out, derivations });
+}
+
+/**
+ * Relations with no standing: those whose own derivation was refused, and
+ * those derived — transitively — from one that was. A relation reachable only
+ * through an unadmitted derivation is not authoritative, however well-formed
+ * its own declaration looks.
+ */
+function ungroundedRelations(structure: RelationalStructure, refused: string[]): Set<string> {
+  const out = new Set(refused);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const [name, rel] of Object.entries(structure.relations)) {
+      if (out.has(name) || !rel.derivedBy) continue;
+      if (inputsOf(rel.derivedBy).some((i) => out.has(i))) {
+        out.add(name);
+        grew = true;
+      }
+    }
+  }
+  return out;
 }
