@@ -277,6 +277,76 @@ describe("C3 — the harness is falsified", () => {
     expect(new Set(after.assertions[0].along).size).toBe(before.length);
     expect(isolationViolation(fixture, coord)).toBeUndefined();
   });
+  it("rejects a member-absence erasure that empties a payload-carrying branch", () => {
+    // `erase` spells "member m vs absent" by emptying the holder, because a
+    // branch stripped of its tag is neither absence nor schema-valid. For
+    // `derivedBy` every branch requires `from`, so the quotient removes the
+    // operand as well as the tag and stops being about the member at all: what
+    // it actually erases is "this relation is derived" versus "it is not".
+    const structure = {
+      relations: {
+        src: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } },
+        out: {
+          grain: ["k"],
+          fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } },
+          derivedBy: { kind: "project", from: "src", keep: ["k", "v"] },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
+    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.kind:project~<absent>")!;
+    expect(coord).toBeDefined();
+    const violation = isolationViolation(fixture, coord);
+    expect(violation).toMatch(/holder presence/);
+    // The message must name what was destroyed, or it cannot be adjudicated.
+    expect(violation).toMatch(/\.from|\.keep/);
+  });
+
+  it("permits a member-absence erasure on a tag-only branch, so the rule is not a blanket refusal", () => {
+    // `additivity: { kind: "additive" }` carries nothing but its tag, so
+    // emptying the holder removes exactly the leaf the coordinate names. The
+    // rule has to distinguish these two cases or it would refuse every
+    // member-absence coordinate rather than the over-factored ones.
+    const structure = {
+      relations: {
+        r: {
+          grain: ["k"],
+          fields: {
+            k: { transformation: "nominal", key: true },
+            v: { transformation: "ratio", additivity: { kind: "additive" } },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
+    const coord = loadCensus().find((c) => c.id === "field.additivity.kind:additive~<absent>")!;
+    expect(coord).toBeDefined();
+    expect(isolationViolation(fixture, coord)).toBeUndefined();
+  });
+
+  it("is measured per stimulus: the same coordinate is isolated or not depending on what the branch carries", () => {
+    // `temporality.grain` is optional on the same object as `kind`, so
+    // `temporality.kind:instant~<absent>` is isolated against a bare `{kind}`
+    // and NOT isolated against `{kind, grain}` — where erasure would also
+    // destroy the grain fact that REL_TEMPORAL_GRAIN_MIXED depends on.
+    const fieldWith = (temporality: Record<string, unknown>) =>
+      ({
+        id: "fx_probe",
+        structure: {
+          relations: {
+            r: {
+              grain: ["k"],
+              fields: { k: { transformation: "nominal", key: true }, t: { transformation: "interval", temporality } },
+            },
+          },
+        },
+        assertions: [],
+      }) as unknown as Fixture;
+    const coord = loadCensus().find((c) => c.id === "field.temporality.kind:instant~<absent>")!;
+    expect(isolationViolation(fieldWith({ kind: "instant" }), coord)).toBeUndefined();
+    expect(isolationViolation(fieldWith({ kind: "instant", grain: "day" }), coord)).toMatch(/holder presence/);
+  });
+
   it("rejects a pair the oracle does not tell apart", () => {
     expect(codes({ coordinates: ["field.transformation:ordinal~interval"], a: { fixture: "FX_N_TEMP_MEAN" }, b: { fixture: "FX_N_SURVEY_MEAN_RATIO_SCORE" } })).toContain("SAME_OUTCOME");
   });

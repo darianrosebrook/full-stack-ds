@@ -287,6 +287,16 @@ export function checkWitness(w: Witness, census: Coordinate[], oracle: Oracle): 
  * Returns a description of the violation, or undefined when the erasure is
  * isolated.
  */
+/** Every path in a fixture that holds a non-object value, for set-difference. */
+function terminalPaths(node: unknown, path = "", out: Set<string> = new Set()): Set<string> {
+  if (Array.isArray(node) || node === null || typeof node !== "object") {
+    if (path) out.add(path);
+    return out;
+  }
+  for (const [k, v] of Object.entries(node as Record<string, unknown>)) terminalPaths(v, `${path}.${k}`, out);
+  return out;
+}
+
 export function isolationViolation(fixture: Fixture, c: Coordinate): string | undefined {
   const before = fixture as unknown as Record<string, unknown>;
   const after = erase(fixture, c) as unknown as Record<string, unknown>;
@@ -301,6 +311,30 @@ export function isolationViolation(fixture: Fixture, c: Coordinate): string | un
     const introduced = codesAfter.filter((x) => !codesBefore.includes(x));
     if (introduced.length > 0) {
       return `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`;
+    }
+  }
+
+  // A member-absence erasure must remove ONLY the leaf it names.
+  //
+  // `erase` empties the whole holder for a discriminator, because a branch
+  // stripped of its tag is neither absence nor schema-valid. When the branch
+  // carries payload, that also deletes the payload, and the quotient stops
+  // being "member m versus absent" — it becomes "this declaration exists versus
+  // it does not". A collision then witnesses holder presence, a degree of
+  // freedom the census never gave its own coordinate, and the seven
+  // `derivedBy.kind:X~<absent>` ids are seven spellings of that one fact.
+  //
+  // Measured per stimulus, not assumed per coordinate: against `{kind}` alone
+  // the erasure is isolated; against `{kind, from}` it is not.
+  if (c.kind === "member-absence") {
+    const tag = c.leaf.split(".").pop();
+    const bp = terminalPaths(before);
+    const ap = terminalPaths(after);
+    const collateral = [...bp].filter((p) => !ap.has(p) && p.split(".").pop() !== tag);
+    if (collateral.length > 0) {
+      return `erasing ${c.id} also removed ${collateral.join(", ")}; the quotient is holder presence, not "${
+        c.members?.[0] ?? "the member"
+      } versus absent", so a collision may be attributable to the removed payload`;
     }
   }
 

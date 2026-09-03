@@ -8,7 +8,10 @@
  * - Ownership: every live kernel coordinate is ratified or owned by an open
  *   experiment. It survives growth — a later stage may admit what its authority
  *   demands, provided the same change opens a basis that owns it — so what it
- *   refuses is an orphaned claim, not growth.
+ *   refuses is an orphaned claim, not growth. Owning means holding an
+ *   UNRESOLVED verdict, never having once listed the coordinate: a decided
+ *   coordinate is no longer anyone's responsibility, so its reappearance has to
+ *   be taken up again.
  * - Rule surface: `RULE_SOURCES` is what the holdout digest covers. If a module
  *   can influence a judgment without being in it, the digest under-claims and
  *   the holdout can report itself current while the rules have moved.
@@ -45,9 +48,60 @@ describe("no live coordinate is an orphaned claim", () => {
       spec: "REL-HYPOTHETICAL-01",
       frozenAt: "0000000",
       candidates: orphans.slice(0, 3),
+      unresolved: orphans.slice(0, 3),
     };
     const remaining = orphanedCoordinates([later]).map((o) => o.coordinate);
     expect(remaining).toEqual(orphans.slice(3));
+  });
+
+  it("a CLOSED experiment owns nothing: a coordinate it already decided is an orphan if it comes back", () => {
+    // The failure the membership reading could not see, in full:
+    //
+    //   stage 2 rules x not-yet-admitted -> x leaves the kernel -> stage 2 closes
+    //   stage 3 reintroduces x and forgets to open a basis for it
+    //
+    // Under "owned = ever appeared in some basis", the closed stage-2 basis
+    // still lists x, so the invariant reports an owner that finished deciding
+    // years ago and the reintroduction passes unnoticed.
+    const x = orphanedCoordinates([]).map((o) => o.coordinate)[0];
+    expect(x, "expected at least one live unratified coordinate to build the scenario from").toBeTruthy();
+
+    const closed: ExperimentBasis = {
+      file: "subtraction-historical.json",
+      spec: "REL-HISTORICAL-01",
+      frozenAt: "0000000",
+      candidates: [x],
+      unresolved: [], // every verdict recorded; the experiment is done
+    };
+    expect(orphanedCoordinates([closed]).map((o) => o.coordinate)).toContain(x);
+
+    // ...and taking responsibility again is exactly what clears it.
+    const reopened: ExperimentBasis = { ...closed, file: "subtraction-stage3.json", spec: "REL-STAGE-3-01", unresolved: [x] };
+    expect(orphanedCoordinates([closed, reopened]).map((o) => o.coordinate)).not.toContain(x);
+  });
+
+  it("an adjudicated coordinate inside a STILL-OPEN experiment is not owned either", () => {
+    // Ownership is per-coordinate, not per-basis: an open experiment is on the
+    // hook only for what it has not yet decided.
+    const [x, y] = orphanedCoordinates([]).map((o) => o.coordinate);
+    const open: ExperimentBasis = {
+      file: "subtraction-open.json",
+      spec: "REL-OPEN-01",
+      frozenAt: "0000000",
+      candidates: [x, y],
+      unresolved: [y],
+    };
+    const remaining = orphanedCoordinates([open]).map((o) => o.coordinate);
+    expect(remaining).toContain(x);
+    expect(remaining).not.toContain(y);
+  });
+
+  it("the live ledger owns every candidate it has not yet decided", () => {
+    // Guards the wiring rather than the rule: if `loadBases` stopped reading
+    // verdicts, this would silently become the membership reading again.
+    const [stage2] = loadBases();
+    expect(stage2.unresolved.length).toBeGreaterThan(0);
+    expect(stage2.unresolved.every((id) => stage2.candidates.includes(id))).toBe(true);
   });
 
   it("registers a basis by its existence, and every registered basis names its owning spec", () => {

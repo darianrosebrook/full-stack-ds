@@ -21,10 +21,20 @@
  * discharge it. The invariant is right; its owner was not.
  *
  * A basis is registered by existing: any `subtraction-*.json` in the fixtures
- * directory is read as one. A CLOSED experiment stays registered and is inert
- * by construction — every candidate it adjudicated is either ratified (so
- * accounted anyway) or no longer in the kernel — so nothing has to remember to
- * deregister it.
+ * directory is read as one. What a basis OWNS, though, is not its candidate
+ * list — it is the subset of that list still carrying an `unresolved` verdict.
+ * The difference is the whole invariant:
+ *
+ *   Ownership is unresolved responsibility, never historical membership.
+ *
+ * Under the membership reading, a coordinate a closed experiment ruled
+ * `not-yet-admitted` stayed "owned" forever, so a later stage could reintroduce
+ * it with no basis at all and the invariant would see an owner that had already
+ * finished deciding. Under this reading a closed basis owns nothing by
+ * construction (its verdicts are all recorded), and an already-adjudicated
+ * coordinate inside a still-open experiment owns nothing either — if either one
+ * reappears in the kernel, someone must explicitly take responsibility again.
+ * Nothing has to remember to deregister anything.
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -38,6 +48,11 @@ export interface ExperimentBasis {
   spec: string;
   frozenAt: string;
   candidates: string[];
+  /**
+   * The candidates this basis has NOT yet decided. A missing verdict entry
+   * reads as `unresolved`, matching `checkSubtraction`.
+   */
+  unresolved: string[];
 }
 
 const BASIS_FILE = /^subtraction-.+\.json$/;
@@ -52,12 +67,16 @@ export function loadBases(dir = FIXTURES_DIR): ExperimentBasis[] {
       const raw = JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8")) as {
         spec?: string;
         basis?: { frozenAt?: string; candidates?: string[] };
+        verdicts?: Record<string, { disposition?: string }>;
       };
+      const candidates = raw.basis?.candidates ?? [];
+      const verdicts = raw.verdicts ?? {};
       return {
         file: f,
         spec: raw.spec ?? f,
         frozenAt: raw.basis?.frozenAt ?? "",
-        candidates: raw.basis?.candidates ?? [],
+        candidates,
+        unresolved: candidates.filter((id) => (verdicts[id]?.disposition ?? "unresolved") === "unresolved"),
       };
     });
 }
@@ -78,14 +97,17 @@ export function orphanedCoordinates(bases: ExperimentBasis[] = loadBases()): Orp
   const kernel = loadCensus();
   const oracle = loadOracle();
   const ratified = ratifiedSet(loadWitnesses().witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
-  const owned = new Set(bases.flatMap((b) => b.candidates));
+  // Ownership is unresolved responsibility. A basis that has already decided a
+  // coordinate is not on the hook for it a second time, so its reappearance in
+  // the kernel is an orphan until some experiment reopens it.
+  const owned = new Set(bases.flatMap((b) => b.unresolved));
   return kernel
     .filter((c) => c.kind !== "reference")
     .filter((c) => !ratified.has(c.id) && !owned.has(c.id))
     .map((c) => ({
       coordinate: c.id,
-      detail: `no necessity witness ratifies it and no open experimental basis owns it (${
-        bases.length === 0 ? "none registered" : bases.map((b) => b.spec).join(", ")
+      detail: `no necessity witness ratifies it and no experiment holds an unresolved verdict for it (${
+        bases.length === 0 ? "none registered" : bases.map((b) => `${b.spec}: ${b.unresolved.length} unresolved`).join(", ")
       }); the slice that admitted it must open a basis that adjudicates it`,
     }))
     .sort((a, b) => a.coordinate.localeCompare(b.coordinate));
