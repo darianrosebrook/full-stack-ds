@@ -81,3 +81,8 @@ evidence:
     evidence_ref: "PARTIAL AGAINST THE LITERAL CLAUSE - read the exception. Measured in-browser at the document root in light theme: background.secondary/.subtle/.hover and interaction.background.hover all resolve to #f7f7f7; border.subtle #d0d0d0, border.light #b8b8b8. The content-surface tier is disjoint from and strictly lighter than every border, and background.secondary is lighter than border.subtle (clause 2 fully holds). EXCEPTION to clause 1: background.tertiary and background.disabled remain at #d0d0d0, which border.subtle also uses. That is deliberate - they are border-weight surfaces by role, and the reference system behaves the same way (eBay Evo binds background-tertiary and border-subtle both to neutral-300 #e5e5e5). Full disjointness would need a ramp step that does not exist. Before: six roles collapsed on #d0d0d0 (secondary, subtle, disabled, placeholder, readOnly, border.subtle) and three on #b8b8b8."
     recorded_at: "2026-09-03T00:20:55.534Z"
     commit_sha: "73b1f3ac"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "card.color.background.hover re-bound from semantic.color.background.secondary to semantic.color.background.hover (it was pointing at the wrong role), and background.hover itself moved neutral.200 -> neutral.50. Hover surface is now #f7f7f7 against the card's own border at #d0d0d0/#b8b8b8, so the hover tint is lighter than the border rather than a mid-grey darker than it. Previously the hover swapped the card to #d0d0d0. Emitted CSS carries the refreshed fallback: Card.css .card--interactive:hover background-color var(--fsds-card-color-background-hover, #f7f7f7)."
+    recorded_at: "2026-09-03T00:21:09.877Z"
+    commit_sha: "73b1f3ac"
