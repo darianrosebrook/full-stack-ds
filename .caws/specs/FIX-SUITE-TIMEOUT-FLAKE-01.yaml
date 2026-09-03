@@ -2,9 +2,10 @@ id: FIX-SUITE-TIMEOUT-FLAKE-01
 title: 'Root vitest suite flakes: module-registry tests race the 5s default timeout under parallel load'
 risk_tier: 3
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: suite-timeout
 created_at: '2026-09-03T00:58:52.201Z'
-updated_at: '2026-09-03T00:58:52.201Z'
+updated_at: '2026-09-03T00:59:22.564Z'
 blast_radius:
   modules:
     - 'ds-figma-plugin'
