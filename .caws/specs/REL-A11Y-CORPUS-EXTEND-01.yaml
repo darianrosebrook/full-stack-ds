@@ -52,3 +52,8 @@ contracts:
   - name: 'corpus-case'
     type: schema
     path: 'packages/ds-contracts/analytical-pack/corpus-case.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Eleven cases added across the five conservation families, each stage-classified by where the defect originates: information (CASE_PEER_TEXT_NAMES_THE_FORM, CASE_PEER_SUMMARY_ASSERTS_UNTESTED_TREND), order (CASE_SORTED_PROJECTION_SORT_STATE_UNDECLARED, CASE_CATEGORICAL_REORDER_NOT_SHARED), structure (CASE_NESTED_GROUPS_FLAT_IN_PEER, CASE_TABULAR_CELL_LOSES_ITS_KEYS, CASE_SUBSET_WITHOUT_DECLARED_POPULATION), representation-independence (CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN, CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP), interaction (CASE_FILTER_STATE_POINTER_ONLY, CASE_SELECTION_NARROWS_EXTENT_SILENTLY). Runtime evidence from tmp/probe-a11y.mts on main: corpus 59->70 cases, catalogue 47->57 rows, stage<=1 19 cases/15 diagnostics/3 obligations UNCHANGED, stage<=2 28/22/4 -> 30/24/4, stage<=3 67/55/5, stage<=5 70/57/5. corpus-integrity.test.ts 'the five conservation invariants are each carried by a case' pins that the family did not collapse (>=10 distinct diagnostics, all six invariants present)."
+    recorded_at: "2026-09-03T00:42:10.079Z"
