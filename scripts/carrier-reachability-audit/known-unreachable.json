@@ -1,0 +1,167 @@
+{
+  "$comment": "Forward carrier-reachability ledger (RAIL-WEB-STYLE-CARRIER-REACHABILITY-01). An entry means: authored CSS requires a component-owned carrier the current Web-DOM realization does not produce, so the rule matches nothing. It does NOT mean the contract surface is stale — deleting the declaration is one of three possible resolutions (selector repair, realization repair, independently justified contract retirement) and requires evidence sourced independently of the generated output (FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01). Two-directional ratchet: the rail fails on a new finding, on an entry that no longer reproduces, and on changed finding identity — the carrier is part of the id, so repairing one carrier of a two-carrier key cannot silently re-point an entry. Seeded from what the live corpus derives; no count is frozen into the gate. Re-derive with --reseed; never hand-edit the derived fields.",
+  "gaps": [
+    {
+      "component": "Button",
+      "key": "spinner",
+      "carrier": "button__spinner",
+      "kind": "part",
+      "selector": ".button__spinner",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Button",
+      "key": "loadingText",
+      "carrier": "button__loadingText",
+      "kind": "part",
+      "selector": ".button__loadingText",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ".checkbox:hover .checkbox__indicator",
+      "carrier": "checkbox__indicator",
+      "kind": "part",
+      "selector": ".checkbox:hover .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": "input",
+      "carrier": "checkbox__input",
+      "kind": "part",
+      "selector": ".checkbox__input",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": "indicator",
+      "carrier": "checkbox__indicator",
+      "kind": "part",
+      "selector": ".checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ":has(.checkbox__input:checked) .checkbox__indicator",
+      "carrier": "checkbox__input",
+      "kind": "part",
+      "selector": ":has(.checkbox__input:checked) .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ":has(.checkbox__input:checked) .checkbox__indicator",
+      "carrier": "checkbox__indicator",
+      "kind": "part",
+      "selector": ":has(.checkbox__input:checked) .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ":has(.checkbox__input:disabled) .checkbox__indicator",
+      "carrier": "checkbox__input",
+      "kind": "part",
+      "selector": ":has(.checkbox__input:disabled) .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ":has(.checkbox__input:disabled) .checkbox__indicator",
+      "carrier": "checkbox__indicator",
+      "kind": "part",
+      "selector": ":has(.checkbox__input:disabled) .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ":has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "carrier": "checkbox__input",
+      "kind": "part",
+      "selector": ":has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Checkbox",
+      "key": ":has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "carrier": "checkbox__indicator",
+      "kind": "part",
+      "selector": ":has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Details",
+      "key": ".details--icon-none .details__icon",
+      "carrier": "details--icon-none",
+      "kind": "modifier",
+      "selector": ".details--icon-none .details__icon",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Details",
+      "key": ".details--icon-right .details__icon",
+      "carrier": "details--icon-right",
+      "kind": "modifier",
+      "selector": ".details--icon-right .details__icon",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Skeleton",
+      "key": "shape",
+      "carrier": "skeleton__shape",
+      "kind": "part",
+      "selector": ".skeleton__shape",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Skeleton",
+      "key": "stack",
+      "carrier": "skeleton__stack",
+      "kind": "part",
+      "selector": ".skeleton__stack",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Tabs",
+      "key": "--vertical __root",
+      "carrier": "tabs__root",
+      "kind": "part",
+      "selector": ".tabs--vertical .tabs__root",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Text",
+      "key": "error",
+      "carrier": "text__error",
+      "kind": "part",
+      "selector": ".text__error",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    },
+    {
+      "component": "Text",
+      "key": "success",
+      "carrier": "text__success",
+      "kind": "part",
+      "selector": ".text__success",
+      "spec": "RAIL-WEB-STYLE-CARRIER-REACHABILITY-01",
+      "note": "Seeded at rail birth; standing debt, not yet adjudicated. Resolution direction is open — see the ledger $comment."
+    }
+  ]
+}

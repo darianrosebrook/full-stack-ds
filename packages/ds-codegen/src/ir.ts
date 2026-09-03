@@ -5086,6 +5086,136 @@ export function expandOptionsForContract(
   };
 }
 
+/**
+ * Every component-owned attachment point the Web-DOM realization can produce.
+ *
+ * "Carrier" is the thing a rule attaches to: the root class, a value/boolean
+ * modifier class, a `__part` class, or — for the anchored-surface family — a
+ * `data-<prefix>-<part>` marker. This is the substrate an authored selector
+ * may claim. A selector that names a carrier absent from here can never match,
+ * however well-formed it is.
+ *
+ * Derived from IR authority, never from generated framework source. Modifier
+ * spelling comes from `classRecipe` (so a colliding axis is namespaced exactly
+ * as the emitters namespace it, and a disjoint axis keeps the bare shape); part
+ * carriers come from walking `ir.dom`, which is what emitters walk to place
+ * `__part` classes; marker carriers come from `expandOptionsForContract`, the
+ * same helper `expandStylesKey` consults. Re-deriving any of that from a regex
+ * over emitted `.tsx` would create a second naming algorithm that can drift
+ * from the first while both look green.
+ *
+ * `partsDeterminate` is the honest bit. Three contracts (Card, Popover,
+ * Tooltip) carry no `anatomy.dom`, so the IR has no dom tree to walk and the
+ * producible part set is UNKNOWN, not empty. Treating unknown as empty would
+ * report every part carrier in those components as unreachable — inferring a
+ * defect from the absence of information, which is the error
+ * FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01 exists to prevent. Callers must
+ * skip part adjudication when this is false.
+ */
+export interface WebDomCarriers {
+  /** The root BEM class, from `classRecipe.base`. */
+  base: string;
+  /** Every component-owned CLASS an element can carry: root, modifiers, parts. */
+  classes: ReadonlySet<string>;
+  /** Part name → the selector that carries it (`.base__part` or a data marker). */
+  partSelectors: ReadonlyMap<string, string>;
+  /** Non-class carriers (the anchored-surface `[data-*]` markers), as selectors. */
+  markerSelectors: ReadonlySet<string>;
+  /** False when the contract carries no `anatomy.dom`: the part set is unknown. */
+  partsDeterminate: boolean;
+}
+
+export function deriveWebDomCarriers(
+  ir: ComponentIR,
+  contract: ComponentContract,
+): WebDomCarriers {
+  const base = ir.classRecipe.base;
+  const classes = new Set<string>([base]);
+
+  // Value modifiers: `classRecipe` owns the spelling (including `valuePrefix`
+  // for colliding axes); the contract's `variants` owns the vocabulary each
+  // axis can take. Both are declarations — neither is a reconstruction.
+  for (const vm of ir.classRecipe.valueModifiers) {
+    const values = contract.variants?.[vm.propName];
+    if (!Array.isArray(values)) continue;
+    for (const value of values) {
+      classes.add(`${base}--${vm.valuePrefix ?? ""}${String(value)}`);
+    }
+  }
+  for (const bm of ir.classRecipe.booleanModifiers) {
+    classes.add(`${base}--${bm.propName}`);
+  }
+
+  // Part carriers: the parts the realization actually carries, NOT the parts
+  // `anatomy.parts` declares. Checkbox declares `input` and `indicator` and
+  // renders neither; claiming them here would make the validator green on
+  // exactly the defect it exists to find.
+  //
+  // Three production paths reach an element, and all three are needed —
+  // calibrated against what the React emitter places, per component, across
+  // the whole corpus:
+  //
+  //   1. the `anatomy.dom` tree — nodes carrying a `part`;
+  //   2. compound subcomponents (`PartIR.isCompound`) — Table's `cell`/`head`,
+  //      Toast's `item`, Tabs' `tab`: emitted as separate subcomponents that
+  //      carry `.<base>__<part>` without ever appearing in the root's dom tree;
+  //   3. content-transform vocabularies — Markdown's 11 block/mark parts and
+  //      CodeBlock's `token`, realized by the transform rather than by a dom
+  //      node. Missing this path reported all 12 as unreachable.
+  //
+  // The root's own part is excluded: the root element carries `.<base>`, never
+  // `.<base>__<part>`, whatever the contract names that part (Toast calls it
+  // `viewport`).
+  const producedParts = new Set<string>();
+  const walk = (node: DomNodeIR): void => {
+    if (node.part) producedParts.add(node.part);
+    if (isHighlightTransform(node.content)) {
+      producedParts.add(node.content.tokenPart);
+    } else if (isMarkdownTransform(node.content)) {
+      for (const part of Object.values(node.content.blockParts)) producedParts.add(part);
+      for (const part of Object.values(node.content.markParts)) producedParts.add(part);
+    }
+    for (const child of node.children) walk(child);
+  };
+  if (ir.dom) walk(ir.dom);
+  for (const part of ir.parts) {
+    if (part.isCompound) producedParts.add(part.name);
+  }
+  producedParts.delete("root");
+  if (ir.dom?.part) producedParts.delete(ir.dom.part);
+
+  const surfacePartSelectors =
+    expandOptionsForContract(contract, base)?.surfacePartSelectors;
+
+  const partSelectors = new Map<string, string>();
+  const markerSelectors = new Set<string>();
+  for (const part of producedParts) {
+    const marker = surfacePartSelectors?.[part];
+    if (marker) {
+      partSelectors.set(part, marker);
+      markerSelectors.add(marker);
+      continue;
+    }
+    partSelectors.set(part, `.${base}__${part}`);
+    classes.add(`${base}__${part}`);
+  }
+  // A marked part is carried by its marker whether or not the dom tree names
+  // it — the anchored-surface emitters place the marker on an adopted or
+  // portaled element the dom walk does not see as a `part` node.
+  for (const [part, marker] of Object.entries(surfacePartSelectors ?? {})) {
+    if (!partSelectors.has(part)) partSelectors.set(part, marker);
+    markerSelectors.add(marker);
+  }
+
+  return {
+    base,
+    classes,
+    partSelectors,
+    markerSelectors,
+    partsDeterminate: ir.dom !== undefined,
+  };
+}
+
 export function expandStylesKey(
   key: string,
   prefix: string,

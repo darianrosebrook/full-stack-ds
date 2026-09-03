@@ -289,6 +289,22 @@ jobs:
       - name: Motion-realization ledger (reduced motion + motion tokens)
         run: pnpm run audit:motion-realization
 
+      # Carrier reachability, both directions, one IR authority
+      # (RAIL-WEB-STYLE-CARRIER-REACHABILITY-01). Forward: an authored style
+      # selector that requires a component-owned carrier the Web-DOM IR never
+      # produces — the rule compiles into all five packages and matches
+      # nothing. Inverse: a non-default variant value whose emitted carrier no
+      # rule selects, so choosing it changes nothing. Both consume
+      # `deriveWebDomCarriers`; neither re-derives modifier spelling. The
+      # forward validator is NOT yet an unconditional `generate:check` gate:
+      # while its corpus ledger is nonzero, promoting it would mean carrying a
+      # known-defect exception list inside semantic validation.
+      - name: Carrier-reachability ledger (authored CSS -> producible carrier)
+        run: pnpm run audit:carrier-reachability
+
+      - name: Variant-realization ledger (emitted carrier -> reachable rule)
+        run: pnpm run audit:variant-realization
+
   coverage-gate:
     name: Coverage thresholds
     runs-on: ubuntu-latest

@@ -28,10 +28,16 @@ const PATTERNS = {
   // iconography has its own emission ledger gate (ledger-icons.mjs --check),
   // separate from the codegen rail's generated-tree drift diff.
   iconography: /^packages\/ds-iconography\//,
-  // styling-realization ledgers (dead slots + pseudo-state gaps). Their inputs
-  // are the contract corpus, the generated React CSS/TSX they classify against,
-  // and the audits themselves — so a change to any of those can move a verdict.
-  stylingAudits: /^(packages\/ds-(contracts|react)\/|scripts\/(dead-slot|pseudo-state|state-suppression)-audit\/|scripts\/lib\/ledger-ratchet)/,
+  // styling-realization ledgers (dead slots, pseudo-state gaps, and the two
+  // carrier-reachability directions). Their inputs are the contract corpus, the
+  // generated React CSS/TSX they classify against, and the audits themselves —
+  // so a change to any of those can move a verdict. The carrier rails add one
+  // more input the others do not have: `ds-codegen/src`, because the carrier
+  // vocabulary is derived from the IR (`deriveWebDomCarriers`) rather than
+  // re-implemented in the script, so an emitter/IR change can move a verdict
+  // without any contract or generated file moving.
+  stylingAudits:
+    /^(packages\/ds-(contracts|react)\/|packages\/ds-codegen\/src\/|scripts\/(dead-slot|pseudo-state|state-suppression|carrier-reachability|variant-style)-audit\/|scripts\/lib\/ledger-ratchet)/,
   // token-reference resolvability. Its verdict is a diff between two name
   // spaces, so BOTH sides are inputs: the generated React CSS that reads a
   // --fsds-* name, and the ds-tokens source that decides which names the graph
