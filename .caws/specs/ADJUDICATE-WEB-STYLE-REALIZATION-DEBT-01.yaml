@@ -2,9 +2,11 @@ id: ADJUDICATE-WEB-STYLE-REALIZATION-DEBT-01
 title: 'Adjudicate web style-realization debt: burn the determinate forward carriers, decide the inverse axes'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Forward carrier ledger 18 findings / 11 carriers -> 0. Seven carriers resolved by realizing declared anatomy (Checkbox composite control, Button spinner/loadingText, Skeleton stack/row/shape), two by selector repair (Details namespaced icon keys, Tabs part-suffixed root key), two by contract retirement (Text error/success, justified from the contract alone). Inverse ledger 47 -> 43 across 20 axes, every finding carrying adjudication/evidence/remedy: 22 structural-behavioral, 10 visual-obligation, 8 unresolved-contract-semantics, 3 stale-vocabulary. Card''s five unknown-topology carriers audited (realization gap; cause is the COMPOUND_PARTS name allowlist; repair deferred with measured blast radius) and its historical badge-slot deletion re-audited (stands, on rule 5b''s contract-sourced ground rather than the withdrawn one). Principal unplanned finding: five non-web emission predicates keyed on web DOM topology as a proxy for a contract fact, so each web carrier repair silently changed or hard-broke another target; all five re-keyed to contract facts with generated native trees byte-identical to the merge base. Forward validator deliberately still not promoted into generate:check.'
 created_at: '2026-09-03T19:21:26.605Z'
-updated_at: '2026-09-03T22:34:46.057Z'
+updated_at: '2026-09-03T22:39:33.657Z'
 created_by_session: 'd97cce86-6592-41ba-857f-a6ec646948c1'
 blast_radius:
   modules:
