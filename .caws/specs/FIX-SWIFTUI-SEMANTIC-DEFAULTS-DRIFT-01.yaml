@@ -61,3 +61,8 @@ evidence:
     recorded_at: "2026-09-03T22:05:09.816Z"
     command: node scripts/generate-swiftui-semantic-defaults.mjs --check
     exit_code: 1
+  - criterion_id: A3
+    status: pass
+    evidence_ref: ".github/workflows/ci.yml adds the 'Verify SwiftUI semantic-defaults table is up-to-date' step (pnpm run swiftui:semantic-defaults:check) in the gate job immediately after tokens:build:check and before the macOS Swift test"
+    recorded_at: "2026-09-03T22:05:12.063Z"
+    commit_sha: "33b1a99d"
