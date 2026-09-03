@@ -1,0 +1,25 @@
+id: FIX-AFX-DEAD-CSS-01
+title: 'Remove analytical-fixture CSS rules orphaned by the stage-1.5 kernel removals'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-03T00:20:23.939Z'
+updated_at: '2026-09-03T00:20:23.939Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'src/styles/app.css'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given app.css carries .afx-badge--prov, .afx-badge--unc and .afx-relationships whose only consumers were removed from AnalyticalFixturesScratchView by REL-FIELD-ALGEBRA-02 phase B (d2eb4800); when the dead rules are deleted; then src/consumption/css-hygiene.test.ts reports zero dead app.css selectors and no live selector is removed'
+non_functional: {}
+contracts: []
