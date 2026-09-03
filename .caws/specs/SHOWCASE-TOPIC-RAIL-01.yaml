@@ -39,3 +39,8 @@ acceptance:
     then: 'views smoke, all-tabs smoke, and the consumption guard stay green'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node tmp/topic-rail-verify.mjs <dev-server> — Playwright geometry audit at 360/640/820/1024/1280/1440px: 11/11 topic links single-line (uniform 29px height), zero mid-phrase wraps, zero horizontal overflow (was: every label wrapped, 44-62px pills)"
+    recorded_at: "2026-09-03T01:02:15.434Z"
