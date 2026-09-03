@@ -112,3 +112,5 @@ CLAUDE.md
 .caws/events.jsonl.lock
 tmp/guard-strikes-*.json
 # <<< caws gitignore <<<
+
+.caws/messages.jsonl
