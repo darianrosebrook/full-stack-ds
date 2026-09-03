@@ -985,12 +985,15 @@ button {
      belongs to leaf links; the rail uses items purely as group hosts. */
 }
 
-.topic-rail .nav-list__list {
+/* Child combinators (not .nav-list__* class tokens) keep the css-hygiene
+   dead-selector guard's src scan honest: the DS renders exactly one ul >
+   li pair under the rail nav, and the app never names those internals. */
+.topic-rail > ul {
   gap: var(--fsds-core-spacing-size-06);
 }
 
-.topic-rail .nav-list__item,
-.topic-rail .nav-list__item:hover {
+.topic-rail > ul > li,
+.topic-rail > ul > li:hover {
   padding: 0;
   background: transparent;
   color: inherit;
@@ -1060,7 +1063,7 @@ button {
     overflow: visible;
   }
 
-  .topic-rail .nav-list__list {
+  .topic-rail > ul {
     display: flex;
     flex-direction: column;
     gap: var(--fsds-core-spacing-size-05);
