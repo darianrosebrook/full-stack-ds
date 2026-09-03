@@ -204,3 +204,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A15
+    status: pass
+    evidence_ref: "validateStylesCarrierReachability is exported from validation/styles.ts and is NOT called from cli.ts, so generate:check does not run it: grep returns 0 matches, and generate:check reports 51/51 contracts passed with no reachability diagnostics. It is exercised through the ledgered rail (pnpm run audit:carrier-reachability), wired into .github/workflows/ci.yml and .githooks/pre-push under the existing RUN_STYLING_AUDITS flag. There is no known-component or known-selector exclusion list anywhere in the validator — the standing 18 live in the rail's ledger, outside codegen semantic authority. Promotion to an unconditional gate is deferred to a zero baseline and recorded as such in the CI comment and the snapshot row."
+    recorded_at: "2026-09-03T18:11:25.034Z"
+    command: grep -c validateStylesCarrierReachability packages/ds-codegen/src/cli.ts
+    exit_code: 1
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
