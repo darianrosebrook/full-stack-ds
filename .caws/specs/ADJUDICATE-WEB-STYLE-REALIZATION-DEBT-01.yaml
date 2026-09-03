@@ -130,3 +130,7 @@ evidence:
     status: pass
     evidence_ref: "Text error/success are the only contract retirements; justified from the contract alone (no error/success variant, prop or token). Details/Tabs resolved by selector repair, not deletion. adjudication.md forward table"
     recorded_at: "2026-09-03T22:37:49.991Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Button spinner/loadingText realized in anatomy.dom (commit 93ce4195); loading opacity moved to .button[aria-busy=true] .button__loadingText. governed:rail PASS all six targets"
+    recorded_at: "2026-09-03T22:37:50.510Z"
