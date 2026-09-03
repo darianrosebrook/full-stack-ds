@@ -80,7 +80,7 @@ export const shuttleTokenScopes = {
       name: "shuttle.color.background.default",
       cssVar: "--fsds-shuttle-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "shuttle.color.foreground.primary": {
       name: "shuttle.color.foreground.primary",

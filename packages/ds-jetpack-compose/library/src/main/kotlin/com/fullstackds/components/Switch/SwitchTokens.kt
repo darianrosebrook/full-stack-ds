@@ -102,7 +102,7 @@ val switchTokenScopes: ComponentTokenScopes = mapOf(
             name = "switch.color.track.background.default",
             cssVar = "--fsds-switch-color-track-background-default",
             ref = "semantic.color.background.tertiary",
-            fallback = "#b8b8b8",
+            fallback = "#d0d0d0",
         ),
         "switch.color.track.border.default" to ComponentTokenDefinition(
             name = "switch.color.track.border.default",

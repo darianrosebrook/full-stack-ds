@@ -366,7 +366,7 @@
     },
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#b8b8b8"
+      "fallback": "#f7f7f7"
     },
     "select.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.hover",
@@ -408,7 +408,7 @@
   ".select__option:hover": {
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#b8b8b8"
+      "fallback": "#f7f7f7"
     },
     "select.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.hover",

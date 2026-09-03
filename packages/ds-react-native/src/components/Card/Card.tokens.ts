@@ -90,8 +90,8 @@ export const cardTokenScopes = {
     "card.color.background.hover": {
       name: "card.color.background.hover",
       cssVar: "--fsds-card-color-background-hover",
-      ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      ref: "semantic.color.background.hover",
+      fallback: "#f7f7f7",
     },
     "card.color.border.default": {
       name: "card.color.border.default",

@@ -104,7 +104,7 @@ export const detailsTokenScopes = {
       name: "details.color.background.hover",
       cssVar: "--fsds-details-color-background-hover",
       ref: "semantic.color.background.hover",
-      fallback: "#b8b8b8",
+      fallback: "#f7f7f7",
     },
     "details.color.foreground.primary": {
       name: "details.color.foreground.primary",
@@ -190,7 +190,7 @@ export const detailsTokenScopes = {
       name: "details.color.background.default",
       cssVar: "--fsds-details-color-background-default",
       ref: "semantic.color.background.hover",
-      fallback: "#b8b8b8",
+      fallback: "#f7f7f7",
     },
   },
   "variant_compact": {
@@ -218,7 +218,7 @@ export const detailsTokenScopes = {
       name: "details.color.background.default",
       cssVar: "--fsds-details-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "details.color.border.default": {
       name: "details.color.border.default",

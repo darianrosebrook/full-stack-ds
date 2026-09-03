@@ -54,7 +54,7 @@ export class AccordionElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-text-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
@@ -127,7 +127,7 @@ export class AccordionElement extends LitElement {
     }
 
     .accordion__trigger:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-accordion-color-background-hover, #f7f7f7);
       color: var(--fsds-accordion-color-text-hover, #474647);
     }
 
@@ -295,7 +295,7 @@ export class AccordionItemElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-text-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
@@ -368,7 +368,7 @@ export class AccordionItemElement extends LitElement {
     }
 
     .accordion__trigger:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-accordion-color-background-hover, #f7f7f7);
       color: var(--fsds-accordion-color-text-hover, #474647);
     }
 
@@ -438,7 +438,7 @@ export class AccordionTriggerElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-text-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
@@ -511,7 +511,7 @@ export class AccordionTriggerElement extends LitElement {
     }
 
     .accordion__trigger:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-accordion-color-background-hover, #f7f7f7);
       color: var(--fsds-accordion-color-text-hover, #474647);
     }
 
@@ -626,7 +626,7 @@ export class AccordionContentElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-text-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-accordion-color-icon: var(--fsds-semantic-color-foreground-tertiary, #727272);
@@ -699,7 +699,7 @@ export class AccordionContentElement extends LitElement {
     }
 
     .accordion__trigger:hover:not([aria-disabled="true"]) {
-      background-color: var(--fsds-accordion-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-accordion-color-background-hover, #f7f7f7);
       color: var(--fsds-accordion-color-text-hover, #474647);
     }
 

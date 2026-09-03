@@ -591,7 +591,7 @@ function validateReferences(context: CollectionContext): string[] {
 /**
  * Load all brand token files from the brands directory
  */
-function loadBrandTokens(): Map<BrandId, BrandOverrides> {
+export function loadBrandTokens(): Map<BrandId, BrandOverrides> {
   const brands = new Map<BrandId, BrandOverrides>();
   const brandsDir = PATHS.brandsDir;
 

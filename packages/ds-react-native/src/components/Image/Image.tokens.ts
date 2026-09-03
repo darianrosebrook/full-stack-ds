@@ -80,7 +80,7 @@ export const imageTokenScopes = {
       name: "image.color.background.default",
       cssVar: "--fsds-image-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "image.color.foreground.primary": {
       name: "image.color.foreground.primary",

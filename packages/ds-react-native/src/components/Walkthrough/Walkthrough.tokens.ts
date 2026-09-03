@@ -80,7 +80,7 @@ export const walkthroughTokenScopes = {
       name: "walkthrough.surface.bg",
       cssVar: "--fsds-walkthrough-surface-bg",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "walkthrough.surface.border": {
       name: "walkthrough.surface.border",

@@ -26,7 +26,7 @@
   color: var(--fsds-postcard-color-foreground-primary, #141414);
 
   &:hover {
-    background-color: var(--fsds-postcard-color-background-hover, #d0d0d0);
+    background-color: var(--fsds-postcard-color-background-hover, #f7f7f7);
     border-color: var(--fsds-postcard-color-border-hover, #888889);
   }
 }

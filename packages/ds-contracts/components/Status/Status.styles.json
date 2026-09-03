@@ -44,7 +44,7 @@
     },
     "background-color": {
       "resolvesTo": "status.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "status.color.foreground.primary",

@@ -35,7 +35,7 @@ enum BlockquoteTokens {
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("0")),
             "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
             "blockquote.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-foreground-primary", name: "blockquote.color.foreground.primary", ref: "semantic.color.foreground.secondary", fallback: .adaptive(light: "#474647", dark: "#a0a0a1")),
-            "blockquote.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-background-default", name: "blockquote.color.background.default", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "blockquote.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-background-default", name: "blockquote.color.background.default", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
             "blockquote.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-border-default", name: "blockquote.color.border.default", ref: "semantic.color.border.accent", fallback: .adaptive(light: "#d92d2e", dark: "#e55b5a")),
             "blockquote.typography.fontStyle": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-typography-font-style", name: "blockquote.typography.fontStyle", ref: "semantic.typography.font.style.italic", fallback: .string("italic")),
             "blockquote.typography.fontWeight": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-typography-font-weight", name: "blockquote.typography.fontWeight", ref: "semantic.typography.font.weight.medium", fallback: .string("500")),
@@ -49,7 +49,7 @@ enum BlockquoteTokens {
             "blockquote.size.fontSize.lg": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-size-font-size-lg", name: "blockquote.size.fontSize.lg", ref: "core.typography.ramp.5", fallback: .string("1.125rem")),
         ],
         "variant_default": [
-            "blockquote.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-background-default", name: "blockquote.color.background.default", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "blockquote.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-background-default", name: "blockquote.color.background.default", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
         ],
         "variant_bordered": [
             "blockquote.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-blockquote-color-background-default", name: "blockquote.color.background.default", ref: "semantic.color.background.primary", fallback: .adaptive(light: "#ffffff", dark: "#000000")),

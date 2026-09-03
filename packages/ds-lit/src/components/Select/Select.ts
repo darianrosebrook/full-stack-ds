@@ -63,7 +63,7 @@ export class SelectElement extends LitElement {
 
     .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -78,7 +78,7 @@ export class SelectElement extends LitElement {
     }
 
     .select__option:hover:not([aria-disabled="true"]) {
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -324,7 +324,7 @@ export class SelectTriggerElement extends LitElement {
 
     .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -339,7 +339,7 @@ export class SelectTriggerElement extends LitElement {
     }
 
     .select__option:hover:not([aria-disabled="true"]) {
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -522,7 +522,7 @@ export class SelectContentElement extends LitElement {
 
     .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -537,7 +537,7 @@ export class SelectContentElement extends LitElement {
     }
 
     .select__option:hover:not([aria-disabled="true"]) {
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -720,7 +720,7 @@ export class SelectOptionElement extends LitElement {
 
     .select__trigger:hover:not([aria-disabled="true"]) {
       --fsds-select-color-border-default: var(--fsds-semantic-color-border-bold, #888889);
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 
@@ -735,7 +735,7 @@ export class SelectOptionElement extends LitElement {
     }
 
     .select__option:hover:not([aria-disabled="true"]) {
-      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-select-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-hover, #474647);
     }
 

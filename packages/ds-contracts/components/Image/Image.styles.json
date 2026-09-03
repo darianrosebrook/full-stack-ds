@@ -14,7 +14,7 @@
     },
     "background-color": {
       "resolvesTo": "image.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "image.color.foreground.primary",

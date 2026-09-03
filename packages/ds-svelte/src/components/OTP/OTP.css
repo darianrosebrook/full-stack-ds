@@ -34,7 +34,7 @@
   border-width: 1px;
   border-radius: var(--fsds-otp-size-radius-default, 6px);
   border-color: var(--fsds-otp-color-border-default, #b8b8b8);
-  background-color: var(--fsds-otp-color-background-default, #d0d0d0);
+  background-color: var(--fsds-otp-color-background-default, #f7f7f7);
   color: var(--fsds-otp-color-foreground-primary, #141414);
 }
 

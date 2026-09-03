@@ -4,21 +4,21 @@
     "background": {
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.neutral.100}",
+        "$value": "{color.palette.neutral.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.light": "{color.palette.neutral.50}",
           "fsds.dark": "{color.palette.neutral.800}"
         },
-        "$description": "NEUTRAL-ONLY hover background for neutral/transparent surfaces (list rows, menu items, ghost/outline controls). NOT intent-aware — a brand/intent surface that uses this reads gray on hover instead of its intent-dark. Intent surfaces must use semantic.color.action.background.<intent>.hover."
+        "$description": "NEUTRAL-ONLY hover background for neutral/transparent surfaces (list rows, menu items, ghost/outline controls). NOT intent-aware — a brand/intent surface that uses this reads gray on hover instead of its intent-dark. Intent surfaces must use semantic.color.action.background.<intent>.hover. Light sits on the surface-tint step (neutral.50); at neutral.100 a hovered row jumped to a border-weight grey."
       },
       "active": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.light": "{color.palette.neutral.100}",
           "fsds.dark": "{color.palette.neutral.700}"
         },
-        "$description": "NEUTRAL-ONLY active/pressed background for neutral/transparent surfaces. NOT intent-aware. Intent surfaces use semantic.color.action.background.<intent>.active."
+        "$description": "NEUTRAL-ONLY active/pressed background for neutral/transparent surfaces. NOT intent-aware. Intent surfaces use semantic.color.action.background.<intent>.active. One step darker than hover so press stays legible against it."
       },
       "selected": {
         "$type": "color",

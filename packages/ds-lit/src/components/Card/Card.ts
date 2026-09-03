@@ -38,7 +38,7 @@ export class CardElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -131,7 +131,7 @@ export class CardElement extends LitElement {
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
       box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
@@ -290,7 +290,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -383,7 +383,7 @@ export class CardHeaderElement extends LitElement {
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
       box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
@@ -524,7 +524,7 @@ export class CardContentElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -617,7 +617,7 @@ export class CardContentElement extends LitElement {
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
       box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
@@ -758,7 +758,7 @@ export class CardFooterElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -851,7 +851,7 @@ export class CardFooterElement extends LitElement {
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
       box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }
@@ -992,7 +992,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -1085,7 +1085,7 @@ export class CardDescriptionElement extends LitElement {
     }
 
     .card--interactive:hover {
-      background-color: var(--fsds-card-color-background-hover, #d0d0d0);
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
       box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       transform: translateY(-1px);
     }

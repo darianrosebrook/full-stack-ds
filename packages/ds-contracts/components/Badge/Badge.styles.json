@@ -44,7 +44,7 @@
     },
     "background-color": {
       "resolvesTo": "badge.color.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "badge.color.foreground.primary",
@@ -142,7 +142,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "badge.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   "--sm": {

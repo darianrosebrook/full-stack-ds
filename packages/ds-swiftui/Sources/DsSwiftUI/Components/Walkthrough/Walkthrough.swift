@@ -31,7 +31,7 @@ enum WalkthroughTokens {
             "box-model.height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-height", name: "box-model.height", literal: .string("auto")),
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("0")),
             "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
-            "walkthrough.surface.bg": FsdsComponentTokenDefinition(cssVar: "--fsds-walkthrough-surface-bg", name: "walkthrough.surface.bg", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "walkthrough.surface.bg": FsdsComponentTokenDefinition(cssVar: "--fsds-walkthrough-surface-bg", name: "walkthrough.surface.bg", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
             "walkthrough.surface.border": FsdsComponentTokenDefinition(cssVar: "--fsds-walkthrough-surface-border", name: "walkthrough.surface.border", ref: "semantic.color.border.subtle", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
             "walkthrough.surface.radius": FsdsComponentTokenDefinition(cssVar: "--fsds-walkthrough-surface-radius", name: "walkthrough.surface.radius", ref: "semantic.shape.radius.large", fallback: .string("16px")),
             "walkthrough.surface.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-walkthrough-surface-shadow", name: "walkthrough.surface.shadow", ref: "semantic.elevation.surface.floating", fallback: .string("0px 2px 4px #0000000f, 0px 4px 8px #0000001a")),

@@ -73,7 +73,7 @@ export class DialogElement extends LitElement {
     }
 
     .dialog__closeButton:hover {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .dialog {
@@ -349,7 +349,7 @@ export class DialogHeaderElement extends LitElement {
     }
 
     .dialog__closeButton:hover {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .dialog {
@@ -542,7 +542,7 @@ export class DialogTitleElement extends LitElement {
     }
 
     .dialog__closeButton:hover {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .dialog {
@@ -735,7 +735,7 @@ export class DialogBodyElement extends LitElement {
     }
 
     .dialog__closeButton:hover {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .dialog {
@@ -928,7 +928,7 @@ export class DialogFooterElement extends LitElement {
     }
 
     .dialog__closeButton:hover {
-      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .dialog {

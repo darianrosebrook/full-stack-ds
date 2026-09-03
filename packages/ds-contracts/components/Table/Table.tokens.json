@@ -21,7 +21,7 @@
   },
   "table.color.background.footer": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "table.border.width": {
@@ -86,7 +86,7 @@
   },
   "table.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "table.color.background.selected": {

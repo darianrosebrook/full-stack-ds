@@ -412,7 +412,8 @@
         "neutral": {
           "50": {
             "$type": "color",
-            "$value": "#e9e9e9"
+            "$description": "Lightest neutral (#f7f7f7) — the surface-tint step. The ramp previously started at #e9e9e9 and no semantic token referenced it, so every light surface role fell to neutral.100 (#d0d0d0), a border-weight grey. This step exists so a secondary/subtle/hover surface can sit close to white while borders stay at 100/200.",
+            "$value": "#f7f7f7"
           },
           "100": {
             "$type": "color",
@@ -2396,7 +2397,7 @@
           "$type": "color",
           "$description": "Secondary background color",
           "$value": {
-            "light": "#d0d0d0",
+            "light": "#f7f7f7",
             "dark": "#313131"
           }
         },
@@ -2404,7 +2405,7 @@
           "$type": "color",
           "$description": "Tertiary background color",
           "$value": {
-            "light": "#b8b8b8",
+            "light": "#d0d0d0",
             "dark": "#474647"
           }
         },
@@ -2428,7 +2429,7 @@
           "$type": "color",
           "$description": "Hover background color",
           "$value": {
-            "light": "#b8b8b8",
+            "light": "#f7f7f7",
             "dark": "#474647"
           }
         },
@@ -2574,7 +2575,7 @@
           "$type": "color",
           "$description": "Active state background color",
           "$value": {
-            "light": "#a0a0a1",
+            "light": "#d0d0d0",
             "dark": "#5c5b5c"
           }
         },
@@ -2590,7 +2591,7 @@
           "$type": "color",
           "$description": "Placeholder background color",
           "$value": {
-            "light": "#d0d0d0",
+            "light": "#f7f7f7",
             "dark": "#313131"
           }
         },
@@ -2598,7 +2599,7 @@
           "$type": "color",
           "$description": "Read-only background color",
           "$value": {
-            "light": "#d0d0d0",
+            "light": "#f7f7f7",
             "dark": "#313131"
           }
         },
@@ -2622,7 +2623,7 @@
           "$type": "color",
           "$description": "Subtle background tint — used for hover states on otherwise-transparent surfaces (NavList item hover).",
           "$value": {
-            "light": "#d0d0d0",
+            "light": "#f7f7f7",
             "dark": "#313131"
           }
         },
@@ -3774,17 +3775,17 @@
       "background": {
         "hover": {
           "$type": "color",
-          "$description": "NEUTRAL-ONLY hover background for neutral/transparent surfaces (list rows, menu items, ghost/outline controls). NOT intent-aware — a brand/intent surface that uses this reads gray on hover instead of its intent-dark. Intent surfaces must use semantic.color.action.background.<intent>.hover.",
+          "$description": "NEUTRAL-ONLY hover background for neutral/transparent surfaces (list rows, menu items, ghost/outline controls). NOT intent-aware — a brand/intent surface that uses this reads gray on hover instead of its intent-dark. Intent surfaces must use semantic.color.action.background.<intent>.hover. Light sits on the surface-tint step (neutral.50); at neutral.100 a hovered row jumped to a border-weight grey.",
           "$value": {
-            "light": "#d0d0d0",
+            "light": "#f7f7f7",
             "dark": "#313131"
           }
         },
         "active": {
           "$type": "color",
-          "$description": "NEUTRAL-ONLY active/pressed background for neutral/transparent surfaces. NOT intent-aware. Intent surfaces use semantic.color.action.background.<intent>.active.",
+          "$description": "NEUTRAL-ONLY active/pressed background for neutral/transparent surfaces. NOT intent-aware. Intent surfaces use semantic.color.action.background.<intent>.active. One step darker than hover so press stays legible against it.",
           "$value": {
-            "light": "#b8b8b8",
+            "light": "#d0d0d0",
             "dark": "#474647"
           }
         },

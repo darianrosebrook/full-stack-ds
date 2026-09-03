@@ -91,7 +91,7 @@ export const postcardTokenScopes = {
       name: "postcard.color.background.hover",
       cssVar: "--fsds-postcard-color-background-hover",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "postcard.color.border.default": {
       name: "postcard.color.border.default",

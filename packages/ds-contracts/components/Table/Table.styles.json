@@ -70,13 +70,13 @@
   "head": {
     "background-color": {
       "resolvesTo": "table.color.background.footer",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   "footer": {
     "background-color": {
       "resolvesTo": "table.color.background.footer",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "font-weight": {
       "resolvesTo": "table.text.weightFooter",
@@ -164,7 +164,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "table.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   "selected": {

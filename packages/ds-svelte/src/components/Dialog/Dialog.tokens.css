@@ -55,7 +55,7 @@
 }
 
 .dialog__closeButton:hover {
-  --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+  --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
 }
 /* @generated:end */
 

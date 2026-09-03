@@ -88,7 +88,7 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             name = "status.color.background.default",
             cssVar = "--fsds-status-color-background-default",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "status.color.foreground.primary" to ComponentTokenDefinition(
             name = "status.color.foreground.primary",

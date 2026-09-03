@@ -80,7 +80,7 @@ export const accordionTokenScopes = {
       name: "accordion.color.background.hover",
       cssVar: "--fsds-accordion-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "accordion.color.text": {
       name: "accordion.color.text",

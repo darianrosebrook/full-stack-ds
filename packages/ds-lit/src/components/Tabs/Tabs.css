@@ -42,12 +42,12 @@
 
 .tabs__tab:hover {
   color: var(--fsds-tabs-color-hover-fg, #141414);
-  background-color: var(--fsds-tabs-color-hover-bg, #b8b8b8);
+  background-color: var(--fsds-tabs-color-hover-bg, #f7f7f7);
 }
 
 .tabs__tab--active {
   color: var(--fsds-tabs-color-active-fg, #141414);
-  background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
+  background-color: var(--fsds-tabs-color-active-bg, #f7f7f7);
 }
 
 .tabs__tab:disabled {
@@ -118,7 +118,7 @@
 }
 
 .tabs--pills .tabs__tab--active {
-  background-color: var(--fsds-tabs-color-active-bg, #d0d0d0);
+  background-color: var(--fsds-tabs-color-active-bg, #f7f7f7);
   color: var(--fsds-tabs-color-active-fg, #141414);
 }
 

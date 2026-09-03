@@ -101,7 +101,7 @@ val progressTokenScopes: ComponentTokenScopes = mapOf(
             name = "progress.color.track.background",
             cssVar = "--fsds-progress-color-track-background",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "progress.color.fill.info" to ComponentTokenDefinition(
             name = "progress.color.fill.info",

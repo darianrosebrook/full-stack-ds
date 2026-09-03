@@ -28,7 +28,7 @@ enum AccordionTokens {
             "box-model.height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-height", name: "box-model.height", literal: .string("auto")),
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("0")),
             "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
-            "accordion.color.background.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-accordion-color-background-hover", name: "accordion.color.background.hover", ref: "semantic.interaction.background.hover", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "accordion.color.background.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-accordion-color-background-hover", name: "accordion.color.background.hover", ref: "semantic.interaction.background.hover", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
             "accordion.color.text": FsdsComponentTokenDefinition(cssVar: "--fsds-accordion-color-text", name: "accordion.color.text", ref: "semantic.color.foreground.primary", fallback: .adaptive(light: "#141414", dark: "#fafafa")),
             "accordion.color.textSecondary": FsdsComponentTokenDefinition(cssVar: "--fsds-accordion-color-text-secondary", name: "accordion.color.textSecondary", ref: "semantic.color.foreground.secondary", fallback: .adaptive(light: "#474647", dark: "#a0a0a1")),
             "accordion.color.icon": FsdsComponentTokenDefinition(cssVar: "--fsds-accordion-color-icon", name: "accordion.color.icon", ref: "semantic.color.foreground.tertiary", fallback: .adaptive(light: "#727272", dark: "#888889")),

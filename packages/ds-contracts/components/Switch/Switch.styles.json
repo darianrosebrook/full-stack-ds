@@ -36,7 +36,7 @@
     },
     "background-color": {
       "resolvesTo": "switch.color.track.background.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#d0d0d0"
     },
     "border-color": {
       "resolvesTo": "switch.color.track.border.default",

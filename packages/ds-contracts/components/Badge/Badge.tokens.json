@@ -1,12 +1,12 @@
 {
   "badge.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "badge.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#d0d0d0",
+    "fallback": "#f7f7f7",
     "layer": "semantic"
   },
   "badge.color.foreground.primary": {

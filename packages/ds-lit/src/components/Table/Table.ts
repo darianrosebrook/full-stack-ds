@@ -38,7 +38,7 @@ export class TableElement extends LitElement {
       --fsds-table-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-table-color-text-muted: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-table-color-border: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-table-color-background-footer: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-table-color-background-footer: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-table-border-width: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-table-spacing-cell-x: var(--fsds-core-spacing-size-03, 4px);
       --fsds-table-spacing-cell-y: var(--fsds-core-spacing-size-02, 2px);
@@ -51,7 +51,7 @@ export class TableElement extends LitElement {
       --fsds-table-text-size-caption: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-table-text-weight-head: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-table-text-weight-footer: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-table-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
+      --fsds-table-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
       --fsds-table-color-background-selected: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-table-focus-width: var(--fsds-semantic-shape-control-border-focus-width, 2px);
       --fsds-table-focus-color: var(--fsds-semantic-color-border-accent, #d92d2e);
@@ -76,7 +76,7 @@ export class TableElement extends LitElement {
       overflow-x: auto;
 
       &:hover {
-        background-color: var(--fsds-table-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-table-color-background-hover, #f7f7f7);
       }
 
       &[aria-selected="true"] {
@@ -99,11 +99,11 @@ export class TableElement extends LitElement {
     }
 
     .table__head {
-      background-color: var(--fsds-table-color-background-footer, #d0d0d0);
+      background-color: var(--fsds-table-color-background-footer, #f7f7f7);
     }
 
     .table__footer {
-      background-color: var(--fsds-table-color-background-footer, #d0d0d0);
+      background-color: var(--fsds-table-color-background-footer, #f7f7f7);
       font-weight: var(--fsds-table-text-weight-footer, 500);
     }
 

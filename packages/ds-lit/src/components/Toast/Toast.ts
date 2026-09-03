@@ -38,13 +38,13 @@ export class ToastElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0566fe);
-      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
@@ -101,7 +101,7 @@ export class ToastElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg, #d0d0d0);
+      background-color: var(--fsds-toast-surface-bg, #f7f7f7);
       border-color: var(--fsds-toast-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;
@@ -256,13 +256,13 @@ export class ToastItemElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0566fe);
-      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
@@ -319,7 +319,7 @@ export class ToastItemElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg, #d0d0d0);
+      background-color: var(--fsds-toast-surface-bg, #f7f7f7);
       border-color: var(--fsds-toast-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;
@@ -405,13 +405,13 @@ export class ToastTitleElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0566fe);
-      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
@@ -468,7 +468,7 @@ export class ToastTitleElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg, #d0d0d0);
+      background-color: var(--fsds-toast-surface-bg, #f7f7f7);
       border-color: var(--fsds-toast-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;
@@ -549,13 +549,13 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0566fe);
-      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #d0d0d0);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
@@ -612,7 +612,7 @@ export class ToastDescriptionElement extends LitElement {
     }
 
     .toast__item {
-      background-color: var(--fsds-toast-surface-bg, #d0d0d0);
+      background-color: var(--fsds-toast-surface-bg, #f7f7f7);
       border-color: var(--fsds-toast-surface-border, #d0d0d0);
       border-style: solid;
       border-width: 1px;

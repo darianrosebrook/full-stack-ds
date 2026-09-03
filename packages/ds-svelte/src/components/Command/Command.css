@@ -130,11 +130,11 @@
 }
 
 .command__item:hover:not([aria-disabled="true"]) {
-  background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+  background-color: var(--fsds-command-color-background-hover, #f7f7f7);
 }
 
 .command__item[aria-selected="true"] {
-  background-color: var(--fsds-command-color-background-hover, #d0d0d0);
+  background-color: var(--fsds-command-color-background-hover, #f7f7f7);
   color: var(--fsds-command-color-text, #141414);
 }
 

@@ -455,13 +455,13 @@
   ".command__item:hover": {
     "background-color": {
       "resolvesTo": "command.color.backgroundHover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     }
   },
   ".command__item[aria-selected=\"true\"]": {
     "background-color": {
       "resolvesTo": "command.color.backgroundHover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "color": {
       "resolvesTo": "command.color.text",

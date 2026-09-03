@@ -15,7 +15,7 @@
   max-height: var(--fsds-box-model-max-height);
   display: inline-flex;
   align-items: center;
-  background-color: var(--fsds-toggle-switch-color-background-default, #d0d0d0);
+  background-color: var(--fsds-toggle-switch-color-background-default, #f7f7f7);
   color: var(--fsds-toggle-switch-color-foreground-default, #141414);
   border-color: var(--fsds-toggle-switch-color-border-default, #b8b8b8);
   border-radius: var(--fsds-toggle-switch-border-radius-default, 9999px);
@@ -26,7 +26,7 @@
   box-sizing: border-box;
 
   &:hover:not(:disabled) {
-    background-color: var(--fsds-toggle-switch-color-background-hover, #d0d0d0);
+    background-color: var(--fsds-toggle-switch-color-background-hover, #f7f7f7);
   }
 
   &[aria-checked="true"] {

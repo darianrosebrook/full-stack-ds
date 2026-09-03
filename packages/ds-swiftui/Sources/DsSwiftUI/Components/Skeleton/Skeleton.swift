@@ -48,9 +48,9 @@ enum SkeletonTokens {
             "box-model.height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-height", name: "box-model.height", literal: .string("auto")),
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("1em")),
             "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
-            "skeleton.color.base": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-base", name: "skeleton.color.base", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "skeleton.color.base": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-base", name: "skeleton.color.base", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
             "skeleton.color.highlight": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-highlight", name: "skeleton.color.highlight", ref: "semantic.color.background.highlight", fallback: .adaptive(light: "#f5a2a1", dark: "#900909")),
-            "skeleton.color.static": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-static", name: "skeleton.color.static", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "skeleton.color.static": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-static", name: "skeleton.color.static", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
             "skeleton.radius.sm": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-radius-sm", name: "skeleton.radius.sm", ref: "semantic.shape.radius.small", fallback: .string("4px")),
             "skeleton.radius.md": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-radius-md", name: "skeleton.radius.md", ref: "semantic.shape.radius.medium", fallback: .string("8px")),
             "skeleton.radius.lg": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-radius-lg", name: "skeleton.radius.lg", ref: "semantic.shape.radius.large", fallback: .string("16px")),
@@ -82,7 +82,7 @@ enum SkeletonTokens {
             "skeleton.radius.md": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-radius-md", name: "skeleton.radius.md", ref: "semantic.shape.radius.medium", fallback: .string("8px")),
         ],
         "variant_wipe": [
-            "skeleton.color.base": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-base", name: "skeleton.color.base", ref: "semantic.color.background.tertiary", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
+            "skeleton.color.base": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-color-base", name: "skeleton.color.base", ref: "semantic.color.background.tertiary", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
         ],
         "variant_compact": [
             "skeleton.gap.md": FsdsComponentTokenDefinition(cssVar: "--fsds-skeleton-gap-md", name: "skeleton.gap.md", ref: "skeleton.gap.compact", fallback: .string("4px")),

@@ -36,7 +36,7 @@ export class ShowMoreElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
@@ -58,7 +58,7 @@ export class ShowMoreElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
+      background-color: var(--fsds-show-more-color-background-default, #f7f7f7);
       color: var(--fsds-show-more-color-foreground-secondary, #474647);
       padding: var(--fsds-show-more-size-padding-default, 24px);
       border-radius: var(--fsds-show-more-size-radius-default, 6px);
@@ -147,7 +147,7 @@ export class ShowMoreContentElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
@@ -169,7 +169,7 @@ export class ShowMoreContentElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
+      background-color: var(--fsds-show-more-color-background-default, #f7f7f7);
       color: var(--fsds-show-more-color-foreground-secondary, #474647);
       padding: var(--fsds-show-more-size-padding-default, 24px);
       border-radius: var(--fsds-show-more-size-radius-default, 6px);
@@ -227,7 +227,7 @@ export class ShowMoreTriggerElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
@@ -249,7 +249,7 @@ export class ShowMoreTriggerElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      background-color: var(--fsds-show-more-color-background-default, #d0d0d0);
+      background-color: var(--fsds-show-more-color-background-default, #f7f7f7);
       color: var(--fsds-show-more-color-foreground-secondary, #474647);
       padding: var(--fsds-show-more-size-padding-default, 24px);
       border-radius: var(--fsds-show-more-size-radius-default, 6px);

@@ -18,12 +18,12 @@
       },
       "onColor": {
         "$type": "color",
-        "$value": "{color.palette.neutral.50}",
+        "$value": "{color.mode.white}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.50}",
-          "fsds.dark": "{color.palette.neutral.50}"
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.white}"
         },
-        "$description": "Text/icon on filled accent surfaces - fixed near-white for AA contrast"
+        "$description": "Text/icon on filled accent surfaces - pure white in both modes. background.accent (blue.500) is sized against white at 4.84:1; neutral.50 only reached 3.99:1 and failed AA."
       },
       "link": {
         "$type": "color",

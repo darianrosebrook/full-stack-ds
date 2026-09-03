@@ -209,7 +209,7 @@ export const selectTokenScopes = {
       name: "select.color.background.default",
       cssVar: "--fsds-select-color-background-default",
       ref: "semantic.color.background.hover",
-      fallback: "#b8b8b8",
+      fallback: "#f7f7f7",
     },
     "select.color.foreground.default": {
       name: "select.color.foreground.default",

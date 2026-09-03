@@ -41,7 +41,7 @@ export class DetailsElement extends LitElement {
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
@@ -58,7 +58,7 @@ export class DetailsElement extends LitElement {
     }
 
     .details__summary:hover:not([aria-disabled="true"]) {
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .details--compact {
@@ -68,7 +68,7 @@ export class DetailsElement extends LitElement {
 
     .details--inline {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
@@ -96,7 +96,7 @@ export class DetailsElement extends LitElement {
       color: var(--fsds-details-color-foreground-primary, #141414);
 
       &:hover:not([aria-disabled="true"]) {
-        background-color: var(--fsds-details-color-background-hover, #b8b8b8);
+        background-color: var(--fsds-details-color-background-hover, #f7f7f7);
         border-color: var(--fsds-details-color-border-hover, #888889);
       }
 
@@ -233,7 +233,7 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #a0a0a1);
       --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
@@ -250,7 +250,7 @@ export class DetailsContentElement extends LitElement {
     }
 
     .details__summary:hover:not([aria-disabled="true"]) {
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #b8b8b8);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #f7f7f7);
     }
 
     .details--compact {
@@ -260,7 +260,7 @@ export class DetailsContentElement extends LitElement {
 
     .details--inline {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
     }
 
@@ -288,7 +288,7 @@ export class DetailsContentElement extends LitElement {
       color: var(--fsds-details-color-foreground-primary, #141414);
 
       &:hover:not([aria-disabled="true"]) {
-        background-color: var(--fsds-details-color-background-hover, #b8b8b8);
+        background-color: var(--fsds-details-color-background-hover, #f7f7f7);
         border-color: var(--fsds-details-color-border-hover, #888889);
       }
 

@@ -42,7 +42,7 @@ enum CommandTokens {
             "command.text.sizeSmall": FsdsComponentTokenDefinition(cssVar: "--fsds-command-text-size-small", name: "command.text.sizeSmall", ref: "semantic.typography.body.04", fallback: .string("12px")),
             "command.shadow": FsdsComponentTokenDefinition(cssVar: "--fsds-command-shadow", name: "command.shadow", ref: "semantic.elevation.surface.floating", fallback: .string("0px 2px 4px #0000000f, 0px 4px 8px #0000001a")),
             "command.opacity.disabled": FsdsComponentTokenDefinition(cssVar: "--fsds-command-opacity-disabled", name: "command.opacity.disabled", ref: "semantic.interaction.disabled.opacity", fallback: .string("0.5")),
-            "command.color.backgroundHover": FsdsComponentTokenDefinition(cssVar: "--fsds-command-color-background-hover", name: "command.color.backgroundHover", ref: "semantic.interaction.background.hover", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "command.color.backgroundHover": FsdsComponentTokenDefinition(cssVar: "--fsds-command-color-background-hover", name: "command.color.backgroundHover", ref: "semantic.interaction.background.hover", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
         ],
     ]
 }

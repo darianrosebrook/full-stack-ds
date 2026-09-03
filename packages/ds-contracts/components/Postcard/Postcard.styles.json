@@ -60,7 +60,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "postcard.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "postcard.color.border.hover",

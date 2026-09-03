@@ -36,7 +36,7 @@ export class OTPElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-otp-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-otp-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-otp-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-otp-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -81,7 +81,7 @@ export class OTPElement extends LitElement {
       border-width: 1px;
       border-radius: var(--fsds-otp-size-radius-default, 6px);
       border-color: var(--fsds-otp-color-border-default, #b8b8b8);
-      background-color: var(--fsds-otp-color-background-default, #d0d0d0);
+      background-color: var(--fsds-otp-color-background-default, #f7f7f7);
       color: var(--fsds-otp-color-foreground-primary, #141414);
     }
 
@@ -160,7 +160,7 @@ export class OTPGroupElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
-      --fsds-otp-color-background-default: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-otp-color-background-default: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-otp-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-otp-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -205,7 +205,7 @@ export class OTPGroupElement extends LitElement {
       border-width: 1px;
       border-radius: var(--fsds-otp-size-radius-default, 6px);
       border-color: var(--fsds-otp-color-border-default, #b8b8b8);
-      background-color: var(--fsds-otp-color-background-default, #d0d0d0);
+      background-color: var(--fsds-otp-color-background-default, #f7f7f7);
       color: var(--fsds-otp-color-foreground-primary, #141414);
     }
 

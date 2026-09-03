@@ -295,10 +295,10 @@
           "--fsds-tabs-color-indicator": "var(--fsds-semantic-color-border-accent, #d92d2e)",
           "--fsds-tabs-shape-radius": "var(--fsds-semantic-shape-control-radius-default, 6px)",
           "--fsds-tabs-motion-indicator": "var(--fsds-core-motion-duration-short, 150ms)",
-          "--fsds-tabs-color-hover-bg": "var(--fsds-semantic-color-background-hover, #b8b8b8)",
+          "--fsds-tabs-color-hover-bg": "var(--fsds-semantic-color-background-hover, #f7f7f7)",
           "--fsds-tabs-color-hover-fg": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-tabs-color-active-fg": "var(--fsds-semantic-color-foreground-primary, #141414)",
-          "--fsds-tabs-color-active-bg": "var(--fsds-semantic-color-background-secondary, #d0d0d0)",
+          "--fsds-tabs-color-active-bg": "var(--fsds-semantic-color-background-secondary, #f7f7f7)",
           "--fsds-tabs-color-focus": "var(--fsds-semantic-color-border-accent, #d92d2e)",
           "--fsds-tabs-color-underline-active": "var(--fsds-semantic-color-border-accent, #d92d2e)",
           "--fsds-tabs-size-indicator-thickness": "2px",
@@ -349,14 +349,14 @@
         "selector": ".tabs__tab:hover",
         "declarations": {
           "color": "var(--fsds-tabs-color-hover-fg, #141414)",
-          "background-color": "var(--fsds-tabs-color-hover-bg, #b8b8b8)"
+          "background-color": "var(--fsds-tabs-color-hover-bg, #f7f7f7)"
         }
       },
       {
         "selector": ".tabs__tab--active",
         "declarations": {
           "color": "var(--fsds-tabs-color-active-fg, #141414)",
-          "background-color": "var(--fsds-tabs-color-active-bg, #d0d0d0)"
+          "background-color": "var(--fsds-tabs-color-active-bg, #f7f7f7)"
         }
       },
       {
@@ -449,7 +449,7 @@
       {
         "selector": ".tabs--pills .tabs__tab--active",
         "declarations": {
-          "background-color": "var(--fsds-tabs-color-active-bg, #d0d0d0)",
+          "background-color": "var(--fsds-tabs-color-active-bg, #f7f7f7)",
           "color": "var(--fsds-tabs-color-active-fg, #141414)"
         }
       },

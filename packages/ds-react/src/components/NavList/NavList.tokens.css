@@ -19,7 +19,7 @@
   --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
-  --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #d0d0d0);
+  --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f7f7f7);
   --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
   --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
   --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);

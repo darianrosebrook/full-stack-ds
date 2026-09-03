@@ -38,8 +38,8 @@ export class ButtonElement extends LitElement {
       --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
       --fsds-box-model-max-height: none;
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
-      --fsds-button-color-background-hover: var(--fsds-semantic-interaction-background-hover, #d0d0d0);
-      --fsds-button-color-background-active: var(--fsds-semantic-interaction-background-active, #b8b8b8);
+      --fsds-button-color-background-hover: var(--fsds-semantic-interaction-background-hover, #f7f7f7);
+      --fsds-button-color-background-active: var(--fsds-semantic-interaction-background-active, #d0d0d0);
       --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #b8b8b8);
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #727272);
@@ -173,12 +173,12 @@ export class ButtonElement extends LitElement {
       transition-timing-function: var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 
       &:hover:not(:disabled) {
-        background-color: var(--fsds-button-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-button-color-background-hover, #f7f7f7);
         border-color: var(--fsds-button-color-border-hover, #888889);
       }
 
       &:active:not(:disabled) {
-        background-color: var(--fsds-button-color-background-active, #b8b8b8);
+        background-color: var(--fsds-button-color-background-active, #d0d0d0);
       }
 
       &:focus-visible:not(:disabled) {

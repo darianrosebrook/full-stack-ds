@@ -124,11 +124,12 @@
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.9137254901960784,
-              0.9137254901960784,
-              0.9137254901960784
+              0.9686274509803922,
+              0.9686274509803922,
+              0.9686274509803922
             ]
-          }
+          },
+          "$description": "Lightest neutral (#f7f7f7) — the surface-tint step. The ramp previously started at #e9e9e9 and no semantic token referenced it, so every light surface role fell to neutral.100 (#d0d0d0), a border-weight grey. This step exists so a secondary/subtle/hover surface can sit close to white while borders stay at 100/200."
         },
         "100": {
           "$type": "color",

@@ -38,7 +38,7 @@ enum DetailsTokens {
             "details.size.radius.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-radius-default", name: "details.size.radius.default", ref: "semantic.shape.control.radius.default", fallback: .string("6px")),
             "details.size.icon": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-icon", name: "details.size.icon", ref: "core.spacing.size.05", fallback: .string("12px")),
             "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", ref: "semantic.color.background.primary", fallback: .adaptive(light: "#ffffff", dark: "#000000")),
-            "details.color.background.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-hover", name: "details.color.background.hover", ref: "semantic.color.background.hover", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
+            "details.color.background.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-hover", name: "details.color.background.hover", ref: "semantic.color.background.hover", fallback: .adaptive(light: "#f7f7f7", dark: "#474647")),
             "details.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-foreground-primary", name: "details.color.foreground.primary", ref: "semantic.color.foreground.primary", fallback: .adaptive(light: "#141414", dark: "#fafafa")),
             "details.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-default", name: "details.color.border.default", ref: "semantic.color.border.primary", fallback: .adaptive(light: "#a0a0a1", dark: "#5c5b5c")),
             "details.color.border.hover": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-hover", name: "details.color.border.hover", ref: "semantic.color.border.bold", fallback: .adaptive(light: "#888889", dark: "#727272")),
@@ -54,7 +54,7 @@ enum DetailsTokens {
             "details.typography.fontSize.compact": FsdsComponentTokenDefinition(cssVar: "--fsds-details-typography-font-size-compact", name: "details.typography.fontSize.compact", ref: "semantic.typography.body.04", fallback: .string("12px")),
         ],
         "hover": [
-            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", ref: "semantic.color.background.hover", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
+            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", ref: "semantic.color.background.hover", fallback: .adaptive(light: "#f7f7f7", dark: "#474647")),
         ],
         "variant_compact": [
             "details.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-padding-default", name: "details.size.padding.default", ref: "details.size.padding.compact", fallback: .string("8px")),
@@ -62,7 +62,7 @@ enum DetailsTokens {
         ],
         "variant_inline": [
             "details.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-size-padding-default", name: "details.size.padding.default", ref: "core.spacing.size.07", fallback: .string("24px")),
-            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#d0d0d0", dark: "#313131")),
+            "details.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-background-default", name: "details.color.background.default", ref: "semantic.color.background.secondary", fallback: .adaptive(light: "#f7f7f7", dark: "#313131")),
             "details.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-details-color-border-default", name: "details.color.border.default", ref: "semantic.color.border.subtle", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
         ],
     ]

@@ -197,7 +197,7 @@ export const sheetTokenScopes = {
       name: "sheet.color.backgroundHover",
       cssVar: "--fsds-sheet-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
   },
 } satisfies ComponentTokenScopes;

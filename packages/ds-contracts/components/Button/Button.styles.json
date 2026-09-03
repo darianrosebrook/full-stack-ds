@@ -358,7 +358,7 @@
   "hover": {
     "background-color": {
       "resolvesTo": "button.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "button.color.border.hover",
@@ -368,7 +368,7 @@
   "active": {
     "background-color": {
       "resolvesTo": "button.color.background.active",
-      "fallback": "#b8b8b8"
+      "fallback": "#d0d0d0"
     }
   },
   "focus": {

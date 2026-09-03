@@ -86,7 +86,7 @@
   ".card--interactive:hover": {
     "background-color": {
       "resolvesTo": "card.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "box-shadow": {
       "resolvesTo": "card.elevation.raised",

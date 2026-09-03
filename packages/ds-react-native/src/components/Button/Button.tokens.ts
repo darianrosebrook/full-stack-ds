@@ -92,13 +92,13 @@ export const buttonTokenScopes = {
       name: "button.color.background.hover",
       cssVar: "--fsds-button-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "button.color.background.active": {
       name: "button.color.background.active",
       cssVar: "--fsds-button-color-background-active",
       ref: "semantic.interaction.background.active",
-      fallback: "#b8b8b8",
+      fallback: "#d0d0d0",
     },
     "button.color.background.disabled": {
       name: "button.color.background.disabled",

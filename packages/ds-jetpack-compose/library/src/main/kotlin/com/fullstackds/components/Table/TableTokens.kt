@@ -102,7 +102,7 @@ val tableTokenScopes: ComponentTokenScopes = mapOf(
             name = "table.color.background.footer",
             cssVar = "--fsds-table-color-background-footer",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "table.border.width" to ComponentTokenDefinition(
             name = "table.border.width",
@@ -180,7 +180,7 @@ val tableTokenScopes: ComponentTokenScopes = mapOf(
             name = "table.color.background.hover",
             cssVar = "--fsds-table-color-background-hover",
             ref = "semantic.interaction.background.hover",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "table.color.background.selected" to ComponentTokenDefinition(
             name = "table.color.background.selected",

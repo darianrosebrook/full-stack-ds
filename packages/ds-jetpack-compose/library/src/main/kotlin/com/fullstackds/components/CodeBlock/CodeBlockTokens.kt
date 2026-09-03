@@ -88,7 +88,7 @@ val codeBlockTokenScopes: ComponentTokenScopes = mapOf(
             name = "code-block.color.background.default",
             cssVar = "--fsds-code-block-color-background-default",
             ref = "semantic.color.background.secondary",
-            fallback = "#d0d0d0",
+            fallback = "#f7f7f7",
         ),
         "code-block.color.foreground.primary" to ComponentTokenDefinition(
             name = "code-block.color.foreground.primary",

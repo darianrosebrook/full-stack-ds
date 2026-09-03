@@ -84,7 +84,7 @@ export const codeBlockTokenScopes = {
       name: "code-block.color.background.default",
       cssVar: "--fsds-code-block-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "code-block.color.foreground.primary": {
       name: "code-block.color.foreground.primary",

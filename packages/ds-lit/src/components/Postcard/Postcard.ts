@@ -37,7 +37,7 @@ export class PostcardElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-postcard-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-postcard-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -96,7 +96,7 @@ export class PostcardElement extends LitElement {
       color: var(--fsds-postcard-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-postcard-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-postcard-color-background-hover, #f7f7f7);
         border-color: var(--fsds-postcard-color-border-hover, #888889);
       }
     }
@@ -224,7 +224,7 @@ export class PostcardHeaderElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-postcard-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-postcard-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -283,7 +283,7 @@ export class PostcardHeaderElement extends LitElement {
       color: var(--fsds-postcard-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-postcard-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-postcard-color-background-hover, #f7f7f7);
         border-color: var(--fsds-postcard-color-border-hover, #888889);
       }
     }
@@ -375,7 +375,7 @@ export class PostcardContentElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-postcard-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-postcard-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -434,7 +434,7 @@ export class PostcardContentElement extends LitElement {
       color: var(--fsds-postcard-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-postcard-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-postcard-color-background-hover, #f7f7f7);
         border-color: var(--fsds-postcard-color-border-hover, #888889);
       }
     }
@@ -526,7 +526,7 @@ export class PostcardFooterElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-postcard-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #d0d0d0);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #f7f7f7);
       --fsds-postcard-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
       --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #888889);
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -585,7 +585,7 @@ export class PostcardFooterElement extends LitElement {
       color: var(--fsds-postcard-color-foreground-primary, #141414);
 
       &:hover {
-        background-color: var(--fsds-postcard-color-background-hover, #d0d0d0);
+        background-color: var(--fsds-postcard-color-background-hover, #f7f7f7);
         border-color: var(--fsds-postcard-color-border-hover, #888889);
       }
     }

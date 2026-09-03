@@ -49,7 +49,7 @@
 }
 
 .calendar__nav:hover:not([aria-disabled="true"]) {
-  background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
+  background-color: var(--fsds-calendar-color-day-hover, #f7f7f7);
   color: var(--fsds-calendar-color-foreground-primary, #141414);
 }
 
@@ -101,7 +101,7 @@
 }
 
 .calendar__day:hover:not([aria-disabled="true"]) {
-  background-color: var(--fsds-calendar-color-day-hover, #d0d0d0);
+  background-color: var(--fsds-calendar-color-day-hover, #f7f7f7);
 }
 
 .calendar__day:focus-visible:not([aria-disabled="true"]) {

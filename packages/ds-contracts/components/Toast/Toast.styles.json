@@ -50,7 +50,7 @@
   "item": {
     "background-color": {
       "resolvesTo": "toast.surface.bg",
-      "fallback": "#d0d0d0"
+      "fallback": "#f7f7f7"
     },
     "border-color": {
       "resolvesTo": "toast.surface.border",

@@ -86,7 +86,7 @@ export const toggleSwitchTokenScopes = {
       name: "toggle-switch.color.background.default",
       cssVar: "--fsds-toggle-switch-color-background-default",
       ref: "semantic.color.background.secondary",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "toggle-switch.color.foreground.default": {
       name: "toggle-switch.color.foreground.default",
@@ -116,7 +116,7 @@ export const toggleSwitchTokenScopes = {
       name: "toggle-switch.color.background.hover",
       cssVar: "--fsds-toggle-switch-color-background-hover",
       ref: "semantic.interaction.background.hover",
-      fallback: "#d0d0d0",
+      fallback: "#f7f7f7",
     },
     "toggle-switch.color.background.checked": {
       name: "toggle-switch.color.background.checked",
