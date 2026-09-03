@@ -183,3 +183,10 @@ evidence:
     command: "pnpm run audit:variant-realization"
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A12
+    status: pass
+    evidence_ref: "Structural/behavioral values appear and are adjudicated, not rejected: the ledger carries List.as ul/ol/dl, Popover/Tooltip/Walkthrough/Select placement, Toast.politeness, OTP.mode, Accordion.type, Tabs.activationMode, each with disposition=no-styling-intent. Case '<C>.<axis> non-default values are censused and carry a disposition' for Calendar.mode, NavList.orientation and OTP.mode. The ledger $comment states that until a contract fact declares a visual obligation this is a ratchet and not a semantic rejection rule, and that a row may be resolved by painting the value OR by retiring the overclaim. The one surviving false-positive control is pinned: 'the axis DEFAULT is never a gap'."
+    recorded_at: "2026-09-03T18:11:08.658Z"
+    command: node scripts/variant-style-audit/realization.test.mjs
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
