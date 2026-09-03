@@ -170,3 +170,7 @@ evidence:
     status: pass
     evidence_ref: "structural-behavioral (22): Popover/Tooltip/Walkthrough placement are anchored+flip-shift, so a CSS modifier would assert a runtime-flipped side — wrong, not merely absent; List.as is realized by the polymorphic root (const As = as ?? 'ul'); Accordion.type, Calendar.mode, OTP.mode, Tabs.activationMode, Toast.politeness are behavior/a11y facts"
     recorded_at: "2026-09-03T22:38:25.499Z"
+  - criterion_id: A14
+    status: pass
+    evidence_ref: "stale-vocabulary (3): Badge/Chip variant=default and Divider orientation=horizontal are base rules flagged only because the keyed prop declares no default (variantDefault reads only the declared default). Remedy is a one-line declaration. Details' two equivalents were in scope and are fixed, taking the ledger 45 -> 43"
+    recorded_at: "2026-09-03T22:38:36.754Z"
