@@ -36,3 +36,9 @@ contracts:
   - name: 'brand-layer-css'
     type: behavior
     path: 'packages/ds-tokens/build/generators/global.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Measured in the showcase with Chrome DevTools colour-scheme emulation forced to dark (prefers-color-scheme: dark = true), html data-theme=light, no data-brand. BEFORE: --fsds-semantic-color-border-light computed #474647 (neutral.700, the DARK value); six rules matched and the winner was the brand layer's unscoped @media dark :root. AFTER: it computes #b8b8b8 (neutral.200, the LIGHT value), and a real Card renders border 1px rgb(184,184,184) uniform on all four sides over a #f7f7f7 surface."
+    recorded_at: "2026-09-03T00:28:50.136Z"
+    commit_sha: b72a6d9f
