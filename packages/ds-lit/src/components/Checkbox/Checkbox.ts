@@ -49,14 +49,14 @@ export class CheckboxElement extends LitElement {
       &:hover .checkbox__indicator {
         --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-hover, #888889);
       }
-    }
 
-    :has(.checkbox__input:checked) .checkbox__indicator {
-      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
-    }
+      &:has(.checkbox__input:checked) .checkbox__indicator {
+        --fsds-checkbox-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #0566fe);
+      }
 
-    :has(.checkbox__input:disabled) .checkbox__indicator {
-      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #d0d0d0);
+      &:has(.checkbox__input:disabled) .checkbox__indicator {
+        --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #d0d0d0);
+      }
     }
 
     .checkbox {
@@ -74,6 +74,13 @@ export class CheckboxElement extends LitElement {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
+
+      &:has(.checkbox__input:focus-visible) .checkbox__indicator {
+        outline-width: var(--fsds-checkbox-focus-ring-width, 2px);
+        outline-color: var(--fsds-checkbox-focus-ring-color, #0566fe);
+        outline-style: var(--fsds-checkbox-focus-ring-style, solid);
+        outline-offset: var(--fsds-checkbox-focus-ring-offset, 2px);
+      }
     }
 
     .checkbox__input {
@@ -100,13 +107,6 @@ export class CheckboxElement extends LitElement {
       border-width: var(--fsds-checkbox-border-width, 1px);
       box-sizing: border-box;
       transition-duration: var(--fsds-checkbox-transition-duration, 150ms);
-    }
-
-    :has(.checkbox__input:focus-visible) .checkbox__indicator {
-      outline-width: var(--fsds-checkbox-focus-ring-width, 2px);
-      outline-color: var(--fsds-checkbox-focus-ring-color, #0566fe);
-      outline-style: var(--fsds-checkbox-focus-ring-style, solid);
-      outline-offset: var(--fsds-checkbox-focus-ring-offset, 2px);
     }
   `;
 

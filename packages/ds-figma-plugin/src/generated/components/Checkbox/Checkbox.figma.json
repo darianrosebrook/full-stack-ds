@@ -289,19 +289,19 @@
         }
       },
       {
-        "selector": ":has(.checkbox__input:checked) .checkbox__indicator",
+        "selector": ".checkbox:has(.checkbox__input:checked) .checkbox__indicator",
         "declarations": {
           "--fsds-checkbox-color-background-default": "var(--fsds-semantic-color-action-background-primary-default, #0566fe)"
         }
       },
       {
-        "selector": ":has(.checkbox__input:disabled) .checkbox__indicator",
+        "selector": ".checkbox:has(.checkbox__input:disabled) .checkbox__indicator",
         "declarations": {
           "--fsds-checkbox-color-background-default": "var(--fsds-semantic-color-background-disabled, #d0d0d0)"
         }
       },
       {
-        "selector": ":has(.checkbox__input:focus-visible) .checkbox__indicator",
+        "selector": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator",
         "declarations": {
           "outline-width": "var(--fsds-checkbox-focus-ring-width, 2px)",
           "outline-color": "var(--fsds-checkbox-focus-ring-color, #0566fe)",
