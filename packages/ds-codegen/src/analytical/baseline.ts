@@ -30,6 +30,7 @@ export const BASELINE_FILE = path.join(CONTRACTS, "analytical-fixtures/baseline-
 const INPUTS: Record<string, string> = {
   "relation-model.ts": path.join(HERE, "relation-model.ts"),
   "engines.ts": path.join(HERE, "engines.ts"),
+  "codes.ts": path.join(HERE, "codes.ts"),
   "derivation.ts": path.join(HERE, "derivation.ts"),
   "judgment.ts": path.join(HERE, "judgment.ts"),
   "relation.contract.schema.json": path.join(CONTRACTS, "relation.contract.schema.json"),

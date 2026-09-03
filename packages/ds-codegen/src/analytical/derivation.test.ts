@@ -10,7 +10,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkDerivations, DERIVATION_DIAG, DERIVATION_OBLIGATION, derivationKey, inputsOf } from "./derivation.js";
+import { OBLIGATION } from "./codes.js";
+import { checkDerivations, DERIVATION_DIAG, derivationKey, inputsOf } from "./derivation.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import { CONTRACTS_DIR } from "./necessity.js";
@@ -241,15 +242,19 @@ describe("derivationKey is a stable identity, not a spelling", () => {
     const decl = { kind: "graph", from: "e", edgeFrom: "s", edgeTo: "t" } as const;
     expect(derivationKey(decl)).toBe("graph");
     expect(derivationKey({ ...decl, requiresConservation: true })).toBe("graph(requiresConservation)");
-    // The boundary never asserts that conservation HOLDS: that needs rows, and
-    // the corpus twin expects `unproven` until they arrive.
+    // The boundary never asserts that conservation HOLDS: that needs rows. The
+    // declaration raises the question and nothing more, so with no rows the
+    // result is the outstanding obligation, never a discharge and never a
+    // refutation.
     const s = valid({
       relations: {
         e: { grain: ["s"], fields: { s: key, t: key, v: ratio } },
         g: { grain: ["s"], fields: { s: key, t: key, v: ratio }, derivedBy: { ...decl, value: "v", requiresConservation: true } },
       },
     });
-    expect(codes(s)).toEqual([]);
+    const f = findings(s);
+    expect(f.map((x) => x.kind)).toEqual(["obligation"]);
+    expect(f[0].term).toBe("invariant:conservation");
   });
 
   it("names the relations a derivation reads", () => {
@@ -384,7 +389,12 @@ describe("silence is proven admissibility, not absence of contradiction", () => 
       undetermined: {
         relations: {
           src: { grain: ["day"], fields: { day: key, v: ratio } },
-          binned: { grain: ["day"], fields: { day: key, v: ratio }, derivedBy: { kind: "bin", from: "src", field: "day" } },
+          binned: {
+            grain: ["day"],
+            fields: { day: key, v: ratio },
+            // The closure is declared so the ONLY thing outstanding is the grain.
+            derivedBy: { kind: "bin", from: "src", field: "day", closure: "left-closed" },
+          },
         },
       },
       // A determined grain cannot be laundered into `unknown`: declaring
@@ -393,7 +403,11 @@ describe("silence is proven admissibility, not absence of contradiction", () => 
       refuted: {
         relations: {
           src: { grain: ["id"], fields: { id: key, amount: ratio } },
-          binned: { grain: "unknown", fields: { id: key, amount: ratio }, derivedBy: { kind: "bin", from: "src", field: "amount" } },
+          binned: {
+            grain: "unknown",
+            fields: { id: key, amount: ratio },
+            derivedBy: { kind: "bin", from: "src", field: "amount", closure: "right-closed" },
+          },
         },
       },
     },
@@ -511,11 +525,11 @@ describe("silence is proven admissibility, not absence of contradiction", () => 
           const f = findings(valid(c.undetermined));
           expect(f).toHaveLength(1);
           expect(f[0].kind).toBe("obligation");
-          expect(f[0].term).toBe(DERIVATION_OBLIGATION.GRAIN_DECLARED);
+          expect(f[0].term).toBe(OBLIGATION.GRAIN_DECLARED);
           expect(f[0].code).toBeUndefined();
           const j = judge(c.undetermined as RelationalStructure, []);
           expect(j.status).toBe("unproven");
-          expect(termsOf(j)).toContain(DERIVATION_OBLIGATION.GRAIN_DECLARED);
+          expect(termsOf(j)).toContain(OBLIGATION.GRAIN_DECLARED);
           expect(codesOf(j)).toEqual([]);
         });
       }
@@ -537,7 +551,7 @@ describe("silence is proven admissibility, not absence of contradiction", () => 
     const vocabulary = JSON.parse(
       fs.readFileSync(path.join(CONTRACTS_DIR, "analytical-pack", "vocabulary.json"), "utf-8"),
     ) as { namespaces: Record<string, string[]> };
-    const [ns, name] = DERIVATION_OBLIGATION.GRAIN_DECLARED.split(":");
+    const [ns, name] = OBLIGATION.GRAIN_DECLARED.split(":");
     expect(vocabulary.namespaces[ns]).toContain(name);
   });
 
@@ -558,8 +572,8 @@ describe("silence is proven admissibility, not absence of contradiction", () => 
       },
     }) as RelationalStructure;
     const j = judge(undecided, [{ kind: "aggregate", relation: "joined", field: "rank", op: "mean" }] as never);
-    expect(termsOf(j)).toContain(DERIVATION_OBLIGATION.GRAIN_DECLARED);
-    expect(j.diagnostics.map((d) => d.code)).toEqual(["REL_MEANINGFULNESS_ORDINAL_MEAN"]);
+    expect(termsOf(j)).toContain(OBLIGATION.GRAIN_DECLARED);
+    expect(j.diagnostics.map((d) => d.code)).toContain("REL_MEANINGFULNESS_ORDINAL_MEAN");
     expect(j.status).toBe("illegal");
   });
 });

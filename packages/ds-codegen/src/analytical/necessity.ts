@@ -42,8 +42,15 @@ const DOCTRINE = path.resolve(HERE, "../../../../docs/architecture/analytical-re
  * array: a rule that lives in a module absent from it can change while the
  * holdout still claims to have been authored against the current rules. Adding
  * a rule module here is part of adding the module, not a follow-up.
+ *
+ * The order is append-only, so the digest's history reads as a sequence of
+ * widenings rather than a sequence of reorderings.
  */
-export const RULE_SOURCES: readonly string[] = [path.join(HERE, "engines.ts"), path.join(HERE, "derivation.ts")];
+export const RULE_SOURCES: readonly string[] = [
+  path.join(HERE, "engines.ts"),
+  path.join(HERE, "derivation.ts"),
+  path.join(HERE, "codes.ts"),
+];
 
 /** The oracle-required outcome of a stimulus: status and the set of codes/terms. */
 export interface Outcome {

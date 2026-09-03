@@ -21,7 +21,13 @@ import type { Assertion } from "./relation-model.js";
 export type EvidenceClass = "schema" | "instance";
 export type Status = "admissible" | "illegal" | "unproven";
 /** The vocabulary's engine names that stage 1 implements. */
-export type Engine = "meaningfulness" | "additivity" | "dimensional" | "declaration-missing" | "derivation-typing";
+export type Engine =
+  | "meaningfulness"
+  | "additivity"
+  | "dimensional"
+  | "declaration-missing"
+  | "derivation-typing"
+  | "task-invariant";
 
 export interface OccurrenceBase {
   subject: string;
@@ -39,13 +45,19 @@ export interface ObligationOccurrence extends OccurrenceBase {
 }
 
 /**
- * A finding about a DERIVATION, not about an assertion.
+ * A finding about the DERIVATION LAYER, not about an assertion.
  *
  * A malformed join is a defect whether or not any assertion reads it, so it
  * cannot borrow an assertion's identity: forcing it through one would make a
  * fixture invent an assertion just to run a structural rule, and would emit the
  * same structural defect once per reader. `derivation` is its own stable key
  * (`derivationKey`), the analogue of `assertionKey`.
+ *
+ * The domain covers findings ABOUT derivations as well as findings about a
+ * single one — two peers whose derivations aggregate to different target grains
+ * is a defect of the derivation layer with no assertion and no single owning
+ * operator, and it is keyed by the peer set's structural key for the same
+ * reason.
  */
 export interface DerivationOccurrence {
   /** `diagnostic`: the declared result is refuted. `obligation`: undecided. */

@@ -32,6 +32,7 @@
  * REL_NULL_SUPPRESSED_AS_ZERO). They are instance-evidence behaviour: they
  * confer no stage-1 schema necessity (REL-FIELD-ALGEBRA-02, invariant 9).
  */
+import { DIAG, OBLIGATION } from "./codes.js";
 import { checkDerivations, inputsOf } from "./derivation.js";
 import type { Assertion, Evidence, FieldDecl, RelationDecl, RelationalStructure } from "./relation-model.js";
 import { normalizeObservation, type Observation } from "./structure.js";
@@ -45,31 +46,7 @@ import {
   normalizeJudgment,
 } from "./judgment.js";
 
-export const DIAG = {
-  ORDINAL_MEAN: "REL_MEANINGFULNESS_ORDINAL_MEAN",
-  INTERVAL_RATIO: "REL_MEANINGFULNESS_INTERVAL_RATIO",
-  INTERVAL_SUM: "REL_MEANINGFULNESS_INTERVAL_SUM",
-  NOMINAL_ORDER_STAT: "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT",
-  CYCLIC_LINEAR_MEAN: "REL_MEANINGFULNESS_CYCLIC_LINEAR_MEAN",
-  IDENTITY_AGGREGATED: "REL_IDENTITY_AGGREGATED",
-  TEMPORAL_INSTANT_SUM: "REL_TEMPORAL_INSTANT_SUM",
-  SUM_SEMIADDITIVE: "REL_ADDITIVITY_SUM_SEMIADDITIVE",
-  RATIO_MEASURE_AVERAGED: "REL_RATIO_MEASURE_AVERAGED",
-  GRAIN_FANOUT: "REL_GRAIN_FANOUT",
-  PROPORTION_SUM_ACROSS_WHOLES: "REL_PROPORTION_SUM_ACROSS_WHOLES",
-  UNIT_SUM_INCOMMENSURABLE: "REL_UNIT_SUM_INCOMMENSURABLE",
-  PROPORTION_WHOLE_UNDECLARED: "REL_PROPORTION_WHOLE_UNDECLARED",
-  INDEX_BASE_MISSING: "REL_INDEX_BASE_MISSING",
-  UNCERTAINTY_UNPROPAGATED: "REL_UNCERTAINTY_UNPROPAGATED",
-  NULL_CENSORED_AS_OBSERVED: "REL_NULL_CENSORED_AS_OBSERVED",
-  NULL_SUPPRESSED_AS_ZERO: "REL_NULL_SUPPRESSED_AS_ZERO",
-} as const;
-
-export const OBLIGATION = {
-  GRAIN_DECLARED: "grain:declared",
-  UNIT_COMMENSURABLE: "unit:commensurable",
-  NULL_MISSING_MECHANISM: "null:missing-mechanism",
-} as const;
+export { DIAG, OBLIGATION } from "./codes.js";
 
 export interface RuleContext {
   structure: RelationalStructure;
@@ -115,6 +92,46 @@ const combines = (a: Assertion) => a.kind === "aggregate";
 const opOf = (a: Assertion) => ("op" in a ? a.op : undefined);
 /** Does the assertion combine VALUES (not just count rows)? */
 const combinesValues = (a: Assertion) => combines(a) && opOf(a) !== "count";
+/** Does the result depend on how many rows carry each value? */
+const multiplicitySensitive = (a: Assertion) => combines(a) && opOf(a) !== "min";
+
+/**
+ * What a join's fan-out does to each field, read from the cardinality alone.
+ *
+ * The side that does NOT survive at row granularity has each of its rows
+ * matched by several rows of the other. `one-to-many` names `from` as that
+ * side, `many-to-one` names `with`, `many-to-many` names both, and
+ * `one-to-one` names neither. Two different things then go wrong, and they are
+ * reached by different fields:
+ *
+ * - `values`: a measure carried only by the repeated side appears once per
+ *   match, so summing or averaging it is taken over the wrong multiset. A
+ *   field on both sides is excluded — a join key carries the same value either
+ *   way, so nothing about it is manufactured here.
+ * - `identity`: a grain column of the repeated side no longer identifies a
+ *   row. Counting it counts rows of the SURVIVING side while naming the
+ *   repeated side's identity — "orders" that are really order lines. This one
+ *   deliberately includes fields present on both sides, because the foreign
+ *   key that both carry is exactly the column that gets counted.
+ */
+function fanOut(
+  structure: RelationalStructure,
+  relation: RelationDecl,
+): { values: Set<string>; identity: Set<string> } | undefined {
+  const d = relation.derivedBy;
+  if (d?.kind !== "join" || d.cardinality === "one-to-one") return undefined;
+  const left = structure.relations[d.from];
+  const right = structure.relations[d.with];
+  if (!left || !right) return undefined;
+  const repeated: RelationDecl[] =
+    d.cardinality === "one-to-many" ? [left] : d.cardinality === "many-to-one" ? [right] : [left, right];
+  const other = (r: RelationDecl) => (r === left ? right : left);
+  const carried = (f: string) => f in relation.fields;
+  return {
+    values: new Set(repeated.flatMap((r) => Object.keys(r.fields).filter((f) => !(f in other(r).fields) && carried(f)))),
+    identity: new Set(repeated.flatMap((r) => (r.grain === "unknown" ? [] : r.grain.filter(carried)))),
+  };
+}
 
 export const meaningfulness: Rule = {
   name: "meaningfulness",
@@ -172,6 +189,14 @@ export const additivity: Rule = {
       else if (ctx.rows && hasDuplicates(ctx.rows, witness)) diag(out, ctx, E, DIAG.GRAIN_FANOUT, "instance", relationName);
     }
     const op = opOf(a);
+    // Fan-out is decidable from the DECLARATION once the join says its
+    // cardinality — that is what the cardinality coordinate is for. `min` is
+    // exempt from both branches because repetition does not move an order
+    // statistic.
+    const fan = multiplicitySensitive(a) ? fanOut(ctx.structure, relation) : undefined;
+    if (fan && (op === "count" ? fan.identity.has(ctx.fieldName) : fan.values.has(ctx.fieldName))) {
+      diag(out, ctx, E, DIAG.GRAIN_FANOUT, "schema");
+    }
     if (a.kind === "aggregate" && op === "sum" && f.additivity?.kind === "semi-additive") {
       const along = a.along;
       const blocked = f.additivity.nonAdditiveAlong;
@@ -278,7 +303,7 @@ export function judge(
   // meaning acquiring authority before its premise. Evaluating everything and
   // then appending the structural defect prevents laundering only at the
   // headline; the occurrences underneath would still have been manufactured.
-  const boundary = checkDerivations(structure);
+  const boundary = checkDerivations(structure, evidence);
   // Only REFUTATION removes standing. An undecided derivation narrows what can
   // be concluded but does not block, so its assertions still evaluate and carry
   // the obligation forward — the doctrine's rule that unproven preconditions
@@ -312,12 +337,9 @@ export function judge(
     };
     for (const r of rules) r.apply(ctx, out);
   }
-  const derivations = boundary.map((o) => ({
-    ...o,
-    engine: "derivation-typing" as const,
-    evidenceClass: "schema" as const,
-  }));
-  return normalizeJudgment({ ...out, derivations });
+  // The boundary's findings carry their own engine and evidence class: it is
+  // one module but not one engine, and provenance is per rule.
+  return normalizeJudgment({ ...out, derivations: boundary });
 }
 
 /**

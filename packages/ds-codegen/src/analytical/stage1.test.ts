@@ -299,7 +299,7 @@ describe("A8 — holdout authored against the recorded rule digest", () => {
     // A digest over a subset would let a rule move into an undigested module
     // and change freely while the holdout still reported itself current. Every
     // module `judge` reaches for a RULE (not for a type or a path) belongs here.
-    expect(RULE_SOURCES.map((p) => path.basename(p)).sort()).toEqual(["derivation.ts", "engines.ts"]);
+    expect(RULE_SOURCES.map((p) => path.basename(p)).sort()).toEqual(["codes.ts", "derivation.ts", "engines.ts"]);
     for (const p of RULE_SOURCES) expect(fs.existsSync(p), p).toBe(true);
   });
 
