@@ -1,0 +1,36 @@
+id: FIX-SUITE-TIMEOUT-FLAKE-01
+title: 'Root vitest suite flakes: module-registry tests race the 5s default timeout under parallel load'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-03T00:58:52.201Z'
+updated_at: '2026-09-03T00:58:52.201Z'
+blast_radius:
+  modules:
+    - 'ds-figma-plugin'
+    - 'ds-codegen'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-figma-plugin/src/ui.test.ts'
+    - 'packages/ds-figma-plugin/src/plugin.test.ts'
+    - 'packages/ds-codegen/src/cli.test.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the root vitest suite run under full 244-file parallel load; when pnpm test is executed repeatedly; then no test in the three vi.resetModules+dynamic-import files fails with ''Test timed out in 5000ms'''
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given ui.test.ts whose second case asserts a ''Missing #app root.'' throw; when the suite runs under load; then it never reports the cascaded ''from_html is not a function'' assertion produced by resetModules racing an in-flight import'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the timeout budgets are raised; when a test genuinely hangs; then it still fails rather than hanging the runner, and the raised budget is scoped to the three affected files only'
+non_functional: {}
+contracts: []
