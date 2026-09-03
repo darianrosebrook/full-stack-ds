@@ -2,9 +2,10 @@ id: ADJUDICATE-WEB-STYLE-REALIZATION-DEBT-01
 title: 'Adjudicate web style-realization debt: burn the determinate forward carriers, decide the inverse axes'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: style-debt-adjudication
 created_at: '2026-09-03T19:21:26.605Z'
-updated_at: '2026-09-03T19:21:26.605Z'
+updated_at: '2026-09-03T22:34:46.057Z'
 created_by_session: 'd97cce86-6592-41ba-857f-a6ec646948c1'
 blast_radius:
   modules:
@@ -34,6 +35,9 @@ scope:
     - 'packages/ds-lit/src'
     - 'packages/ds-react-native/src'
     - 'e2e'
+    - packages/ds-figma-plugin/src/generated
+    - packages/ds-codegen/src
+    - docs/state-suppression-audit
   out: []
 invariants:
   - 'A reachability or realization finding is evidence of disagreement, not authority about which side is wrong'
