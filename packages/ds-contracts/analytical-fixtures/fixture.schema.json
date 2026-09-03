@@ -504,7 +504,7 @@
                 }
               ]
             },
-            "conserved": {
+            "requiresConservation": {
               "type": "boolean",
               "const": true
             }

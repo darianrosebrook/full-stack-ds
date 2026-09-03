@@ -38,10 +38,30 @@ export interface ObligationOccurrence extends OccurrenceBase {
   term: string;
 }
 
+/**
+ * A finding about a DERIVATION, not about an assertion.
+ *
+ * A malformed join is a defect whether or not any assertion reads it, so it
+ * cannot borrow an assertion's identity: forcing it through one would make a
+ * fixture invent an assertion just to run a structural rule, and would emit the
+ * same structural defect once per reader. `derivation` is its own stable key
+ * (`derivationKey`), the analogue of `assertionKey`.
+ */
+export interface DerivationOccurrence {
+  code: string;
+  subject: string;
+  derivation: string;
+  engine: Engine;
+  evidenceClass: EvidenceClass;
+  detail: string;
+}
+
 export interface Judgment {
   status: Status;
   diagnostics: DiagnosticOccurrence[];
   obligations: ObligationOccurrence[];
+  /** Findings from the derivation boundary. Empty for a structure with no derivations. */
+  derivations: DerivationOccurrence[];
 }
 
 /**
@@ -60,8 +80,14 @@ export function assertionKey(a: Assertion): string {
 }
 
 /** Any proven illegality wins; otherwise any outstanding premise; otherwise admissible. */
-export function deriveStatus(diagnostics: readonly DiagnosticOccurrence[], obligations: readonly ObligationOccurrence[]): Status {
-  if (diagnostics.length > 0) return "illegal";
+export function deriveStatus(
+  diagnostics: readonly DiagnosticOccurrence[],
+  obligations: readonly ObligationOccurrence[],
+  derivations: readonly DerivationOccurrence[] = [],
+): Status {
+  // An uncertified derivation is a proven illegality of the structure, not a
+  // missing premise: the declared result is one the operator cannot produce.
+  if (diagnostics.length > 0 || derivations.length > 0) return "illegal";
   if (obligations.length > 0) return "unproven";
   return "admissible";
 }
@@ -70,7 +96,11 @@ const key = (o: OccurrenceBase & ({ code: string } | { term: string })) =>
   `${"code" in o ? o.code : o.term}|${o.subject}|${o.assertion}|${o.engine}|${o.evidenceClass}`;
 
 /** Sort and dedupe occurrences so the serialization is order-independent. */
-export function normalizeJudgment(j: { diagnostics: DiagnosticOccurrence[]; obligations: ObligationOccurrence[] }): Judgment {
+export function normalizeJudgment(j: {
+  diagnostics: DiagnosticOccurrence[];
+  obligations: ObligationOccurrence[];
+  derivations?: DerivationOccurrence[];
+}): Judgment {
   const dedupe = <T extends OccurrenceBase & ({ code: string } | { term: string })>(xs: T[]): T[] => {
     const seen = new Map<string, T>();
     for (const x of xs) seen.set(key(x), x);
@@ -78,7 +108,13 @@ export function normalizeJudgment(j: { diagnostics: DiagnosticOccurrence[]; obli
   };
   const diagnostics = dedupe(j.diagnostics);
   const obligations = dedupe(j.obligations);
-  return { status: deriveStatus(diagnostics, obligations), diagnostics, obligations };
+  // A derivation occurrence is keyed by its own identity, so one malformed
+  // join referenced by three assertions is one finding, not three.
+  const dkey = (d: DerivationOccurrence) => `${d.code}|${d.subject}|${d.derivation}|${d.engine}|${d.evidenceClass}`;
+  const seenD = new Map<string, DerivationOccurrence>();
+  for (const d of j.derivations ?? []) seenD.set(dkey(d), d);
+  const derivations = [...seenD.values()].sort((a, b) => dkey(a).localeCompare(dkey(b)));
+  return { status: deriveStatus(diagnostics, obligations, derivations), diagnostics, obligations, derivations };
 }
 
 /** Byte-stable form for digests, ledgers, and permutation tests. */
@@ -93,7 +129,10 @@ export function canonicalJudgment(j: Judgment): string {
 
 /** The distinct diagnostic codes in a judgment. */
 export function codesOf(j: Judgment): string[] {
-  return [...new Set(j.diagnostics.map((d) => d.code))].sort();
+  // Both domains normalise into one answer: a caller asking what is wrong with
+  // a structure should not have to know whether the defect was exposed by an
+  // assertion or by the derivation boundary.
+  return [...new Set([...j.diagnostics.map((d) => d.code), ...j.derivations.map((d) => d.code)])].sort();
 }
 
 /** The distinct obligation terms in a judgment. */

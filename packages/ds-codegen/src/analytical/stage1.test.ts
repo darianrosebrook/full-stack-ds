@@ -31,7 +31,7 @@ const fx = (id: string): Fixture => {
   return f;
 };
 const judgeFixture = (f: Fixture): Judgment => judge(f.structure, f.assertions, f.evidence);
-const ADMISSIBLE = canonicalJudgment({ status: "admissible", diagnostics: [], obligations: [] });
+const ADMISSIBLE = canonicalJudgment({ status: "admissible", diagnostics: [], obligations: [], derivations: [] });
 
 describe("A1 — every stage-1 case yields exactly its expected judgment", () => {
   it("has a non-empty stage-1 case set", () => {

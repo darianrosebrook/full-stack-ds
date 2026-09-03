@@ -137,11 +137,21 @@ export const Derivation = z
     /** Relational projection: keep these fields. What is dropped is derived, not declared. */
     z.strictObject({ kind: z.literal("project"), from: Name, keep: z.array(Name).min(1) }),
     /**
-     * Read a relation as edges. `conserved` declares the flow invariant; it is
-     * an invariant on the derivation, NOT a perceptual task — the task table is
-     * L3.5 and stays out of stage 2.
+     * Read a relation as edges.
+     *
+     * `requiresConservation` is a REQUIREMENT, never a finding: it says this
+     * graph claims flow is conserved, not that anything has checked. The two
+     * cannot share a field. The corpus depends on exactly this split — one
+     * case expects `REL_FLOW_NOT_CONSERVED` once rows show a leak, and its twin
+     * expects `unproven` with the `invariant:conservation` obligation while the
+     * edge values are unseen. A boolean that meant "observed to conserve" could
+     * not produce the second, and a declaration that were treated as evidence
+     * would silently discharge it.
+     *
+     * It is an invariant on the derivation, NOT a perceptual task — the task
+     * table is L3.5 and stays out of stage 2.
      */
-    z.strictObject({ kind: z.literal("graph"), from: Name, edgeFrom: Name, edgeTo: Name, value: Name.optional(), conserved: z.literal(true).optional() }),
+    z.strictObject({ kind: z.literal("graph"), from: Name, edgeFrom: Name, edgeTo: Name, value: Name.optional(), requiresConservation: z.literal(true).optional() }),
   ])
   .meta({ id: "derivation" });
 
@@ -256,6 +266,8 @@ export type AdditivityDecl = z.infer<typeof Additivity>;
 export type PermitsDecl = z.infer<typeof Permits>;
 export type FieldDecl = z.infer<typeof Field>;
 export type RelationDecl = z.infer<typeof Relation>;
+export type DerivationDecl = z.infer<typeof Derivation>;
+export type JoinCardinalityDecl = z.infer<typeof JoinCardinality>;
 export type RelationalStructure = z.infer<typeof RelationalStructure>;
 export type AggregateOp = z.infer<typeof AggregateAssertion>["op"];
 export type Assertion = z.infer<typeof Assertion>;

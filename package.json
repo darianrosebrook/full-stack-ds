@@ -17,6 +17,8 @@
     "analytical:check-schemas": "tsx packages/ds-codegen/src/analytical/emit-schemas.ts --check",
     "analytical:baseline": "tsx packages/ds-codegen/src/analytical/baseline.ts",
     "analytical:check-baseline": "tsx packages/ds-codegen/src/analytical/baseline.ts --check --ledger-only --rewrites",
+    "analytical:pending": "tsx packages/ds-codegen/src/analytical/pending-gate.ts",
+    "analytical:pending:gate": "tsx packages/ds-codegen/src/analytical/pending-gate.ts --gate",
     "generate": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js",
     "generate:all": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=all",
     "generate:react-native": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=react-native",

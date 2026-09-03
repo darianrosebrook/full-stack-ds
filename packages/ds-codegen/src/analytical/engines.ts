@@ -32,6 +32,7 @@
  * REL_NULL_SUPPRESSED_AS_ZERO). They are instance-evidence behaviour: they
  * confer no stage-1 schema necessity (REL-FIELD-ALGEBRA-02, invariant 9).
  */
+import { checkDerivations } from "./derivation.js";
 import type { Assertion, Evidence, FieldDecl, RelationDecl, RelationalStructure } from "./relation-model.js";
 import { normalizeObservation, type Observation } from "./structure.js";
 import {
@@ -293,5 +294,15 @@ export function judge(
     };
     for (const r of rules) r.apply(ctx, out);
   }
-  return normalizeJudgment(out);
+  // The derivation boundary runs over the STRUCTURE, independently of any
+  // assertion. That is what makes the assertion rules' blindness to
+  // base-versus-derived sound: an assertion may treat a derived relation as
+  // authoritative only because the boundary certified it first. Structures
+  // with no derivations produce an empty set and are unaffected.
+  const derivations = checkDerivations(structure).map((o) => ({
+    ...o,
+    engine: "derivation-typing" as const,
+    evidenceClass: "schema" as const,
+  }));
+  return normalizeJudgment({ ...out, derivations });
 }
