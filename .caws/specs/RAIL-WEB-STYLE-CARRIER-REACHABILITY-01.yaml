@@ -148,3 +148,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "Case 'DIRECTION: an emitted variant class with no CSS rule is not a finding here' — a Checkbox-shaped fixture declaring size sm/md/lg with empty styles returns []. The forward validator answers only 'does authored CSS demand an impossible carrier'. The inverse question is censused separately by scripts/variant-style-audit (47 findings), and the two rails cross-reference each other in their report headers."
+    recorded_at: "2026-09-03T18:10:32.087Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
