@@ -68,9 +68,22 @@ describe("C0 — provenance of the two censuses", () => {
     const carried = new Set([...Object.values(removals.leafMap), ...removals.factorized["field.scale"].into]);
     for (const c of kernel) {
       if (c.kind === "reference") continue;
+      // member-absence is a coordinate CLASS the stage-1 census could not
+      // express, not a new kernel fact: the schema it walked is unchanged, so
+      // these ids have no stage-1 counterpart by construction. They are
+      // dispositioned against the stage-2 oracle below, not here.
+      if (c.kind === "member-absence") continue;
       const known = stage1Ids.has(c.id) || carried.has(c.leaf);
       expect(known, `${c.id} is a kernel coordinate the stage-1 census never carried`).toBe(true);
     }
+  });
+  it("the refined census adds member-absence only as a new class over the same schema", () => {
+    const absence = kernel.filter((c) => c.kind === "member-absence");
+    // Every one belongs to a leaf the kernel already carries: refining the
+    // census must not smuggle in a new leaf.
+    for (const c of absence) expect(kernelIds.has(c.leaf), `${c.id} has no kernel leaf`).toBe(true);
+    expect(count(kernel)).toEqual({ leaves: 26, pairs: 21, references: 4 });
+    expect(absence).toHaveLength(10);
   });
 });
 
@@ -95,8 +108,42 @@ describe("C2 — every witness holds", () => {
 describe("C1 — coverage: every kernel coordinate is ratified", () => {
   const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
   it("every leaf and member pair of the kernel has a holding witness", () => {
-    const missing = kernel.filter(isCoordinate).filter((c) => !ratified.has(c.id)).map((c) => c.id);
+    const missing = kernel
+      .filter(isCoordinate)
+      .filter((c) => c.kind !== "member-absence")
+      .filter((c) => !ratified.has(c.id))
+      .map((c) => c.id);
     expect(missing).toEqual([]);
+  });
+  /**
+   * The member-absence class is the open obligation of REL-VIEW-ALGEBRA-01 A4,
+   * and it is enumerated here so it cannot be forgotten or quietly absorbed.
+   * The slice may not close with this list non-empty: each id must either earn
+   * a witness against the stage-2 oracle or leave the kernel with a removals
+   * entry. It is deliberately NOT dispositioned yet — a coordinate that stage 1
+   * cannot separate may be separable once the stage-2 derivations exist, and
+   * ablating before that would remove something the next commit re-earns.
+   */
+  it("the member-absence class is undispositioned, and it is exactly these ten", () => {
+    const pending = kernel
+      .filter((c) => c.kind === "member-absence")
+      .filter((c) => !ratified.has(c.id))
+      .map((c) => c.id)
+      .sort();
+    expect(pending).toEqual(
+      [
+        "assertion.aggregate.nulls:as-observed~<absent>",
+        "assertion.aggregate.nulls:as-zero~<absent>",
+        "assertion.aggregate.nulls:exclude~<absent>",
+        "field.additivity.kind:additive~<absent>",
+        "field.additivity.kind:ratio-measure~<absent>",
+        "field.additivity.kind:semi-additive~<absent>",
+        "field.temporality.kind:instant~<absent>",
+        "field.temporality.kind:interval~<absent>",
+        "observation.null:absent~<absent>",
+        "observation.null:censored~<absent>",
+      ].sort(),
+    );
   });
   it("no witness names a coordinate the kernel does not have", () => {
     const phantom = [...ratified].filter((id) => !kernelIds.has(id));
@@ -221,8 +268,8 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
       if (d.state === "not-yet-admitted") expect(d.reintroducibleAt, `${c.id}: ${d.reason}`).toBeGreaterThanOrEqual(2);
     }
   });
-  it("the live kernel census is exactly the ratified set (post-removal equality)", () => {
-    const live = kernel.filter(isCoordinate).map((c) => c.id).sort();
+  it("the live kernel census is exactly the ratified set, less the undispositioned member-absence class", () => {
+    const live = kernel.filter(isCoordinate).filter((c) => c.kind !== "member-absence").map((c) => c.id).sort();
     expect(live).toEqual([...ratified].sort());
   });
   it("every ratified stage-1 coordinate resolves to a kernel coordinate that exists", () => {
@@ -291,8 +338,45 @@ describe("C8 — the census is derived, exhaustive and exactly-once", () => {
     const ids = deriveCensus(mutated as Record<string, unknown>).map((c) => c.id);
     expect(ids).toContain("field.foo");
     expect(ids).toContain("field.mode");
-    expect(ids.filter((id) => id.startsWith("field.mode:"))).toEqual(["field.mode:a~b", "field.mode:a~c", "field.mode:b~c"]);
+    // `mode` is optional (field.required does not name it), so it contributes
+    // both member pairs and member-absence coordinates.
+    expect(ids.filter((id) => id.startsWith("field.mode:"))).toEqual([
+      "field.mode:a~b",
+      "field.mode:a~c",
+      "field.mode:b~c",
+      "field.mode:a~<absent>",
+      "field.mode:b~<absent>",
+      "field.mode:c~<absent>",
+    ]);
     expect(kernelIds.has("field.foo")).toBe(false);
+  });
+  it("member-absence is emitted only where absence is a state the schema admits and the member is not the leaf's only one", () => {
+    const mutated = JSON.parse(JSON.stringify(schema)) as {
+      definitions: Record<string, { properties: Record<string, unknown>; required?: string[] }>;
+    };
+    // required enum: absence is impossible, so no member-absence coordinate
+    mutated.definitions.field.properties.req = { type: "string", enum: ["x", "y"] };
+    mutated.definitions.field.required = [...(mutated.definitions.field.required ?? []), "req"];
+    // optional single-member literal: "the one member vs absent" IS the leaf,
+    // so emitting it too would double-count the same erasure under two ids
+    mutated.definitions.field.properties.flag = { type: "boolean", enum: [true] };
+    const ids = deriveCensus(mutated as Record<string, unknown>).map((c) => c.id);
+    expect(ids).toContain("field.req");
+    expect(ids).toContain("field.req:x~y");
+    expect(ids.filter((id) => id.startsWith("field.req:") && id.includes("<absent>"))).toEqual([]);
+    expect(ids).toContain("field.flag");
+    expect(ids.filter((id) => id.startsWith("field.flag:"))).toEqual([]);
+  });
+  it("the absence sentinel cannot collide with a real member of the same name", () => {
+    // `observation.null` really has a member called `absent`, so a bare
+    // `observation.null:censored~absent` would denote both a member pair and a
+    // member-absence coordinate; the later id shadowed the earlier one in
+    // kernelPair and moved three stage-1 coordinates out of `ratified`.
+    const nullIds = kernel.filter((c) => c.leaf === "observation.null").map((c) => c.id);
+    expect(nullIds).toContain("observation.null:absent~censored");
+    expect(nullIds).toContain("observation.null:absent~<absent>");
+    expect(nullIds).not.toContain("observation.null:censored~absent");
+    expect(new Set(nullIds).size).toBe(nullIds.length);
   });
   it("evidence coordinates are the instance-evidence ones and nothing in the declaration is", () => {
     const instance = kernel.filter((c) => c.role === "instance").map((c) => c.leaf);
