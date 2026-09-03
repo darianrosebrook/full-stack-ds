@@ -23,3 +23,8 @@ acceptance:
     then: 'given the Popover token was renamed border.accent to border.default in FIX-CONTRACT-SURFACE-QUALITY-02; when audit:dead-slots regenerates the matrix; then the committed matrix matches the regeneration and git status is clean'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run audit:dead-slots in the bound worktree regenerated the identical 2-line diff observed on main (slot + cssVar popover.color.border.accent -> .default), confirming determinism; ratchet reported findings=98 ledgered=98 unledgered=0 stale=0, so no status flipped. After merge c742e99f, 'git diff HEAD -- docs/dead-slot-audit/dead-slot-matrix.json' is empty and 'git status --short' shows no tracked modifications."
+    recorded_at: "2026-09-03T01:13:26.361Z"
