@@ -127,3 +127,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Case 'reports the Details defect': a fixture whose IR produces details--none and whose styles key is '.details--icon-none .details__icon' yields exactly 1 issue naming '.details--icon-none' AND the repair '.details--none'. Companion case 'correcting the modifier to the produced form clears the finding' returns []. Live corpus reproduces it: docs/carrier-reachability-audit/carrier-reachability.md rows Details .details--icon-none / .details--icon-right, kind=modifier. Falsified by skipping the modifier branch in the validator -> the Details case fails, 15/16."
+    recorded_at: "2026-09-03T18:10:30.872Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
