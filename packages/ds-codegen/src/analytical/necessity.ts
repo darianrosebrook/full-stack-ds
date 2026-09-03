@@ -45,6 +45,13 @@ const DOCTRINE = path.resolve(HERE, "../../../../docs/architecture/analytical-re
  *
  * The order is append-only, so the digest's history reads as a sequence of
  * widenings rather than a sequence of reorderings.
+ *
+ * This is a CLOSED declaration, not a bounded attribution: experiments.test.ts
+ * walks the local import graph from these entry points and requires every
+ * module a judgment can reach to be either listed here or named in an explicit
+ * non-rule list with the reason it cannot move a judgment. A helper extracted
+ * out of `engines.ts` into a new file is reached through its import and
+ * reported, where a hand-maintained list would have silently under-claimed.
  */
 export const RULE_SOURCES: readonly string[] = [
   path.join(HERE, "engines.ts"),

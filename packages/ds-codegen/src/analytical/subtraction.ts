@@ -36,8 +36,8 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { loadCensus } from "./census.js";
-import { checkWitness, FIXTURES_DIR, loadOracle, loadWitnesses, ratifiedSet } from "./necessity.js";
+import { orphanedCoordinates } from "./experiments.js";
+import { FIXTURES_DIR } from "./necessity.js";
 
 export type SubtractionDisposition = "unresolved" | "witnessed" | "representation-artifact" | "not-yet-admitted";
 
@@ -49,15 +49,27 @@ export interface CoordinateVerdict {
   reintroducibleAt?: number;
 }
 
+/**
+ * Why a constructor SURVIVED Stage-2 necessity — never what it means.
+ *
+ * `authorityRef` points at where the law actually lives, because a ledger that
+ * defined its operators would become a second authority for their semantics,
+ * and the `kind` experiment would then be discovering the necessity of operator
+ * identity from definitions the subtraction itself authored.
+ */
 export interface ConstructorEntry {
   disposition: "required" | "retired";
-  cases: string[];
-  transitionLaw: string;
-  reason?: string;
+  authorityRef: { vocabulary: string; signature: string; law: string };
+  retentionRationale: string;
+  evidenceCases: string[];
+  removableWhen: string;
 }
 
 export interface SubtractionLedger {
   $comment?: string;
+  $authorityNote?: string;
+  /** The slice that opened this obligation. */
+  spec?: string;
   dispositions: Record<string, string>;
   basis: { frozenAt: string; reason: string; digest: string; count: number; candidates: string[] };
   constructors: Record<string, ConstructorEntry>;
@@ -150,18 +162,11 @@ export function verdictDrift(ledger: SubtractionLedger, live: Set<string>, ratif
   return out.sort();
 }
 
-/** Live kernel coordinates that neither carry a witness nor belong to the frozen basis. */
-export function unaccounted(ledger: SubtractionLedger = loadSubtraction()): string[] {
-  const kernel = loadCensus();
-  const oracle = loadOracle();
-  const ratified = ratifiedSet(loadWitnesses().witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
-  const basis = new Set(ledger.basis.candidates);
-  return kernel
-    .filter((c) => c.kind !== "reference")
-    .filter((c) => !ratified.has(c.id) && !basis.has(c.id))
-    .map((c) => c.id)
-    .sort();
-}
+// The "is every live coordinate owned?" invariant deliberately does NOT live
+// here. It is not a fact about this experiment — a coordinate a later stage
+// admits is that stage's obligation — so it belongs above any single basis, in
+// experiments.ts. Keeping it here would make a closed experiment fire against
+// work that neither caused it nor could discharge it.
 
 const invokedDirectly = process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]));
 if (invokedDirectly) {
@@ -178,10 +183,10 @@ if (invokedDirectly) {
   } else {
     console.log(`subtraction: ${ledger.basis.count} candidates frozen at ${ledger.basis.frozenAt}`);
     for (const [d, n] of [...counts].sort()) console.log(`  ${String(n).padStart(4)}  ${d}`);
-    const later = unaccounted(ledger);
+    const later = orphanedCoordinates();
     if (later.length > 0) {
-      console.log(`\n${later.length} live kernel coordinate(s) outside this experiment (a LATER stage's obligation, not this one's):`);
-      for (const id of later) console.log(`  ${id}`);
+      console.log(`\n${later.length} live kernel coordinate(s) with no ratification and no owning experiment:`);
+      for (const o of later) console.log(`  ${o.coordinate}`);
     }
   }
 }

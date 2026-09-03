@@ -39,7 +39,8 @@ import {
   type Witness,
 } from "./necessity.js";
 import { canonical, collides, erase } from "./quotient.js";
-import { loadSubtraction, unaccounted, verdictDrift } from "./subtraction.js";
+import { orphanedCoordinates } from "./experiments.js";
+import { loadSubtraction, verdictDrift } from "./subtraction.js";
 import type { RelationalStructure } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
 
@@ -158,12 +159,12 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
    * cannot separate may be separable once the stage-2 derivations exist, and
    * ablating before that would remove something the next commit re-earns.
    */
-  it("every live kernel coordinate is accounted for: ratified, or a candidate of the frozen experiment", () => {
-    // The invariant that survives growth. It does not say the kernel must
-    // contain exactly these coordinates; it says none may be unaccounted. A
-    // coordinate a later stage admits fails this until that stage opens its own
-    // candidate set, which is where the obligation belongs.
-    expect(unaccounted(subtraction)).toEqual([]);
+  it("no live kernel coordinate is an orphaned claim", () => {
+    // The invariant that survives growth, and it is NOT stage-2's: a later
+    // stage may admit whatever its authority demands, provided the same bounded
+    // change opens a basis that owns it. What fails is an unexplained degree of
+    // freedom with neither a proof nor a burden of proof attached.
+    expect(orphanedCoordinates()).toEqual([]);
   });
 
   it("every recorded verdict is true of the live tree", () => {

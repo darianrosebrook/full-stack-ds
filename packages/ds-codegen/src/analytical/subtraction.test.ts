@@ -24,7 +24,6 @@ import { Derivation } from "./relation-model.js";
 import {
   checkSubtraction,
   loadSubtraction,
-  unaccounted,
   verdictDrift,
   type SubtractionLedger,
 } from "./subtraction.js";
@@ -105,12 +104,12 @@ describe("the basis is frozen, so a later stage's growth cannot reopen this one"
     expect(kernelIds.has("a.b")).toBe(false);
   });
 
-  it("a live coordinate outside the basis is reported as a LATER stage's obligation, not a failure of this one", () => {
-    const later = unaccounted(live);
-    // Today there are none; what matters is that they would be reported by a
-    // separate function and never enter `checkSubtraction`.
-    expect(Array.isArray(later)).toBe(true);
+  it("a live coordinate outside the basis is never a failure of this gate", () => {
+    // Ownership is a repo-level invariant that no single experiment owns; this
+    // gate must not be able to see one. `checkSubtraction` reads only the
+    // frozen basis, so its result cannot mention anything outside it.
     expect(check(live).unresolved.every((id) => live.basis.candidates.includes(id))).toBe(true);
+    expect(check(live).problems.every((p) => live.basis.candidates.some((id) => p.includes(id)) || p.startsWith("basis"))).toBe(true);
   });
 
   it("the live ledger's basis is internally consistent", () => {
@@ -161,15 +160,32 @@ describe("a verdict must be true of the live tree, or it is a story about it", (
 describe("constructor existence is governed separately from coordinate necessity", () => {
   const kinds = () => Derivation.options.map((o) => o.shape.kind.value as string).sort();
 
-  it("every constructor the algebra admits carries a required disposition with its transition law", () => {
+  it("every constructor the algebra admits carries a required disposition and a retention rationale", () => {
     const required = Object.entries(live.constructors)
       .filter(([, c]) => c.disposition === "required")
       .map(([k]) => k)
       .sort();
     expect(required).toEqual(kinds());
     for (const [name, c] of Object.entries(live.constructors)) {
-      expect(c.transitionLaw.trim().length, `${name} has no transition law`).toBeGreaterThan(0);
-      expect(c.cases.length, `${name} cites no case`).toBeGreaterThan(0);
+      expect(c.retentionRationale.trim().length, `${name} has no retention rationale`).toBeGreaterThan(0);
+      expect(c.evidenceCases.length, `${name} cites no case`).toBeGreaterThan(0);
+      expect(c.removableWhen.trim().length, `${name} does not say what could retire it`).toBeGreaterThan(0);
+    }
+  });
+
+  it("the ledger points at the law rather than stating it, so it is not a second authority for meaning", () => {
+    // A subtraction that authored the definitions it then found necessary would
+    // be circular, which is the failure this whole slice has been removing. So
+    // every constructor's `authorityRef` must name real loci that really carry
+    // the operator, and the ledger's own prose must be about survival.
+    const repo = path.resolve(__dirname, "../../../..");
+    for (const [name, c] of Object.entries(live.constructors)) {
+      for (const [role, refText] of Object.entries(c.authorityRef)) {
+        const file = refText.split(/[ (§]/)[0];
+        const p = path.join(repo, file);
+        expect(fs.existsSync(p), `${name}.authorityRef.${role} names a missing file ${file}`).toBe(true);
+        expect(fs.readFileSync(p, "utf-8"), `${name}.authorityRef.${role} (${file}) does not mention ${name}`).toContain(name);
+      }
     }
   });
 
@@ -186,15 +202,15 @@ describe("constructor existence is governed separately from coordinate necessity
   });
 
   it("a constructor's necessity is not owned by the current corpus population", () => {
-    // Cases are EVIDENCE for a constructor's transition law, not the mechanism
-    // that keeps it alive. If deleting the referencing case were enough to
-    // retire an operator, the cheap discharge would have moved one level
-    // upstream. So the ledger records the law itself, and retirement requires
-    // its own disposition — which no case count can supply.
+    // Cases are EVIDENCE that Stage-2 authority needs the constructor, not the
+    // mechanism that keeps it alive. If deleting the referencing case were
+    // enough to retire an operator, the cheap discharge would have moved one
+    // level upstream. So retirement requires its own disposition, and the
+    // ledger says so per constructor.
     for (const [name, c] of Object.entries(live.constructors)) {
       expect(c.disposition, `${name}`).toBe("required");
-      // The law is stated in its own terms, not as "case X exists".
-      expect(c.transitionLaw, `${name}`).not.toMatch(/^CASE_/);
+      expect(c.removableWhen, `${name}`).toMatch(/disposition/);
+      expect(c.removableWhen, `${name}`).toMatch(/no coordinate verdict/);
     }
   });
 });

@@ -1,5 +1,6 @@
 {
   "$comment": "The Stage-2 subtraction (REL-VIEW-ALGEBRA-01). This file is NOT a freeze over the live kernel and must never be read as one. It is the frozen BASIS of one experiment plus its verdicts, in the sense of ADR-0001: freeze the basis needed to make a claim reproducible; do not freeze the evolving system merely because you measured it. `basis` fixes the candidate ids as they stood at the recorded commit and is never re-derived from the live census, so a coordinate a later stage admits creates a LATER stage's obligation and cannot reopen this one. The close condition is that no candidate remains `unresolved` — every proposition opened here has a verdict — which is terminal for the slice, not a standing repository invariant: after Stage 2 closes this ledger is historical evidence and its gate must not participate in ordinary repo admission. `constructors` is a SEPARATE governed disposition on the algebra's vocabulary, and coordinate subtraction cannot reach it: a constructor may leave the admitted algebra only through an explicit vocabulary-evolution disposition showing that its semantic transition law is no longer required by active authority. That separation is what keeps deletion from being the cheap discharge — a coordinate failing necessity loses primitive standing, which never by itself means a thing that coordinate names disappears.",
+  "spec": "REL-VIEW-ALGEBRA-01",
   "dispositions": {
     "unresolved": "not yet adjudicated; the close condition is zero of these",
     "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
@@ -135,57 +136,99 @@
   "constructors": {
     "aggregate-to-grain": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, aggregate-to-grain branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable)"
+      },
+      "retentionRationale": "Stage-2 authority distinguishes derivations that combine rows to a DECLARED coarser grain from those that do not: CASE_NESTED_SUBTOTALS_OFF_GRAIN turns on whether the target grain is one the hierarchy declares, and CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN on two such targets diverging. Neither question can be asked of a structure that cannot say a result was combined to a named grain.",
+      "evidenceCases": [
         "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
         "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN",
         "CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS"
       ],
-      "transitionLaw": "Combines rows to a named coarser grain. The result's grain IS the target grain; the target must be drawn from the input, and every surviving field must come from it."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     },
     "join": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, join branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, and fanOut in engines.ts)"
+      },
+      "retentionRationale": "Stage-2 authority requires a declared cardinality between two relations: both fan-out cases are decided from the declaration rather than from rows, which is the whole reason the cardinality coordinate was re-earned. Without this constructor the two cases are indistinguishable from a single relation carrying repeated values.",
+      "evidenceCases": [
         "CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN",
         "CASE_ORDER_COUNT_AFTER_LINE_JOIN"
       ],
-      "transitionLaw": "Relates two relations at a declared cardinality. The cardinality names which side survives at row granularity; the other side's values are repeated once per match, and no field of the result may come from outside the two inputs."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     },
     "nest": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, nest branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, isDeclaredNestGrain)"
+      },
+      "retentionRationale": "Stage-2 authority requires hierarchy membership as a structural fact: CASE_NESTED_SUBTOTALS_OFF_GRAIN needs the set of grains a hierarchy declares, and CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP needs the membership a later projection would have to rebuild. Both are properties of the hierarchy, not of any field.",
+      "evidenceCases": [
         "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
         "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"
       ],
-      "transitionLaw": "Imposes a hierarchy without combining rows. Its prefixes are the grains it declares, and its levels must survive into the result or the hierarchy it declares is unrecoverable."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     },
     "bin": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, bin branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, semanticFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires boundary membership to be declarable: CASE_WHICH_BIN_GETS_TEN is undecidable unless the structure can say a field's range was partitioned and which side of a boundary owns a value on it.",
+      "evidenceCases": [
         "CASE_WHICH_BIN_GETS_TEN"
       ],
-      "transitionLaw": "Partitions a field's range into intervals. The closure decides which side of each boundary owns a value that lands on it; binning a grain column coarsens the row set in a way the declaration does not pin down."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     },
     "normalize": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, normalize branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, semanticFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires the claim that a measure was rescaled against a whole: CASE_NORMALIZED_AVERAGES is a defect of that claim, not of the measure, and cannot be stated without a constructor that makes it.",
+      "evidenceCases": [
         "CASE_NORMALIZED_AVERAGES"
       ],
-      "transitionLaw": "Rescales a field against a whole, which presumes the parts sum to that whole. The row set is unchanged."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     },
     "project": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, project branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, semanticFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires field selection to be a derivation rather than a rendering choice: CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP is decided upstream of any projection, which is only expressible if dropping fields is itself a derivation.",
+      "evidenceCases": [
         "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"
       ],
-      "transitionLaw": "Keeps exactly the named fields. The grain survives iff every grain column is kept; the membership of a nested input is lost with any dropped level, before any projection is chosen."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     },
     "graph": {
       "disposition": "required",
-      "cases": [
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, graph branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, conservationFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires reading a relation as directed edges with an optional conservation REQUIREMENT: CASE_LEAKING_FLOW and CASE_FLOW_CONSERVATION_EDGE_VALUES_UNSEEN are the same declaration under different evidence, which needs a constructor that can carry the requirement without asserting it.",
+      "evidenceCases": [
         "CASE_LEAKING_FLOW",
         "CASE_FLOW_CONSERVATION_EDGE_VALUES_UNSEEN"
       ],
-      "transitionLaw": "Reads a relation as directed edges without changing which rows exist. A declared conservation requirement is a claim about edge VALUES and is discharged only by rows, never by the declaration."
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
     }
   },
   "verdicts": {
@@ -543,5 +586,6 @@
     "structure.peers[]#present": {
       "disposition": "unresolved"
     }
-  }
+  },
+  "$authorityNote": "The entries under `constructors` are EVIDENCE that a constructor survived Stage-2 necessity, never definitions of what it means. `authorityRef` names where the law actually lives, and the honest state of that is a finding rather than a tidy answer: no single locus states the per-operator transition law today. The doctrine names the operator set and gives two illustrative typing rules; `relation-model.ts` declares each constructor's signature; `derivation.ts` implements the law that certifies a declared result. Stage 2 has therefore surfaced a need for an explicit operator-law authority, which this ledger deliberately does NOT become — a subtraction that authored the definitions it then found necessary would be circular, which is the failure this whole slice has been removing."
 }
