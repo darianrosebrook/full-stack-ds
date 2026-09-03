@@ -134,3 +134,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
     exit_code: 0
     commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "Case 'reports a part carrier the realization does not produce' (Checkbox shape: parts [root,indicator], dom = bare <input>) yields 1 issue naming '.checkbox__indicator'. Case 'adding the part to the REALIZATION clears it, with the styles key untouched' passes the SAME styles object with a dom tree that renders the part and gets []. Live corpus: 18 forward findings including Checkbox __input/__indicator across 6 selectors, Button __spinner/__loadingText, Skeleton __shape/__stack, Text __error/__success, Tabs __root."
+    recorded_at: "2026-09-03T18:10:31.271Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
