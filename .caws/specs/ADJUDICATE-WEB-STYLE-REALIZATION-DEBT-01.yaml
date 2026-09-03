@@ -146,3 +146,7 @@ evidence:
     status: pass
     evidence_ref: "Skeleton stack/shape realized from contract-side evidence (usage example lines:3, part descriptions, multiple:true). e2e/style-carrier-rail.spec.ts: lines=3 -> 1 stack/3 rows/3 shapes in all 5 web frameworks; no lines -> 0; lines=0 -> no literal 0"
     recorded_at: "2026-09-03T22:38:01.915Z"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "Rail mutation proof, both directions: restoring the retired Text error block -> FAIL 1 unledgered (Text error -> .text__error); removing Skeleton's realized shape child -> FAIL 2 unledgered. Both revert to PASS. Plus per-guard unit mutations in swiftui component-source.test.ts (dom-tag guard -> Chip; projection guard -> TextField; locality guard -> Select x3; iteration guard -> synthetic)"
+    recorded_at: "2026-09-03T22:38:13.182Z"
