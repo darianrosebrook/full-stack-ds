@@ -77,6 +77,22 @@ export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
       const v = parent[key];
       if (v === b) parent[key] = a;
       else if (Array.isArray(v)) parent[key] = [...new Set(v.map((x) => (x === b ? a : x)))];
+    } else if (coordinate.kind === "member-absence" && id === coordinate.leaf && coordinate.members) {
+      // Erasing "member m vs absent" spells m as absence: a representation that
+      // cannot say m explicitly must express it by leaving the leaf off. If
+      // nothing downstream can tell the two apart, m is a redundant spelling of
+      // the default rather than a degree of freedom.
+      const [m] = coordinate.members;
+      if (parent[key] === m) {
+        // Absence of a discriminated declaration is absence of the WHOLE
+        // declaration, not of its tag: erasing `additivity.kind:semi-additive`
+        // must not leave `{nonAdditiveAlong}` behind, which is neither absence
+        // nor a schema-valid declaration. Emptying the holder lets the cleanup
+        // below drop it from its parent exactly as leaf erasure does.
+        if (key === "kind") for (const k of Object.keys(parent)) delete parent[k];
+        else delete parent[key];
+        cleanup.push(parent);
+      }
     }
   });
   // A sub-declaration emptied by erasure carries no coordinate: drop it from its

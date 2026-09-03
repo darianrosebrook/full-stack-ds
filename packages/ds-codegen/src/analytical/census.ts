@@ -5,11 +5,21 @@
  * projection of the zod model), so a leaf added to the model appears here
  * with no hand edit and a parent axis cannot hide unnecessary children.
  *
- * Two coordinate kinds:
+ * Three coordinate kinds:
  * - `leaf`: a property whose value is a primitive, an enum, a set of names, or
  *   a record of primitives (e.g. `field.unit.conversions`);
  * - `member-pair`: for an enum leaf, the distinction between two of its
  *   members. Erasing it merges the two members.
+ * - `member-absence`: for an enum leaf that is OPTIONAL, the distinction
+ *   between carrying a given member and not carrying the leaf at all. Erasing
+ *   it rewrites that member as absence. Stage 1.5 could not see this class,
+ *   and recorded the consequence as a non-claim: `temporality.interval` and
+ *   `additivity.additive` are indistinguishable from the leaf's absence, but
+ *   member-vs-absence was not a coordinate, so they stayed unexamined. A
+ *   default member that no witness separates from absence is a redundant
+ *   spelling of the default, not a semantic degree of freedom
+ *   (REL-VIEW-ALGEBRA-01, closing that blind spot before the next subtraction
+ *   pass rather than after it).
  *
  * Not coordinates: `id` (fixture identity) and the reference leaves
  * `assertion.relation` / `assertion.field` / `relationship.*.relation|field`
@@ -26,7 +36,18 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export type CoordinateKind = "leaf" | "member-pair" | "reference";
+export type CoordinateKind = "leaf" | "member-pair" | "member-absence" | "reference";
+
+/**
+ * The pseudo-member a `member-absence` coordinate pairs a real member against.
+ * The angle brackets are load-bearing: member names match `[a-z0-9-]+`, so a
+ * bare `absent` would be ambiguous with the real member of that name on
+ * `observation.null` — `observation.null:censored~absent` would denote both a
+ * member pair and a member-absence coordinate, and the later id silently
+ * shadowed the earlier one in `kernelPair`, moving three stage-1 coordinates
+ * out of `ratified`. A sentinel outside the member grammar cannot collide.
+ */
+export const ABSENT = "<absent>" as const;
 
 export interface Coordinate {
   id: string;
@@ -92,7 +113,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
   const seen = new Set<string>();
   const role = (p: string): "schema" | "instance" => (p.startsWith("evidence") ? "instance" : "schema");
 
-  const addLeaf = (rawPath: string, enumMembers?: string[]) => {
+  const addLeaf = (rawPath: string, enumMembers?: string[], optional = false) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
@@ -107,23 +128,39 @@ export function deriveCensus(schema: Node): Coordinate[] {
           out.push({ id: `${id}:${enumMembers[i]}~${enumMembers[k]}`, kind: "member-pair", leaf: id, members: [enumMembers[i], enumMembers[k]], role: role(rawPath) });
         }
       }
+      // Absence is only a distinguishable state where the schema admits it. A
+      // required leaf cannot be absent, so it has no member-absence coordinate.
+      // Nor does a single-member leaf (`z.literal(true).optional()`): there,
+      // "the one member vs absent" IS the leaf coordinate — the same erasure
+      // under two ids — and emitting both would double-count the distinction
+      // and let one id ratify the other.
+      if (optional && enumMembers.length > 1) {
+        for (const m of enumMembers) {
+          out.push({ id: `${id}:${m}~${ABSENT}`, kind: "member-absence", leaf: id, members: [m, ABSENT], role: role(rawPath) });
+        }
+      }
     }
   };
 
-  const walk = (raw: Node, rawPath: string): void => {
+  const walk = (raw: Node, rawPath: string, optional = false): void => {
     const n = resolve(raw);
-    if (Array.isArray(n.enum)) return addLeaf(rawPath, n.enum as string[]);
-    if (n.const !== undefined) return addLeaf(rawPath, [String(n.const)]);
-    if (Array.isArray(n.anyOf)) return walkUnion(n.anyOf as Node[], rawPath);
-    if (Array.isArray(n.oneOf)) return walkUnion(n.oneOf as Node[], rawPath);
+    if (Array.isArray(n.enum)) return addLeaf(rawPath, n.enum as string[], optional);
+    if (n.const !== undefined) return addLeaf(rawPath, [String(n.const)], optional);
+    if (Array.isArray(n.anyOf)) return walkUnion(n.anyOf as Node[], rawPath, optional);
+    if (Array.isArray(n.oneOf)) return walkUnion(n.oneOf as Node[], rawPath, optional);
     if (n.type === "array") {
       const items = resolve((n.items ?? {}) as Node);
-      if (isPrimitive(items) || Array.isArray(items.enum)) return addLeaf(rawPath, Array.isArray(items.enum) ? (items.enum as string[]) : undefined);
+      if (isPrimitive(items) || Array.isArray(items.enum)) return addLeaf(rawPath, Array.isArray(items.enum) ? (items.enum as string[]) : undefined, optional);
       return walk(items, `${rawPath}[]`);
     }
     if (n.type === "object") {
       if (n.properties) {
-        for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) walk(v, rawPath ? `${rawPath}.${k}` : k);
+        const required = new Set((Array.isArray(n.required) ? n.required : []) as string[]);
+        for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) {
+          // A property of an optional holder is itself absent whenever the
+          // holder is: `additivity.kind` is absent if `additivity` is.
+          walk(v, rawPath ? `${rawPath}.${k}` : k, optional || !required.has(k));
+        }
         return;
       }
       if (n.additionalProperties && typeof n.additionalProperties === "object") {
@@ -137,19 +174,20 @@ export function deriveCensus(schema: Node): Coordinate[] {
     throw new Error(`census: unhandled schema node at ${rawPath}: ${JSON.stringify(n).slice(0, 80)}`);
   };
 
-  const walkUnion = (branches: Node[], rawPath: string): void => {
+  const walkUnion = (branches: Node[], rawPath: string, optional = false): void => {
     const resolved = branches.map(resolve);
     const objects = resolved.filter((b) => b.type === "object" && b.properties);
     const discriminated =
       objects.length === resolved.length && objects.every((b) => (b.properties as Record<string, Node>).kind?.const !== undefined);
     if (discriminated) {
       const kinds = objects.map((b) => String((b.properties as Record<string, Node>).kind.const));
-      addLeaf(`${rawPath}.kind`, kinds);
+      addLeaf(`${rawPath}.kind`, kinds, optional);
       // Every branch property is qualified by its branch, so a coordinate's id does not
       // depend on which sibling branches happen to exist (removing `rollup` must not rename `op`).
       objects.forEach((b, i) => {
+        const req = new Set((Array.isArray(b.required) ? b.required : []) as string[]);
         for (const [k, v] of Object.entries(b.properties as Record<string, Node>)) {
-          if (k !== "kind") walk(v, `${rawPath}.${kinds[i]}.${k}`);
+          if (k !== "kind") walk(v, `${rawPath}.${kinds[i]}.${k}`, optional || !req.has(k));
         }
       });
       return;
