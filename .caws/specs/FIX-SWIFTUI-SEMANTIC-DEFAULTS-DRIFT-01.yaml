@@ -2,9 +2,10 @@ id: FIX-SWIFTUI-SEMANTIC-DEFAULTS-DRIFT-01
 title: 'Regenerate SwiftUI semantic-defaults table from the token graph and drift-gate it'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: swiftui-semantic-defaults-drift
 created_at: '2026-09-03T21:54:33.475Z'
-updated_at: '2026-09-03T21:54:33.475Z'
+updated_at: '2026-09-03T21:54:39.285Z'
 created_by_session: 'session-f8cdb1f5-46f6-4406-b46f-3745decbb166'
 blast_radius:
   modules:
