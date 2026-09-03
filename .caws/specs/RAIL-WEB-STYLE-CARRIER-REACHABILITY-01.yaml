@@ -105,3 +105,11 @@ contracts:
   - name: 'styles-carrier-reachability'
     type: behavior
     path: 'packages/ds-codegen/src/validation/styles.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "deriveWebDomCarriers (ir.ts) is the single carrier authority; validation/styles.ts, scripts/carrier-reachability-audit/audit.mjs and scripts/variant-style-audit/audit.mjs all consume it. The variant audit's local computeTaintedAxes copy — whose own comment said it 'mirrors the codegen' — is deleted and replaced by taintedAxesFromIR, which reads classRecipe.valueModifiers[].valuePrefix. Cases 'a value-disjoint axis keeps the bare --<value> shape' and 'a colliding axis is namespaced --<axis>-<value>, and only that form'. Falsified: sed 's/vm.valuePrefix ?? \"\"/\"\"/' on ir.ts -> the colliding-axis case fails, 15/16."
+    recorded_at: "2026-09-03T18:10:12.673Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts
+    exit_code: 0
+    commit_sha: "61dca202b956c06edc8ae0f0be1cf3d3fc49795a"
