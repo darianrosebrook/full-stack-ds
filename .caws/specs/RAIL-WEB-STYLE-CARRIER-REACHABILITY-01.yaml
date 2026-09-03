@@ -1,0 +1,107 @@
+id: RAIL-WEB-STYLE-CARRIER-REACHABILITY-01
+title: 'Web-DOM style-carrier reachability: authored selectors may claim only carriers the IR can produce'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-03T17:46:54.335Z'
+updated_at: '2026-09-03T17:46:54.335Z'
+created_by_session: 'd97cce86-6592-41ba-857f-a6ec646948c1'
+blast_radius:
+  modules:
+    - 'ds-codegen IR carrier derivation'
+    - 'ds-codegen semantic validation (styles)'
+    - 'carrier-reachability ledgered rail'
+    - 'variant-style audit inverse census'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/validation/styles.ts'
+    - 'packages/ds-codegen/src/validation/styles.test.ts'
+    - 'packages/ds-codegen/src/carrier-reachability.test.ts'
+    - 'scripts/carrier-reachability-audit'
+    - 'scripts/variant-style-audit'
+    - 'docs/carrier-reachability-audit'
+    - 'docs/internal/variant-style-audit'
+    - 'package.json'
+    - '.githooks/pre-push'
+    - '.github/workflows/ci.yml'
+    - 'scripts/prepush-scope.mjs'
+    - 'scripts/prepush-scope.test.mjs'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A component-authored style selector that requires a component-owned carrier may claim only a carrier the Web-DOM IR can actually produce; carrier production is derived from IR authority, never reconstructed from generated framework source'
+  - 'Carrier reachability proves only that a selector has a producible attachment point: not that the rule wins the cascade, changes computed style, supplies required content, or realizes the intended visual distinction'
+  - 'A reachability finding never authorizes deleting the contract side; resolution may be selector repair, realization repair, or independently justified contract retirement (FIX-DEAD-SLOT-UNRENDERED-PART-AUTHORITY-01)'
+  - 'The validator carries no known-defect exception list; while its corpus ledger is nonzero it is exercised by the ledgered rail, and promotion to an unconditional generate:check gate happens only at a zero baseline'
+acceptance:
+  - id: A1
+    given: 'validation and audit code needing modifier spelling'
+    when: 'it resolves a variant class name'
+    then: 'it consumes an IR-exported carrier derivation built on classRecipe/valuePrefix, with no second computeTaintedAxes, no generated-React-source scraping, and no independent naming regex'
+  - id: A2
+    given: 'a contract declaring anatomy.parts entries'
+    when: 'the producible carrier set is derived'
+    then: 'it reflects the Web-DOM realization substrate (the parts the IR dom tree actually carries), so a declared-but-unrendered part yields no part carrier'
+  - id: A3
+    given: 'an authored selector referencing a global or consumer-owned descendant'
+    when: 'reachability is evaluated'
+    then: 'only component-owned carriers (root class, value/boolean modifiers, part carriers, IR-declared data-* markers) are adjudicated and non-owned selector material is not silently claimed'
+  - id: A4
+    given: 'a Details-shaped fixture whose IR produces details--none but whose raw styles key requires .details--icon-none .details__icon'
+    when: 'the validator runs'
+    then: 'it reports an unreachable owned carrier, and correcting the modifier to .details--none .details__icon clears the finding'
+  - id: A5
+    given: 'a Checkbox-shaped fixture that styles an indicator part whose Web-DOM realization produces no indicator carrier'
+    when: 'the validator runs'
+    then: 'it reports the unreachable part carrier, and adding the carrier to the realization clears it without editing the styles declaration'
+  - id: A6
+    given: 'an anchored-surface contract whose parts are carried by IR-owned data-* markers'
+    when: 'the validator runs'
+    then: 'it passes without manufacturing a BEM __part class, and removing the marker from the produced carrier vocabulary makes a dedicated test fail'
+  - id: A7
+    given: 'a variant class the component emits with no matching CSS rule'
+    when: 'validateStylesCarrierReachability runs'
+    then: 'it does NOT fail — that is the inverse problem, and this validator answers only whether authored CSS demands an impossible carrier'
+  - id: A8
+    given: 'pseudo-class host satisfiability, aria-attribute truth, suppression guards, cascade order and runtime visual effect'
+    when: 'the slice closes'
+    then: 'each is a named non-claim and no existing element-awareness or state rail is silently subsumed'
+  - id: A9
+    given: 'the live corpus'
+    when: 'the reachability rail runs'
+    then: 'its findings are captured in a two-directional ledger that fails on a new finding, a stale finding, or changed finding identity, seeded from what the corpus derives rather than a frozen count'
+  - id: A10
+    given: 'a forward-ledger entry'
+    when: 'a reader acts on it'
+    then: 'its recorded meaning is that CSS requires a carrier the current realization does not produce, explicitly not a licence to delete the declaring contract surface'
+  - id: A11
+    given: 'a non-default variant value whose emitted carrier has no reachable style rule'
+    when: 'the inverse census runs'
+    then: 'it is an accounted-for ledger finding regardless of whether any token or styles artifact already demonstrates styling intent, and stylingIntent survives only as disposition metadata'
+  - id: A12
+    given: 'structural or behavioral variant values such as List.as, placement and politeness'
+    when: 'they appear in the inverse ledger'
+    then: 'they are adjudicated as non-visual dispositions rather than mechanically rejected, because no contract fact yet declares a visual obligation'
+  - id: A13
+    given: 'both ledger directions'
+    when: 'either resolves a carrier name'
+    then: 'both consume the same IR carrier authority and neither has an independent naming algorithm'
+  - id: A14
+    given: 'the landed slice'
+    when: 'four mutations are applied (break valuePrefix consumption, remove a produced part carrier, remove a surface data-* carrier, suppress the Details unreachable diagnostic)'
+    then: 'each kills a dedicated test'
+  - id: A15
+    given: 'a nonzero forward corpus ledger'
+    when: 'generate:check runs'
+    then: 'the validator is exercised through the ledgered rail with no known-component or known-selector exclusion list inside semantic validation, and promotion to an unconditional gate is deferred to a zero baseline'
+non_functional: {}
+contracts:
+  - name: 'web-dom-carrier-derivation'
+    type: api
+    path: 'packages/ds-codegen/src/ir.ts'
+  - name: 'styles-carrier-reachability'
+    type: behavior
+    path: 'packages/ds-codegen/src/validation/styles.ts'
