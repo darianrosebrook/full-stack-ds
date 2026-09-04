@@ -40,3 +40,8 @@ contracts:
   - name: 'authority-check-wiring'
     type: contract-test
     path: 'scripts/prepush-scope.test.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node --test scripts/prepush-scope.test.mjs (SwiftUI input and docs-only exclusion cases); pnpm run swiftui:semantic-defaults:check"
+    recorded_at: "2026-09-04T23:50:34.347Z"
