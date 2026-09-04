@@ -58,7 +58,6 @@ export function TokensTable({ tokens }: TokensTableProps) {
     label: GROUP_LABEL[key],
     entries: groups.get(key) ?? [],
   })).filter((group) => group.entries.length > 0);
-  const tokenCount = Object.keys(tokens).length;
 
   return (
     <Stack

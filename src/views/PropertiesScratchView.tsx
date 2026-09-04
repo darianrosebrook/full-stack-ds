@@ -24,6 +24,11 @@ import {
 // The remaining corpus is wired in once the mechanism is proven.
 const SEED_COMPONENTS = ["Button", "Truncate", "Switch"];
 
+// Read-only shared fallbacks for components with no overrides yet; module
+// scope keeps them referentially stable across renders and mounts.
+const NO_PROP_OVERRIDES: Record<string, unknown> = {};
+const NO_TOKEN_OVERRIDES: Record<string, string> = {};
+
 export function PropertiesScratchView() {
   const seed = useMemo(
     () =>
@@ -48,8 +53,10 @@ export function PropertiesScratchView() {
     Record<string, Record<string, string>>
   >({});
 
-  const propValues = propOverrides[activeName] ?? {};
-  const tokenValues = tokenOverrides[activeName] ?? {};
+  // Stable empty fallbacks: a fresh `{}` per render would retrigger the
+  // config memo below on every render even when no override exists.
+  const propValues = propOverrides[activeName] ?? NO_PROP_OVERRIDES;
+  const tokenValues = tokenOverrides[activeName] ?? NO_TOKEN_OVERRIDES;
 
   const config = useMemo(() => {
     if (!component) return undefined;
