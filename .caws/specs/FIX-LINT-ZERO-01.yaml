@@ -62,3 +62,11 @@ contracts:
   - name: 'lint-zero-gate'
     type: contract-test
     path: 'package.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm run lint (eslint . --max-warnings=0) exits 0 on merged main c56052e9
+    recorded_at: "2026-09-04T23:06:46.493Z"
+    command: pnpm run lint
+    exit_code: 0
+    commit_sha: c56052e9
