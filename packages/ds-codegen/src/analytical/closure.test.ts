@@ -15,8 +15,13 @@
  * they are tests OF THE CHECKER, not candidate witnesses, and obligation 3 is
  * expected to reject them for exactly that reason.
  */
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { loadBranchSignatures, loadCensus } from "./census.js";
+import type { Oracle, Witness } from "./necessity.js";
+import type { Fixture } from "./structure.js";
 import {
   checkClosure,
   checkClosures,
@@ -664,5 +669,102 @@ describe("the consistency check and the terminal gate are different questions", 
     expect(closureGate({ ...settled, checks: settled.checks.map((c, i) => (i === 0 ? { ...c, promotion: "refuted" as const } : c)) }).ok).toBe(
       false,
     );
+  });
+});
+
+
+/**
+ * WHO OWNS SUPPORT FRESHNESS.
+ *
+ * `evidenceStanding` is a projection: it receives a `CurrentSupport` and reads
+ * its three sets. It performs no witness check and holds no evaluation
+ * identity, so it cannot be the thing that keeps support fresh — and an earlier
+ * summary of mine said "the consumer re-evaluates", which attributed the work
+ * to the wrong boundary.
+ *
+ * The boundary that actually owns freshness is the CALL SITE. Every production
+ * construction of support is inline and per-call:
+ *
+ *   closure.ts:324       loadStanding
+ *   closure.ts:748       checkClosures
+ *   experiments.ts:118   orphanedCoordinates
+ *   erasure-audit.ts:307 auditWitnesses
+ *
+ * all of the form `primitiveRatified(witnesses.filter(w => checkWitness(...).ok))`,
+ * none at module scope, and nothing anywhere persists a support set or a
+ * witness result. So there is no retention boundary to police today — which is
+ * a property that must keep holding, not a fact to state once.
+ */
+describe("support freshness is owned by the call site, and stays owned there", () => {
+  const census = loadCensus();
+  const oracle = loadOracle();
+
+  /**
+   * A genuine tightening of acceptance, injected through the real parameter:
+   * one stimulus stops validating, so every witness resting on it fails
+   * SCHEMA_INVALID. Nothing about the coordinates or the erasures moves.
+   */
+  /** A side is a named fixture or a patch on one; both name a base stimulus. */
+  const stimulusOf = (side: Witness["a"]): string => ("fixture" in side ? side.fixture : side.base);
+
+  const stricter = (fixtureId: string): Oracle => ({
+    ...oracle,
+    validate: (f: unknown) => ((f as Fixture).id === fixtureId ? ["tightened: this stimulus is no longer admitted"] : oracle.validate(f)),
+  });
+
+  it("a previously supported coordinate stops being reported as supported when acceptance tightens", () => {
+    const witnesses = loadWitnesses().witnesses;
+    const before = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census);
+
+    // A coordinate that IS primitive now, and the stimulus its witness rests on.
+    const single = witnesses.find((w) => w.coordinates.length === 1 && before.of(w.coordinates[0]).state === "primitive")!;
+    const target = stimulusOf(single.a);
+    expect(before.of(single.coordinates[0]).state).toBe("primitive");
+
+    // An unaffected control: primitive, and resting on neither of the stimuli
+    // the tightening touches. Without it this test would also pass for a path
+    // that simply reported nothing as supported.
+    const control = witnesses.find(
+      (w) => w.coordinates.length === 1 && w !== single && stimulusOf(w.a) !== target && stimulusOf(w.b) !== target && before.of(w.coordinates[0]).state === "primitive",
+    )!;
+    expect(control, "no unaffected control exists; the assertion below would be vacuous").toBeDefined();
+
+    const after = loadStanding("REL-VIEW-ALGEBRA-01", stricter(target), census);
+    // The invalidated support class is not reported as still holding. NOT a
+    // specific replacement state: with no suspension ledger entry, whatever the
+    // fresh evaluation yields is the correct answer -- the property is that the
+    // stale positive cannot survive.
+    expect(after.of(single.coordinates[0]).state, "a support class invalidated by tighter acceptance was still reported").not.toBe("primitive");
+    expect(after.of(control.coordinates[0]).state, "the control lost standing it should have kept").toBe("primitive");
+
+    // And nothing sticks in either direction: the original acceptance yields
+    // the original answer again. A memoised support set would fail here even
+    // though it passed above.
+    const again = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census);
+    expect(again.of(single.coordinates[0]).state).toBe("primitive");
+  });
+
+  it("no production path retains a support set or a witness result across evaluations", () => {
+    // The structural half. The test above shows the current call sites rebuild;
+    // this one fails if a future one starts caching, which is the only way the
+    // retained-positive-result problem becomes reachable at all.
+    const dir = path.dirname(fileURLToPath(import.meta.url));
+    const sources = fs.readdirSync(dir).filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
+    const offenders: string[] = [];
+    for (const f of sources) {
+      const src = fs.readFileSync(path.join(dir, f), "utf-8");
+      src.split("\n").forEach((line, i) => {
+        // A support set built at MODULE scope outlives every call in the
+        // process and is exactly the retention this forbids.
+        if (/^(export )?const .*\b(primitiveRatified|interactionOnly)\s*\(/.test(line)) offenders.push(`${f}:${i + 1} ${line.trim()}`);
+        // Persisting one is worse: it outlives the process.
+        if (/writeFileSync/.test(line) && /(primitive|support|standing)/i.test(line)) offenders.push(`${f}:${i + 1} ${line.trim()}`);
+      });
+    }
+    expect(offenders, "support was cached at module scope or written to disk; the freshness owner moved").toEqual([]);
+    // And the guard is not vacuous: the pattern it looks for does occur, inside
+    // functions, at the four call sites named above.
+    const perCall = sources.filter((f) => /primitiveRatified\s*\(/.test(fs.readFileSync(path.join(dir, f), "utf-8")));
+    expect(perCall.length, "the guard is scanning for a pattern that no longer appears anywhere").toBeGreaterThan(1);
   });
 });
