@@ -47,3 +47,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/frameworks/no-component-name-lore.test.ts — 10/10 pass; live corpus names and all 9 BUILTIN_TARGET_PACKS emitter roots scanned; hostile detector fixtures cover host/ref and reversed predicates
     recorded_at: "2026-09-04T23:16:48.932Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts — 45/45 pass; alternate ActionControl/MediaAsset refs select the same structural classes and emit those types; wrong dismiss-event near miss is rejected
+    recorded_at: "2026-09-04T23:16:57.364Z"
