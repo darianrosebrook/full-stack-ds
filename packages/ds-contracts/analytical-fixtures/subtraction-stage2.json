@@ -33,7 +33,32 @@
       "$comment": "What each shape of witness may and may not ratify. The retention criterion says a distinction becomes unexpressible when EXACTLY the candidate is erased; only one shape of witness establishes that.",
       "single": "A holding 1-coordinate witness ratifies PRIMITIVE COORDINATE STANDING: erasing exactly this coordinate destroys a distinction an independently grounded cause requires.",
       "minimalMultiple": "A holding minimal >1-coordinate witness proves the SET is a necessary separating set, and — because checkWitness raises NOT_MINIMAL when any member alone already collides the stimuli — positively establishes that NO MEMBER separates alone. Acceptance and disqualification are the same fact. It must never ratify any member individually. What it leaves open is the factorization, and a 2-set pairing a candidate TAG with its branch PAYLOAD is evidence the present factorization may be non-orthogonal, not a successful tag verdict.",
-      "consequence": "`primitiveRatified` and `interactionProven` are separate in the code, `verdictDrift` refuses a `witnessed` verdict supported only by a multi-coordinate set, and the coordinates in that position are owned by subtraction-stage2-interaction.json rather than counted as ratified."
+      "consequence": "`primitiveRatified` and `interactionProven` are separate in the code, `verdictDrift` refuses a `witnessed` verdict supported only by a multi-coordinate set, and the coordinates in that position are owned by subtraction-stage2-interaction.json rather than counted as ratified.",
+      "classification": {
+        "$comment": "A classification of the WITNESS, never of a coordinate, and deliberately NOT a sixth disposition. Standing is a property of a coordinate; hygiene is a property of an argument, and the same coordinate could be semantic in one witness and cleanup in another. (The branch review also found the ledger could self-authorize disposition names, which is a second reason not to grow that vocabulary from here.)",
+        "single": "one coordinate; ratifies primitive standing",
+        "quotient-hygiene": "one coordinate carries the candidate distinction and the additional coordinate(s) exist only to erase branch-specific representational residue, so the two encodings can enter the same comparison class",
+        "interaction": "a condition genuinely failed; the members participate jointly and the factorization is open",
+        "indeterminate": "conditions 1-4 hold but no control CAN exist — a two-member discriminator has one member pair, so the pair under test is the only one the enum has. Unsatisfiable by construction is not the same as false, and reporting it as `interaction` would manufacture a conclusion from the size of the vocabulary",
+        "conditions": [
+          "1. exactly one member is a discriminator substitution (a `kind` member pair)",
+          "2. every auxiliary member lies in payload structurally conditional on one side of that discriminator",
+          "3. the discriminator-only substitution fails to collide solely because that conditional payload remains",
+          "4. erasing an auxiliary alone does not supply the outcome difference being cited",
+          "5. a control within the same enum — two members of compatible payload shape — separates on a single coordinate, showing discriminator differences can. Condition 5 is what makes this empirical rather than an excuse: without a control, 'the payload got in the way' is unfalsifiable"
+        ],
+        "notYetLicensed": "A hygiene classification does NOT by itself confer primitive standing on the carrier. Doing so would quietly rewrite the retention rule from 'erase exactly c' into 'erase c plus whatever makes the test work'. Conferring it requires the SEMANTIC ERASURE CLOSURE below to be formalized and tested against the existing 2-set witnesses first.",
+        "semanticErasureClosure": {
+          "status": "proposed, not adopted",
+          "statement": "Erasing a coordinate may deterministically remove representation-only residue whose existence is CONDITIONAL on the erased choice. Such cleanup is not an additional semantic erasure and cannot contain independently varying analytical information.",
+          "wouldYield": [
+            "single-coordinate -> primitive evidence",
+            "multi-coordinate / interaction -> factorization remains open",
+            "single + hygiene closure -> primitive evidence after normalization"
+          ],
+          "preservesResultOf": "17bfcc96 — arbitrary 2-sets still do not ratify their members"
+        }
+      }
     },
     "threeLayers": {
       "$comment": "The layers a candidate can belong to. Confusing any two of them has now produced a defect in both directions, so the separation is recorded rather than remembered.",

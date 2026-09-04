@@ -15,6 +15,7 @@
  * Every gate case below is synthetic, so the tests keep their meaning as the
  * live ledger burns down.
  */
+import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
@@ -24,7 +25,9 @@ import { loadBases, orphanedCoordinates, type ExperimentBasis } from "./experime
 import { FIXTURES_DIR } from "./necessity.js";
 import { Derivation } from "./relation-model.js";
 import {
+  basesForSpec,
   checkSubtraction,
+  DISPOSITIONS,
   loadSubtraction,
   verdictDrift,
   type SubtractionLedger,
@@ -33,14 +36,8 @@ import {
 const live = loadSubtraction();
 
 const ledgerOf = (over: Partial<SubtractionLedger>): SubtractionLedger => ({
-  dispositions: {
-    unresolved: "not yet adjudicated",
-    witnessed: "a holding witness ratifies it",
-    "required-derived-vocabulary": "derivable from other facts, but external authority governs the name",
-    "representation-artifact": "another coordinate already carries the distinction",
-    "not-yet-admitted": "no active authority requires it",
-  },
-  basis: { frozenAt: "abc1234", reason: "test", digest: "0".repeat(64), count: 2, candidates: ["a.b", "c.d"] },
+  dispositions: Object.fromEntries(DISPOSITIONS.map((d) => [d, `synthetic gloss for ${d}`])),
+  basis: { frozenAt: "abc1234", reason: "test", count: 2, candidates: ["a.b", "c.d"] },
   constructors: {},
   verdicts: { "a.b": { disposition: "unresolved" }, "c.d": { disposition: "unresolved" } },
   ...over,
@@ -91,6 +88,66 @@ describe("the close condition is a verdict per candidate, not a smaller schema",
       "verdict e.f is not in the frozen basis",
     );
     expect(check(ledgerOf({ verdicts: { "a.b": { disposition: "unresolved" } } })).problems).toContain("candidate c.d has no verdict entry");
+  });
+});
+
+describe("the apparatus owns its own vocabulary and verifies its own freeze", () => {
+  it("refuses a disposition the ledger invented for itself", () => {
+    // The defect this closes: the check read `ledger.dispositions`, so a ledger
+    // could authorize a new disposition in the same edit that used it. A
+    // vocabulary a document can extend about itself is not a vocabulary.
+    const l = ledgerOf({});
+    (l.dispositions as Record<string, string>)["looks-fine"] = "a gloss is not an authority";
+    l.verdicts["a.b"] = { disposition: "looks-fine" as never, reason: "r" };
+    const p = check(l).problems;
+    expect(p.some((x) => x.includes("must describe exactly the code-owned vocabulary"))).toBe(true);
+    expect(p).toContain('a.b: unknown disposition "looks-fine"');
+  });
+
+  it("refuses a duplicated candidate, which satisfies the count while hiding a coordinate", () => {
+    const l = ledgerOf({ basis: { frozenAt: "abc1234", reason: "test", count: 2, candidates: ["a.b", "a.b"] } });
+    expect(check(l).problems).toContain("basis lists duplicate candidate(s): a.b");
+  });
+
+  it("verifies the basis digest instead of merely recording it", () => {
+    const bad = ledgerOf({ basis: { frozenAt: "abc1234", reason: "test", digest: "0".repeat(64), count: 2, candidates: ["a.b", "c.d"] } });
+    expect(check(bad).problems.some((p) => p.startsWith("basis digest is"))).toBe(true);
+    const real = createHash("sha256").update(["a.b", "c.d"].join("\n")).digest("hex");
+    const good = ledgerOf({ basis: { frozenAt: "abc1234", reason: "test", digest: real, count: 2, candidates: ["a.b", "c.d"] } });
+    expect(good.basis.digest).toBe(real);
+    expect(check(good).problems).toEqual([]);
+  });
+
+  it("the live ledger's recorded digest is the one its candidate list actually hashes to", () => {
+    for (const { file, ledger } of basesForSpec("REL-VIEW-ALGEBRA-01")) {
+      if (ledger.basis.digest === undefined) continue;
+      const actual = createHash("sha256").update([...ledger.basis.candidates].sort().join("\n")).digest("hex");
+      expect(actual, `${file}`).toBe(ledger.basis.digest);
+    }
+  });
+});
+
+describe("the gate covers every basis the spec opened", () => {
+  it("finds the sibling bases, not just the first one", () => {
+    // The defect: the CLI checked `subtraction-stage2.json` alone, so it could
+    // report green while obligations this same slice created were still open in
+    // a sibling file.
+    const files = basesForSpec("REL-VIEW-ALGEBRA-01").map((b) => b.file).sort();
+    expect(files.length).toBeGreaterThan(1);
+    expect(files).toContain("subtraction-stage2.json");
+    for (const { file, ledger } of basesForSpec("REL-VIEW-ALGEBRA-01")) {
+      expect(ledger.spec, file).toBe("REL-VIEW-ALGEBRA-01");
+    }
+  });
+
+  it("a sibling basis with an open candidate keeps the gate red", () => {
+    const open = basesForSpec("REL-VIEW-ALGEBRA-01").filter(({ ledger }) =>
+      ledger.basis.candidates.some((id) => (ledger.verdicts[id]?.disposition ?? "unresolved") === "unresolved"),
+    );
+    expect(open.length).toBeGreaterThan(0);
+    for (const { file, ledger } of open) {
+      expect(checkSubtraction(file, ledger).ok, `${file} reports OK with unresolved candidates`).toBe(false);
+    }
   });
 });
 

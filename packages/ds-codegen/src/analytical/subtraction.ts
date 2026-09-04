@@ -34,6 +34,7 @@
  *   pnpm run analytical:subtraction          # report, exit 0
  *   pnpm run analytical:subtraction --gate   # exit 1 unless every candidate has a verdict
  */
+import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { orphanedCoordinates } from "./experiments.js";
@@ -55,6 +56,22 @@ export type SubtractionDisposition =
  * redundancy. Every other decided verdict expects the coordinate to be gone.
  */
 export const RETAINING: ReadonlySet<string> = new Set(["required-derived-vocabulary"]);
+
+/**
+ * The closed disposition vocabulary, owned by CODE.
+ *
+ * It used to be validated against the ledger's own `dispositions` map, so a
+ * ledger could invent a disposition and authorize it in the same edit by adding
+ * the key. A vocabulary a document can extend about itself is not a vocabulary.
+ * The ledger's map must now DESCRIBE exactly this set and may not extend it.
+ */
+export const DISPOSITIONS: readonly SubtractionDisposition[] = [
+  "unresolved",
+  "witnessed",
+  "required-derived-vocabulary",
+  "representation-artifact",
+  "not-yet-admitted",
+];
 
 export interface CoordinateVerdict {
   disposition: SubtractionDisposition;
@@ -150,6 +167,24 @@ export function checkSubtraction(file = SUBTRACTION_FILE, ledger = loadSubtracti
   if (basis.length !== ledger.basis.count) {
     problems.push(`basis records count ${ledger.basis.count} but lists ${basis.length} candidates`);
   }
+  // A duplicated candidate satisfies the count while hiding a coordinate: two
+  // entries, one verdict, one obligation silently discharged by the other.
+  const dupes = [...new Set(basis.filter((id, i) => basis.indexOf(id) !== i))].sort();
+  if (dupes.length > 0) problems.push(`basis lists duplicate candidate(s): ${dupes.join(", ")}`);
+  // The digest is what makes the basis reproducible; recording one and never
+  // checking it is a freeze that cannot fail.
+  if (ledger.basis.digest !== undefined) {
+    const actual = createHash("sha256").update([...basis].sort().join("\n")).digest("hex");
+    if (actual !== ledger.basis.digest) {
+      problems.push(`basis digest is ${ledger.basis.digest} but the candidate list hashes to ${actual}`);
+    }
+  }
+  // The ledger describes the vocabulary; it does not own it.
+  const declared = Object.keys(ledger.dispositions).sort();
+  const owned = [...DISPOSITIONS].sort();
+  if (declared.join(",") !== owned.join(",")) {
+    problems.push(`dispositions must describe exactly the code-owned vocabulary [${owned.join(", ")}], not [${declared.join(", ")}]`);
+  }
   for (const id of basis) {
     if (!(id in ledger.verdicts)) problems.push(`candidate ${id} has no verdict entry`);
   }
@@ -158,7 +193,7 @@ export function checkSubtraction(file = SUBTRACTION_FILE, ledger = loadSubtracti
   }
   for (const [id, v] of Object.entries(ledger.verdicts)) {
     if (v.disposition === "unresolved") continue;
-    if (!(v.disposition in ledger.dispositions)) problems.push(`${id}: unknown disposition "${v.disposition}"`);
+    if (!DISPOSITIONS.includes(v.disposition)) problems.push(`${id}: unknown disposition "${v.disposition}"`);
     // A verdict with no reason is a bare enumeration whose only message is
     // that the code changed, which cannot discharge anything.
     if (!v.reason?.trim()) problems.push(`${id}: ${v.disposition} with no reason`);
@@ -239,20 +274,39 @@ export function verdictDrift(
 // experiments.ts. Keeping it here would make a closed experiment fire against
 // work that neither caused it nor could discharge it.
 
+/**
+ * Every basis a spec opened, so the gate cannot report green while obligations
+ * this slice created are still open in a sibling file. `subtraction-stage2.json`
+ * is not privileged; it is simply the first one.
+ */
+export function basesForSpec(spec: string, dir = FIXTURES_DIR): { file: string; ledger: SubtractionLedger }[] {
+  return fs
+    .readdirSync(dir)
+    .filter((f) => /^subtraction-.+\.json$/.test(f))
+    .sort()
+    .map((f) => ({ file: f, ledger: loadSubtraction(path.join(dir, f)) }))
+    .filter(({ ledger }) => ledger.spec === spec);
+}
+
 const invokedDirectly = process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]));
 if (invokedDirectly) {
-  const ledger = loadSubtraction();
-  const r = checkSubtraction(SUBTRACTION_FILE, ledger);
+  const SPEC = "REL-VIEW-ALGEBRA-01";
+  const all = basesForSpec(SPEC);
+  const results = all.map(({ file, ledger }) => ({ file, ledger, r: checkSubtraction(path.join(FIXTURES_DIR, file), ledger) }));
   const counts = new Map<string, number>();
-  for (const id of ledger.basis.candidates) {
-    const d = ledger.verdicts[id]?.disposition ?? "unresolved";
-    counts.set(d, (counts.get(d) ?? 0) + 1);
+  for (const { ledger } of all) {
+    for (const id of ledger.basis.candidates) {
+      const d = ledger.verdicts[id]?.disposition ?? "unresolved";
+      counts.set(d, (counts.get(d) ?? 0) + 1);
+    }
   }
   if (process.argv.includes("--gate")) {
-    console.log(r.message);
-    if (!r.ok) process.exit(1);
+    for (const { file, r } of results) console.log(`${file}: ${r.ok ? "OK" : r.message}`);
+    if (results.some(({ r }) => !r.ok)) process.exit(1);
   } else {
-    console.log(`subtraction: ${ledger.basis.count} candidates frozen at ${ledger.basis.frozenAt}`);
+    console.log(`subtraction: ${all.length} basis file(s) opened by ${SPEC}`);
+    for (const { file, ledger } of all) console.log(`  ${file} — ${ledger.basis.count} candidates frozen at ${ledger.basis.frozenAt}`);
+    console.log("");
     for (const [d, n] of [...counts].sort()) console.log(`  ${String(n).padStart(4)}  ${d}`);
     const later = orphanedCoordinates();
     if (later.length > 0) {

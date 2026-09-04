@@ -434,6 +434,125 @@ export function interactionProven(witnesses: Witness[]): { sets: string[][]; coo
   return { sets, coordinates };
 }
 
+export type WitnessClass =
+  | "single"
+  /** Conditions 1-5 all hold: one coordinate carries the distinction, the rest erase residue. */
+  | "quotient-hygiene"
+  /** A condition genuinely failed: the members really do participate jointly. */
+  | "interaction"
+  /**
+   * Conditions 1-4 hold but no control EXISTS. A discriminator with two members
+   * whose payload shapes differ admits no compatible-shape pair, so condition 5
+   * is unsatisfiable by construction rather than false. Reporting that as
+   * `interaction` would manufacture a conclusion from the size of the
+   * vocabulary instead of from the witness.
+   */
+  | "indeterminate";
+
+export interface WitnessClassification {
+  klass: WitnessClass;
+  /** For hygiene: the coordinate that carries the candidate distinction. */
+  carrier?: string;
+  /** For hygiene: the coordinates present only to erase conditional residue. */
+  residue?: string[];
+  /** Why the classification does or does not hold, condition by condition. */
+  conditions: { id: string; held: boolean; detail: string }[];
+}
+
+/**
+ * Classify a holding witness as single, quotient-hygiene, or true interaction.
+ *
+ * The hygiene conditions, all required:
+ *
+ *  1. one member is a discriminator substitution (a `kind` member pair);
+ *  2. every auxiliary member lies in payload structurally CONDITIONAL on one
+ *     side of that discriminator;
+ *  3. the discriminator-only substitution fails to collide SOLELY because that
+ *     conditional payload remains;
+ *  4. erasing the auxiliary payload alone does not supply the outcome
+ *     difference being cited;
+ *  5. a CONTROL within the same enum — two members with compatible payload
+ *     shape — separates on a single coordinate, showing discriminator
+ *     differences can.
+ *
+ * Condition 5 is what makes this an empirical classification rather than an
+ * excuse: without a control, "the payload got in the way" is unfalsifiable.
+ */
+export function classifyWitness(
+  w: Witness,
+  census: Coordinate[],
+  oracle: Oracle,
+  singleWitnessed: ReadonlySet<string>,
+): WitnessClassification {
+  const conditions: WitnessClassification["conditions"] = [];
+  if (w.coordinates.length === 1) return { klass: "single", conditions };
+
+  const byId = new Map(census.map((c) => [c.id, c]));
+  const discriminators = w.coordinates.filter((id) => byId.get(id)?.kind === "member-pair" && byId.get(id)?.leaf.endsWith(".kind"));
+  const auxiliaries = w.coordinates.filter((id) => !discriminators.includes(id));
+
+  const c1 = discriminators.length === 1;
+  conditions.push({
+    id: "1-one-discriminator-substitution",
+    held: c1,
+    detail: c1 ? `${discriminators[0]}` : `${discriminators.length} discriminator member pairs among ${w.coordinates.join(" + ")}`,
+  });
+  if (!c1) return { klass: "interaction", conditions };
+
+  const carrier = discriminators[0];
+  const holder = byId.get(carrier)!.leaf.replace(/\.kind$/, "");
+  const members = byId.get(carrier)!.members ?? [];
+  // 2. Auxiliaries must live under `<holder>.<member>.` — payload that exists
+  //    only on one side of this discriminator.
+  const branchPrefixes = members.map((m) => `${holder}.${m}.`);
+  const misplaced = auxiliaries.filter((id) => !branchPrefixes.some((p) => id.startsWith(p)));
+  conditions.push({
+    id: "2-auxiliaries-are-branch-conditional-payload",
+    held: misplaced.length === 0,
+    detail: misplaced.length === 0 ? `all under ${branchPrefixes.join(" or ")}` : `outside the branch payload: ${misplaced.join(", ")}`,
+  });
+  if (misplaced.length > 0) return { klass: "interaction", conditions };
+
+  // 3. The discriminator alone must fail to collide, and 4. the auxiliaries
+  //    alone must fail too — otherwise the witness was not minimal and
+  //    checkWitness would have said so. Re-derived here rather than assumed.
+  const a = resolveSide(w.a, oracle).fixture;
+  const b = resolveSide(w.b, oracle).fixture;
+  const carrierAlone = collides(a, b, byId.get(carrier)!);
+  const auxAlone = auxiliaries.some((id) => byId.has(id) && collides(a, b, byId.get(id)!));
+  conditions.push({
+    id: "3-discriminator-alone-does-not-collide",
+    held: !carrierAlone,
+    detail: carrierAlone ? "it does collide alone, so the set is not minimal" : "residue remains after the tag is rewritten",
+  });
+  conditions.push({
+    id: "4-auxiliary-alone-does-not-supply-the-difference",
+    held: !auxAlone,
+    detail: auxAlone ? "an auxiliary alone already collides the stimuli" : "no auxiliary separates on its own",
+  });
+  if (carrierAlone || auxAlone) return { klass: "interaction", conditions };
+
+  // 5. A control from the same enum: a member pair on this discriminator that
+  //    IS ratified by a single-coordinate witness.
+  const control = [...singleWitnessed].find((id) => id.startsWith(`${holder}.kind:`) && id !== carrier);
+  // A control must be POSSIBLE before its absence can mean anything. With two
+  // members the pair under test is the only one the enum has.
+  const siblingPairs = census.filter((c) => c.kind === "member-pair" && c.leaf === `${holder}.kind` && c.id !== carrier);
+  const controlPossible = siblingPairs.length > 0;
+  conditions.push({
+    id: "5-control-pair-separates-on-one-coordinate",
+    held: control !== undefined,
+    detail: control
+      ? control
+      : controlPossible
+        ? `${siblingPairs.length} sibling pair(s) exist on ${holder}.kind but none has a single-coordinate witness`
+        : `UNAVAILABLE: ${holder}.kind has no sibling member pair, so no control can exist`,
+  });
+  if (!control) return { klass: controlPossible ? "interaction" : "indeterminate", conditions };
+
+  return { klass: "quotient-hygiene", carrier, residue: auxiliaries, conditions };
+}
+
 /**
  * Coordinates whose ONLY support is membership in a multi-coordinate witness.
  *

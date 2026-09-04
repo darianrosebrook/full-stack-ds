@@ -124,6 +124,40 @@
         ],
         "controlledComparison": "EVERY interaction-only pair has `semi-additive` as a member, and `semi-additive` is the only branch carrying payload. The control is `additive~ratio-measure`: same enum, same rules, both branches tag-only, and it has a holding SINGLE-coordinate witness. So the 2-set requirement tracks payload shape, not semantic entanglement — substituting a payload-carrying member alone leaves the payload behind, and the second coordinate erases that remnant."
       }
+    },
+    "witnessClassification": {
+      "$comment": "Every holding multi-coordinate witness, run through the five conditions. Measured, not argued.",
+      "results": [
+        {
+          "witness": "field.additivity.kind:additive~semi-additive + ...nonAdditiveAlong#present",
+          "class": "quotient-hygiene",
+          "carrier": "field.additivity.kind:additive~semi-additive",
+          "residue": [
+            "field.additivity.semi-additive.nonAdditiveAlong#present"
+          ],
+          "control": "field.additivity.kind:additive~ratio-measure"
+        },
+        {
+          "witness": "field.additivity.kind:semi-additive~ratio-measure + ...nonAdditiveAlong#present",
+          "class": "quotient-hygiene",
+          "carrier": "field.additivity.kind:semi-additive~ratio-measure",
+          "residue": [
+            "field.additivity.semi-additive.nonAdditiveAlong#present"
+          ],
+          "control": "field.additivity.kind:additive~ratio-measure"
+        },
+        {
+          "witness": "assertion.kind + assertion.aggregate.op",
+          "class": "interaction",
+          "failed": "condition 1 — `assertion.kind` is a bare LEAF, not a member pair, so there is no tag rewrite for residue to be conditional on"
+        },
+        {
+          "witness": "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
+          "class": "indeterminate",
+          "failed": "condition 5 UNAVAILABLE — `Assertion` has exactly two branches, so C(2,2)=1 and the pair under test is the only member pair the enum has. Conditions 1-4 all held."
+        }
+      ],
+      "finding": "The assertion cluster was chosen as the independent falsifier and cannot serve as one: its discriminator is structurally incapable of supplying a control. Conditions 1-4 held there, so the MECHANISM looks the same, but the test is inconclusive rather than confirming. Quotient-hygiene therefore rests on a single enum so far and must not yet be generalized to the twenty derivedBy.kind pairs — though `Derivation` has seven members and `bin~normalize` is a ratified single-coordinate control, so unlike `Assertion` it CAN be tested."
     }
   },
   "openQuestion": {

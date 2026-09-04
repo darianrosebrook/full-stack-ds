@@ -36,6 +36,7 @@ import {
   outcomeFrom,
   primitiveRatified,
   interactionOnly,
+  classifyWitness,
   resolveSide,
   type Witness,
 } from "./necessity.js";
@@ -490,6 +491,68 @@ describe("C1b — a minimal multi-coordinate witness is weaker evidence than a s
     const owned = new Set(loadBases().flatMap((b) => b.candidates));
     for (const id of interactionOnly(holding)) {
       expect(owned.has(id), `${id} is interaction-only and no basis owns it`).toBe(true);
+    }
+  });
+});
+
+describe("C1c — a multi-coordinate witness is classified, and the classification can fail", () => {
+  const single = primitiveRatified(holding);
+  const multi = holding.filter((w) => w.coordinates.length > 1);
+  const classify = (w: (typeof multi)[number]) => classifyWitness(w, kernel, oracle, single);
+
+  it("every multi-coordinate witness gets a classification, and none is silently `single`", () => {
+    for (const w of multi) {
+      const c = classify(w);
+      expect(c.klass, w.coordinates.join(" + ")).not.toBe("single");
+      expect(c.conditions.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("hygiene requires all five conditions, so dropping the control changes the verdict", () => {
+    // Condition 5 is what makes this empirical rather than an excuse: without a
+    // control, "the payload got in the way" is unfalsifiable.
+    const hygienic = multi.filter((w) => classify(w).klass === "quotient-hygiene");
+    expect(hygienic.length, "no hygiene witness to test the conditions against").toBeGreaterThan(0);
+    for (const w of hygienic) {
+      expect(classifyWitness(w, kernel, oracle, new Set()).klass).not.toBe("quotient-hygiene");
+    }
+  });
+
+  it("an UNAVAILABLE control reports indeterminate, never interaction", () => {
+    // A two-member discriminator has one member pair, so the pair under test is
+    // the only one the enum has and no control can exist. Calling that
+    // `interaction` would manufacture a conclusion from the size of the
+    // vocabulary rather than from the witness.
+    for (const w of multi) {
+      const c = classify(w);
+      const cond5 = c.conditions.find((x) => x.id.startsWith("5-"));
+      if (cond5 && !cond5.held && cond5.detail.startsWith("UNAVAILABLE")) {
+        expect(c.klass).toBe("indeterminate");
+        expect(c.conditions.filter((x) => !x.held)).toHaveLength(1);
+      }
+    }
+  });
+
+  it("a witness with no discriminator substitution is interaction, not hygiene", () => {
+    // `assertion.kind + assertion.aggregate.op` pairs a bare LEAF with a
+    // payload leaf. There is no tag rewrite for residue to be conditional on.
+    const w = multi.find((x) => x.coordinates.includes("assertion.kind"));
+    expect(w, "expected the bare-leaf witness to still exist").toBeDefined();
+    const c = classify(w!);
+    expect(c.klass).toBe("interaction");
+    expect(c.conditions[0].id).toBe("1-one-discriminator-substitution");
+    expect(c.conditions[0].held).toBe(false);
+  });
+
+  it("names the carrier and the residue separately, because they are different claims", () => {
+    for (const w of multi.filter((x) => classify(x).klass === "quotient-hygiene")) {
+      const c = classify(w);
+      expect(c.carrier).toBeTruthy();
+      expect(c.residue?.length).toBeGreaterThan(0);
+      expect(c.residue).not.toContain(c.carrier);
+      // The residue must be branch-conditional payload under the carrier's holder.
+      const holder = c.carrier!.split(":")[0].replace(/\.kind$/, "");
+      for (const r of c.residue!) expect(r.startsWith(`${holder}.`)).toBe(true);
     }
   });
 });
