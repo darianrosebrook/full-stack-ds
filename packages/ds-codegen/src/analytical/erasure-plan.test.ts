@@ -13,7 +13,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { loadCensus, loadDerivation, loadLocators, loadPlans, type Coordinate } from "./census.js";
-import { executePlan, orderPlans, type ForgetOperation } from "./erasure-plan.js";
+import { executePlan, orderPlans, wouldChange, type ForgetOperation } from "./erasure-plan.js";
 import { FIXTURES_DIR } from "./necessity.js";
 import { canonical, erase, planFor } from "./quotient.js";
 import { isMarker } from "./quotient-image.js";
@@ -395,5 +395,262 @@ describe("the quotient no longer reads the schema", () => {
     for (const token of ["walkFixture", "loadBranchSignatures", "derivedBy", "grainWitness", "peers", "assertions"]) {
       expect(source.includes(token), `quotient.ts still mentions ${token}`).toBe(false);
     }
+  });
+});
+
+/**
+ * THE OPERATION'S OWN LAW.
+ *
+ * Everything above this point checks WHERE an erasure writes and what it costs.
+ * None of it checks what the erasure FORGETS, and those are different claims.
+ * `checkIsolation` cannot supply the missing one either: legality and locality
+ * are necessary side conditions on an erasure, not a definition of it. An
+ * operation can stay inside its own slot, leave a schema-legal image, and still
+ * be the wrong function.
+ *
+ * The specimen that forced this block: `forget-reference-order` returning
+ * `[...v].sort().map((_x, _i, arr) => arr[0])`. It is idempotent, it writes only
+ * inside the plan's slot, and every image it produces is schema-legal — so
+ * composition, footprint and isolation all pass it — yet it destroys membership
+ * while claiming to forget only order. It survived all 222 tests in this file,
+ * `quotient-image.test.ts` and `necessity.test.ts` together. Only the recorded
+ * freeze noticed, and a moved digest proves a byte changed, not that a law broke.
+ *
+ * Lawful forgetting is EXACT IDENTIFICATION, which is two obligations pulling
+ * against each other:
+ *
+ *   IDENTIFIES  stimuli differing only in the fact the coordinate names must
+ *               produce equal images — otherwise the operation does not forget.
+ *   SEPARATES   stimuli differing in any fact the coordinate does NOT name must
+ *               produce different images — otherwise it forgets something else.
+ *
+ * Only the pair binds. Either alone is satisfied by a degenerate function:
+ * identity satisfies SEPARATES, and a constant satisfies IDENTIFIES.
+ */
+describe("lawful forgetting — each operation identifies exactly what its coordinate names", () => {
+  /** A relation, built to whatever depth a locator needs. */
+  const fx = (r: Record<string, unknown>): Fixture =>
+    ({ id: "fx_law", structure: { relations: { r: { grain: ["k"], fields: { k: { transformation: "nominal", key: true } }, ...r } } }, assertions: [] }) as unknown as Fixture;
+  /** A relation carrying one extra field `v`, the usual subject. */
+  const field = (v: Record<string, unknown>): Fixture => fx({ fields: { k: { transformation: "nominal", key: true }, v } });
+  const image = (planId: string, f: Fixture) => {
+    const p = plans.get(planId);
+    if (!p) throw new Error(`no plan for ${planId}`);
+    return JSON.stringify(executePlan(f, p));
+  };
+
+  /**
+   * One row per operation the census actually plans. Each names the fact its
+   * coordinate carries, a pair that must collapse, and a pair that must not.
+   *
+   * The `separates` pairs are chosen to differ in a fact of the SAME kind and
+   * often the same slot — a neighbouring enum member, another element of the
+   * same list — because a pair differing somewhere unrelated is separated by
+   * any operation at all and would prove nothing.
+   */
+  const fires = (planId: string, f: Fixture) => image(planId, f) !== JSON.stringify(f);
+
+  /**
+   * How many of a row's two stimuli the operation actually runs on.
+   *
+   * Stated per row and asserted, because a SEPARATES row where the operation
+   * is a no-op on BOTH sides is vacuous: the images differ only because the
+   * stimuli did, and the row would stay green for any operation whatsoever.
+   * The first draft of the `forget-reference-order` row was exactly that — it
+   * used `["a","b"]` and `["a","c"]`, both already sorted, so `affects` skipped
+   * them both and the row proved nothing about ordering.
+   *
+   * "one" is the honest and intended answer where the second stimulus carries a
+   * fact the coordinate does not name: a merge leaves a third member alone, an
+   * absence-spelling leaves a different member alone, and a value already in
+   * canonical form is already its own image.
+   */
+  type Fires = "both" | "one";
+
+  const laws: {
+    op: ForgetOperation["kind"];
+    plan: string;
+    forgets: string;
+    identifies: [Fixture, Fixture, Fires];
+    separates: [Fixture, Fixture, string, Fires];
+  }[] = [
+    {
+      op: "forget-value",
+      plan: "field.transformation",
+      forgets: "which scale a field is measured on",
+      identifies: [field({ transformation: "ordinal" }), field({ transformation: "interval" }), "both"],
+      separates: [field({ transformation: "ordinal" }), field({ transformation: "ordinal", index: true }), "a sibling leaf on the same field", "both"],
+    },
+    {
+      op: "merge-enum-members",
+      plan: "field.transformation:nominal~ordinal",
+      forgets: "the distinction between two named members, and no third one",
+      identifies: [field({ transformation: "nominal" }), field({ transformation: "ordinal" }), "both"],
+      separates: [field({ transformation: "nominal" }), field({ transformation: "ratio" }), "a member outside the merged pair", "both"],
+      // "both", not "one": the locator sweeps EVERY field's transformation, and
+      // the key field `k` carries `nominal` in both stimuli, so the merge runs
+      // on each side regardless of what `v` carries. The firing profile is
+      // therefore weak evidence for this row alone, which is why the merge's
+      // class content and the third member's survival are asserted directly
+      // below rather than inferred from the images differing.
+    },
+    {
+      op: "spell-member-as-absent",
+      plan: "field.temporality.grain:day~<absent>",
+      forgets: "whether one member was spelled or left off",
+      identifies: [field({ transformation: "interval", temporality: { kind: "instant", grain: "day" } }), field({ transformation: "interval", temporality: { kind: "instant" } }), "one"],
+      separates: [field({ transformation: "interval", temporality: { kind: "instant", grain: "day" } }), field({ transformation: "interval", temporality: { kind: "instant", grain: "month" } }), "a different member of the same enum", "one"],
+    },
+    {
+      op: "delete-slot",
+      plan: "field.cyclic",
+      forgets: "whether an optional leaf was declared",
+      identifies: [field({ transformation: "ordinal", cyclic: true }), field({ transformation: "ordinal" }), "one"],
+      separates: [field({ transformation: "ordinal", cyclic: true }), field({ transformation: "ordinal", cyclic: true, index: true }), "another optional leaf beside it", "both"],
+    },
+    {
+      op: "delete-holder",
+      plan: "field.temporality#present",
+      forgets: "whether the holder was declared at all",
+      identifies: [field({ transformation: "interval", temporality: { kind: "instant" } }), field({ transformation: "interval" }), "one"],
+      separates: [field({ transformation: "interval", temporality: { kind: "instant" } }), field({ transformation: "ratio", temporality: { kind: "instant" } }), "a fact outside the holder", "both"],
+    },
+    {
+      op: "forget-reference-order",
+      plan: "relation.derivedBy.nest.levels#order",
+      forgets: "the sequence of a reference list, and nothing about its members",
+      identifies: [fx({ derivedBy: { kind: "nest", levels: ["a", "b"] } }), fx({ derivedBy: { kind: "nest", levels: ["b", "a"] } }), "one"],
+      // THE MUTANT-B ROW. Same length, same position count, one member swapped.
+      // BOTH sides are given out of order, so the operation runs on each: a pair
+      // that is already sorted is skipped by `affects` and separates for the
+      // trivial reason that nothing happened to either one.
+      separates: [fx({ derivedBy: { kind: "nest", levels: ["b", "a"] } }), fx({ derivedBy: { kind: "nest", levels: ["c", "a"] } }), "which things the list names", "both"],
+    },
+    {
+      op: "forget-reference-arity",
+      plan: "relation.derivedBy.nest.levels#arity",
+      forgets: "how many references stand above the declaration's floor",
+      identifies: [fx({ derivedBy: { kind: "nest", levels: ["a", "b", "c"] } }), fx({ derivedBy: { kind: "nest", levels: ["a", "b"] } }), "one"],
+      separates: [fx({ derivedBy: { kind: "nest", levels: ["a", "b", "c"] } }), fx({ derivedBy: { kind: "nest", levels: ["b", "a", "c"] } }), "the order of the references it keeps", "both"],
+    },
+    {
+      op: "forget-reference-incidence",
+      plan: "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      forgets: "which positions name the same thing, and only that",
+      identifies: [
+        field({ transformation: "ratio", additivity: { kind: "semi-additive", nonAdditiveAlong: ["a", "a"] } }),
+        field({ transformation: "ratio", additivity: { kind: "semi-additive", nonAdditiveAlong: ["a", "b"] } }),
+        "both",
+      ],
+      separates: [
+        field({ transformation: "ratio", additivity: { kind: "semi-additive", nonAdditiveAlong: ["a", "a"] } }),
+        field({ transformation: "ratio", additivity: { kind: "semi-additive", nonAdditiveAlong: ["a", "a", "a"] } }),
+        "how many positions there are",
+        "both",
+      ],
+    },
+  ];
+
+  it("covers every operation kind the census plans, so no operation is exempt from the law", () => {
+    // The table is checked against the plan registry rather than against the
+    // type union: a kind the census never plans has no law to state here, and a
+    // kind it DOES plan must not be able to slip in unstated.
+    const planned = new Set([...plans.values()].map((p) => p.operation.kind));
+    expect(new Set(laws.map((l) => l.op))).toEqual(planned);
+  });
+
+  for (const law of laws) {
+    describe(`${law.op} forgets ${law.forgets}`, () => {
+      const ran = (x: Fixture, y: Fixture, expected: Fires) =>
+        expect([fires(law.plan, x), fires(law.plan, y)].filter(Boolean).length, `the operation must run on ${expected === "both" ? "both stimuli" : "exactly one stimulus"}`).toBe(expected === "both" ? 2 : 1);
+
+      it("IDENTIFIES: stimuli differing only in the named fact produce the same image", () => {
+        const [x, y, profile] = law.identifies;
+        expect(JSON.stringify(x), "the two stimuli must actually differ, or the row proves nothing").not.toBe(JSON.stringify(y));
+        ran(x, y, profile);
+        expect(image(law.plan, x)).toBe(image(law.plan, y));
+      });
+
+      it(`SEPARATES: it does not also forget ${law.separates[2]}`, () => {
+        const [x, y, , profile] = law.separates;
+        expect(JSON.stringify(x)).not.toBe(JSON.stringify(y));
+        // Without this the row is satisfied by an operation that does nothing:
+        // the images would differ only because the stimuli did.
+        ran(x, y, profile);
+        expect(image(law.plan, x)).not.toBe(image(law.plan, y));
+      });
+    });
+  }
+
+  it("merge-enum-members writes the CLASS of exactly the two named members, and leaves a third alone", () => {
+    // The merge row's SEPARATES check is satisfied by the images differing, and
+    // they would differ for a merge that wrote a class of the WRONG members, or
+    // one that quietly touched a third. Both are in-slot and both are legal.
+    const p = plans.get("field.transformation:nominal~ordinal")!;
+    const at = (f: Fixture) =>
+      (executePlan(f, p) as unknown as { structure: { relations: { r: { fields: Record<string, { transformation: unknown }> } } } }).structure.relations.r.fields.v.transformation;
+
+    const cls = at(field({ transformation: "nominal" }));
+    expect(isMarker(cls)).toBe(true);
+    expect((cls as { members: string[] }).members, "the class is exactly the pair the coordinate names").toEqual(["nominal", "ordinal"]);
+    // Symmetric: reaching the class from either member gives the same class, or
+    // composing two merges over one leaf would depend on listing order.
+    expect(JSON.stringify(at(field({ transformation: "ordinal" })))).toBe(JSON.stringify(cls));
+    // And the member outside the pair is not merely "still different" — it is
+    // untouched, still a plain source-language value.
+    expect(at(field({ transformation: "ratio" }))).toBe("ratio");
+  });
+
+  it("forget-value departs the source language: a hole is never confusable with a declared value", () => {
+    // The other half of `forget-value`'s law, which no pair of stimuli states.
+    // Substituting a known value at the slot satisfies IDENTIFIES perfectly —
+    // every transformation collapses to one — and it is local and legal. What
+    // it fails is that the image must not be readable as an un-erased
+    // declaration; a reader could not tell it from a field that really is
+    // nominal. The quotient codomain exists to carry exactly this difference.
+    const p = plans.get("field.transformation")!;
+    const img = executePlan(field({ transformation: "ordinal" }), p) as unknown as {
+      structure: { relations: { r: { fields: Record<string, { transformation: unknown }> } } };
+    };
+    const at = img.structure.relations.r.fields.v.transformation;
+    expect(isMarker(at), "the slot must carry a marker, not a value the source language could have declared").toBe(true);
+    expect(typeof at).not.toBe("string");
+  });
+
+  it("the skip predicate is not a second, disagreeing definition of the operation", () => {
+    // `affects` decides whether a slot needs the operation at all, and for the
+    // reference operations it decides by recomputing the operation's own answer
+    // (`JSON.stringify(v) !== JSON.stringify([...v].sort())`). That is a second
+    // copy of the definition, and two copies can drift apart.
+    //
+    // The consequence is not cosmetic. A slot the predicate skips keeps its
+    // original value; a slot it admits gets the operation's. If they disagree,
+    // the image depends on which of the two was consulted, and the erasure
+    // stops being a function of the coordinate. That is exactly how the
+    // membership-collapsing mutant produced two DIFFERENT images from two
+    // stimuli that differ only in order: one was skipped, the other was not.
+    const disagree: string[] = [];
+    for (const f of fixtures) {
+      for (const [id, plan] of plans) {
+        const predicted = wouldChange(f, plan);
+        const actual = JSON.stringify(executePlan(f, plan)) !== JSON.stringify(f);
+        if (predicted !== actual) disagree.push(`${f.id}/${id}: predicted ${predicted}, observed ${actual}`);
+      }
+    }
+    expect(disagree.slice(0, 5), `${disagree.length} disagreements over ${fixtures.length} fixtures x ${plans.size} plans`).toEqual([]);
+  });
+
+  it("the law is not vacuous: an in-slot, legal, idempotent operation still fails it", () => {
+    // The specimen, executed rather than described. This is the same function
+    // the surviving mutant installed, applied through the same plan, and the
+    // SEPARATES row above is what refuses it. Without this the block could
+    // silently stop discriminating and still read green.
+    const wrong = (v: string[]) => v.slice().sort().map((_x, _i, arr) => arr[0]);
+    const levels = (l: string[]) => ({ derivedBy: { kind: "nest", levels: wrong(l) } });
+    expect(wrong(["a", "b"])).toEqual(wrong(["b", "a"]));            // it does forget order
+    expect(wrong(wrong(["a", "b"]))).toEqual(wrong(["a", "b"]));      // and it is idempotent
+    expect(wrong(["a", "b"])).toHaveLength(2);                        // and arity survives
+    // And yet it identifies two lists that name different things.
+    expect(JSON.stringify(fx(levels(["a", "b"])))).toBe(JSON.stringify(fx(levels(["a", "c"]))));
   });
 });
