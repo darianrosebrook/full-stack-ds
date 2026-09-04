@@ -1,0 +1,735 @@
+{
+  "$comment": "The Stage-2 subtraction (REL-VIEW-ALGEBRA-01). This file is NOT a freeze over the live kernel and must never be read as one. It is the frozen BASIS of one experiment plus its verdicts, in the sense of ADR-0001: freeze the basis needed to make a claim reproducible; do not freeze the evolving system merely because you measured it. `basis` fixes the candidate ids as they stood at the recorded commit and is never re-derived from the live census, so a coordinate a later stage admits creates a LATER stage's obligation and cannot reopen this one. The close condition is that no candidate remains `unresolved` — every proposition opened here has a verdict — which is terminal for the slice, not a standing repository invariant: after Stage 2 closes this ledger is historical evidence and its gate must not participate in ordinary repo admission. `constructors` is a SEPARATE governed disposition on the algebra's vocabulary, and coordinate subtraction cannot reach it: a constructor may leave the admitted algebra only through an explicit vocabulary-evolution disposition showing that its semantic transition law is no longer required by active authority. That separation is what keeps deletion from being the cheap discharge — a coordinate failing necessity loses primitive standing, which never by itself means a thing that coordinate names disappears.",
+  "spec": "REL-VIEW-ALGEBRA-01",
+  "dispositions": {
+    "unresolved": "not yet adjudicated; the close condition is zero of these",
+    "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
+    "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it",
+    "required-derived-vocabulary": "no independent semantic degree of freedom — it is wholly derivable from other semantic facts — but external authority governs the NAME, so the coordinate legitimately stays in the kernel. The only decided verdict that does not expect the coordinate to disappear."
+  },
+  "adjudicationPolicy": {
+    "$comment": "The rule this subtraction is adjudicated under, recorded BEFORE any verdict cites it. It is not a meaning of an individual disposition — it constrains what may be concluded at all — so it is kept out of `dispositions`.",
+    "retention": "Retain a candidate coordinate iff an independently grounded Stage-2 cause requires a distinction that becomes unexpressible when exactly that coordinate is erased. Otherwise remove the coordinate from the Stage-2 kernel. A coordinate failing necessity loses PRIMITIVE STANDING; it never by itself means a thing that coordinate names must disappear.",
+    "independentlyGrounded": [
+      "Engine behavior is evidence, never authority: the outcome must be adjudicable from the frozen corpus and doctrine without consulting the implementation result, and each verdict's reason must point backward to that authority.",
+      "Schema invalidity does not establish semantic necessity: if changing a value merely makes the union invalid, that proves the encoding requires the tag, not that the semantics do.",
+      "Substitution must isolate the claimed distinction: if testing a pair requires also exchanging another slot or changing operand arity, the evidence is that two constructors differ, not a witness for that pair.",
+      "Failure to find a witness is a RESULT, never permission to invent new corpus authority. A new {base, patch} stimulus is admissible only where its judgment follows mechanically from an already-existing Stage-2 cause."
+    ],
+    "constructorSeparation": "Constructor necessity ('does Stage 2 require this constructor at all?') is adjudicated separately from discriminator necessity ('does Stage 2 require this encoding coordinate?'). Only the first can retire an operator; the second means remodel or quotient the representation. No coordinate verdict can reach the `constructors` ledger — they do not share a key.",
+    "kindInterpretation": {
+      "proves": "A discriminant is necessary to distinguish two constructors with the same structural operand signature.",
+      "doesNotProve": "`derivedBy.kind` is a primitive analytical semantic axis.",
+      "openQuestion": "Under the discriminator normal form, branch identity is carried by the `kind:A~B` pairs and holder existence by `relation.derivedBy#present`. What independent degree of freedom the BARE `relation.derivedBy.kind` leaf then represents is an explicit remaining question, not an automatic survivor: a `bin~normalize` witness may make the leaf look necessary because erasing the tag collapses them, while the pair establishes the same distinction. Test it after the 21 pair adjudications."
+    },
+    "normalFormProbes": {
+      "$comment": "Structural questions to ask of a candidate BEFORE looking for a witness. Each names a way a representation can generate propositions about itself. Discovered by subtraction, not assumed.",
+      "crossTerm": "Has the representation generated a cross-product between independent degrees of freedom? For an optional tagged holder those are existence, alternative identity, and alternative-specific payload; 'alternative A versus absence' is their cross-term and is never a fourth degree of freedom. Established by the 13 discriminator member-absence candidates collapsing to 3 holder-presence facts.",
+      "tagIsNotTheChoice": "A tag that names a semantic choice does not thereby constitute an independent semantic coordinate. If the tag is wholly derivable from the presence, structure, payload, or occurrence class it summarizes, retain the underlying distinction and classify the TAG by its actual role: primitive coordinate (removing it destroys an independently grounded distinction), required derived vocabulary (externally governed and name-bearing, but fully derivable from other semantic facts), or representation artifact (neither independently necessary nor externally required).",
+      "reportingVocabulary": "A reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE. Authority to name a conclusion does not imply independent semantic information in the name. The semantic normal form is not necessarily the vocabulary in which the system reports its conclusions. Two materially different instances so far: constructor law and operand structure beneath a derived constructor tag; diagnostic and obligation occurrence classes beneath a derived verdict status.",
+      "dependentSum": "Is the coordinate one of a set of SIBLINGS, or one of a set of FIBERS? A semantic normal form cannot be represented as a flat inventory of typed parameters; it must preserve the dependency structure among them. Some coordinates are independently variable, others are meaningful only inside the fiber selected by another semantic choice. A schema that serializes both as sibling JSON fields makes them look equally ablatable, and they are not. Established by the twenty derivation pairs having bilateral residue while the additivity pairs have unilateral residue and the control has none."
+    },
+    "witnessStrength": {
+      "$comment": "What each shape of witness may and may not ratify. The retention criterion says a distinction becomes unexpressible when EXACTLY the candidate is erased; only one shape of witness establishes that.",
+      "single": "A holding 1-coordinate witness ratifies PRIMITIVE COORDINATE STANDING: erasing exactly this coordinate destroys a distinction an independently grounded cause requires.",
+      "minimalMultiple": "A holding minimal >1-coordinate witness proves the SET is a necessary separating set, and — because checkWitness raises NOT_MINIMAL when any member alone already collides the stimuli — positively establishes that NO MEMBER separates alone. Acceptance and disqualification are the same fact. It must never ratify any member individually. What it leaves open is the factorization, and a 2-set pairing a candidate TAG with its branch PAYLOAD is evidence the present factorization may be non-orthogonal, not a successful tag verdict.",
+      "consequence": "`primitiveRatified` and `interactionProven` are separate in the code, `verdictDrift` refuses a `witnessed` verdict supported only by a multi-coordinate set, and the coordinates in that position are owned by subtraction-stage2-interaction.json rather than counted as ratified.",
+      "classification": {
+        "$comment": "A classification of the WITNESS, never of a coordinate, and deliberately NOT a sixth disposition. Standing is a property of a coordinate; hygiene is a property of an argument, and the same coordinate could be semantic in one witness and cleanup in another. (The branch review also found the ledger could self-authorize disposition names, which is a second reason not to grow that vocabulary from here.)",
+        "single": "one coordinate; ratifies primitive standing",
+        "quotient-hygiene": "one coordinate carries the candidate distinction and the additional coordinate(s) exist only to erase branch-specific representational residue, so the two encodings can enter the same comparison class",
+        "interaction": "a condition genuinely failed; the members participate jointly and the factorization is open",
+        "indeterminate": "conditions 1-4 hold but no control CAN exist — a two-member discriminator has one member pair, so the pair under test is the only one the enum has. Unsatisfiable by construction is not the same as false, and reporting it as `interaction` would manufacture a conclusion from the size of the vocabulary",
+        "conditions": [
+          "1. exactly one member is a discriminator substitution (a `kind` member pair)",
+          "2. every auxiliary member lies in payload structurally conditional on one side of that discriminator",
+          "3. the discriminator-only substitution fails to collide solely because that conditional payload remains",
+          "4. erasing an auxiliary alone does not supply the outcome difference being cited",
+          "5. a control within the same enum — two members of compatible payload shape — separates on a single coordinate, showing discriminator differences can. Condition 5 is what makes this empirical rather than an excuse: without a control, 'the payload got in the way' is unfalsifiable"
+        ],
+        "notYetLicensed": "A hygiene classification does NOT by itself confer primitive standing on the carrier. Doing so would quietly rewrite the retention rule from 'erase exactly c' into 'erase c plus whatever makes the test work'. That remains true after adoption: the closure below is a way of STATING a conditional proof, not a way of discharging one, and a `provisional` closure leaves its candidate's verdict `unresolved`.",
+        "semanticErasureClosure": {
+          "status": "ADOPTED as a code-owned, dependency-aware WITNESS FORM (closure.ts). Not a sixth disposition; the ledger vocabulary is unchanged.",
+          "$comment": "The strict rule stays valid for INDEPENDENT coordinates: erasing exactly coordinate c must destroy the independently grounded distinction. What the second-enum probe falsified is treating that rule as universal. A tagged union is not a Cartesian product of independently present coordinates; it is a dependent sum, Sigma constructor : Kind . Payload(constructor). `toGrain` exists only under aggregate-to-grain, `keep` only under project, `edgeFrom`/`edgeTo` only under graph. Once two constructors are identified, their branch-indexed payload cannot remain untouched and still produce a comparable encoding, so the measured 1/3/4/5 raw-edit cardinalities are properties of the SERIALIZED SUM-TYPE ENCODING, not measurements of semantic dimensionality.",
+          "whyNotLeftUnlicensed": "Leaving closure unlicensed would let the schema's branch topology decide the semantic result: all twenty non-control derivation pairs would lose standing for the single reason that their constructors happen to require differently named fields. That answers the subtraction with the representation under test, which is precisely the failure this lane exists to detect. Adoption is therefore a correction to the quotient's DOMAIN MODEL — a type-aware erasure rule replacing a flat JSON-leaf ablation — not a relaxation of witness discipline.",
+          "proofObject": {
+            "carrier": "exactly one discriminator member-pair coordinate: the semantic intervention under test",
+            "normalization": "the branch-conditional payload that must be erased for the two encodings to enter the same comparison class. Named `normalization` rather than `cleanup` deliberately: `cleanup` sounds disposable, and these coordinates may yet prove semantically consequential. What is known now is only that their SERIALIZED PRESENCE is conditional on the carrier's branch.",
+            "control": "a reference to the holding single-coordinate witness on a payload-compatible sibling pair of the same enum",
+            "dependencies": "the normalization set plus whatever it reaches transitively through other closures; a cycle appears here"
+          },
+          "states": {
+            "provisional": "the carrier/normalization mechanism holds, but one or more normalization dependencies remain unresolved (or no control CAN exist)",
+            "holding": "every proof obligation is discharged and the carrier has earned primitive standing",
+            "refuted": "a normalization coordinate independently carries the same distinction, an interaction remains, or the final quotient fails"
+          },
+          "obligations": [
+            "1. SINGLE SEMANTIC CARRIER. `carrier` names exactly one discriminator member-pair coordinate. The semantic witness bound remains ONE carrier; raw normalization cardinality is not counted against it.",
+            "2. MECHANICALLY DERIVED NORMALIZATION. The checker derives the set from the symmetric difference of the two branch payload signatures, read from the census's own schema walk. The authored list is retained for inspectability and must exactly equal the derived set, so the author cannot choose whatever makes the collision happen. An empty derived set is refused: that is a single-coordinate witness in the wrong record type.",
+            "3. CONTROLLED STIMULI. The two stimuli are identical outside the discriminated holder (checked by erasing the holder's whole contribution and comparing canonical forms), their required outcomes differ, and every hand-adjudicated side cites a corpus case, diagnostic code or obligation term the frozen oracle grounds — not merely engine output.",
+            "4. CARRIER INSUFFICIENCY BEFORE NORMALIZATION. The carrier alone must not collide, and neither may the carrier with any PROPER subset of the derived normalization set. The carrier-alone clause is evaluated unconditionally rather than as subset zero of the sweep.",
+            "5. COMPLETE CLOSURE SUFFICIENCY. The carrier plus the entire derived normalization set must collide. Failure means an INTERACTION remains, and refutes.",
+            "6. NORMALIZATION IS NOT THE CITED CAUSE. Normalization without the carrier must not collide the stimuli, and every member must lie in payload conditional on one branch. No normalization coordinate receives standing merely by appearing in a closure.",
+            "7. SAME-ENUM CONTROL. A sibling pair with compatible branch payload topology must show that a discriminator CAN separate directly on one coordinate. `bin~normalize` satisfies this for Derivation. Where no control can exist — the two-member `assertion.kind` enum — the classification is `indeterminate`, not failed.",
+            "8. DEPENDENCY AND FIXED-POINT DISCHARGE. Before promotion from provisional to holding, every normalization dependency must be resolved, none may be primitive- or interaction-supported in a way that independently carries the carrier distinction, and the simultaneous final quotient must conserve the authoritative judgment partition."
+          ],
+          "readingADependencyThatLaterEarnsStanding": {
+            "$comment": "A normalization coordinate gaining primitive standing does not retroactively erase the structural measurement; it changes the inference drawn from it. `carrier + normalization collides` remains a true fact about the encoding, but `the carrier is independently primitive` no longer follows from it.",
+            "derivedDiscriminator": "branch payload already carries enough information to identify the constructor; the tag is required reporting vocabulary or decoding convenience, not an independent semantic coordinate",
+            "compositeConstructor": "constructor choice and branch payload jointly constitute the irreducible semantic object; neither current coordinate deserves primitive standing alone",
+            "why": "This is why the closure must stay dependency-aware. Otherwise it would turn deterministic normalization into a mechanism for deleting whatever competing carrier prevented a desired witness. A strongly connected component in the carrier -> normalization graph indicates a composite object and must stay unresolved until refactored or discharged by the simultaneous quotient."
+          },
+          "whyTheControlIsStronger": "`bin~normalize` requires NO normalization. Its single-coordinate witness already establishes a discriminant between two constructors sharing the same structural operand signature, and no dependency resolution can weaken that result. It is strictly stronger than any closure, which is exactly what qualifies it as the control the other twenty cite.",
+          "testedAgainstExistingWitnesses": "The derived normalization set reproduces the residue `classifyWitness` observed for every holding multi-coordinate witness that has a carrier: both additivity hygiene witnesses (minRawEdit 2, unilateral residue) and the indeterminate `assertion.kind:aggregate~ratio-comparison`. The one witness with no carrier pairs the BARE `assertion.kind` leaf with payload, so no discriminator substitution is under test and no closure applies. Pinned in closure.test.ts.",
+          "preservesResultOf": "17bfcc96 — arbitrary 2-sets still do not ratify their members, and the <=2-coordinate bound on witnesses.json is unchanged",
+          "recordedFor": "The twenty non-control derivation pairs, in closures-stage2.json, as PROVISIONAL measurements. Their subtraction verdicts stay `unresolved`. Nineteen have no constructed stimuli, so obligations 3-6 are not evaluable — which is a different state from failing them. `aggregate-to-grain~project` carries stimuli and discharges obligations 1-7; obligation 8 is open because both its dependencies are unresolved, so its carrier gains nothing."
+        }
+      }
+    },
+    "threeLayers": {
+      "$comment": "The layers a candidate can belong to. Confusing any two of them has now produced a defect in both directions, so the separation is recorded rather than remembered.",
+      "semanticDistinction": "something the authority genuinely distinguishes",
+      "encodingFactorization": "the coordinates chosen to represent that distinction",
+      "reportingVocabulary": "names derived from those facts for external consumption",
+      "observedFailures": [
+        "A required NAME need not be primitive: `admissible | illegal | unproven` is a pure function of the diagnostic and obligation occurrence lists (judgment.ts), so the vocabulary is authoritative while carrying no independent semantic degree of freedom.",
+        "A schema can MULTIPLY one fact into cross-term coordinates: 13 discriminator member-absence candidates were three holder-presence facts.",
+        "A schema can also SPLIT one irreducible semantic object across several coordinates, none of which deserves primitive standing by itself — the inverse problem, and the one a minimal multi-coordinate witness reveals."
+      ],
+      "principle": "A semantic distinction can be irreducible while every coordinate in its current encoding is reducible. And: a reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE — authority to name a conclusion does not imply independent semantic information in the name."
+    }
+  },
+  "closeConditions": [
+    {
+      "id": "final-quotient",
+      "condition": "Every `representation-artifact` verdict must remain redundant after SIMULTANEOUSLY removing every coordinate adjudicated out of the kernel — evaluated over the final retained set as a whole, not after its own erasure and not sequentially in adjudication order.",
+      "why": "Otherwise two coordinates can each be declared carried by the other, both be removed, and collectively erase the distinction. That is the cyclic-redundancy form of the same instrument problem the isolation rule closes for single erasures, and it would let subtraction ORDER determine the normal form."
+    },
+    {
+      "id": "operator-law-locus",
+      "condition": "One authoritative locus states the per-operator transition law.",
+      "why": "Today it is three-way: the doctrine names the operator set and two illustrative typing rules, relation-model.ts declares each signature, derivation.ts implements the certification law. Deliberately NOT fixed before the `kind` pass — centralizing the laws first would risk designing the abstraction the subtraction is supposed to discover. Sequence: finish subtraction, observe the surviving operator normal form, then establish the locus from that result."
+    },
+    {
+      "id": "ruledigest-boundary",
+      "condition": "The `holdout.ruleDigest` claim boundary is explicitly settled in words.",
+      "why": "Excluding relation-model.ts is correct if the digest means 'judgment law over already-admitted structures'. If the holdout claim is end-to-end — fixture bytes through structural admission through judgment — then a well-formedness change can alter the holdout without moving the digest, and relation-model.ts is material despite not deciding the semantic result. Settle the wording rather than reflexively digesting the file."
+    },
+    {
+      "id": "closure-dependency-discharge",
+      "condition": "No closure in closures-stage2.json may remain `provisional` at close, and none may be `refuted` without its carrier carrying a verdict that accounts for the refutation.",
+      "why": "A provisional closure is an open conditional: it says the mechanism holds subject to dependencies nobody has adjudicated. Closing the slice with twenty of them outstanding would record a proof form as though it were a result. The dependencies collapse to nine distinct payload coordinates across the twenty carriers, so the discharge is nine adjudications, not twenty."
+    }
+  ],
+  "basis": {
+    "frozenAt": "bb742e8f",
+    "reason": "the commit at which the Stage-2 rules and fixtures were complete and the ledger was clean at stage 2, so the candidate set is the one the experiment actually opened",
+    "digest": "e64972726a8dd2f72740be1c37fbffd7c6b9f5d5ec31784161960c458b7f1661",
+    "count": 118,
+    "candidates": [
+      "assertion.aggregate.along#arity",
+      "assertion.aggregate.along#order",
+      "assertion.aggregate.along#present",
+      "assertion.aggregate.field#incidence",
+      "assertion.aggregate.nulls:as-observed~<absent>",
+      "assertion.aggregate.nulls:as-zero~<absent>",
+      "assertion.aggregate.nulls:exclude~<absent>",
+      "assertion.aggregate.relation#incidence",
+      "assertion.ratio-comparison.field#incidence",
+      "assertion.ratio-comparison.relation#incidence",
+      "evidence.grainWitness#arity",
+      "evidence.grainWitness#incidence",
+      "evidence.grainWitness#order",
+      "evidence.rows.*#present",
+      "field.additivity.kind:additive~<absent>",
+      "field.additivity.kind:additive~non-additive",
+      "field.additivity.kind:non-additive~<absent>",
+      "field.additivity.kind:non-additive~ratio-measure",
+      "field.additivity.kind:ratio-measure~<absent>",
+      "field.additivity.kind:semi-additive~<absent>",
+      "field.additivity.kind:semi-additive~non-additive",
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
+      "field.additivity.semi-additive.nonAdditiveAlong#order",
+      "field.temporality.grain",
+      "field.temporality.grain:day~<absent>",
+      "field.temporality.grain:day~month",
+      "field.temporality.grain:month~<absent>",
+      "field.temporality.kind:instant~<absent>",
+      "field.temporality.kind:interval~<absent>",
+      "observation.null:absent~<absent>",
+      "observation.null:absent~suppressed",
+      "observation.null:censored~<absent>",
+      "observation.null:censored~suppressed",
+      "observation.null:suppressed~<absent>",
+      "relation.derivedBy.aggregate-to-grain.from#incidence",
+      "relation.derivedBy.aggregate-to-grain.from#present",
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.aggregate-to-grain.toGrain#present",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "relation.derivedBy.bin.closure:left-closed~right-closed",
+      "relation.derivedBy.bin.closure:right-closed~<absent>",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.bin.field#present",
+      "relation.derivedBy.bin.from#incidence",
+      "relation.derivedBy.bin.from#present",
+      "relation.derivedBy.graph.edgeFrom#incidence",
+      "relation.derivedBy.graph.edgeFrom#present",
+      "relation.derivedBy.graph.edgeTo#incidence",
+      "relation.derivedBy.graph.edgeTo#present",
+      "relation.derivedBy.graph.from#incidence",
+      "relation.derivedBy.graph.from#present",
+      "relation.derivedBy.graph.requiresConservation",
+      "relation.derivedBy.graph.value#incidence",
+      "relation.derivedBy.graph.value#present",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+      "relation.derivedBy.join.from#incidence",
+      "relation.derivedBy.join.from#present",
+      "relation.derivedBy.join.with#incidence",
+      "relation.derivedBy.join.with#present",
+      "relation.derivedBy.kind",
+      "relation.derivedBy.kind:aggregate-to-grain~<absent>",
+      "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:aggregate-to-grain~join",
+      "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "relation.derivedBy.kind:aggregate-to-grain~project",
+      "relation.derivedBy.kind:bin~<absent>",
+      "relation.derivedBy.kind:bin~graph",
+      "relation.derivedBy.kind:bin~normalize",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:graph~<absent>",
+      "relation.derivedBy.kind:join~<absent>",
+      "relation.derivedBy.kind:join~bin",
+      "relation.derivedBy.kind:join~graph",
+      "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:join~normalize",
+      "relation.derivedBy.kind:join~project",
+      "relation.derivedBy.kind:nest~<absent>",
+      "relation.derivedBy.kind:nest~bin",
+      "relation.derivedBy.kind:nest~graph",
+      "relation.derivedBy.kind:nest~normalize",
+      "relation.derivedBy.kind:nest~project",
+      "relation.derivedBy.kind:normalize~<absent>",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.kind:project~<absent>",
+      "relation.derivedBy.kind:project~graph",
+      "relation.derivedBy.nest.from#incidence",
+      "relation.derivedBy.nest.from#present",
+      "relation.derivedBy.nest.levels#arity",
+      "relation.derivedBy.nest.levels#incidence",
+      "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.nest.levels#present",
+      "relation.derivedBy.normalize.field#incidence",
+      "relation.derivedBy.normalize.field#present",
+      "relation.derivedBy.normalize.from#incidence",
+      "relation.derivedBy.normalize.from#present",
+      "relation.derivedBy.project.from#incidence",
+      "relation.derivedBy.project.from#present",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+      "relation.derivedBy.project.keep#order",
+      "relation.derivedBy.project.keep#present",
+      "structure.peers#present",
+      "structure.peers[]#arity",
+      "structure.peers[]#incidence",
+      "structure.peers[]#order",
+      "structure.peers[]#present"
+    ]
+  },
+  "constructors": {
+    "aggregate-to-grain": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, aggregate-to-grain branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable)"
+      },
+      "retentionRationale": "Stage-2 authority distinguishes derivations that combine rows to a DECLARED coarser grain from those that do not: CASE_NESTED_SUBTOTALS_OFF_GRAIN turns on whether the target grain is one the hierarchy declares, and CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN on two such targets diverging. Neither question can be asked of a structure that cannot say a result was combined to a named grain.",
+      "evidenceCases": [
+        "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
+        "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN",
+        "CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    },
+    "join": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, join branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, and fanOut in engines.ts)"
+      },
+      "retentionRationale": "Stage-2 authority requires a declared cardinality between two relations: both fan-out cases are decided from the declaration rather than from rows, which is the whole reason the cardinality coordinate was re-earned. Without this constructor the two cases are indistinguishable from a single relation carrying repeated values.",
+      "evidenceCases": [
+        "CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN",
+        "CASE_ORDER_COUNT_AFTER_LINE_JOIN"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    },
+    "nest": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, nest branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, isDeclaredNestGrain)"
+      },
+      "retentionRationale": "Stage-2 authority requires hierarchy membership as a structural fact: CASE_NESTED_SUBTOTALS_OFF_GRAIN needs the set of grains a hierarchy declares, and CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP needs the membership a later projection would have to rebuild. Both are properties of the hierarchy, not of any field.",
+      "evidenceCases": [
+        "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
+        "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    },
+    "bin": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, bin branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, semanticFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires boundary membership to be declarable: CASE_WHICH_BIN_GETS_TEN is undecidable unless the structure can say a field's range was partitioned and which side of a boundary owns a value on it.",
+      "evidenceCases": [
+        "CASE_WHICH_BIN_GETS_TEN"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    },
+    "normalize": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, normalize branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, semanticFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires the claim that a measure was rescaled against a whole: CASE_NORMALIZED_AVERAGES is a defect of that claim, not of the measure, and cannot be stated without a constructor that makes it.",
+      "evidenceCases": [
+        "CASE_NORMALIZED_AVERAGES"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    },
+    "project": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, project branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, semanticFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires field selection to be a derivation rather than a rendering choice: CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP is decided upstream of any projection, which is only expressible if dropping fields is itself a derivation.",
+      "evidenceCases": [
+        "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    },
+    "graph": {
+      "disposition": "required",
+      "authorityRef": {
+        "vocabulary": "docs/architecture/analytical-relation-doctrine.md § L3 — View algebra",
+        "signature": "packages/ds-codegen/src/analytical/relation-model.ts (Derivation, graph branch)",
+        "law": "packages/ds-codegen/src/analytical/derivation.ts (determinedGrain, resultIsDerivable, conservationFindings)"
+      },
+      "retentionRationale": "Stage-2 authority requires reading a relation as directed edges with an optional conservation REQUIREMENT: CASE_LEAKING_FLOW and CASE_FLOW_CONSERVATION_EDGE_VALUES_UNSEEN are the same declaration under different evidence, which needs a constructor that can carry the requirement without asserting it.",
+      "evidenceCases": [
+        "CASE_LEAKING_FLOW",
+        "CASE_FLOW_CONSERVATION_EDGE_VALUES_UNSEEN"
+      ],
+      "removableWhen": "an explicit vocabulary-evolution disposition shows this constructor's law is no longer required by active authority; no coordinate verdict can supply one"
+    }
+  },
+  "verdicts": {
+    "assertion.aggregate.along#arity": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.along#order": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.along#present": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.nulls:as-observed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.nulls:as-zero~<absent>": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.nulls:exclude~<absent>": {
+      "disposition": "unresolved"
+    },
+    "assertion.aggregate.relation#incidence": {
+      "disposition": "unresolved"
+    },
+    "assertion.ratio-comparison.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "assertion.ratio-comparison.relation#incidence": {
+      "disposition": "unresolved"
+    },
+    "evidence.grainWitness#arity": {
+      "disposition": "unresolved"
+    },
+    "evidence.grainWitness#incidence": {
+      "disposition": "unresolved"
+    },
+    "evidence.grainWitness#order": {
+      "disposition": "unresolved"
+    },
+    "evidence.rows.*#present": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:additive~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
+    },
+    "field.additivity.kind:additive~non-additive": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:non-additive~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
+    },
+    "field.additivity.kind:non-additive~ratio-measure": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:ratio-measure~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
+    },
+    "field.additivity.kind:semi-additive~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires nonAdditiveAlong besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by field.additivity#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "field.additivity.kind:semi-additive~non-additive": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#arity": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#order": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain:day~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain:day~month": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.grain:month~<absent>": {
+      "disposition": "unresolved"
+    },
+    "field.temporality.kind:instant~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.temporality#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
+    },
+    "field.temporality.kind:interval~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.temporality#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
+    },
+    "observation.null:absent~<absent>": {
+      "disposition": "unresolved"
+    },
+    "observation.null:absent~suppressed": {
+      "disposition": "unresolved"
+    },
+    "observation.null:censored~<absent>": {
+      "disposition": "unresolved"
+    },
+    "observation.null:censored~suppressed": {
+      "disposition": "unresolved"
+    },
+    "observation.null:suppressed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#arity": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#order": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.bin.closure": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure:left-closed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure:left-closed~right-closed": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.closure:right-closed~<absent>": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.field#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.bin.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.bin.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.graph.edgeFrom#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.edgeFrom#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.graph.edgeTo#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.edgeTo#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.graph.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.graph.requiresConservation": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.value#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.graph.value#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-one": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-one": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~one-to-many": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.join.with#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.join.with#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.kind": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, toGrain besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~bin": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~join": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~nest": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:bin~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, field besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:bin~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:bin~normalize": {
+      "disposition": "witnessed",
+      "reason": "WITNESSED. bin and normalize share the required key-set {field, from} — the only such pair among the seven constructors — so rewriting one to the other is a schema-VALID substitution that alters nothing but the discriminant. The witness pairs FX_READINGS_BINNED_NO_CLOSURE (CASE_WHICH_BIN_GETS_TEN: an undeclared-closure bin is illegal, a rule keyed to the bin constructor because partitioning a range is what raises the question of which side owns a boundary) against the same bytes under `normalize`, where that question does not arise and the CASE_NORMALIZED_AVERAGES rule does not fire because the only assertion is `min` over the source relation. WHAT THIS ESTABLISHES, precisely: a discriminant is necessary to distinguish two constructors with the same structural operand signature. It does NOT establish that `derivedBy.kind` is a primitive analytical semantic axis."
+    },
+    "relation.derivedBy.kind:bin~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:graph~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, edgeFrom, edgeTo besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:join~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, with, cardinality besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:join~bin": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~nest": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:join~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, levels besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:nest~bin": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~normalize": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:nest~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:normalize~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, field besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:normalize~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:normalize~project": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.kind:project~<absent>": {
+      "disposition": "representation-artifact",
+      "reason": "NOT INDEPENDENTLY ERASABLE. Its branch requires from, keep besides the tag, so spelling this member as absence necessarily empties the whole declaration: the quotient erases holder presence AND the required payload at once and cannot isolate 'this member versus absent'. The census split one holder-level degree of freedom into a branch-shaped cross-term. The distinction it was reaching for is carried by relation.derivedBy#present (holder existence) together with the kind:A~B pairs (branch identity). Refused mechanically by isolationViolation, which measures the over-erasure per stimulus rather than assuming it per coordinate."
+    },
+    "relation.derivedBy.kind:project~graph": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.nest.levels#arity": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#order": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.nest.levels#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.normalize.field#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.normalize.field#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.normalize.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.normalize.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.project.from#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.from#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "relation.derivedBy.project.keep#arity": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#incidence": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#order": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy.project.keep#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
+    },
+    "structure.peers#present": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#arity": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#incidence": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#order": {
+      "disposition": "unresolved"
+    },
+    "structure.peers[]#present": {
+      "disposition": "unresolved"
+    }
+  },
+  "$authorityNote": "The entries under `constructors` are EVIDENCE that a constructor survived Stage-2 necessity, never definitions of what it means. `authorityRef` names where the law actually lives, and the honest state of that is a finding rather than a tidy answer: no single locus states the per-operator transition law today. The doctrine names the operator set and gives two illustrative typing rules; `relation-model.ts` declares each constructor's signature; `derivation.ts` implements the law that certifies a declared result. Stage 2 has therefore surfaced a need for an explicit operator-law authority, which this ledger deliberately does NOT become — a subtraction that authored the definitions it then found necessary would be circular, which is the failure this whole slice has been removing."
+}

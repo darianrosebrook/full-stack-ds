@@ -30,6 +30,8 @@ export const BASELINE_FILE = path.join(CONTRACTS, "analytical-fixtures/baseline-
 const INPUTS: Record<string, string> = {
   "relation-model.ts": path.join(HERE, "relation-model.ts"),
   "engines.ts": path.join(HERE, "engines.ts"),
+  "codes.ts": path.join(HERE, "codes.ts"),
+  "derivation.ts": path.join(HERE, "derivation.ts"),
   "judgment.ts": path.join(HERE, "judgment.ts"),
   "relation.contract.schema.json": path.join(CONTRACTS, "relation.contract.schema.json"),
   "assertion.schema.json": path.join(CONTRACTS, "analytical-fixtures/assertion.schema.json"),
@@ -53,7 +55,7 @@ export function computeBaseline(): Baseline {
   for (const f of fixtures) ledger[f.id] = canonicalJudgment(judge(f.structure, f.assertions, f.evidence));
   return {
     $comment:
-      "Frozen stage-1 baseline recorded at the end of REL-FIELD-ALGEBRA-02 Phase A. Digests name the representation inputs; ledger is the canonical judgment of every fixture. Phase B removals must conserve the ledger byte-for-byte (analytical:check-baseline).",
+      "Frozen stage-1 baseline recorded at the end of REL-FIELD-ALGEBRA-02 Phase A. Digests name the representation inputs; ledger is the canonical judgment of every fixture. Phase B removals must conserve the ledger byte-for-byte (analytical:check-baseline). This file is a HISTORICAL FREEZE, not a running record: other artifacts anchor to the digests it froze, so it is compared against rather than refreshed. A later stage's fixtures and any domain the canonical form gains after the freeze are additions, not movements, and checkBaseline is explicit about which it is reporting.",
     digests: Object.fromEntries(Object.entries(INPUTS).map(([k, p]) => [k, sha(p)])),
     ledger,
   };
@@ -70,10 +72,34 @@ export function rewriteLedgerEntry(entry: string, rewrites: readonly (readonly [
   return rewrites.reduce((s, [pattern, replacement]) => s.replace(new RegExp(pattern, "g"), replacement), entry);
 }
 
-/** Human-readable differences between the recorded baseline and the live tree (empty = conserved). */
+/**
+ * A live judgment restricted to the fields a recorded one carries.
+ *
+ * The record is compared on exactly what it recorded. When the canonical form
+ * gains a domain after a freeze, every recorded entry would otherwise report as
+ * moved — which is false: nothing moved, the form widened. Projecting is not a
+ * blanket tolerance, because it is driven by the RECORDED entry: a record that
+ * carries a field is always compared on it, so a genuine movement inside any
+ * recorded domain is still caught.
+ */
+function projectOnto(live: string, recorded: string): string {
+  const l = JSON.parse(live) as Record<string, unknown>;
+  const keys = Object.keys(JSON.parse(recorded) as Record<string, unknown>);
+  return JSON.stringify(Object.fromEntries(keys.map((k) => [k, l[k]])));
+}
+
+/**
+ * Human-readable differences between the recorded baseline and the live tree
+ * (empty = conserved).
+ *
+ * `ignoreAdditions` separates the two things this can report. A judgment that
+ * MOVED is a regression under every option. A fixture that did not exist when
+ * the baseline was frozen is not: later stages add fixtures by design, and what
+ * guarantees they are accounted for is the binding ledger, not this file.
+ */
 export function checkBaseline(
   file = BASELINE_FILE,
-  opts: { ledgerOnly?: boolean; rewrites?: readonly (readonly [string, string])[] } = {},
+  opts: { ledgerOnly?: boolean; rewrites?: readonly (readonly [string, string])[]; ignoreAdditions?: boolean } = {},
 ): string[] {
   const recorded = JSON.parse(fs.readFileSync(file, "utf-8")) as Baseline;
   const live = computeBaseline();
@@ -86,9 +112,11 @@ export function checkBaseline(
   for (const [id, raw] of Object.entries(recorded.ledger)) {
     const j = rewriteLedgerEntry(raw, opts.rewrites ?? []);
     if (live.ledger[id] === undefined) out.push(`fixture missing: ${id}`);
-    else if (live.ledger[id] !== j) out.push(`judgment moved: ${id}\n  was ${j}\n  now ${live.ledger[id]}`);
+    else if (projectOnto(live.ledger[id], j) !== j) out.push(`judgment moved: ${id}\n  was ${j}\n  now ${projectOnto(live.ledger[id], j)}`);
   }
-  for (const id of Object.keys(live.ledger)) if (recorded.ledger[id] === undefined) out.push(`fixture added since baseline: ${id}`);
+  if (!opts.ignoreAdditions) {
+    for (const id of Object.keys(live.ledger)) if (recorded.ledger[id] === undefined) out.push(`fixture added since baseline: ${id}`);
+  }
   return out;
 }
 
@@ -109,6 +137,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const diffs = checkBaseline(BASELINE_FILE, {
       ledgerOnly: process.argv.includes("--ledger-only"),
       rewrites: process.argv.includes("--rewrites") ? loadKeyRewrites() : [],
+      ignoreAdditions: process.argv.includes("--ignore-additions"),
     });
     if (diffs.length > 0) {
       console.error(`baseline --check: NOT CONSERVED\n${diffs.join("\n")}`);

@@ -11,18 +11,21 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { casesAdjudicableAt, checkFixtureLedger, loadCorpusInput, loadLedgerInput, sha256, type LedgerInput } from "./corpus-integrity.js";
 import { DIAG, OBLIGATION, RULES, judge } from "./engines.js";
+import { OPERATOR_LAWS } from "./derivation.js";
 import { assertionKey, canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
+import { RULE_SOURCES } from "./necessity.js";
 import { alphaRename, normalizeObservation, renameSubject, type Fixture, type RelationalStructure } from "./structure.js";
 
 const CONTRACTS = path.resolve(__dirname, "../../../ds-contracts");
 const PACK = path.join(CONTRACTS, "analytical-pack");
 const DOCTRINE = path.resolve(__dirname, "../../../../docs/architecture/analytical-relation-doctrine.md");
-const ENGINE_SOURCE = path.join(__dirname, "engines.ts");
-const BLIND_SOURCES = ["relation-model.ts", "structure.ts", "judgment.ts", "engines.ts", "emit-schemas.ts"].map((f) => path.join(__dirname, f));
+const BLIND_SOURCES = ["relation-model.ts", "structure.ts", "judgment.ts", "engines.ts", "derivation.ts", "emit-schemas.ts"].map((f) =>
+  path.join(__dirname, f),
+);
 
 const corpus = loadCorpusInput(PACK, DOCTRINE);
 const stage1Cases = casesAdjudicableAt(corpus.cases, 1);
-const ledger = () => loadLedgerInput(CONTRACTS, DOCTRINE, ENGINE_SOURCE, 1);
+const ledger = () => loadLedgerInput(CONTRACTS, DOCTRINE, RULE_SOURCES, 1);
 const live = ledger();
 const byId = new Map(live.fixtures.map((f) => [f.id, f]));
 const fx = (id: string): Fixture => {
@@ -31,7 +34,7 @@ const fx = (id: string): Fixture => {
   return f;
 };
 const judgeFixture = (f: Fixture): Judgment => judge(f.structure, f.assertions, f.evidence);
-const ADMISSIBLE = canonicalJudgment({ status: "admissible", diagnostics: [], obligations: [] });
+const ADMISSIBLE = canonicalJudgment({ status: "admissible", diagnostics: [], obligations: [], derivations: [] });
 
 describe("A1 — every stage-1 case yields exactly its expected judgment", () => {
   it("has a non-empty stage-1 case set", () => {
@@ -138,9 +141,14 @@ describe("A2 — the binding ledger", () => {
     );
   });
 
-  it("flags a binding to a case that is not adjudicable at stage 1", () => {
+  it("flags a binding to a case the corpus does not contain, but not one from a later stage", () => {
+    expect(mutate((i) => (i.bindings.cases.CASE_NOT_IN_THE_CORPUS = "FX_N_TEMP_MEAN"))).toContain("LEDGER_BINDING_CASE_UNKNOWN");
+    // The ledger is shared across stages. A stage-2 binding seen from the
+    // stage-1 view is not a typo and not evidence for stage 1; it is simply
+    // out of view. What keeps stage-1 evidence stage-1 is A1, which iterates
+    // the stage-1 cases, not this rule.
     const later = corpus.cases.find((c) => c.stage > 1)!;
-    expect(mutate((i) => (i.bindings.cases[later.case] = "FX_N_TEMP_MEAN"))).toContain("LEDGER_BINDING_CASE_UNKNOWN");
+    expect(mutate((i) => (i.bindings.cases[later.case] = "FX_N_TEMP_MEAN"))).not.toContain("LEDGER_BINDING_CASE_UNKNOWN");
   });
 
   it("flags an orphan fixture and a missing neighbour", () => {
@@ -234,10 +242,23 @@ describe("A5 — mixed faults and order independence", () => {
   });
 
   const reverseKeys = <T>(o: Record<string, T>): Record<string, T> => Object.fromEntries(Object.entries(o).reverse());
+  // Spreading `s` rather than rebuilding it is load-bearing: a permuter that
+  // names the keys it carries silently stops permuting any key added later,
+  // and a structure key that is never permuted is a rule that is never tested
+  // for order independence. `peers` is reversed at both levels for the same
+  // reason — the sets and the members inside them are both unordered.
   const permute = (s: RelationalStructure): RelationalStructure => ({
+    ...s,
     relations: reverseKeys(
       Object.fromEntries(Object.entries(s.relations).map(([n, r]) => [n, { ...r, fields: reverseKeys(r.fields) }])),
     ),
+    ...(s.peers ? { peers: [...s.peers].reverse().map((m) => [...m].reverse()) } : {}),
+  });
+
+  it("permutes every key a structure can carry, not a list written when there was one", () => {
+    const s = live.fixtures.find((f) => f.structure.peers)!.structure;
+    expect(Object.keys(permute(s)).sort()).toEqual(Object.keys(s).sort());
+    expect(permute(s).peers).not.toEqual(s.peers);
   });
 
   it("every fixture judges byte-identically under reversed assertions, fields, relations, along, and rules", () => {
@@ -268,18 +289,21 @@ describe("A6 — every obligation has a discharge triad", () => {
     });
   }
 
-  it("covers the three stage-1 obligations", () => {
-    expect(Object.keys(live.bindings.triads).sort()).toEqual([
-      OBLIGATION.GRAIN_DECLARED,
-      OBLIGATION.NULL_MISSING_MECHANISM,
-      OBLIGATION.UNIT_COMMENSURABLE,
-    ]);
+  it("covers every obligation a stage-1 case carries", () => {
+    // Derived from the corpus rather than counted, because the ledger is shared
+    // with later stages: the stage-1 claim is that every obligation stage 1
+    // raises has a triad, not that the file contains only stage-1 triads.
+    const carried = [...new Set(stage1Cases.filter((c) => c.verdict === "unproven").map((c) => c.obligation!))].sort();
+    expect(carried).toEqual([OBLIGATION.GRAIN_DECLARED, OBLIGATION.NULL_MISSING_MECHANISM, OBLIGATION.UNIT_COMMENSURABLE]);
+    for (const term of carried) expect(Object.keys(live.bindings.triads)).toContain(term);
   });
 });
 
 describe("A7 — a legal near-neighbour per diagnostic is admissible", () => {
-  it("covers every stage-1 diagnostic", () => {
-    expect(Object.keys(live.bindings.neighbours)).toHaveLength(15);
+  it("covers every diagnostic a stage-1 case carries", () => {
+    const carried = [...new Set(stage1Cases.filter((c) => c.verdict === "illegal").map((c) => c.diagnostic!))].sort();
+    expect(carried).toHaveLength(15);
+    for (const code of carried) expect(Object.keys(live.bindings.neighbours)).toContain(code);
   });
   for (const [code, id] of Object.entries(live.bindings.neighbours)) {
     it(`${code} ← ${id}`, () => {
@@ -289,8 +313,31 @@ describe("A7 — a legal near-neighbour per diagnostic is admissible", () => {
 });
 
 describe("A8 — holdout authored against the recorded rule digest", () => {
-  it("the recorded digest is the digest of engines.ts as it is now", () => {
-    expect(live.holdout.ruleDigest).toBe(sha256(fs.readFileSync(ENGINE_SOURCE, "utf-8")));
+  it("the recorded digest is the digest of the whole rule surface as it is now", () => {
+    expect(live.holdout.ruleDigest).toBe(sha256(RULE_SOURCES.map((p) => fs.readFileSync(p, "utf-8")).join("")));
+  });
+
+  it("the rule surface is every module a judgment can come from, not just the one it started in", () => {
+    // A digest over a subset would let a rule move into an undigested module
+    // and change freely while the holdout still reported itself current. Every
+    // module `judge` reaches for a RULE (not for a type or a path) belongs here.
+    expect(RULE_SOURCES.map((p) => path.basename(p)).sort()).toEqual([
+      "codes.ts",
+      "derivation.ts",
+      "engines.ts",
+      "judgment.ts",
+      "structure.ts",
+    ]);
+    for (const p of RULE_SOURCES) expect(fs.existsSync(p), p).toBe(true);
+  });
+
+  it("every rule source is reviewable text", () => {
+    // A single NUL byte makes git classify a source file as binary and stop
+    // emitting its diff. A rule the reviewer cannot see change is the same
+    // hazard the digest exists to close, reached from the other side.
+    for (const p of RULE_SOURCES) {
+      expect(fs.readFileSync(p, "utf-8").includes("\0"), `${path.basename(p)} contains a NUL byte`).toBe(false);
+    }
   });
   it("holds out at least six mixed fixtures, none reused from the case set", () => {
     expect(live.holdout.items.length).toBeGreaterThanOrEqual(6);
@@ -299,9 +346,75 @@ describe("A8 — holdout authored against the recorded rule digest", () => {
   });
   for (const item of live.holdout.items) {
     it(`${item.fixture} → ${item.expected.status}`, () => {
-      expect(JSON.parse(canonicalJudgment(judgeFixture(fx(item.fixture))))).toEqual(item.expected);
+      const j = JSON.parse(canonicalJudgment(judgeFixture(fx(item.fixture)))) as Record<string, unknown>;
+      // Each item is compared on exactly the domains it records.
+      expect(Object.fromEntries(Object.keys(item.expected).map((k) => [k, j[k]]))).toEqual(item.expected);
+      // The eight ORIGINAL items were authored before the derivation domain
+      // existed, so the domain they do not record is asserted EMPTY rather than
+      // quietly skipped: that is the reach argument in the re-record log made
+      // mechanical. An item that RECORDS `derivations` has had that domain
+      // hand-derived, and the line above is what holds it. Keeping the blanket
+      // assertion would have made the two indistinguishable — a fixture reaching
+      // the boundary would fail even with a correct hand expectation, and the
+      // only way to land one would be to weaken the guard for everybody.
+      if (!("derivations" in item.expected)) {
+        expect(j.derivations, `${item.fixture} now reaches the derivation boundary; re-derive its expectation by hand`).toEqual([]);
+      }
     });
   }
+
+  it("at least one holdout item reaches the derivation boundary in each of its three states", () => {
+    // Until this held, the derivation rules — including the project law and the
+    // fail-closed conservation walk — were held only to the stage-2 case
+    // fixtures and unit tests, never to a hand-authored answer key. That gap was
+    // recorded as an explicit non-claim in the re-record log twice before it was
+    // closed.
+    const reaching = live.holdout.items.filter((i) => "derivations" in i.expected);
+    expect(reaching.length).toBeGreaterThanOrEqual(3);
+    expect(new Set(reaching.map((i) => i.expected.status))).toEqual(new Set(["illegal", "unproven", "admissible"]));
+    // Both occurrence kinds are represented, so a refutation and an obligation
+    // are each held to a hand-derived answer rather than only one of them.
+    const kinds = reaching.flatMap((i) => (i.expected.derivations ?? []).map((d) => `${d[0]}:${d[1]}`));
+    expect(new Set(kinds)).toEqual(new Set(["diagnostic:REL_DERIVATION_RESULT_NOT_DERIVABLE", "obligation:invariant:conservation"]));
+  });
+
+  it("holds EVERY operator law to a hand-derived expectation, not two of seven", () => {
+    // The non-claim this closes, recorded twice in the re-record log: three
+    // items exercised `project` and `graph`, and the other five laws were held
+    // to the stage-2 case fixtures and unit tests alone. The law set is read
+    // from OPERATOR_LAWS rather than listed here, so an eighth operator arrives
+    // with this test already failing for it.
+    const reached = new Set(
+      live.holdout.items
+        .flatMap((i) => i.expected.derivations ?? [])
+        .map((d) => String(d[3]).split("(")[0]),
+    );
+    expect([...reached].sort()).toEqual(Object.keys(OPERATOR_LAWS).sort());
+  });
+
+  it("the conservation holdout separates `cannot be decided` from `conserved`", () => {
+    // The value of that fixture is precisely that the older skip-the-row
+    // behaviour would report NOTHING on it: dropping the unreadable edge leaves
+    // the middle node balanced 10 in / 10 out and the last node a pure sink,
+    // which the balance walk skips. Asserting the arithmetic here is what makes
+    // it a falsifier for the fail-closed repair rather than one more graph.
+    const f = fx("FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE");
+    const rows = f.evidence!.rows!.edges;
+    const readable = rows.filter((r) => typeof r.amount === "number") as { src: string; dst: string; amount: number }[];
+    expect(rows).toHaveLength(3);
+    expect(readable).toHaveLength(2);
+    const inflow = new Map<string, number>();
+    const outflow = new Map<string, number>();
+    for (const r of readable) {
+      outflow.set(r.src, (outflow.get(r.src) ?? 0) + r.amount);
+      inflow.set(r.dst, (inflow.get(r.dst) ?? 0) + r.amount);
+    }
+    // Every node with both an inflow and an outflow balances once the unreadable
+    // edge is dropped, so a walk that skipped it would find no imbalance at all.
+    const decidable = [...inflow.keys()].filter((n) => outflow.has(n));
+    expect(decidable).toEqual(["b"]);
+    for (const n of decidable) expect(inflow.get(n)).toBe(outflow.get(n));
+  });
 });
 
 describe("A9 — per-observation heterogeneity survives", () => {

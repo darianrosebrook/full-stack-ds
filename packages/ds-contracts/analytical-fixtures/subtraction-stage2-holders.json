@@ -1,0 +1,49 @@
+{
+  "$comment": "The holder-presence coordinates the Stage-2 subtraction DISCOVERED. When the discriminator member-absence class was retired as a cross-term, the degree of freedom it had been spelling — does this optional tagged holder exist at all — had no coordinate of its own. These three are that fact, one per holder. They open a NEW bounded basis rather than being appended to the frozen 118, because the experiment that exposed them must not be rewritten by its own result, and because being the better factorization does not by itself establish necessity: each still earns a verdict under the same `adjudicationPolicy` recorded in subtraction-stage2.json. This is the ownership invariant working as intended — a new semantic proposition acquires a new burden of proof.",
+  "spec": "REL-VIEW-ALGEBRA-01",
+  "dispositions": {
+    "unresolved": "not yet adjudicated; the close condition is zero of these",
+    "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
+    "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it",
+    "required-derived-vocabulary": "no independent semantic degree of freedom — it is wholly derivable from other semantic facts — but external authority governs the NAME, so the coordinate legitimately stays in the kernel. The only decided verdict that does not expect the coordinate to disappear."
+  },
+  "policyRef": "subtraction-stage2.json#adjudicationPolicy",
+  "basis": {
+    "frozenAt": "2b70b3f8",
+    "reason": "the commit at which isolationViolation began refusing the over-erasing quotient, which is what made the cross-term class untenable and these three coordinates necessary to name",
+    "supersedes": [
+      "field.additivity.kind:additive~<absent>",
+      "field.additivity.kind:non-additive~<absent>",
+      "field.additivity.kind:ratio-measure~<absent>",
+      "field.additivity.kind:semi-additive~<absent>",
+      "field.temporality.kind:instant~<absent>",
+      "field.temporality.kind:interval~<absent>",
+      "relation.derivedBy.kind:aggregate-to-grain~<absent>",
+      "relation.derivedBy.kind:bin~<absent>",
+      "relation.derivedBy.kind:graph~<absent>",
+      "relation.derivedBy.kind:join~<absent>",
+      "relation.derivedBy.kind:nest~<absent>",
+      "relation.derivedBy.kind:normalize~<absent>",
+      "relation.derivedBy.kind:project~<absent>"
+    ],
+    "count": 3,
+    "candidates": [
+      "field.additivity#present",
+      "field.temporality#present",
+      "relation.derivedBy#present"
+    ]
+  },
+  "constructors": {},
+  "verdicts": {
+    "field.additivity#present": {
+      "disposition": "unresolved"
+    },
+    "field.temporality#present": {
+      "disposition": "unresolved"
+    },
+    "relation.derivedBy#present": {
+      "disposition": "unresolved"
+    }
+  }
+}

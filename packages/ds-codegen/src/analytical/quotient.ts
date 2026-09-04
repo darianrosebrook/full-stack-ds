@@ -1,136 +1,74 @@
 /**
  * Quotients over the representation (REL-FIELD-ALGEBRA-02, invariant 6).
  *
- * `erase(fixture, coordinate)` removes a coordinate from a fixture: a leaf is
- * deleted wherever it occurs; a member pair is merged by rewriting the second
- * member as the first. `canonical(fixture)` is a name-blind, key-sorted
- * serialization (identifiers confer no standing, so two fixtures that differ
- * only in spelling are the same representation). A necessity witness for
- * coordinate X is a pair (A, B) whose oracle-required outcomes differ while
- * `canonical(erase(A, X)) === canonical(erase(B, X))`: no consumer of the
- * quotiented representation can tell them apart, so X is necessary.
+ * `erase(fixture, coordinate)` executes the coordinate's erasure plan.
+ * `canonical(fixture)` is a name-blind, key-sorted serialization (identifiers
+ * confer no standing, so two fixtures that differ only in spelling are the same
+ * representation). A necessity witness for coordinate X is a pair (A, B) whose
+ * oracle-required outcomes differ while `canonical(erase(A, X)) ===
+ * canonical(erase(B, X))`: no consumer of the quotiented representation can tell
+ * them apart, so X is necessary.
  *
- * This module is external to the engine: it never judges anything.
+ * This module used to carry a hand-maintained traversal of the fixture shape —
+ * a second reading of the schema, independent of the one the census derives
+ * coordinate ids from, and free to disagree with it. It did: eleven coordinates
+ * the census named were at labels the walk never produced, so their erasure was
+ * a no-op on every input and "no witness holds for it" was a statement about the
+ * walk. It now EXECUTES plans the census emits and interprets nothing; the
+ * schema has one reader.
+ *
+ * It is external to the engine: it never judges anything.
  */
-import type { Coordinate } from "./census.js";
+import { loadDerivation, type Coordinate } from "./census.js";
+import { executeAll, executePlan, synthesizePlan, type ErasurePlan } from "./erasure-plan.js";
 import { alphaRename, type Fixture } from "./structure.js";
 
 type Json = Record<string, unknown>;
 
-/** Visit every labelled node of a fixture; `visit` may mutate `parent[key]`. */
-function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: string) => void): void {
-  const obj = (v: unknown): v is Json => typeof v === "object" && v !== null && !Array.isArray(v);
-  // A `kind`-discriminated object labels its other properties by branch, as the census does.
-  const props = (node: Json, prefix: string) => {
-    const branch = typeof node.kind === "string" ? `${prefix}.${node.kind}` : prefix;
-    for (const key of Object.keys(node)) visit(key === "kind" ? `${prefix}.kind` : `${branch}.${key}`, node, key);
-  };
-  const structure = fixture.structure as Json | undefined;
-  if (structure) {
-    const relations = (structure.relations ?? {}) as Record<string, Json>;
-    for (const rel of Object.values(relations)) {
-      if ("grain" in rel) visit("relation.grain", rel, "grain");
-      const fields = (rel.fields ?? {}) as Record<string, Json>;
-      for (const f of Object.values(fields)) {
-        for (const key of Object.keys(f)) {
-          const v = f[key];
-          if (key === "whole") {
-            if (obj(v)) visit("field.whole.perRow", v, "perRow");
-            else visit("field.whole", f, "whole");
-          } else if (obj(v)) {
-            props(v, `field.${key}`);
-          } else visit(`field.${key}`, f, key);
-        }
-      }
-    }
-  }
-  const assertions = (fixture.assertions ?? []) as Json[];
-  for (const a of assertions) props(a, "assertion");
-  const evidence = fixture.evidence as Json | undefined;
-  if (evidence) {
-    const rows = (evidence.rows ?? {}) as Record<string, Record<string, unknown>[]>;
-    for (const relRows of Object.values(rows)) {
-      for (const row of relRows) {
-        for (const key of Object.keys(row)) {
-          const o = row[key];
-          if (obj(o)) props(o, "observation");
-          else visit("observation.value", row, key);
-        }
-      }
-    }
-    if ("grainWitness" in evidence) visit("evidence.grainWitness", evidence, "grainWitness");
-  }
-}
-
-/** Deep-clone then erase one coordinate everywhere it occurs. */
-export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
-  const copy = JSON.parse(JSON.stringify(fixture)) as Json;
-  const cleanup: Json[] = [];
-  walkFixture(copy, (id, parent, key) => {
-    if (coordinate.kind === "leaf" && id === coordinate.leaf) {
-      // a bare scalar observation IS its value, so erasing the value erases the observation,
-      // exactly as `{value}` erased to `{}` is dropped below.
-      delete parent[key];
-      cleanup.push(parent);
-    } else if (coordinate.kind === "member-pair" && id === coordinate.leaf && coordinate.members) {
-      const [a, b] = coordinate.members;
-      const v = parent[key];
-      if (v === b) parent[key] = a;
-      else if (Array.isArray(v)) parent[key] = [...new Set(v.map((x) => (x === b ? a : x)))];
-    } else if (coordinate.kind === "member-absence" && id === coordinate.leaf && coordinate.members) {
-      // Erasing "member m vs absent" spells m as absence: a representation that
-      // cannot say m explicitly must express it by leaving the leaf off. If
-      // nothing downstream can tell the two apart, m is a redundant spelling of
-      // the default rather than a degree of freedom.
-      const [m] = coordinate.members;
-      if (parent[key] === m) {
-        // Absence of a discriminated declaration is absence of the WHOLE
-        // declaration, not of its tag: erasing `additivity.kind:semi-additive`
-        // must not leave `{nonAdditiveAlong}` behind, which is neither absence
-        // nor a schema-valid declaration. Emptying the holder lets the cleanup
-        // below drop it from its parent exactly as leaf erasure does.
-        if (key === "kind") for (const k of Object.keys(parent)) delete parent[k];
-        else delete parent[key];
-        cleanup.push(parent);
-      }
-    }
-  });
-  // A sub-declaration emptied by erasure carries no coordinate: drop it from its
-  // holder (`whole: {perRow}` with perRow erased is no declaration of a whole;
-  // `{null}` with null erased is no observation). Named declarations (a field,
-  // a relation) and positional ones (an assertion, a row) stay, empty or not.
-  for (const emptied of cleanup) {
-    if (Object.keys(emptied).length === 0) dropEmpty(copy, emptied, null);
-  }
-  return copy as unknown as Fixture;
-}
-
-const NAMED_HOLDERS = new Set(["fields", "relations"]);
-
-function dropEmpty(root: unknown, target: Json, viaKey: string | null): void {
-  if (typeof root !== "object" || root === null) return;
-  if (Array.isArray(root)) {
-    for (const item of root) dropEmpty(item, target, null);
-    return;
-  }
-  const node = root as Json;
-  for (const key of Object.keys(node)) {
-    if (node[key] === target) {
-      if (viaKey === null || !NAMED_HOLDERS.has(viaKey)) delete node[key];
-    } else dropEmpty(node[key], target, key);
-  }
+/**
+ * The plan a coordinate's erasure executes, or `undefined` for the `reference`
+ * kind — whose spelling confers no standing, so there is nothing to forget. Its
+ * STRUCTURE is forgotten by the `#arity` / `#order` / `#incidence` coordinates,
+ * each of which has a plan of its own at the same slot.
+ *
+ * A coordinate the census REFUSES to emit still gets one, synthesized from the
+ * same registries, so a refusal stays falsifiable rather than becoming an
+ * erasure that quietly does nothing.
+ */
+export function planFor(coordinate: Coordinate): ErasurePlan | undefined {
+  const d = loadDerivation();
+  return d.plans.get(coordinate.id) ?? synthesizePlan(coordinate, d.locators, d.requiredLeaves);
 }
 
 /**
- * Erase a set of coordinates in a listing-order-independent way: branch
- * leaves first, then member pairs, then discriminator leaves (`*.kind`) last,
- * since a merged or erased discriminator relabels the branch-qualified leaves
- * under it.
+ * Deep-clone then erase one coordinate everywhere its plan locates it.
+ *
+ * Throws where no plan can be built. The alternative — returning the fixture
+ * untouched — is how eleven coordinates spent this experiment "unwitnessed":
+ * every witness naming them failed NO_COLLISION against an unerased fixture,
+ * and nothing distinguished that from a semantic result.
+ */
+export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
+  const plan = planFor(coordinate);
+  if (plan) return executePlan(fixture, plan);
+  if (coordinate.kind === "reference") return JSON.parse(JSON.stringify(fixture)) as Fixture;
+  throw new Error(`quotient: no erasure plan for ${coordinate.id} (leaf ${coordinate.leaf}); its erasure would silently do nothing`);
+}
+
+/**
+ * Erase a set of coordinates in a listing-order-independent way.
+ *
+ * The order was a hand-written three-way rank here (branch leaves, then member
+ * pairs, then discriminator leaves). It is now derived from the plans' own
+ * `runAfter` edges, and the difference is not cosmetic: the rank gave a
+ * discriminator MERGE and a branch-qualified reference facet the same rank, so
+ * listing order decided which ran first, and merging `kind:aggregate-to-grain~join`
+ * before erasing `join.from#incidence` relabels the branch out from under the
+ * second locator. 14 of 443 stress sets changed; no witness set did.
  */
 export function eraseAll(fixture: Fixture, coordinates: readonly Coordinate[]): Fixture {
-  const rank = (c: Coordinate) => (c.kind === "leaf" ? (c.leaf.endsWith(".kind") ? 2 : 0) : 1);
-  const ordered = [...coordinates].sort((x, y) => rank(x) - rank(y));
-  return ordered.reduce((f, c) => erase(f, c), fixture);
+  const plans = coordinates.map(planFor).filter((p): p is ErasurePlan => p !== undefined);
+  return executeAll(fixture, plans);
 }
 
 /** Sort keys recursively so serialization is declaration-order-blind. */

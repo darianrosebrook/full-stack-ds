@@ -1,0 +1,265 @@
+{
+  "$comment": "AUDIT of coordinates whose only ratification comes from a minimal MULTI-coordinate witness. A holding 2-set is guaranteed minimal — checkWitness raises NOT_MINIMAL when either coordinate alone already collides the stimuli — so for every coordinate here the harness has positively established that erasing it ALONE does not destroy the distinction. That is the retention criterion failing, and `ratifiedSet` was reading it as passing. What such a witness does prove is that the SEMANTIC DISTINCTION is real; what stays open is the factorization. The earlier witness record is deliberately NOT altered: stage 1.5 adjudicated under the older rule and closed, and rewriting a finished experiment's result from outside it is the thing this slice refuses everywhere else. The question is asked here instead.",
+  "spec": "REL-VIEW-ALGEBRA-01",
+  "policyRef": "subtraction-stage2.json#adjudicationPolicy",
+  "dispositions": {
+    "unresolved": "not yet adjudicated; the close condition is zero of these",
+    "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
+    "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it",
+    "required-derived-vocabulary": "no independent semantic degree of freedom — it is wholly derivable from other semantic facts — but external authority governs the NAME, so the coordinate legitimately stays in the kernel. The only decided verdict that does not expect the coordinate to disappear."
+  },
+  "outcomes": {
+    "$comment": "The three ways an entry can resolve. Naming them in advance keeps the audit from defaulting to the most convenient one.",
+    "bothReEarned": "each coordinate has its own holding single-coordinate falsifier; the 2-set was incidental, and both are primitive",
+    "onePrimitiveOneDerived": "one carrier holds the degree of freedom and the other is derivable from it — required derived vocabulary, or a representation artifact",
+    "compositeePrimitive": "neither is primitive in its current form: the semantic primitive is a composite the schema decomposed into two mutually dependent coordinates. A semantic distinction can be irreducible while every coordinate in its current encoding is reducible"
+  },
+  "basis": {
+    "frozenAt": "c1e9d533",
+    "reason": "the commit at which primitive ratification was separated from interaction evidence, which is what made this population visible; measured, not enumerated by hand",
+    "count": 5,
+    "candidates": [
+      "assertion.kind",
+      "assertion.kind:aggregate~ratio-comparison",
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+      "field.additivity.semi-additive.nonAdditiveAlong#present"
+    ]
+  },
+  "constructors": {},
+  "pairings": {
+    "assertion.kind": "assertion.aggregate.op",
+    "assertion.kind:aggregate~ratio-comparison": "assertion.aggregate.op",
+    "field.additivity.kind:additive~semi-additive": "field.additivity.semi-additive.nonAdditiveAlong#present",
+    "field.additivity.kind:semi-additive~ratio-measure": "field.additivity.semi-additive.nonAdditiveAlong#present",
+    "field.additivity.semi-additive.nonAdditiveAlong#present": "field.additivity.kind:additive~semi-additive | field.additivity.kind:semi-additive~ratio-measure"
+  },
+  "verdicts": {
+    "assertion.kind": {
+      "disposition": "unresolved"
+    },
+    "assertion.kind:aggregate~ratio-comparison": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:additive~semi-additive": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:semi-additive~ratio-measure": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#present": {
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `field#present`, alternative identity in the `field.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits. Two holding witnesses named this coordinate as their second erasure. They were expressible as plain 2-sets ONLY because this synthetic proposition made a branch-field deletion look like a coordinate erasure; both are migrated to closures-stage2.json with their stimuli and causes intact, where the operation is `forget-branch-field` and the footprint names what the deletion actually costs. That is an honest downgrade — a closure confers no standing where a holding 2-set conferred interaction-only support — and it surfaced a fact the coordinate-handle model hid: the footprint contains `field.additivity.semi-additive.nonAdditiveAlong#incidence`, which IS primitively ratified, so under obligation 8 this closure cannot prove its carrier primitive and the constructor/payload pair reads as COMPOSITE under the current encoding."
+    }
+  },
+  "measurements": {
+    "$comment": "Evidence gathered for the audit, before any verdict. Stimuli vary only the additivity declaration and the assertion shape, both of which stage-2 causes already range over, so no new authority is invented.",
+    "additivity": {
+      "observationalPartition": {
+        "$comment": "Each declaration crossed with the assertion shapes the stage-2 additivity causes reach, plus being the field a `normalize` rescales. Cell = the diagnostics produced.",
+        "classes": [
+          {
+            "members": [
+              "<absent>",
+              "additive"
+            ],
+            "behaviour": "no diagnostic under any stimulus"
+          },
+          {
+            "members": [
+              "semi[d1]"
+            ],
+            "behaviour": "SUM_SEMIADDITIVE on sum along d1 and on sum with no along"
+          },
+          {
+            "members": [
+              "semi[d2]"
+            ],
+            "behaviour": "SUM_SEMIADDITIVE on sum along d2 and on sum with no along"
+          },
+          {
+            "members": [
+              "semi[d1,d2]"
+            ],
+            "behaviour": "SUM_SEMIADDITIVE on either along and on sum with no along"
+          },
+          {
+            "members": [
+              "non-additive"
+            ],
+            "behaviour": "NORMALIZE_NONADDITIVE only when it is a normalize field"
+          },
+          {
+            "members": [
+              "ratio-measure"
+            ],
+            "behaviour": "RATIO_MEASURE_AVERAGED on sum and on mean"
+          }
+        ],
+        "findings": [
+          "SIX classes over seven declarations: `<absent>` and `additive` are observationally identical under every stimulus reached. Relevant to field.additivity#present in the holders basis — holder presence is observable through the OTHER three branches, not through `additive`.",
+          "The three semi[...] variants are mutually distinct, so which dimensions are blocked is real content.",
+          "The observable content factorizes into three independent facts: the set of dimensions along which summation is illegal, whether the mean is illegal, and whether normalizing the field is illegal. The tag makes them MUTUALLY EXCLUSIVE — a measure cannot be declared both semi-additive along a dimension and a ratio-measure. No stage-2 cause exercises that exclusivity, so it is unwitnessed rather than wrong; recorded here as an observation, not a verdict."
+        ]
+      },
+      "supportStatus": {
+        "$comment": "Every live additivity coordinate, by the strength of its support.",
+        "primitive": [
+          "field.additivity.kind",
+          "field.additivity.kind:additive~ratio-measure",
+          "field.additivity.semi-additive.nonAdditiveAlong#incidence"
+        ],
+        "interactionOnly": [
+          "field.additivity.kind:additive~semi-additive",
+          "field.additivity.kind:semi-additive~ratio-measure",
+          "field.additivity.semi-additive.nonAdditiveAlong#present"
+        ],
+        "unresolved": [
+          "field.additivity#present",
+          "field.additivity.kind:additive~non-additive",
+          "field.additivity.kind:semi-additive~non-additive",
+          "field.additivity.kind:non-additive~ratio-measure",
+          "field.additivity.semi-additive.nonAdditiveAlong#arity",
+          "field.additivity.semi-additive.nonAdditiveAlong#order"
+        ],
+        "controlledComparison": "EVERY interaction-only pair has `semi-additive` as a member, and `semi-additive` is the only branch carrying payload. The control is `additive~ratio-measure`: same enum, same rules, both branches tag-only, and it has a holding SINGLE-coordinate witness. So the 2-set requirement tracks payload shape, not semantic entanglement — substituting a payload-carrying member alone leaves the payload behind, and the second coordinate erases that remnant."
+      }
+    },
+    "witnessClassification": {
+      "$comment": "Every holding multi-coordinate witness, run through the five conditions. Measured, not argued.",
+      "results": [
+        {
+          "witness": "field.additivity.kind:additive~semi-additive + ...nonAdditiveAlong#present",
+          "class": "quotient-hygiene",
+          "carrier": "field.additivity.kind:additive~semi-additive",
+          "residue": [
+            "field.additivity.semi-additive.nonAdditiveAlong#present"
+          ],
+          "control": "field.additivity.kind:additive~ratio-measure"
+        },
+        {
+          "witness": "field.additivity.kind:semi-additive~ratio-measure + ...nonAdditiveAlong#present",
+          "class": "quotient-hygiene",
+          "carrier": "field.additivity.kind:semi-additive~ratio-measure",
+          "residue": [
+            "field.additivity.semi-additive.nonAdditiveAlong#present"
+          ],
+          "control": "field.additivity.kind:additive~ratio-measure"
+        },
+        {
+          "witness": "assertion.kind + assertion.aggregate.op",
+          "class": "interaction",
+          "failed": "condition 1 — `assertion.kind` is a bare LEAF, not a member pair, so there is no tag rewrite for residue to be conditional on"
+        },
+        {
+          "witness": "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
+          "class": "indeterminate",
+          "failed": "condition 5 UNAVAILABLE — `Assertion` has exactly two branches, so C(2,2)=1 and the pair under test is the only member pair the enum has. Conditions 1-4 all held."
+        }
+      ],
+      "finding": "The assertion cluster was chosen as the independent falsifier and cannot serve as one: its discriminator is structurally incapable of supplying a control. Conditions 1-4 held there, so the MECHANISM looks the same, but the test is inconclusive rather than confirming. Quotient-hygiene therefore rests on a single enum so far and must not yet be generalized to the twenty derivedBy.kind pairs — though `Derivation` has seven members and `bin~normalize` is a ratified single-coordinate control, so unlike `Assertion` it CAN be tested."
+    },
+    "cleanupCardinality": {
+      "$comment": "Erasing a discriminator rewrites one member's tag to the other's. Required payload each branch carries that the other does not is RESIDUE: it survives the rewrite and keeps the two encodings out of the same comparison class. The smallest raw erasure set is therefore 1 + the residue on each side. A fact about branch topology, not about any judgment.",
+      "measured": {
+        "bin~normalize": {
+          "residue": 0,
+          "minRawEdit": 1,
+          "bilateral": false
+        },
+        "nine pairs at minRawEdit 3": [
+          "aggregate-to-grain~bin",
+          "aggregate-to-grain~nest",
+          "aggregate-to-grain~normalize",
+          "aggregate-to-grain~project",
+          "bin~project",
+          "nest~bin",
+          "nest~normalize",
+          "nest~project",
+          "normalize~project"
+        ],
+        "ten pairs at minRawEdit 4": [
+          "aggregate-to-grain~graph",
+          "aggregate-to-grain~join",
+          "bin~graph",
+          "join~bin",
+          "join~nest",
+          "join~normalize",
+          "join~project",
+          "nest~graph",
+          "normalize~graph",
+          "project~graph"
+        ],
+        "join~graph": {
+          "residue": 4,
+          "minRawEdit": 5,
+          "bilateral": true
+        }
+      },
+      "finding": "20 of 21 pairs have residue on BOTH sides. Only the control is expressible within the <=2-coordinate witness contract. So a bespoke two-set search for any of the twenty is futile BEFORE it runs, and recording `interaction` for one would be a false negative: it would report a semantic difference where the test merely failed to erase the second branch's residue. Pinned by test (C1d)."
+    },
+    "derivationEnumProbe": {
+      "$comment": "NON-RATIFYING probe. It never entered witnesses.json, primitiveRatified, interactionProven, or any verdict, and its stimuli are not fixtures. Its only question: do the five hygiene conditions generalize to a second enum when residue exists on BOTH branches — a shape the <=2-coordinate contract cannot express?",
+      "carrier": "relation.derivedBy.kind:aggregate-to-grain~project",
+      "cleanup": [
+        "relation.derivedBy.aggregate-to-grain.toGrain#present",
+        "relation.derivedBy.project.keep#present"
+      ],
+      "stimuli": "Two structures differing in NOTHING but the `derivedBy` object (verified structurally). a: project keep[country, amount] over a nest declaring levels [country, state] -> REL_DERIVATION_DISCARDS_MEMBERSHIP + grain:declared, grounded in CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP. b: aggregate-to-grain toGrain[country], a declared prefix of that hierarchy -> no finding. Both readings mechanical over existing stage-2 causes.",
+      "collisionLattice": {
+        "carrier alone": false,
+        "carrier + keep#present": false,
+        "carrier + toGrain#present": false,
+        "carrier + BOTH cleanups": true,
+        "cleanup alone, no carrier": false
+      },
+      "conditions": {
+        "1-one-discriminator-substitution": "held — the carrier is the only tag rewrite",
+        "2-cleanup-is-branch-conditional-payload": "held — both cleanups are under relation.derivedBy.<member>.",
+        "3-carrier-alone-does-not-collide": "held — measured; and neither single cleanup suffices, so the cleanup set is minimal",
+        "4-cleanup-alone-does-not-supply-the-difference": "held — measured: no collision without the carrier",
+        "5-same-enum-control-separates-on-one-coordinate": "held — bin~normalize is PRIMITIVE, a holding single-coordinate witness",
+        "6-cleanup-bears-no-standing": "held FOR NOW — both cleanup coordinates are `unresolved` in the stage-2 basis, so the split demotes nothing that has earned its place"
+      },
+      "result": "All conditions hold. Quotient hygiene is independently observed on a SECOND enum, with residue on both branches, so raw edit cardinality was measuring serialization cleanup rather than semantic content. The additivity case is no longer the sole instance.",
+      "provisionality": "Condition 6 is a dependency, not a proof: the cleanup coordinates are UNRESOLVED, not proven standing-free. If either later earns primitive standing, this classification becomes false and must be re-decided — the same shape of provisionality the `final-quotient` close condition carries.",
+      "notClaimed": "Semantic-erasure closure is NOT adopted by this probe, the <=2-coordinate witness bound is unchanged, no coordinate gained or lost standing, and none of the twenty pairs is classified. Adopting closure would mean separating the semantic carrier from its deterministic normalization in the witness form itself, with its own proof obligations — a change to what the apparatus can conclude, which this probe was designed to inform rather than perform."
+    },
+    "closureDependencyProbe": {
+      "$comment": "SUPERSEDED, and kept because the way it was wrong is the finding. It proposed a fixture falsifier for the eight required-child presence coordinates. That falsifier is UNSATISFIABLE by construction: holder erasure is strictly coarser than child erasure (E_holder o E_child == E_holder, verified with 0 counterexamples over 84 fixtures x 7 pairs, and a direct search over all 3,486 fixture pairs found 0 instances of the shape), so E_child(A)==E_child(B) ENTAILS E_holder(A)==E_holder(B). A failure would have revealed non-confluent erasure or canonicalization, never semantic evidence. The question was structural, not experimental, and was settled by the census normal-form invariant recorded below.",
+      "measured": {
+        "allNineRequiredOnTheirBranch": true,
+        "eightCarryAPresenceFacet": [
+          "relation.derivedBy.aggregate-to-grain.toGrain#present",
+          "relation.derivedBy.bin.field#present",
+          "relation.derivedBy.graph.edgeFrom#present",
+          "relation.derivedBy.graph.edgeTo#present",
+          "relation.derivedBy.join.with#present",
+          "relation.derivedBy.nest.levels#present",
+          "relation.derivedBy.normalize.field#present",
+          "relation.derivedBy.project.keep#present"
+        ],
+        "ninthIsAPlainRequiredEnumLeaf": "relation.derivedBy.join.cardinality"
+      },
+      "hypothesis": "The census emits a `#present` facet for a reference whose HOLDER is optional, not only for a reference that is itself optional. `relation.derivedBy` is optional on a relation, so every branch payload reference inherits one — including the eight the schema marks REQUIRED on their branch. For a required field, 'this field is absent' is not a state the branch has: presence can vary ONLY by the whole `derivedBy` being absent, and that fact is already carried by `relation.derivedBy#present` in the holders basis. If that holds, these are the same CROSS-TERM shape the discriminator normal form removed thirteen of, one level down: holder existence multiplied by branch-conditional payload.",
+      "notClaimed": "This is a hypothesis with a named falsifier, not a verdict. Three things it does NOT say. (1) It says nothing about the reference-topology facets — `#arity`, `#order`, `#incidence` are separate coordinates about what a reference's STRUCTURE carries, and none is touched by an argument about presence. (2) It does not say the fields carry nothing; it says the PRESENCE facet on a required field may carry nothing beyond holder presence. (3) `relation.derivedBy#present` is itself unadjudicated, so a collapse onto it moves the question rather than answering it — and `relation.derivedBy#present` may not even be erasable, which has to be checked before anything is collapsed onto it.",
+      "falsifier": "Find two schema-valid stimuli whose required outcomes differ under independently grounded authority, that are identified by erasing exactly one of the eight, and that are NOT identified by erasing `relation.derivedBy#present`. That would show the presence facet carries something the holder fact does not.",
+      "ifItHolds": "Step 3's 'adjudicate nine' collapses further, to one holder-presence adjudication plus the separate topology-facet questions. That would be a second instance of the same normal-form defect, which is worth more than the twenty verdicts it would discharge.",
+      "resolution": {
+        "invariant": "A required named property of a discriminated branch does not receive a presence coordinate merely because an ancestor holder is optional. present(p) = present(H) for a property required by every branch; present(p) = present(H) AND branch(H) = k for one required by branch k. The nearest optional holder owns existence, the discriminator owns alternative identity, and the required child owns only its value and topology distinctions.",
+        "applied": "16 coordinates removed from the census, each with a `representation-artifact` verdict in its frozen basis.",
+        "reach": "Wider than the eight closure dependencies: every branch's `from#present` is the same artifact even though `from` never appears in a symmetric difference, and `field.additivity.semi-additive.nonAdditiveAlong#present` is reached too.",
+        "notReached": "`graph.value#present` (optional ON its branch, so presence varies with holder and branch fixed); `evidence.rows.*#present` (a record ENTRY, genuinely variable per relation); `structure.peers#present` (the array is self-optional); and every value/topology coordinate, which is what the payload actually carries.",
+        "secondFinding": "The dependency count was under-approximated for a different reason: normalization was named after the coordinate handle that implemented the deletion rather than after the operation. Forgetting a branch field destroys everything inside it, so the twenty carriers depend on 21 derivation coordinates, not 9 — and the same under-approximation exists in witnesses.json, where a 2-set naming `assertion.aggregate.op` destroys that leaf plus its six member pairs."
+      }
+    }
+  },
+  "openQuestion": {
+    "$comment": "The audit's three precommitted outcomes may not exhaust the cases. The measurement suggests a fourth, and it is recorded as a QUESTION rather than adopted, because adding an outcome class changes what the audit can conclude and that should not be decided by the party running it.",
+    "candidate": "substitutionHygiene",
+    "statement": "A minimal 2-set can arise for two different reasons. (a) TRUE INTERACTION: two coordinates jointly carry a distinction neither carries alone. (b) SUBSTITUTION HYGIENE: one coordinate carries the distinction and the second is only required to make the erasure well-formed, because the members have different payload shapes and rewriting one to the other leaves a remnant. Under (b) the second coordinate is canonical-form cleanup, not a co-equal carrier of meaning, and reading the 2-set as evidence about IT would be as wrong as reading it as ratification.",
+    "discriminator": "Compare against a control pair from the same enum whose branches are both tag-only. If that control has a single-coordinate witness while the payload-involving pairs need 2-sets, the 2-set tracks payload shape rather than semantics. For additivity the control is `additive~ratio-measure`, and it does.",
+    "consequenceIfAdopted": "It would also apply to the twenty derivedBy.kind pairs, whose members likewise have different required key-sets — and it would make `bin~normalize` the control for THAT enum, since it is the only pair there with matching payload shape and it holds on a single coordinate."
+  }
+}

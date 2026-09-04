@@ -541,10 +541,34 @@ export interface HoldoutExpectation {
   status: "admissible" | "illegal" | "unproven";
   diagnostics: [string, string, string, string, string][];
   obligations: [string, string, string, string, string][];
+  /**
+   * OPTIONAL, and the optionality is the record.
+   *
+   * The eight original items were authored before the derivation boundary
+   * existed, so they record no expectation for that domain and are held to an
+   * EMPTY one. An item that records `derivations` has had the domain
+   * hand-derived, and is held to what it records. Making the field required
+   * would force the eight to be back-filled with a value nobody derived by hand.
+   *
+   * Its tuple carries one field more than the others: the occurrence KIND, since
+   * a derivation occurrence can be a diagnostic or an obligation and the two
+   * mean opposite things about the same declaration.
+   * [kind, code|term, subject, derivation, engine, evidenceClass]
+   */
+  derivations?: [string, string, string, string, string, string][];
 }
 
 export interface Holdout {
-  /** sha256 of the engine rule source at the time the expectations were authored. */
+  /**
+   * sha256 of the RULE SOURCE at the time the expectations were authored.
+   *
+   * "Rule source" is every module that can move a judgment, concatenated in
+   * `RULE_SOURCES` order — not one file. Stage 2 split the rules across two
+   * modules (`engines.ts` and the derivation boundary), and a digest over only
+   * the first would let the second's semantics change while the holdout still
+   * reported itself authoritative, which is the one thing this digest exists to
+   * prevent.
+   */
   ruleDigest: string;
   items: { fixture: string; expected: HoldoutExpectation }[];
 }
@@ -560,7 +584,7 @@ export interface LedgerInput {
   validateFixture: (fixture: unknown) => string[];
   bindings: Bindings;
   holdout: Holdout;
-  /** sha256 of the engine rule source as it is now. */
+  /** sha256 of the rule source as it is now (see `Holdout.ruleDigest`). */
   ruleSourceDigest: string;
 }
 
@@ -632,11 +656,22 @@ export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
   for (const id of adjudicable.keys()) {
     if (!(id in bindings.cases)) out.push({ code: "LEDGER_CASE_UNBOUND", detail: `stage-${stage} case ${id} has no fixture binding` });
   }
+  // One binding ledger serves every stage, so a view at stage N sees bindings
+  // for cases that only become adjudicable later. That is not a defect: the
+  // stage-N claim is that the ledger RESTRICTED to stage-N cases is complete
+  // and injective, which the two checks around this one establish. What is a
+  // defect is a binding to a case the corpus does not contain at all — the
+  // typo this rule exists to catch, and the only thing "unknown" can mean once
+  // a later stage exists.
+  const known = new Set(input.cases.map((c) => c.case));
   const targets = new Map<string, string[]>();
   for (const [c, f] of Object.entries(bindings.cases)) {
-    if (!adjudicable.has(c)) {
-      out.push({ code: "LEDGER_BINDING_CASE_UNKNOWN", fixture: f, detail: `${c} is not a corpus case adjudicable at stage ${stage}` });
+    if (!known.has(c)) {
+      out.push({ code: "LEDGER_BINDING_CASE_UNKNOWN", fixture: f, detail: `${c} is not a corpus case` });
     }
+    // Injectivity and holdout contamination are stage-independent: two cases
+    // sharing one stimulus makes them indistinguishable whichever stages they
+    // belong to, so every binding is recorded here regardless of `stage`.
     targets.set(f, [...(targets.get(f) ?? []), c]);
   }
   for (const [f, cs] of targets) {
@@ -668,7 +703,7 @@ export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
   if (holdout.ruleDigest !== input.ruleSourceDigest) {
     out.push({
       code: "LEDGER_HOLDOUT_RULE_DIGEST_MISMATCH",
-      detail: `holdout authored against rule digest ${holdout.ruleDigest}; engine source is now ${input.ruleSourceDigest} — re-verify every expectation by hand and re-record`,
+      detail: `holdout authored against rule digest ${holdout.ruleDigest}; rule source is now ${input.ruleSourceDigest} — re-verify every expectation by hand and re-record`,
     });
   }
 
@@ -679,7 +714,7 @@ export function checkFixtureLedger(input: LedgerInput): LedgerFinding[] {
 export function loadLedgerInput(
   contractsDir: string,
   doctrinePath: string,
-  ruleSourcePath: string,
+  ruleSourcePaths: string | readonly string[],
   stage = 1,
 ): LedgerInput {
   const read = (rel: string) => fs.readFileSync(path.join(contractsDir, rel), "utf-8");
@@ -694,6 +729,12 @@ export function loadLedgerInput(
     validateFixture: loadFixtureValidator(contractsDir),
     bindings: JSON.parse(read("analytical-fixtures/bindings.json")) as Bindings,
     holdout: JSON.parse(read("analytical-fixtures/holdout.json")) as Holdout,
-    ruleSourceDigest: sha256(fs.readFileSync(ruleSourcePath, "utf-8")),
+    // Concatenated in the caller's order: the digest names the whole rule
+    // surface, so moving a rule between modules still moves it.
+    ruleSourceDigest: sha256(
+      (typeof ruleSourcePaths === "string" ? [ruleSourcePaths] : ruleSourcePaths)
+        .map((p) => fs.readFileSync(p, "utf-8"))
+        .join(""),
+    ),
   };
 }
