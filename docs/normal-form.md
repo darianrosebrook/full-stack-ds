@@ -4,8 +4,8 @@ authority: architecture
 status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
-updated: 2026-08-18
-verified_at_commit: 2b9f302e
+updated: 2026-09-04
+verified_at_commit: bdce5b6b4502ae23578a4a1c9b0354b295bbf8e6
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -25,7 +25,7 @@ The claim, stated plainly:
 
 > Compositional systems — systems where higher-order artifacts are assembled from lower-order ones under shared constraints — converge on a single architectural shape. That shape can be written down. Systems that conform to it compose cleanly across heterogeneous targets, regenerate safely, and survive transfer to new substrates. Systems that resist it accumulate a predictable family of symptoms — shadow files, stubbed-out implementations, force-pushes around quality gates, runtime drift between layers, irreproducible builds — that no amount of after-the-fact tooling fully fixes.
 
-The constraint of "<!-- component-count -->51 components, 1 rendered primitive, 5 Web DOM frameworks" exists to test this claim. Five frameworks is not a feature; it is the falsification surface. If the same contract can drive React (function components with hooks), Vue (reactive composables), Svelte (compiler-driven runes), Angular (signals with dependency injection), and Lit (web components with reactive controllers) without leaking implementation detail into any of them — and without the contract growing per-framework escape hatches — then the contract is at the right level of abstraction. If it cannot, the contract is wrong, and the wrongness will be visible as friction in exactly one of those five outputs.
+The constraint of "<!-- component-count -->51 components, 1 rendered primitive, <!-- web-framework-count -->5 Web DOM frameworks" exists to test this claim — a constraint now carried by <!-- registered-target-count -->9 registered codegen targets: the five web frameworks plus React Native (rail-admitted, a different substrate) and, outside the rail, SwiftUI and Jetpack Compose as explicit-only native targets. The five web frameworks remain the falsification surface with teeth — the only family proven end-to-end, from emission through admission to runtime — while the native targets are the adversarial extension of the same test at graded proof strength. If the same contract can drive React (function components with hooks), Vue (reactive composables), Svelte (compiler-driven runes), Angular (signals with dependency injection), and Lit (web components with reactive controllers) without leaking implementation detail into any of them — and without the contract growing per-framework escape hatches — then the contract is at the right level of abstraction. If it cannot, the contract is wrong, and the wrongness will be visible as friction in exactly one of those outputs.
 
 This document names the architectural shape, identifies the load-bearing pieces of this codebase that encode it, and states the falsification conditions. It is intended for readers who want to evaluate the architecture as a claim, not just use the codegen.
 
@@ -34,7 +34,8 @@ This document names the architectural shape, identifies the load-bearing pieces 
 This document argues from one concrete codebase. The current evidence is:
 
 - <!-- component-count -->51 component contracts generated through one primitive. (Count is loader-derived — `contracts-fs.ts` walks `components/*/<Name>.contract.json`; do not hand-maintain this number, re-derive it.)
-- Five Web DOM framework emitters consuming a shared IR, plus a sixth on a different substrate (React Native) consuming the same IR and admitted by the same rail.
+- Five Web DOM framework emitters consuming a shared IR, plus React Native on a different substrate consuming the same IR and admitted by the same rail.
+- Two native explicit-only targets outside the rail consuming the same IR: SwiftUI, allowlisted for <!-- target-component-count:swiftui -->51 contracts — the full corpus — and Jetpack Compose, allowlisted for <!-- target-component-count:jetpack-compose -->23. Both are proven to compile via dedicated native CI lanes over hand-authored example consumers; neither is runtime-proven.
 - Boundary checks in the IR that fail on unresolved contract references.
 - Regeneration semantics that preserve custom regions while rewriting generated regions.
 - An A2UI projection that exposes consumer-facing capability without renderer internals.
@@ -101,6 +102,8 @@ React Native is the sixth emitter (`frameworks/react-native/`, rail-admitted alo
 
 That is the informative outcome. The split held in the direction it claims — the *emitter* stayed thin and the contract grew no per-framework escape hatches — while the IR absorbed the cost, which is exactly where this architecture says cost should land. A sixth target that had forced contract changes, or per-component branches in an emitter, would have falsified the claim. One that forces IR extension refines it: the IR is the substrate-neutrality boundary, and reaching a genuinely new substrate is what moves it.
 
+The seventh and eighth targets extend that result at lower proof strength. SwiftUI (`frameworks/swift/`, explicit-only, outside the rail) now emits its allowlisted <!-- target-component-count:swiftui -->51 contracts — the full corpus, the broadest sweep of any target — and Jetpack Compose (`frameworks/jetpack-compose/`, allowlisting <!-- target-component-count:jetpack-compose -->23) follows the same shape. Both consume the same IR through the substrate-aware facts the React Native work added, required no per-component emitter lore, and are held to compile-only admission: dedicated native CI lanes build hand-authored example consumers against the emitted trees. That proves the contract can drive a fully declarative, non-DOM substrate without web idioms leaking into it; it does not prove runtime behavior. The honest state of the prediction: the IR/emitter split has now absorbed three genuinely different substrates beyond the web family, and the cost landed in the IR every time.
+
 ### 5. Boundary linters that fail loud on references to non-existent contract entities
 
 The cleanest example in this codebase is `validateDomBindings` in `ir.ts`. When a contract's `anatomy.dom` block contains `bindings: { onChange: "channel:checked.onChange" }`, the IR builder walks the tree, looks up `checked` in the normalized-channels set, and *throws a descriptive error* if it does not exist. It does not silently emit a literal string `channel:checked.onChange` into the generated output. It does not log a warning. It fails the build.
@@ -163,7 +166,9 @@ The five Web DOM frameworks were chosen for paradigm spread, not popularity. The
 
 Hooks vs. controllers, virtual DOM vs. shadow DOM, immutable props vs. mutable reactive properties, synthetic events vs. native events, function components vs. classes. These paradigms are not minor variations on a theme. They are different answers to the same questions, and the contract must give an answer that is correct in each idiom without being framed in any of them.
 
-The contract currently drives all five idiomatically, with hundreds of passing tests per framework. The mechanism by which a leak would show up is concrete: an emitter wanting access to a contract field that no other emitter uses, surfacing as friction in the IR. No such leak is present today in the five emitters; that is what makes the IR short, mechanical, and shared. Whether the spread is wide enough to count as adversarial — or whether a sixth or seventh framework would expose a leak — is a question the current evidence does not resolve.
+The contract currently drives all five idiomatically, with hundreds of passing tests per framework. The mechanism by which a leak would show up is concrete: an emitter wanting access to a contract field that no other emitter uses, surfacing as friction in the IR. No such leak is present today in the five emitters; that is what makes the IR short, mechanical, and shared.
+
+Beyond the web family, the spread now includes three non-web substrates at graded proof strength: React Native (runtime-proven and rail-admitted — the DOM-shaped component model realized on native primitives), SwiftUI (compile-proven — a fully declarative, value-driven hierarchy with no DOM analogue, emitting the entire corpus), and Jetpack Compose (compile-proven). The question this section used to close on — whether a sixth or seventh framework would expose a leak — has been partially answered: three further targets landed without contract escape hatches and without per-component emitter lore, but only React Native is held to runtime proof. Whether the declarative-native substrates hold the same line at runtime is the open half of the question.
 
 ## What this is not
 
@@ -187,6 +192,6 @@ The seven properties are stated at the level of generality where they are meant 
 
 ## What this codebase demonstrates, and does not
 
-It demonstrates that, for the <!-- component-count -->51 components built so far, a single typed contract drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive, with fail-closed boundary checks and preserved custom regions across regenerations. The IR is one file; the contract schema is one file; the emitters are five small directories. A reader can clone the repo, regenerate, inspect the IR and one or two contracts, and form a view in under an hour.
+It demonstrates that, for the <!-- component-count -->51 components built so far, a single typed contract drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive — with React Native admitted to the same rail, and the full-corpus SwiftUI and partial-corpus Jetpack Compose emitters compiling against the same IR outside it — with fail-closed boundary checks and preserved custom regions across regenerations. The IR is one file; the contract schema is one file; the emitters are small directories. A reader can clone the repo, regenerate, inspect the IR and one or two contracts, and form a view in under an hour.
 
-It does not demonstrate that every compositional system must take this shape, that the contract will continue to hold past 100 components, or that the architecture transfers to substrates outside UI engineering. Those are open questions, named here so the reader does not have to infer them.
+It does not demonstrate that every compositional system must take this shape, that the contract will continue to hold past 100 components, that the native emitters are runtime-correct (the native lanes prove compilation only), or that the architecture transfers to substrates outside UI engineering. Those are open questions, named here so the reader does not have to infer them.
