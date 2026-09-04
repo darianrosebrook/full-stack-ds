@@ -4166,9 +4166,13 @@ export function buildSurfaceIR(
         `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" is not a declared prop.`,
       );
     }
-    if (!member.type?.trim().endsWith("[]")) {
+    // Array-typedness is judged on the canonical TS string, so it holds for
+    // both authored forms: structured {kind:"array"} members and legacy
+    // TS-string members (which normalize to fallback{raw} and lower verbatim).
+    const resolvedType = canonicalTsType(normalizePropType(member));
+    if (!resolvedType.endsWith("[]")) {
       throw new Error(
-        `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" must be array-typed (got "${member.type ?? "undefined"}").`,
+        `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" must be array-typed (got "${resolvedType}").`,
       );
     }
     if (!path) {
