@@ -1,0 +1,691 @@
+/**
+ * Semantic erasure closure: a conditional proof constructor for DEPENDENT
+ * representations (REL-VIEW-ALGEBRA-01).
+ *
+ * The strict retention rule is unchanged for INDEPENDENT coordinates:
+ *
+ *   erasing exactly coordinate `c` must destroy the independently grounded
+ *   distinction.
+ *
+ * What this module corrects is treating that rule as universal. A tagged union
+ * is not a Cartesian product of independently present coordinates; it is a
+ * dependent sum,
+ *
+ *   Sigma constructor : Kind . Payload(constructor)
+ *
+ * where `toGrain` exists only under `aggregate-to-grain`, `keep` only under
+ * `project`, `edgeFrom`/`edgeTo` only under `graph`. Once two constructors are
+ * identified, their branch-indexed payload cannot remain untouched and still
+ * produce a comparable encoding. The measured 1/3/4/5 raw-edit cardinalities on
+ * the seven derivation constructors are therefore properties of the SERIALIZED
+ * sum-type encoding, not measurements of semantic dimensionality.
+ *
+ * Leaving that unlicensed would make the schema's branch topology decide the
+ * semantic result: all twenty non-control derivation pairs would lose standing
+ * for the single reason that their constructors happen to require differently
+ * named fields. That answers the subtraction with the representation under
+ * test, which is the failure this lane exists to detect.
+ *
+ * So the proof object separates ONE semantic intervention from the
+ * deterministic representational normalization it induces:
+ *
+ *   carrier         the single discriminator substitution under test
+ *   normalization   the branch-conditional payload that must be erased for the
+ *                   two encodings to enter the same comparison class
+ *
+ * `normalization`, never "cleanup": these coordinates may yet prove
+ * semantically consequential. What is known now is only that their SERIALIZED
+ * PRESENCE is conditional on the carrier's branch.
+ *
+ * This is a WITNESS CLASSIFICATION, not a sixth subtraction disposition. The
+ * code-owned ledger vocabulary in `subtraction.ts` is unchanged, and a
+ * provisional closure leaves its candidate's verdict `unresolved`. Nothing here
+ * writes to `witnesses.json`, and no coordinate named here reaches
+ * `primitiveRatified`.
+ */
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { loadBranchSignatures, loadCensus, type BranchSignatures, type Coordinate } from "./census.js";
+import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
+import {
+  checkWitness,
+  FIXTURES_DIR,
+  interactionOnly,
+  loadOracle,
+  loadWitnesses,
+  primitiveRatified,
+  resolveSide,
+  sameOutcome,
+  type Oracle,
+  type Side,
+} from "./necessity.js";
+import { canonical, eraseAll } from "./quotient.js";
+
+/**
+ * A reference to the holding witness that serves as a closure's control.
+ *
+ * By COORDINATE, because `witnesses.json` entries carry no ids: the stable
+ * handle for "the witness that ratifies X" is X itself, and `primitiveRatified`
+ * is what decides whether such a witness exists.
+ */
+export interface WitnessRef {
+  coordinate: string;
+}
+
+/**
+ * `provisional` — the carrier/normalization mechanism holds, but one or more
+ *   normalization dependencies remain unresolved (or no control CAN exist).
+ * `holding` — every proof obligation is discharged and the carrier has earned
+ *   primitive standing.
+ * `refuted` — a normalization coordinate independently carries the same
+ *   distinction, an interaction remains, or the final quotient fails.
+ */
+export type ClosurePromotion = "provisional" | "holding" | "refuted";
+
+export interface SemanticErasureClosure {
+  /** Exactly one discriminator member-pair coordinate. */
+  carrier: string;
+  /**
+   * The branch-conditional payload coordinates. Authored for inspectability,
+   * but obligation 2 requires it to equal the set DERIVED from the two branch
+   * signatures — the author must not be able to pick whatever makes the
+   * collision happen.
+   */
+  normalization: string[];
+  control: WitnessRef;
+  /**
+   * Coordinates whose standing must be settled before promotion: the
+   * normalization set, plus anything reached transitively when a normalization
+   * coordinate is itself the carrier of another closure. That transitivity is
+   * where a cycle would appear.
+   */
+  dependencies: string[];
+  /** 1 + the residue on each side; the smallest raw erasure set. */
+  minRawEdit: number;
+  /** The claim under check, in the shape a verdict takes. */
+  promotion: ClosurePromotion;
+  /**
+   * The controlled stimuli, when they have been constructed. Their ABSENCE is
+   * a real state: obligations 3-6 are then not evaluable, which is exactly what
+   * `provisional` says about the nineteen pairs whose stimuli nobody has built.
+   */
+  a?: Side;
+  b?: Side;
+  note?: string;
+}
+
+export interface ClosureFile {
+  $comment?: string;
+  spec?: string;
+  policyRef?: string;
+  closures: SemanticErasureClosure[];
+}
+
+export const CLOSURES_FILE = path.join(FIXTURES_DIR, "closures-stage2.json");
+
+export function loadClosures(file = CLOSURES_FILE): ClosureFile {
+  return JSON.parse(fs.readFileSync(file, "utf-8")) as ClosureFile;
+}
+
+/** `<holder>.kind:<a>~<b>` -> its parts, or undefined when it is not one. */
+export function parseCarrier(id: string): { leaf: string; holder: string; members: [string, string] } | undefined {
+  const m = /^(.*\.kind):([^~]+)~([^~]+)$/.exec(id);
+  if (!m) return undefined;
+  return { leaf: m[1], holder: m[1].replace(/\.kind$/, ""), members: [m[2], m[3]] };
+}
+
+/**
+ * The coordinate whose erasure DELETES a branch payload field from the
+ * encoding.
+ *
+ * A reference-typed field gets a presence facet; a plain enum or scalar leaf
+ * does not, and erasing the bare leaf deletes the key. Choosing by what the
+ * census actually emits rather than by a naming convention is not cosmetic: an
+ * earlier hand-written selector assumed `#present` universally and named
+ * `relation.derivedBy.join.cardinality#present`, which does not exist.
+ */
+function payloadCoordinate(holder: string, member: string, field: string, byId: Map<string, Coordinate>): string | undefined {
+  const base = `${holder}.${member}.${field}`;
+  if (byId.has(`${base}#present`)) return `${base}#present`;
+  if (byId.has(base)) return base;
+  return undefined;
+}
+
+export interface DerivedNormalization {
+  /** Required payload each branch carries that the other does not. */
+  residue: { [member: string]: string[] };
+  /** The census coordinates that erase that residue, sorted. */
+  normalization: string[];
+  /** 1 + the residue on each side. */
+  minRawEdit: number;
+  /** Residue on BOTH sides — the shape a <=2-coordinate witness cannot express. */
+  bilateral: boolean;
+  /** Payload fields with no erasing coordinate; a derivation failure, never a pass. */
+  unmapped: string[];
+}
+
+/**
+ * Derive the normalization set MECHANICALLY, from the symmetric difference of
+ * the two branch payload signatures.
+ *
+ * Erasing a discriminator rewrites one member's tag to the other's. Required
+ * payload each branch carries that the other does not is RESIDUE: it survives
+ * the rewrite and keeps the two encodings out of the same comparison class.
+ */
+export function deriveNormalization(
+  carrier: string,
+  census: Coordinate[] = loadCensus(),
+  signatures: Map<string, BranchSignatures> = loadBranchSignatures(),
+): DerivedNormalization | { error: string } {
+  const parsed = parseCarrier(carrier);
+  if (!parsed) return { error: `${carrier} is not a discriminator member-pair id` };
+  const sig = signatures.get(parsed.leaf);
+  if (!sig) return { error: `${parsed.leaf} is not a discriminated union in the schema` };
+  const [a, b] = parsed.members;
+  const reqA = sig.required[a];
+  const reqB = sig.required[b];
+  if (!reqA || !reqB) return { error: `${parsed.leaf} has no branch ${!reqA ? a : b}` };
+
+  const byId = new Map(census.map((c) => [c.id, c]));
+  const residue: DerivedNormalization["residue"] = {
+    [a]: reqA.filter((f) => !reqB.includes(f)),
+    [b]: reqB.filter((f) => !reqA.includes(f)),
+  };
+  const normalization: string[] = [];
+  const unmapped: string[] = [];
+  for (const [member, fields] of Object.entries(residue)) {
+    for (const f of fields) {
+      const id = payloadCoordinate(parsed.holder, member, f, byId);
+      if (id) normalization.push(id);
+      else unmapped.push(`${parsed.holder}.${member}.${f}`);
+    }
+  }
+  const counts = [residue[a].length, residue[b].length];
+  return {
+    residue,
+    normalization: normalization.sort(),
+    minRawEdit: 1 + counts[0] + counts[1],
+    bilateral: counts[0] > 0 && counts[1] > 0,
+    unmapped: unmapped.sort(),
+  };
+}
+
+/**
+ * Sibling member pairs on the same discriminator with COMPATIBLE branch payload
+ * topology: an empty symmetric difference, so a single-coordinate witness for
+ * them is possible at all.
+ */
+export function compatibleControls(
+  carrier: string,
+  census: Coordinate[] = loadCensus(),
+  signatures: Map<string, BranchSignatures> = loadBranchSignatures(),
+): string[] {
+  const parsed = parseCarrier(carrier);
+  if (!parsed) return [];
+  return census
+    .filter((c) => c.kind === "member-pair" && c.leaf === parsed.leaf && c.id !== carrier)
+    .filter((c) => {
+      const d = deriveNormalization(c.id, census, signatures);
+      return !("error" in d) && d.normalization.length === 0;
+    })
+    .map((c) => c.id)
+    .sort();
+}
+
+/**
+ * Every identifier the frozen oracle grounds: corpus case ids, diagnostic
+ * codes, obligation terms, holdout fixture ids.
+ *
+ * Obligation 3 requires a hand-adjudicated side to cite one. Without that the
+ * "not merely engine output" clause is unfalsifiable prose — `resolveSide`
+ * never labels a source `engine`, so a `cause` reading "probe only" would sail
+ * through while being exactly what the clause forbids. Citing a grounded
+ * identifier does not prove the reasoning is right; it proves the author was
+ * required to name the authority they claim to be reading, which is the part a
+ * checker can enforce.
+ */
+export function groundedVocabulary(oracle: Oracle): Set<string> {
+  const out = new Set<string>();
+  for (const id of oracle.fixtures.keys()) {
+    const o = oracle.outcomeOf(id);
+    if (!o) continue;
+    for (const c of o.outcome.codes) out.add(c);
+    for (const t of o.outcome.terms) out.add(t);
+    const name = o.source.split(":")[1];
+    if (name) out.add(name);
+  }
+  return out;
+}
+
+/** The live standing of one coordinate, for obligation 8. */
+export type Standing =
+  | { state: "primitive" }
+  | { state: "interaction-only" }
+  | { state: "resolved"; disposition: SubtractionDisposition }
+  | { state: "unresolved" }
+  | { state: "unowned" };
+
+export interface StandingIndex {
+  of(coordinate: string): Standing;
+}
+
+/** Standing read from the live witnesses and every basis the spec opened. */
+export function loadStanding(spec = "REL-VIEW-ALGEBRA-01", oracle: Oracle = loadOracle(), census: Coordinate[] = loadCensus()): StandingIndex {
+  const holding = loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok);
+  const primitive = primitiveRatified(holding);
+  const interaction = new Set(interactionOnly(holding));
+  const verdicts = new Map<string, SubtractionDisposition>();
+  for (const { ledger } of basesForSpec(spec)) {
+    for (const id of ledger.basis.candidates) verdicts.set(id, ledger.verdicts[id]?.disposition ?? "unresolved");
+  }
+  return {
+    of(coordinate) {
+      if (primitive.has(coordinate)) return { state: "primitive" };
+      if (interaction.has(coordinate)) return { state: "interaction-only" };
+      const d = verdicts.get(coordinate);
+      if (d === undefined) return { state: "unowned" };
+      return d === "unresolved" ? { state: "unresolved" } : { state: "resolved", disposition: d };
+    },
+  };
+}
+
+export interface Obligation {
+  id: string;
+  held: boolean;
+  /** Neither held nor failed: the condition cannot be evaluated or cannot exist. */
+  unevaluable?: boolean;
+  detail: string;
+}
+
+export interface ClosureCheck {
+  carrier: string;
+  /** False for a MALFORMED proof object — distinct from a refuted one. */
+  ok: boolean;
+  problems: string[];
+  obligations: Obligation[];
+  promotion: ClosurePromotion;
+  derived?: DerivedNormalization;
+  /** Set when obligation 7 is unsatisfiable by construction rather than false. */
+  classification?: "indeterminate";
+  /** How a dependency that later earns standing must be re-read. */
+  rereadIf?: string;
+  standing: { coordinate: string; standing: Standing }[];
+}
+
+const REREAD =
+  "A normalization coordinate gaining primitive standing does not erase this structural measurement; it changes the inference. " +
+  "`carrier + normalization collides` remains a true fact about the encoding, but `the carrier is independently primitive` no longer follows from it. " +
+  "The result becomes either a DERIVED DISCRIMINATOR (the branch payload already identifies the constructor, so the tag is reporting vocabulary or decoding convenience) " +
+  "or a COMPOSITE CONSTRUCTOR (tag and payload jointly constitute one irreducible semantic object, and neither coordinate deserves primitive standing alone). " +
+  "Which one it is must be re-decided, never assumed.";
+
+/**
+ * Check one closure against the eight proof obligations.
+ *
+ * Obligations 3-6 need stimuli. A closure with none is not thereby wrong — it
+ * is a structural measurement whose stimuli have not been constructed, and its
+ * promotion is `provisional`. Reporting those obligations as FAILED would make
+ * "nobody has built the fixtures yet" indistinguishable from "the mechanism
+ * does not hold", which are opposite findings.
+ */
+export function checkClosure(
+  closure: SemanticErasureClosure,
+  census: Coordinate[] = loadCensus(),
+  oracle: Oracle = loadOracle(),
+  standingIndex: StandingIndex = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census),
+  ledger: SemanticErasureClosure[] = [],
+  signatures: Map<string, BranchSignatures> = loadBranchSignatures(),
+): ClosureCheck {
+  const problems: string[] = [];
+  const obligations: Obligation[] = [];
+  const byId = new Map(census.map((c) => [c.id, c]));
+  const coord = (id: string) => byId.get(id);
+
+  // 1. SINGLE SEMANTIC CARRIER. The semantic witness bound stays at one
+  //    carrier; raw normalization cardinality is not counted against it.
+  const parsed = parseCarrier(closure.carrier);
+  const carrierCoord = coord(closure.carrier);
+  const c1 = parsed !== undefined && carrierCoord?.kind === "member-pair" && carrierCoord.leaf.endsWith(".kind");
+  obligations.push({
+    id: "1-single-semantic-carrier",
+    held: c1,
+    detail: c1 ? `${closure.carrier} is the only discriminator substitution` : `${closure.carrier} is not a live discriminator member-pair coordinate`,
+  });
+  if (!c1 || !parsed) {
+    problems.push(`${closure.carrier}: obligation 1 failed, so nothing further can be derived`);
+    return { carrier: closure.carrier, ok: false, problems, obligations, promotion: "refuted", standing: [] };
+  }
+
+  // 2. MECHANICALLY DERIVED NORMALIZATION.
+  const derived = deriveNormalization(closure.carrier, census, signatures);
+  if ("error" in derived) {
+    problems.push(`${closure.carrier}: ${derived.error}`);
+    return { carrier: closure.carrier, ok: false, problems, obligations, promotion: "refuted", standing: [] };
+  }
+  const authored = [...closure.normalization].sort();
+  const c2 = derived.unmapped.length === 0 && authored.join("\n") === derived.normalization.join("\n") && closure.minRawEdit === derived.minRawEdit;
+  obligations.push({
+    id: "2-mechanically-derived-normalization",
+    held: c2,
+    detail: c2
+      ? `[${derived.normalization.join(", ")}] is the symmetric difference of the branch signatures; minRawEdit ${derived.minRawEdit}`
+      : derived.unmapped.length > 0
+        ? `no erasing coordinate for payload ${derived.unmapped.join(", ")}`
+        : `authored [${authored.join(", ")}] (minRawEdit ${closure.minRawEdit}) is not the derived [${derived.normalization.join(", ")}] (minRawEdit ${derived.minRawEdit})`,
+  });
+  if (!c2) problems.push(`${closure.carrier}: authored normalization does not equal the derived set`);
+  // A closure with nothing to normalize is not a weak closure; it is a
+  // single-coordinate witness wearing the wrong record type, and admitting one
+  // here would let a plain witness claim the closure form's licence.
+  if (derived.normalization.length === 0) {
+    problems.push(`${closure.carrier}: derives an EMPTY normalization set, so it is a single-coordinate witness and belongs in witnesses.json`);
+  }
+
+  // Dependencies: the normalization set, plus whatever it reaches transitively
+  // through the closures of its own members. A cycle would show up here.
+  const byCarrier = new Map(ledger.map((c) => [c.carrier, c]));
+  const deps = new Set<string>();
+  const stack = [...derived.normalization];
+  while (stack.length > 0) {
+    const id = stack.pop()!;
+    if (deps.has(id)) continue;
+    deps.add(id);
+    for (const n of byCarrier.get(id)?.normalization ?? []) stack.push(n);
+  }
+  const depList = [...deps].sort();
+  const declaredDeps = [...closure.dependencies].sort();
+  if (declaredDeps.join("\n") !== depList.join("\n")) {
+    problems.push(`${closure.carrier}: declared dependencies [${declaredDeps.join(", ")}] are not the reachable set [${depList.join(", ")}]`);
+  }
+
+  const stimuli = closure.a !== undefined && closure.b !== undefined;
+  const unevaluable = (id: string, detail: string): Obligation => ({ id, held: false, unevaluable: true, detail });
+
+  let a: ReturnType<typeof resolveSide> | undefined;
+  let b: ReturnType<typeof resolveSide> | undefined;
+  if (stimuli) {
+    a = resolveSide(closure.a!, oracle);
+    b = resolveSide(closure.b!, oracle);
+  }
+
+  // 3. CONTROLLED STIMULI: identical outside the discriminated holder, and
+  //    their required outcomes differ under authority that is not the engine.
+  //
+  //    "Identical outside the holder" is checked by erasing the holder's WHOLE
+  //    contribution from both — every census coordinate under `<holder>.` plus
+  //    the discriminator leaf — and comparing canonical forms. That is a
+  //    stronger and better-defined statement than a hand-written path deletion,
+  //    and it reuses the quotient rather than reimplementing it.
+  const holderCoords = census.filter((c) => c.id === parsed.leaf || c.id.startsWith(`${parsed.holder}.`));
+  if (!stimuli) {
+    obligations.push(unevaluable("3-controlled-stimuli", "no stimuli constructed"));
+  } else {
+    const outside = canonical(eraseAll(a!.fixture, holderCoords)) === canonical(eraseAll(b!.fixture, holderCoords));
+    const differ = !sameOutcome(a!.outcome, b!.outcome);
+    const vocabulary = groundedVocabulary(oracle);
+    const ungrounded = ([["a", closure.a!], ["b", closure.b!]] as const)
+      .filter(([, side]) => "base" in side && ![...vocabulary].some((v) => side.cause.includes(v)))
+      .map(([label]) => label);
+    const held = outside && differ && ungrounded.length === 0;
+    obligations.push({
+      id: "3-controlled-stimuli",
+      held,
+      detail: held
+        ? `identical outside ${parsed.holder}; ${a!.source} vs ${b!.source} require different outcomes`
+        : !outside
+          ? `the stimuli differ somewhere other than ${parsed.holder}`
+          : !differ
+            ? `both stimuli require ${JSON.stringify(a!.outcome)}`
+            : `hand-adjudicated side(s) ${ungrounded.join(", ")} cite no corpus case, diagnostic code or obligation term the frozen oracle grounds`,
+    });
+    for (const [label, side] of [["a", a!], ["b", b!]] as const) {
+      const errors = oracle.validate(side.fixture);
+      if (errors.length > 0) problems.push(`${closure.carrier}: stimulus ${label} is schema-invalid: ${errors.join("; ")}`);
+    }
+  }
+
+  const collidesUnder = (ids: string[]): boolean => {
+    const cs = ids.map((id) => coord(id)).filter((c): c is Coordinate => c !== undefined);
+    if (cs.length !== ids.length) return false;
+    return canonical(eraseAll(a!.fixture, cs)) === canonical(eraseAll(b!.fixture, cs));
+  };
+
+  // 4. CARRIER INSUFFICIENCY BEFORE NORMALIZATION: the carrier alone must not
+  //    collide, and neither may the carrier with any PROPER subset of the
+  //    derived normalization set. That is what makes the set minimal.
+  if (!stimuli) {
+    obligations.push(unevaluable("4-carrier-insufficient-before-normalization", "no stimuli constructed"));
+  } else {
+    const n = derived.normalization;
+    const offenders: string[] = [];
+    // The carrier ALONE is tested unconditionally, never as subset zero of the
+    // sweep. When the normalization set is empty the sweep has no proper
+    // subsets at all, and folding the two together silently skipped the one
+    // clause obligation 4 exists for — reporting PASS for a carrier that in
+    // fact collided on its own.
+    if (collidesUnder([closure.carrier])) offenders.push("the carrier alone");
+    for (let mask = 1; mask < 1 << n.length; mask++) {
+      const subset = n.filter((_, i) => (mask >> i) & 1);
+      if (subset.length === n.length) continue;
+      if (collidesUnder([closure.carrier, ...subset])) offenders.push(`carrier + ${subset.join(" + ")}`);
+    }
+    obligations.push({
+      id: "4-carrier-insufficient-before-normalization",
+      held: offenders.length === 0,
+      detail:
+        offenders.length === 0
+          ? `the carrier alone and every one of the ${(1 << n.length) - 2} other proper subsets leave the stimuli distinct`
+          : `already collides: ${offenders.join("; ")}`,
+    });
+  }
+
+  // 5. COMPLETE CLOSURE SUFFICIENCY.
+  if (!stimuli) {
+    obligations.push(unevaluable("5-complete-closure-sufficiency", "no stimuli constructed"));
+  } else {
+    const held = collidesUnder([closure.carrier, ...derived.normalization]);
+    obligations.push({
+      id: "5-complete-closure-sufficiency",
+      held,
+      detail: held ? "carrier + the complete normalization set collides the stimuli" : "an INTERACTION remains: the full set does not collide them",
+    });
+  }
+
+  // 6. NORMALIZATION IS NOT THE CITED CAUSE: without the carrier it must not
+  //    collide, every member must lie in payload conditional on one branch, and
+  //    no member gains standing by appearing here.
+  const branchPrefixes = parsed.members.map((m) => `${parsed.holder}.${m}.`);
+  const misplaced = derived.normalization.filter((id) => !branchPrefixes.some((p) => id.startsWith(p)));
+  if (!stimuli) {
+    obligations.push(
+      misplaced.length > 0
+        ? { id: "6-normalization-is-not-the-cited-cause", held: false, detail: `outside the branch payload: ${misplaced.join(", ")}` }
+        : unevaluable("6-normalization-is-not-the-cited-cause", "branch-conditionality holds; the collision half needs stimuli"),
+    );
+  } else {
+    const alone = collidesUnder(derived.normalization);
+    const held = !alone && misplaced.length === 0;
+    obligations.push({
+      id: "6-normalization-is-not-the-cited-cause",
+      held,
+      detail: held
+        ? `all under ${branchPrefixes.join(" or ")}, and erasing them without the carrier leaves the stimuli distinct`
+        : alone
+          ? "the normalization set alone already collides the stimuli, so IT carries the distinction"
+          : `outside the branch payload: ${misplaced.join(", ")}`,
+    });
+  }
+
+  // 7. SAME-ENUM CONTROL. Where no compatible sibling pair exists, the
+  //    condition is unsatisfiable by construction rather than false, and the
+  //    classification is `indeterminate` — not a failure.
+  const possible = compatibleControls(closure.carrier, census, signatures);
+  const controlStanding = standingIndex.of(closure.control.coordinate);
+  const controlValid = possible.includes(closure.control.coordinate) && controlStanding.state === "primitive";
+  let indeterminate = false;
+  if (possible.length === 0) {
+    indeterminate = true;
+    obligations.push(
+      unevaluable("7-same-enum-control", `UNAVAILABLE: no sibling pair on ${parsed.leaf} has a compatible branch payload signature, so no control can exist`),
+    );
+  } else {
+    obligations.push({
+      id: "7-same-enum-control",
+      held: controlValid,
+      detail: controlValid
+        ? `${closure.control.coordinate} has a compatible payload signature and a holding single-coordinate witness`
+        : !possible.includes(closure.control.coordinate)
+          ? `${closure.control.coordinate} is not a payload-compatible sibling; candidates: ${possible.join(", ") || "(none)"}`
+          : `${closure.control.coordinate} is payload-compatible but its standing is ${controlStanding.state}, not primitive`,
+    });
+  }
+
+  // 8. DEPENDENCY AND FIXED-POINT DISCHARGE.
+  const standing = depList.map((coordinate) => ({ coordinate, standing: standingIndex.of(coordinate) }));
+  const open = standing.filter((s) => s.standing.state === "unresolved" || s.standing.state === "unowned");
+  const supported = standing.filter((s) => s.standing.state === "primitive" || s.standing.state === "interaction-only");
+  const c8 = open.length === 0 && supported.length === 0;
+  obligations.push({
+    id: "8-dependency-and-fixed-point-discharge",
+    held: c8,
+    detail: c8
+      ? `every dependency resolved and none independently supported; the simultaneous final quotient remains a close condition of the slice`
+      : open.length > 0
+        ? `${open.length} dependency/dependencies not yet adjudicated: ${open.map((s) => `${s.coordinate} (${s.standing.state})`).join(", ")}`
+        : `${supported.length} dependency/dependencies carry standing of their own: ${supported.map((s) => `${s.coordinate} (${s.standing.state})`).join(", ")}`,
+  });
+
+  // Promotion. `refuted` is reserved for the three named causes; everything
+  // else that is not fully discharged is `provisional`, because "not proven" and
+  // "disproven" are different results and collapsing them would let an
+  // unconstructed fixture read as a refutation.
+  const failed = (id: string) => obligations.some((o) => o.id.startsWith(id) && !o.held && !o.unevaluable);
+  const refuted = failed("5-") || failed("6-");
+  const promotion: ClosurePromotion = refuted ? "refuted" : obligations.every((o) => o.held) ? "holding" : "provisional";
+
+  return {
+    carrier: closure.carrier,
+    ok: problems.length === 0,
+    problems,
+    obligations,
+    promotion,
+    derived,
+    classification: indeterminate ? "indeterminate" : undefined,
+    rereadIf: supported.length > 0 || open.length > 0 ? REREAD : undefined,
+    standing,
+  };
+}
+
+export interface ClosureGateResult {
+  ok: boolean;
+  problems: string[];
+  checks: ClosureCheck[];
+  /** Closure carriers that reach themselves through their normalization sets. */
+  cycles: string[][];
+  /** Every distinct dependency across the ledger, with its live standing. */
+  dependencies: { coordinate: string; standing: Standing; blocks: string[] }[];
+}
+
+/**
+ * Strongly connected components of the carrier -> normalization graph with more
+ * than one member, or a self-loop.
+ *
+ * A normalization coordinate whose own support eventually depends back on the
+ * carrier is evidence of a COMPOSITE semantic object rather than two
+ * independently primitive coordinates. Such a component stays unresolved until
+ * it is refactored or discharged by the simultaneous quotient — a closure must
+ * never be able to delete the competing carrier that stood in its way.
+ */
+export function closureCycles(closures: SemanticErasureClosure[]): string[][] {
+  const edges = new Map(closures.map((c) => [c.carrier, c.normalization]));
+  const index = new Map<string, number>();
+  const low = new Map<string, number>();
+  const onStack = new Set<string>();
+  const stack: string[] = [];
+  const out: string[][] = [];
+  let counter = 0;
+  const strongconnect = (v: string): void => {
+    index.set(v, counter);
+    low.set(v, counter);
+    counter += 1;
+    stack.push(v);
+    onStack.add(v);
+    for (const w of edges.get(v) ?? []) {
+      if (!index.has(w)) {
+        strongconnect(w);
+        low.set(v, Math.min(low.get(v)!, low.get(w)!));
+      } else if (onStack.has(w)) {
+        low.set(v, Math.min(low.get(v)!, index.get(w)!));
+      }
+    }
+    if (low.get(v) === index.get(v)) {
+      const component: string[] = [];
+      for (;;) {
+        const w = stack.pop()!;
+        onStack.delete(w);
+        component.push(w);
+        if (w === v) break;
+      }
+      const selfLoop = component.length === 1 && (edges.get(component[0]) ?? []).includes(component[0]);
+      if (component.length > 1 || selfLoop) out.push(component.sort());
+    }
+  };
+  for (const c of closures.map((x) => x.carrier)) if (!index.has(c)) strongconnect(c);
+  return out.sort((x, y) => x.join().localeCompare(y.join()));
+}
+
+export function checkClosures(file = CLOSURES_FILE): ClosureGateResult {
+  const ledger = loadClosures(file);
+  const census = loadCensus();
+  const oracle = loadOracle();
+  const signatures = loadBranchSignatures();
+  const standingIndex = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census);
+  const problems: string[] = [];
+
+  const dupes = [...new Set(ledger.closures.map((c) => c.carrier).filter((id, i, all) => all.indexOf(id) !== i))].sort();
+  if (dupes.length > 0) problems.push(`duplicate closure carrier(s): ${dupes.join(", ")}`);
+
+  const checks = ledger.closures.map((c) => checkClosure(c, census, oracle, standingIndex, ledger.closures, signatures));
+  for (const c of checks) problems.push(...c.problems);
+  // The recorded promotion is a CLAIM, checked exactly as a verdict is.
+  for (const [i, c] of checks.entries()) {
+    const claimed = ledger.closures[i].promotion;
+    if (claimed !== c.promotion) problems.push(`${c.carrier}: recorded promotion "${claimed}" but the obligations yield "${c.promotion}"`);
+  }
+  // No closure may confer standing. This is the guarantee that adopting the
+  // proof form did not quietly widen what ratifies a coordinate.
+  const primitive = primitiveRatified(loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok));
+  for (const c of checks) {
+    if (c.promotion !== "holding" && primitive.has(c.carrier)) {
+      problems.push(`${c.carrier}: is primitively ratified while its closure is ${c.promotion}`);
+    }
+  }
+
+  const blocks = new Map<string, string[]>();
+  for (const c of checks) for (const s of c.standing) blocks.set(s.coordinate, [...(blocks.get(s.coordinate) ?? []), c.carrier].sort());
+  const dependencies = [...blocks.keys()]
+    .sort()
+    .map((coordinate) => ({ coordinate, standing: standingIndex.of(coordinate), blocks: blocks.get(coordinate)! }));
+
+  return { ok: problems.length === 0, problems, checks, cycles: closureCycles(ledger.closures), dependencies };
+}
+
+const invokedDirectly = process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]));
+if (invokedDirectly) {
+  const r = checkClosures();
+  if (process.argv.includes("--gate")) {
+    console.log(r.ok ? `closures --gate: OK — ${r.checks.length} closure(s) consistent with their obligations` : r.problems.join("\n"));
+    if (!r.ok) process.exit(1);
+  } else {
+    const byPromotion = new Map<string, number>();
+    for (const c of r.checks) byPromotion.set(c.promotion, (byPromotion.get(c.promotion) ?? 0) + 1);
+    console.log(`closures: ${r.checks.length} semantic-erasure-closure record(s)`);
+    for (const [p, n] of [...byPromotion].sort()) console.log(`  ${String(n).padStart(4)}  ${p}`);
+    console.log(`\n${r.dependencies.length} distinct dependency coordinate(s) across ${r.checks.length} carriers:`);
+    for (const d of r.dependencies) {
+      console.log(`  ${d.coordinate.padEnd(56)} ${d.standing.state.padEnd(16)} blocks ${d.blocks.length}`);
+    }
+    console.log(r.cycles.length === 0 ? "\nno dependency cycles" : `\n${r.cycles.length} cycle(s): ${r.cycles.map((c) => c.join(" -> ")).join("; ")}`);
+    if (r.problems.length > 0) console.log(`\n${r.problems.length} problem(s):\n  ${r.problems.join("\n  ")}`);
+  }
+}

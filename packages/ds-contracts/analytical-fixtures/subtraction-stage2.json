@@ -27,7 +27,8 @@
       "$comment": "Structural questions to ask of a candidate BEFORE looking for a witness. Each names a way a representation can generate propositions about itself. Discovered by subtraction, not assumed.",
       "crossTerm": "Has the representation generated a cross-product between independent degrees of freedom? For an optional tagged holder those are existence, alternative identity, and alternative-specific payload; 'alternative A versus absence' is their cross-term and is never a fourth degree of freedom. Established by the 13 discriminator member-absence candidates collapsing to 3 holder-presence facts.",
       "tagIsNotTheChoice": "A tag that names a semantic choice does not thereby constitute an independent semantic coordinate. If the tag is wholly derivable from the presence, structure, payload, or occurrence class it summarizes, retain the underlying distinction and classify the TAG by its actual role: primitive coordinate (removing it destroys an independently grounded distinction), required derived vocabulary (externally governed and name-bearing, but fully derivable from other semantic facts), or representation artifact (neither independently necessary nor externally required).",
-      "reportingVocabulary": "A reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE. Authority to name a conclusion does not imply independent semantic information in the name. The semantic normal form is not necessarily the vocabulary in which the system reports its conclusions. Two materially different instances so far: constructor law and operand structure beneath a derived constructor tag; diagnostic and obligation occurrence classes beneath a derived verdict status."
+      "reportingVocabulary": "A reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE. Authority to name a conclusion does not imply independent semantic information in the name. The semantic normal form is not necessarily the vocabulary in which the system reports its conclusions. Two materially different instances so far: constructor law and operand structure beneath a derived constructor tag; diagnostic and obligation occurrence classes beneath a derived verdict status.",
+      "dependentSum": "Is the coordinate one of a set of SIBLINGS, or one of a set of FIBERS? A semantic normal form cannot be represented as a flat inventory of typed parameters; it must preserve the dependency structure among them. Some coordinates are independently variable, others are meaningful only inside the fiber selected by another semantic choice. A schema that serializes both as sibling JSON fields makes them look equally ablatable, and they are not. Established by the twenty derivation pairs having bilateral residue while the additivity pairs have unilateral residue and the control has none."
     },
     "witnessStrength": {
       "$comment": "What each shape of witness may and may not ratify. The retention criterion says a distinction becomes unexpressible when EXACTLY the candidate is erased; only one shape of witness establishes that.",
@@ -47,16 +48,42 @@
           "4. erasing an auxiliary alone does not supply the outcome difference being cited",
           "5. a control within the same enum — two members of compatible payload shape — separates on a single coordinate, showing discriminator differences can. Condition 5 is what makes this empirical rather than an excuse: without a control, 'the payload got in the way' is unfalsifiable"
         ],
-        "notYetLicensed": "A hygiene classification does NOT by itself confer primitive standing on the carrier. Doing so would quietly rewrite the retention rule from 'erase exactly c' into 'erase c plus whatever makes the test work'. Conferring it requires the SEMANTIC ERASURE CLOSURE below to be formalized and tested against the existing 2-set witnesses first.",
+        "notYetLicensed": "A hygiene classification does NOT by itself confer primitive standing on the carrier. Doing so would quietly rewrite the retention rule from 'erase exactly c' into 'erase c plus whatever makes the test work'. That remains true after adoption: the closure below is a way of STATING a conditional proof, not a way of discharging one, and a `provisional` closure leaves its candidate's verdict `unresolved`.",
         "semanticErasureClosure": {
-          "status": "proposed, not adopted",
-          "statement": "Erasing a coordinate may deterministically remove representation-only residue whose existence is CONDITIONAL on the erased choice. Such cleanup is not an additional semantic erasure and cannot contain independently varying analytical information.",
-          "wouldYield": [
-            "single-coordinate -> primitive evidence",
-            "multi-coordinate / interaction -> factorization remains open",
-            "single + hygiene closure -> primitive evidence after normalization"
+          "status": "ADOPTED as a code-owned, dependency-aware WITNESS FORM (closure.ts). Not a sixth disposition; the ledger vocabulary is unchanged.",
+          "$comment": "The strict rule stays valid for INDEPENDENT coordinates: erasing exactly coordinate c must destroy the independently grounded distinction. What the second-enum probe falsified is treating that rule as universal. A tagged union is not a Cartesian product of independently present coordinates; it is a dependent sum, Sigma constructor : Kind . Payload(constructor). `toGrain` exists only under aggregate-to-grain, `keep` only under project, `edgeFrom`/`edgeTo` only under graph. Once two constructors are identified, their branch-indexed payload cannot remain untouched and still produce a comparable encoding, so the measured 1/3/4/5 raw-edit cardinalities are properties of the SERIALIZED SUM-TYPE ENCODING, not measurements of semantic dimensionality.",
+          "whyNotLeftUnlicensed": "Leaving closure unlicensed would let the schema's branch topology decide the semantic result: all twenty non-control derivation pairs would lose standing for the single reason that their constructors happen to require differently named fields. That answers the subtraction with the representation under test, which is precisely the failure this lane exists to detect. Adoption is therefore a correction to the quotient's DOMAIN MODEL — a type-aware erasure rule replacing a flat JSON-leaf ablation — not a relaxation of witness discipline.",
+          "proofObject": {
+            "carrier": "exactly one discriminator member-pair coordinate: the semantic intervention under test",
+            "normalization": "the branch-conditional payload that must be erased for the two encodings to enter the same comparison class. Named `normalization` rather than `cleanup` deliberately: `cleanup` sounds disposable, and these coordinates may yet prove semantically consequential. What is known now is only that their SERIALIZED PRESENCE is conditional on the carrier's branch.",
+            "control": "a reference to the holding single-coordinate witness on a payload-compatible sibling pair of the same enum",
+            "dependencies": "the normalization set plus whatever it reaches transitively through other closures; a cycle appears here"
+          },
+          "states": {
+            "provisional": "the carrier/normalization mechanism holds, but one or more normalization dependencies remain unresolved (or no control CAN exist)",
+            "holding": "every proof obligation is discharged and the carrier has earned primitive standing",
+            "refuted": "a normalization coordinate independently carries the same distinction, an interaction remains, or the final quotient fails"
+          },
+          "obligations": [
+            "1. SINGLE SEMANTIC CARRIER. `carrier` names exactly one discriminator member-pair coordinate. The semantic witness bound remains ONE carrier; raw normalization cardinality is not counted against it.",
+            "2. MECHANICALLY DERIVED NORMALIZATION. The checker derives the set from the symmetric difference of the two branch payload signatures, read from the census's own schema walk. The authored list is retained for inspectability and must exactly equal the derived set, so the author cannot choose whatever makes the collision happen. An empty derived set is refused: that is a single-coordinate witness in the wrong record type.",
+            "3. CONTROLLED STIMULI. The two stimuli are identical outside the discriminated holder (checked by erasing the holder's whole contribution and comparing canonical forms), their required outcomes differ, and every hand-adjudicated side cites a corpus case, diagnostic code or obligation term the frozen oracle grounds — not merely engine output.",
+            "4. CARRIER INSUFFICIENCY BEFORE NORMALIZATION. The carrier alone must not collide, and neither may the carrier with any PROPER subset of the derived normalization set. The carrier-alone clause is evaluated unconditionally rather than as subset zero of the sweep.",
+            "5. COMPLETE CLOSURE SUFFICIENCY. The carrier plus the entire derived normalization set must collide. Failure means an INTERACTION remains, and refutes.",
+            "6. NORMALIZATION IS NOT THE CITED CAUSE. Normalization without the carrier must not collide the stimuli, and every member must lie in payload conditional on one branch. No normalization coordinate receives standing merely by appearing in a closure.",
+            "7. SAME-ENUM CONTROL. A sibling pair with compatible branch payload topology must show that a discriminator CAN separate directly on one coordinate. `bin~normalize` satisfies this for Derivation. Where no control can exist — the two-member `assertion.kind` enum — the classification is `indeterminate`, not failed.",
+            "8. DEPENDENCY AND FIXED-POINT DISCHARGE. Before promotion from provisional to holding, every normalization dependency must be resolved, none may be primitive- or interaction-supported in a way that independently carries the carrier distinction, and the simultaneous final quotient must conserve the authoritative judgment partition."
           ],
-          "preservesResultOf": "17bfcc96 — arbitrary 2-sets still do not ratify their members"
+          "readingADependencyThatLaterEarnsStanding": {
+            "$comment": "A normalization coordinate gaining primitive standing does not retroactively erase the structural measurement; it changes the inference drawn from it. `carrier + normalization collides` remains a true fact about the encoding, but `the carrier is independently primitive` no longer follows from it.",
+            "derivedDiscriminator": "branch payload already carries enough information to identify the constructor; the tag is required reporting vocabulary or decoding convenience, not an independent semantic coordinate",
+            "compositeConstructor": "constructor choice and branch payload jointly constitute the irreducible semantic object; neither current coordinate deserves primitive standing alone",
+            "why": "This is why the closure must stay dependency-aware. Otherwise it would turn deterministic normalization into a mechanism for deleting whatever competing carrier prevented a desired witness. A strongly connected component in the carrier -> normalization graph indicates a composite object and must stay unresolved until refactored or discharged by the simultaneous quotient."
+          },
+          "whyTheControlIsStronger": "`bin~normalize` requires NO normalization. Its single-coordinate witness already establishes a discriminant between two constructors sharing the same structural operand signature, and no dependency resolution can weaken that result. It is strictly stronger than any closure, which is exactly what qualifies it as the control the other twenty cite.",
+          "testedAgainstExistingWitnesses": "The derived normalization set reproduces the residue `classifyWitness` observed for every holding multi-coordinate witness that has a carrier: both additivity hygiene witnesses (minRawEdit 2, unilateral residue) and the indeterminate `assertion.kind:aggregate~ratio-comparison`. The one witness with no carrier pairs the BARE `assertion.kind` leaf with payload, so no discriminator substitution is under test and no closure applies. Pinned in closure.test.ts.",
+          "preservesResultOf": "17bfcc96 — arbitrary 2-sets still do not ratify their members, and the <=2-coordinate bound on witnesses.json is unchanged",
+          "recordedFor": "The twenty non-control derivation pairs, in closures-stage2.json, as PROVISIONAL measurements. Their subtraction verdicts stay `unresolved`. Nineteen have no constructed stimuli, so obligations 3-6 are not evaluable — which is a different state from failing them. `aggregate-to-grain~project` carries stimuli and discharges obligations 1-7; obligation 8 is open because both its dependencies are unresolved, so its carrier gains nothing."
         }
       }
     },
@@ -88,6 +115,11 @@
       "id": "ruledigest-boundary",
       "condition": "The `holdout.ruleDigest` claim boundary is explicitly settled in words.",
       "why": "Excluding relation-model.ts is correct if the digest means 'judgment law over already-admitted structures'. If the holdout claim is end-to-end — fixture bytes through structural admission through judgment — then a well-formedness change can alter the holdout without moving the digest, and relation-model.ts is material despite not deciding the semantic result. Settle the wording rather than reflexively digesting the file."
+    },
+    {
+      "id": "closure-dependency-discharge",
+      "condition": "No closure in closures-stage2.json may remain `provisional` at close, and none may be `refuted` without its carrier carrying a verdict that accounts for the refutation.",
+      "why": "A provisional closure is an open conditional: it says the mechanism holds subject to dependencies nobody has adjudicated. Closing the slice with twenty of them outstanding would record a proof form as though it were a result. The dependencies collapse to nine distinct payload coordinates across the twenty carriers, so the discharge is nine adjudications, not twenty."
     }
   ],
   "basis": {

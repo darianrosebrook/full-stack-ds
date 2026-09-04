@@ -140,6 +140,18 @@ describe("the gate covers every basis the spec opened", () => {
     }
   });
 
+  it("every basis reports only LEDGER problems that are its own open candidates", () => {
+    // A structural ledger problem is not the same as an unresolved candidate:
+    // the first says the file is malformed, the second says the work is not
+    // done. `subtraction-stage2-holders.json` shipped with a dispositions map
+    // listing four of the five code-owned dispositions, which no test covered,
+    // so it reported a malformed-ledger problem on every gate run while reading
+    // as ordinary open work. This is the ratchet that catches the next one.
+    for (const { file, ledger } of basesForSpec("REL-VIEW-ALGEBRA-01")) {
+      expect(checkSubtraction(file, ledger).problems, `${file}`).toEqual([]);
+    }
+  });
+
   it("a sibling basis with an open candidate keeps the gate red", () => {
     const open = basesForSpec("REL-VIEW-ALGEBRA-01").filter(({ ledger }) =>
       ledger.basis.candidates.some((id) => (ledger.verdicts[id]?.disposition ?? "unresolved") === "unresolved"),
@@ -330,7 +342,7 @@ describe("the rule is on disk before any verdict cites it", () => {
 
   it("states the closure conditions as validity constraints, each with its reason", () => {
     const ids = (live.closeConditions ?? []).map((c) => c.id).sort();
-    expect(ids).toEqual(["final-quotient", "operator-law-locus", "ruledigest-boundary"]);
+    expect(ids).toEqual(["closure-dependency-discharge", "final-quotient", "operator-law-locus", "ruledigest-boundary"]);
     for (const c of live.closeConditions ?? []) {
       expect(c.condition.trim().length, `${c.id} states no condition`).toBeGreaterThan(0);
       expect(c.why.trim().length, `${c.id} gives no reason`).toBeGreaterThan(0);

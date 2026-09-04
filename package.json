@@ -19,6 +19,8 @@
     "analytical:check-baseline": "tsx packages/ds-codegen/src/analytical/baseline.ts --check --ledger-only --rewrites --ignore-additions",
     "analytical:subtraction": "tsx packages/ds-codegen/src/analytical/subtraction.ts",
     "analytical:subtraction:gate": "tsx packages/ds-codegen/src/analytical/subtraction.ts --gate",
+    "analytical:closures": "tsx packages/ds-codegen/src/analytical/closure.ts",
+    "analytical:closures:gate": "tsx packages/ds-codegen/src/analytical/closure.ts --gate",
     "generate": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js",
     "generate:all": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=all",
     "generate:react-native": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=react-native",

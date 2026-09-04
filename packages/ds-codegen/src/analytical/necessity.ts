@@ -548,7 +548,16 @@ export function classifyWitness(
         ? `${siblingPairs.length} sibling pair(s) exist on ${holder}.kind but none has a single-coordinate witness`
         : `UNAVAILABLE: ${holder}.kind has no sibling member pair, so no control can exist`,
   });
-  if (!control) return { klass: controlPossible ? "interaction" : "indeterminate", conditions };
+  // `indeterminate` means conditions 1-4 HELD, so the carrier and its residue
+  // are known and reporting them costs nothing. Withholding them made the
+  // classification unusable by anything downstream that wants to ask what the
+  // witness was about — including the closure cross-check, which could then
+  // only compare the two hygiene witnesses and silently skipped this one.
+  if (!control) {
+    return controlPossible
+      ? { klass: "interaction", conditions }
+      : { klass: "indeterminate", carrier, residue: auxiliaries, conditions };
+  }
 
   return { klass: "quotient-hygiene", carrier, residue: auxiliaries, conditions };
 }

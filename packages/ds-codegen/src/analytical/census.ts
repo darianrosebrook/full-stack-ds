@@ -149,8 +149,35 @@ function isPrimitive(n: Node): boolean {
   return types.length > 0 && types.every((x) => PRIMITIVE_TYPES.has(x));
 }
 
+/**
+ * The REQUIRED payload of each branch of a discriminated union, keyed by
+ * member, with `kind` excluded because every branch carries it.
+ *
+ * This is a fact about the SCHEMA's branch topology, not about any judgment.
+ * It is recorded during the census walk rather than by a second reading of the
+ * schema so that "which properties does branch m require" has one authority: a
+ * separate walk would be free to disagree with the one the coordinate ids come
+ * from, and the closure checker's normalization set is derived from exactly
+ * this.
+ */
+export interface BranchSignatures {
+  /** Required property names per branch member, `kind` excluded, sorted. */
+  required: Record<string, string[]>;
+}
+
+export interface CensusDerivation {
+  coordinates: Coordinate[];
+  /** Keyed by discriminator leaf id, e.g. `relation.derivedBy.kind`. */
+  signatures: Map<string, BranchSignatures>;
+}
+
 export function deriveCensus(schema: Node): Coordinate[] {
+  return deriveCensusWithSignatures(schema).coordinates;
+}
+
+export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
   const defs = (schema.definitions ?? {}) as Record<string, Node>;
+  const signatures = new Map<string, BranchSignatures>();
   const resolve = (n: Node): Node => {
     let cur = n;
     for (let i = 0; i < 8; i++) {
@@ -318,6 +345,11 @@ export function deriveCensus(schema: Node): Coordinate[] {
       const kinds = objects.map((b) => String((b.properties as Record<string, Node>).kind.const));
       addHolderPresence(rawPath, optional);
       addLeaf(`${rawPath}.kind`, kinds, optional);
+      signatures.set(label(`${rawPath}.kind`), {
+        required: Object.fromEntries(
+          objects.map((b, i) => [kinds[i], ((Array.isArray(b.required) ? b.required : []) as string[]).filter((k) => k !== "kind").sort()]),
+        ),
+      });
       // Every branch property is qualified by its branch, so a coordinate's id does not
       // depend on which sibling branches happen to exist (removing `rollup` must not rename `op`).
       objects.forEach((b, i) => {
@@ -345,11 +377,16 @@ export function deriveCensus(schema: Node): Coordinate[] {
   };
 
   walk(schema, "");
-  return out;
+  return { coordinates: out, signatures };
 }
 
 export function loadCensus(schemaPath = FIXTURE_SCHEMA): Coordinate[] {
   return deriveCensus(JSON.parse(fs.readFileSync(schemaPath, "utf-8")) as Node);
+}
+
+/** Branch payload signatures for every discriminated union in the schema. */
+export function loadBranchSignatures(schemaPath = FIXTURE_SCHEMA): Map<string, BranchSignatures> {
+  return deriveCensusWithSignatures(JSON.parse(fs.readFileSync(schemaPath, "utf-8")) as Node).signatures;
 }
 
 export interface CensusSnapshot {

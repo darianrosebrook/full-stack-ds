@@ -21,7 +21,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { BASELINE_FILE, checkBaseline, type Baseline } from "./baseline.js";
 import { decodeScale, scaleAliases, type ScaleLabel } from "./capabilities.js";
-import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadCensus } from "./census.js";
+import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadBranchSignatures, loadCensus } from "./census.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import {
@@ -568,20 +568,13 @@ describe("C1d — cleanup cardinality bounds which pairs a <=2-coordinate witnes
    * pinned because it is what makes a whole class of witness search futile
    * BEFORE anyone runs it.
    */
-  const branchRequired = (): Map<string, string[]> => {
-    const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as Record<string, never>;
-    const defs = (schema["$defs"] ?? schema["definitions"]) as Record<string, { anyOf?: never[]; oneOf?: never[] }>;
-    const branches = (defs.derivation.anyOf ?? defs.derivation.oneOf ?? []) as {
-      properties?: { kind?: { const?: string } };
-      required?: string[];
-    }[];
-    const out = new Map<string, string[]>();
-    for (const b of branches) {
-      const tag = b.properties?.kind?.const;
-      if (tag) out.set(tag, (b.required ?? []).filter((k) => k !== "kind").sort());
-    }
-    return out;
-  };
+  // Read from the census's own accumulator rather than by re-walking the
+  // schema here. Two readings of "which properties does branch m require" are
+  // free to disagree, and `deriveNormalization` derives every closure's
+  // normalization set from this one — so this is the reading that must be
+  // under test.
+  const branchRequired = (): Map<string, string[]> =>
+    new Map(Object.entries(loadBranchSignatures().get("relation.derivedBy.kind")!.required));
 
   const pairs = () => {
     const req = branchRequired();
