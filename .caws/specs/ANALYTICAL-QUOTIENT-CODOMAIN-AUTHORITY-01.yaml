@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: draft
 created_at: '2026-09-04T18:36:42.497Z'
-updated_at: '2026-09-04T18:36:42.497Z'
+updated_at: '2026-09-04T18:36:52.770Z'
 created_by_session: 'b2dd0282-810d-45e6-99c5-ae3bd21162f1'
 blast_radius:
   modules:
@@ -19,7 +19,8 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
     - 'packages/ds-contracts/quotient-image.schema.json'
     - 'package.json'
-  out: []
+  out:
+    - packages/ds-contracts/analytical-pack
 invariants:
   - 'The terminal invariant is quotientLanguageInvalid == 0, NOT sourceLanguageDeparture == 0. An erasure image that cannot be parsed as an unmodified source declaration is often expected and is not by itself a defect: a compiler IR is not invalid because it does not parse as source. What must never happen is an image invalid in the language of quotient images.'
   - 'Deleting a required leaf must NOT delete its enclosing declaration. That repair is refused as the general rule: it forgets the whole semantic object rather than the named leaf, and it would convert the present subsumes-refinements result on assertion.aggregate.op into real sibling over-erasure. Declaration deletion stays reachable only through an explicit holder-presence or composite-declaration operation.'
