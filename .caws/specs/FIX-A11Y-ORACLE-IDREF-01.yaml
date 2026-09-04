@@ -126,3 +126,7 @@ evidence:
     status: pass
     evidence_ref: "Integrated pnpm test and pnpm run test:frameworks pass generated axe suites; emitter tests assert the scan root contains the rendered component, and React/Vue/Svelte/Lit generated axe configuration disables only the document-level region rule rather than naming/structure rules."
     recorded_at: "2026-09-04T21:47:15.544Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm run audit:a11y-realization PASS: 105 obligations / 630 exact carrier-target-endpoint checks, all 161 unrealized findings ledgered; focused semantic/emitter tests reject decoration-owned labels, dangling IDREFs, and empty scan roots; full mutation run at 3022618b killed the initial 5/5 curated mutants, including Dialog name-to-body via authored assertion."
+    recorded_at: "2026-09-04T21:47:28.621Z"
