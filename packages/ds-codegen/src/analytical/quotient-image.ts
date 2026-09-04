@@ -141,6 +141,35 @@ export function classify(container: Record<string, QJson> | QJson[], key: string
   return "known";
 }
 
+/**
+ * The image with every hole removed: the source document that asserts least
+ * among those the image is consistent with.
+ *
+ * The engine judges the SOURCE language and must never be taught to read a
+ * marker — that would make it a consumer of the erasure encoding, which is the
+ * coupling this whole module exists to prevent. So a harness that wants an
+ * engine opinion about an image projects it here first, and checks the result
+ * is source-valid before asking: where the projection is NOT valid, the engine
+ * has nothing to say about that image and saying so is the honest answer.
+ *
+ * Deleting is the right projection because a hole means "some value stood here"
+ * and the document that omits it is the one claiming least. Substituting a
+ * representative value instead would assert something the quotient does not
+ * know — which is exactly what writing one branch's tag over another branch's
+ * payload was doing.
+ */
+export function sourceProjection(image: unknown): unknown {
+  if (isMarker(image)) return undefined;
+  if (Array.isArray(image)) return image.map(sourceProjection).filter((v) => v !== undefined);
+  if (!isObj(image)) return image;
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(image)) {
+    const p = sourceProjection(v);
+    if (p !== undefined) out[k] = p;
+  }
+  return out;
+}
+
 /** Every marker in the image, with the JSON path it stands at. */
 export function markersIn(image: unknown, at = ""): { path: string; marker: QuotientMarker }[] {
   if (isMarker(image)) return [{ path: at, marker: image }];

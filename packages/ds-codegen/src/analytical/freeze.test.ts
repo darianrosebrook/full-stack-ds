@@ -10,7 +10,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { loadCensus } from "./census.js";
-import { checkFreeze, computeFreeze, corpus, loadFreeze, type Stage2Freeze } from "./freeze.js";
+import { checkFreeze, computeFreeze, corpus, loadFreeze, supersessionOf, type Stage2Freeze } from "./freeze.js";
 
 const frozen = loadFreeze();
 // Scoped to the fixtures the freeze was taken over. Unscoped, a later fixture
@@ -24,6 +24,24 @@ const live = computeFreeze({}, frozen.fixtures);
  * a gap. Named exactly and in both directions: a coordinate leaving this list
  * is a corpus gaining a distinction, and one joining it is a distinction the
  * corpus lost or a locator that stopped arriving.
+ *
+ * WHAT REACH MEANS FOR A MERGE CHANGED, and the list moved with it. A merge now
+ * writes a member CLASS wherever EITHER member appears, so it is corpus-dead
+ * only when neither member is present anywhere — where it used to be dead
+ * whenever the `from` member was absent. Three cardinality and closure pairs
+ * left the list for that reason and not because the corpus grew a distinction.
+ * Reach for a merge is therefore "the corpus carries one of these members", not
+ * "the corpus separates them"; the separating question is measured by
+ * `erasure-audit`, over specimens, and is deliberately not asked here.
+ *
+ * BOTH ARITY COORDINATES ARE NOW DEAD, which is a real loss of corpus coverage
+ * and is recorded as one. Arity truncates to the declaration's own `minItems`,
+ * and every corpus occurrence of `nest.levels` and `structure.peers[]` is
+ * already AT its floor — so there is nothing to truncate. That is a fact about
+ * the corpus, not about the coordinate: the synthesized separating pairs in
+ * `erasure-specimens.ts` build a pair astride the floor and do exercise it.
+ * Truncating to one element instead, as before, moved four fixtures and
+ * produced images the representation cannot express.
  */
 const CORPUS_DEAD = [
   "assertion.aggregate.along#order",
@@ -33,14 +51,13 @@ const CORPUS_DEAD = [
   "field.additivity.semi-additive.nonAdditiveAlong#order",
   "relation.derivedBy.aggregate-to-grain.toGrain#arity",
   "relation.derivedBy.aggregate-to-grain.toGrain#order",
-  "relation.derivedBy.bin.closure:left-closed~right-closed",
   "relation.derivedBy.bin.closure:right-closed~<absent>",
   "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
-  "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-  "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
   "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
   "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+  "relation.derivedBy.nest.levels#arity",
   "relation.derivedBy.nest.levels#order",
+  "structure.peers[]#arity",
   "structure.peers[]#order",
 ];
 
@@ -131,20 +148,59 @@ describe("stage-2 erasure freeze", () => {
   });
 
   /**
-   * The erasure-plan refactor's whole claim, as a single assertion: both
-   * modules that read the schema were rewritten — one now EMITS locators, the
-   * other only executes them — and not one of the 165 erasures changed by a
-   * byte. Reach counts alone could not say this; the digests can.
+   * A moved AUTHORITY and a moved DATA INPUT are reported separately, and the
+   * authority names its cause.
+   *
+   * This replaces an assertion that `census.ts` and `quotient.ts` appeared in
+   * `movedInputs` while no erasure digest moved — the erasure-plan refactor's
+   * claim, which that record could make because it predated the refactor. The
+   * record has since been superseded under a different erasure authority, so
+   * the comparison no longer exists to be asserted. What survives it is the
+   * property it was protecting: attribution. Source modules are no longer named
+   * one at a time in `digests` — a per-file list under-claims, and
+   * `erasure-plan.ts` was never in it — so the check has to distinguish "the
+   * corpus changed" from "what an erasure does changed", and say which.
    */
-  it("census.ts and quotient.ts both moved while every erasure digest held", () => {
-    const r = checkFreeze(frozen, live);
-    expect(r.movedInputs).toContain("census.ts");
-    expect(r.movedInputs).toContain("quotient.ts");
-    expect(r.divergences).toEqual([]);
-    // `fixtures.jsonl` moves too, and for an unrelated reason — holdout items
-    // were added after the freeze. That is precisely why the record is scoped
-    // to named fixtures instead of to whatever the corpus currently holds.
-    expect(r.movedInputs).toContain("fixtures.jsonl");
+  it("attributes a moved AUTHORITY by cause, and does not confuse it with a moved data input", () => {
+    const tampered: Stage2Freeze = { ...frozen, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
+    const r = checkFreeze(tampered, live);
+    expect(r.movedAuthority.map((m) => m.identity)).toEqual(["erasureAuthorityDigest"]);
+    expect(r.movedAuthority[0].invalidates).toContain("what an erasure does");
+    expect(r.movedInputs).toEqual([]);
+    expect(r.message).toContain("recorded under a different authority");
+  });
+
+  it("names each of the four causes apart, so re-recording is never one undifferentiated act", () => {
+    const named = (patch: Partial<Stage2Freeze["authority"]>) =>
+      checkFreeze({ ...frozen, authority: { ...frozen.authority, ...patch } }, live).movedAuthority.map((m) => m.identity);
+    expect(named({ coordinateBasisDigest: "0".repeat(64) })).toEqual(["coordinateBasisDigest"]);
+    expect(named({ witnessAuthorityDigest: "0".repeat(64) })).toEqual(["witnessAuthorityDigest"]);
+    expect(named({ ruleDigest: "0".repeat(64) })).toEqual(["ruleDigest"]);
+    expect(named({ quotientSchemaVersion: 99 })).toEqual(["quotientSchemaVersion"]);
+    expect(checkFreeze(frozen, live).movedAuthority).toEqual([]);
+  });
+
+  it("records what it supersedes: the classes that changed, counted, each with an authored effect", () => {
+    // The old record's numbers are not lost, they are in git. What must stay
+    // HERE is the statement of what changed, because a re-record with no such
+    // statement is indistinguishable from a re-record that absorbed a defect.
+    const s = frozen.supersedes;
+    expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
+    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual([
+      "forget-reference-arity=2",
+      "forget-value=8",
+      "merge-enum-members=52",
+    ]);
+    for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
+  });
+
+  it("refuses to supersede a divergence class nobody has explained", () => {
+    // The ratchet on the supersession mechanism itself. Without it, a re-record
+    // would absorb any future change as easily as this one.
+    const invented = { ...live.erasure, "field.key": { reach: 0, digest: "0".repeat(64) } };
+    expect(() => supersessionOf({ ...frozen, erasure: invented }, checkFreeze({ ...frozen, erasure: invented }, live))).toThrow(
+      /refusing to supersede/,
+    );
   });
 
   it("is recorded over a named fixture scope, and covers every coordinate in it", () => {

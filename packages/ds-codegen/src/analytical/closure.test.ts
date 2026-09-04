@@ -34,7 +34,7 @@ import {
   type Standing,
   type StandingIndex,
 } from "./closure.js";
-import { checkWitness, classifyWitness, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
+import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 
 const census = loadCensus();
 const oracle = loadOracle();
@@ -182,14 +182,40 @@ describe("adopting the closure form confers no standing", () => {
   });
 });
 
-describe("the closure form agrees with the 2-set witnesses that already hold", () => {
+describe("the closure form agrees with the 2-set witnesses it was tested against", () => {
   // The adjudication policy licensed closure only once it was "formalized and
   // tested against the existing 2-set witnesses". Two authorities that describe
   // one witness differently is worse than either being wrong, so the derived
   // normalization set must reproduce the residue `classifyWitness` observed.
-  const holding = loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok);
-  const single = primitiveRatified(holding);
-  const multi = holding.filter((w) => w.coordinates.length > 1);
+  //
+  // THE POPULATION MOVED AND THE CLAIM DID NOT. Both 2-set witnesses stopped
+  // holding when the quotient gained a codomain — the branch residue a hole
+  // leaves is observable where a deletion destroyed it — so scoping this block
+  // to HOLDING witnesses would now scope it to the empty set, and every
+  // assertion in it would pass by having nothing to range over. That is the one
+  // outcome a test may not have.
+  //
+  // So it ranges over the 2-sets the codomain ledger names instead. Nothing is
+  // weakened by the move: `classifyWitness` reads a witness's coordinate set
+  // and its erasure, never its standing, and the classifications below are
+  // byte-identical to the ones recorded while both witnesses held. What their
+  // suspension changes is what they SUPPORT, which is adjudicated in
+  // `codomain-adjudications.json` and is not this block's question.
+  const witnesses = loadWitnesses().witnesses;
+  const single = primitiveRatified(witnesses.filter((w) => checkWitness(w, census, oracle).ok));
+  const ledgered = new Set(loadCodomainAdjudications().awaiting.map((a) => a.witness));
+  const multi = witnesses.filter((w) => w.coordinates.length > 1);
+
+  it("ranges over a non-empty set, every member of which is ledgered rather than silently gone", () => {
+    // Stated first, because it is what stops the rest of the block from being
+    // vacuous. If a 2-set disappears from `witnesses.json` this fails; if one
+    // stops holding without an adjudication, the necessity harness fails.
+    expect(multi).toHaveLength(2);
+    for (const w of multi) {
+      expect(checkWitness(w, census, oracle).ok, `${w.coordinates.join(" + ")} holds again`).toBe(false);
+      expect(ledgered.has(w.coordinates.join(" + ")), `${w.coordinates.join(" + ")} stopped holding unledgered`).toBe(true);
+    }
+  });
 
   it("the residue of the one classified witness left equals the operation's footprint", () => {
     const classified = multi.map((w) => classifyWitness(w, census, oracle, single)).filter((k) => k.carrier !== undefined);
@@ -216,6 +242,9 @@ describe("the closure form agrees with the 2-set witnesses that already hold", (
   });
 
   it("the two hygiene witnesses are gone from witnesses.json and present as closures", () => {
+    // The two that remain in `witnesses.json` are the assertion 2-sets, and
+    // they classify exactly as they did while holding — which is the point:
+    // the hygiene pair MIGRATED to the closure ledger, it did not lapse.
     expect(multi.map((w) => classifyWitness(w, census, oracle, single).klass).sort()).toEqual(["indeterminate", "interaction"]);
     const migrated = ledger.closures.filter((c) => c.carrier.startsWith("field.additivity.kind:"));
     expect(migrated).toHaveLength(2);

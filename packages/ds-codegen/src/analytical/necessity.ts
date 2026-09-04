@@ -16,14 +16,16 @@
  * coordinate that witnesses them; the map is data in `removals.json`.
  */
 import * as fs from "node:fs";
+import { Ajv } from "ajv";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { decodeScale, type ScaleLabel } from "./capabilities.js";
 import type { Coordinate } from "./census.js";
 import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity.js";
 import { DERIVATION_DIAG } from "./codes.js";
-import { checkDerivations } from "./derivation.js";
+import { type BoundaryFinding, checkDerivations } from "./derivation.js";
 import { canonical, collides, erase, eraseAll } from "./quotient.js";
+import { markersIn } from "./quotient-image.js";
 import type { RelationalStructure } from "./relation-model.js";
 import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
 
@@ -112,10 +114,37 @@ export interface RemovalsFile {
   keyRewrites: [string, string][];
 }
 
+/**
+ * What a COMPLETED experiment concluded, under the erasure authority it was
+ * bound to. Historical, and therefore closed to revision.
+ *
+ * Stage 1 accounted 81 coordinates as ratified under its then-current
+ * instrument. That the instrument has since been corrected does not retroject
+ * onto what the completed experiment concluded, and rewriting the tally to 77
+ * would be editing a finished record to match a later measurement. The
+ * distinction is not equivocation: `Disposition` says what was concluded, and
+ * `EvidenceStanding` below says what is currently supported.
+ */
 export type Disposition =
   | { state: "ratified"; via: string[] }
   | { state: "not-yet-admitted"; reason: string; reintroducibleAt?: number }
   | { state: "reference" };
+
+/**
+ * What evidence CURRENTLY supports, under the authority in force now.
+ *
+ * `suspended` is deliberately not a fourth semantic disposition. A coordinate
+ * whose witness stopped holding because the instrument changed has not been
+ * adjudicated and has not left the kernel — its supporting evidence was
+ * invalidated, which is a statement about the evidence and not about the
+ * coordinate. Naming it here keeps it out of the semantic taxonomy, where it
+ * would authorize an outcome alongside ratified and not-yet-admitted that
+ * nobody decided.
+ */
+export type EvidenceStanding =
+  | { state: "holding"; via: "primitive" | "interaction-only" | "closure-accounted"; evidence: string[] }
+  | { state: "suspended"; experiment: string; reason: string; invalidatedEvidence: string[] }
+  | { state: "unsupported" };
 
 export interface Oracle {
   fixtures: Map<string, Fixture>;
@@ -298,7 +327,52 @@ function terminalPaths(node: unknown, path = "", out: Set<string> = new Set()): 
   return out;
 }
 
-export function isolationViolation(fixture: Fixture, c: Coordinate): string | undefined {
+/**
+ * Coordinates whose isolation check could not be run, because the engine has
+ * nothing to say about their image.
+ *
+ * A module-level record rather than a return value: `isolationViolation`
+ * answers a yes/no question and "not asked" is neither. Left silent it would
+ * read as "no violation", which is how a guard stops guarding without anyone
+ * noticing — so the harness reports the set instead.
+ */
+export const inapplicableIsolationChecks = new Set<string>();
+
+/**
+ * Validate a `RelationalStructure` against the EMITTED contract for it.
+ *
+ * The contract for the argument the derivation checker actually takes. Not a
+ * parallel hand-written schema — `relation.contract.schema.json` is the same
+ * projection of `relation-model.ts` that every other consumer reads, so this
+ * cannot drift from the model or disagree with the fixture validator about what
+ * a structure is.
+ */
+let structureValidatorCache: ((s: unknown) => string[]) | undefined;
+function structureValidator(): (s: unknown) => string[] {
+  if (structureValidatorCache) return structureValidatorCache;
+  const schema = JSON.parse(fs.readFileSync(path.join(CONTRACTS_DIR, "relation.contract.schema.json"), "utf-8")) as object;
+  const ajv = new Ajv({ allErrors: true, strict: false });
+  const validate = ajv.compile(schema);
+  structureValidatorCache = (s) => (validate(s) ? [] : (validate.errors ?? []).map((e) => `${e.instancePath || "/"} ${e.message ?? ""}`.trim()));
+  return structureValidatorCache;
+}
+
+
+/**
+ * The instrument the isolation check runs, injectable so its FAILURE is
+ * falsifiable.
+ *
+ * A default parameter, invisible to every real caller. It exists because the
+ * property that matters here cannot be observed from outside otherwise: that a
+ * throw from the checker, on an argument already shown to be in the checker's
+ * domain, propagates as an instrument failure. A test can hand in a checker
+ * that throws and watch what happens; without the seam the only way to assert
+ * that is to trust the absence of a `catch`, which is exactly the thing that
+ * was wrong before and would be wrong again silently.
+ */
+export type DerivationChecker = (structure: RelationalStructure) => BoundaryFinding[];
+
+export function isolationViolation(fixture: Fixture, c: Coordinate, check: DerivationChecker = checkDerivations): string | undefined {
   const before = fixture as unknown as Record<string, unknown>;
   const after = erase(fixture, c) as unknown as Record<string, unknown>;
 
@@ -316,19 +390,62 @@ export function isolationViolation(fixture: Fixture, c: Coordinate): string | un
   // erasure broke the structure, and a collision would be that break. That is
   // the named trap, and it is the line `codes.ts` already draws between
   // `DERIVATION_DIAG` and the doctrine catalogue.
-  const structureOf = (f: Record<string, unknown>) => f.structure as RelationalStructure | undefined;
+  // THE ENGINE IS ASKED ABOUT A SOURCE DOCUMENT, NEVER ABOUT AN IMAGE.
+  //
+  // `erase` returns a quotient image, and the engine reads the source language:
+  // `OPERATOR_LAWS[d.kind]` is a lookup on a string, and a forgotten
+  // discriminator is not one. Teaching the engine to read holes would make it a
+  // consumer of the erasure encoding, so the comparison runs only where the
+  // image's structure IS a source structure, exactly as it stands.
+  //
+  // APPLICABILITY IS DECIDED BY THE CONTRACT FOR THE ACTUAL ARGUMENT, which is
+  // a `RelationalStructure` and not a `Fixture`. Two earlier attempts were both
+  // wrong at this seam, in opposite directions:
+  //
+  //   validating the whole FIXTURE disabled the check for every hand-built
+  //   probe, because those carry no assertions — an envelope requirement
+  //   deciding whether a STRUCTURAL check applies;
+  //
+  //   catching every exception turned an instrument failure into "no opinion",
+  //   so a `TypeError` anywhere in the checker would have read as "this erasure
+  //   introduced no defect". Three situations have to stay distinct: outside
+  //   the declared domain, inside it and clean, and broken while running. An
+  //   unexpected throw is evidence of the third and never the first.
+  //
+  // Nothing is projected, dropped, or substituted to make an image runnable.
+  // `sourceProjection` would delete markers to force a fit, and "the source
+  // document that asserts least" is an extra semantic claim with no law behind
+  // it: removing a forgotten discriminator's marker leaves a malformed holder,
+  // removing the holder changes existence, and choosing a member invents
+  // information. So a structure carrying a marker is simply out of domain.
+  //
+  // Where it is out of domain the comparison is INAPPLICABLE: it neither
+  // refutes nor discharges isolation, and the obligation is left unevaluated
+  // and recorded in `inapplicableIsolationChecks` rather than turned into `[]`.
+  const structureOf = (f: Record<string, unknown> | undefined) => f?.structure as RelationalStructure | undefined;
   const sBefore = structureOf(before);
   const sAfter = structureOf(after);
-  if (sBefore && sAfter) {
+  const inDomain = (s: RelationalStructure | undefined): s is RelationalStructure =>
+    s !== undefined && markersIn(s).length === 0 && structureValidator()(s).length === 0;
+
+  const beforeInDomain = inDomain(sBefore);
+  const afterInDomain = inDomain(sAfter);
+  if (beforeInDomain && afterInDomain) {
     const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
     const semanticIsThePoint = c.kind === "member-pair" && c.leaf.endsWith(".kind");
     const relevant = (d: { code?: string }) => !semanticIsThePoint || (d.code !== undefined && wellFormedness.has(d.code));
-    const codesBefore = checkDerivations(sBefore).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
-    const codesAfter = checkDerivations(sAfter).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
+    // No try/catch: an exception here is an instrument failure and must
+    // propagate. Both arguments have already been shown to be in the checker's
+    // declared domain, so there is nothing left for a throw to mean.
+    const codes = (s: RelationalStructure) => check(s).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
+    const codesBefore = codes(sBefore);
+    const codesAfter = codes(sAfter);
     const introduced = codesAfter.filter((x) => !codesBefore.includes(x));
     if (introduced.length > 0) {
       return `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`;
     }
+  } else {
+    inapplicableIsolationChecks.add(c.id);
   }
 
   // A member-absence erasure must remove ONLY the leaf it names.
@@ -390,6 +507,224 @@ export function isolationViolation(fixture: Fixture, c: Coordinate): string | un
 
 export function loadWitnesses(file = WITNESSES_FILE): WitnessFile {
   return JSON.parse(fs.readFileSync(file, "utf-8")) as WitnessFile;
+}
+
+export const CODOMAIN_ADJUDICATIONS_FILE = path.join(FIXTURES_DIR, "codomain-adjudications.json");
+
+/**
+ * A witness whose evidence changed when the quotient gained a codomain, held
+ * open for the user to adjudicate rather than decided here.
+ *
+ * `reason` is the measured divergence class, not a narrative. Both classes are
+ * the same defect seen twice: A HOLE IS OBSERVABLE WHERE AN ABSENCE WAS NOT.
+ * Deleting a required discriminator used to destroy the evidence that betrays
+ * its branch; holing it leaves that evidence standing, which is what the
+ * erasure should have been doing all along and is why neither entry is a
+ * regression to be reverted.
+ */
+export interface CodomainAdjudication {
+  /** The witness's coordinate set, joined — witnesses carry no ids. */
+  witness: string;
+  /**
+   * Every coordinate the lapsed witness NAMES.
+   *
+   * Distinct from what it costs. A witness covers its whole coordinate set, so
+   * this is the audit surface — no coordinate the witness touched can go
+   * unmentioned — while the two loss fields below say what standing actually
+   * moved. Reading coverage as loss is how `assertion.aggregate.op` came to be
+   * recorded as suspended while its own primitive witness was still holding.
+   */
+  declares: string[];
+  /** Each declared coordinate's class in the recovered stage-1 record. */
+  historicalStanding: Record<string, "primitive" | "interaction-only" | "closure-accounted" | "none">;
+  /** Coordinates that lose PRIMITIVE ratification while this stays open. */
+  lost: string[];
+  /**
+   * Coordinates that lose only INTERACTION-ONLY standing.
+   *
+   * Kept separate because the two are different claims and collapsing them
+   * would overstate the loss: a 2-set witness never ratified either member, it
+   * established that neither separates alone. What lapses when it stops holding
+   * is that weaker statement, not a ratification.
+   */
+  interactionOnlyLost?: string[];
+  /**
+   * What `checkWitness` reports for this witness TODAY.
+   *
+   * The other end of the pointer. A suspension has to run from an identified
+   * historical standing to an actual current reevaluation failure, or it is an
+   * assertion that something broke with nothing tying it to the break.
+   */
+  currentFailure: { codes: string[] };
+  reason: "branch-residue" | "holder-presence";
+  detail: string;
+  /** What would settle it. Named so the ledger cannot become a parking lot. */
+  repair: string;
+}
+
+export interface CodomainAdjudicationFile {
+  $comment: string;
+  awaiting: CodomainAdjudication[];
+}
+
+export function loadCodomainAdjudications(file = CODOMAIN_ADJUDICATIONS_FILE): CodomainAdjudicationFile {
+  return JSON.parse(fs.readFileSync(file, "utf-8")) as CodomainAdjudicationFile;
+}
+
+/** Coordinate id -> the open adjudication that suspended its evidence. */
+export function codomainHolds(file = CODOMAIN_ADJUDICATIONS_FILE): Map<string, CodomainAdjudication> {
+  const out = new Map<string, CodomainAdjudication>();
+  for (const a of loadCodomainAdjudications(file).awaiting) {
+    for (const id of [...a.lost, ...(a.interactionOnlyLost ?? [])]) out.set(id, a);
+  }
+  return out;
+}
+
+export const HISTORICAL_ACCOUNTING_FILE = path.join(FIXTURES_DIR, "stage1-historical-accounting.json");
+
+/**
+ * What the COMPLETED stage-1 experiment accounted for, recovered from the tree
+ * that concluded it.
+ *
+ * AN INPUT, NEVER AN OUTPUT. This used to be `live ∪ suspended` — the present
+ * support set widened by the present exception ledger — and that is not a
+ * historical authority at all. It breaks in both directions: settle a
+ * suspension and the coordinate leaves history it did in fact belong to; admit
+ * a new witness today and the coordinate enters a history it never belonged to.
+ * A present-day exception ledger cannot author the past.
+ *
+ * The three evidence classes are recorded APART. A primitive ratification, an
+ * interaction-only 2-set, and representation in a not-refuted closure are three
+ * different claims of three different strengths; their union is an accounting
+ * figure and confers no standing, so collapsing them here would let the weakest
+ * of them be reported with the authority of the strongest.
+ */
+export interface HistoricalAccounting {
+  $comment: string;
+  recoveredFrom: {
+    /** The tree the recovery was run at, and the digests of what it read. */
+    commit: string;
+    why: string;
+    procedure: string;
+    inputs: Record<string, string>;
+  };
+  byEvidenceClass: {
+    /** A holding single-coordinate witness: the only class that ratifies. */
+    primitive: string[];
+    /** A minimal 2-set: the distinction is proven, the factorization is not. */
+    interactionOnly: string[];
+    /** Carried by a closure that is not refuted — provisional, and not standing. */
+    closureAccounted: string[];
+  };
+  /** The union of the three, which is what the stage-1 dispositioner was given. */
+  accounted: string[];
+  stage1Dispositions: Record<string, number>;
+}
+
+export function loadHistoricalAccounting(file = HISTORICAL_ACCOUNTING_FILE): HistoricalAccounting {
+  return JSON.parse(fs.readFileSync(file, "utf-8")) as HistoricalAccounting;
+}
+
+/** The historical accounting set, read from the artifact and nothing else. */
+export function historicallyAccounted(record: HistoricalAccounting = loadHistoricalAccounting()): Set<string> {
+  return new Set(record.accounted);
+}
+
+/**
+ * What moved between the recorded history and current support, and whether the
+ * ledger accounts for it.
+ *
+ * Reconciliation is the whole point of holding history separately. With the
+ * historical set derived from the live one, every difference was true by
+ * construction and there was nothing to reconcile — a coordinate that silently
+ * appeared or vanished could not be detected, because the derivation absorbed
+ * it. Here a difference is a finding until an adjudication names it.
+ */
+export interface HistoryReconciliation {
+  /** Historical, not currently supported, and named in the codomain ledger. */
+  suspended: string[];
+  /** Historical, not currently supported, and NOT named anywhere. */
+  unexplainedLoss: string[];
+  /** Currently supported and absent from the recorded history. */
+  unexplainedGain: string[];
+}
+
+export function reconcileHistory(
+  live: ReadonlySet<string>,
+  historical: ReadonlySet<string> = historicallyAccounted(),
+  holds: Map<string, CodomainAdjudication> = codomainHolds(),
+): HistoryReconciliation {
+  const lost = [...historical].filter((id) => !live.has(id)).sort();
+  return {
+    suspended: lost.filter((id) => holds.has(id)),
+    unexplainedLoss: lost.filter((id) => !holds.has(id)),
+    unexplainedGain: [...live].filter((id) => !historical.has(id)).sort(),
+  };
+}
+
+/**
+ * Current support, kept in its three classes rather than unioned.
+ *
+ * The union is an ACCOUNTING figure: it answers "is this coordinate carried by
+ * the experiment at all", which is the question the stage-1 dispositioner asks.
+ * It is not a standing figure, and passing it where a standing figure belongs
+ * is how "n coordinates hold" gets said about a set that includes provisional
+ * closures. The classes travel together so the answer always names which one.
+ */
+export interface CurrentSupport {
+  /** A holding single-coordinate witness. The only class that RATIFIES. */
+  primitive: ReadonlySet<string>;
+  /** A holding minimal 2-set: the distinction is proven, the factorization is not. */
+  interactionOnly: ReadonlySet<string>;
+  /** Carried by a not-refuted closure. Provisional; confers no standing. */
+  closureAccounted: ReadonlySet<string>;
+}
+
+/** The accounting union, which is what the stage-1 dispositioner is given. */
+export function accountedBy(s: CurrentSupport): Set<string> {
+  return new Set([...s.primitive, ...s.interactionOnly, ...s.closureAccounted]);
+}
+
+/**
+ * What currently supports this coordinate, under the authority in force now.
+ *
+ * Separate from `disposition` on purpose — see `EvidenceStanding`. This one may
+ * move whenever the instrument does; `disposition` may not.
+ *
+ * `via` is not decoration. Without it a caller can only report "holding", and
+ * the three classes become synonyms at the point of reporting even when they
+ * were kept apart everywhere else.
+ */
+export function evidenceStanding(
+  id: string,
+  support: CurrentSupport,
+  holds: Map<string, CodomainAdjudication> = codomainHolds(),
+): EvidenceStanding {
+  // SUPPORT IS CHECKED BEFORE THE LEDGER, and the order is the claim.
+  //
+  // A ledger entry records which WITNESS lapsed, and a witness covers every
+  // coordinate it names. `assertion.aggregate.op` appears in the lapsed 2-set
+  // and also holds a primitive witness of its own; reading the ledger first
+  // reported it suspended, which says its evidence is gone when only one of two
+  // independent supports is. Evidence that is still standing cannot be
+  // suspended — so suspension is what is left when nothing supports it.
+  //
+  // Strongest class first: a coordinate with a primitive witness is reported as
+  // ratified even when a closure also carries it, because that is the claim
+  // with the most behind it.
+  if (support.primitive.has(id)) return { state: "holding", via: "primitive", evidence: [id] };
+  if (support.interactionOnly.has(id)) return { state: "holding", via: "interaction-only", evidence: [id] };
+  if (support.closureAccounted.has(id)) return { state: "holding", via: "closure-accounted", evidence: [id] };
+  const open = holds.get(id);
+  if (open) {
+    return {
+      state: "suspended",
+      experiment: "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
+      reason: open.reason,
+      invalidatedEvidence: [open.witness],
+    };
+  }
+  return { state: "unsupported" };
 }
 export function loadRemovals(file = REMOVALS_FILE): RemovalsFile {
   return JSON.parse(fs.readFileSync(file, "utf-8")) as RemovalsFile;
@@ -586,7 +921,7 @@ function kernelPair(kernelIds: Set<string>, leaf: string, a: string, b: string):
  * Disposition of a stage-1 coordinate: ratified through a kernel coordinate a
  * witness holds for, or not-yet-admitted through `removals.json`.
  */
-export function disposition(c: Coordinate, ratified: Set<string>, kernelIds: Set<string>, removals: RemovalsFile): Disposition {
+export function disposition(c: Coordinate, ratified: ReadonlySet<string>, kernelIds: Set<string>, removals: RemovalsFile): Disposition {
   if (c.kind === "reference") return { state: "reference" };
   // a removed leaf takes every member pair under it with it
   const removed = removals.removed.find((r) => r.coordinate === c.id || r.coordinate === c.leaf);

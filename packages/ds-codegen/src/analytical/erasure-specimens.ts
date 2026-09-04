@@ -15,7 +15,8 @@
  *
  *   merge a~b            a  versus  b
  *   member m vs absent   m  versus  the slot deleted
- *   delete the slot      its value  versus  the slot deleted
+ *   forget a required    two DIFFERENT values the corpus writes there
+ *   delete an optional   its value  versus  the slot deleted
  *   forget arity         [x]  versus  [x, y]
  *   forget order         [x, y]  versus  [y, x]
  *   forget incidence     x  versus  y, two names the fixture already binds
@@ -71,13 +72,32 @@ function writeAt(fixture: Fixture, locator: StructuralLocator, value: Written): 
  * demonstrably accepts.
  */
 function valueAt(base: Fixture, plan: ErasurePlan, corpus: Fixture[]): unknown {
+  return distinctValuesAt(base, plan, corpus)[0];
+}
+
+/**
+ * Every DISTINCT value the corpus writes at this locator, base first.
+ *
+ * `forget-value` needs two of them, and needs them to be different values
+ * rather than a value and an absence: holing a slot no longer identifies
+ * present with absent, so a pair built that way would not be separating and
+ * would be discarded — silently turning a coordinate that is testable into one
+ * reported as unbuilt.
+ */
+function distinctValuesAt(base: Fixture, plan: ErasurePlan, corpus: Fixture[]): unknown[] {
+  const out: unknown[] = [];
+  const seen = new Set<string>();
   for (const f of [base, ...corpus]) {
     for (const s of resolveSlots(f, plan.locator)) {
       const v = (s.parent as Json)[s.key as string];
-      if (v !== undefined) return v;
+      if (v === undefined) continue;
+      const k = JSON.stringify(v);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(v);
     }
   }
-  return undefined;
+  return out;
 }
 
 /** Every relation and field name the fixture binds, in first-appearance order. */
@@ -109,18 +129,36 @@ function valuesFor(plan: ErasurePlan, base: Fixture, list: boolean, corpus: Fixt
       return [op.into, op.from];
     case "spell-member-as-absent":
       return [op.member, DELETE];
+    case "forget-value": {
+      // TWO VALUES, not a value and an absence. This leaf is REQUIRED, so there
+      // is no absent state to write: `[current, DELETE]` would build a pair one
+      // side of which the schema rejects, and the coordinate would be reported
+      // unbuilt when it is perfectly testable.
+      //
+      // Both come from the corpus, never invented here. Inventing would mean
+      // re-reading the schema — the duplication this architecture exists to
+      // remove — and the census's `enum` is not a substitute: it stringifies,
+      // so `z.literal(true)` reads back as the STRING "true" and every pair
+      // built from it is schema-invalid.
+      const [a, b] = distinctValuesAt(base, plan, corpus);
+      return b === undefined ? undefined : [a, b];
+    }
     case "delete-slot":
     case "delete-holder":
     case "forget-branch-field":
-      // A value the corpus already writes at this slot, never one invented
-      // here. Inventing would mean re-reading the schema — the duplication this
-      // architecture exists to remove — and the census's `enum` is not a
-      // substitute: it stringifies, so `z.literal(true)` reads back as the
-      // STRING "true" and every pair built from it is schema-invalid.
+      // Here absence is one of the states being identified, so
+      // present-versus-absent is exactly the pair that isolates it.
       return current === undefined ? undefined : [current, DELETE];
     case "forget-reference-arity": {
-      const [x, y] = bound;
-      return y === undefined ? undefined : [[x], [x, y]];
+      // A pair astride the DECLARED floor, not `[x]` versus `[x, y]`.
+      // `nest.levels` and a peer set both require two members, so the short side
+      // of the old pair was schema-invalid and every such pair was discarded —
+      // leaving the coordinate reported dead when it is perfectly testable. The
+      // shortest list the declaration admits, against one element longer, is the
+      // smallest pair that differs in arity and nothing else.
+      const floor = plan.locator.arityFloor ?? 1;
+      if (bound.length < floor + 1) return undefined;
+      return [bound.slice(0, floor), bound.slice(0, floor + 1)];
     }
     case "forget-reference-order": {
       const [x, y] = bound;

@@ -10,10 +10,10 @@
  * distinction it names.
  */
 import { describe, expect, it } from "vitest";
-import { loadPlans } from "./census.js";
+import { loadDerivation, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { claimedFootprints, computeReport, loadReport, measure, specimens } from "./erasure-audit.js";
-import { loadOracle } from "./necessity.js";
+import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
 
 const recorded = loadReport();
@@ -47,23 +47,49 @@ describe("structural claims survive falsification", () => {
 
   it("reports supported-but-unclaimed coarsenings rather than adopting them", () => {
     expect(live.unclaimed.map((u) => `${u.destroys} -> ${u.supported}`).sort()).toEqual([
+      "field.temporality.kind:instant~interval -> field.temporality.kind",
       "relation.derivedBy.kind:bin~normalize -> relation.derivedBy.kind",
-      "relation.derivedBy.nest.levels#incidence -> relation.derivedBy.nest.levels#arity",
-      "structure.peers[]#incidence -> structure.peers[]#arity",
     ]);
+    // The two incidence -> arity entries left this list when arity erasure
+    // started truncating to the declared floor. They were supported only
+    // vacuously — arity had no separating pair to falsify against — and the
+    // floor-aware specimen synthesizer gave it one, so the empty implication
+    // that carried them is gone.
   });
 
-  it("and every one is VACUOUS: its target has no separating pair at all", () => {
-    // The distinction that makes the report readable. A coarsening "supported"
-    // by a coordinate nothing separates rests on an empty implication, not on
-    // evidence, so none of the three is a footprint the structural rules miss.
-    // The one that WAS real — `structure.peers[]#present` coarsening
-    // `structure.peers#present`, because deleting every element empties the
-    // array and an emptied declaration is dropped — is now claimed, which is
-    // why it no longer appears here. The falsification pass found it; the
-    // structural rule was widened rather than the under-report left standing.
-    const unbuilt = new Set(live.unbuilt.map((u) => u.coordinate));
-    for (const u of live.unclaimed) expect(unbuilt.has(u.supported), `${u.supported} has a separating pair`).toBe(true);
+  it("and none of them is one the STRUCTURAL rules should have claimed", () => {
+    // The invariant worth having, rather than an enumeration of why each entry
+    // is here. `unclaimed` means "the specimens support this coarsening and the
+    // structure does not imply it" — so the failure mode it guards against is a
+    // GAP in the claim rules: an entry that containment already covers would
+    // mean the rules missed something they were supposed to derive.
+    //
+    // The three reasons an honest entry appears, none of which is a gap:
+    //   vacuous       — the target has no separating pair, so the implication
+    //                   is empty rather than evidenced;
+    //   two-member    — merging a two-member discriminator's only pair
+    //                   partitions the slot exactly as forgetting its value
+    //                   does, with no third member left to tell them apart
+    //                   (`field.temporality.kind:instant~interval`);
+    //   population    — the specimens happen to separate the leaf only where
+    //                   the merged members differ (`relation.derivedBy.kind`
+    //                   has seven members and this is true of the current set).
+    //
+    // The first two are structural facts about the schema, the third is a fact
+    // about the corpus, and NONE is adopted: claiming any of them would mean
+    // the footprint rules reading enum arity or specimen counts, and the census
+    // is the single reader of the schema.
+    const plans = loadPlans();
+    for (const u of live.unclaimed) {
+      const destroyer = plans.get(u.destroys)!;
+      const supported = plans.get(u.supported)!;
+      const alreadyImplied = claimedFootprints(plans).get(u.destroys)!.includes(u.supported);
+      expect(alreadyImplied, `${u.destroys} -> ${u.supported} is claimed and unclaimed at once`).toBe(false);
+      // A merge never totally suppresses its slot, so containment cannot apply.
+      expect(destroyer.operation.kind, `${u.destroys} should not be a total suppression`).toBe("merge-enum-members");
+      expect(supported.locator.path).toBe(destroyer.locator.path);
+    }
+    expect(live.unclaimed.length).toBeGreaterThan(0);
   });
 
   it("can refute: a false claim is caught by a specimen pair", () => {
@@ -130,71 +156,56 @@ describe("the two language questions, which used to be one", () => {
     expect(validate(bad).length).toBeGreaterThan(0);
   });
 
-  it("reports 34 erasures leaving the source language and, TODAY, all 34 illegal as images", () => {
-    // The measurement the codomain was introduced to make, and it does not say
-    // what the split was expected to say. None of the 34 is a benign departure:
-    // every one is also an illegal IMAGE, so all 34 are defects of the
-    // operations rather than shapes to be tolerated. The next commit drives the
-    // second count to 0; the first is expected to stay non-zero forever.
-    expect(live.sourceLanguageDeparture.length).toBe(34);
-    expect(live.quotientLanguageInvalid.length).toBe(34);
-    const benign = live.sourceLanguageDeparture.filter((d) => !live.quotientLanguageInvalid.some((i) => i.coordinate === d.coordinate));
-    expect(benign).toEqual([]);
+  it("THE TERMINAL INVARIANT: no erasure produces an illegal quotient image", () => {
+    // The only one of the three counts in this block that is an invariant. It
+    // is stated as zero rather than as a number that happens to be zero today,
+    // because any non-zero value is a defect in the operations.
+    expect(live.quotientLanguageInvalid).toEqual([]);
   });
 
-  it("separates three defect classes by OPERATION, each needing a different repair", () => {
-    // Classified by the operation, never by the validator's error string: ajv
-    // reports the first failing branch, so truncating `nest.levels` surfaces as
-    // a missing `toGrain` and would be filed under the wrong repair.
+  it("departures from the SOURCE language are expected, reported, and not a ceiling", () => {
+    // Deliberately not pinned to a count. Departures move whenever specimens or
+    // plans grow, and freezing the number here would make a growing corpus look
+    // like a regression — the mistake the terminal invariant above exists to
+    // avoid making twice. What must hold is that every departure is CLASSIFIED,
+    // so none is silently unaccounted.
+    expect(live.sourceLanguageDeparture.length).toBeGreaterThan(0);
     const plans = loadPlans();
-    const byOp = new Map<string, string[]>();
-    for (const i of live.quotientLanguageInvalid) {
-      const op = plans.get(i.coordinate)?.operation.kind ?? "(no plan)";
-      byOp.set(op, [...(byOp.get(op) ?? []), i.coordinate].sort());
+    for (const d of live.sourceLanguageDeparture) {
+      expect(plans.has(d.coordinate), `${d.coordinate} departs the source language with no plan to attribute it to`).toBe(true);
+      expect(d.error.length).toBeGreaterThan(0);
     }
-    expect([...byOp].map(([op, ids]) => `${op}: ${ids.length}`).sort()).toEqual([
-      "delete-slot: 8",
-      "forget-reference-arity: 2",
-      "merge-enum-members: 24",
-    ]);
-
-    // A branch tag written over another branch's payload: `{kind:"aggregate-to-grain",
-    // levels:[…]}` claims to be an aggregation while carrying a nesting. That is
-    // not forgetting the distinction, it is asserting something false about it.
-    // The repair is a member CLASS, which identifies the two without claiming
-    // either of them.
-    expect(byOp.get("merge-enum-members")).toContain("relation.derivedBy.kind:aggregate-to-grain~nest");
-
-    // A required leaf deleted with no hole left behind. The repair is a typed
-    // forgotten value — NOT deleting the enclosing declaration, which would
-    // forget the relation, the field, every other assertion parameter, and turn
-    // the present `subsumes-refinements` result into real sibling over-erasure.
-    expect(byOp.get("delete-slot")).toEqual([
-      "assertion.aggregate.op",
-      "assertion.kind",
-      "field.additivity.kind",
-      "field.temporality.kind",
-      "field.transformation",
-      "relation.derivedBy.join.cardinality",
-      "relation.derivedBy.kind",
-      "relation.grain",
-    ]);
-
-    // Arity truncated below the representation's own floor: a peer group needs
-    // two members and `slice(0, 1)` leaves one. `slice` to the floor instead is
-    // also strictly LESS erasing — truncating a 2-list to 1 identifies [a,b]
-    // with [a,c], which differ in incidence and not in arity at all.
-    expect(byOp.get("forget-reference-arity")).toEqual(["relation.derivedBy.nest.levels#arity", "structure.peers[]#arity"]);
+    // The generated artifact records the current number under a bound basis;
+    // this test records only that the two questions give different answers,
+    // which is the whole reason they were separated.
+    expect(live.sourceLanguageDeparture.length).toBeGreaterThan(live.quotientLanguageInvalid.length);
   });
 
-  it("keeps each of the four high-reach cases attached to the witness it would move", () => {
-    // Recorded so that the cost of the repair stays visible: these are not
-    // orphaned erasures, they are the evidence four holding witnesses rest on.
-    const worst = live.quotientLanguageInvalid.filter((i) => i.specimens > 100).map((i) => i.coordinate).sort();
-    expect(worst).toEqual(["assertion.aggregate.op", "assertion.kind", "field.transformation", "relation.grain"]);
-    for (const id of worst) {
+  it("holes a required leaf and deletes an optional one, which is why the invariant holds", () => {
+    // The structural rule behind the zero above, asserted directly so that a
+    // regression names its cause instead of surfacing as an anonymous count.
+    const plans = loadPlans();
+    const { requiredLeaves } = loadDerivation();
+    const leaves = [...plans.values()].filter((p) => !p.id.includes(":") && !p.id.includes("#"));
+    expect(leaves.length).toBeGreaterThan(20);
+    for (const p of leaves) {
+      const required = requiredLeaves.has(p.id);
+      expect(p.operation.kind, p.id).toBe(required ? "forget-value" : "delete-slot");
+    }
+  });
+
+  it("keeps the four high-reach cases visible, and records that their standing moved", () => {
+    // These are the coordinates the repair was always going to cost something
+    // on: each supported a holding witness under the old deletion. Two still do
+    // (`field.transformation`, `relation.grain`); two do not, and are suspended
+    // in `codomain-adjudications.json` rather than decided here.
+    const ledgeredCoordinates = new Set(loadCodomainAdjudications().awaiting.flatMap((a) => a.declares));
+    for (const id of ["field.transformation", "relation.grain"]) {
       const w = live.witnesses.find((x) => x.declared.includes(id));
-      expect(w?.holds, `${id} has no holding witness`).toBe(true);
+      expect(w?.holds, `${id} lost its witness without being ledgered`).toBe(true);
+    }
+    for (const id of ["assertion.kind", "assertion.aggregate.op"]) {
+      expect(ledgeredCoordinates.has(id), `${id} lost standing and is not named by any codomain adjudication`).toBe(true);
     }
   });
 });
@@ -288,7 +299,15 @@ describe("the witness audit", () => {
       "assertion.aggregate.op:sum~min",
     ]);
     expect(two.outside).toEqual([]);
-    expect(two.standing).toBe("interaction-only");
+    // Its standing is now `none`, and that is the codomain result rather than a
+    // regression: the witness rested on deletion destroying the `op` slot, and
+    // a hole leaves the slot standing so the two sides no longer collide. What
+    // the audit says about its FOOTPRINT is unchanged — the excess is still six
+    // member pairs of the leaf it declares, still nothing outside. The standing
+    // change is held in `codomain-adjudications.json`, not decided here.
+    expect(two.standing).toBe("none");
+    const ledgeredCoordinates = new Set(loadCodomainAdjudications().awaiting.flatMap((a) => a.declares));
+    for (const id of two.declared) expect(ledgeredCoordinates.has(id), `${id} is named by a lapsed witness that no adjudication covers`).toBe(true);
   });
 
   it("leaves the remaining thirty-five atomic, so the correction is bounded", () => {
@@ -299,7 +318,14 @@ describe("the witness audit", () => {
     }
   });
 
-  it("reports standing without moving it: every audited witness still holds", () => {
-    expect(live.witnesses.filter((w) => !w.holds)).toEqual([]);
+  it("reports standing without moving it: every witness that stopped holding is ledgered, and no other", () => {
+    // The audit still moves no standing — it classifies. What changed is that
+    // the OPERATIONS moved, and three witnesses stopped holding as a result.
+    // The ratchet is stated as an equality so it bites both ways: a witness
+    // cannot fail without appearing in the ledger, and a ledger entry cannot
+    // outlive the failure that justified it.
+    const notHolding = live.witnesses.filter((w) => !w.holds).map((w) => w.witness);
+    const ledgered = loadCodomainAdjudications().awaiting.map((a) => a.witness);
+    expect([...new Set(notHolding)].sort()).toEqual([...new Set(ledgered)].sort());
   });
 });

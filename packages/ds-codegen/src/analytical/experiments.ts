@@ -39,7 +39,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { loadCensus } from "./census.js";
-import { checkWitness, FIXTURES_DIR, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
+import { checkWitness, FIXTURES_DIR, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { RETAINING } from "./subtraction.js";
 
 export interface ExperimentBasis {
@@ -119,7 +119,15 @@ export function orphanedCoordinates(bases: ExperimentBasis[] = loadBases()): Orp
   // Ownership is unresolved responsibility. A basis that has already decided a
   // coordinate is not on the hook for it a second time, so its reappearance in
   // the kernel is an orphan until some experiment reopens it.
-  const owned = new Set(bases.flatMap((b) => [...b.unresolved, ...b.retained]));
+  // An open codomain adjudication is unresolved responsibility of exactly this
+  // kind: the coordinate lost its witness for a MEASURED reason that is written
+  // down, with a named repair, and a test that refuses the entry once the
+  // witness holds again. That is the opposite of an orphan, which is a degree of
+  // freedom with neither a proof nor a burden of proof attached.
+  const owned = new Set([
+    ...bases.flatMap((b) => [...b.unresolved, ...b.retained]),
+    ...loadCodomainAdjudications().awaiting.flatMap((a) => a.lost),
+  ]);
   return kernel
     .filter((c) => c.kind !== "reference")
     .filter((c) => !ratified.has(c.id) && !owned.has(c.id))

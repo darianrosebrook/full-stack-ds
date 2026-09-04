@@ -28,7 +28,17 @@ import {
   checkWitness,
   disposition,
   FIXTURES_DIR,
+  CONTRACTS_DIR,
+  inapplicableIsolationChecks,
   isolationViolation,
+  codomainHolds,
+  evidenceStanding,
+  historicallyAccounted,
+  loadHistoricalAccounting,
+  reconcileHistory,
+  accountedBy,
+  type CurrentSupport,
+  loadCodomainAdjudications,
   loadCensusSnapshot,
   loadOracle,
   loadRemovals,
@@ -40,12 +50,14 @@ import {
   resolveSide,
   type Witness,
 } from "./necessity.js";
+import { checkDerivations } from "./derivation.js";
+import { markersIn } from "./quotient-image.js";
 import { canonical, collides, erase } from "./quotient.js";
 import { loadClosures } from "./closure.js";
 import { loadBases, orphanedCoordinates } from "./experiments.js";
 import { basesForSpec, loadSubtraction, verdictDrift } from "./subtraction.js";
 import type { RelationalStructure } from "./relation-model.js";
-import type { Fixture } from "./structure.js";
+import { type Fixture, loadFixtureValidator } from "./structure.js";
 
 const oracle = loadOracle();
 const kernel = loadCensus();
@@ -125,7 +137,17 @@ const closureAccounted = new Set(
     .closures.filter((c) => c.a !== undefined && c.b !== undefined && c.promotion !== "refuted")
     .flatMap((c) => [c.carrier, ...c.dependencies]),
 );
-const stage1Accounted = new Set([...ratifiedIds, ...interactionIds, ...closureAccounted]);
+/**
+ * The three classes, kept apart.
+ *
+ * `stage1Accounted` below is their union and is an ACCOUNTING figure: it
+ * answers whether the experiment carries a coordinate at all, which is what the
+ * stage-1 dispositioner asks. It is not a standing figure — 4 of the 77 it
+ * yields rest on a not-refuted closure and nothing stronger — so anything that
+ * reports standing takes `support` and names the class.
+ */
+const support: CurrentSupport = { primitive: ratifiedIds, interactionOnly: interactionIds, closureAccounted };
+const stage1Accounted = accountedBy(support);
 
 const count = (cs: Coordinate[]) => ({
   leaves: cs.filter((c) => c.kind === "leaf").length,
@@ -154,11 +176,17 @@ describe("C0 — provenance of the two censuses", () => {
     // carry between them, so sixteen inherited-only presence facets were
     // derived conjunctions rather than degrees of freedom.
     expect(count(kernel)).toEqual({ leaves: 36, pairs: 55, references: 25 });
+    // Accounted THREE ways, not two: ratified, on the pending ledger, or
+    // suspended by the codomain adjudication. The third is a coordinate whose
+    // witness the instrument change invalidated — it is still accounted for,
+    // by a ledger that names the invalidated evidence and the repair, and the
+    // equality below means a coordinate cannot go missing by being quietly
+    // added to it.
     const unaccounted = kernel
       .filter(isCoordinate)
       .filter((c) => !ratifiedIds.has(c.id) && !pendingIds.has(c.id))
       .map((c) => c.id);
-    expect(unaccounted).toEqual([]);
+    expect(unaccounted.sort()).toEqual([...new Set(heldOpen)].filter((id) => kernelIds.has(id) && !pendingIds.has(id)).sort());
   });
   it("the kernel is a proper subset of the stage-1 census by identity or recorded mapping", () => {
     const stage1Ids = new Set(stage1.coordinates.map((c) => c.id));
@@ -186,14 +214,80 @@ describe("C0 — provenance of the two censuses", () => {
   });
 });
 
-describe("C2 — every witness holds", () => {
+describe("C2 — every witness holds, or is held open for adjudication", () => {
+  const awaiting = new Map(loadCodomainAdjudications().awaiting.map((a) => [a.witness, a]));
+
   for (const w of witnesses) {
-    it(`${w.coordinates.join(" + ")}`, () => {
+    const key = w.coordinates.join(" + ");
+    it(key, () => {
       const r = checkWitness(w, kernel, oracle);
-      expect(r.failures, JSON.stringify(r.failures)).toEqual([]);
-      expect(r.ok).toBe(true);
+      const open = awaiting.get(key);
+      if (open === undefined) {
+        expect(r.failures, JSON.stringify(r.failures)).toEqual([]);
+        expect(r.ok).toBe(true);
+        return;
+      }
+      // Held open by `codomain-adjudications.json`. The entry does NOT excuse
+      // the witness — it asserts the witness currently fails, which is checked
+      // here, so a ledger entry cannot outlive the failure it describes.
+      expect(r.ok, `${key} holds again: remove its codomain-adjudications entry`).toBe(false);
+      expect(open.detail.length, `${key} is held open with no measured detail`).toBeGreaterThan(80);
+      expect(open.repair.length, `${key} is held open with no named repair`).toBeGreaterThan(40);
     });
   }
+
+  it("holds open exactly three witnesses, all of them one defect: a hole is observable where an absence was not", () => {
+    // The ratchet, in the direction a list of names cannot see. Every witness
+    // that fails must be listed, so a NEW failure cannot hide behind the
+    // ledger's existence; and the count is pinned, so the ledger cannot grow
+    // quietly.
+    const failing = witnesses.filter((w) => !checkWitness(w, kernel, oracle).ok).map((w) => w.coordinates.join(" + "));
+    expect([...new Set(failing)].sort()).toEqual([...awaiting.keys()].sort());
+    expect(awaiting.size).toBe(3);
+    expect([...awaiting.values()].map((a) => a.reason).sort()).toEqual(["branch-residue", "branch-residue", "holder-presence"]);
+  });
+
+  it("every suspension points from a recorded historical standing to a measured current failure", () => {
+    // Both ends verified against evidence, neither authored. The historical end
+    // is the recovered stage-1 record; the current end is what `checkWitness`
+    // reports right now. An entry claiming a coordinate held something it never
+    // held, or claiming a failure the harness does not produce, fails here.
+    const hist = loadHistoricalAccounting().byEvidenceClass;
+    const classOf = (id: string) =>
+      hist.primitive.includes(id) ? "primitive" : hist.interactionOnly.includes(id) ? "interaction-only" : hist.closureAccounted.includes(id) ? "closure-accounted" : "none";
+    for (const [key, a] of awaiting) {
+      const w = witnesses.find((x) => x.coordinates.join(" + ") === key)!;
+      // The declared set is the witness's own coordinate set, so nothing it
+      // touched can be omitted and nothing it did not touch can be smuggled in.
+      expect([...a.declares].sort(), key).toEqual([...w.coordinates].sort());
+      for (const id of a.declares) expect(a.historicalStanding[id], `${key}/${id}`).toBe(classOf(id));
+      // A loss is only ever of the class the coordinate actually held.
+      for (const id of a.lost) expect(classOf(id), `${key}/${id} is recorded as a primitive loss`).toBe("primitive");
+      for (const id of a.interactionOnlyLost ?? []) expect(classOf(id), `${key}/${id} is recorded as an interaction-only loss`).toBe("interaction-only");
+      // And the current end is the codes the harness produces, not a summary.
+      const codes = [...new Set(checkWitness(w, kernel, oracle).failures.map((f) => f.code))].sort();
+      expect(a.currentFailure.codes, key).toEqual(codes);
+      expect(codes.length, `${key} is held open with no current failure`).toBeGreaterThan(0);
+    }
+  });
+
+  it("a coordinate a lapsed witness merely NAMES is not thereby suspended", () => {
+    // The distinction the `declares` field exists to keep. Every coordinate a
+    // ledger entry names must be either recorded as having lost a class it
+    // actually held, or still supported by evidence of its own.
+    const holds = codomainHolds();
+    for (const a of loadCodomainAdjudications().awaiting) {
+      for (const id of a.declares) {
+        const claimedLoss = a.lost.includes(id) || (a.interactionOnlyLost ?? []).includes(id);
+        if (claimedLoss) {
+          expect(holds.has(id), `${id} is recorded as a loss but not suspended`).toBe(true);
+          continue;
+        }
+        const s = evidenceStanding(id, support, holds);
+        expect(s.state, `${id} is named by a failed witness, claims no loss, and has nothing supporting it`).toBe("holding");
+      }
+    }
+  });
   it("no coordinate set is claimed by more than one witness of the same shape with the same stimuli", () => {
     const seen = new Set<string>();
     for (const w of witnesses) {
@@ -204,15 +298,23 @@ describe("C2 — every witness holds", () => {
   });
 });
 
+/** Coordinates whose evidence is held open by the codomain adjudication ledger. */
+const heldOpen = loadCodomainAdjudications().awaiting.flatMap((a) => a.lost);
+
 describe("C1 — coverage: every kernel coordinate is ratified", () => {
   const ratified = primitiveRatified(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
-  it("every leaf and member pair of the kernel has a holding witness", () => {
+  it("every leaf and member pair of the kernel has a holding witness, or an open codomain adjudication", () => {
     const missing = kernel
       .filter(isCoordinate)
       .filter((c) => !pendingIds.has(c.id))
       .filter((c) => !ratified.has(c.id))
       .map((c) => c.id);
-    expect(missing).toEqual([]);
+    // The four that lost their witness when the quotient gained a codomain are
+    // NOT quietly excused: each is named in `codomain-adjudications.json` with
+    // the measured reason its evidence changed, and this asserts the two sets
+    // are EQUAL — so a coordinate that loses its witness for some other reason
+    // still fails here, and an adjudication that stops being needed fails too.
+    expect(missing.sort()).toEqual([...new Set(heldOpen)].sort());
   });
   /**
    * The member-absence class is the open obligation of REL-VIEW-ALGEBRA-01 A4,
@@ -334,8 +436,88 @@ describe("C3 — the harness is falsified", () => {
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
     const coord = loadCensus().find((c) => c.id === "relation.derivedBy.project.from#incidence")!;
     expect(coord).toBeDefined();
-    expect(isolationViolation(fixture, coord)).toMatch(/introduced derivation defect/);
+    // The diagnostic is NAMED, not merely counted. `REL_DERIVATION_INPUT_MISSING`
+    // is the specific collateral this guard exists to catch; a message that only
+    // says "a defect appeared" would go on passing if the guard started firing
+    // on something else entirely.
+    expect(isolationViolation(fixture, coord)).toContain("REL_DERIVATION_INPUT_MISSING@out");
   });
+
+  /**
+   * The applicability boundary: which ARGUMENT decides whether the check runs.
+   *
+   * `checkDerivations` takes a `RelationalStructure`. Deciding applicability
+   * from the enclosing `Fixture` instead makes an ENVELOPE requirement — a
+   * fixture id pattern, a minimum assertion count — silently disable a
+   * STRUCTURAL check, which is how this guard stopped guarding once already.
+   */
+  describe("C3b — applicability is decided by the argument, not the envelope", () => {
+    const structure = {
+      relations: {
+        src: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } },
+        out: {
+          grain: ["k"],
+          fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } },
+          derivedBy: { kind: "project", from: "src", keep: ["k", "v"] },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const wrap = (assertions: unknown[]) => ({ id: "fx_probe", structure, assertions }) as unknown as Fixture;
+    const bare = wrap([]);
+    const wrapped = wrap([{ kind: "aggregate", relation: "out", field: "v", op: "sum", along: ["k"] }]);
+    const incidence = loadCensus().find((c) => c.id === "relation.derivedBy.project.from#incidence")!;
+
+    it("the envelope rejects both probes, on grounds that say nothing about the structure", () => {
+      // Stated first because it is what makes the next test a falsifier rather
+      // than a tautology. Validating the fixture would have suppressed the
+      // check on BOTH probes — `assertions` for one, the id pattern for both —
+      // and neither ground is a claim about whether `checkDerivations` can read
+      // this structure.
+      const validate = loadFixtureValidator(CONTRACTS_DIR);
+      expect(validate(bare)).toEqual(['/id must match pattern "^FX_[A-Z0-9_]+$"', "/assertions must NOT have fewer than 1 items"]);
+      expect(validate(wrapped)).toEqual(['/id must match pattern "^FX_[A-Z0-9_]+$"']);
+    });
+
+    it("gives the same derivation-isolation result at zero and at one assertion", () => {
+      const expected = "erasure introduced derivation defect(s) REL_DERIVATION_INPUT_MISSING@out, so any collision may be that defect rather than the coordinate";
+      expect(isolationViolation(bare, incidence)).toBe(expected);
+      expect(isolationViolation(wrapped, incidence)).toBe(expected);
+      // Non-vacuous on both sides: the result is a violation, so neither probe
+      // is passing by having had the check quietly switched off.
+      expect(inapplicableIsolationChecks.has(incidence.id)).toBe(false);
+    });
+
+    it("a forgotten discriminator is OUT OF DOMAIN, and no operator lookup is executed", () => {
+      // `erase` holes `derivedBy.kind`, and `OPERATOR_LAWS[d.kind]` is a lookup
+      // on a string: handing the image to the engine THROWS. That throw is the
+      // observable. If the comparison ran, this call could not return — so a
+      // clean `undefined` plus the coordinate in `inapplicableIsolationChecks`
+      // is direct evidence the lookup never happened, with nothing mocked.
+      const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
+      const image = erase(bare, kindLeaf) as unknown as { structure: RelationalStructure };
+      expect(markersIn(image.structure).map((m) => m.path)).toEqual(["relations.out.derivedBy.kind"]);
+      expect(() => checkDerivations(image.structure)).toThrow();
+
+      inapplicableIsolationChecks.delete(kindLeaf.id);
+      expect(isolationViolation(bare, kindLeaf)).toBeUndefined();
+      expect(inapplicableIsolationChecks.has(kindLeaf.id)).toBe(true);
+    });
+
+    it("an instrument failure on an in-domain structure propagates; it is neither inapplicable nor clean", () => {
+      // The property a catch-all destroys. Both structures here are in domain —
+      // the previous tests establish that the same probe yields a real verdict
+      // — so a throw can only mean the checker broke. Absorbing it would report
+      // "this erasure introduced no defect", which is a false discharge of the
+      // guard rather than an absence of opinion.
+      const boom = () => {
+        throw new TypeError("injected instrument failure");
+      };
+      inapplicableIsolationChecks.delete(incidence.id);
+      expect(() => isolationViolation(bare, incidence, boom)).toThrow(/injected instrument failure/);
+      expect(inapplicableIsolationChecks.has(incidence.id)).toBe(false);
+    });
+  });
+
   it("incidence erasure preserves arity and order, so it isolates co-reference alone", () => {
     const before = ["region", "product", "region"];
     const coord = loadCensus().find((c) => c.id === "assertion.aggregate.along#incidence")!;
@@ -609,8 +791,15 @@ describe("C1c — a multi-coordinate witness is classified, and the classificati
   it("a witness with no discriminator substitution is interaction, not hygiene", () => {
     // `assertion.kind + assertion.aggregate.op` pairs a bare LEAF with a
     // payload leaf. There is no tag rewrite for residue to be conditional on.
-    const w = multi.find((x) => x.coordinates.includes("assertion.kind"));
-    expect(w, "expected the bare-leaf witness to still exist").toBeDefined();
+    //
+    // Read from the witness FILE, not from the holding set. This asks what the
+    // CLASSIFIER does with a witness of that shape, which is a property of
+    // `classifyWitness` and not of whether the witness currently holds — and
+    // this one's evidence is suspended by the codomain ledger. Sourcing it from
+    // `multi` made a classifier test silently disappear when standing moved,
+    // which is the wrong thing to be sensitive to.
+    const w = witnesses.filter((x) => x.coordinates.length > 1).find((x) => x.coordinates.includes("assertion.kind"));
+    expect(w, "expected the bare-leaf witness to still exist in witnesses.json").toBeDefined();
     const c = classify(w!);
     expect(c.klass).toBe("interaction");
     expect(c.conditions[0].id).toBe("1-one-discriminator-substitution");
@@ -653,15 +842,17 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
    * the walk branch-qualified a label the census does not.
    */
   const CORPUS_DEAD: Record<string, string> = {
-    "relation.derivedBy.bin.closure:left-closed~right-closed": "no fixture declares right-closed, so rewriting it to left-closed rewrites nothing",
     "relation.derivedBy.bin.closure:right-closed~<absent>": "no fixture declares right-closed",
-    // The corpus now declares one-to-many AND many-to-one — the join holdout
-    // item added the second — so the three pairs that separate them are live
-    // and only the many-to-many pairs remain dead. That is the ratchet biting
-    // in the direction a superset list could not see.
-    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": "no fixture joins many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": "no fixture joins many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": "no fixture joins many-to-many",
+    // THREE ENTRIES LEFT THIS LIST when merging became symmetric. A merge used
+    // to rewrite only the value equal to `from`, so a pair naming a member the
+    // corpus never declares changed nothing and read as dead. A merge now names
+    // a CLASS, and a slot carrying EITHER member joins it — so
+    // `left-closed~right-closed` acts on every `left-closed` the corpus does
+    // declare. They are no longer un-erasable; they are unSEPARATING, which the
+    // footprint audit reports and this ledger deliberately does not, because
+    // the two say different things. Only `one-to-one~many-to-many` remains here,
+    // and only because the corpus declares neither of its members.
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": "no fixture joins many-to-many or one-to-one, so neither member is present to join the class",
     "assertion.aggregate.along#order": "every corpus `along` is one name or already sorted, so sorting is identity",
     "evidence.grainWitness#arity": "every corpus grain witness names one column, so truncating to one is identity",
     "evidence.grainWitness#order": "every corpus grain witness is one name or already sorted",
@@ -671,6 +862,16 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
     "relation.derivedBy.aggregate-to-grain.toGrain#order": "every corpus toGrain names one column",
     "relation.derivedBy.nest.levels#order": "every corpus nest declares its levels already sorted",
     "structure.peers[]#order": "every corpus peer set is already sorted",
+    // Both became dead when arity erasure started truncating to the slot's
+    // DECLARED floor instead of to one. `levels` and a peer set each require
+    // minItems 2, and every corpus instance is exactly two long, so truncating
+    // to two is identity. This is a corpus fact of the same kind as the entries
+    // above — a third element in either would make both live immediately — and
+    // NOT a claim that arity is unwitnessable: the previous behaviour truncated
+    // to one, which reached these by also destroying incidence ([a,b] and [a,c]
+    // both became [a]), so what it was erasing was never arity alone.
+    "relation.derivedBy.nest.levels#arity": "every corpus nest declares exactly two levels, which is the declared minimum, so truncating to it is identity",
+    "structure.peers[]#arity": "every corpus peer set names exactly two peers, which is the declared minimum, so truncating to it is identity",
   };
 
   const fixtures = [...oracle.fixtures.values()];
@@ -785,16 +986,213 @@ describe("C1d — cleanup cardinality bounds which pairs a <=2-coordinate witnes
   });
 });
 
-describe("C4 — every stage-1 coordinate is dispositioned exactly once; the kernel equals the ratified set", () => {
+describe("C4b — CURRENT evidence standing: what the authority in force now supports", () => {
+  // The other half of the pair, and the reason neither is equivocation. C4 says
+  // what stage 1 concluded under its bound instrument; this says what evidence
+  // survives the instrument's correction. Both are true at once, and reporting
+  // only one of them would either bury a real evidence loss or falsify a closed
+  // experiment's record.
+  const holds = codomainHolds();
+  const historicalRecord = loadHistoricalAccounting();
+  const historicalSet = historicallyAccounted(historicalRecord);
+  const ratifiedUnder = (live: ReadonlySet<string>) =>
+    stage1.coordinates.filter((c) => disposition(c, live, kernelIds, removals).state === "ratified").map((c) => c.id);
+
+  it("the historical record is recovered from a named tree, not inferred from today", () => {
+    // What makes it an authority. The digests are of the files that tree held;
+    // the commit says which tree; the procedure says the recovery ran that
+    // tree's own code. None of it is a function of present support, which is
+    // the property the derived version could not have.
+    expect(historicalRecord.recoveredFrom.commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(Object.keys(historicalRecord.recoveredFrom.inputs).sort()).toEqual([
+      "census-stage1.json",
+      "closures-stage2.json",
+      "removals.json",
+      "witnesses.json",
+    ]);
+    for (const d of Object.values(historicalRecord.recoveredFrom.inputs)) expect(d).toMatch(/^[0-9a-f]{64}$/);
+    // The union it records is the union of the three classes it records, so a
+    // class cannot be edited without the accounting figure moving with it.
+    const { primitive, interactionOnly, closureAccounted } = historicalRecord.byEvidenceClass;
+    expect([...historicalSet].sort()).toEqual([...new Set([...primitive, ...interactionOnly, ...closureAccounted])].sort());
+  });
+
+  it("81 ratified historically, 77 still accounted, 4 suspended — the same 268 coordinates counted twice", () => {
+    // Counted in the SAME units as C4, by running the same dispositioner over
+    // the same stage-1 coordinates against the two different accounted sets.
+    // Comparing `stage1Accounted.size` to 81 would be comparing kernel ids to
+    // stage-1 dispositions, which are not the same population.
+    //
+    // ACCOUNTED, not holding. 77 is the union of three evidence classes — see
+    // the standing tally below, where 4 of those 77 rest on a provisional
+    // closure and nothing stronger. Calling the figure "holding" would report
+    // the weakest class with the authority of the strongest.
+    const historical = ratifiedUnder(historicalSet);
+    const current = ratifiedUnder(stage1Accounted);
+    expect(historical).toHaveLength(81);
+    expect(current).toHaveLength(77);
+
+    // Nothing appeared and nothing vanished: exactly four moved from accounted
+    // to suspended, and each is named in the ledger.
+    const lost = historical.filter((id) => !current.includes(id));
+    expect(lost).toHaveLength(4);
+    for (const id of lost) expect(holds.has(id) || holds.has(id.split(":")[0]), `${id} lost standing but is not in the ledger`).toBe(true);
+  });
+
+  it("reports standing BY CLASS, so a provisional closure is never counted as a ratification", () => {
+    // The narrowing the accounting figure above cannot express. `primitive` is
+    // the only class that ratifies; `closure-accounted` is explicitly not
+    // standing, and a closure that is merely not-refuted must not read as one.
+    const byClass: Record<string, number> = {};
+    for (const id of new Set([...accountedBy(support), ...holds.keys()])) {
+      const s = evidenceStanding(id, support, holds);
+      byClass[s.state === "holding" ? s.via : s.state] = (byClass[s.state === "holding" ? s.via : s.state] ?? 0) + 1;
+    }
+    expect(byClass).toEqual({ primitive: 43, "closure-accounted": 11, suspended: 3 });
+    // And the class boundary is real: every closure-accounted coordinate is
+    // absent from the primitive set, by construction of `evidenceStanding`.
+    for (const id of support.closureAccounted) {
+      const s = evidenceStanding(id, support, holds);
+      if (s.state === "holding" && s.via === "closure-accounted") expect(support.primitive.has(id), id).toBe(false);
+    }
+  });
+
+  it("names the invalidated witness for every suspended coordinate, and suspends nothing else", () => {
+    const suspended = [...new Set([...accountedBy(support), ...holds.keys()])]
+      .map((id) => [id, evidenceStanding(id, support, holds)] as const)
+      .filter(([, s]) => s.state === "suspended");
+    // Three, not four. `assertion.aggregate.op` is DECLARED by the 2-set
+    // witness that lapsed, and holds a primitive witness of its own that the
+    // lapse did not touch — so it lost nothing. Coverage by a failed witness is
+    // not a standing loss, and the ledger keeps the two apart: it appears under
+    // `declares`, and under neither loss field.
+    const covering = loadCodomainAdjudications().awaiting.filter((a) => a.declares.includes("assertion.aggregate.op"));
+    expect(covering).toHaveLength(2);
+    for (const a of covering) {
+      expect(a.lost).not.toContain("assertion.aggregate.op");
+      expect(a.interactionOnlyLost ?? []).not.toContain("assertion.aggregate.op");
+    }
+    expect(holds.has("assertion.aggregate.op")).toBe(false);
+    expect(evidenceStanding("assertion.aggregate.op", support, holds)).toEqual({ state: "holding", via: "primitive", evidence: ["assertion.aggregate.op"] });
+    expect(suspended.map(([id]) => id).sort()).toEqual([
+      "assertion.kind",
+      "assertion.kind:aggregate~ratio-comparison",
+      "field.temporality.kind",
+    ]);
+    for (const [id, s] of suspended) {
+      if (s.state !== "suspended") throw new Error("unreachable");
+      expect(s.experiment).toBe("ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01");
+      expect(s.invalidatedEvidence.length, `${id} suspended with no witness named`).toBeGreaterThan(0);
+    }
+  });
+
+  it("suspension is not a semantic outcome: every suspended coordinate still dispositions as stage 1 concluded", () => {
+    // The load-bearing separation. A suspended coordinate must NOT read as
+    // not-yet-admitted — that would say it was considered and left the kernel,
+    // which nobody decided. It reads exactly as it did before the instrument
+    // changed, and only its evidence standing moved.
+    const byId = new Map(stage1.coordinates.map((c) => [c.id, c]));
+    for (const id of holds.keys()) {
+      const c = byId.get(id);
+      if (!c) continue; // kernel-only ids have no stage-1 disposition to preserve
+      expect(disposition(c, historicalSet, kernelIds, removals).state, id).toBe("ratified");
+    }
+  });
+});
+
+describe("C4c — history is an INPUT to reconciliation, not a function of the present", () => {
+  /**
+   * The four ways the derived version failed, each asserted directly.
+   *
+   * `historicallyRatified(live, holds)` returned `live ∪ holds.keys()`, which
+   * agreed with the recovered record for exactly as long as nothing moved. It
+   * had no way to disagree, which is the defect: a set that cannot contradict
+   * the present cannot be evidence about the past.
+   */
+  const holds = codomainHolds();
+  const historicalSet = historicallyAccounted();
+
+  it("reconciles clean today: every loss is ledgered and nothing appeared from nowhere", () => {
+    const r = reconcileHistory(accountedBy(support), historicalSet, holds);
+    expect(r.unexplainedLoss).toEqual([]);
+    expect(r.unexplainedGain).toEqual([]);
+    expect(r.suspended).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison", "field.temporality.kind"]);
+  });
+
+  it("SETTLING a suspension leaves the historical record untouched", () => {
+    // The first break. Under the derivation, clearing the ledger deleted three
+    // coordinates from history — the past shrinking because a present-day
+    // exception was resolved.
+    const settled: typeof holds = new Map();
+    expect(historicallyAccounted()).toEqual(historicalSet);
+    const r = reconcileHistory(accountedBy(support), historicalSet, settled);
+    // History is unchanged; what moves is that the same three losses are now
+    // UNEXPLAINED, which is the correct report for an unledgered loss.
+    expect(historicallyAccounted()).toEqual(historicalSet);
+    expect(r.unexplainedLoss).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison", "field.temporality.kind"]);
+    expect(r.suspended).toEqual([]);
+  });
+
+  it("ADMITTING new current evidence does not write it into the past", () => {
+    // The second break. Under the derivation, any id added to `live` silently
+    // became a coordinate stage 1 had accounted for.
+    const widened = new Set([...accountedBy(support), "field.temporality.grain:day~month"]);
+    expect(historicallyAccounted()).toEqual(historicalSet);
+    const r = reconcileHistory(widened, historicalSet, holds);
+    expect(r.unexplainedGain).toEqual(["field.temporality.grain:day~month"]);
+    // And the historical dispositions are the same numbers as before.
+    const ratified = stage1.coordinates.filter((c) => disposition(c, historicalSet, kernelIds, removals).state === "ratified");
+    expect(ratified).toHaveLength(81);
+  });
+
+  it("EXCHANGING one historical identifier for another is caught, though the count is unchanged", () => {
+    // The third break, and the reason a count is not an identity. Swapping one
+    // id for another leaves |history| at 57 and would leave any size-based
+    // check green.
+    const swapped = new Set(historicalSet);
+    swapped.delete("assertion.aggregate.nulls");
+    swapped.add("assertion.aggregate.uncertainty:absolute~none");
+    expect(swapped.size).toBe(historicalSet.size);
+    const r = reconcileHistory(accountedBy(support), swapped, holds);
+    expect(r.unexplainedLoss).toContain("assertion.aggregate.uncertainty:absolute~none");
+    expect(r.unexplainedGain).toContain("assertion.aggregate.nulls");
+  });
+
+  it("a PROVISIONAL closure confers accounting, never primitive standing", () => {
+    // The fourth. `closureAccounted` admits any closure that is not refuted,
+    // including one whose promotion is still open — so a coordinate can be
+    // accounted for by an argument nobody has finished making. It must never
+    // read as ratified.
+    const provisional = loadClosures().closures.filter((c) => c.promotion === "provisional");
+    expect(provisional.length).toBeGreaterThan(0);
+    for (const c of provisional) {
+      for (const id of [c.carrier, ...c.dependencies]) {
+        if (support.primitive.has(id)) continue; // separately ratified; the closure adds nothing
+        const s = evidenceStanding(id, support, holds);
+        if (s.state === "holding") expect(s.via, `${id} is carried only by a provisional closure`).toBe("closure-accounted");
+      }
+    }
+  });
+});
+
+describe("C4 — HISTORICAL accounting: what the completed stage-1 experiment concluded", () => {
   // Accounting, not standing: see the note on `stage1Accounted`.
-  const ratified = stage1Accounted;
+  //
+  // WHICH LEDGER THIS IS. `disposition` reports what a COMPLETED experiment
+  // concluded under the erasure authority it was bound to, so the set it is
+  // given is the historical one — the live holding set plus the coordinates the
+  // codomain change suspended. Feeding it the live set instead would rewrite a
+  // finished record to match a later instrument, turning 81 into 77 as though
+  // stage 1 had concluded something it did not. What is currently SUPPORTED is
+  // a different question, asked in "C4b — current evidence standing" below.
+  const ratified = historicallyAccounted();
   const dispositions = stage1.coordinates.map((c) => [c, disposition(c, ratified, kernelIds, removals)] as const);
 
   it("every stage-1 coordinate is ratified, not-yet-admitted, or a name reference", () => {
     const undecided = dispositions.filter(([, d]) => d.state !== "ratified" && d.state !== "not-yet-admitted" && d.state !== "reference");
     expect(undecided).toEqual([]);
   });
-  it("counts: 81 ratified (24 leaves, 57 pairs), 177 not-yet-admitted (128 at stage 2, 49 at stage 3), 10 references", () => {
+  it("counts, UNMOVED by the codomain: 81 ratified (24 leaves, 57 pairs), 177 not-yet-admitted (128 at stage 2, 49 at stage 3), 10 references", () => {
     const tally = { ratified: 0, "not-yet-admitted": 0, reference: 0 };
     const ratifiedKinds = { leaf: 0, "member-pair": 0 };
     const stages: Record<string, number> = {};

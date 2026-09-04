@@ -16,6 +16,7 @@ import { loadCensus, loadDerivation, loadLocators, loadPlans, type Coordinate } 
 import { executePlan, orderPlans, type ForgetOperation } from "./erasure-plan.js";
 import { FIXTURES_DIR } from "./necessity.js";
 import { canonical, erase, planFor } from "./quotient.js";
+import { isMarker } from "./quotient-image.js";
 import { parseFixtures, type Fixture } from "./structure.js";
 
 const census = loadCensus();
@@ -23,9 +24,20 @@ const plans = loadPlans();
 const fixtures = parseFixtures(fs.readFileSync(`${FIXTURES_DIR}/fixtures.jsonl`, "utf-8"));
 const byId = new Map(census.map((c) => [c.id, c]));
 
-/** Every terminal path present in a fixture, so an ADDED key is detectable. */
+/**
+ * Every terminal path present in a fixture, so an ADDED key is detectable.
+ *
+ * A MARKER IS A TERMINAL. A hole replaces a value at a path that already
+ * existed; its `@q` and `by` keys are the erasure's own bookkeeping, not
+ * declarations the fixture acquired. Descending into them would report 1521
+ * "added paths" for an operation that added no facts, and the invariant this
+ * guard exists for — forgetting may destroy, never create — would be drowned by
+ * its own instrument. What it still catches, unchanged, is the real defect: an
+ * erasure writing a slot into existence, which is how incidence erasure once
+ * added `along` to 76 fixtures that never declared it.
+ */
 function paths(node: unknown, at = "", out = new Set<string>()): Set<string> {
-  if (node === null || typeof node !== "object") {
+  if (node === null || typeof node !== "object" || isMarker(node)) {
     out.add(at);
     return out;
   }
@@ -72,26 +84,79 @@ describe("plan registry — one walk owns identity and location", () => {
     expect(seen.get("reference-topology")).toEqual(
       new Set(["forget-reference-arity", "forget-reference-order", "forget-reference-incidence"]),
     );
-    expect(seen.get("leaf")).toEqual(new Set(["delete-slot", "delete-holder"]));
+    expect(seen.get("leaf")).toEqual(new Set(["forget-value", "delete-slot", "delete-holder"]));
   });
 
-  it("distinguishes deleting a holder from deleting a value slot, because their footprints differ", () => {
+  it("chooses a leaf's operation from the SCHEMA: required leaves are holed, optional ones deleted", () => {
+    // Asserted as the rule rather than as the eight names that satisfy it
+    // today. A ninth required leaf added to the model must be holed too, and a
+    // list of names would let it be deleted while the test still passed.
+    const { requiredLeaves } = loadDerivation();
+    const leaves = census.filter((c) => c.kind === "leaf" && !c.id.endsWith("#present"));
+    expect(leaves.length).toBeGreaterThan(20);
+    for (const c of leaves) {
+      const op = plans.get(c.id)!.operation.kind;
+      // A required leaf has no absent state to identify, and deleting it leaves
+      // a declaration missing something it must have.
+      if (requiredLeaves.has(c.leaf)) expect(op, `${c.id} is required`).toBe("forget-value");
+      // An optional leaf CAN say nothing, and "says nothing" is one of the
+      // states its erasure has to identify — which deletion does, and a hole
+      // would not.
+      else expect(op, `${c.id} is optional`).toBe("delete-slot");
+    }
+  });
+
+  it("distinguishes forgetting a holder from forgetting a value, because their footprints differ", () => {
     expect(plans.get("relation.derivedBy#present")!.operation.kind).toBe("delete-holder");
-    expect(plans.get("relation.derivedBy.join.cardinality")!.operation.kind).toBe("delete-slot");
+    // Required within the join branch, so a hole rather than a deletion: the
+    // join declaration cannot be missing its cardinality and still be a join.
+    expect(plans.get("relation.derivedBy.join.cardinality")!.operation.kind).toBe("forget-value");
+    // Optional on a field, so deletion: absence is one of the states it can be in.
+    expect(plans.get("field.cyclic")!.operation.kind).toBe("delete-slot");
   });
 });
 
 describe("execution — forgetting may destroy, never create", () => {
-  it("never adds a path to any fixture, for any plan", () => {
+  it("never declares a slot that was not already declared, for any plan", () => {
+    // Stated over SLOTS rather than terminal paths, because a hole legitimately
+    // moves a terminal upward: `grain: ["k"]` has the terminal `.grain[0]`, and
+    // holing it makes `.grain` itself terminal. That is the hole replacing a
+    // subtree that was there, not the fixture acquiring a declaration.
+    //
+    // So a path that appears is an offender only when it is not a PREFIX of one
+    // that existed — which is exactly "something is now declared where nothing
+    // was". The real defect this guards is untouched: incidence erasure once
+    // wrote `along` into 76 fixtures that never declared it, and `.…along` is a
+    // prefix of nothing in those fixtures.
+    const declaredBefore = (before: Set<string>, x: string) =>
+      before.has(x) || [...before].some((b) => b.startsWith(x) && (b[x.length] === "." || b[x.length] === "["));
+
     const offenders: string[] = [];
     for (const p of plans.values()) {
       for (const f of fixtures) {
         const before = paths(f);
-        const added = [...paths(executePlan(f, p))].filter((x) => !before.has(x));
+        const added = [...paths(executePlan(f, p))].filter((x) => !declaredBefore(before, x));
         if (added.length > 0) offenders.push(`${p.id} added ${added.slice(0, 3).join(", ")} to ${f.id}`);
       }
     }
     expect(offenders).toEqual([]);
+  });
+
+  it("and that guard can still fail: a plan that writes an undeclared slot is caught", () => {
+    // The falsifier for the rule above, because a prefix test is exactly the
+    // kind of loosening that can quietly stop catching anything. `along` is
+    // optional on an aggregate assertion, so a fixture that omits it has no
+    // path under it for a write to be a prefix of.
+    const fixture = {
+      id: "FX_T",
+      structure: { relations: { r: { grain: ["k"], fields: { k: { transformation: "nominal", key: true } } } } },
+      assertions: [{ kind: "aggregate", relation: "r", field: "k", op: "sum" }],
+    } as unknown as Fixture;
+    const before = paths(fixture);
+    const written = JSON.parse(JSON.stringify(fixture)) as { assertions: Record<string, unknown>[] };
+    written.assertions[0].along = ["k"];
+    const declaredBefore = (x: string) => before.has(x) || [...before].some((b) => b.startsWith(x) && (b[x.length] === "." || b[x.length] === "["));
+    expect([...paths(written)].filter((x) => !declaredBefore(x))).toEqual([".assertions[0].along[0]"]);
   });
 
   it("reaches the sugar spelling of an observation as well as the record spelling", () => {

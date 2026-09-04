@@ -1,0 +1,71 @@
+{
+  "$comment": "Witnesses whose evidence changed when the quotient gained a declared codomain (ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01). Each is HELD OPEN, not decided: no standing moves because this file exists. The ledger may only shrink — `necessity.test.ts` refuses an entry whose witness holds again, and refuses a non-holding witness that is not listed, so neither a stale entry nor a new failure can hide here. All three are one defect seen twice over: A HOLE IS OBSERVABLE WHERE AN ABSENCE WAS NOT. Deleting a required discriminator destroyed the evidence that betrays its branch; holing it leaves that evidence standing. The old erasures did not hold these coordinates apart — they hid the residue by destroying it, and nobody had stated that as the argument. Reverting to deletion is refused on its own terms: it produces images the representation cannot express (`quotientLanguageInvalid`), which is what this spec exists to end.",
+  "awaiting": [
+    {
+      "witness": "field.temporality.kind",
+      "declares": [
+        "field.temporality.kind"
+      ],
+      "historicalStanding": {
+        "field.temporality.kind": "primitive"
+      },
+      "lost": [
+        "field.temporality.kind"
+      ],
+      "currentFailure": {
+        "codes": [
+          "NO_COLLISION"
+        ]
+      },
+      "reason": "holder-presence",
+      "detail": "The pair is FX_TEMP_SUM (a field with NO temporality declaration) against FX_EVENT_AT_SUM (temporality {kind: instant}). Deleting the tag emptied the holder and `dropEmpty` removed the whole declaration, so the two collided — but what collided them was the disappearance of `field.temporality#present`, not the forgetting of which kind it was. Holing the tag leaves `{temporality: {kind: <hole>}}` against nothing, and the pair now differs exactly where it always differed: in whether a temporality is declared at all.",
+      "repair": "Either re-state the witness against two stimuli that both DECLARE a temporality and differ only in its kind, or adjudicate that this coordinate's evidence is holder presence and belongs to `field.temporality#present`. The first is a corpus question; the second is a standing question."
+    },
+    {
+      "witness": "assertion.kind + assertion.aggregate.op",
+      "declares": [
+        "assertion.kind",
+        "assertion.aggregate.op"
+      ],
+      "historicalStanding": {
+        "assertion.kind": "interaction-only",
+        "assertion.aggregate.op": "primitive"
+      },
+      "lost": [],
+      "interactionOnlyLost": [
+        "assertion.kind"
+      ],
+      "currentFailure": {
+        "codes": [
+          "NO_COLLISION"
+        ]
+      },
+      "reason": "branch-residue",
+      "detail": "The pair is FX_TEMP_RATIO_COMPARISON against FX_N_TEMP_MEAN. `assertion.aggregate.op` is branch-qualified — the slot exists only where kind is `aggregate` — so after both erasures the aggregate side carries `op: <hole>` and the ratio-comparison side carries no `op` slot at all. The PRESENCE of the hole betrays the branch that the `kind` erasure was supposed to forget. Deletion hid this by removing the slot; it did not forget it.",
+      "repair": "This is exactly the residue the closure form exists to normalize, and a `forget-branch-field` carrier over the aggregate branch's `op` is the named mechanism. The carrier is one of the 22 already ledgered as provisional; promoting it is a closure adjudication, not a witness repair."
+    },
+    {
+      "witness": "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
+      "declares": [
+        "assertion.kind:aggregate~ratio-comparison",
+        "assertion.aggregate.op"
+      ],
+      "historicalStanding": {
+        "assertion.kind:aggregate~ratio-comparison": "interaction-only",
+        "assertion.aggregate.op": "primitive"
+      },
+      "lost": [],
+      "interactionOnlyLost": [
+        "assertion.kind:aggregate~ratio-comparison"
+      ],
+      "currentFailure": {
+        "codes": [
+          "NO_COLLISION"
+        ]
+      },
+      "reason": "branch-residue",
+      "detail": "The same pair and the same residue as above, reached through the member-class spelling instead of the whole-leaf one: both sides carry `kind` as the class {aggregate, ratio-comparison}, and the aggregate side still carries `op: <hole>` that the other side has no slot for. That the two spellings fail identically is the point — the residue is a property of the branch structure, not of which erasure names it.",
+      "repair": "The same closure carrier settles both entries. If it is promoted, this entry and the one above close together; if it is refused, both coordinates lose their present evidence together."
+    }
+  ]
+}

@@ -14,7 +14,8 @@ import { DIAG, OBLIGATION, RULES, judge } from "./engines.js";
 import { OPERATOR_LAWS } from "./derivation.js";
 import { assertionKey, canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
 import { RULE_SOURCES } from "./necessity.js";
-import { alphaRename, normalizeObservation, renameSubject, type Fixture, type RelationalStructure } from "./structure.js";
+import { alphaRename, renameSubject } from "./alpha-rename.js";
+import { normalizeObservation, type Fixture, type RelationalStructure } from "./structure.js";
 
 const CONTRACTS = path.resolve(__dirname, "../../../ds-contracts");
 const PACK = path.join(CONTRACTS, "analytical-pack");
@@ -439,7 +440,12 @@ describe("A10 — identifier spelling confers no standing", () => {
 
   it("an alpha-renamed fixture validates and judges identically up to subject renaming", () => {
     const original = fx(live.bindings.special.renameOriginal as string);
-    const renamed = alphaRename(original, map);
+    // `alphaRename` returns a quotient IMAGE, because that is what it returns in
+    // general — renaming an erased representation is its other caller. Narrowing
+    // it back here is sound for a reason worth stating rather than assuming: a
+    // corpus line carries no holes, and renaming introduces none, so this image
+    // is a fixture. The very next line proves it against the source schema.
+    const renamed = alphaRename(original, map) as unknown as Fixture;
     expect(live.validateFixture(renamed)).toEqual([]);
     // no original identifier survives as a relation, field, or assertion reference
     expect(Object.keys(renamed.structure.relations)).toEqual(["w"]);

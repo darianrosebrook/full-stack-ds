@@ -57,8 +57,9 @@
 import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { fileURLToPath } from "node:url";
-import { FIXTURE_SCHEMA, loadCensus, loadPlans } from "./census.js";
+import { authorityIdentities, footprintBasisDigest, type AuthorityIdentities } from "./authority.js";
+import { loadCensus, loadPlans } from "./census.js";
+import { ruleSurfaceDigest } from "./corpus-integrity.js";
 import { loadClosures } from "./closure.js";
 import { deletionFootprint, executePlan, wouldChange, type ErasurePlan } from "./erasure-plan.js";
 import { separatingPairs, type PairFailure } from "./erasure-specimens.js";
@@ -68,15 +69,15 @@ import {
   loadOracle,
   loadWitnesses,
   resolveSide,
+  RULE_SOURCES,
   WITNESSES_FILE,
   type Witness,
 } from "./necessity.js";
 import { canonical } from "./quotient.js";
-import { loadQuotientValidator, QUOTIENT_SCHEMA_FILE, QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
+import { loadQuotientValidator, QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { parseFixtures, type Fixture } from "./structure.js";
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const FOOTPRINTS_FILE = path.join(FIXTURES_DIR, "erasure-footprints.json");
 
 const sha = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex");
@@ -336,6 +337,25 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
 export interface FootprintReport {
   $comment: string;
   digests: Record<string, string>;
+  /**
+   * The authority this measurement was taken under, by CAUSE.
+   *
+   * `digests` above lists the data the report reads. These say what the report
+   * MEANS: which coordinates exist, what an erasure does, what admits a
+   * witness, and what the engine judges. A flat list of file digests reports
+   * that something moved; these report which of those four moved, and only one
+   * of them requires re-verifying erasure behaviour by hand.
+   */
+  authority: AuthorityIdentities & { ruleDigest: string };
+  /**
+   * The identity of the specimen POPULATION, held apart from the four above.
+   *
+   * A footprint claim is population-sensitive — "no specimen separates this" is
+   * a statement about the specimens — while a witness is existential and
+   * survives the population growing. Binding both to one identity would reject
+   * standing that a new specimen cannot possibly have disturbed.
+   */
+  footprintBasisDigest: string;
   /** Which quotient language these images were measured in. */
   quotientSchemaVersion: number;
   specimens: { corpus: number; stimuli: number; synthesized: number; total: number };
@@ -424,17 +444,18 @@ export function computeReport(): FootprintReport {
   return {
     $comment:
       "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
+    // DATA only. The source modules that used to be listed here one at a time
+    // are covered by the identities below, over their whole import closure: a
+    // per-file list under-claims by construction, and `erasure-specimens.ts`
+    // synthesizes every pair the measurement depends on while never appearing
+    // in it.
     digests: {
-      "fixture.schema.json": sha(fs.readFileSync(FIXTURE_SCHEMA)),
-      [QUOTIENT_SCHEMA_FILE]: sha(fs.readFileSync(path.join(CONTRACTS_DIR, QUOTIENT_SCHEMA_FILE))),
-      "quotient-image.ts": sha(fs.readFileSync(path.join(HERE, "quotient-image.ts"))),
       "fixtures.jsonl": sha(fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl"))),
-      "census.ts": sha(fs.readFileSync(path.join(HERE, "census.ts"))),
-      "erasure-plan.ts": sha(fs.readFileSync(path.join(HERE, "erasure-plan.ts"))),
-      "quotient.ts": sha(fs.readFileSync(path.join(HERE, "quotient.ts"))),
       "witnesses.json": sha(fs.readFileSync(WITNESSES_FILE)),
       "closures-stage2.json": sha(fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json"))),
     },
+    authority: { ...authorityIdentities(QUOTIENT_SCHEMA_VERSION), ruleDigest: ruleSurfaceDigest(RULE_SOURCES) },
+    footprintBasisDigest: footprintBasisDigest(s.fixtures.map(canonical)),
     quotientSchemaVersion: QUOTIENT_SCHEMA_VERSION,
     specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length },
     unbuilt: s.unbuilt,
@@ -457,6 +478,21 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   const problems: string[] = [];
   for (const [k, v] of Object.entries(recorded.digests)) {
     if (live.digests[k] !== v) problems.push(`input ${k} moved since the report was recorded`);
+  }
+  // Named separately from the data inputs, and by cause. "An input moved" is
+  // one finding; "the coordinates moved" and "what an erasure does moved" are
+  // two, and they call for different re-verification before re-recording.
+  const recordedAuthority = recorded.authority as unknown as Record<string, string | number>;
+  const liveAuthority = live.authority as unknown as Record<string, string | number>;
+  for (const k of Object.keys(liveAuthority).sort()) {
+    if (recordedAuthority?.[k] !== liveAuthority[k]) {
+      problems.push(`authority ${k} moved since the report was recorded: ${String(recordedAuthority?.[k])} -> ${String(liveAuthority[k])}`);
+    }
+  }
+  if (recorded.footprintBasisDigest !== live.footprintBasisDigest) {
+    // A footprint claim is population-sensitive and a witness is not, so this
+    // rejects the classifications without touching witness standing.
+    problems.push("the specimen population moved: every footprint classification bound to footprintBasisDigest is rejected");
   }
   const ids = new Set([...Object.keys(recorded.footprints), ...Object.keys(live.footprints)]);
   for (const id of [...ids].sort()) {

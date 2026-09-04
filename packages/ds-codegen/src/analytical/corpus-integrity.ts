@@ -729,12 +729,23 @@ export function loadLedgerInput(
     validateFixture: loadFixtureValidator(contractsDir),
     bindings: JSON.parse(read("analytical-fixtures/bindings.json")) as Bindings,
     holdout: JSON.parse(read("analytical-fixtures/holdout.json")) as Holdout,
-    // Concatenated in the caller's order: the digest names the whole rule
-    // surface, so moving a rule between modules still moves it.
-    ruleSourceDigest: sha256(
-      (typeof ruleSourcePaths === "string" ? [ruleSourcePaths] : ruleSourcePaths)
-        .map((p) => fs.readFileSync(p, "utf-8"))
-        .join(""),
-    ),
+    ruleSourceDigest: ruleSurfaceDigest(ruleSourcePaths),
   };
+}
+
+/**
+ * The digest of the whole rule surface.
+ *
+ * Concatenated in the caller's order, so moving a rule between modules still
+ * moves it. Exported because the freeze and the footprint report both have to
+ * record which RULES their verdicts were taken under, and a second reading of
+ * "what the rule surface hashes to" would be free to disagree with the
+ * holdout's.
+ */
+export function ruleSurfaceDigest(ruleSourcePaths: string | readonly string[]): string {
+  return sha256(
+    (typeof ruleSourcePaths === "string" ? [ruleSourcePaths] : ruleSourcePaths)
+      .map((p) => fs.readFileSync(p, "utf-8"))
+      .join(""),
+  );
 }

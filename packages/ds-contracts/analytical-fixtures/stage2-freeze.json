@@ -1,11 +1,14 @@
 {
   "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
   "digests": {
-    "fixture.schema.json": "b1faba61e6b2048c05d4e6ee782c305c40cea5429da065f8af02c446249e0a88",
-    "fixtures.jsonl": "4e23b40739798c0a4bc278e841965ff95ef08bc78821be1b58b9baba296736ba",
-    "census.ts": "9c57a2c5f184a774a08cfdc3367de5c13452c28155d65d405bfc91150585b6ea",
-    "quotient.ts": "cf16c2cc48f9537be7d6ee6194546720225ea7f60cd93bbb2b22e792440119e3",
-    "structure.ts": "d44a1cab0621d0981397cdc6c18a899d0b72c19b5dea26fb9f8cb1c994075db5"
+    "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766"
+  },
+  "authority": {
+    "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
+    "erasureAuthorityDigest": "e2952b14e4f5554b2c8c56327d05871c41c8542fa6e766aa09813a384696c554",
+    "witnessAuthorityDigest": "0a5b5885c279efb204348634e5057315f4c7b7657a879e2f6ebdfa9b509c22e0",
+    "quotientSchemaVersion": 1,
+    "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -232,35 +235,35 @@
   "erasure": {
     "relation.grain": {
       "reach": 84,
-      "digest": "cbb3d891420d21a589b639f061b9450d4b920dfb9c5159b3203515d03932b12b"
+      "digest": "63a88833674a6306203141eb2e48ad04cadc58ce7ef6f3974d01ea688118c488"
     },
     "field.transformation": {
       "reach": 84,
-      "digest": "1c0023cc9324fa1d526b4704a633327a8d01ecba3a4c433a22a12a3ba3948ae0"
+      "digest": "fbdaf67bdfd74fe1f9300fdedab1cb342a792a514af5be1f752c73bd6fc2f6ac"
     },
     "field.transformation:nominal~ordinal": {
-      "reach": 9,
-      "digest": "61148a4baacc3d3ec982ff3aae80794ec1e440cdbb5f6d94e0415c144dfbbf60"
+      "reach": 83,
+      "digest": "9974dc0f28e2cc8392f385ca376bc07c462f85b7ccbd6310e6ca34a63450ba96"
     },
     "field.transformation:nominal~interval": {
-      "reach": 18,
-      "digest": "98a2a1bc54d9e02d469971c2fccde91b2fa46ab0160674c5795803584135e52c"
+      "reach": 83,
+      "digest": "124f1bcd63f4a1d840c1c4a4d9e4638db3b12fc857ef7789623a763e7f7dcbe3"
     },
     "field.transformation:nominal~ratio": {
-      "reach": 71,
-      "digest": "50e834c7af566f2953dd0d1284e7a600ed5d40820fd03af3855c8e867a89364f"
+      "reach": 84,
+      "digest": "a25df87b298a5886f010a134ef724bc839eadd0561db602c5f7e83384194c820"
     },
     "field.transformation:ordinal~interval": {
-      "reach": 18,
-      "digest": "58c36f3ce372fe80c93381de47551ed9122215ec695b01a4ac59f546364d0e91"
+      "reach": 26,
+      "digest": "c724fcbc4479be03f938f59e318f42b7c7b18f8f308d4fbd36bf16735924b38e"
     },
     "field.transformation:ordinal~ratio": {
-      "reach": 71,
-      "digest": "4bcff88fe9470121e575edd1d9fa3ea7b3d2651aafa4d1f91b2ffe5240dbfc25"
+      "reach": 76,
+      "digest": "65647942a30765d950a814726b6c7ed2829d355431dc492d08ceea8c1497786f"
     },
     "field.transformation:interval~ratio": {
-      "reach": 71,
-      "digest": "9db338763b9a90d1f755e5c3e7b1d633264a1a8dd88183e51d69e93582b597b1"
+      "reach": 76,
+      "digest": "f83f4cd5244773ea0545f1e370c5be8cbaaaeb82a2bef80762e30b6c260018e9"
     },
     "field.cyclic": {
       "reach": 3,
@@ -296,19 +299,19 @@
     },
     "field.temporality.kind": {
       "reach": 18,
-      "digest": "fcbea7a4071cce05e58bae5b1a2adae7110718f19596b436cc867a7e158041db"
+      "digest": "d675a98e56279c08f37aea278dc56cc54e899aac5b8d43beaf4262f959afc6d2"
     },
     "field.temporality.kind:instant~interval": {
-      "reach": 6,
-      "digest": "f6d2b687eec547eb64a2d056bd822a7a502ea48b84e909352a9825ab680a7bee"
+      "reach": 18,
+      "digest": "743f6e3d4287f2cacc810e32fdc177172479b6af0c39eb7d07b45c49516056d1"
     },
     "field.temporality.grain": {
       "reach": 2,
       "digest": "14199285178f746331617936c2edc31e786005cf8687e6967aed06142a4c87ca"
     },
     "field.temporality.grain:day~month": {
-      "reach": 1,
-      "digest": "67d2460fd924a448f352655d005ac685475ef8668db8fb1287636d006f1c285b"
+      "reach": 2,
+      "digest": "2fba70361d8a231381ed71ccb1f9baacbf371565f8491cad627baac8aaacd8b8"
     },
     "field.temporality.grain:day~<absent>": {
       "reach": 2,
@@ -340,31 +343,31 @@
     },
     "field.additivity.kind": {
       "reach": 8,
-      "digest": "e0e9ee0ce3a826cc026f601e28655deebac0367771fc2ae07207ce2348ed0502"
+      "digest": "f03d687bf585e53f8e0a1aa9c083d13c725a0890fe7bac02f1ae0427419b1e2f"
     },
     "field.additivity.kind:additive~semi-additive": {
-      "reach": 3,
-      "digest": "93fb8b56eff6f1c63db392d8f36c50872fe3fa833db3ea58b8d32180c16435ba"
+      "reach": 4,
+      "digest": "6caa70dcae62f456b0801db7060a917b9221061062a9a695d02c9bd28dfbb4d6"
     },
     "field.additivity.kind:additive~non-additive": {
-      "reach": 1,
-      "digest": "da2d4fd146e5d5d8ad9f7c88090cde62a9a945363d5343fda477d69448472860"
+      "reach": 2,
+      "digest": "c6c59d1d36a667715708a0eca0f9c0de6832465c79ae11cce048591b577df4a0"
     },
     "field.additivity.kind:additive~ratio-measure": {
-      "reach": 3,
-      "digest": "3bd57b66919c4f6f5940fc7af5ee91f87cf9cb5d04d05ce9f6f255996284f68c"
+      "reach": 4,
+      "digest": "7374dba2120f088a35cc7cb95d1e70457f7277488f807a36f1ddf8e0b0c41035"
     },
     "field.additivity.kind:semi-additive~non-additive": {
-      "reach": 1,
-      "digest": "b3d5f7b214426a21f6582c2a21c5d7171071ab64f8ce2c43744aff9e93cfc2c6"
+      "reach": 4,
+      "digest": "f7781b311e8908325627bcef369c3a79a7c3df4400b4b7d6dfd50fc3a770f59d"
     },
     "field.additivity.kind:semi-additive~ratio-measure": {
-      "reach": 3,
-      "digest": "07c685d99c9e67d18816f47c4511b5f3137def51a635d1d2cb8cbec0d67917d5"
+      "reach": 6,
+      "digest": "6ba995c1320a85ce04b9a0e17d7fa79300f9a5832780701cc285f067d59c3282"
     },
     "field.additivity.kind:non-additive~ratio-measure": {
-      "reach": 3,
-      "digest": "6c1928e87fc3810181dd67121cc87aed633b03fa7ed679d060145fd5f8d4c7d1"
+      "reach": 4,
+      "digest": "4b5e0e102f57cef4760ffab4206a5e00b2ce4127859eea4181cc1d692387843e"
     },
     "field.additivity.semi-additive.nonAdditiveAlong": {
       "reach": 0,
@@ -396,91 +399,91 @@
     },
     "relation.derivedBy.kind": {
       "reach": 21,
-      "digest": "a654ad03687081b6da801ba6798374a984a757dba16b47658ad91bbb56a16783"
+      "digest": "80fcb36603b778516657a743c4c8dd248e9c1107d3128f83d3bfa7515666c2d9"
     },
     "relation.derivedBy.kind:aggregate-to-grain~join": {
-      "reach": 3,
-      "digest": "fa2706730e7fb50ab1dac8bfe1690d49b81a142494f4f045d96c67beb33182aa"
+      "reach": 7,
+      "digest": "b767f0bb893096fb485a8a302efa57f544895e922a19278b7c1ac4308ab60bf8"
     },
     "relation.derivedBy.kind:aggregate-to-grain~nest": {
-      "reach": 4,
-      "digest": "1dd8c593f7b61a6565c46e976a10c0ea738373fcf6a7d4864b1963cfcb5de65a"
+      "reach": 6,
+      "digest": "c97d89449a7b6ef8eb1f5bbed737c6bb7b29cb9e66c3db05d5a078d5805252ab"
     },
     "relation.derivedBy.kind:aggregate-to-grain~bin": {
-      "reach": 2,
-      "digest": "a85a378c47cf2705fa9c15abe3258daf1c6e0f97b2766b240f695461fa57e268"
+      "reach": 6,
+      "digest": "1798cc9d746ba3dcf26d04d966858bc2cd9e5e5e0dc0e4cde7edb9aec541884c"
     },
     "relation.derivedBy.kind:aggregate-to-grain~normalize": {
-      "reach": 2,
-      "digest": "cd7da3aedc0a5bc3db5410c743279f3a5eda315be71bd6c203f2bbb424081d8f"
+      "reach": 6,
+      "digest": "726459d6f727c2d327df621e1559cc0c9c2a118d35c6b0b0f8cf560b21fe5fc1"
     },
     "relation.derivedBy.kind:aggregate-to-grain~project": {
-      "reach": 4,
-      "digest": "3886b58f16ca4c4990943fc39cd7b3bc364d34916cdf523a643962db9a3b97e5"
+      "reach": 8,
+      "digest": "96418335fcce9bd6279de9f03c66c86df30b8a5cdef4823322dfeda3b3bf15b6"
     },
     "relation.derivedBy.kind:aggregate-to-grain~graph": {
-      "reach": 6,
-      "digest": "d1a48a57e8fbe2bad1fdf8ab7b99081f05e3b7ffd14ac187fa843f73e65751f5"
+      "reach": 10,
+      "digest": "335a96ec75164df9abef626d237f0339c65cfd3519f36044e757c3e87213c4c6"
     },
     "relation.derivedBy.kind:join~nest": {
-      "reach": 4,
-      "digest": "5d3f5cbc2842c4fec1efb970b8a86f78900edc7d41f0256b8afd291870cf79e7"
+      "reach": 7,
+      "digest": "b0f77d4659e290da8d029605d9d8ff0619bfb78f1d04c74c4c45b9ed8d141a96"
     },
     "relation.derivedBy.kind:join~bin": {
-      "reach": 2,
-      "digest": "1a835035149800eed626ef33104d73b3fb38f553dd0495566a22d8f47c7705ac"
+      "reach": 5,
+      "digest": "1145704b7489bbe967bc00f41688ab9525b5cc6401e5950e731a2d153190c624"
     },
     "relation.derivedBy.kind:join~normalize": {
-      "reach": 2,
-      "digest": "df2ae6161e0798b7bd479b4f6903e6f7d5a79ecf43469589da92fbfe284a07ac"
+      "reach": 5,
+      "digest": "45a66d8f5058e6d266d456eb4d71440fe6ea9565f931a4be4a4338c775666e85"
     },
     "relation.derivedBy.kind:join~project": {
-      "reach": 4,
-      "digest": "cd510e89881d9415ebbd1cd5cbb7dc1c993a3b903561d68fe06dd042994a1e5a"
+      "reach": 7,
+      "digest": "2f4a3a3fe03c49eee9953f6150e663867ee1896f5dc8e6413dc68feef9159203"
     },
     "relation.derivedBy.kind:join~graph": {
-      "reach": 6,
-      "digest": "0667480703a461524d354753c3cafcad6debdb224b4a0e571fd1769a7c7ef234"
+      "reach": 9,
+      "digest": "9a8e8fd279a908794e1b2e5340e41bf9f7e5112bd841a8f88c91747c47880ed2"
     },
     "relation.derivedBy.kind:nest~bin": {
-      "reach": 2,
-      "digest": "ebbdb0bdbd1aabd22a473ccf925a0e405be9fa60054b7b6860a156990df92f8a"
+      "reach": 6,
+      "digest": "9dc55f0373a97955d86d043bbfabc047ca66e805ca771ebe69164bcae11f27d9"
     },
     "relation.derivedBy.kind:nest~normalize": {
-      "reach": 2,
-      "digest": "16d83ff91480add255bb8609986aa4304dbf9607c56b34e96d9a6ce7d731b72d"
+      "reach": 6,
+      "digest": "aa30cdd178cd509040be668352a38486ff83babbbf3ce0712552be8af6dc763e"
     },
     "relation.derivedBy.kind:nest~project": {
-      "reach": 4,
-      "digest": "25214459ccde530571b124c6cadd2caa7fb303ea265b63d20bd7a8aef5643b2a"
+      "reach": 6,
+      "digest": "deb6e65bad0a0f766d84108605ee083e8416f49327d206cd388cd8759d3817fe"
     },
     "relation.derivedBy.kind:nest~graph": {
-      "reach": 6,
-      "digest": "0d8ee9b972001227232d18794c6255bf0f3ec3b103a83fa1a08f04ad5c07ea8b"
+      "reach": 10,
+      "digest": "4bf7fc55528a0ab7f1dc58df1c4f0462926eb22088fd08100db8103c1d78df36"
     },
     "relation.derivedBy.kind:bin~normalize": {
-      "reach": 2,
-      "digest": "00d1d349ea57359b0268fa47617210441571a60bf2164d972245c51c41f656bc"
+      "reach": 4,
+      "digest": "f030d61478752f7b7dc8f56ed459b0a2b615378e625cd40b9f387bee266317aa"
     },
     "relation.derivedBy.kind:bin~project": {
-      "reach": 4,
-      "digest": "3e4290dfda66e17d6984ed2f7a2509a5ff0b7966f7080f5f146e0afa26ee8540"
+      "reach": 6,
+      "digest": "6cd63c95b4c61b568fc2ca82e8ca4668e2dd55ea10f0952b1a48e7c8a2d56f8e"
     },
     "relation.derivedBy.kind:bin~graph": {
-      "reach": 6,
-      "digest": "26ea758aec7a248767c7e2b0589e136ae46b95c21696c7e96b849de10ef08dd1"
+      "reach": 8,
+      "digest": "92633decd22e3a4965b575469855980d92c0d1652389e6081fd2015f7a4e12c1"
     },
     "relation.derivedBy.kind:normalize~project": {
-      "reach": 4,
-      "digest": "b78c77ff04b70fdef201fdd8d28bc5785b370863ae4476db39353267125d3b23"
+      "reach": 6,
+      "digest": "a248b36b955cdc0194b1140d268fe1f039f19d088444243fd56a341e91eda416"
     },
     "relation.derivedBy.kind:normalize~graph": {
-      "reach": 6,
-      "digest": "e7ec602da82dc341dd9b137f09f890105b55db250b4d2f4f2fd1dd943964bfaa"
+      "reach": 8,
+      "digest": "c7cd532cd813858a5be1ff158c9a4aba85ae032e970cde18aedc8bdc1c122f50"
     },
     "relation.derivedBy.kind:project~graph": {
-      "reach": 6,
-      "digest": "d06ffd15092b24ea5fc80296388be47a0661304294e3bf164b9a6101e40f09bd"
+      "reach": 10,
+      "digest": "a70f24045c04b140ae6493e35ad1ffa377ecb8e93ead312dc7a5f2a9c2915000"
     },
     "relation.derivedBy.aggregate-to-grain.from": {
       "reach": 0,
@@ -524,11 +527,11 @@
     },
     "relation.derivedBy.join.cardinality": {
       "reach": 3,
-      "digest": "9b4e67b3b44a7cfffb691c11cbdc9f829c6074cde224aaa1455ccd0ea4e4dcf0"
+      "digest": "e8c631a810a234a623f0b0acb5dfd6d4b04dc57ef2e42f1ec5f5c8635bcd5840"
     },
     "relation.derivedBy.join.cardinality:one-to-one~one-to-many": {
       "reach": 3,
-      "digest": "4190a815663a741d376350a4eeb88648d32ada3b6dad9c9aa56f04da927e43af"
+      "digest": "2b7cafdeb7f7534fd96cf8033321d6725abb370e15b2b23679ed0433a013c63d"
     },
     "relation.derivedBy.join.cardinality:one-to-one~many-to-one": {
       "reach": 0,
@@ -539,12 +542,12 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.join.cardinality:one-to-many~many-to-one": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "reach": 3,
+      "digest": "67cb1c304093818b6e2504632d5d273c1e0b86a27662aa8834f7895d4612aa03"
     },
     "relation.derivedBy.join.cardinality:one-to-many~many-to-many": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "reach": 3,
+      "digest": "3bedf58892bb0e0de6687d6abfd9baf2c838b895009cecd52027abb10cafdf1d"
     },
     "relation.derivedBy.join.cardinality:many-to-one~many-to-many": {
       "reach": 0,
@@ -563,8 +566,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.nest.levels#arity": {
-      "reach": 4,
-      "digest": "93f315f49c5c83b7f4803f87b55ee2059167768d3a2df13ffa2528fac3e6e3df"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.nest.levels#order": {
       "reach": 0,
@@ -595,8 +598,8 @@
       "digest": "d335042cf2739e92ccef5508924ad5d3e07b9ec01c0e44906489dde5fc18da1a"
     },
     "relation.derivedBy.bin.closure:left-closed~right-closed": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "reach": 1,
+      "digest": "45aa07a2285e561e619266ac0381bfb2792ca8de8fe6e429122c9af0551d079d"
     },
     "relation.derivedBy.bin.closure:left-closed~<absent>": {
       "reach": 1,
@@ -699,8 +702,8 @@
       "digest": "7f5e8e48f4f026ed22d241fd735e604f908d57cfdc43eb2a49823cec145db4fe"
     },
     "structure.peers[]#arity": {
-      "reach": 4,
-      "digest": "3d74c63c3970164382446e106a93b5e8099a9157c6c8df657d9d298c365a7a0b"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "structure.peers[]#order": {
       "reach": 0,
@@ -712,11 +715,11 @@
     },
     "assertion.kind": {
       "reach": 84,
-      "digest": "7beaa626d0f3309d139b583ee304312cc7814c084a5d3d4b95044830727e9c32"
+      "digest": "e3e3ea52fcb5eb765d7c0c7dc5f6eaa6891cd3adae4edd1a7440622e4a60ee91"
     },
     "assertion.kind:aggregate~ratio-comparison": {
-      "reach": 2,
-      "digest": "a56a18056598a75dc844d4d4467fc98e73d6efe3bb93d5556930f1002a5d8119"
+      "reach": 84,
+      "digest": "1bbae1c0041cabe7ff0fa9a253098b961d0c843aa7ecd26081ddb5281990c4b1"
     },
     "assertion.aggregate.relation": {
       "reach": 0,
@@ -736,31 +739,31 @@
     },
     "assertion.aggregate.op": {
       "reach": 82,
-      "digest": "df65313757120deb8d7738f4438c888f791aaa055b526d344134a7f471a1b150"
+      "digest": "eb31faae55095af6fc4bc2a68e292082c15ec29445f03a75a5034ab406f909d6"
     },
     "assertion.aggregate.op:sum~mean": {
-      "reach": 20,
-      "digest": "95cfe636036fb8a2e8a5d7dbd24d04cefc4604db95ecb8b51158ebd22421014e"
+      "reach": 54,
+      "digest": "cbbf0358836bcb2832db6eb4a0127bc37e27d09ac955387d5b77be46eea1e84f"
     },
     "assertion.aggregate.op:sum~count": {
-      "reach": 7,
-      "digest": "c40f52bca0af376e023236405031d0cda98abeb974c9e9010e265d93a9f92259"
+      "reach": 44,
+      "digest": "5b2efe22208c5972f96142f8c23756310c473f15ca09704e36839901da0b1250"
     },
     "assertion.aggregate.op:sum~min": {
-      "reach": 26,
-      "digest": "6213ef8e207cc1479172398e1bbb1b10dd09619fd10252a5335a54d028d209da"
+      "reach": 63,
+      "digest": "691fa7aeca5e27ace75dbbad2041903bd991d2a49fd2d15b0bd9bcb6120875df"
     },
     "assertion.aggregate.op:mean~count": {
-      "reach": 7,
-      "digest": "3d06a84d1d1012ceb487eb4eb87e5e4f3f07f0a7ee036bb2b224dc29325ee22a"
+      "reach": 25,
+      "digest": "2fdeeaefaecad30656661eca3b23b076542b543d905eed9464d99f10cedc9361"
     },
     "assertion.aggregate.op:mean~min": {
-      "reach": 26,
-      "digest": "4b287f79ae20224b5022bb64554b43c3b3f13a845c1202b4c68609cf7641eaaa"
+      "reach": 44,
+      "digest": "79afe8d48ae7483dd8e924c28f12bb4c8619091fecf8e910e64794db72c2fa0d"
     },
     "assertion.aggregate.op:count~min": {
-      "reach": 26,
-      "digest": "6e50132de5ec12a6a3d1f1d7b0cedf42c72b79bf094013955b54a4ab017f513d"
+      "reach": 33,
+      "digest": "f89bb8c51cf5d22375f2e5fd0227120f82510d6d7556c877a0050d9b295cccb7"
     },
     "assertion.aggregate.along": {
       "reach": 0,
@@ -787,16 +790,16 @@
       "digest": "96a893ab004b1e1bc4a8bdc4660f1963e52551c15be85732bb8bbc68870aecfd"
     },
     "assertion.aggregate.nulls:exclude~as-zero": {
-      "reach": 2,
-      "digest": "7e0dd4f1a4ce8c38616618369c5f8108a026d4841eed7faded75e6d83e9ac634"
+      "reach": 6,
+      "digest": "f5566c7a546018bbead5da9b1252f1b39abdfdd3632aebea5e6224e0f0274616"
     },
     "assertion.aggregate.nulls:exclude~as-observed": {
-      "reach": 1,
-      "digest": "c280632423fdff0013f55587ee3739a6df801a30ac7c0b6bd039c6b8f37f1293"
+      "reach": 5,
+      "digest": "b3d06f490104c423d58f121cc9b7fc93cfec96cb170080efe0ba287f6b65e221"
     },
     "assertion.aggregate.nulls:as-zero~as-observed": {
-      "reach": 1,
-      "digest": "5ba59143e38ee1f3701972e4e2c5d569bdeb918f7105445359b219a4da0ff972"
+      "reach": 3,
+      "digest": "04cb2269ff6ab15edb40390df73741130cdb6ddc0d0918d0ddae759ce8bac841"
     },
     "assertion.aggregate.nulls:exclude~<absent>": {
       "reach": 4,
@@ -847,16 +850,16 @@
       "digest": "6c883bbb26fe1da6259c1b8bf33098db5a6854751388991bd01aa49d6b2b6d80"
     },
     "observation.null:absent~censored": {
-      "reach": 4,
-      "digest": "cd962a465e0220542014f253548b7164e23b975cdcddf086c3bbdeeaedd5f3a9"
+      "reach": 8,
+      "digest": "6e3923a7a50d499624c8474fb548f0dcafd01f1efe76bccca631f69edb37f83d"
     },
     "observation.null:absent~suppressed": {
-      "reach": 2,
-      "digest": "774281f7826a43f50364a10255a093de4db8c03c7ab413c5067615784cbdc05d"
+      "reach": 6,
+      "digest": "2ab2908e4b210a5b991cd32f5ed4debf4c7a99cc26f09a3f339f37ed3f882d50"
     },
     "observation.null:censored~suppressed": {
-      "reach": 2,
-      "digest": "74b11e0b410c97c616103476a6544cfd0a4f0571f5b44e4fa311df3609e89cfc"
+      "reach": 6,
+      "digest": "d5cd5533a78606bb640c61aa0d5db3e35208704abbcd8630c4c72bf6ce080e2e"
     },
     "observation.null:absent~<absent>": {
       "reach": 4,
@@ -891,5 +894,25 @@
       "digest": "8480529aa7d9acd895107f26caee42523671fa63165896e875ae0a68161fca91"
     }
   },
-  "adjudicated": {}
+  "adjudicated": {},
+  "supersedes": {
+    "erasureAuthorityDigest": null,
+    "divergences": [
+      {
+        "operation": "forget-reference-arity",
+        "coordinates": 2,
+        "effect": "Arity truncates to the declaration's own minItems rather than to one element. The short side of the old pair was schema-invalid wherever the floor exceeded one. Corpus reach falls to zero because every corpus occurrence of these two lists is already AT its floor — a fact about the corpus, not about the coordinate, and the synthesized separating pairs do exercise it."
+      },
+      {
+        "operation": "forget-value",
+        "coordinates": 8,
+        "effect": "A required leaf becomes a typed hole instead of being deleted. Reach is unchanged — the same fixtures are touched — and the erased representation differs at every one, because the slot now exists and says `forgotten` where it used to be absent. Deleting it produced images the representation cannot express, and identified `forgotten` with `absent`, which are different facts."
+      },
+      {
+        "operation": "merge-enum-members",
+        "coordinates": 52,
+        "effect": "A merge now writes a member CLASS at every occurrence of either member, and saturates: merging a~b and b~c leaves all three in one class. The old rewrite of `from` to `into` touched only the fixtures carrying `from`, which is why reach was small and why two merges of overlapping pairs did not compose. Reach grows to every fixture carrying any member of the saturated class."
+      }
+    ]
+  }
 }
