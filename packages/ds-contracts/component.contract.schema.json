@@ -719,11 +719,22 @@
     },
     "propMember": {
       "type": "object",
-      "description": "A single prop exposed by the component.",
+      "description": "A single prop exposed by the component. Declares its type as EITHER a legacy TS-string `type` OR a structured framework-neutral `propType` (exactly one) — the same XOR as designedPropMember/constrainedPropMember, so legacy-bucket (styled/hook) members can migrate to the structured grammar in place (CODEGEN-PROP-TYPE-IR-LEGACY-BUCKET-REFS-01).",
       "required": [
         "name",
-        "type",
         "description"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "required": [
+            "propType"
+          ]
+        }
       ],
       "additionalProperties": false,
       "properties": {
@@ -734,6 +745,9 @@
         "type": {
           "type": "string",
           "description": "TypeScript type expression (e.g. \"string\", \"ReactElement\", \"TooltipPlacement\")."
+        },
+        "propType": {
+          "$ref": "#/$defs/propType"
         },
         "required": {
           "type": "boolean",

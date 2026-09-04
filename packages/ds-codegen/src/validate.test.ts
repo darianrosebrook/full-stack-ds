@@ -246,3 +246,89 @@ describe("designed-member array defaults (Batch C enabler)", () => {
     expect(result.ok).toBe(true);
   });
 });
+
+// Contract: CODEGEN-PROP-TYPE-IR-LEGACY-BUCKET-REFS-01, contract
+// `proptypeir-legacy-bucket-xor`. Legacy-bucket (styled/hook) members declare
+// their type as EITHER a legacy TS-string `type` OR a structured `propType` —
+// the same XOR designedPropMember/constrainedPropMember already enforce.
+describe("legacy-bucket member type/propType XOR (LEGACY-BUCKET-REFS-01)", () => {
+  it("accepts a styled member authoring a structured propType (ref to an object-literal alias)", () => {
+    const result = validator.validateComponent({
+      name: "ProbeStyled",
+      layer: "primitive",
+      props: {
+        styled: {
+          members: [
+            {
+              name: "author",
+              propType: { kind: "ref", to: "ProbeAuthor" },
+              description: "Author metadata.",
+            },
+          ],
+        },
+      },
+      types: { ProbeAuthor: { kind: "alias", alias: "{ name: string }" } },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("accepts a hook member authoring a structured propType (array-of-ref)", () => {
+    const result = validator.validateComponent({
+      name: "ProbeHook",
+      layer: "primitive",
+      props: {
+        hook: {
+          members: [
+            {
+              name: "steps",
+              propType: { kind: "array", items: { kind: "ref", to: "ProbeStep" } },
+              description: "Step definitions.",
+            },
+          ],
+        },
+      },
+      types: { ProbeStep: { kind: "alias", alias: "{ anchor: string }" } },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects a styled member with BOTH type and propType", () => {
+    const result = validator.validateComponent({
+      name: "ProbeBoth",
+      layer: "primitive",
+      props: {
+        styled: {
+          members: [
+            {
+              name: "author",
+              type: "ProbeAuthor",
+              propType: { kind: "ref", to: "ProbeAuthor" },
+              description: "Author metadata.",
+            },
+          ],
+        },
+      },
+      types: { ProbeAuthor: { kind: "alias", alias: "{ name: string }" } },
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects a styled member with NEITHER type nor propType", () => {
+    const result = validator.validateComponent({
+      name: "ProbeNeither",
+      layer: "primitive",
+      props: {
+        styled: {
+          members: [
+            {
+              name: "author",
+              description: "Author metadata.",
+            },
+          ],
+        },
+      },
+      types: { ProbeAuthor: { kind: "alias", alias: "{ name: string }" } },
+    });
+    expect(result.ok).toBe(false);
+  });
+});

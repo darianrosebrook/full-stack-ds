@@ -208,7 +208,7 @@
       "members": [
         {
           "name": "steps",
-          "type": "WalkthroughStepSpec[]",
+          "propType": { "kind": "array", "items": { "kind": "ref", "to": "WalkthroughStepSpec" } },
           "description": "Array of step definitions, each specifying an anchor target and content.",
           "default": [
             { "anchor": "#step-1", "title": "Welcome to the tour" },

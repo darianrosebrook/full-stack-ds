@@ -138,7 +138,7 @@
         },
         {
           "name": "author",
-          "type": "PostcardAuthor",
+          "propType": { "kind": "ref", "to": "PostcardAuthor" },
           "description": "Author metadata: name, handle, and avatar URL.",
           "required": true
         },
@@ -150,13 +150,13 @@
         },
         {
           "name": "stats",
-          "type": "PostcardStats",
+          "propType": { "kind": "ref", "to": "PostcardStats" },
           "description": "Engagement statistics: likes, replies, reposts.",
           "required": true
         },
         {
           "name": "embed",
-          "type": "PostcardEmbed",
+          "propType": { "kind": "ref", "to": "PostcardEmbed" },
           "description": "Optional media embed with type, URL, and aspect ratio."
         }
       ]

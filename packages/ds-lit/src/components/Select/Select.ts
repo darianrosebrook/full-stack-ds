@@ -221,7 +221,7 @@ export class SelectElement extends LitElement {
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: String }) triggerLabel?: string = "Select an option";
   @property({ type: String }) size?: SelectSize = "md";
-  @property({ attribute: false }) filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  @property({ attribute: false }) filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   @property({ type: Boolean }) searchable?: boolean;
   @property({ type: Boolean }) empty?: boolean;
   @property() position?: string;

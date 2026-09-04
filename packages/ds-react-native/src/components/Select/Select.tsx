@@ -24,7 +24,7 @@ export interface SelectProps {
   disabled?: boolean;
   triggerLabel?: string;
   size?: SelectSize;
-  filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
   position?: "bottom" | "top" | "auto";
