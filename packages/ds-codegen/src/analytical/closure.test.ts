@@ -21,6 +21,7 @@ import {
   checkClosure,
   checkClosures,
   closureCycles,
+  closureGate,
   compatibleControls,
   deriveNormalization,
   footprintOf,
@@ -30,6 +31,7 @@ import {
   parseCarrier,
   type BranchNormalization,
   type SemanticErasureClosure,
+  type Standing,
   type StandingIndex,
 } from "./closure.js";
 import { checkWitness, classifyWitness, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
@@ -55,7 +57,7 @@ const AGG_PROJECT_SIDES = {
 };
 
 const closureOf = (over: Partial<SemanticErasureClosure> & { carrier: string }): SemanticErasureClosure => {
-  const d = deriveNormalization(over.carrier, census, signatures);
+  const d = deriveNormalization(over.carrier, signatures);
   return {
     normalization: "error" in d ? [] : d.normalization,
     control: { coordinate: CONTROL },
@@ -66,13 +68,13 @@ const closureOf = (over: Partial<SemanticErasureClosure> & { carrier: string }):
   };
 };
 
-/** A branch-field operation with its footprint taken from the live census. */
+/** A branch-field operation with its footprint taken from the live locators. */
 const op = (holder: string, branch: string, field: string): BranchNormalization => ({
   holder,
   branch,
   field,
   operation: "forget-branch-field",
-  footprint: footprintOf(`${holder}.${branch}.${field}`, census),
+  footprint: footprintOf(`${holder}.${branch}.${field}`),
 });
 
 const DERIVATION = (c: { carrier: string }) => c.carrier.startsWith("relation.derivedBy.kind:");
@@ -95,7 +97,7 @@ describe("the committed closure ledger", () => {
     expect(ledger.closures.map((c) => c.carrier)).not.toContain(CONTROL);
     // The control is the one pair whose branches require the same payload, so
     // it needs no normalization and a single-coordinate witness already holds.
-    const d = deriveNormalization(CONTROL, census, signatures);
+    const d = deriveNormalization(CONTROL, signatures);
     expect("error" in d ? [] : d.normalization).toEqual([]);
     expect(primitiveRatified(loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok))).toContain(CONTROL);
   });
@@ -193,7 +195,7 @@ describe("the closure form agrees with the 2-set witnesses that already hold", (
     const classified = multi.map((w) => classifyWitness(w, census, oracle, single)).filter((k) => k.carrier !== undefined);
     expect(classified.map((k) => k.klass)).toEqual(["indeterminate"]);
     for (const k of classified) {
-      const d = deriveNormalization(k.carrier!, census, signatures);
+      const d = deriveNormalization(k.carrier!, signatures);
       expect("error" in d).toBe(false);
       if ("error" in d) continue;
       // The witness names one coordinate; the operation that implements the
@@ -229,7 +231,7 @@ describe("the closure form agrees with the 2-set witnesses that already hold", (
     // derivation pairs fail, and it is why they needed a new proof form rather
     // than a bespoke search.
     for (const carrier of ["field.additivity.kind:additive~semi-additive", "field.additivity.kind:semi-additive~ratio-measure"]) {
-      const d = deriveNormalization(carrier, census, signatures);
+      const d = deriveNormalization(carrier, signatures);
       expect("error" in d).toBe(false);
       if ("error" in d) continue;
       expect(d.minRawEdit).toBe(2);
@@ -274,7 +276,7 @@ describe("obligation 1 — a single semantic carrier", () => {
 
 describe("obligation 2 — the normalization set is derived, not chosen", () => {
   it("derives the symmetric difference of the two branch payload signatures", () => {
-    const d = deriveNormalization(AGG_PROJECT, census, signatures);
+    const d = deriveNormalization(AGG_PROJECT, signatures);
     expect("error" in d).toBe(false);
     if ("error" in d) return;
     expect(d.residue).toEqual({ "aggregate-to-grain": ["toGrain"], project: ["keep"] });
@@ -286,7 +288,7 @@ describe("obligation 2 — the normalization set is derived, not chosen", () => 
   it("the footprint is what the operation destroys, which is more than the edit count", () => {
     // minRawEdit counts EDITS; the footprint counts semantic coordinates. Two
     // edits, six coordinates: the topology of both references goes with them.
-    const d = deriveNormalization(AGG_PROJECT, census, signatures);
+    const d = deriveNormalization(AGG_PROJECT, signatures);
     if ("error" in d) throw new Error(d.error);
     expect(d.minRawEdit).toBe(3);
     expect(d.footprint).toEqual([
@@ -303,7 +305,7 @@ describe("obligation 2 — the normalization set is derived, not chosen", () => 
     // The largest gap the handle model hid: `join.cardinality` is a plain enum
     // leaf, and deleting it forgets all six cardinality distinctions, not a
     // bare leaf.
-    const d = deriveNormalization("relation.derivedBy.kind:join~project", census, signatures);
+    const d = deriveNormalization("relation.derivedBy.kind:join~project", signatures);
     if ("error" in d) throw new Error(d.error);
     const cardinality = d.footprint.filter((f) => f.startsWith("relation.derivedBy.join.cardinality"));
     expect(cardinality).toHaveLength(7);
@@ -597,5 +599,41 @@ describe("carrier parsing", () => {
   it("refuses an id that is not a discriminator member pair", () => {
     expect(parseCarrier("relation.derivedBy.project.keep#present")).toBeUndefined();
     expect(parseCarrier("field.additivity.kind")).toBeUndefined();
+  });
+});
+
+describe("the consistency check and the terminal gate are different questions", () => {
+  const r = checkClosures();
+
+  it("check passes: all twenty-two closures are internally consistent", () => {
+    expect(r.ok).toBe(true);
+    expect(r.problems).toEqual([]);
+    expect(r.checks.length).toBe(22);
+  });
+
+  it("gate FAILS, because consistency is not settlement", () => {
+    // The naming hazard this split exists for: every closure satisfies its
+    // obligations today and every one is `provisional`, so a single `--gate`
+    // reporting OK would read in CI as "the closures are settled". Nothing they
+    // carry may be spent, and the terminal command has to say so.
+    const g = closureGate(r);
+    expect(g.ok).toBe(false);
+    expect(g.message).toContain("22 of 22 carrier(s) still provisional");
+    expect(g.message).toContain("24 dependency coordinate(s) without a settled standing");
+  });
+
+  it("gate passes only when every carrier holds and every dependency is settled", () => {
+    const settled = {
+      ...r,
+      checks: r.checks.map((c) => ({ ...c, promotion: "holding" as const })),
+      dependencies: r.dependencies.map((d) => ({ ...d, standing: { state: "resolved", disposition: "witnessed" } as Standing })),
+      cycles: [],
+    };
+    expect(closureGate(settled).ok).toBe(true);
+    expect(closureGate({ ...settled, cycles: [["a", "b"]] }).ok).toBe(false);
+    expect(closureGate({ ...settled, ok: false, problems: ["x"] }).ok).toBe(false);
+    expect(closureGate({ ...settled, checks: settled.checks.map((c, i) => (i === 0 ? { ...c, promotion: "refuted" as const } : c)) }).ok).toBe(
+      false,
+    );
   });
 });

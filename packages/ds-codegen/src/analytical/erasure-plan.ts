@@ -331,6 +331,43 @@ export function orderPlans(plans: readonly ErasurePlan[]): ErasurePlan[] {
 }
 
 /**
+ * Does `outer`'s locator contain `inner`'s — structurally, on the step list?
+ *
+ * The step list, never the id string. An id is an encoding choice, and a
+ * containment computed from ids certifies that choice as semantics; it is also
+ * simply wrong here, because `field.whole` ends in `scalar-only` and is not a
+ * prefix of `field.whole.perRow` even though one id prefixes the other.
+ */
+export function containsSteps(outer: StructuralLocator, inner: StructuralLocator): boolean {
+  const a = outer.steps;
+  const b = inner.steps;
+  return a.length <= b.length && a.every((s, i) => JSON.stringify(s) === JSON.stringify(b[i]));
+}
+
+/** Operations that delete their slot unconditionally, so everything inside goes. */
+export const UNCONDITIONAL_DELETIONS: ReadonlySet<ForgetOperation["kind"]> = new Set([
+  "delete-slot",
+  "delete-holder",
+  "forget-branch-field",
+]);
+
+/**
+ * Every coordinate an UNCONDITIONAL DELETION makes unobservable.
+ *
+ * Exported here rather than in the audit so that a plan which is not a
+ * coordinate — a closure's `forget-branch-field` — computes its footprint the
+ * same way every coordinate plan does, from the same locator registry. The
+ * audit then falsifies the result against specimens; this function only claims.
+ */
+export function deletionFootprint(plan: ErasurePlan, plans: Iterable<ErasurePlan>): string[] {
+  if (!UNCONDITIONAL_DELETIONS.has(plan.operation.kind)) return [];
+  return [...plans]
+    .filter((q) => containsSteps(plan.locator, q.locator))
+    .map((q) => q.id)
+    .sort();
+}
+
+/**
  * A plan for a path that is NOT a coordinate.
  *
  * A closure's normalization is the case: `forget-branch-field` deletes a

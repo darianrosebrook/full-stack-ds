@@ -45,8 +45,8 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { loadBranchSignatures, loadCensus, loadLocators, type BranchSignatures, type Coordinate } from "./census.js";
-import { planAt, type ErasurePlan, type StructuralLocator } from "./erasure-plan.js";
+import { loadBranchSignatures, loadCensus, loadLocators, loadPlans, type BranchSignatures, type Coordinate } from "./census.js";
+import { deletionFootprint, planAt, type ErasurePlan, type StructuralLocator } from "./erasure-plan.js";
 import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
 import {
   checkWitness,
@@ -188,13 +188,19 @@ export const forgetBranchField = (
     field: n.field,
   });
 
-/** Live semantic coordinates at or below a path. References are listed for exhaustiveness and confer no standing. */
-export function footprintOf(path: string, census: Coordinate[]): string[] {
-  return census
-    .filter((c) => c.kind !== "reference")
-    .filter((c) => c.id === path || c.id.startsWith(`${path}#`) || c.id.startsWith(`${path}.`) || c.id.startsWith(`${path}:`))
-    .map((c) => c.id)
-    .sort();
+/**
+ * Every coordinate a branch-field deletion at `path` makes unobservable.
+ *
+ * Computed from the LOCATORS the census emits, not from string prefixes on
+ * coordinate ids. The two agree on every branch field in this schema, and the
+ * agreement is a fact about this schema rather than a licence: an id prefix is
+ * an encoding coincidence, and it is already wrong elsewhere — `field.whole`
+ * prefixes `field.whole.perRow` as a string while its locator, which ends in
+ * `scalar-only`, does not contain it. A footprint computed from ids would have
+ * had the leaf subsuming a coordinate it cannot reach.
+ */
+export function footprintOf(path: string, plans: Map<string, ErasurePlan> = loadPlans(), locators = loadLocators()): string[] {
+  return deletionFootprint(planAt(`forget(${path})`, path, locators, { kind: "delete-holder" }), plans.values());
 }
 
 export interface DerivedNormalization {
@@ -220,7 +226,6 @@ export interface DerivedNormalization {
  */
 export function deriveNormalization(
   carrier: string,
-  census: Coordinate[] = loadCensus(),
   signatures: Map<string, BranchSignatures> = loadBranchSignatures(),
 ): DerivedNormalization | { error: string } {
   const parsed = parseCarrier(carrier);
@@ -240,7 +245,7 @@ export function deriveNormalization(
   for (const [branch, fields] of Object.entries(residue)) {
     for (const field of fields) {
       const n = { holder: parsed.holder, branch, field, operation: "forget-branch-field" as const, footprint: [] as string[] };
-      normalization.push({ ...n, footprint: footprintOf(branchFieldPath(n), census) });
+      normalization.push({ ...n, footprint: footprintOf(branchFieldPath(n)) });
     }
   }
   normalization.sort((x, y) => branchFieldPath(x).localeCompare(branchFieldPath(y)));
@@ -269,7 +274,7 @@ export function compatibleControls(
   return census
     .filter((c) => c.kind === "member-pair" && c.leaf === parsed.leaf && c.id !== carrier)
     .filter((c) => {
-      const d = deriveNormalization(c.id, census, signatures);
+      const d = deriveNormalization(c.id, signatures);
       return !("error" in d) && d.normalization.length === 0;
     })
     .map((c) => c.id)
@@ -401,7 +406,7 @@ export function checkClosure(
   }
 
   // 2. MECHANICALLY DERIVED NORMALIZATION.
-  const derived = deriveNormalization(closure.carrier, census, signatures);
+  const derived = deriveNormalization(closure.carrier, signatures);
   if ("error" in derived) {
     problems.push(`${closure.carrier}: ${derived.error}`);
     return { carrier: closure.carrier, ok: false, problems, obligations, promotion: "refuted", standing: [] };
@@ -753,12 +758,49 @@ export function checkClosures(file = CLOSURES_FILE): ClosureGateResult {
   return { ok: problems.length === 0, problems, checks, cycles: closureCycles(ledger.closures), dependencies };
 }
 
+/**
+ * The TERMINAL condition, which `--check` deliberately does not test.
+ *
+ * `--check` asks whether the ledger is internally consistent: derived
+ * operations, footprints, obligations, and the recorded promotion all agree.
+ * Every one of the twenty-two closures satisfies that today while every one is
+ * `provisional`, so a command called `--gate` that reported OK on consistency
+ * alone would read, to anyone glancing at CI, as "the closures are settled".
+ * They are not settled; nothing they carry may be spent.
+ *
+ * So the two are separated and `--gate` fails until the experiment can close:
+ * no carrier still provisional, no dependency still unresolved, no cycle.
+ */
+export function closureGate(r: ClosureGateResult): { ok: boolean; message: string } {
+  const provisional = r.checks.filter((c) => c.promotion === "provisional").map((c) => c.carrier);
+  const refuted = r.checks.filter((c) => c.promotion === "refuted").map((c) => c.carrier);
+  const open = r.dependencies.filter((d) => d.standing.state !== "resolved").map((d) => d.coordinate);
+  const reasons = [
+    r.ok ? "" : `${r.problems.length} consistency problem(s) — see --check`,
+    refuted.length > 0 ? `${refuted.length} refuted carrier(s): ${refuted.join(", ")}` : "",
+    provisional.length > 0 ? `${provisional.length} of ${r.checks.length} carrier(s) still provisional` : "",
+    open.length > 0 ? `${open.length} dependency coordinate(s) without a settled standing` : "",
+    r.cycles.length > 0 ? `${r.cycles.length} dependency cycle(s)` : "",
+  ].filter(Boolean);
+  return {
+    ok: reasons.length === 0,
+    message:
+      reasons.length === 0
+        ? `closures --gate: OK — all ${r.checks.length} carrier(s) holding with settled dependencies`
+        : `closures --gate: REL-VIEW-ALGEBRA-01 cannot close on these closures:\n  ${reasons.join("\n  ")}`,
+  };
+}
+
 const invokedDirectly = process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]));
 if (invokedDirectly) {
   const r = checkClosures();
-  if (process.argv.includes("--gate")) {
-    console.log(r.ok ? `closures --gate: OK — ${r.checks.length} closure(s) consistent with their obligations` : r.problems.join("\n"));
+  if (process.argv.includes("--check")) {
+    console.log(r.ok ? `closures --check: OK — ${r.checks.length} closure(s) consistent with their obligations` : r.problems.join("\n"));
     if (!r.ok) process.exit(1);
+  } else if (process.argv.includes("--gate")) {
+    const g = closureGate(r);
+    console.log(g.message);
+    if (!g.ok) process.exit(1);
   } else {
     const byPromotion = new Map<string, number>();
     for (const c of r.checks) byPromotion.set(c.promotion, (byPromotion.get(c.promotion) ?? 0) + 1);
