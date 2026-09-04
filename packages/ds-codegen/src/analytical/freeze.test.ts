@@ -180,6 +180,40 @@ describe("stage-2 erasure freeze", () => {
     expect(checkFreeze(frozen, live).movedAuthority).toEqual([]);
   });
 
+  it("REFUSES to certify a record taken under a different acceptance authority", () => {
+    // THE STALE-CONCLUSION TEST. `movedAuthority` used to be computed, printed
+    // in the message, and then dropped before `ok` was decided — so this
+    // consumer returned `ok: true` for a record whose acceptance authority no
+    // longer existed. Every programmatic caller reads `ok`.
+    //
+    // Reproduced against the real path before it was repaired: weakening
+    // `checkWitness` so an unevaluated isolation obligation stopped failing a
+    // witness — an acceptance change touching no stimulus and no erasure image
+    // — left `checkFreeze(loadFreeze())` reporting ok=true, divergences=[],
+    // movedAuthority=[witnessAuthorityDigest].
+    const moved = checkFreeze({ ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: "0".repeat(64) } }, live);
+    expect(moved.ok, "a record certified under an authority that has moved").toBe(false);
+    expect(moved.divergences.map((d) => d.key)).toContain("authority:witnessAuthorityDigest");
+
+    // The erasures and verdicts still match — the refusal is ABOUT the
+    // authority, not a side effect of something else diverging.
+    expect(moved.divergences.filter((d) => !d.key.startsWith("authority:")), "nothing else diverged").toEqual([]);
+
+    // And it runs through the ordinary ratchet: adjudicable with a reason...
+    const adjudicated = checkFreeze(
+      { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: "0".repeat(64) }, adjudicated: { "authority:witnessAuthorityDigest": "the witness surface gained a comment only" } },
+      live,
+    );
+    expect(adjudicated.ok).toBe(true);
+    expect(adjudicated.accepted.map((a) => a.key)).toEqual(["authority:witnessAuthorityDigest"]);
+
+    // ...and an adjudication left behind after a re-record is itself a finding,
+    // so the acceptance cannot silently outlive the move it excused.
+    const leftover = checkFreeze({ ...frozen, adjudicated: { "authority:witnessAuthorityDigest": "stale" } }, live);
+    expect(leftover.ok).toBe(false);
+    expect(leftover.stale).toEqual(["authority:witnessAuthorityDigest"]);
+  });
+
   it("records what it supersedes: the classes that changed, counted, each with an authored effect", () => {
     // The old record's numbers are not lost, they are in git. What must stay
     // HERE is the statement of what changed, because a re-record with no such

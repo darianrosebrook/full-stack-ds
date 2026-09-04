@@ -314,6 +314,27 @@ export function checkFreeze(
     .sort()
     .map((identity) => ({ identity, invalidates: AUTHORITY_MEANING[identity] }));
 
+  // A MOVED AUTHORITY IS A DIVERGENCE, not a footnote on an `ok` record.
+  //
+  // It used to be computed, reported in the message, and then dropped before
+  // `ok` was decided. So a record taken under one acceptance authority could be
+  // certified under a different one: `checkFreeze(...).ok === true` while
+  // `movedAuthority` named `witnessAuthorityDigest`. Every programmatic
+  // consumer reads `ok`; only a human reading the prose saw the move.
+  //
+  // Demonstrated rather than argued: weakening `checkWitness` so an unevaluated
+  // isolation obligation stops failing a witness -- an acceptance change that
+  // touches no stimulus and no erasure image -- left this consumer returning
+  // `ok: true`, `divergences: []`, `movedAuthority: [witnessAuthorityDigest]`.
+  //
+  // Routed through the SAME ratchet as every other divergence rather than a new
+  // rule: `adjudicated` can accept it with a reason, and an adjudication left
+  // behind after a re-record shows up in `stale`. Re-recording clears it,
+  // because `--record` recomputes the authority block.
+  for (const { identity, invalidates } of movedAuthority) {
+    divergences.push({ key: `authority:${identity}`, detail: `recorded under a different ${identity} — ${invalidates}` });
+  }
+
   // Census population first: an erasure difference on a coordinate that no
   // longer exists is not a walk finding, it is the removal being reported twice.
   const frozenIds = new Set(Object.keys(frozen.erasure));

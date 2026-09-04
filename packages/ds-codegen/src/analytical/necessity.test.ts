@@ -1338,6 +1338,41 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     }
     expect(holds.has("assertion.aggregate.op")).toBe(false);
     expect(evidenceStanding("assertion.aggregate.op", support, holds)).toEqual({ state: "holding", via: "primitive", evidence: ["assertion.aggregate.op"] });
+
+    // THE STALE-STANDING TEST, at the consumer that turns a stored suspension
+    // into standing.
+    //
+    // `codomain-adjudications.json` is a stored evaluated conclusion: three
+    // witnesses, the standing each lost, and the failure codes the harness
+    // produced for them. If `evidenceStanding` read that ledger first, an
+    // acceptance change that made those witnesses pass would leave their
+    // coordinates reported as suspended on the strength of a conclusion
+    // computed under rules that no longer apply.
+    //
+    // The stimuli and the erasure images are untouched here. What moves is the
+    // acceptance boundary, expressed as a predicate at the same place the
+    // production path applies it: `checkWitness(...).ok` is what decides which
+    // witnesses feed `primitiveRatified` and `interactionOnly`.
+    const admits = (accept: (r: ReturnType<typeof checkWitness>) => boolean) => {
+      const held = witnesses.filter((w) => accept(checkWitness(w, kernel, oracle)));
+      return { primitive: primitiveRatified(held), interactionOnly: new Set(interactionOnly(held)), closureAccounted } satisfies CurrentSupport;
+    };
+    const asRecorded = admits((r) => r.ok);
+    // The weaker boundary: the three held-open witnesses fail on NO_COLLISION
+    // alone, so admitting that code is exactly the change that would make the
+    // stored ledger obsolete.
+    const weakened = admits((r) => r.ok || r.failures.every((f) => f.code === "NO_COLLISION"));
+
+    const suspendedIds = [...holds.keys()];
+    expect(suspendedIds.length, "the ledger must actually assert something, or this proves nothing").toBeGreaterThan(0);
+    // Under the recorded boundary the ledger and the consumer agree.
+    for (const id of suspendedIds) expect(evidenceStanding(id, asRecorded, holds).state, id).toBe("suspended");
+    // Under the weakened one the consumer reports what it evaluated, not what
+    // the ledger stored. Same ledger object, same stimuli, same images.
+    for (const id of suspendedIds) {
+      const s = evidenceStanding(id, weakened, holds);
+      expect(s.state, `${id} was handed back a stored suspension under an acceptance boundary that no longer produces it`).toBe("holding");
+    }
     expect(suspended.map(([id]) => id).sort()).toEqual([
       "assertion.kind",
       "assertion.kind:aggregate~ratio-comparison",
