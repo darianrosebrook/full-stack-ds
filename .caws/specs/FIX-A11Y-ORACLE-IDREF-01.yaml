@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: fix-a11y-oracle-idref
 created_at: '2026-09-04T18:30:42.582Z'
-updated_at: '2026-09-04T20:26:52.420Z'
+updated_at: '2026-09-04T20:32:12.521Z'
 created_by_session: '01a06d90-6485-7c73-b6c8-0b0ec424c0f8'
 blast_radius:
   modules:
@@ -65,6 +65,9 @@ scope:
     - package.json
     - scripts/contract-oracle-mutation/
     - scripts/custom-region-audit/
+    - packages/ds-contracts/component.contract.schema.json
+    - packages/ds-codegen/src/contract.ts
+    - packages/ds-codegen/src/carrier-reachability.test.ts
   out: []
   support:
     - README.md
