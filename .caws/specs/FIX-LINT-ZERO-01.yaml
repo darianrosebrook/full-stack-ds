@@ -70,3 +70,10 @@ evidence:
     command: pnpm run lint
     exit_code: 0
     commit_sha: c56052e9
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run test:react-native — 163 tests pass incl. new Calendar/Spinner/ToggleSwitch behavior suites proving selection, sizing, and switch-token semantics"
+    recorded_at: "2026-09-04T23:06:47.307Z"
+    command: "pnpm run test:react-native"
+    exit_code: 0
+    commit_sha: c56052e9
