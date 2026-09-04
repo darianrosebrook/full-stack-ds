@@ -1,0 +1,809 @@
+{
+  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
+  "digests": {
+    "fixture.schema.json": "b1faba61e6b2048c05d4e6ee782c305c40cea5429da065f8af02c446249e0a88",
+    "fixtures.jsonl": "4e23b40739798c0a4bc278e841965ff95ef08bc78821be1b58b9baba296736ba",
+    "census.ts": "9c57a2c5f184a774a08cfdc3367de5c13452c28155d65d405bfc91150585b6ea",
+    "quotient.ts": "cf16c2cc48f9537be7d6ee6194546720225ea7f60cd93bbb2b22e792440119e3",
+    "structure.ts": "d44a1cab0621d0981397cdc6c18a899d0b72c19b5dea26fb9f8cb1c994075db5"
+  },
+  "verdicts": {
+    "unresolved": [
+      "assertion.aggregate.along#arity",
+      "assertion.aggregate.along#order",
+      "assertion.aggregate.along#present",
+      "assertion.aggregate.field#incidence",
+      "assertion.aggregate.nulls:as-observed~<absent>",
+      "assertion.aggregate.nulls:as-zero~<absent>",
+      "assertion.aggregate.nulls:exclude~<absent>",
+      "assertion.aggregate.relation#incidence",
+      "assertion.kind",
+      "assertion.kind:aggregate~ratio-comparison",
+      "assertion.ratio-comparison.field#incidence",
+      "assertion.ratio-comparison.relation#incidence",
+      "evidence.grainWitness#arity",
+      "evidence.grainWitness#incidence",
+      "evidence.grainWitness#order",
+      "evidence.rows.*#present",
+      "field.additivity#present",
+      "field.additivity.kind:additive~non-additive",
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:non-additive~ratio-measure",
+      "field.additivity.kind:semi-additive~non-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
+      "field.additivity.semi-additive.nonAdditiveAlong#order",
+      "field.temporality#present",
+      "field.temporality.grain",
+      "field.temporality.grain:day~<absent>",
+      "field.temporality.grain:day~month",
+      "field.temporality.grain:month~<absent>",
+      "observation.null:absent~<absent>",
+      "observation.null:absent~suppressed",
+      "observation.null:censored~<absent>",
+      "observation.null:censored~suppressed",
+      "observation.null:suppressed~<absent>",
+      "relation.derivedBy#present",
+      "relation.derivedBy.aggregate-to-grain.from#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "relation.derivedBy.bin.closure:left-closed~right-closed",
+      "relation.derivedBy.bin.closure:right-closed~<absent>",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.bin.from#incidence",
+      "relation.derivedBy.graph.edgeFrom#incidence",
+      "relation.derivedBy.graph.edgeTo#incidence",
+      "relation.derivedBy.graph.from#incidence",
+      "relation.derivedBy.graph.requiresConservation",
+      "relation.derivedBy.graph.value#incidence",
+      "relation.derivedBy.graph.value#present",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+      "relation.derivedBy.join.from#incidence",
+      "relation.derivedBy.join.with#incidence",
+      "relation.derivedBy.kind",
+      "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:aggregate-to-grain~join",
+      "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "relation.derivedBy.kind:aggregate-to-grain~project",
+      "relation.derivedBy.kind:bin~graph",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:join~bin",
+      "relation.derivedBy.kind:join~graph",
+      "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:join~normalize",
+      "relation.derivedBy.kind:join~project",
+      "relation.derivedBy.kind:nest~bin",
+      "relation.derivedBy.kind:nest~graph",
+      "relation.derivedBy.kind:nest~normalize",
+      "relation.derivedBy.kind:nest~project",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.kind:project~graph",
+      "relation.derivedBy.nest.from#incidence",
+      "relation.derivedBy.nest.levels#arity",
+      "relation.derivedBy.nest.levels#incidence",
+      "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
+      "relation.derivedBy.normalize.from#incidence",
+      "relation.derivedBy.project.from#incidence",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+      "relation.derivedBy.project.keep#order",
+      "structure.peers#present",
+      "structure.peers[]#arity",
+      "structure.peers[]#incidence",
+      "structure.peers[]#order",
+      "structure.peers[]#present"
+    ],
+    "witnessed": [
+      "relation.derivedBy.kind:bin~normalize"
+    ],
+    "required-derived-vocabulary": [],
+    "representation-artifact": [
+      "field.additivity.kind:additive~<absent>",
+      "field.additivity.kind:non-additive~<absent>",
+      "field.additivity.kind:ratio-measure~<absent>",
+      "field.additivity.kind:semi-additive~<absent>",
+      "field.additivity.semi-additive.nonAdditiveAlong#present",
+      "field.temporality.kind:instant~<absent>",
+      "field.temporality.kind:interval~<absent>",
+      "relation.derivedBy.aggregate-to-grain.from#present",
+      "relation.derivedBy.aggregate-to-grain.toGrain#present",
+      "relation.derivedBy.bin.field#present",
+      "relation.derivedBy.bin.from#present",
+      "relation.derivedBy.graph.edgeFrom#present",
+      "relation.derivedBy.graph.edgeTo#present",
+      "relation.derivedBy.graph.from#present",
+      "relation.derivedBy.join.from#present",
+      "relation.derivedBy.join.with#present",
+      "relation.derivedBy.kind:aggregate-to-grain~<absent>",
+      "relation.derivedBy.kind:bin~<absent>",
+      "relation.derivedBy.kind:graph~<absent>",
+      "relation.derivedBy.kind:join~<absent>",
+      "relation.derivedBy.kind:nest~<absent>",
+      "relation.derivedBy.kind:normalize~<absent>",
+      "relation.derivedBy.kind:project~<absent>",
+      "relation.derivedBy.nest.from#present",
+      "relation.derivedBy.nest.levels#present",
+      "relation.derivedBy.normalize.field#present",
+      "relation.derivedBy.normalize.from#present",
+      "relation.derivedBy.project.from#present",
+      "relation.derivedBy.project.keep#present"
+    ],
+    "not-yet-admitted": []
+  },
+  "erasure": {
+    "relation.grain": {
+      "reach": 84,
+      "digest": "cbb3d891420d21a589b639f061b9450d4b920dfb9c5159b3203515d03932b12b"
+    },
+    "field.transformation": {
+      "reach": 84,
+      "digest": "1c0023cc9324fa1d526b4704a633327a8d01ecba3a4c433a22a12a3ba3948ae0"
+    },
+    "field.transformation:nominal~ordinal": {
+      "reach": 9,
+      "digest": "61148a4baacc3d3ec982ff3aae80794ec1e440cdbb5f6d94e0415c144dfbbf60"
+    },
+    "field.transformation:nominal~interval": {
+      "reach": 18,
+      "digest": "98a2a1bc54d9e02d469971c2fccde91b2fa46ab0160674c5795803584135e52c"
+    },
+    "field.transformation:nominal~ratio": {
+      "reach": 71,
+      "digest": "50e834c7af566f2953dd0d1284e7a600ed5d40820fd03af3855c8e867a89364f"
+    },
+    "field.transformation:ordinal~interval": {
+      "reach": 18,
+      "digest": "58c36f3ce372fe80c93381de47551ed9122215ec695b01a4ac59f546364d0e91"
+    },
+    "field.transformation:ordinal~ratio": {
+      "reach": 71,
+      "digest": "4bcff88fe9470121e575edd1d9fa3ea7b3d2651aafa4d1f91b2ffe5240dbfc25"
+    },
+    "field.transformation:interval~ratio": {
+      "reach": 71,
+      "digest": "9db338763b9a90d1f755e5c3e7b1d633264a1a8dd88183e51d69e93582b597b1"
+    },
+    "field.cyclic": {
+      "reach": 3,
+      "digest": "42a8649efbcb0a9adbff207043709fee1a94ed3e064219f0788d7d3948538714"
+    },
+    "field.proportion": {
+      "reach": 7,
+      "digest": "be9e3f979f8a5799ad6b36a971cc09fbd85fcf6b03eb6133cd3128c15c4e5bbc"
+    },
+    "field.index": {
+      "reach": 3,
+      "digest": "0b1ff6cc81d60d7bf880b375a8967b1fe619696d7a502c49ed4c6c0c37526c1e"
+    },
+    "field.key": {
+      "reach": 67,
+      "digest": "d1c8662f13693ae4c9575daa2257672a148df44966c5cbeb0a425d785fb738b9"
+    },
+    "field.unit.units": {
+      "reach": 3,
+      "digest": "94e771bcb08b4eea1acceaab61c712624f602cb669f9d17b31492c6a0c965905"
+    },
+    "field.unit.perRow": {
+      "reach": 5,
+      "digest": "bf7ce0441d7379494391ff3b20a3d249b130e607cf72dcb10ab8db31e915e589"
+    },
+    "field.unit.conversions": {
+      "reach": 2,
+      "digest": "7590320ad99d3bf23ee81b13a031bc18bede75b60c5b580bba7a44922a70b332"
+    },
+    "field.temporality#present": {
+      "reach": 18,
+      "digest": "65146cf34aa19c44195b8844d54a4ad14e92fa8776c1c990c9b2e790502e94c8"
+    },
+    "field.temporality.kind": {
+      "reach": 18,
+      "digest": "fcbea7a4071cce05e58bae5b1a2adae7110718f19596b436cc867a7e158041db"
+    },
+    "field.temporality.kind:instant~interval": {
+      "reach": 6,
+      "digest": "f6d2b687eec547eb64a2d056bd822a7a502ea48b84e909352a9825ab680a7bee"
+    },
+    "field.temporality.grain": {
+      "reach": 2,
+      "digest": "14199285178f746331617936c2edc31e786005cf8687e6967aed06142a4c87ca"
+    },
+    "field.temporality.grain:day~month": {
+      "reach": 1,
+      "digest": "67d2460fd924a448f352655d005ac685475ef8668db8fb1287636d006f1c285b"
+    },
+    "field.temporality.grain:day~<absent>": {
+      "reach": 2,
+      "digest": "c99fb19fb86a0cb6d47e893741555c61e6093e1a366a1ae616a656327a6ee669"
+    },
+    "field.temporality.grain:month~<absent>": {
+      "reach": 1,
+      "digest": "18dbf504dfb89605f0fc540ce4c89eee8b4f55817a651a9aca8d982f6de3288d"
+    },
+    "field.whole": {
+      "reach": 2,
+      "digest": "5caa80cda94adbf9781d542b763561d037b7c3d0c6ec23f46ba4413d9c82d612"
+    },
+    "field.whole.perRow": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.whole.perRow#incidence": {
+      "reach": 4,
+      "digest": "354f5ed91813a572e05180c34bca90a45faa54c5a24ffbb69bae894b1b707192"
+    },
+    "field.base": {
+      "reach": 1,
+      "digest": "742b4b3c81daf9da8d269746f208a4a75d3430f53f413e0e27f35fed01ecba2a"
+    },
+    "field.additivity#present": {
+      "reach": 8,
+      "digest": "80ab9d6260cdd86283acf347b20490be322c09863aaf34c66e7f191790612e32"
+    },
+    "field.additivity.kind": {
+      "reach": 8,
+      "digest": "e0e9ee0ce3a826cc026f601e28655deebac0367771fc2ae07207ce2348ed0502"
+    },
+    "field.additivity.kind:additive~semi-additive": {
+      "reach": 3,
+      "digest": "93fb8b56eff6f1c63db392d8f36c50872fe3fa833db3ea58b8d32180c16435ba"
+    },
+    "field.additivity.kind:additive~non-additive": {
+      "reach": 1,
+      "digest": "da2d4fd146e5d5d8ad9f7c88090cde62a9a945363d5343fda477d69448472860"
+    },
+    "field.additivity.kind:additive~ratio-measure": {
+      "reach": 3,
+      "digest": "3bd57b66919c4f6f5940fc7af5ee91f87cf9cb5d04d05ce9f6f255996284f68c"
+    },
+    "field.additivity.kind:semi-additive~non-additive": {
+      "reach": 1,
+      "digest": "b3d5f7b214426a21f6582c2a21c5d7171071ab64f8ce2c43744aff9e93cfc2c6"
+    },
+    "field.additivity.kind:semi-additive~ratio-measure": {
+      "reach": 3,
+      "digest": "07c685d99c9e67d18816f47c4511b5f3137def51a635d1d2cb8cbec0d67917d5"
+    },
+    "field.additivity.kind:non-additive~ratio-measure": {
+      "reach": 3,
+      "digest": "6c1928e87fc3810181dd67121cc87aed633b03fa7ed679d060145fd5f8d4c7d1"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#arity": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#order": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#incidence": {
+      "reach": 3,
+      "digest": "db9035c2b7308769a6cf15d08a348cd98806051123ad08c86d90f5e0c56f73e7"
+    },
+    "field.permits.null": {
+      "reach": 12,
+      "digest": "5678d8ffee47b4611e4b951bf295c18500e730ac9ba213e0fa47bffca437d29a"
+    },
+    "field.permits.uncertainty": {
+      "reach": 5,
+      "digest": "bae03b0a5d1aabe2aa46d55f97b4f0169df964be1281d7a94de8691c6eabff04"
+    },
+    "relation.derivedBy#present": {
+      "reach": 21,
+      "digest": "1e3dea7564f7bcf053caf5223d6f0dac269d2a541128314ba8838dea7221d8fa"
+    },
+    "relation.derivedBy.kind": {
+      "reach": 21,
+      "digest": "a654ad03687081b6da801ba6798374a984a757dba16b47658ad91bbb56a16783"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~join": {
+      "reach": 3,
+      "digest": "fa2706730e7fb50ab1dac8bfe1690d49b81a142494f4f045d96c67beb33182aa"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~nest": {
+      "reach": 4,
+      "digest": "1dd8c593f7b61a6565c46e976a10c0ea738373fcf6a7d4864b1963cfcb5de65a"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~bin": {
+      "reach": 2,
+      "digest": "a85a378c47cf2705fa9c15abe3258daf1c6e0f97b2766b240f695461fa57e268"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~normalize": {
+      "reach": 2,
+      "digest": "cd7da3aedc0a5bc3db5410c743279f3a5eda315be71bd6c203f2bbb424081d8f"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~project": {
+      "reach": 4,
+      "digest": "3886b58f16ca4c4990943fc39cd7b3bc364d34916cdf523a643962db9a3b97e5"
+    },
+    "relation.derivedBy.kind:aggregate-to-grain~graph": {
+      "reach": 6,
+      "digest": "d1a48a57e8fbe2bad1fdf8ab7b99081f05e3b7ffd14ac187fa843f73e65751f5"
+    },
+    "relation.derivedBy.kind:join~nest": {
+      "reach": 4,
+      "digest": "5d3f5cbc2842c4fec1efb970b8a86f78900edc7d41f0256b8afd291870cf79e7"
+    },
+    "relation.derivedBy.kind:join~bin": {
+      "reach": 2,
+      "digest": "1a835035149800eed626ef33104d73b3fb38f553dd0495566a22d8f47c7705ac"
+    },
+    "relation.derivedBy.kind:join~normalize": {
+      "reach": 2,
+      "digest": "df2ae6161e0798b7bd479b4f6903e6f7d5a79ecf43469589da92fbfe284a07ac"
+    },
+    "relation.derivedBy.kind:join~project": {
+      "reach": 4,
+      "digest": "cd510e89881d9415ebbd1cd5cbb7dc1c993a3b903561d68fe06dd042994a1e5a"
+    },
+    "relation.derivedBy.kind:join~graph": {
+      "reach": 6,
+      "digest": "0667480703a461524d354753c3cafcad6debdb224b4a0e571fd1769a7c7ef234"
+    },
+    "relation.derivedBy.kind:nest~bin": {
+      "reach": 2,
+      "digest": "ebbdb0bdbd1aabd22a473ccf925a0e405be9fa60054b7b6860a156990df92f8a"
+    },
+    "relation.derivedBy.kind:nest~normalize": {
+      "reach": 2,
+      "digest": "16d83ff91480add255bb8609986aa4304dbf9607c56b34e96d9a6ce7d731b72d"
+    },
+    "relation.derivedBy.kind:nest~project": {
+      "reach": 4,
+      "digest": "25214459ccde530571b124c6cadd2caa7fb303ea265b63d20bd7a8aef5643b2a"
+    },
+    "relation.derivedBy.kind:nest~graph": {
+      "reach": 6,
+      "digest": "0d8ee9b972001227232d18794c6255bf0f3ec3b103a83fa1a08f04ad5c07ea8b"
+    },
+    "relation.derivedBy.kind:bin~normalize": {
+      "reach": 2,
+      "digest": "00d1d349ea57359b0268fa47617210441571a60bf2164d972245c51c41f656bc"
+    },
+    "relation.derivedBy.kind:bin~project": {
+      "reach": 4,
+      "digest": "3e4290dfda66e17d6984ed2f7a2509a5ff0b7966f7080f5f146e0afa26ee8540"
+    },
+    "relation.derivedBy.kind:bin~graph": {
+      "reach": 6,
+      "digest": "26ea758aec7a248767c7e2b0589e136ae46b95c21696c7e96b849de10ef08dd1"
+    },
+    "relation.derivedBy.kind:normalize~project": {
+      "reach": 4,
+      "digest": "b78c77ff04b70fdef201fdd8d28bc5785b370863ae4476db39353267125d3b23"
+    },
+    "relation.derivedBy.kind:normalize~graph": {
+      "reach": 6,
+      "digest": "e7ec602da82dc341dd9b137f09f890105b55db250b4d2f4f2fd1dd943964bfaa"
+    },
+    "relation.derivedBy.kind:project~graph": {
+      "reach": 6,
+      "digest": "d06ffd15092b24ea5fc80296388be47a0661304294e3bf164b9a6101e40f09bd"
+    },
+    "relation.derivedBy.aggregate-to-grain.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.aggregate-to-grain.from#incidence": {
+      "reach": 4,
+      "digest": "43f5a0e5f12356a0829a54920cf9728a27769eca6e3d1b0b63e2baa5db1165b9"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#arity": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#order": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence": {
+      "reach": 4,
+      "digest": "097475af453922f757d72a0fbb1c701bbe011a1c41d5bc66022f0663241ababd"
+    },
+    "relation.derivedBy.join.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.join.from#incidence": {
+      "reach": 3,
+      "digest": "52007a00703229def7857085938dc12cc8ba4df8db860b845b16ac8396224da4"
+    },
+    "relation.derivedBy.join.with": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.join.with#incidence": {
+      "reach": 3,
+      "digest": "47546542c3b02a78b0e63c908fdb7f7c5d4c7e6a73713264d80fc586c3b32d98"
+    },
+    "relation.derivedBy.join.cardinality": {
+      "reach": 3,
+      "digest": "9b4e67b3b44a7cfffb691c11cbdc9f829c6074cde224aaa1455ccd0ea4e4dcf0"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~one-to-many": {
+      "reach": 3,
+      "digest": "4190a815663a741d376350a4eeb88648d32ada3b6dad9c9aa56f04da927e43af"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-one": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-one": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.nest.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.nest.from#incidence": {
+      "reach": 4,
+      "digest": "782992021c4b71a6e27ce2f3d6e51ae084e66b005dca02cbc5e2160b71c066c0"
+    },
+    "relation.derivedBy.nest.levels": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.nest.levels#arity": {
+      "reach": 4,
+      "digest": "93f315f49c5c83b7f4803f87b55ee2059167768d3a2df13ffa2528fac3e6e3df"
+    },
+    "relation.derivedBy.nest.levels#order": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.nest.levels#incidence": {
+      "reach": 4,
+      "digest": "f716358438157603b5fb3c5f018e6e4174615f5b0f5db2811b9aa3a06d959f4a"
+    },
+    "relation.derivedBy.bin.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.bin.from#incidence": {
+      "reach": 2,
+      "digest": "a2960806c59000f064456eb12b99017f1b71a37fcf80ad0edb3c16576d7d22f5"
+    },
+    "relation.derivedBy.bin.field": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.bin.field#incidence": {
+      "reach": 2,
+      "digest": "32e5cf5d50bee9deecdea59b5a65e67d6db81e109c9fd5ae2ca68ab4ce6c7d06"
+    },
+    "relation.derivedBy.bin.closure": {
+      "reach": 1,
+      "digest": "d335042cf2739e92ccef5508924ad5d3e07b9ec01c0e44906489dde5fc18da1a"
+    },
+    "relation.derivedBy.bin.closure:left-closed~right-closed": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.bin.closure:left-closed~<absent>": {
+      "reach": 1,
+      "digest": "d335042cf2739e92ccef5508924ad5d3e07b9ec01c0e44906489dde5fc18da1a"
+    },
+    "relation.derivedBy.bin.closure:right-closed~<absent>": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.normalize.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.normalize.from#incidence": {
+      "reach": 2,
+      "digest": "89a7a02791578abc5f8c1f78accf51a883beaf4cb3fa64690acb155e39b0764e"
+    },
+    "relation.derivedBy.normalize.field": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.normalize.field#incidence": {
+      "reach": 2,
+      "digest": "1074ee0f90bdc3f45c540404d03f487772840d769757f80a263fa59c36508856"
+    },
+    "relation.derivedBy.project.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.project.from#incidence": {
+      "reach": 4,
+      "digest": "51df48dc4c917a8e167da2b4f09f359ef1157d3b34be788f63a4c4ad24503a92"
+    },
+    "relation.derivedBy.project.keep": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.project.keep#arity": {
+      "reach": 4,
+      "digest": "f99da0f539c7e66982579ae42f77b7987977c125095cb991e0e0df76f0fb858f"
+    },
+    "relation.derivedBy.project.keep#order": {
+      "reach": 4,
+      "digest": "ad2dcaf322b6d2e0399bdcdcfc9aa17665f279d4341c780c555bfe50a4cd4f28"
+    },
+    "relation.derivedBy.project.keep#incidence": {
+      "reach": 4,
+      "digest": "41c422ab83d7e4ab80e0e94dbcc134d85885399a4c303afd671ee20d1b46aaf0"
+    },
+    "relation.derivedBy.graph.from": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.graph.from#incidence": {
+      "reach": 6,
+      "digest": "bbb7f12566bf16feaa9bf23b1d6f2bb4070244faba84fa43d6c9419c6049df78"
+    },
+    "relation.derivedBy.graph.edgeFrom": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.graph.edgeFrom#incidence": {
+      "reach": 6,
+      "digest": "e165be2363cfc9ee224eb690c57467af3384e617bf16eaac3f2fa8459d9961b4"
+    },
+    "relation.derivedBy.graph.edgeTo": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.graph.edgeTo#incidence": {
+      "reach": 6,
+      "digest": "f64ca9fe023162574623bd9d10b05c1aad115fe6ca855c95532360b050101459"
+    },
+    "relation.derivedBy.graph.value": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "relation.derivedBy.graph.value#present": {
+      "reach": 6,
+      "digest": "3f00e86b15152e7ae5c01370464425172ff133f540b900bf879698a72318294c"
+    },
+    "relation.derivedBy.graph.value#incidence": {
+      "reach": 6,
+      "digest": "90e05724e5f5b94788e07d602ac25e25cc725ebd38c66fb73b11dc14823148c4"
+    },
+    "relation.derivedBy.graph.requiresConservation": {
+      "reach": 6,
+      "digest": "f81a580572bb064996294c150050d369c0e0a76833c7f4cce157d55ca6fc04f2"
+    },
+    "structure.peers#present": {
+      "reach": 4,
+      "digest": "7f5e8e48f4f026ed22d241fd735e604f908d57cfdc43eb2a49823cec145db4fe"
+    },
+    "structure.peers[]": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "structure.peers[]#present": {
+      "reach": 4,
+      "digest": "7f5e8e48f4f026ed22d241fd735e604f908d57cfdc43eb2a49823cec145db4fe"
+    },
+    "structure.peers[]#arity": {
+      "reach": 4,
+      "digest": "3d74c63c3970164382446e106a93b5e8099a9157c6c8df657d9d298c365a7a0b"
+    },
+    "structure.peers[]#order": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "structure.peers[]#incidence": {
+      "reach": 4,
+      "digest": "2cd6998b51004cb9502da7eac7edb84bfc46afbd8eab640b3607c8e380f47d08"
+    },
+    "assertion.kind": {
+      "reach": 84,
+      "digest": "7beaa626d0f3309d139b583ee304312cc7814c084a5d3d4b95044830727e9c32"
+    },
+    "assertion.kind:aggregate~ratio-comparison": {
+      "reach": 2,
+      "digest": "a56a18056598a75dc844d4d4467fc98e73d6efe3bb93d5556930f1002a5d8119"
+    },
+    "assertion.aggregate.relation": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "assertion.aggregate.relation#incidence": {
+      "reach": 82,
+      "digest": "c902678cc9b523324b0d06b9ce05b01fc60e82ab1ed7e8a184fcc6bcdaaecb01"
+    },
+    "assertion.aggregate.field": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "assertion.aggregate.field#incidence": {
+      "reach": 82,
+      "digest": "5d719edd12ff73ece0e3b0cd5e89a4b8526d5a6bf87463fa42381abd8c43ec31"
+    },
+    "assertion.aggregate.op": {
+      "reach": 82,
+      "digest": "df65313757120deb8d7738f4438c888f791aaa055b526d344134a7f471a1b150"
+    },
+    "assertion.aggregate.op:sum~mean": {
+      "reach": 20,
+      "digest": "95cfe636036fb8a2e8a5d7dbd24d04cefc4604db95ecb8b51158ebd22421014e"
+    },
+    "assertion.aggregate.op:sum~count": {
+      "reach": 7,
+      "digest": "c40f52bca0af376e023236405031d0cda98abeb974c9e9010e265d93a9f92259"
+    },
+    "assertion.aggregate.op:sum~min": {
+      "reach": 26,
+      "digest": "6213ef8e207cc1479172398e1bbb1b10dd09619fd10252a5335a54d028d209da"
+    },
+    "assertion.aggregate.op:mean~count": {
+      "reach": 7,
+      "digest": "3d06a84d1d1012ceb487eb4eb87e5e4f3f07f0a7ee036bb2b224dc29325ee22a"
+    },
+    "assertion.aggregate.op:mean~min": {
+      "reach": 26,
+      "digest": "4b287f79ae20224b5022bb64554b43c3b3f13a845c1202b4c68609cf7641eaaa"
+    },
+    "assertion.aggregate.op:count~min": {
+      "reach": 26,
+      "digest": "6e50132de5ec12a6a3d1f1d7b0cedf42c72b79bf094013955b54a4ab017f513d"
+    },
+    "assertion.aggregate.along": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "assertion.aggregate.along#present": {
+      "reach": 6,
+      "digest": "0a20bfd9c9194c136d6ef91269f966949b2628f3edb6c0bfd17c4169e6d0220c"
+    },
+    "assertion.aggregate.along#arity": {
+      "reach": 1,
+      "digest": "97c2b817223d046539ddc834bef2fc46764fafbb467718fc53fdec6595a27f0f"
+    },
+    "assertion.aggregate.along#order": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "assertion.aggregate.along#incidence": {
+      "reach": 6,
+      "digest": "6c1092bf3dcb719b43bb26e0c91bf799fc7d472e3696bc5bae5bf332b83fa399"
+    },
+    "assertion.aggregate.nulls": {
+      "reach": 7,
+      "digest": "96a893ab004b1e1bc4a8bdc4660f1963e52551c15be85732bb8bbc68870aecfd"
+    },
+    "assertion.aggregate.nulls:exclude~as-zero": {
+      "reach": 2,
+      "digest": "7e0dd4f1a4ce8c38616618369c5f8108a026d4841eed7faded75e6d83e9ac634"
+    },
+    "assertion.aggregate.nulls:exclude~as-observed": {
+      "reach": 1,
+      "digest": "c280632423fdff0013f55587ee3739a6df801a30ac7c0b6bd039c6b8f37f1293"
+    },
+    "assertion.aggregate.nulls:as-zero~as-observed": {
+      "reach": 1,
+      "digest": "5ba59143e38ee1f3701972e4e2c5d569bdeb918f7105445359b219a4da0ff972"
+    },
+    "assertion.aggregate.nulls:exclude~<absent>": {
+      "reach": 4,
+      "digest": "7cfcf3972f19d7219369b007e76ca8728bdaa5c3a866e78260a2be2802f98b17"
+    },
+    "assertion.aggregate.nulls:as-zero~<absent>": {
+      "reach": 2,
+      "digest": "c92233ecf1e89a450b5ad894b7a2b9502a5e1f9dfe2abe8931abf681eecc4d0d"
+    },
+    "assertion.aggregate.nulls:as-observed~<absent>": {
+      "reach": 1,
+      "digest": "b4eaea1c106514215e4064cc8128836a68de573a0f0af0bb68183a00b0fe06da"
+    },
+    "assertion.aggregate.uncertainty": {
+      "reach": 3,
+      "digest": "462abdbc0e5b2b4b696c58dfa3ad7500f7ea545a53e0139535ee698f8f8bea88"
+    },
+    "assertion.ratio-comparison.relation": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "assertion.ratio-comparison.relation#incidence": {
+      "reach": 2,
+      "digest": "ca02992826bb61c706989570bf130999a128acdeeee32f9f472f4f2df9b2d414"
+    },
+    "assertion.ratio-comparison.field": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "assertion.ratio-comparison.field#incidence": {
+      "reach": 2,
+      "digest": "d12cb63bc497172bbbb41814057a51039309708fa3f9c58476ce1d4d45d26e16"
+    },
+    "evidence.rows.*#present": {
+      "reach": 24,
+      "digest": "a4f2843787dc96506776b5c567a4cdcf2aa34fb23949c99b654be0146089e333"
+    },
+    "observation.value": {
+      "reach": 24,
+      "digest": "2ff27b88cffe447608db3e6ef076881d89cc0b33669e5938358ff656ddc9866a"
+    },
+    "observation.unit": {
+      "reach": 3,
+      "digest": "1870fa8ac061154e43f207ccddf38a7dc910c5335b879682fbb9129230bafa16"
+    },
+    "observation.null": {
+      "reach": 10,
+      "digest": "6c883bbb26fe1da6259c1b8bf33098db5a6854751388991bd01aa49d6b2b6d80"
+    },
+    "observation.null:absent~censored": {
+      "reach": 4,
+      "digest": "cd962a465e0220542014f253548b7164e23b975cdcddf086c3bbdeeaedd5f3a9"
+    },
+    "observation.null:absent~suppressed": {
+      "reach": 2,
+      "digest": "774281f7826a43f50364a10255a093de4db8c03c7ab413c5067615784cbdc05d"
+    },
+    "observation.null:censored~suppressed": {
+      "reach": 2,
+      "digest": "74b11e0b410c97c616103476a6544cfd0a4f0571f5b44e4fa311df3609e89cfc"
+    },
+    "observation.null:absent~<absent>": {
+      "reach": 4,
+      "digest": "900e873b90e5c42eb26aa99af0efe534de426af82ee28fc48b522b793bd6bff7"
+    },
+    "observation.null:censored~<absent>": {
+      "reach": 4,
+      "digest": "eaa96c3b0db9bd8660693261f9fe349ea1f9fa9e1e1361d67e55d13e229ac914"
+    },
+    "observation.null:suppressed~<absent>": {
+      "reach": 2,
+      "digest": "70ed84d004178ba3f44c656f02d86a4370e762d61f830da788b727e77557bc7a"
+    },
+    "evidence.grainWitness": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "evidence.grainWitness#present": {
+      "reach": 3,
+      "digest": "1d44a76405fc32e910997476db493d74e9359a7d280d67c9decaf193524e4c87"
+    },
+    "evidence.grainWitness#arity": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "evidence.grainWitness#order": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "evidence.grainWitness#incidence": {
+      "reach": 3,
+      "digest": "8480529aa7d9acd895107f26caee42523671fa63165896e875ae0a68161fca91"
+    }
+  },
+  "adjudicated": {}
+}
