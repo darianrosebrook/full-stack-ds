@@ -558,6 +558,90 @@ describe("C1c — a multi-coordinate witness is classified, and the classificati
   });
 });
 
+describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
+  /**
+   * A coordinate whose erasure alters no fixture cannot collide two of them, so
+   * no witness naming it can ever hold. Two very different things produce that,
+   * and they must never be confused:
+   *
+   *   CORPUS — the erasure is defined but this corpus gives it nothing to do:
+   *     truncating an already-one-element list, sorting a sorted one, merging an
+   *     enum member no fixture uses. A fact about the corpus, and a real limit
+   *     on what can be witnessed today.
+   *   WALK — the quotient never visits that label, so the erasure is a no-op on
+   *     ANY input. Then "no witness holds" is a statement about this walk, and
+   *     reading it as "the coordinate is not necessary" is a subtraction verdict
+   *     drawn from a bug.
+   *
+   * Both look identical from outside, so the corpus-caused ones are enumerated
+   * BY NAME with their reason. Anything else is a walk defect until proven
+   * otherwise. Three separate instances have now been found this way — the
+   * grainWitness facets, the five optional HOLDERS whose `#present` had no node
+   * to erase, and `field.temporality`, which is tagged but is not a union, so
+   * the walk branch-qualified a label the census does not.
+   */
+  const CORPUS_DEAD: Record<string, string> = {
+    "relation.derivedBy.bin.closure:left-closed~right-closed": "no fixture declares right-closed, so rewriting it to left-closed rewrites nothing",
+    "relation.derivedBy.bin.closure:right-closed~<absent>": "no fixture declares right-closed",
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": "the corpus only ever joins one-to-many",
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": "the corpus only ever joins one-to-many",
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-one": "the corpus only ever joins one-to-many",
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": "the corpus only ever joins one-to-many",
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-one": "the corpus only ever joins one-to-many",
+    "assertion.aggregate.along#order": "every corpus `along` is one name or already sorted, so sorting is identity",
+    "evidence.grainWitness#arity": "every corpus grain witness names one column, so truncating to one is identity",
+    "evidence.grainWitness#order": "every corpus grain witness is one name or already sorted",
+    "field.additivity.semi-additive.nonAdditiveAlong#arity": "every corpus nonAdditiveAlong names one dimension",
+    "field.additivity.semi-additive.nonAdditiveAlong#order": "every corpus nonAdditiveAlong names one dimension",
+    "relation.derivedBy.aggregate-to-grain.toGrain#arity": "every corpus toGrain names one column",
+    "relation.derivedBy.aggregate-to-grain.toGrain#order": "every corpus toGrain names one column",
+    "relation.derivedBy.nest.levels#order": "every corpus nest declares its levels already sorted",
+    "structure.peers[]#order": "every corpus peer set is already sorted",
+  };
+
+  const fixtures = [...oracle.fixtures.values()];
+  const dead = kernel
+    .filter((c) => c.kind !== "reference")
+    .filter((c) => fixtures.every((f) => canonical(erase(f, c)) === canonical(f)))
+    .map((c) => c.id)
+    .sort();
+
+  it("every un-erasable coordinate is named, with the corpus reason it has nothing to erase", () => {
+    expect(dead.filter((id) => !(id in CORPUS_DEAD))).toEqual([]);
+  });
+
+  it("the enumeration is exact, so a coordinate that BECOMES erasable is noticed too", () => {
+    // A list that only had to be a superset would let a stale entry hide the
+    // fact that the corpus grew a case for it — the ratchet has to bite in both
+    // directions or it is only a suppression list.
+    expect(Object.keys(CORPUS_DEAD).sort()).toEqual(dead);
+  });
+
+  it("every optional holder's presence coordinate erases the holder", () => {
+    // The specific defect: `props` labels a holder's children and never the
+    // holder, so `#present` had no node. All three of the holder-presence
+    // candidates in the holders basis were affected, which would have made them
+    // unwitnessable by construction.
+    for (const id of ["relation.derivedBy#present", "field.additivity#present", "field.temporality#present", "evidence.rows.*#present", "structure.peers[]#present"]) {
+      const c = kernel.find((x) => x.id === id)!;
+      const altered = fixtures.filter((f) => canonical(erase(f, c)) !== canonical(f));
+      expect(altered.length, `${id} erases nothing anywhere`).toBeGreaterThan(0);
+    }
+  });
+
+  it("a tagged holder that is not a union keeps the census's unqualified labels", () => {
+    // `field.temporality` carries a `kind` but is not a discriminated union, so
+    // the census emits `field.temporality.grain`. A walk that branch-qualified
+    // on the presence of `kind` labelled the same node
+    // `field.temporality.instant.grain` and never visited what the census named.
+    expect(loadBranchSignatures().has("field.temporality.kind")).toBe(false);
+    expect(loadBranchSignatures().has("field.additivity.kind")).toBe(true);
+    const grain = kernel.find((c) => c.id === "field.temporality.grain")!;
+    const altered = fixtures.filter((f) => canonical(erase(f, grain)) !== canonical(f));
+    expect(altered.length).toBeGreaterThan(0);
+  });
+});
+
 describe("C1d — cleanup cardinality bounds which pairs a <=2-coordinate witness can even express", () => {
   /**
    * Erasing a discriminator rewrites one member's tag to the other's. Required

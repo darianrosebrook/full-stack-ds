@@ -12,7 +12,7 @@
  *
  * This module is external to the engine: it never judges anything.
  */
-import type { Coordinate } from "./census.js";
+import { loadBranchSignatures, type Coordinate } from "./census.js";
 import { alphaRename, type Fixture } from "./structure.js";
 
 type Json = Record<string, unknown>;
@@ -23,16 +23,54 @@ const INCIDENCE_TOKEN = "zz_erased_reference";
 /** A plain object: a HOLDER of nodes, never a reference or a list of them. */
 const obj = (v: unknown): v is Json => typeof v === "object" && v !== null && !Array.isArray(v);
 
+/**
+ * Leaves the SCHEMA discriminates a union on, read once per process.
+ *
+ * Carrying a `kind` property is not the same as being a discriminated union,
+ * and the census draws that line: only `walkUnion` branch-qualifies its
+ * children. `field.temporality` is tagged but is not a union, so the census
+ * emits `field.temporality.grain` while a walk that qualified on the presence of
+ * `kind` alone labelled the same node `field.temporality.instant.grain`. Four
+ * corpus fields declare that grain, and all four of its coordinates were
+ * therefore un-erasable — the label the census names was never visited.
+ */
+let unionLeaves: Set<string> | undefined;
+const discriminatesAUnion = (prefix: string): boolean =>
+  (unionLeaves ??= new Set(loadBranchSignatures().keys())).has(`${prefix}.kind`);
+
 /** Visit every labelled node of a fixture; `visit` may mutate `parent[key]`. */
 function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: string) => void): void {
-  // A `kind`-discriminated object labels its other properties by branch, as the census does.
+  // A DISCRIMINATED-UNION object labels its other properties by branch, as the census does.
   const props = (node: Json, prefix: string) => {
-    const branch = typeof node.kind === "string" ? `${prefix}.${node.kind}` : prefix;
+    const branch = typeof node.kind === "string" && discriminatesAUnion(prefix) ? `${prefix}.${node.kind}` : prefix;
     for (const key of Object.keys(node)) visit(key === "kind" ? `${prefix}.kind` : `${branch}.${key}`, node, key);
+  };
+  /**
+   * A HOLDER carries one fact its contents cannot: whether it is declared at
+   * all. `props` labels a holder's children and never the holder itself, so an
+   * optional holder's `#present` coordinate had no node to erase and its
+   * erasure was a no-op on any input — `relation.derivedBy#present`,
+   * `field.additivity#present` and `field.temporality#present` altered nothing
+   * across the whole corpus. All three are live subtraction candidates, so "no
+   * witness holds for it" was a statement about this walk, and reading it as
+   * "not necessary" would have been a verdict drawn from a bug. Visit the
+   * holder FIRST, then descend only if it survived.
+   */
+  const holder = (parent: Json, key: string, label: string) => {
+    visit(label, parent, key);
+    const v = parent[key];
+    if (obj(v)) props(v, label);
   };
   const structure = fixture.structure as Json | undefined;
   if (structure) {
-    if ("peers" in structure) visit("structure.peers", structure, "peers");
+    if ("peers" in structure) {
+      visit("structure.peers", structure, "peers");
+      // Each peer SET is its own declaration: its membership, arity and order
+      // are coordinates, and whether a given set is declared is another. The
+      // whole-array visit above cannot reach any of them.
+      const peers = structure.peers;
+      if (Array.isArray(peers)) for (const i of peers.keys()) visit("structure.peers[]", peers as unknown as Json, String(i));
+    }
     const relations = (structure.relations ?? {}) as Record<string, Json>;
     for (const rel of Object.values(relations)) {
       if ("grain" in rel) visit("relation.grain", rel, "grain");
@@ -40,7 +78,7 @@ function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: 
       // must reach it: without this every coordinate the L3 algebra admits is
       // un-erasable, and a witness naming one could only fail NO_COLLISION or
       // pass for the wrong reason.
-      if (obj(rel.derivedBy)) props(rel.derivedBy as Json, "relation.derivedBy");
+      if ("derivedBy" in rel) holder(rel, "derivedBy", "relation.derivedBy");
       const fields = (rel.fields ?? {}) as Record<string, Json>;
       for (const f of Object.values(fields)) {
         for (const key of Object.keys(f)) {
@@ -49,7 +87,7 @@ function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: 
             if (obj(v)) visit("field.whole.perRow", v, "perRow");
             else visit("field.whole", f, "whole");
           } else if (obj(v)) {
-            props(v, `field.${key}`);
+            holder(f, key, `field.${key}`);
           } else visit(`field.${key}`, f, key);
         }
       }
@@ -60,6 +98,10 @@ function walkFixture(fixture: Json, visit: (labelId: string, parent: Json, key: 
   const evidence = fixture.evidence as Json | undefined;
   if (evidence) {
     const rows = (evidence.rows ?? {}) as Record<string, Record<string, unknown>[]>;
+    // Whether rows were supplied FOR A RELATION is its own coordinate
+    // (`evidence.rows.*#present`), and it is not any row's property: the
+    // entry-level visit is the only thing that can reach it.
+    for (const rel of Object.keys(rows)) visit("evidence.rows.*", rows as unknown as Json, rel);
     for (const relRows of Object.values(rows)) {
       for (const row of relRows) {
         for (const key of Object.keys(row)) {

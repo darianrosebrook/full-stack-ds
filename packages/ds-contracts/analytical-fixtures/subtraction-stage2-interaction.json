@@ -224,6 +224,27 @@
       "result": "All conditions hold. Quotient hygiene is independently observed on a SECOND enum, with residue on both branches, so raw edit cardinality was measuring serialization cleanup rather than semantic content. The additivity case is no longer the sole instance.",
       "provisionality": "Condition 6 is a dependency, not a proof: the cleanup coordinates are UNRESOLVED, not proven standing-free. If either later earns primitive standing, this classification becomes false and must be re-decided — the same shape of provisionality the `final-quotient` close condition carries.",
       "notClaimed": "Semantic-erasure closure is NOT adopted by this probe, the <=2-coordinate witness bound is unchanged, no coordinate gained or lost standing, and none of the twenty pairs is classified. Adopting closure would mean separating the semantic carrier from its deterministic normalization in the witness form itself, with its own proof obligations — a change to what the apparatus can conclude, which this probe was designed to inform rather than perform."
+    },
+    "closureDependencyProbe": {
+      "$comment": "NON-RATIFYING structural probe of the nine coordinates the twenty closures depend on. No verdict, no witness, no standing moved. It exists because 'probe the shape before hunting the witness' is what stopped twenty futile two-set searches, and the same question is worth asking here BEFORE nine witness searches are attempted.",
+      "measured": {
+        "allNineRequiredOnTheirBranch": true,
+        "eightCarryAPresenceFacet": [
+          "relation.derivedBy.aggregate-to-grain.toGrain#present",
+          "relation.derivedBy.bin.field#present",
+          "relation.derivedBy.graph.edgeFrom#present",
+          "relation.derivedBy.graph.edgeTo#present",
+          "relation.derivedBy.join.with#present",
+          "relation.derivedBy.nest.levels#present",
+          "relation.derivedBy.normalize.field#present",
+          "relation.derivedBy.project.keep#present"
+        ],
+        "ninthIsAPlainRequiredEnumLeaf": "relation.derivedBy.join.cardinality"
+      },
+      "hypothesis": "The census emits a `#present` facet for a reference whose HOLDER is optional, not only for a reference that is itself optional. `relation.derivedBy` is optional on a relation, so every branch payload reference inherits one — including the eight the schema marks REQUIRED on their branch. For a required field, 'this field is absent' is not a state the branch has: presence can vary ONLY by the whole `derivedBy` being absent, and that fact is already carried by `relation.derivedBy#present` in the holders basis. If that holds, these are the same CROSS-TERM shape the discriminator normal form removed thirteen of, one level down: holder existence multiplied by branch-conditional payload.",
+      "notClaimed": "This is a hypothesis with a named falsifier, not a verdict. Three things it does NOT say. (1) It says nothing about the reference-topology facets — `#arity`, `#order`, `#incidence` are separate coordinates about what a reference's STRUCTURE carries, and none is touched by an argument about presence. (2) It does not say the fields carry nothing; it says the PRESENCE facet on a required field may carry nothing beyond holder presence. (3) `relation.derivedBy#present` is itself unadjudicated, so a collapse onto it moves the question rather than answering it — and `relation.derivedBy#present` may not even be erasable, which has to be checked before anything is collapsed onto it.",
+      "falsifier": "Find two schema-valid stimuli whose required outcomes differ under independently grounded authority, that are identified by erasing exactly one of the eight, and that are NOT identified by erasing `relation.derivedBy#present`. That would show the presence facet carries something the holder fact does not.",
+      "ifItHolds": "Step 3's 'adjudicate nine' collapses further, to one holder-presence adjudication plus the separate topology-facet questions. That would be a second instance of the same normal-form defect, which is worth more than the twenty verdicts it would discharge."
     }
   },
   "openQuestion": {
