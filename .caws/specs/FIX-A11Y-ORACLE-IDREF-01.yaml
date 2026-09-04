@@ -113,3 +113,8 @@ contracts:
   - name: 'accessibility-oracle'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/react/tests.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Integrated pnpm test: 254 files / 3363 tests pass, including relationship-lowering (16), idref-slot-gate (5), and generated Dialog/Sheet/Command tests; integrated pnpm run test:frameworks exits 0 across Vue, Lit, Svelte, Angular, and React Native."
+    recorded_at: "2026-09-04T21:46:30.638Z"
