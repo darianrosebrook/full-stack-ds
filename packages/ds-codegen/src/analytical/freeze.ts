@@ -258,10 +258,37 @@ export function supersessionOf(prior: Stage2Freeze, check: FreezeCheck = checkFr
 }
 
 export interface FreezeDivergence {
-  /** `<coordinate>`, `census:<id>` or `verdict:<id>` — the key `adjudicated` must name. */
+  /** `<coordinate>`, `census:<id>`, `verdict:<id>` or `authority:<identity>` — the readable class. */
   key: string;
   detail: string;
+  /**
+   * WHAT CHANGED, exactly. The class alone is not an identity.
+   *
+   * `adjudicated` used to be matched on `key`, so one written reason excused
+   * every subsequent movement of that class. Reproduced against this consumer:
+   * record under A, review a comment-only change to B, then move to C without
+   * re-recording — `authority:witnessAuthorityDigest` still named a live
+   * divergence, so the A->B reason certified the unreviewed A->C. The same
+   * matcher accepted a D->B comparison under an A->B review.
+   *
+   * Full values, never truncated display digests: a prefix is a different
+   * claim, and `detail` is prose that moves for reasons of its own.
+   */
+  transition: { from: string; to: string };
 }
+
+/**
+ * The key an `adjudicated` entry must carry to excuse a divergence.
+ *
+ * Readable class, then the exact endpoints. A reason is a review of one
+ * transition; it cannot be a standing permission for a class.
+ */
+export function adjudicationKey(d: FreezeDivergence): string {
+  return `${d.key}@${d.transition.from}->${d.transition.to}`;
+}
+
+/** Neither endpoint exists — an appearance or a disappearance, not a change. */
+const NOTHING = "(absent)";
 
 export interface FreezeCheck {
   ok: boolean;
@@ -298,7 +325,7 @@ export function checkFreeze(
 ): FreezeCheck {
   const divergences: FreezeDivergence[] = [];
   for (const id of frozen.fixtures.filter((f) => !live.fixtures.includes(f))) {
-    divergences.push({ key: `fixture:${id}`, detail: "the fixture the record was taken over is gone from the corpus" });
+    divergences.push({ key: `fixture:${id}`, detail: "the fixture the record was taken over is gone from the corpus", transition: { from: "present", to: NOTHING } });
   }
 
   const movedInputs = Object.keys(frozen.digests)
@@ -332,7 +359,7 @@ export function checkFreeze(
   // behind after a re-record shows up in `stale`. Re-recording clears it,
   // because `--record` recomputes the authority block.
   for (const { identity, invalidates } of movedAuthority) {
-    divergences.push({ key: `authority:${identity}`, detail: `recorded under a different ${identity} — ${invalidates}` });
+    divergences.push({ key: `authority:${identity}`, detail: `recorded under a different ${identity} — ${invalidates}`, transition: { from: String(was[identity]), to: String(now[identity]) } });
   }
 
   // Census population first: an erasure difference on a coordinate that no
@@ -340,10 +367,10 @@ export function checkFreeze(
   const frozenIds = new Set(Object.keys(frozen.erasure));
   const liveIds = new Set(Object.keys(live.erasure));
   for (const id of [...frozenIds].filter((x) => !liveIds.has(x)).sort()) {
-    divergences.push({ key: `census:${id}`, detail: `coordinate left the census (was reach ${frozen.erasure[id].reach})` });
+    divergences.push({ key: `census:${id}`, detail: `coordinate left the census (was reach ${frozen.erasure[id].reach})`, transition: { from: frozen.erasure[id].digest, to: NOTHING } });
   }
   for (const id of [...liveIds].filter((x) => !frozenIds.has(x)).sort()) {
-    divergences.push({ key: `census:${id}`, detail: `coordinate entered the census (reach ${live.erasure[id].reach})` });
+    divergences.push({ key: `census:${id}`, detail: `coordinate entered the census (reach ${live.erasure[id].reach})`, transition: { from: NOTHING, to: live.erasure[id].digest } });
   }
 
   for (const id of [...frozenIds].filter((x) => liveIds.has(x)).sort()) {
@@ -356,6 +383,7 @@ export function checkFreeze(
         a.reach === b.reach
           ? `same reach (${a.reach}) but a different erased representation: digest ${a.digest.slice(0, 12)} -> ${b.digest.slice(0, 12)}`
           : `reach ${a.reach} -> ${b.reach}`,
+      transition: { from: a.digest, to: b.digest },
     });
   }
 
@@ -369,17 +397,17 @@ export function checkFreeze(
   for (const id of [...new Set([...wasIn.keys(), ...isIn.keys()])].sort()) {
     const a = wasIn.get(id) ?? "(not a candidate)";
     const b = isIn.get(id) ?? "(not a candidate)";
-    if (a !== b) divergences.push({ key: `verdict:${id}`, detail: `${a} -> ${b}` });
+    if (a !== b) divergences.push({ key: `verdict:${id}`, detail: `${a} -> ${b}`, transition: { from: a, to: b } });
   }
 
   const accepted: FreezeCheck["accepted"] = [];
   const unaccounted: FreezeDivergence[] = [];
   for (const d of divergences) {
-    const reason = frozen.adjudicated[d.key];
+    const reason = frozen.adjudicated[adjudicationKey(d)];
     if (reason?.trim()) accepted.push({ ...d, reason });
     else unaccounted.push(d);
   }
-  const diverging = new Set(divergences.map((d) => d.key));
+  const diverging = new Set(divergences.map(adjudicationKey));
   const stale = Object.keys(frozen.adjudicated)
     .filter((k) => !diverging.has(k))
     .sort();
@@ -390,7 +418,7 @@ export function checkFreeze(
       (accepted.length > 0 ? ` (${accepted.length} adjudicated divergence(s))` : "")
     : [
         unaccounted.length > 0
-          ? `freeze --check: ${unaccounted.length} unadjudicated divergence(s):\n  ${unaccounted.map((d) => `${d.key}: ${d.detail}`).join("\n  ")}`
+          ? `freeze --check: ${unaccounted.length} unadjudicated divergence(s):\n  ${unaccounted.map((d) => `${d.key}: ${d.detail}\n    to accept, adjudicate: ${adjudicationKey(d)}`).join("\n  ")}`
           : "",
         stale.length > 0
           ? `freeze --check: ${stale.length} adjudication(s) with nothing to adjudicate — remove them or say what still diverges:\n  ${stale.join("\n  ")}`

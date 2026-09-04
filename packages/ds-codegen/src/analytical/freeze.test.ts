@@ -132,14 +132,17 @@ describe("stage-2 erasure freeze", () => {
   });
 
   it("accepts a divergence only against a written reason, and refuses a reason with nothing to adjudicate", () => {
+    // The reason is keyed by the TRANSITION, not the class — see the
+    // A->B->C test below for what the class-only key permitted.
     const tampered = { ...live.erasure, "assertion.aggregate.op": { reach: 0, digest: "0".repeat(64) } };
-    const accepted = checkFreeze({ ...frozen, erasure: tampered, adjudicated: { "assertion.aggregate.op": "corrected locator" } }, live);
+    const key = `assertion.aggregate.op@${"0".repeat(64)}->${live.erasure["assertion.aggregate.op"].digest}`;
+    const accepted = checkFreeze({ ...frozen, erasure: tampered, adjudicated: { [key]: "corrected locator" } }, live);
     expect(accepted.ok).toBe(true);
     expect(accepted.accepted.map((a) => a.reason)).toEqual(["corrected locator"]);
 
-    const stale = checkFreeze({ ...frozen, adjudicated: { "field.key": "nothing diverges here" } }, live);
+    const stale = checkFreeze({ ...frozen, adjudicated: { "field.key@a->b": "nothing diverges here" } }, live);
     expect(stale.ok).toBe(false);
-    expect(stale.stale).toEqual(["field.key"]);
+    expect(stale.stale).toEqual(["field.key@a->b"]);
   });
 
   it("attributes a moved input, so a divergence can be traced to what changed", () => {
@@ -200,8 +203,9 @@ describe("stage-2 erasure freeze", () => {
     expect(moved.divergences.filter((d) => !d.key.startsWith("authority:")), "nothing else diverged").toEqual([]);
 
     // And it runs through the ordinary ratchet: adjudicable with a reason...
+    const excuse = `authority:witnessAuthorityDigest@${"0".repeat(64)}->${live.authority.witnessAuthorityDigest}`;
     const adjudicated = checkFreeze(
-      { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: "0".repeat(64) }, adjudicated: { "authority:witnessAuthorityDigest": "the witness surface gained a comment only" } },
+      { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: "0".repeat(64) }, adjudicated: { [excuse]: "the witness surface gained a comment only" } },
       live,
     );
     expect(adjudicated.ok).toBe(true);
@@ -209,9 +213,62 @@ describe("stage-2 erasure freeze", () => {
 
     // ...and an adjudication left behind after a re-record is itself a finding,
     // so the acceptance cannot silently outlive the move it excused.
-    const leftover = checkFreeze({ ...frozen, adjudicated: { "authority:witnessAuthorityDigest": "stale" } }, live);
+    const leftover = checkFreeze({ ...frozen, adjudicated: { [excuse]: "stale" } }, live);
     expect(leftover.ok).toBe(false);
-    expect(leftover.stale).toEqual(["authority:witnessAuthorityDigest"]);
+    expect(leftover.stale).toEqual([excuse]);
+  });
+
+  it("an adjudication cannot authorize a transition it did not review", () => {
+    // The exception path. Refusing an UNREVIEWED authority change is only half
+    // the boundary: a review written for one transition must not certify a
+    // later one. `adjudicated` was matched on the divergence CLASS alone, so
+    // `authority:witnessAuthorityDigest` accepted any movement of that identity
+    // once any movement of it had been excused.
+    //
+    // Sequence the class-only matcher permitted: record under A, review a
+    // comment-only change to B, then change acceptance behaviour again to C
+    // without re-recording and without touching the adjudication. The key still
+    // named a live divergence, so the old reason accepted the new state.
+    const A = frozen.authority.witnessAuthorityDigest;
+    const [B, C, D] = ["b".repeat(64), "c".repeat(64), "d".repeat(64)];
+    const at = (recorded: string, current: string, adjudicated: Record<string, string> = {}) =>
+      checkFreeze(
+        { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: recorded }, adjudicated },
+        { ...live, authority: { ...live.authority, witnessAuthorityDigest: current } },
+      );
+    // Full values, not a truncated display digest: the point is to identify the
+    // transition exactly, and a prefix is a different claim.
+    const reviewed = `authority:witnessAuthorityDigest@${A}->${B}`;
+    const excuse = { [reviewed]: "reviewed: the witness surface gained a comment only" };
+
+    // The transition that was actually reviewed is accepted.
+    const good = at(A, B, excuse);
+    expect(good.ok).toBe(true);
+    expect(good.accepted.map((x) => x.reason)).toEqual(["reviewed: the witness surface gained a comment only"]);
+
+    // A later, unreviewed movement of the SAME identity is not.
+    expect(at(A, C, excuse).ok, "a review of A->B authorised A->C").toBe(false);
+    // Nor is a different starting point: an A->B review is not a D->B review.
+    expect(at(D, B, excuse).ok, "a review of A->B authorised D->B").toBe(false);
+    // And in both, the unmatched excuse is reported rather than silently unused.
+    expect(at(A, C, excuse).stale).toEqual([reviewed]);
+    expect(at(D, B, excuse).stale).toEqual([reviewed]);
+  });
+
+  it("binds erasure divergences to their transition too, since one matcher serves them all", () => {
+    // The shared seam, exercised on a different divergence class. If the repair
+    // had been an authority-only exception, this would still accept a stale
+    // excuse — and erasure digests are the record's primary subject.
+    const id = Object.keys(frozen.erasure)[0];
+    const A = frozen.erasure[id].digest;
+    const [B, C] = ["b".repeat(64), "c".repeat(64)];
+    const at = (current: string, adjudicated: Record<string, string> = {}) =>
+      checkFreeze({ ...frozen, adjudicated }, { ...live, erasure: { ...live.erasure, [id]: { ...live.erasure[id], digest: current } } });
+    const reviewed = `${id}@${A}->${B}`;
+    const excuse = { [reviewed]: "reviewed: the hole gained an attribution field" };
+    expect(at(B, excuse).ok).toBe(true);
+    expect(at(C, excuse).ok, "a review of one erased representation authorised a different one").toBe(false);
+    expect(at(C, excuse).stale).toEqual([reviewed]);
   });
 
   it("records what it supersedes: the classes that changed, counted, each with an authored effect", () => {
