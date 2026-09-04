@@ -4,6 +4,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { classify } from "./prepush-scope.mjs";
 
 const on = (r, ...k) => k.every((key) => r[key] === true);
@@ -74,6 +75,34 @@ test("empty range (no files): nothing runs", () => {
 test("mixed docs + contract: union (rail + generate + docs-claims + tests)", () => {
   const r = classify(["docs/x.md", "packages/ds-contracts/components/Card/Card.contract.json"]);
   assert.ok(on(r, "RUN_DOCS_CLAIMS", "RUN_GENERATE_CHECK", "RUN_RAIL", "RUN_TESTS"));
+});
+
+// --- iconography committed-output drift ------------------------------------
+// The emission ledger attests the freshly generated edge set, but its own
+// check rebuilds before comparing that edge set. It cannot by itself prove the
+// committed package-root index files equal those fresh bytes. Both automation
+// surfaces therefore owe the byte-diff check before ledger attestation.
+
+test("an iconography change runs its dedicated gate group", () => {
+  assert.equal(
+    classify(["packages/ds-iconography/icons/Add/Add.icon.json"])
+      .RUN_ICONOGRAPHY,
+    true,
+  );
+});
+
+test("CI and pre-push both check committed icon exports before the ledger", () => {
+  for (const [surface, url] of [
+    ["CI", new URL("../.github/workflows/ci.yml", import.meta.url)],
+    ["pre-push", new URL("../.githooks/pre-push", import.meta.url)],
+  ]) {
+    const source = readFileSync(url, "utf8");
+    const buildCheck = source.indexOf("pnpm run iconography:build:check");
+    const ledgerCheck = source.indexOf("pnpm run iconography:ledger:check");
+    assert.notEqual(buildCheck, -1, `${surface} omits committed-export drift`);
+    assert.notEqual(ledgerCheck, -1, `${surface} omits ledger drift`);
+    assert.ok(buildCheck < ledgerCheck, `${surface} must byte-check before attesting`);
+  }
 });
 
 // --- contract-oracle catalog integrity --------------------------------------
