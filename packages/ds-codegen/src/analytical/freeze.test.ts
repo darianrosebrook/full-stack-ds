@@ -123,8 +123,20 @@ describe("stage-2 erasure freeze", () => {
   });
 
   it("attributes a moved input, so a divergence can be traced to what changed", () => {
-    const r = checkFreeze({ ...frozen, digests: { ...frozen.digests, "quotient.ts": "0".repeat(64) } }, live);
-    expect(r.movedInputs).toEqual(["quotient.ts"]);
+    const r = checkFreeze({ ...frozen, digests: { ...frozen.digests, "fixtures.jsonl": "0".repeat(64) } }, live);
+    expect(r.movedInputs).toContain("fixtures.jsonl");
+  });
+
+  /**
+   * The erasure-plan refactor's whole claim, as a single assertion: both
+   * modules that read the schema were rewritten — one now EMITS locators, the
+   * other only executes them — and not one of the 165 erasures changed by a
+   * byte. Reach counts alone could not say this; the digests can.
+   */
+  it("census.ts and quotient.ts both moved while every erasure digest held", () => {
+    const r = checkFreeze(frozen, live);
+    expect(r.movedInputs).toEqual(["census.ts", "quotient.ts"]);
+    expect(r.divergences).toEqual([]);
   });
 
   it("is recorded over the whole corpus, not a sample", () => {

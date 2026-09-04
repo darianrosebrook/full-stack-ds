@@ -45,7 +45,8 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { loadBranchSignatures, loadCensus, type BranchSignatures, type Coordinate } from "./census.js";
+import { loadBranchSignatures, loadCensus, loadLocators, type BranchSignatures, type Coordinate } from "./census.js";
+import { planAt, type ErasurePlan, type StructuralLocator } from "./erasure-plan.js";
 import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
 import {
   checkWitness,
@@ -59,7 +60,8 @@ import {
   type Oracle,
   type Side,
 } from "./necessity.js";
-import { canonical, eraseAll } from "./quotient.js";
+import { canonical, planFor } from "./quotient.js";
+import { executeAll } from "./erasure-plan.js";
 
 /**
  * A reference to the holding witness that serves as a closure's control.
@@ -163,18 +165,28 @@ export interface BranchNormalization {
 export const branchFieldPath = (n: Pick<BranchNormalization, "holder" | "branch" | "field">) => `${n.holder}.${n.branch}.${n.field}`;
 
 /**
- * The erasure handle for a branch-field operation.
+ * The erasure handle for a branch-field operation, as an executable plan.
  *
- * Synthetic on purpose: the operation is "delete this path", which is what a
- * `leaf` erasure does, and it must not depend on the census happening to emit a
- * coordinate at that path. Under the required-child presence rule it no longer
- * does — the `#present` propositions these used to borrow were derived
- * conjunctions of holder existence and branch identity, and are gone.
+ * It is not a coordinate — the operation is "forget this branch-conditional
+ * payload", which no retained coordinate names — but it is not a second system
+ * either: its LOCATION comes from the same census registry every coordinate
+ * plan's does. It used to be a synthetic `Coordinate` with a fabricated id,
+ * which worked only because the quotient reconstructed locations from ids; once
+ * the quotient executes plans, a fabricated id resolves to no plan and the
+ * erasure silently does nothing, so `planAt` throws instead.
  */
-export const forgetPath = (path: string): Coordinate => ({ id: `forget(${path})`, kind: "leaf", leaf: path, role: "schema" });
+export const forgetPath = (path: string, locators: Map<string, StructuralLocator> = loadLocators()): ErasurePlan =>
+  planAt(`forget(${path})`, path, locators, { kind: "delete-holder" });
 
-export const forgetBranchField = (n: Pick<BranchNormalization, "holder" | "branch" | "field">): Coordinate =>
-  forgetPath(branchFieldPath(n));
+export const forgetBranchField = (
+  n: Pick<BranchNormalization, "holder" | "branch" | "field">,
+  locators: Map<string, StructuralLocator> = loadLocators(),
+): ErasurePlan =>
+  planAt(`forget(${branchFieldPath(n)})`, branchFieldPath(n), locators, {
+    kind: "forget-branch-field",
+    branch: n.branch,
+    field: n.field,
+  });
 
 /** Live semantic coordinates at or below a path. References are listed for exhaustiveness and confer no standing. */
 export function footprintOf(path: string, census: Coordinate[]): string[] {
@@ -461,7 +473,7 @@ export function checkClosure(
     obligations.push(unevaluable("3-controlled-stimuli", "no stimuli constructed"));
   } else {
     const forgetHolder = [forgetPath(parsed.holder)];
-    const outside = canonical(eraseAll(a!.fixture, forgetHolder)) === canonical(eraseAll(b!.fixture, forgetHolder));
+    const outside = canonical(executeAll(a!.fixture, forgetHolder)) === canonical(executeAll(b!.fixture, forgetHolder));
     const differ = !sameOutcome(a!.outcome, b!.outcome);
     const vocabulary = groundedVocabulary(oracle);
     const ungrounded = ([["a", closure.a!], ["b", closure.b!]] as const)
@@ -487,13 +499,14 @@ export function checkClosure(
 
   /** Erase the carrier (a census coordinate) and/or a set of branch-field operations. */
   const collidesUnder = (withCarrier: boolean, ops: BranchNormalization[]): boolean => {
-    const cs: Coordinate[] = [...ops.map(forgetBranchField)];
+    const cs: ErasurePlan[] = ops.map((o) => forgetBranchField(o));
     if (withCarrier) {
       const cc = coord(closure.carrier);
-      if (!cc) return false;
-      cs.push(cc);
+      const carrierPlan = cc && planFor(cc);
+      if (!carrierPlan) return false;
+      cs.push(carrierPlan);
     }
-    return canonical(eraseAll(a!.fixture, cs)) === canonical(eraseAll(b!.fixture, cs));
+    return canonical(executeAll(a!.fixture, cs)) === canonical(executeAll(b!.fixture, cs));
   };
 
   // 4. CARRIER INSUFFICIENCY BEFORE NORMALIZATION: the carrier alone must not
