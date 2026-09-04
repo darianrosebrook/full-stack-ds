@@ -25,13 +25,15 @@ describe("the committed footprint report", () => {
     expect(r.live.digests).toEqual(r.recorded.digests);
   });
 
-  it("is measured over the corpus AND every witness and closure stimulus", () => {
+  it("is measured over the corpus, every authored stimulus, and synthesized separating pairs", () => {
     const s = specimens();
     expect(s.corpus).toBe(84);
+    // Without the authored stimuli, a coordinate whose only evidence is a
+    // patched pair reads as dead — the exact misreading this lane prevents.
     expect(s.stimuli).toBeGreaterThan(0);
-    // Without the stimuli, a coordinate whose only evidence is a patched pair
-    // would read as dead — the exact misreading this lane exists to prevent.
-    expect(live.specimens.total).toBe(s.corpus + s.stimuli);
+    // Without the synthesized pairs, 79 of 140 erasures were untestable.
+    expect(s.synthesized).toBeGreaterThan(80);
+    expect(live.specimens.total).toBe(s.corpus + s.stimuli + s.synthesized);
   });
 });
 
@@ -40,17 +42,25 @@ describe("structural claims survive falsification", () => {
     expect(live.refuted).toEqual([]);
   });
 
-  it("reports the three supported-but-unclaimed coarsenings rather than adopting them", () => {
-    // Each is a MERGE that appears to coarsen its own leaf's DELETION. That is
-    // false in general — deleting `grain` identifies `{day}`, `{month}` and
-    // absence, while merging day~month leaves absence separable — and it is
-    // only supported here because no specimen pair exercises the difference.
-    // Adopting it would let a thin specimen set widen a footprint.
+  it("reports supported-but-unclaimed coarsenings rather than adopting them", () => {
     expect(live.unclaimed.map((u) => `${u.destroys} -> ${u.supported}`).sort()).toEqual([
-      "field.temporality.grain:day~month -> field.temporality.grain",
-      "relation.derivedBy.bin.closure:left-closed~<absent> -> relation.derivedBy.bin.closure",
       "relation.derivedBy.kind:bin~normalize -> relation.derivedBy.kind",
+      "relation.derivedBy.nest.levels#incidence -> relation.derivedBy.nest.levels#arity",
+      "structure.peers[]#incidence -> structure.peers[]#arity",
     ]);
+  });
+
+  it("and every one is VACUOUS: its target has no separating pair at all", () => {
+    // The distinction that makes the report readable. A coarsening "supported"
+    // by a coordinate nothing separates rests on an empty implication, not on
+    // evidence, so none of the three is a footprint the structural rules miss.
+    // The one that WAS real — `structure.peers[]#present` coarsening
+    // `structure.peers#present`, because deleting every element empties the
+    // array and an emptied declaration is dropped — is now claimed, which is
+    // why it no longer appears here. The falsification pass found it; the
+    // structural rule was widened rather than the under-report left standing.
+    const unbuilt = new Set(live.unbuilt.map((u) => u.coordinate));
+    for (const u of live.unclaimed) expect(unbuilt.has(u.supported), `${u.supported} has a separating pair`).toBe(true);
   });
 
   it("can refute: a false claim is caught by a specimen pair", () => {
@@ -68,11 +78,39 @@ describe("structural claims survive falsification", () => {
   });
 
   it("reports what it could not test at all, instead of counting it as agreement", () => {
-    // 79 of 140 erasures identify no two distinct specimens, so their claimed
-    // footprint is unfalsified rather than confirmed. That is the corpus
-    // ceiling, and it is the argument for schema-minimal specimens.
-    expect(live.unseparated.length).toBeGreaterThan(live.dead.length);
-    for (const id of live.dead) expect(live.unseparated).toContain(id);
+    // Synthesis moved this a long way. Every one of the 140 erasures now acts
+    // on some specimen — `dead` is empty where the corpus alone left 16 — and
+    // 25 still identify no two distinct ones, where the corpus alone left 79.
+    // Those 25 carry claimed footprints that are unfalsified, not confirmed.
+    expect(live.dead).toEqual([]);
+    expect(live.unseparated.length).toBe(25);
+  });
+});
+
+describe("erasures that leave the language", () => {
+  it("names the four whose quotient is schema-invalid on every specimen it touches", () => {
+    // A necessity argument says no consumer of the QUOTIENTED representation
+    // can tell two stimuli apart. Where the quotient leaves the language there
+    // is no such consumer, and these four each support a HOLDING witness. Not
+    // acted on here: repairing it means deciding that deleting a required leaf
+    // deletes its declaration, which would move real evidence.
+    const worst = live.invalidating.filter((i) => i.specimens > 100).map((i) => i.coordinate).sort();
+    expect(worst).toEqual(["assertion.aggregate.op", "assertion.kind", "field.transformation", "relation.grain"]);
+    for (const id of worst) {
+      const w = live.witnesses.find((x) => x.declared.includes(id));
+      expect(w?.holds, `${id} has no holding witness`).toBe(true);
+    }
+  });
+
+  it("counts the rest, which are branch residue and are what closures exist for", () => {
+    // Writing one branch's tag over another branch's payload cannot be
+    // schema-valid — `graph` requires `edgeFrom`/`edgeTo`, `aggregate-to-grain`
+    // requires `toGrain`. That is the residue the closure form normalizes, and
+    // it is confirmed here from a direction the closure ledger never looks:
+    // the specimen synthesizer cannot build a pair for any of them.
+    const residue = live.invalidating.filter((i) => i.coordinate.includes(".kind"));
+    expect(residue.length).toBeGreaterThan(20);
+    expect(live.invalidating.length).toBe(34);
   });
 });
 

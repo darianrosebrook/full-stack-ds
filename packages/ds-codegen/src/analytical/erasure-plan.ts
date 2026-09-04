@@ -361,11 +361,27 @@ export const UNCONDITIONAL_DELETIONS: ReadonlySet<ForgetOperation["kind"]> = new
  */
 export function deletionFootprint(plan: ErasurePlan, plans: Iterable<ErasurePlan>): string[] {
   if (!UNCONDITIONAL_DELETIONS.has(plan.operation.kind)) return [];
+  const steps = plan.locator.steps;
+  // Deleting every ELEMENT of an array empties it, and an emptied declaration
+  // is dropped from its holder — so an element deletion is at least as coarse
+  // as deleting the array itself. The containment test alone cannot see this:
+  // the array's locator is SHORTER, so it contains the element plan rather than
+  // the other way round. Found by the falsification pass, which reported
+  // `structure.peers[]#present -> structure.peers#present` as supported and
+  // unclaimed; claimed here rather than left as an under-report.
+  const parent = steps.length > 0 && steps[steps.length - 1].kind === "elements" ? { path: plan.locator.path, steps: steps.slice(0, -1) } : undefined;
   return [...plans]
-    .filter((q) => containsSteps(plan.locator, q.locator))
+    .filter(
+      (q) =>
+        containsSteps(plan.locator, q.locator) ||
+        (parent !== undefined && UNCONDITIONAL_DELETIONS.has(q.operation.kind) && stepsEqual(parent.steps, q.locator.steps)),
+    )
     .map((q) => q.id)
     .sort();
 }
+
+const stepsEqual = (a: readonly LocatorStep[], b: readonly LocatorStep[]) =>
+  a.length === b.length && a.every((s, i) => JSON.stringify(s) === JSON.stringify(b[i]));
 
 /**
  * A plan for a path that is NOT a coordinate.

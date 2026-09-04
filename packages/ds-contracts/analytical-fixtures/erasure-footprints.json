@@ -4,7 +4,7 @@
     "fixture.schema.json": "b1faba61e6b2048c05d4e6ee782c305c40cea5429da065f8af02c446249e0a88",
     "fixtures.jsonl": "4e23b40739798c0a4bc278e841965ff95ef08bc78821be1b58b9baba296736ba",
     "census.ts": "2cd03735368b2c7138bbc8cdee7ce3a1307c2f8b52a0068b3d587f83d4ee0043",
-    "erasure-plan.ts": "06a69f2f0e7cc77bf38816a3eb387aa84914dc9c2e957d1a31bb84f2a412f7e6",
+    "erasure-plan.ts": "0c529f0fcd81a7563db3039f7739ff27229dd29ae1023616b23cb900800d776e",
     "quotient.ts": "2465ac77fd507cc21ac06f8713015b0f9429d8d71a26b7d31d724163bee0131b",
     "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
     "closures-stage2.json": "a26ac911924f230e803871691e0ee60ecf60cf6ee2ab03771add0099aa0a7780"
@@ -12,8 +12,339 @@
   "specimens": {
     "corpus": 84,
     "stimuli": 22,
-    "total": 106
+    "synthesized": 93,
+    "total": 199
   },
+  "unbuilt": [
+    {
+      "coordinate": "relation.grain",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.transformation",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.temporality.kind",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.additivity.kind",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation; the erasure does not identify the two values"
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~semi-additive",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~non-additive",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~ratio-measure",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~nest",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~bin",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~normalize",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~bin",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~normalize",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:project~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.join.cardinality",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#arity",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#incidence",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "structure.peers[]#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "structure.peers[]#arity",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "structure.peers[]#incidence",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "assertion.kind",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~ratio-comparison",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "assertion.aggregate.op",
+      "reason": "erasing it produces a schema-invalid representation; the locator resolves to no slot, or the base binds too few names"
+    },
+    {
+      "coordinate": "evidence.rows.*#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values"
+    },
+    {
+      "coordinate": "evidence.grainWitness#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values"
+    }
+  ],
+  "invalidating": [
+    {
+      "coordinate": "assertion.kind",
+      "specimens": 106,
+      "error": "/assertions/0 must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.transformation",
+      "specimens": 106,
+      "error": "/structure/relations/survey/fields/respondent must have required property 'transformation'"
+    },
+    {
+      "coordinate": "relation.grain",
+      "specimens": 106,
+      "error": "/structure/relations/survey must have required property 'grain'"
+    },
+    {
+      "coordinate": "assertion.aggregate.op",
+      "specimens": 104,
+      "error": "/assertions/0 must have required property 'op'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind",
+      "specimens": 23,
+      "error": "/structure/relations/shares/derivedBy must have required property 'kind'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:project~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "field.additivity.kind",
+      "specimens": 5,
+      "error": "/structure/relations/stock/fields/on_hand/additivity must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~semi-additive",
+      "specimens": 5,
+      "error": "/structure/relations/stock/fields/on_hand/additivity must NOT have additional properties"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "specimens": 5,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~nest",
+      "specimens": 5,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#arity",
+      "specimens": 5,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "structure.peers[]#arity",
+      "specimens": 4,
+      "error": "/structure/peers/0 must NOT have fewer than 2 items"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~ratio-measure",
+      "specimens": 3,
+      "error": "/structure/relations/regions/fields/gdp_per_capita/additivity/kind must be equal to constant"
+    },
+    {
+      "coordinate": "relation.derivedBy.join.cardinality",
+      "specimens": 3,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
+      "specimens": 3,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "specimens": 3,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~normalize",
+      "specimens": 3,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~normalize",
+      "specimens": 3,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~ratio-comparison",
+      "specimens": 2,
+      "error": "/assertions/0 must have required property 'op'"
+    },
+    {
+      "coordinate": "field.temporality.kind",
+      "specimens": 2,
+      "error": "/structure/relations/daily/fields/day/temporality must have required property 'kind'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "specimens": 2,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~bin",
+      "specimens": 2,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~bin",
+      "specimens": 2,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~non-additive",
+      "specimens": 1,
+      "error": "/structure/relations/regions/fields/avg_score/additivity/kind must be equal to constant"
+    }
+  ],
   "footprints": {
     "assertion.aggregate.along#arity": [
       "assertion.aggregate.along#arity"
@@ -591,6 +922,7 @@
       "structure.peers[]#order"
     ],
     "structure.peers[]#present": [
+      "structure.peers#present",
       "structure.peers[]#arity",
       "structure.peers[]#incidence",
       "structure.peers[]#order",
@@ -604,69 +936,13 @@
       "structure.peers[]#present"
     ]
   },
-  "dead": [
-    "assertion.aggregate.along#order",
-    "evidence.grainWitness#arity",
-    "evidence.grainWitness#order",
-    "field.additivity.semi-additive.nonAdditiveAlong#arity",
-    "field.additivity.semi-additive.nonAdditiveAlong#order",
-    "relation.derivedBy.aggregate-to-grain.toGrain#arity",
-    "relation.derivedBy.aggregate-to-grain.toGrain#order",
-    "relation.derivedBy.bin.closure:left-closed~right-closed",
-    "relation.derivedBy.bin.closure:right-closed~<absent>",
-    "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
-    "relation.derivedBy.nest.levels#order",
-    "structure.peers[]#order"
-  ],
+  "dead": [],
   "unseparated": [
-    "assertion.aggregate.along#arity",
-    "assertion.aggregate.along#order",
-    "assertion.aggregate.relation#incidence",
     "assertion.kind",
     "assertion.kind:aggregate~ratio-comparison",
-    "assertion.ratio-comparison.field#incidence",
-    "assertion.ratio-comparison.relation#incidence",
-    "evidence.grainWitness#arity",
-    "evidence.grainWitness#incidence",
-    "evidence.grainWitness#order",
     "field.additivity.kind:additive~semi-additive",
-    "field.additivity.kind:non-additive~ratio-measure",
     "field.additivity.kind:semi-additive~non-additive",
     "field.additivity.kind:semi-additive~ratio-measure",
-    "field.additivity.semi-additive.nonAdditiveAlong#arity",
-    "field.additivity.semi-additive.nonAdditiveAlong#order",
-    "field.temporality.grain:day~<absent>",
-    "field.temporality.grain:month~<absent>",
-    "observation.null:absent~suppressed",
-    "observation.null:censored~suppressed",
-    "observation.null:suppressed~<absent>",
-    "relation.derivedBy.aggregate-to-grain.from#incidence",
-    "relation.derivedBy.aggregate-to-grain.toGrain#arity",
-    "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
-    "relation.derivedBy.aggregate-to-grain.toGrain#order",
-    "relation.derivedBy.bin.closure:left-closed~right-closed",
-    "relation.derivedBy.bin.closure:right-closed~<absent>",
-    "relation.derivedBy.bin.field#incidence",
-    "relation.derivedBy.bin.from#incidence",
-    "relation.derivedBy.graph.edgeFrom#incidence",
-    "relation.derivedBy.graph.edgeTo#incidence",
-    "relation.derivedBy.graph.from#incidence",
-    "relation.derivedBy.graph.requiresConservation",
-    "relation.derivedBy.graph.value#incidence",
-    "relation.derivedBy.graph.value#present",
-    "relation.derivedBy.join.cardinality",
-    "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
-    "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
-    "relation.derivedBy.join.from#incidence",
-    "relation.derivedBy.join.with#incidence",
     "relation.derivedBy.kind:aggregate-to-grain~bin",
     "relation.derivedBy.kind:aggregate-to-grain~graph",
     "relation.derivedBy.kind:aggregate-to-grain~join",
@@ -686,36 +962,21 @@
     "relation.derivedBy.kind:nest~project",
     "relation.derivedBy.kind:normalize~graph",
     "relation.derivedBy.kind:normalize~project",
-    "relation.derivedBy.kind:project~graph",
-    "relation.derivedBy.nest.from#incidence",
-    "relation.derivedBy.nest.levels#arity",
-    "relation.derivedBy.nest.levels#incidence",
-    "relation.derivedBy.nest.levels#order",
-    "relation.derivedBy.normalize.field#incidence",
-    "relation.derivedBy.normalize.from#incidence",
-    "relation.derivedBy.project.from#incidence",
-    "relation.derivedBy.project.keep#arity",
-    "relation.derivedBy.project.keep#incidence",
-    "relation.derivedBy.project.keep#order",
-    "structure.peers#present",
-    "structure.peers[]#arity",
-    "structure.peers[]#incidence",
-    "structure.peers[]#order",
-    "structure.peers[]#present"
+    "relation.derivedBy.kind:project~graph"
   ],
   "refuted": [],
   "unclaimed": [
-    {
-      "destroys": "field.temporality.grain:day~month",
-      "supported": "field.temporality.grain"
-    },
     {
       "destroys": "relation.derivedBy.kind:bin~normalize",
       "supported": "relation.derivedBy.kind"
     },
     {
-      "destroys": "relation.derivedBy.bin.closure:left-closed~<absent>",
-      "supported": "relation.derivedBy.bin.closure"
+      "destroys": "relation.derivedBy.nest.levels#incidence",
+      "supported": "relation.derivedBy.nest.levels#arity"
+    },
+    {
+      "destroys": "structure.peers[]#incidence",
+      "supported": "structure.peers[]#arity"
     }
   ],
   "witnesses": [

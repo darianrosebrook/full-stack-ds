@@ -61,6 +61,7 @@ import { fileURLToPath } from "node:url";
 import { FIXTURE_SCHEMA, loadCensus, loadPlans } from "./census.js";
 import { loadClosures } from "./closure.js";
 import { deletionFootprint, executePlan, wouldChange, type ErasurePlan } from "./erasure-plan.js";
+import { separatingPairs, type PairFailure } from "./erasure-specimens.js";
 import {
   checkWitness,
   FIXTURES_DIR,
@@ -85,7 +86,7 @@ const sha = (bytes: string | Buffer) => createHash("sha256").update(bytes).diges
  * that no corpus line contains, and a footprint measured without them would
  * report a coordinate dead that its own witness exercises.
  */
-export function specimens(): { fixtures: Fixture[]; corpus: number; stimuli: number } {
+export function specimens(): { fixtures: Fixture[]; corpus: number; stimuli: number; synthesized: number; unbuilt: PairFailure[] } {
   const oracle = loadOracle();
   const corpus = parseFixtures(fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl"), "utf-8"));
   const seen = new Set(corpus.map(canonical));
@@ -116,7 +117,28 @@ export function specimens(): { fixtures: Fixture[]; corpus: number; stimuli: num
       }
     }
   }
-  return { fixtures: [...corpus, ...extra], corpus: corpus.length, stimuli: extra.length };
+  // Synthesized separating pairs are counted separately, because they are a
+  // different kind of evidence: the corpus and the stimuli were authored to
+  // make an argument, these were written to give a footprint claim something
+  // that could refute it.
+  const authored = [...corpus, ...extra];
+  const built = separatingPairs(authored, oracle.validate);
+  const synthesized: Fixture[] = [];
+  for (const p of built.pairs) {
+    for (const f of [p.a, p.b]) {
+      const c = canonical(f);
+      if (seen.has(c)) continue;
+      seen.add(c);
+      synthesized.push(f);
+    }
+  }
+  return {
+    fixtures: [...authored, ...synthesized],
+    corpus: corpus.length,
+    stimuli: extra.length,
+    synthesized: synthesized.length,
+    unbuilt: built.unbuilt,
+  };
 }
 
 /** Two plans act on the same occurrence when their step lists agree exactly. */
@@ -312,7 +334,18 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
 export interface FootprintReport {
   $comment: string;
   digests: Record<string, string>;
-  specimens: { corpus: number; stimuli: number; total: number };
+  specimens: { corpus: number; stimuli: number; synthesized: number; total: number };
+  /** Coordinates for which no separating pair could be written, and why. */
+  unbuilt: PairFailure[];
+  /**
+   * Erasures whose result is not a schema-valid representation.
+   *
+   * A necessity argument says "no consumer of the QUOTIENTED representation can
+   * tell the two apart". Where the quotient leaves the language, there is no
+   * such consumer, and the argument is standing on a shape the schema rejects.
+   * Reported, never acted on: four of these currently support holding witnesses.
+   */
+  invalidating: { coordinate: string; specimens: number; error: string }[];
   /** Coordinate id -> measured footprint. Every plan appears, singleton or not. */
   footprints: Record<string, string[]>;
   /** Erasures no specimen distinguishes. A corpus fact; never read as a verdict. */
@@ -324,6 +357,31 @@ export interface FootprintReport {
   /** Coarsenings the specimens support and the structural rules do not claim. */
   unclaimed: { destroys: string; supported: string }[];
   witnesses: WitnessAudit[];
+}
+
+/**
+ * Which erasures produce a representation the schema rejects.
+ *
+ * Measured over the AUTHORED specimens only. A synthesized pair is discarded
+ * unless both sides validate, so including them would make this look better by
+ * construction — the population would be filtered by the property being tested.
+ */
+export function invalidatingErasures(fixtures: Fixture[], plans: Map<string, ErasurePlan> = loadPlans()): FootprintReport["invalidating"] {
+  const validate = loadOracle().validate;
+  const out: FootprintReport["invalidating"] = [];
+  for (const p of plans.values()) {
+    let count = 0;
+    let first = "";
+    for (const f of fixtures) {
+      if (!wouldChange(f, p)) continue;
+      const errors = validate(executePlan(f, p));
+      if (errors.length === 0) continue;
+      count++;
+      first ||= errors[0];
+    }
+    if (count > 0) out.push({ coordinate: p.id, specimens: count, error: first });
+  }
+  return out.sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
 }
 
 export function computeReport(): FootprintReport {
@@ -341,7 +399,9 @@ export function computeReport(): FootprintReport {
       "witnesses.json": sha(fs.readFileSync(WITNESSES_FILE)),
       "closures-stage2.json": sha(fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json"))),
     },
-    specimens: { corpus: s.corpus, stimuli: s.stimuli, total: s.fixtures.length },
+    specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length },
+    unbuilt: s.unbuilt,
+    invalidating: invalidatingErasures(s.fixtures.slice(0, s.corpus + s.stimuli)),
     footprints: Object.fromEntries([...m.footprints].sort(([a], [b]) => a.localeCompare(b))),
     dead: m.dead,
     unseparated: m.unseparated,
@@ -387,7 +447,22 @@ if (invokedDirectly) {
   } else {
     const report = computeReport();
     const wide = Object.entries(report.footprints).filter(([, f]) => f.length > 1);
-    console.log(`footprints: ${report.specimens.total} specimens (${report.specimens.corpus} corpus + ${report.specimens.stimuli} stimuli)`);
+    console.log(
+      `footprints: ${report.specimens.total} specimens (${report.specimens.corpus} corpus + ${report.specimens.stimuli} stimuli + ${report.specimens.synthesized} synthesized)`,
+    );
+    const byReason = new Map<string, string[]>();
+    for (const u of report.unbuilt) {
+      const key = u.reason.startsWith("schema-invalid") ? "erasing it produces a schema-invalid representation" : u.reason;
+      byReason.set(key, [...(byReason.get(key) ?? []), u.coordinate]);
+    }
+    console.log(`  ${report.invalidating.length} erasure(s) leave the language (schema-invalid result):`);
+    for (const i of report.invalidating) console.log(`    ${String(i.specimens).padStart(3)}  ${i.coordinate.padEnd(50)} ${i.error}`);
+    console.log(`  ${report.unbuilt.length} coordinate(s) with no separating pair:`);
+    for (const [reason, ids] of [...byReason].sort((a, b) => b[1].length - a[1].length)) {
+      console.log(`    ${String(ids.length).padStart(3)}  ${reason}`);
+      for (const id of ids.slice(0, 6)) console.log(`         ${id}`);
+      if (ids.length > 6) console.log(`         … and ${ids.length - 6} more`);
+    }
     console.log(`  ${wide.length} of ${Object.keys(report.footprints).length} erasures destroy more than themselves`);
     console.log(`  ${report.dead.length} erasure(s) no specimen distinguishes\n`);
     for (const [id, f] of wide.sort((a, b) => b[1].length - a[1].length).slice(0, 12)) {
