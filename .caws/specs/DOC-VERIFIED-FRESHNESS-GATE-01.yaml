@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/docs-claims-freshness.selftest.mjs — stale-fail (exit 1, names docs/a.md + lastTouch commit) and unresolvable-stamp scenarios; real-repo form: any unledgered stale stamp fails docs:check-claims"
     recorded_at: "2026-09-04T22:29:10.000Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node scripts/docs-claims-freshness.selftest.mjs — ledgered-pass (exit 0), ledger-mismatch / obsolete-entry / dangling-entry (exit 1); real repo: doc-freshness-baseline.json exempts exactly 6 known-stale stamps, canonical run reports '9 verified stamp(s) fresh or ledgered (6 ledgered stale)'"
+    recorded_at: "2026-09-04T22:29:16.473Z"
