@@ -62,3 +62,12 @@ contracts:
   - name: 'proptypeir-legacy-bucket-xor'
     type: schema
     path: 'packages/ds-contracts/component.contract.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "packages/ds-codegen/src/validate.test.ts 'legacy-bucket member type/propType XOR' describe — styled/hook propType-only accepted, both/neither rejected"
+    recorded_at: "2026-09-04T23:44:34.445Z"
+    test_nodeid: "packages/ds-codegen/src/validate.test.ts > legacy-bucket member type/propType XOR (LEGACY-BUCKET-REFS-01)"
+    command: pnpm exec vitest run src/validate.test.ts
+    exit_code: 0
+    commit_sha: e18800d5
