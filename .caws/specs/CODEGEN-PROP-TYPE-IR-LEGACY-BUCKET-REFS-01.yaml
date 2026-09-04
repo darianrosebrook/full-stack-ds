@@ -3,7 +3,6 @@ title: 'Object-literal aliases referenced via structured propType on legacy-buck
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: proptype-legacy-bucket-refs
 created_at: '2026-09-04T23:16:14.905Z'
 updated_at: '2026-09-04T23:37:09.397Z'
 created_by_session: 'sess_841020c6-ac0e-4334-9975-5dc480cda4b5'
