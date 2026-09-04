@@ -26,6 +26,8 @@ interface Props {
   disabled?: boolean;
   name?: string;
   value?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -66,7 +68,7 @@ const classNames = computed(() => [
 
 <template>
   <label :class="classNames" :data-testid="props['data-testid']" data-fsds-component="checkbox">
-    <input :class="'checkbox__input'" type="checkbox" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" :name="props.name" :value="props.value" :aria-checked="(props.indeterminate ? 'mixed' : behavior.checked.value)" :indeterminate="props.indeterminate" />
+    <input :class="'checkbox__input'" type="checkbox" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" :name="props.name" :value="props.value" :aria-label="props.ariaLabel" :aria-labelledby="props.ariaLabelledby" :aria-checked="(props.indeterminate ? 'mixed' : behavior.checked.value)" :indeterminate="props.indeterminate" />
     <span :class="'checkbox__indicator'" aria-hidden="true"></span>
   </label>
 </template>

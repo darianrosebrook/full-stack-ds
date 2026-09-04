@@ -87,6 +87,28 @@ describe("validateContractSemantics — cross-reference rules", () => {
     expect(issueAt(issues, "/relationships/0/to")).toBe(true);
   });
 
+  it("rejects a decorative part as an aria-labelledby target", () => {
+    const c = base({
+      anatomy: {
+        parts: ["root", "icon"],
+        details: {
+          root: { description: "Interactive owner", role: "root" },
+          icon: { description: "Decorative glyph", role: "decoration" },
+        },
+      },
+      relationships: [
+        { from: "root", to: "icon", attribute: "aria-labelledby" },
+      ],
+    });
+
+    const issues = validateContractSemantics(c);
+    expect(issues).toContainEqual({
+      pointer: "/relationships/0/to",
+      message:
+        '[A11Y_IDREF_DECORATIVE_NAME_TARGET] aria-labelledby target "icon" is declared as a decoration and cannot provide an accessible name',
+    });
+  });
+
   it("flags channels.value referencing a missing prop", () => {
     const c = base({
       layer: "composer",

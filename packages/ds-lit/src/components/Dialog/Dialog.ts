@@ -214,6 +214,10 @@ export class DialogElement extends LitElement {
   @property({ type: Boolean }) closeOnBackdropClick?: boolean = true;
   @property({ type: String }) initialFocus?: string;
   @property({ type: String }) returnFocus?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
+  @property({ type: String }) ariaLabelledby?: string;
+  @property({ type: String }) ariaDescribedby?: string;
 
   private behavior = new DialogBehavior(this, {
     open: () => this.open,
@@ -269,12 +273,12 @@ export class DialogElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null ? 'dialog-title' : null].filter(Boolean).join(' ') || undefined)} aria-describedby="dialog-body">
+    return html`<div class="${this.computeClasses()}">
   ${this.behavior.openness ? html`
   <div class=${'dialog__backdrop'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'dialog__modal'} role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id" data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'dialog__modal'} role="dialog" aria-modal="true" aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null && !this.ariaLabel ? 'dialog-title' : null, this.ariaLabelledby].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined(['dialog-body', this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'dialog__header'}>
       <h2 class=${'dialog__title'} id="dialog-title">
         <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>

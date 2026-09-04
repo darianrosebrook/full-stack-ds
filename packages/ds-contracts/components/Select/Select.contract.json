@@ -26,7 +26,8 @@
             "aria-haspopup",
             "aria-controls",
             "aria-expanded",
-            "aria-disabled"
+            "aria-disabled",
+            "aria-label"
           ]
         }
       },
@@ -35,7 +36,13 @@
         "description": "Button control that opens or closes the select listbox.",
         "role": "trigger",
         "interactive": true,
-        "focusable": true
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label",
+            "aria-expanded"
+          ]
+        }
       },
       "text": {
         "tag": "span",
@@ -91,6 +98,7 @@
         "aria-controls": "fsds-select-listbox"
       },
       "bindings": {
+        "aria-label": "prop:triggerLabel",
         "aria-expanded": "channel:open.value",
         "aria-disabled": "prop:disabled"
       },
@@ -102,7 +110,9 @@
             "type": "button"
           },
           "bindings": {
-            "disabled": "prop:disabled"
+            "disabled": "prop:disabled",
+            "aria-label": "prop:triggerLabel",
+            "aria-expanded": "channel:open.value"
           },
           "events": {
             "click": "channel:open.onChange"
@@ -237,6 +247,12 @@
           "name": "disabled",
           "propType": { "kind": "boolean" },
           "description": "Disabled state."
+        },
+        {
+          "name": "triggerLabel",
+          "propType": { "kind": "string" },
+          "description": "Accessible name for the button that opens the option list.",
+          "default": "Select an option"
         },
         {
           "name": "size",

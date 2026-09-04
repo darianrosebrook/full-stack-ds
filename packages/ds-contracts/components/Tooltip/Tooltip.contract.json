@@ -219,7 +219,7 @@
   "relationships": [
     {
       "from": "trigger",
-      "to": "root",
+      "to": "content",
       "attribute": "aria-describedby",
       "when": "visibility=visible",
       "description": "Trigger's aria-describedby points to the tooltip content's id when visible, providing supplemental screen-reader description."

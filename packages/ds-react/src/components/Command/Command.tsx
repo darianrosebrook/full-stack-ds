@@ -18,7 +18,7 @@ import "./Command.css";
 // @custom:end
 
 // @generated:start props
-export interface CommandProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-label" | "aria-labelledby" | "children" | "className" | "data-testid" | "defaultOpen" | "defaultSearch" | "emptyMessage" | "filter" | "label" | "onOpenChange" | "onSearchChange" | "open" | "placeholder" | "search" | "shouldFilter"> {
+export interface CommandProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultSearch" | "emptyMessage" | "filter" | "label" | "onOpenChange" | "onSearchChange" | "open" | "placeholder" | "search" | "searchLabel" | "shouldFilter"> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -26,14 +26,16 @@ export interface CommandProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria
   defaultSearch?: string;
   onSearchChange?: (value: string) => void;
   placeholder?: string;
+  searchLabel?: string;
   emptyMessage?: string;
   label?: string;
   shouldFilter?: boolean;
   filter?: ((value: string, search: string) => number) | undefined;
   className?: string;
   "data-testid"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
+  slots?: {
+    items?: ReactNode;
+  };
 }
 // @generated:end
 
@@ -106,13 +108,13 @@ export function Command({
   onSearchChange,
   className,
   "data-testid": testId,
-  "aria-label": ariaLabel,
-  "aria-labelledby": ariaLabelledBy,
   placeholder = "Search...",
+  searchLabel = "Search commands",
   emptyMessage = "No results found.",
   label = "Command palette",
   shouldFilter = true,
   filter,
+  slots,
   ...rest
 }: CommandProps) {
   const { open, setOpen, search, setSearch, renderInPortal } = useCommand({
@@ -135,30 +137,19 @@ export function Command({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} data-fsds-component="command" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="command" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
       {open ? (
         <div className="command__overlay" aria-hidden="true" />
       ) : null}
       {open ? (
-        <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label} aria-labelledby={ariaLabelledBy}>
+        <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label}>
           <div className="command__inputWrapper">
             <span className="command__searchIcon" aria-hidden="true" />
-            <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onChange={(e) => setSearch(e.target.value)} aria-expanded={open} placeholder={placeholder} value={search} id={`${instanceId}-input`} />
+            <input className="command__input" type="search" role="combobox" aria-autocomplete="list" onChange={(e) => setSearch(e.target.value)} aria-expanded={open} aria-label={searchLabel} placeholder={placeholder} value={search} id={`${instanceId}-input`} aria-controls={`${instanceId}-list`} />
           </div>
-          <div className="command__list" role="listbox" id="fsds-command-listbox" aria-labelledby={`${instanceId}-input`}>
+          <div className="command__list" role="listbox" id={`${instanceId}-list`} aria-labelledby={`${instanceId}-input`}>
             <div className="command__empty" />
-            <div className="command__group">
-              <div className="command__groupHeading" />
-              <div className="command__groupItems">
-                <div className="command__item" role="option">
-                  <span className="command__itemIcon" />
-                  <div className="command__itemContent">
-                    <span className="command__itemLabel" />
-                    <span className="command__itemDescription" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            {slots?.items}
             <div className="command__separator" role="separator" aria-hidden="true" />
           </div>
         </div>

@@ -114,6 +114,24 @@
       "description": "Accessible label for the OTP group.",
       "defaultExpr": "\"One-time password\"",
       "nodeKind": null
+    },
+    {
+      "name": "fieldLabel",
+      "safeName": "fieldLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label applied to each one-character OTP field.",
+      "defaultExpr": "\"One-time password digit\"",
+      "nodeKind": null
+    },
+    {
+      "name": "ariaDescribedby",
+      "safeName": "ariaDescribedby",
+      "type": "string",
+      "required": false,
+      "description": "External description element id for the OTP group.",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {

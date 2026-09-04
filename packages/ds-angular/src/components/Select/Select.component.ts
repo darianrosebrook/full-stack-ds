@@ -26,8 +26,8 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "select" },
-  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
-  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled" [attr.aria-controls]="instanceId + '-options'">
+  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
+  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-controls]="instanceId + '-options'">
     <span [ngClass]="'select__text'"></span>
   </button>
   <ng-container *ngIf="behavior.open()">
@@ -64,6 +64,7 @@ export class SelectComponent {
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() multiple?: boolean;
   @Input() disabled?: boolean;
+  @Input() triggerLabel?: string = "Select an option";
   @Input() size?: SelectSize = "md";
   @Input() filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   @Input() searchable?: boolean;

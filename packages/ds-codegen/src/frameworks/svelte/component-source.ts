@@ -1648,7 +1648,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     rootUsePortal,
     rootSelectorAnchored: selectorAnchor !== null,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
-    rootRole: ir.root.effectiveRole ?? undefined,
+    rootRole: ir.root.rootRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     ...(overlayClickTrigger && booleanChannel

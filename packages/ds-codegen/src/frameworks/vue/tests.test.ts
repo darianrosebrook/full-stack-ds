@@ -14,10 +14,12 @@ describe("generateVueTest", () => {
     expect(source).toContain(`props: { "size": "small" }`);
     expect(source).toContain(`await wrapper.trigger("click");`);
     expect(source).toContain(`expect(onChangeSpy).toHaveBeenCalled();`);
-    expect(source).toContain(`const results = await axe(wrapper.element);`);
-    expect(source).toContain(`unexpectedViolations`);
     expect(source).toContain(
-      `expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`,
+      `const results = await axe(wrapper.element, componentAxeOptions);`,
+    );
+    expect(source).toContain(`region: { enabled: false }`);
+    expect(source).toContain(
+      `expect(results.violations.map((v) => v.id)).toEqual([]);`,
     );
   });
 });
@@ -81,11 +83,31 @@ describe("generateVueTest — real corpus contracts", () => {
     expect(source).toContain(`import Accordion from "../Accordion.vue";`);
   });
 
+  it("includes required props in the axe fixture", () => {
+    const source = generateVueTest(corpusIR("Details"));
+
+    expect(source).toContain(`"summary": "placeholder"`);
+  });
+
+  it("does not leak component-local type aliases into the runtime fixture", () => {
+    const source = generateVueTest(corpusIR("Postcard"));
+
+    expect(source).toContain(`"author": {}`);
+    expect(source).not.toContain(`as PostcardAuthor`);
+  });
+
   it("attaches Dialog to the body for portal/dismissal assertions", () => {
     const source = generateVueTest(corpusIR("Dialog"));
 
     expect(source).toContain(`import Dialog from "../Dialog.vue";`);
     expect(source).toContain(`attachTo: document.body`);
+    expect(source).toContain(`props: { "open": true }`);
+    expect(source).toContain(
+      `"title": "<span>Test Dialog title</span>"`,
+    );
+    expect(source).toContain(`expect(root).not.toBeNull();`);
+    expect(source).not.toContain(`knownScaffoldViolationIds`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
   });
 
   it("keeps the generic plan for the Toast surface and cleans up timers", () => {

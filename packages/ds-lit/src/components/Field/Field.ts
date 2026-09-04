@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { FieldBehavior } from './FieldBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -201,10 +202,10 @@ export class FieldElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="group">
+    return html`<div class="${this.computeClasses()}" role="group" aria-labelledby=${ifDefined([this.querySelector('[slot="label"]') !== null ? 'field-label' : null].filter(Boolean).join(' ') || undefined)}>
   <div class=${'field__header'}>
-    <label class=${'field__label'}>
-      <slot name="label"></slot>
+    <label class=${'field__label'} id="field-label">
+      <slot name="label" @slotchange=${() => this.requestUpdate()}></slot>
     </label>
   </div>
   <div class=${'field__control'}>

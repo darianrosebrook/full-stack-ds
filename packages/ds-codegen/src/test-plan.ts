@@ -98,9 +98,33 @@ export interface EscapeDismissalTestCase {
 
 export type OverlayClickDismissalTestCase = EscapeDismissalTestCase;
 
+export interface AccessibilityLabelInput {
+  /** Public input name used by a generated axe fixture. */
+  name: string;
+  /** Non-empty accessible name supplied by the fixture. */
+  value: string;
+  /** Whether the input is a declared component prop or a host attribute. */
+  kind: "prop" | "attribute";
+}
+
+export interface AccessibilityContentFixture {
+  /** Named consumer slot/snippet; undefined means the default child surface. */
+  slotName: string | undefined;
+  /** Static HTML whose shape is valid for the contract-declared host. */
+  html: string;
+}
+
 export interface AccessibilityTestCase {
-  axeProps: string;
+  labelInput: AccessibilityLabelInput | undefined;
   needsListParent: boolean;
+  /** Prop values required to activate the contract's accessible role branch. */
+  props: Array<{ name: string; value: string | number | boolean }>;
+  /**
+   * Contract-derived content that makes the axe fixture exercise real naming
+   * and DOM-structure paths. In particular, an aria-labelledby target must
+   * not be left empty and a list must not be tested with a bare text node.
+   */
+  content: AccessibilityContentFixture[];
 }
 
 /**
@@ -122,6 +146,21 @@ export interface RequiredPropPlaceholder {
   name: string;
   /** JS expression string to splat into render-call JSX, e.g. `""`. */
   expression: string;
+}
+
+/**
+ * Remove the named-type assertion from a required-prop placeholder when the
+ * framework test harness intentionally accepts `Record<string, unknown>`.
+ * The runtime value is still supplied, but the generated test no longer
+ * refers to a component-local type alias that is not in the test module.
+ * React keeps the assertion because its JSX call site is type-checked and
+ * imports the alias explicitly.
+ */
+export function runtimeRequiredPropExpression(expression: string): string {
+  return expression.replace(
+    /^(\{\})\s+as\s+[A-Za-z_$][A-Za-z0-9_$]*$/,
+    "$1",
+  );
 }
 
 export interface ComponentTestPlan {
@@ -534,11 +573,243 @@ function buildAccessibilityTestCase(ir: ComponentIR): AccessibilityTestCase {
     needsLabel ||
     (role !== undefined && ROLES_NEEDING_LABEL.has(role)) ||
     (role !== undefined && INNER_ROLES_NEEDING_LABEL.has(role));
+  const authoredLabelProp = findAuthoredRoleLabelProp(ir, role);
+  const accessibilityProps = findRoleActivationProps(ir.dom, role);
+  const idRefContent = findIdRefContentFixtures(ir.dom, ir.name);
+  const defaultContent = findDefaultContentFixture(ir.dom);
+  const content = [
+    ...idRefContent.fixtures,
+    ...(defaultContent ? [defaultContent] : []),
+  ];
 
   return {
-    axeProps: axeNeedsLabel ? ` aria-label="Test ${ir.name}"` : "",
+    // Prefer exercising a real aria-labelledby relationship over injecting a
+    // parallel aria-label. A raw host attribute is only a fallback when the
+    // contract exposes no naming-content path. This prevents TextField-like
+    // composites from putting aria-label on a role-less outer wrapper while
+    // leaving the actual input unnamed.
+    labelInput: axeNeedsLabel && !idRefContent.suppliesAccessibleName
+      ? {
+          name: authoredLabelProp ?? "aria-label",
+          value: `Test ${ir.name}`,
+          kind: authoredLabelProp ? "prop" : "attribute",
+        }
+      : undefined,
     needsListParent: role === "listitem",
+    props: accessibilityProps,
+    content,
   };
+}
+
+function findRoleActivationProps(
+  root: DomNodeIR | null | undefined,
+  role: string | undefined,
+): Array<{ name: string; value: boolean }> {
+  if (!root || !role) return [];
+
+  const visit = (node: DomNodeIR): Array<{ name: string; value: boolean }> => {
+    const roleBinding = node.bindings.role;
+    if (
+      roleBinding?.kind === "conditional" &&
+      roleBinding.condition.kind === "prop" &&
+      (!roleBinding.condition.path || roleBinding.condition.path.length === 0)
+    ) {
+      const trueMatches =
+        roleBinding.whenTrue.kind === "literal" &&
+        roleBinding.whenTrue.value === role;
+      const falseMatches =
+        roleBinding.whenFalse.kind === "literal" &&
+        roleBinding.whenFalse.value === role;
+      if (trueMatches !== falseMatches) {
+        return [{
+          name: roleBinding.condition.prop,
+          value: trueMatches,
+        }];
+      }
+    }
+    for (const child of node.children) {
+      const found = visit(child);
+      if (found.length > 0) return found;
+    }
+    return [];
+  };
+
+  return visit(root);
+}
+
+function findIdRefContentFixtures(
+  root: DomNodeIR | null | undefined,
+  componentName: string,
+): { fixtures: AccessibilityContentFixture[]; suppliesAccessibleName: boolean } {
+  if (!root) return { fixtures: [], suppliesAccessibleName: false };
+
+  const nodes: DomNodeIR[] = [];
+  const collect = (node: DomNodeIR): void => {
+    nodes.push(node);
+    node.children.forEach(collect);
+  };
+  collect(root);
+
+  const fixtures = new Map<string, AccessibilityContentFixture>();
+  let suppliesAccessibleName = false;
+  for (const source of nodes) {
+    for (const idRef of source.idRefAttrs) {
+      if (idRef.attribute !== "aria-labelledby" && idRef.attribute !== "aria-describedby") {
+        continue;
+      }
+      for (const ref of idRef.refs) {
+        const target = nodes.find((node) => node.generatedIdSlug === ref.slug);
+        if (!target) continue;
+        for (const slotName of namedSlotsUnder(target)) {
+          if (!fixtures.has(slotName)) {
+            fixtures.set(slotName, {
+              slotName,
+              html: `<span>Test ${componentName} ${slotName}</span>`,
+            });
+          }
+          if (idRef.attribute === "aria-labelledby") {
+            suppliesAccessibleName = true;
+          }
+        }
+      }
+    }
+  }
+  return { fixtures: [...fixtures.values()], suppliesAccessibleName };
+}
+
+function namedSlotsUnder(node: DomNodeIR): string[] {
+  const slots: string[] = [];
+  const visit = (current: DomNodeIR): void => {
+    if (current.tag === "slot" && current.slotName) slots.push(current.slotName);
+    current.children.forEach(visit);
+  };
+  visit(node);
+  return slots;
+}
+
+/**
+ * Find the default child placement and preserve the nearest native list
+ * container's content model. The generic fixture previously rendered the
+ * string "content" directly inside ul/ol, which axe correctly rejected.
+ */
+function findDefaultContentFixture(
+  root: DomNodeIR | null | undefined,
+): AccessibilityContentFixture | undefined {
+  if (!root) return undefined;
+  type ContentModel =
+    | "flow"
+    | "list"
+    | "table"
+    | "table-section"
+    | "table-row"
+    | "description-list"
+    | "select";
+  const visit = (
+    node: DomNodeIR,
+    inheritedModel: ContentModel,
+  ): string | undefined => {
+    const model: ContentModel =
+      node.tag === "ul" || node.tag === "ol"
+        ? "list"
+        : node.tag === "table"
+          ? "table"
+          : node.tag === "thead" || node.tag === "tbody" || node.tag === "tfoot"
+            ? "table-section"
+            : node.tag === "tr"
+              ? "table-row"
+              : node.tag === "dl"
+                ? "description-list"
+                : node.tag === "select"
+                  ? "select"
+                  : inheritedModel;
+    if (node.tag === "children" || (node.tag === "slot" && !node.slotName)) {
+      switch (model) {
+        case "list":
+          return "<li>content</li>";
+        case "table":
+          return "<tbody><tr><td>content</td></tr></tbody>";
+        case "table-section":
+          return "<tr><td>content</td></tr>";
+        case "table-row":
+          return "<td>content</td>";
+        case "description-list":
+          return "<div><dt>Term</dt><dd>content</dd></div>";
+        case "select":
+          return "<option>content</option>";
+        default:
+          return "<span>content</span>";
+      }
+    }
+    for (const child of node.children) {
+      const found = visit(child, model);
+      if (found) return found;
+    }
+    return undefined;
+  };
+  const html = visit(root, "flow");
+  if (!html) return undefined;
+  return {
+    slotName: undefined,
+    html,
+  };
+}
+
+/**
+ * Resolve the prop that the authored role owner binds to `aria-label`.
+ * This keeps the axe fixture on the same public API path a consumer uses
+ * (`ariaLabel` for Dialog, `label` for Command) instead of fabricating a raw
+ * host attribute that may land on an outer layout wrapper.
+ */
+function findAuthoredRoleLabelProp(
+  ir: ComponentIR,
+  role: string | undefined,
+): string | undefined {
+  if (!ir.dom) return undefined;
+
+  const boundLabelProp = (node: DomNodeIR): string | undefined => {
+    const binding = node.bindings["aria-label"];
+    if (binding?.kind === "prop" && (!binding.path || binding.path.length === 0)) {
+      return binding.prop;
+    }
+    return undefined;
+  };
+
+  const find = (
+    node: DomNodeIR,
+    predicate: (candidate: DomNodeIR, isRoot: boolean) => boolean,
+    isRoot = false,
+  ): string | undefined => {
+    if (predicate(node, isRoot)) {
+      const prop = boundLabelProp(node);
+      if (prop) return prop;
+    }
+    for (const child of node.children) {
+      const found = find(child, predicate, false);
+      if (found) return found;
+    }
+    return undefined;
+  };
+
+  // Prefer the node that actually owns the contract role. The role can be
+  // authored directly in anatomy.dom, synthesized on the DOM root, or implicit
+  // in the root element (for example input -> textbox).
+  if (role) {
+    const roleOwnerProp = find(
+      ir.dom,
+      (node, isRoot) =>
+        node.attrs.role === role ||
+        (isRoot &&
+          (ir.root.rootRole === role || ir.root.implicitRole === role)),
+      true,
+    );
+    if (roleOwnerProp) return roleOwnerProp;
+  }
+
+  // Some native controls declare labeling requirements without spelling an
+  // explicit a11y role. A prop-bound aria-label is still stronger evidence
+  // than injecting an arbitrary host attribute, especially for Svelte and
+  // shadow-DOM targets where host attributes do not fall through.
+  return find(ir.dom, (node) => boundLabelProp(node) !== undefined, true);
 }
 
 

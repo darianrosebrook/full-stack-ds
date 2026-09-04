@@ -155,6 +155,7 @@
     "element": "div",
     "explicitRole": "tooltip",
     "effectiveRole": "tooltip",
+    "rootRole": "tooltip",
     "labeling": [
       "aria-describedby"
     ],

@@ -24,7 +24,7 @@ const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg"
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "icon" },
-  template: `<span [ngClass]="classes()" aria-hidden="true">
+  template: `<span [ngClass]="classes()" [attr.role]="((decorative ?? true) ? 'presentation' : 'img')" [attr.aria-hidden]="((decorative ?? true) ? 'true' : 'false')" [attr.aria-label]="ariaLabel">
   <ng-container *ngIf="iconGlyph as glyph">
     <svg fill="none" xmlns="http://www.w3.org/2000/svg" [attr.data-fsds-icon]="glyph.name" [attr.viewBox]="glyph.viewBox" [attr.width]="(this.iconGlyphPx ?? glyph.size)" [attr.height]="(this.iconGlyphPx ?? glyph.size)">
       <ng-container *ngFor="let glyphPath of glyph.paths">
@@ -38,6 +38,8 @@ const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg"
 export class IconComponent {
   @Input() name!: string;
   @Input() size?: "sm" | "md" | "lg" | "xl" = "md";
+  @Input() decorative?: boolean = true;
+  @Input() ariaLabel?: string;
   @Input() class?: string;
 
   classes(): string {

@@ -68,7 +68,8 @@
           "attributes": [
             "aria-autocomplete",
             "aria-controls",
-            "aria-expanded"
+            "aria-expanded",
+            "aria-label"
           ]
         }
       },
@@ -188,11 +189,11 @@
                   "attrs": {
                     "type": "search",
                     "role": "combobox",
-                    "aria-autocomplete": "list",
-                    "aria-controls": "fsds-command-listbox"
+                    "aria-autocomplete": "list"
                   },
                   "bindings": {
                     "aria-expanded": "channel:open.value",
+                    "aria-label": "prop:searchLabel",
                     "placeholder": "prop:placeholder",
                     "value": "channel:search.value"
                   },
@@ -206,8 +207,7 @@
               "tag": "div",
               "part": "list",
               "attrs": {
-                "role": "listbox",
-                "id": "fsds-command-listbox"
+                "role": "listbox"
               },
               "children": [
                 {
@@ -215,47 +215,8 @@
                   "part": "empty"
                 },
                 {
-                  "tag": "div",
-                  "part": "group",
-                  "children": [
-                    {
-                      "tag": "div",
-                      "part": "groupHeading"
-                    },
-                    {
-                      "tag": "div",
-                      "part": "groupItems",
-                      "children": [
-                        {
-                          "tag": "div",
-                          "part": "item",
-                          "attrs": {
-                            "role": "option"
-                          },
-                          "children": [
-                            {
-                              "tag": "span",
-                              "part": "itemIcon"
-                            },
-                            {
-                              "tag": "div",
-                              "part": "itemContent",
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "part": "itemLabel"
-                                },
-                                {
-                                  "tag": "span",
-                                  "part": "itemDescription"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "tag": "slot",
+                  "name": "items"
                 },
                 {
                   "tag": "div",
@@ -311,6 +272,12 @@
           "type": "string",
           "description": "Placeholder text for the search input.",
           "default": "Search..."
+        },
+        {
+          "name": "searchLabel",
+          "type": "string",
+          "description": "Accessible label for the command search input.",
+          "default": "Search commands"
         },
         {
           "name": "emptyMessage",
@@ -529,8 +496,7 @@
     {
       "from": "input",
       "to": "list",
-      "attribute": "aria-controls",
-      "when": "openness=expanded"
+      "attribute": "aria-controls"
     },
     {
       "from": "input",

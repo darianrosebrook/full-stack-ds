@@ -19,10 +19,12 @@ interface Props {
   invalid?: boolean;
   required?: boolean;
   name?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   class?: string;
 }
 
-let { type, value, defaultValue, onChange, placeholder, disabled, invalid, required, name, class: className }: Props = $props();
+let { type, value, defaultValue, onChange, placeholder, disabled, invalid, required, name, ariaLabel, ariaLabelledby, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -53,4 +55,4 @@ const fieldAssociation = useFieldAssociation();
 // @custom:end
 </script>
 
-<input class={classes} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} data-fsds-component="input" role="textbox" id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />
+<input class={classes} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} data-fsds-component="input" role="textbox" id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />

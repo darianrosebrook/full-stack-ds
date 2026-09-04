@@ -32,7 +32,7 @@ let nextInstanceId = 0;
   host: { "data-fsds-component": "walkthrough" },
   template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')" [attr.data-placement]="_position.state().placement" [style.position]="'fixed'" [style.top.px]="_position.state().top" [style.left.px]="_position.state().left" [style.visibility]="_position.state().ready ? 'visible' : 'hidden'">
   <div [ngClass]="'walkthrough__content'" role="group" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-description'">
-    <h3 [ngClass]="'walkthrough__title'" [attr.id]="instanceId + '-title'">
+    <h3 [ngClass]="'walkthrough__title'" [attr.aria-label]="(label ?? 'Feature tour')" [attr.id]="instanceId + '-title'">
       <ng-content select="[slot=title]" />
     </h3>
     <p [ngClass]="'walkthrough__description'" [attr.id]="instanceId + '-description'">
@@ -40,15 +40,15 @@ let nextInstanceId = 0;
     </p>
   </div>
   <div [ngClass]="'walkthrough__controls'">
-    <button [ngClass]="'walkthrough__skip'" type="button"></button>
-    <button [ngClass]="'walkthrough__prev'" type="button"></button>
+    <button [ngClass]="'walkthrough__skip'" type="button" aria-label="Skip tour"></button>
+    <button [ngClass]="'walkthrough__prev'" type="button" aria-label="Previous step"></button>
     <div [ngClass]="'walkthrough__dots'">
       <ng-container *ngFor="let item of ((steps ?? [{'anchor':'#step-1','title':'Welcome to the tour'},{'anchor':'#step-2','title':'Browse your dashboard'},{'anchor':'#step-3','title':'Configure preferences'}])); let index = index">
         <button [ngClass]="'walkthrough__dot'" type="button" [attr.aria-label]="item.title" [attr.data-step-index]="index"></button>
       </ng-container>
     </div>
     <span [ngClass]="'walkthrough__counter'"></span>
-    <button [ngClass]="'walkthrough__next'" type="button"></button>
+    <button [ngClass]="'walkthrough__next'" type="button" aria-label="Next step"></button>
   </div>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

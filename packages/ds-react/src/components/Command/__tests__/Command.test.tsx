@@ -12,6 +12,14 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Command — unit", () => {
   it("renders with default props", () => {
     render(<Command data-testid="command" open={true} />);
@@ -57,37 +65,67 @@ describe("Command — unit", () => {
 
 describe("Command — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Command aria-label="Test Command" open={true} /></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Command label="Test Command" open={true} /></>);
+    const component = baseElement.querySelector('[data-fsds-component="command"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end
 
 // @custom:start tests
+
+describe("Command — accessible role ownership", () => {
+  it("exposes one dialog with the contract-authored default name", () => {
+    render(<Command open />);
+
+    expect(screen.getAllByRole("dialog")).toHaveLength(1);
+    expect(
+      screen.getByRole("dialog", { name: "Command palette" }),
+    ).toBeInTheDocument();
+  });
+
+  it("honors consumer labels for both the dialog and its search field", () => {
+    render(
+      <Command
+        open
+        label="Actions"
+        searchLabel="Filter available actions"
+      />,
+    );
+
+    expect(screen.getByRole("dialog", { name: "Actions" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("combobox", { name: "Filter available actions" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps each search field linked to its own listbox across instances", () => {
+    render(
+      <>
+        <Command open label="First command" />
+        <Command open label="Second command" />
+      </>,
+    );
+
+    const inputs = screen.getAllByRole("combobox");
+    expect(inputs).toHaveLength(2);
+    const controlledIds = inputs.map((input) =>
+      input.getAttribute("aria-controls"),
+    );
+    expect(controlledIds.every(Boolean)).toBe(true);
+    expect(new Set(controlledIds).size).toBe(2);
+
+    for (const input of inputs) {
+      const target = document.getElementById(input.getAttribute("aria-controls")!);
+      expect(target).toHaveAttribute("role", "listbox");
+      expect(target?.closest('[data-fsds-component="command"]')).toBe(
+        input.closest('[data-fsds-component="command"]'),
+      );
+    }
+  });
+});
 
 describe("Command — portal (FIX-PORTAL-CONTRACT-ADJUDICATION-01)", () => {
   it("mounts the command root at document.body, escaping an ancestor stacking context", () => {

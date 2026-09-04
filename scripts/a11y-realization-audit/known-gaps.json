@@ -69,6 +69,8 @@
       "family": "react",
       "class": "relationship",
       "key": "aria-activedescendant",
+      "from": "input",
+      "to": "item",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
@@ -90,6 +92,18 @@
       "family": "react",
       "class": "relationship",
       "key": "aria-describedby",
+      "from": "control",
+      "to": "help",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
+    },
+    {
+      "component": "Field",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "from": "control",
+      "to": "error",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
@@ -175,6 +189,8 @@
       "family": "react",
       "class": "relationship",
       "key": "aria-labelledby",
+      "from": "container",
+      "to": "caption",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -182,6 +198,8 @@
       "family": "react",
       "class": "relationship",
       "key": "aria-sort",
+      "from": "headerCell",
+      "to": "cell",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -287,6 +305,8 @@
       "family": "vue",
       "class": "relationship",
       "key": "aria-activedescendant",
+      "from": "input",
+      "to": "item",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
@@ -308,6 +328,18 @@
       "family": "vue",
       "class": "relationship",
       "key": "aria-describedby",
+      "from": "control",
+      "to": "help",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
+    },
+    {
+      "component": "Field",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "from": "control",
+      "to": "error",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
@@ -393,6 +425,8 @@
       "family": "vue",
       "class": "relationship",
       "key": "aria-labelledby",
+      "from": "container",
+      "to": "caption",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -400,6 +434,8 @@
       "family": "vue",
       "class": "relationship",
       "key": "aria-sort",
+      "from": "headerCell",
+      "to": "cell",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -505,6 +541,8 @@
       "family": "svelte",
       "class": "relationship",
       "key": "aria-activedescendant",
+      "from": "input",
+      "to": "item",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
@@ -526,6 +564,18 @@
       "family": "svelte",
       "class": "relationship",
       "key": "aria-describedby",
+      "from": "control",
+      "to": "help",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
+    },
+    {
+      "component": "Field",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "from": "control",
+      "to": "error",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
@@ -611,6 +661,8 @@
       "family": "svelte",
       "class": "relationship",
       "key": "aria-labelledby",
+      "from": "container",
+      "to": "caption",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -618,6 +670,8 @@
       "family": "svelte",
       "class": "relationship",
       "key": "aria-sort",
+      "from": "headerCell",
+      "to": "cell",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -723,6 +777,8 @@
       "family": "lit",
       "class": "relationship",
       "key": "aria-activedescendant",
+      "from": "input",
+      "to": "item",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
@@ -744,6 +800,8 @@
       "family": "lit",
       "class": "relationship",
       "key": "for",
+      "from": "label",
+      "to": "control",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Platform limitation: Lit components render into shadow roots and idrefs cannot cross the shadow boundary, so Field's label→slotted-control association is unrealizable today. Candidate for the ARIA Reference Target proposal when it ships."
     },
@@ -752,6 +810,18 @@
       "family": "lit",
       "class": "relationship",
       "key": "aria-describedby",
+      "from": "control",
+      "to": "help",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Platform limitation: Lit components render into shadow roots and idrefs cannot cross the shadow boundary, so Field's label→slotted-control association is unrealizable today. Candidate for the ARIA Reference Target proposal when it ships."
+    },
+    {
+      "component": "Field",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "from": "control",
+      "to": "error",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Platform limitation: Lit components render into shadow roots and idrefs cannot cross the shadow boundary, so Field's label→slotted-control association is unrealizable today. Candidate for the ARIA Reference Target proposal when it ships."
     },
@@ -837,6 +907,8 @@
       "family": "lit",
       "class": "relationship",
       "key": "aria-labelledby",
+      "from": "container",
+      "to": "caption",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -844,6 +916,8 @@
       "family": "lit",
       "class": "relationship",
       "key": "aria-sort",
+      "from": "headerCell",
+      "to": "cell",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -949,6 +1023,8 @@
       "family": "angular",
       "class": "relationship",
       "key": "aria-activedescendant",
+      "from": "input",
+      "to": "item",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
@@ -970,6 +1046,18 @@
       "family": "angular",
       "class": "relationship",
       "key": "aria-describedby",
+      "from": "control",
+      "to": "help",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
+    },
+    {
+      "component": "Field",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "from": "control",
+      "to": "error",
       "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
       "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
@@ -1055,6 +1143,8 @@
       "family": "angular",
       "class": "relationship",
       "key": "aria-labelledby",
+      "from": "container",
+      "to": "caption",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {
@@ -1062,6 +1152,8 @@
       "family": "angular",
       "class": "relationship",
       "key": "aria-sort",
+      "from": "headerCell",
+      "to": "cell",
       "spec": "FEAT-A11Y-TABLE-SEMANTICS-01"
     },
     {

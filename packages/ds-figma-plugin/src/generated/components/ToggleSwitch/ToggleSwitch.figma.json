@@ -191,6 +191,7 @@
     "element": "div",
     "explicitRole": "switch",
     "effectiveRole": "switch",
+    "rootRole": "switch",
     "labeling": [
       "aria-label",
       "aria-checked",

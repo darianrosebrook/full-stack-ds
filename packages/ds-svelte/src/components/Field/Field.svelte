@@ -73,9 +73,9 @@ provideFieldAssociation(() => fieldAssociationValue);
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="field" role="group">
+<div class={classes} aria-labelledby={label ? `${instanceId}-label` : undefined} data-fsds-component="field" role="group">
   <div class={'field__header'}>
-    <label class={'field__label'} for={`${instanceId}-control`}>
+    <label class={'field__label'} id={`${instanceId}-label`} for={`${instanceId}-control`}>
       {@render label?.()}
     </label>
   </div>

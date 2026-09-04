@@ -1,12 +1,20 @@
 // @generated:start imports
 import { describe, expect, it, vi, afterEach } from "vitest";
-import type { Component } from "svelte";
+import { createRawSnippet, type Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
 import Toast from "../Toast.svelte";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Toast — unit", () => {
   afterEach(() => {
     document.body.innerHTML = "";
@@ -92,34 +100,11 @@ describe("Toast — unit", () => {
 
 describe("Toast — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Toast", "open": true } });
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Toast", "children": createRawSnippet(() => ({ render: () => "<span>content</span>" })), "open": true } });
     const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
-    const results = await axe(root as Element);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const results = await axe(root as Element, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

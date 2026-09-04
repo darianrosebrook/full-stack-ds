@@ -61,6 +61,7 @@ export function Walkthrough({
       >
         <View
           style={styles.title}
+          accessibilityLabel={label}
         >
           {slots?.title}
         </View>
@@ -76,10 +77,12 @@ export function Walkthrough({
       >
         <Pressable
           style={styles.skip}
+          accessibilityLabel={"Skip tour"}
           accessibilityRole="button"
         />
         <Pressable
           style={styles.prev}
+          accessibilityLabel={"Previous step"}
           accessibilityRole="button"
         />
         <View
@@ -99,6 +102,7 @@ export function Walkthrough({
         />
         <Pressable
           style={styles.next}
+          accessibilityLabel={"Next step"}
           accessibilityRole="button"
         />
       </View>

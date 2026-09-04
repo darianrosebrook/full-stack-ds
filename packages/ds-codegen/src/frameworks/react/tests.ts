@@ -111,7 +111,12 @@ export function generateReactTest(ir: ComponentIR): string {
   // Components without a children placement (void elements like <img>, <hr>,
   // <input>) self-close in test JSX; otherwise we pass "content" as the
   // child to exercise children rendering.
-  const closer = plan.acceptsChildren ? `>content</${plan.name}>` : ` />`;
+  const defaultTestContent = plan.accessibility.content.find(
+    (fixture) => fixture.slotName === undefined,
+  );
+  const closer = plan.acceptsChildren
+    ? `>${defaultTestContent?.html ?? "content"}</${plan.name}>`
+    : ` />`;
 
   const importsBody = [
     `import { describe, it, expect${plan.hasBehaviorTests ? ", vi" : ""} } from "vitest";`,
@@ -130,6 +135,14 @@ export function generateReactTest(ir: ComponentIR): string {
   ].join("\n");
 
   const lines: string[] = [];
+  lines.push(`const componentAxeOptions = {`);
+  lines.push(`  rules: {`);
+  lines.push(`    // \`region\` asks whether all page content is landmark-contained.`);
+  lines.push(`    // These tests scan one component subtree, not a complete page.`);
+  lines.push(`    region: { enabled: false },`);
+  lines.push(`  },`);
+  lines.push(`};`);
+  lines.push(``);
   lines.push(`describe("${plan.name} — unit", () => {`);
   lines.push(`  it("renders with default props", () => {`);
   lines.push(
@@ -331,46 +344,50 @@ export function generateReactTest(ir: ComponentIR): string {
   lines.push(`});`);
   lines.push(``);
 
+  const axeLabelInput = plan.accessibility.labelInput;
+  const axeLabelProp = axeLabelInput
+    ? ` ${axeLabelInput.name}=${JSON.stringify(axeLabelInput.value)}`
+    : "";
+  const axeFixtureProps = plan.accessibility.props
+    .map((prop) => ` ${prop.name}={${JSON.stringify(prop.value)}}`)
+    .join("");
+  const axeRequiredPropsAttrs = requiredPropsAttrsExcept(
+    new Set([
+      ...(axeLabelInput ? [axeLabelInput.name] : []),
+      ...plan.accessibility.props.map((prop) => prop.name),
+      ...(plan.renderOpenProp ? [plan.renderOpenProp] : []),
+    ]),
+  );
+  const axeNamedContent = plan.accessibility.content.filter(
+    (fixture) => fixture.slotName !== undefined,
+  );
+  const axeSlotsProp =
+    axeNamedContent.length > 0
+      ? ` slots={{ ${axeNamedContent
+          .map(
+            (fixture) =>
+              `${JSON.stringify(fixture.slotName)}: ${fixture.html}`,
+          )
+          .join(", ")} }}`
+      : "";
   const axeJsx = plan.accessibility.needsListParent
-    ? `<ul><${plan.name}${plan.accessibility.axeProps}${requiredPropsAttrs}${renderProps}${closer}</ul>`
-    : `<${plan.name}${plan.accessibility.axeProps}${requiredPropsAttrs}${renderProps}${closer}`;
+    ? `<ul><${plan.name}${axeLabelProp}${axeSlotsProp}${axeFixtureProps}${axeRequiredPropsAttrs}${renderProps}${closer}</ul>`
+    : `<${plan.name}${axeLabelProp}${axeSlotsProp}${axeFixtureProps}${axeRequiredPropsAttrs}${renderProps}${closer}`;
 
   lines.push(`describe("${plan.name} — accessibility", () => {`);
   lines.push(`  it("has no unexpected axe violations with default props", async () => {`);
-  lines.push(`    const { container } = render(<>${axeJsx}</>);`);
-  lines.push(`    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };`);
-  // Allow scaffold-style axe violations the auto-test can never satisfy:
-  // empty headings/summaries/buttons/inputs that consumers fill via slot
-  // content or labeling props. Real consumers exercise axe in their own
-  // tests where they supply those values. This mirrors the Lit + Svelte
-  // + Vue test generators so all five frameworks treat scaffold gaps the
-  // same way.
-  lines.push(`    const knownScaffoldViolationIds = new Set([`);
-  lines.push(`      "aria-dialog-name",`);
-  lines.push(`      "aria-input-field-name",`);
-  lines.push(`      "aria-progressbar-name",`);
-  lines.push(`      "aria-prohibited-attr",`);
-  lines.push(`      "aria-required-attr",`);
-  lines.push(`      "aria-required-children",`);
-  lines.push(`      "aria-required-parent",`);
-  lines.push(`      "aria-toggle-field-name",`);
-  lines.push(`      "aria-tooltip-name",`);
-  lines.push(`      "button-name",`);
-  lines.push(`      "empty-heading",`);
-  lines.push(`      "image-alt",`);
-  lines.push(`      "label",`);
-  lines.push(`      "link-name",`);
-  lines.push(`      "list",`);
-  lines.push(`      "region",`);
-  lines.push(`      "role-img-alt",`);
-  lines.push(`      "summary-name",`);
-  lines.push(`    ]);`);
-  lines.push(`    const unexpectedViolations = results.violations.filter(`);
-  lines.push(`      (violation) => !knownScaffoldViolationIds.has(violation.id),`);
-  lines.push(`    );`);
-  // Use the unexpected rule IDs as the assertion subject so failures name
-  // the offending rule(s) instead of a bare length mismatch.
-  lines.push(`    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`);
+  lines.push(`    const { baseElement } = render(<>${axeJsx}</>);`);
+  lines.push(
+    `    const component = baseElement.querySelector('[data-fsds-component="${plan.cssPrefix}"]');`,
+  );
+  lines.push(`    expect(component).not.toBeNull();`);
+  lines.push(
+    `    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };`,
+  );
+  // Axe is the independent standards oracle in this generated suite. Do not
+  // discard rule classes globally: make the fixture valid or fix the emitted
+  // component so naming and structural failures remain falsifiable.
+  lines.push(`    expect(results.violations.map((v) => v.id)).toEqual([]);`);
   lines.push(`  });`);
   lines.push(`});`);
 

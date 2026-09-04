@@ -1239,6 +1239,14 @@ export interface RootSemanticsIR {
    * `undefined` when no role attribute is needed.
    */
   effectiveRole: string | undefined;
+  /**
+   * Role attribute to synthesize on the rendered DOM root. This is narrower
+   * than `effectiveRole`: when `anatomy.dom` already assigns that role to an
+   * authored node (including an inner dialog panel), the authored node owns
+   * it and this field is undefined so emitters cannot duplicate the role on
+   * the outer layout host.
+   */
+  rootRole: string | undefined;
   /** Required labeling attributes from the contract. */
   labeling: string[];
   /** Keyboard interactions declared in the a11y block. */
@@ -1722,6 +1730,20 @@ export const LAYER_ORDER: Record<string, number> = {
   assembly: 3,
 };
 
+/**
+ * True when the authored DOM tree already places `role` on one of its nodes.
+ * Role ownership is a normalized IR fact: emitters must not independently
+ * rediscover whether an inner panel or the outer host owns the component role.
+ */
+function domTreeOwnsRole(
+  node: DomNodeIR | null | undefined,
+  role: string,
+): boolean {
+  if (!node) return false;
+  if (node.attrs.role === role) return true;
+  return node.children.some((child) => domTreeOwnsRole(child, role));
+}
+
 export function buildComponentIR(
   contract: ComponentContract,
   options?: BuildComponentIROptions,
@@ -1764,6 +1786,10 @@ export function buildComponentIR(
   const surface = buildSurfaceIR(contract, parts);
   const textOverflow = buildTextOverflowIR(contract);
   const dom = buildDomTree(contract);
+  const rootRole =
+    effectiveRole && !domTreeOwnsRole(dom, effectiveRole)
+      ? effectiveRole
+      : undefined;
 
   if (dom) {
     enrichMarkdownTagsInTree(
@@ -1862,6 +1888,7 @@ export function buildComponentIR(
       explicitRole,
       implicitRole,
       effectiveRole,
+      rootRole,
       labeling: contract.a11y?.labeling ?? [],
       keyboard: contract.a11y?.keyboard,
       polymorphicTagProp,

@@ -12,96 +12,83 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Button — unit", () => {
   it("renders with default props", () => {
-    render(<Button data-testid="button">content</Button>);
+    render(<Button data-testid="button"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Button data-testid="button">content</Button>);
+    render(<Button data-testid="button"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button");
   });
 
   it("merges custom className", () => {
-    render(<Button data-testid="button" className="custom">content</Button>);
+    render(<Button data-testid="button" className="custom"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button", "custom");
   });
 
   it("applies size=small variant class", () => {
-    render(<Button data-testid="button" size="small">content</Button>);
+    render(<Button data-testid="button" size="small"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--small");
   });
 
   it("applies size=medium variant class", () => {
-    render(<Button data-testid="button" size="medium">content</Button>);
+    render(<Button data-testid="button" size="medium"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--medium");
   });
 
   it("applies size=large variant class", () => {
-    render(<Button data-testid="button" size="large">content</Button>);
+    render(<Button data-testid="button" size="large"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--large");
   });
 
   it("applies variant=primary variant class", () => {
-    render(<Button data-testid="button" variant="primary">content</Button>);
+    render(<Button data-testid="button" variant="primary"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--primary");
   });
 
   it("applies variant=secondary variant class", () => {
-    render(<Button data-testid="button" variant="secondary">content</Button>);
+    render(<Button data-testid="button" variant="secondary"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--secondary");
   });
 
   it("applies variant=tertiary variant class", () => {
-    render(<Button data-testid="button" variant="tertiary">content</Button>);
+    render(<Button data-testid="button" variant="tertiary"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--tertiary");
   });
 
   it("applies variant=ghost variant class", () => {
-    render(<Button data-testid="button" variant="ghost">content</Button>);
+    render(<Button data-testid="button" variant="ghost"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--ghost");
   });
 
   it("applies variant=destructive variant class", () => {
-    render(<Button data-testid="button" variant="destructive">content</Button>);
+    render(<Button data-testid="button" variant="destructive"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--destructive");
   });
 
   it("applies variant=outline variant class", () => {
-    render(<Button data-testid="button" variant="outline">content</Button>);
+    render(<Button data-testid="button" variant="outline"><span>content</span></Button>);
     expect(screen.getByTestId("button")).toHaveClass("button--outline");
   });
 });
 
 describe("Button — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Button aria-label="Test Button">content</Button></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Button ariaLabel="Test Button"><span>content</span></Button></>);
+    const component = baseElement.querySelector('[data-fsds-component="button"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

@@ -7,6 +7,7 @@ import { portalsRootToBody, selectorAnchoredRootPortal } from "../../semantics.j
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
+  runtimeRequiredPropExpression,
 } from "../../test-plan.js";
 
 export function generateSvelteTest(ir: ComponentIR): string {
@@ -46,10 +47,13 @@ export function generateSvelteTest(ir: ComponentIR): string {
   const needsFireEvent =
     (emitChannelInteraction && plan.channels.some((c) => c.interaction === "click")) ||
     emitOverlayClick;
+  const needsRawSnippet = plan.accessibility.content.length > 0;
 
   const importParts = [
     `import { describe, expect, it${needsVi ? ", vi" : ""}${portalRoot ? ", afterEach" : ""} } from "vitest";`,
-    `import type { Component } from "svelte";`,
+    needsRawSnippet
+      ? `import { createRawSnippet, type Component } from "svelte";`
+      : `import type { Component } from "svelte";`,
     `import { render${needsFireEvent ? ", fireEvent" : ""} } from "@testing-library/svelte";`,
     `import { axe } from "vitest-axe";`,
     `import ${plan.name} from "../${plan.name}.svelte";`,
@@ -57,6 +61,14 @@ export function generateSvelteTest(ir: ComponentIR): string {
   const importsBody = importParts.join("\n");
 
   const lines: string[] = [];
+  lines.push(`const componentAxeOptions = {`);
+  lines.push(`  rules: {`);
+  lines.push(`    // \`region\` asks whether all page content is landmark-contained.`);
+  lines.push(`    // These tests scan one component subtree, not a complete page.`);
+  lines.push(`    region: { enabled: false },`);
+  lines.push(`  },`);
+  lines.push(`};`);
+  lines.push(``);
   lines.push(`describe("${plan.name} — unit", () => {`);
   if (portalRoot) {
     // There is no testing-library auto-cleanup in this package, so portaled
@@ -285,15 +297,33 @@ export function generateSvelteTest(ir: ComponentIR): string {
 
   lines.push(`describe("${plan.name} — accessibility", () => {`);
   lines.push(`  it("has no unexpected axe violations with default props", async () => {`);
-  const axeAttrs = attrsFromAxeProps(plan.accessibility.axeProps);
-  const axeRenderProps: RenderProps = { ...axeAttrs };
+  const axeLabelInput = plan.accessibility.labelInput;
+  const axeRenderProps: RenderProps = Object.fromEntries(
+    plan.requiredProps.map((prop) => [
+      prop.name,
+      { code: runtimeRequiredPropExpression(prop.expression) },
+    ]),
+  );
+  for (const prop of plan.accessibility.props) {
+    axeRenderProps[prop.name] = prop.value;
+  }
+  if (axeLabelInput) {
+    axeRenderProps[axeLabelInput.name] = axeLabelInput.value;
+  }
+  for (const fixture of plan.accessibility.content) {
+    axeRenderProps[fixture.slotName ?? "children"] = {
+      code: `createRawSnippet(() => ({ render: () => ${JSON.stringify(
+        fixture.html,
+      )} }))`,
+    };
+  }
   if (plan.renderOpenProp) axeRenderProps[plan.renderOpenProp] = true;
   if (portalRoot) {
     lines.push(
       `    render(${plan.name} as unknown as Component<Record<string, unknown>>, { props: ${objectLiteral(axeRenderProps)} });`,
     );
     lines.push(rootDecl);
-    lines.push(`    const results = await axe(root as Element);`);
+    lines.push(`    const results = await axe(root as Element, componentAxeOptions);`);
   } else {
     lines.push(
       `    const { container } = render(${plan.name} as unknown as Component<Record<string, unknown>>, { props: ${objectLiteral(axeRenderProps)} });`,
@@ -301,39 +331,12 @@ export function generateSvelteTest(ir: ComponentIR): string {
     if (plan.accessibility.needsListParent) {
       lines.push(`    const list = document.createElement("ul");`);
       lines.push(`    list.append(container.firstElementChild!);`);
-      lines.push(`    const results = await axe(list);`);
+      lines.push(`    const results = await axe(list, componentAxeOptions);`);
     } else {
-      lines.push(`    const results = await axe(container);`);
+      lines.push(`    const results = await axe(container, componentAxeOptions);`);
     }
   }
-  lines.push(`    const knownScaffoldViolationIds = new Set([`);
-  // Rules that fire when the test fixture renders the component with no
-  // slot content / missing required text or alt props. Real consumers fill
-  // them; the test scaffold doesn't.
-  lines.push(`      "aria-dialog-name",`);
-  lines.push(`      "aria-input-field-name",`);
-  lines.push(`      "aria-progressbar-name",`);
-  lines.push(`      "aria-prohibited-attr",`);
-  lines.push(`      "aria-required-attr",`);
-  lines.push(`      "aria-required-children",`);
-  lines.push(`      "aria-required-parent",`);
-  lines.push(`      "aria-toggle-field-name",`);
-  lines.push(`      "aria-tooltip-name",`);
-  lines.push(`      "button-name",`);
-  lines.push(`      "empty-heading",`);
-  lines.push(`      "image-alt",`);
-  lines.push(`      "label",`);
-  lines.push(`      "link-name",`);
-  lines.push(`      "list",`);
-  lines.push(`      "region",`);
-  lines.push(`      "role-img-alt",`);
-  lines.push(`      "summary-name",`);
-  lines.push(`    ]);`);
-  lines.push(`    const unexpectedViolations = results.violations.filter(`);
-  lines.push(`      (violation) => !knownScaffoldViolationIds.has(violation.id),`);
-  lines.push(`    );`);
-  // Compare rule-id arrays so failures name the offending rules.
-  lines.push(`    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`);
+  lines.push(`    expect(results.violations.map((v) => v.id)).toEqual([]);`);
   lines.push(`  });`);
   lines.push(`});`);
 
@@ -348,7 +351,7 @@ export function generateSvelteTest(ir: ComponentIR): string {
   return renderSections(sections, "line");
 }
 
-type RenderPropValue = string | boolean | { code: string };
+type RenderPropValue = string | number | boolean | { code: string };
 type RenderProps = Record<string, RenderPropValue>;
 
 function renderExpression(
@@ -363,12 +366,6 @@ function renderExpression(
   return `render(${componentName} as unknown as Component<Record<string, unknown>>, { props: ${objectLiteral(allProps)} })`;
 }
 
-function attrsFromAxeProps(axeProps: string): Record<string, string> {
-  if (!axeProps) return {};
-  const labelMatch = /aria-label="([^"]+)"/.exec(axeProps);
-  return labelMatch ? { "aria-label": labelMatch[1] } : {};
-}
-
 function objectLiteral(values: RenderProps): string {
   const entries = Object.entries(values);
   if (entries.length === 0) return "{}";
@@ -379,6 +376,6 @@ function objectLiteral(values: RenderProps): string {
 
 function literal(value: RenderPropValue): string {
   if (typeof value === "object" && "code" in value) return value.code;
-  if (typeof value === "boolean") return String(value);
+  if (typeof value === "boolean" || typeof value === "number") return String(value);
   return JSON.stringify(value);
 }

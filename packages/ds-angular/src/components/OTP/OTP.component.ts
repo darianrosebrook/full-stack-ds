@@ -23,10 +23,10 @@ export type OTPMode = "numeric" | "alphanumeric";
   standalone: true,
   imports: [NgClass, NgFor],
   host: { "data-fsds-component": "otp" },
-  template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="(label ?? 'One-time password')" aria-describedby="otp-error-id">
+  template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="(label ?? 'One-time password')" [attr.aria-describedby]="ariaDescribedby">
   <div [ngClass]="'otp__group'">
     <ng-container *ngFor="let _ of arrayFromCount((length ?? 6)); let index = index">
-      <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" (input)="applySetCharAtValue($event, index)" [disabled]="disabled" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
+      <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" (input)="applySetCharAtValue($event, index)" [disabled]="disabled" [attr.aria-label]="(fieldLabel ?? 'One-time password digit')" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
     </ng-container>
   </div>
 </div>`,
@@ -42,6 +42,8 @@ export class OTPComponent {
   @Input() disabled?: boolean;
   @Input() readOnly?: boolean;
   @Input() label?: string = "One-time password";
+  @Input() fieldLabel?: string = "One-time password digit";
+  @Input() ariaDescribedby?: string;
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);

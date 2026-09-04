@@ -210,6 +210,15 @@
       "nodeKind": null
     },
     {
+      "name": "searchLabel",
+      "safeName": "searchLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the command search input.",
+      "defaultExpr": "\"Search commands\"",
+      "nodeKind": null
+    },
+    {
       "name": "emptyMessage",
       "safeName": "emptyMessage",
       "type": "string",

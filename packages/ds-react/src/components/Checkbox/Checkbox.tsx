@@ -18,7 +18,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface CheckboxProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>, "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "indeterminate" | "name" | "onChange" | "size" | "value"> {
+export interface CheckboxProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>, "ariaLabel" | "ariaLabelledby" | "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "indeterminate" | "name" | "onChange" | "size" | "value"> {
   size?: CheckboxSize;
   checked?: boolean;
   defaultChecked?: boolean;
@@ -27,6 +27,8 @@ export interface CheckboxProps extends Omit<LabelHTMLAttributes<HTMLLabelElement
   disabled?: boolean;
   name?: string;
   value?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   className?: string;
   "data-testid"?: string;
 }
@@ -48,6 +50,8 @@ export function Checkbox({
   indeterminate,
   name,
   value,
+  ariaLabel,
+  ariaLabelledby,
   ...rest
 }: CheckboxProps) {
   const { checked, setChecked } = useCheckbox({
@@ -75,7 +79,7 @@ export function Checkbox({
 
   return (
   <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} data-fsds-component="checkbox" {...rest}>
-    <input className="checkbox__input" type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} ref={inputRef} />
+    <input className="checkbox__input" type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} ref={inputRef} />
     <span className="checkbox__indicator" aria-hidden="true" />
   </Stack>
   );

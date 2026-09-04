@@ -243,6 +243,7 @@ export class CommandElement extends LitElement {
   @property({ type: String }) defaultSearch?: string;
   @property({ attribute: false }) onSearchChange?: (value: string) => void;
   @property({ type: String }) placeholder?: string = "Search...";
+  @property({ type: String }) searchLabel?: string = "Search commands";
   @property({ type: String }) emptyMessage?: string = "No results found.";
   @property({ type: String }) label?: string = "Command palette";
   @property({ type: Boolean }) shouldFilter?: boolean = true;
@@ -304,7 +305,7 @@ export class CommandElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="dialog">
+    return html`<div class="${this.computeClasses()}">
   ${this.behavior.open ? html`
   <div class=${'command__overlay'} aria-hidden="true" data-fsds-channel-renders="open"></div>
   ` : nothing}
@@ -312,22 +313,11 @@ export class CommandElement extends LitElement {
   <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${ifDefined((this.label ?? "Command palette"))} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'command__inputWrapper'}>
       <span class=${'command__searchIcon'} aria-hidden="true"></span>
-      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" @change=${(e: Event) => this.handleSearchChange(e)} aria-expanded=${this.behavior.open ? 'true' : 'false'} placeholder=${ifDefined((this.placeholder ?? "Search..."))} .value=${this.behavior.search} id="command-input" />
+      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" @change=${(e: Event) => this.handleSearchChange(e)} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-label=${ifDefined((this.searchLabel ?? "Search commands"))} placeholder=${ifDefined((this.placeholder ?? "Search..."))} .value=${this.behavior.search} id="command-input" aria-controls="command-list" />
     </div>
-    <div class=${'command__list'} role="listbox" id="fsds-command-listbox" aria-labelledby="command-input">
+    <div class=${'command__list'} role="listbox" id="command-list" aria-labelledby="command-input">
       <div class=${'command__empty'}></div>
-      <div class=${'command__group'}>
-        <div class=${'command__groupHeading'}></div>
-        <div class=${'command__groupItems'}>
-          <div class=${'command__item'} role="option">
-            <span class=${'command__itemIcon'}></span>
-            <div class=${'command__itemContent'}>
-              <span class=${'command__itemLabel'}></span>
-              <span class=${'command__itemDescription'}></span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <slot name="items"></slot>
       <div class=${'command__separator'} role="separator" aria-hidden="true"></div>
     </div>
   </div>

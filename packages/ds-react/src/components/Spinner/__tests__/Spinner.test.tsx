@@ -12,6 +12,14 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Spinner — unit", () => {
   it("renders with default props", () => {
     render(<Spinner data-testid="spinner" />);
@@ -71,32 +79,11 @@ describe("Spinner — unit", () => {
 
 describe("Spinner — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Spinner aria-label="Test Spinner" /></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Spinner label="Test Spinner" /></>);
+    const component = baseElement.querySelector('[data-fsds-component="spinner"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

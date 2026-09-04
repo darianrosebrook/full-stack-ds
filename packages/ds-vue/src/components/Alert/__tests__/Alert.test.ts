@@ -7,92 +7,77 @@ import Alert from "../Alert.vue";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Alert — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert", "class": "custom" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("alert");
   });
 
   it("applies intent=info variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "intent": "info" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "intent": "info" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--info");
   });
 
   it("applies intent=success variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "intent": "success" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "intent": "success" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--success");
   });
 
   it("applies intent=warning variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "intent": "warning" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "intent": "warning" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--warning");
   });
 
   it("applies intent=danger variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "intent": "danger" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "intent": "danger" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--danger");
   });
 
   it("applies level=inline variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "level": "inline" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "level": "inline" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--inline");
   });
 
   it("applies level=section variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "level": "section" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "level": "section" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--section");
   });
 
   it("applies level=page variant class", () => {
-    const wrapper = mount(Alert as Component, { props: { "level": "page" }, attrs: { "data-testid": "alert" }, slots: { default: "content" } });
+    const wrapper = mount(Alert as Component, { props: { "level": "page" }, attrs: { "data-testid": "alert" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("alert--page");
   });
 });
 
 describe("Alert — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert", "aria-label": "Test Alert" }, slots: { default: "content" } });
-    const results = await axe(wrapper.element);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const wrapper = mount(Alert as Component, { props: {}, attrs: { "data-testid": "alert", "aria-label": "Test Alert" }, slots: { "default": "<span>content</span>" } });
+    const results = await axe(wrapper.element, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

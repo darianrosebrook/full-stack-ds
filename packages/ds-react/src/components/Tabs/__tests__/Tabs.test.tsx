@@ -12,86 +12,73 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Tabs — unit", () => {
   it("renders with default props", () => {
-    render(<Tabs data-testid="tabs">content</Tabs>);
+    render(<Tabs data-testid="tabs"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Tabs data-testid="tabs">content</Tabs>);
+    render(<Tabs data-testid="tabs"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs");
   });
 
   it("merges custom className", () => {
-    render(<Tabs data-testid="tabs" className="custom">content</Tabs>);
+    render(<Tabs data-testid="tabs" className="custom"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs", "custom");
   });
 
   it("applies orientation=horizontal variant class", () => {
-    render(<Tabs data-testid="tabs" orientation="horizontal">content</Tabs>);
+    render(<Tabs data-testid="tabs" orientation="horizontal"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--horizontal");
   });
 
   it("applies orientation=vertical variant class", () => {
-    render(<Tabs data-testid="tabs" orientation="vertical">content</Tabs>);
+    render(<Tabs data-testid="tabs" orientation="vertical"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--vertical");
   });
 
   it("applies appearance=underline variant class", () => {
-    render(<Tabs data-testid="tabs" appearance="underline">content</Tabs>);
+    render(<Tabs data-testid="tabs" appearance="underline"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--underline");
   });
 
   it("applies appearance=pills variant class", () => {
-    render(<Tabs data-testid="tabs" appearance="pills">content</Tabs>);
+    render(<Tabs data-testid="tabs" appearance="pills"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--pills");
   });
 
   it("applies activationMode=automatic variant class", () => {
-    render(<Tabs data-testid="tabs" activationMode="automatic">content</Tabs>);
+    render(<Tabs data-testid="tabs" activationMode="automatic"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--automatic");
   });
 
   it("applies activationMode=manual variant class", () => {
-    render(<Tabs data-testid="tabs" activationMode="manual">content</Tabs>);
+    render(<Tabs data-testid="tabs" activationMode="manual"><span>content</span></Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--manual");
   });
 
   it("calls onValueChange when activeTab changes", async () => {
     const onValueChangeSpy = vi.fn();
-    expect(() => render(<Tabs data-testid="tabs" value={""} onValueChange={onValueChangeSpy}>content</Tabs>)).not.toThrow();
+    expect(() => render(<Tabs data-testid="tabs" value={""} onValueChange={onValueChangeSpy}><span>content</span></Tabs>)).not.toThrow();
   });
 });
 
 describe("Tabs — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Tabs aria-label="Test Tabs">content</Tabs></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Tabs aria-label="Test Tabs"><span>content</span></Tabs></>);
+    const component = baseElement.querySelector('[data-fsds-component="tabs"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end
@@ -354,30 +341,8 @@ describe("Tabs — accessibility (full fixture)", () => {
         </Tabs>
       </>,
     );
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (v) => !knownScaffoldViolationIds.has(v.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const results = await axe(container, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @custom:end

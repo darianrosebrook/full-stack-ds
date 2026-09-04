@@ -20,6 +20,8 @@ export interface CheckboxProps {
   disabled?: boolean;
   name?: string;
   value?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;

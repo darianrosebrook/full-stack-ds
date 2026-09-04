@@ -17,14 +17,16 @@ interface Props {
   defaultSearch?: string;
   onSearchChange?: (value: string) => void;
   placeholder?: string;
+  searchLabel?: string;
   emptyMessage?: string;
   label?: string;
   shouldFilter?: boolean;
   filter?: ((value: string, search: string) => number) | undefined;
   class?: string;
+  items?: import('svelte').Snippet;
 }
 
-let { open, defaultOpen, onOpenChange, search, defaultSearch, onSearchChange, placeholder = "Search...", emptyMessage = "No results found.", label = "Command palette", shouldFilter = true, filter, class: className }: Props = $props();
+let { open, defaultOpen, onOpenChange, search, defaultSearch, onSearchChange, placeholder = "Search...", searchLabel = "Search commands", emptyMessage = "No results found.", label = "Command palette", shouldFilter = true, filter, class: className, items }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -56,7 +58,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="command" use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpen(false); } }}>
+<div class={classes} data-fsds-component="command" use:portal={{ enabled: true }} onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpen(false); } }}>
   {#if behavior.open}
   <div class={'command__overlay'} aria-hidden="true"></div>
   {/if}
@@ -64,22 +66,11 @@ const instanceId = $props.id();
   <div class={'command__dialog'} role="dialog" aria-modal="true" aria-label={label}>
     <div class={'command__inputWrapper'}>
       <span class={'command__searchIcon'} aria-hidden="true"></span>
-      <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} aria-expanded={behavior.open} placeholder={placeholder} value={behavior.search} id={`${instanceId}-input`} />
+      <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} aria-expanded={behavior.open} aria-label={searchLabel} placeholder={placeholder} value={behavior.search} id={`${instanceId}-input`} aria-controls={`${instanceId}-list`} />
     </div>
-    <div class={'command__list'} role="listbox" id="fsds-command-listbox" aria-labelledby={`${instanceId}-input`}>
+    <div class={'command__list'} role="listbox" id={`${instanceId}-list`} aria-labelledby={`${instanceId}-input`}>
       <div class={'command__empty'}></div>
-      <div class={'command__group'}>
-        <div class={'command__groupHeading'}></div>
-        <div class={'command__groupItems'}>
-          <div class={'command__item'} role="option">
-            <span class={'command__itemIcon'}></span>
-            <div class={'command__itemContent'}>
-              <span class={'command__itemLabel'}></span>
-              <span class={'command__itemDescription'}></span>
-            </div>
-          </div>
-        </div>
-      </div>
+      {@render items?.()}
       <div class={'command__separator'} role="separator" aria-hidden="true"></div>
     </div>
   </div>

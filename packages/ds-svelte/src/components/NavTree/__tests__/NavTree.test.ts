@@ -1,12 +1,20 @@
 // @generated:start imports
 import { describe, expect, it } from "vitest";
-import type { Component } from "svelte";
+import { createRawSnippet, type Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
 import NavTree from "../NavTree.svelte";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("NavTree — unit", () => {
   it("renders with default props", () => {
     const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: {} });
@@ -42,34 +50,11 @@ describe("NavTree — unit", () => {
 
 describe("NavTree — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test NavTree" } });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder", "aria-label": "Test NavTree", "children": createRawSnippet(() => ({ render: () => "<li>content</li>" })) } });
     const list = document.createElement("ul");
     list.append(container.firstElementChild!);
-    const results = await axe(list);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const results = await axe(list, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

@@ -28,10 +28,11 @@ interface Props {
   closeOnBackdropClick?: boolean;
   initialFocus?: string;
   returnFocus?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   class?: string;
   "data-testid"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
 }
 // @generated:end
 
@@ -76,9 +77,9 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="`${instanceId}-body`" role="dialog" :data-testid="props['data-testid']" data-fsds-component="dialog" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
+    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="dialog" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
       <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true"></div>
-      <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
+      <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[`${instanceId}-body`, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'dialog__header'">
           <h2 :class="'dialog__title'" :id="`${instanceId}-title`">
             <slot name="title" />

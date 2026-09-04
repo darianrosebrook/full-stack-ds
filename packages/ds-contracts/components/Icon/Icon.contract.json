@@ -25,8 +25,10 @@
     "dom": {
       "tag": "span",
       "part": "root",
-      "attrs": {
-        "aria-hidden": "true"
+      "bindings": {
+        "role": "conditional:prop:decorative|literal:presentation|literal:img",
+        "aria-hidden": "conditional:prop:decorative|literal:true|literal:false",
+        "aria-label": "prop:ariaLabel"
       },
       "children": [
         {
@@ -63,6 +65,17 @@
           "propType": { "kind": "enum", "values": ["sm", "md", "lg", "xl"] },
           "description": "Rendered glyph size. Maps to pixels (sm=16, md=20, lg=24, xl=32 — mirroring the icon.size token scale) and selects the nearest authored size variant.",
           "default": "md"
+        },
+        {
+          "name": "decorative",
+          "propType": { "kind": "boolean" },
+          "description": "Whether assistive technology should ignore the icon.",
+          "default": true
+        },
+        {
+          "name": "ariaLabel",
+          "propType": { "kind": "string" },
+          "description": "Accessible name used when decorative is false."
         }
       ]
     }
@@ -101,6 +114,7 @@
     "flipIcon": false
   },
   "a11y": {
+    "role": "img",
     "labeling": [
       "aria-label",
       "aria-hidden"

@@ -7,6 +7,14 @@ import Select from "../Select.svelte";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Select — unit", () => {
   it("renders with default props", () => {
     const { container } = render(Select as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
@@ -64,32 +72,9 @@ describe("Select — unit", () => {
 
 describe("Select — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Select as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Select", "open": true } });
-    const results = await axe(container);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { container } = render(Select as unknown as Component<Record<string, unknown>>, { props: { "triggerLabel": "Test Select", "open": true } });
+    const results = await axe(container, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

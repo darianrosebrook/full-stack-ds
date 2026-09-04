@@ -250,6 +250,7 @@ export function Accordion({
         ref={rootRef}
         className={classNames}
         data-testid={testId}
+        data-fsds-component="accordion"
         onKeyDown={handleKeyDown}
         {...rest}
       >

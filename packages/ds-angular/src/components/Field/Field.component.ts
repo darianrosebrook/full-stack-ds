@@ -27,9 +27,9 @@ let nextInstanceId = 0;
   imports: [NgClass, NgIf],
   providers: [FieldAssociationService],
   host: { "data-fsds-component": "field" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" [attr.aria-labelledby]="instanceId + '-label'">
   <div [ngClass]="'field__header'">
-    <label [ngClass]="'field__label'" [attr.for]="instanceId + '-control'">
+    <label [ngClass]="'field__label'" [attr.id]="instanceId + '-label'" [attr.for]="instanceId + '-control'">
       <ng-content select="[slot=label]" />
     </label>
   </div>

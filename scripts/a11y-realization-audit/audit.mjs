@@ -21,15 +21,13 @@
  *
  * -- Obligation classes (each derived from a contract FACT, falsifiable) -----
  *
- *   RELATIONSHIP — every `relationships[]` entry demands its `attribute`
- *                  (for, aria-labelledby, aria-describedby, aria-controls,
- *                  aria-expanded, aria-sort, aria-activedescendant,
- *                  aria-hidden, aria-label) be present in the component's
- *                  generated sources, per family, through that family's
- *                  accessibility surface (web DOM attrs; react-native
- *                  accessibility props). A family with no surface for an
- *                  attribute is an EXPLICIT documented exclusion in the
- *                  report — never a silent skip.
+ *   RELATIONSHIP — every `relationships[]` entry demands its `attribute` on
+ *                  the emitted `from` part. IDREF attributes additionally
+ *                  demand an id on the emitted `to` part and a matching
+ *                  target-id token in the source attribute. Merely finding
+ *                  `aria-labelledby` elsewhere in the file is not evidence.
+ *                  A family with no surface for an attribute is an EXPLICIT
+ *                  documented exclusion in the report — never a silent skip.
  *
  *   KEYBOARD     — every `a11y.keyboard` entry demands a realization:
  *                  NATIVE   (the interactive part is a native element whose
@@ -62,12 +60,13 @@
  * it in review) AND when a ledger entry no longer reproduces (stale debt —
  * delete the entry). The ledger can only shrink truthfully; it cannot rot.
  *
- * NON-CLAIMS: this is a STATIC SOURCE-LEVEL check. A present aria attribute
- * does not prove the id it references resolves at runtime; a keydown handler
- * does not prove correct focus order; native realization does not prove AT
- * announces well. Runtime truth stays with the Playwright rails and axe
- * checks. This rail is drift-protection for the accessibility surface the
- * contracts promise — the "declared but realized nowhere" class.
+ * NON-CLAIMS: this is a STATIC SOURCE-LEVEL check. Matching emitted source
+ * ownership does not prove the contract chose the semantically correct part,
+ * runtime branch, or accessible name; a keydown handler does not prove correct
+ * focus order; native realization does not prove AT announces well. Runtime
+ * truth stays with the Playwright rails and axe checks. This rail is
+ * drift-protection for the accessibility surface the contracts promise — the
+ * "declared but not emitted on its declared carrier" class.
  *
  * Usage:  node scripts/a11y-realization-audit/audit.mjs
  * Output: docs/internal/a11y-realization-audit/a11y-matrix.{json,md}
@@ -81,7 +80,7 @@ import {
   mkdirSync,
   writeFileSync,
 } from "node:fs";
-import { resolve, join, dirname } from "node:path";
+import { resolve, join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -186,6 +185,14 @@ const NATIVE_INTERACTIVE_TAGS = new Set([
   "details",
 ]);
 
+const IDREF_ATTRIBUTES = new Set([
+  "for",
+  "aria-labelledby",
+  "aria-describedby",
+  "aria-controls",
+  "aria-activedescendant",
+]);
+
 // ---- contract corpus --------------------------------------------------------
 function loadContracts() {
   const out = [];
@@ -254,10 +261,16 @@ export function deriveObligations(contracts) {
   for (const { name, contract } of contracts) {
     for (const rel of contract.relationships ?? []) {
       if (!rel.attribute) continue;
+      const target = findPartNode(contract.anatomy?.dom, rel.to);
       obligations.push({
         component: name,
         class: "relationship",
         key: rel.attribute,
+        from: rel.from,
+        to: rel.to,
+        cssPrefix: contract.cssPrefix ?? toKebab(name),
+        targetId: target?.attrs?.id,
+        ...(isConsumerSlotPart(target) ? { targetSlotted: true } : {}),
       });
     }
     const kb = contract.a11y?.keyboard ?? [];
@@ -275,11 +288,40 @@ export function deriveObligations(contracts) {
   // Dedupe (a contract may declare the same attribute in several relationships).
   const seen = new Set();
   return obligations.filter((o) => {
-    const id = `${o.component} ${o.class} ${o.key}`;
+    const id = tupleId(o.component, o.class, o.key, o.from, o.to);
     if (seen.has(id)) return false;
     seen.add(id);
     return true;
   });
+}
+
+function findPartNode(node, part) {
+  if (!node || typeof node !== "object") return undefined;
+  if (node.part === part) return node;
+  for (const child of node.children ?? []) {
+    const found = findPartNode(child, part);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+function isConsumerSlotPart(node) {
+  return Boolean(
+    node &&
+      (node.tag === "slot" ||
+        (node.children?.length === 1 && node.children[0]?.tag === "slot")),
+  );
+}
+
+function toKebab(value) {
+  return String(value)
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/[_\s]+/g, "-")
+    .toLowerCase();
+}
+
+function tupleId(...values) {
+  return JSON.stringify(values.map((value) => value ?? ""));
 }
 
 // ---- realization checking ---------------------------------------------------
@@ -335,6 +377,7 @@ function readComponentSource(treeAbs, component, sourceExtensions) {
   // where the shared `primitives/` tree lives.
   const packageSrc = dirname(treeAbs);
   let src = "";
+  const ownFiles = [];
   const primitiveFiles = new Set();
   const walk = (d) => {
     for (const entry of readdirSync(d).sort()) {
@@ -349,6 +392,7 @@ function readComponentSource(treeAbs, component, sourceExtensions) {
       if (!sourceExtensions.some((ext) => entry.endsWith(ext))) continue;
       const fileSrc = readFileSync(p, "utf-8");
       src += fileSrc;
+      ownFiles.push({ path: p, source: fileSrc });
       for (const f of resolvePrimitiveImports(fileSrc, d, packageSrc)) {
         primitiveFiles.add(f);
       }
@@ -378,13 +422,284 @@ function readComponentSource(treeAbs, component, sourceExtensions) {
       if (!seen.has(next)) queue.push(next);
     }
   }
-  return { own: src, relationship: src + primitiveSrc };
+  return { own: src, ownFiles, relationship: src + primitiveSrc };
 }
 
 export function relationshipTokens(kind, attribute) {
   const table = RELATIONSHIP_SURFACE[kind];
   if (attribute in table) return table[attribute]; // may be null (excluded)
   return kind === "web-dom" ? [attribute] : null;
+}
+
+/**
+ * Extract source-level opening tags without being confused by `=>` inside a
+ * Lit/React event expression. This is intentionally a small scanner rather
+ * than an HTML parser: the input is framework source, not HTML, but braces
+ * and quoted attributes still give us enough structure to identify which
+ * emitted element owns an attribute.
+ */
+export function openingTags(src) {
+  const tags = [];
+  for (let start = 0; start < src.length; start += 1) {
+    if (src[start] !== "<" || !/[A-Za-z]/.test(src[start + 1] ?? "")) continue;
+    let quote = null;
+    let braces = 0;
+    for (let i = start + 1; i < src.length; i += 1) {
+      const ch = src[i];
+      const prev = src[i - 1];
+      if (quote) {
+        if (ch === quote && prev !== "\\") quote = null;
+        continue;
+      }
+      if (ch === '"' || ch === "'" || ch === "`") {
+        quote = ch;
+        continue;
+      }
+      if (ch === "{") braces += 1;
+      else if (ch === "}" && braces > 0) braces -= 1;
+      else if (ch === ">" && braces === 0) {
+        tags.push(src.slice(start, i + 1));
+        start = i;
+        break;
+      }
+    }
+  }
+  return tags;
+}
+
+function partCarriers(srcBundle, obligation, part, { target = false } = {}) {
+  if (!part) return [];
+  const ownSrc = typeof srcBundle === "string" ? srcBundle : srcBundle.own;
+  const files =
+    typeof srcBundle === "string" || !srcBundle.ownFiles?.length
+      ? [{ path: "", source: ownSrc }]
+      : srcBundle.ownFiles;
+  const candidates = [];
+
+  // Compound/surface emitters give each part a framework-native source
+  // boundary: AccordionTrigger.tsx, TabsPanel.vue, or a
+  // `TabsTabElement`/`PopoverTriggerDirective` class. Prefer that boundary
+  // over markup heuristics. It lets the audit prove an attribute belongs to
+  // the declared part even when the framework applies it programmatically to
+  // a custom-element host rather than writing an opening tag.
+  const symbol =
+    part === "root"
+      ? obligation.component
+      : `${obligation.component}${toPascal(part)}`;
+  for (const file of files) {
+    const region = symbolRegion(file.source, symbol);
+    if (region) candidates.push(region);
+  }
+  for (const file of files) {
+    if (sourceStem(file.path) !== symbol.toLowerCase()) continue;
+    const containsOnlySubpartDeclarations =
+      part === "root" &&
+      new RegExp(
+        `(?:^|\\n)export\\s+(?:class|function)\\s+${escapeRegExp(obligation.component)}[A-Z]`,
+      ).test(file.source);
+    if (!containsOnlySubpartDeclarations) candidates.push(file.source);
+  }
+
+  const tags = openingTags(ownSrc);
+  if (part === "root") {
+    const rootTag = tags.find(
+      (tag) =>
+        (tag.includes("data-fsds-component") && tag.includes(obligation.cssPrefix)) ||
+        (target && hasIdAttribute(tag) && targetReferenceTokens(obligation).some((t) => tag.includes(t))),
+    );
+    if (rootTag) candidates.push(rootTag);
+    return [...new Set(candidates)];
+  }
+  const marker = `${obligation.cssPrefix}__${part}`;
+  const exactMarker = new RegExp(`${escapeRegExp(marker)}(?=[^A-Za-z0-9_-]|$)`);
+  const markedTag = tags.find((tag) => exactMarker.test(tag));
+  if (markedTag) candidates.push(markedTag);
+  return [...new Set(candidates)];
+}
+
+function toPascal(value) {
+  return String(value)
+    .replace(/(^|[-_\s]+)([a-zA-Z0-9])/g, (_match, _sep, ch) => ch.toUpperCase());
+}
+
+function sourceStem(path) {
+  return basename(path)
+    .replace(/\.(?:component|directive)(?=\.)/g, "")
+    .split(".")[0]
+    .replace(/[^A-Za-z0-9]/g, "")
+    .toLowerCase();
+}
+
+function symbolRegion(source, symbol) {
+  const declaration = new RegExp(
+    `(?:^|\\n)(?:export\\s+(?:class|function)\\s+${escapeRegExp(symbol)}(?:Element|Component|Directive)?\\b|[A-Za-z0-9_]+\\.[A-Za-z0-9_]+\\s*=\\s*function\\s+${escapeRegExp(symbol)}\\b)`,
+  );
+  const match = declaration.exec(source);
+  if (!match) return undefined;
+  const declarationStart = match.index;
+  const declarationEnd = declarationStart + match[0].length;
+
+  // Angular keeps a component's template (and therefore most DOM carriers)
+  // in the @Component metadata immediately before the exported class. Keep
+  // that decorator inside the exact symbol region, but never borrow the next
+  // component/directive decorator in a compound source file.
+  const before = source.slice(0, declarationStart);
+  const previousExport = before.lastIndexOf("\nexport ");
+  const decorators = [
+    ...before.matchAll(/(?:^|\n)@(?:Component|Directive)\s*\(\{/g),
+  ];
+  const decorator = decorators.at(-1);
+  const start =
+    decorator && decorator.index !== undefined && decorator.index > previousExport
+      ? decorator.index
+      : declarationStart;
+  const remainder = source.slice(declarationEnd);
+  const next = /\n(?:@(?:Component|Directive)\s*\(|export\s+(?:class|function|interface|type|const)\s+)/.exec(
+    remainder,
+  );
+  return source.slice(start, next ? declarationEnd + next.index : undefined);
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function hasIdAttribute(tag) {
+  return (
+    /(?:\bid|:id|\[attr\.id\]|\.id)=/.test(tag) ||
+    /setAttribute\(\s*["']id["']/.test(tag) ||
+    /HostBinding\(\s*["']attr\.id["']/.test(tag)
+  );
+}
+
+function targetReferenceTokens(obligation) {
+  return obligation.targetId
+    ? [obligation.targetId]
+    : [
+        `-${obligation.to}`,
+        `${obligation.to}Id`,
+        `${obligation.to}ID`,
+        `${obligation.to}_id`,
+      ];
+}
+
+function occurrenceCount(source, token) {
+  if (!token) return 0;
+  let count = 0;
+  let offset = 0;
+  while ((offset = source.indexOf(token, offset)) !== -1) {
+    count += 1;
+    offset += token.length;
+  }
+  return count;
+}
+
+function classifyWebRelationship(obligation, srcBundle, tokens) {
+  const ownSrc = typeof srcBundle === "string" ? srcBundle : srcBundle.own;
+  const relationshipSrc =
+    typeof srcBundle === "string"
+      ? srcBundle
+      : srcBundle.relationship ?? srcBundle.own;
+  const sourceCandidates = partCarriers(srcBundle, obligation, obligation.from);
+  if (sourceCandidates.length === 0) {
+    return { verdict: "unrealized", reason: `from part ${obligation.from} not found` };
+  }
+
+  const source = sourceCandidates.find((candidate) =>
+    tokens.some((token) => candidate.includes(token)),
+  );
+  const ownsAttribute = source !== undefined;
+  let attributeSource = source ?? sourceCandidates[0];
+  let via = "owned attribute";
+  if (!ownsAttribute) {
+    const primitiveOnly = relationshipSrc.slice(ownSrc.length);
+    if (tokens.some((token) => primitiveOnly.includes(token))) {
+      attributeSource = primitiveOnly;
+      via = "directly-imported primitive";
+    } else {
+      return {
+        verdict: "unrealized",
+        reason: `${obligation.key} is not on from part ${obligation.from}`,
+      };
+    }
+  }
+
+  if (!IDREF_ATTRIBUTES.has(obligation.key)) {
+    return { verdict: "realized", via };
+  }
+
+  const targetCandidates = partCarriers(srcBundle, obligation, obligation.to, { target: true });
+  if (targetCandidates.length === 0) {
+    return { verdict: "unrealized", reason: `to part ${obligation.to} not found` };
+  }
+  const refTokens = targetReferenceTokens(obligation);
+  const sourceReferences = (token) =>
+    attributeSource.includes(token) ||
+    boundAttributeReferencesTarget(
+      attributeSource,
+      obligation.key,
+      token,
+      relationshipSrc,
+    ) ||
+    (forwardsRelationshipAttribute(attributeSource, obligation.key) &&
+      occurrenceCount(relationshipSrc, token) >= 2);
+  if (obligation.targetSlotted) {
+    const providedReference = refTokens.find(
+      (token) => sourceReferences(token) && occurrenceCount(relationshipSrc, token) >= 2,
+    );
+    if (providedReference) {
+      return { verdict: "realized", via: "consumer-slot association provider" };
+    }
+  }
+  const target = targetCandidates.find((candidate) =>
+    hasIdAttribute(candidate) &&
+    refTokens.some(
+      (token) =>
+        sourceReferences(token) &&
+        candidate.includes(token) &&
+        occurrenceCount(relationshipSrc, token) >= 2,
+    ),
+  );
+  const matchingReference = refTokens.find(
+    (token) =>
+      sourceReferences(token) &&
+      target?.includes(token) &&
+      occurrenceCount(relationshipSrc, token) >= 2,
+  );
+  if (!target || !hasIdAttribute(target) || !matchingReference) {
+    return {
+      verdict: "unrealized",
+      reason: `to part ${obligation.to} has no matching id`,
+    };
+  }
+  return { verdict: "realized", via: via === "owned attribute" ? "owned idref" : via };
+}
+
+function forwardsRelationshipAttribute(source, attribute) {
+  const escaped = escapeRegExp(attribute);
+  return (
+    new RegExp(`(?:rest|attrs|triggerProps)(?:\\.value)?\\s*\\[\\s*["']${escaped}["']\\s*\\]`).test(source) ||
+    /\.\.\.(?:ariaProps|triggerProps|attrs|rest)\b/.test(source)
+  );
+}
+
+function boundAttributeReferencesTarget(carrier, attribute, targetToken, source) {
+  const binding = new RegExp(
+    `\\[attr\\.${escapeRegExp(attribute)}\\]\\s*=\\s*["']([^"']+)["']`,
+  ).exec(carrier);
+  if (!binding) return false;
+  const expression = binding[1].trim();
+  if (expression.includes(targetToken)) return true;
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(expression)) return false;
+
+  // Angular commonly keeps the composed IDREF in a getter so consumer
+  // overrides and generated defaults share one binding. Follow only that
+  // exact getter body; a nearby sibling getter must not lend it an unrelated
+  // endpoint token.
+  const getter = new RegExp(
+    `get\\s+${escapeRegExp(expression)}\\b[^\\{]*\\{([\\s\\S]*?)\\n\\s*\\}`,
+  ).exec(source);
+  return Boolean(getter?.[1].includes(targetToken));
 }
 
 /** Classify one obligation against one family's committed source.
@@ -411,6 +726,9 @@ export function classify(obligation, kind, srcBundle, contractTags) {
           NATIVE_MOBILE_EXCLUSION_REASONS[obligation.key] ??
           `no ${kind} surface for ${obligation.key}`,
       };
+    }
+    if (kind === "web-dom" && obligation.from && obligation.to && obligation.cssPrefix) {
+      return classifyWebRelationship(obligation, srcBundle, tokens);
     }
     return tokens.some((t) => relationshipSrc.includes(t))
       ? { verdict: "realized", via: "attribute" }
@@ -450,7 +768,14 @@ export function classify(obligation, kind, srcBundle, contractTags) {
 
 // ---- main -------------------------------------------------------------------
 function gapId(row) {
-  return `${row.component} ${row.family} ${row.class} ${row.key}`;
+  return tupleId(
+    row.component,
+    row.family,
+    row.class,
+    row.key,
+    row.class === "relationship" ? row.from : undefined,
+    row.class === "relationship" ? row.to : undefined,
+  );
 }
 
 export function runAudit({ repoRoot = REPO } = {}) {
@@ -494,6 +819,17 @@ function loadLedger() {
         );
       }
     }
+    if (
+      g.class === "relationship" &&
+      (typeof g.from !== "string" ||
+        g.from.length === 0 ||
+        typeof g.to !== "string" ||
+        g.to.length === 0)
+    ) {
+      throw new Error(
+        `known-gaps.json relationship entry must name from/to: ${JSON.stringify(g)}`,
+      );
+    }
   }
   return parsed.gaps;
 }
@@ -505,13 +841,13 @@ function markdownReport(rows, unledgered, stale) {
     "Derived from the live contract corpus; verified against committed generated output per admitted family.",
     "Machine-local report — regenerate with `pnpm run audit:a11y-realization`.",
     "",
-    `| component | family | class | key | verdict | via/reason |`,
-    `|---|---|---|---|---|---|`,
+    `| component | family | class | key | endpoints | verdict | via/reason |`,
+    `|---|---|---|---|---|---|---|`,
   ];
   for (const r of rows) {
     if (r.verdict === "realized" || r.verdict === "not-emitted") continue;
     lines.push(
-      `| ${r.component} | ${r.family} | ${r.class} | ${r.key} | ${r.verdict} | ${r.via ?? r.reason ?? ""} |`,
+      `| ${r.component} | ${r.family} | ${r.class} | ${r.key} | ${r.from && r.to ? `${r.from} → ${r.to}` : ""} | ${r.verdict} | ${r.via ?? r.reason ?? ""} |`,
     );
   }
   lines.push("", `Unledgered gaps: ${unledgered.length}`, `Stale ledger entries: ${stale.length}`);

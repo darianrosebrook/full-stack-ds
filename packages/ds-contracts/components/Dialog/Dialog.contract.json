@@ -93,8 +93,9 @@
             "aria-modal": "true"
           },
           "bindings": {
-            "aria-labelledby": "literal:dialog-title-id",
-            "aria-describedby": "literal:dialog-body-id"
+            "aria-label": "prop:ariaLabel",
+            "aria-labelledby": "prop:ariaLabelledby",
+            "aria-describedby": "prop:ariaDescribedby"
           },
           "children": [
             {
@@ -200,6 +201,21 @@
           "name": "returnFocus",
           "type": "string",
           "description": "CSS selector or element ID to return focus to on close."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Explicit accessible name used instead of the title relationship."
+        },
+        {
+          "name": "ariaLabelledby",
+          "type": "string",
+          "description": "Additional consumer-owned IDs that label the dialog."
+        },
+        {
+          "name": "ariaDescribedby",
+          "type": "string",
+          "description": "Additional consumer-owned IDs that describe the dialog."
         }
       ]
     }
@@ -444,13 +460,14 @@
   },
   "relationships": [
     {
-      "from": "root",
+      "from": "modal",
       "to": "title",
       "attribute": "aria-labelledby",
+      "when": "ariaLabel!=present",
       "description": "Dialog takes its accessible name from the title element's id when no aria-label is provided."
     },
     {
-      "from": "root",
+      "from": "modal",
       "to": "body",
       "attribute": "aria-describedby",
       "description": "Optional — links the body region so screen readers announce it when the dialog opens. Dialog uses `body` as the description target since it doesn't carry a separate `description` anatomy part."

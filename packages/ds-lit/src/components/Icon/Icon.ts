@@ -88,6 +88,9 @@ export class IconElement extends LitElement {
 
   @property({ type: String }) name!: string;
   @property({ attribute: false }) size?: "sm" | "md" | "lg" | "xl" = "md";
+  @property({ type: Boolean }) decorative?: boolean = true;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -104,7 +107,7 @@ export class IconElement extends LitElement {
   override render() {
     const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[(this.size ?? "md")];
     const iconGlyph = resolveIcon(this.name, iconGlyphPx ?? Number.NaN);
-    return html`<span class="${this.computeClasses()}" aria-hidden="true">
+    return html`<span class="${this.computeClasses()}" .role=${((this.decorative ?? true) ? "presentation" : "img")} aria-hidden=${((this.decorative ?? true) ? "true" : "false")} aria-label=${ifDefined(this.ariaLabel ?? undefined)}>
   ${iconGlyph ? svg`
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon=${iconGlyph.name} viewBox=${iconGlyph.viewBox} width=${iconGlyphPx ?? iconGlyph.size} height=${iconGlyphPx ?? iconGlyph.size}>
     ${iconGlyph.paths.map((glyphPath) => svg`<path d=${ifDefined(glyphPath.d)} fill=${ifDefined(glyphPath.fill)} stroke=${ifDefined(glyphPath.stroke)} stroke-width=${ifDefined(glyphPath.strokeWidth)} stroke-linecap=${ifDefined(glyphPath.strokeLineCap)} stroke-linejoin=${ifDefined(glyphPath.strokeLineJoin)} stroke-dasharray=${ifDefined(glyphPath.strokeDasharray)} fill-rule=${ifDefined(glyphPath.fillRule)} clip-rule=${ifDefined(glyphPath.clipRule)} />`)}

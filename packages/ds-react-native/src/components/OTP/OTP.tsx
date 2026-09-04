@@ -21,6 +21,8 @@ export interface OTPProps {
   disabled?: boolean;
   readOnly?: boolean;
   label?: string;
+  fieldLabel?: string;
+  ariaDescribedby?: string;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -36,6 +38,7 @@ export function OTP({
   disabled,
   readOnly,
   label = "One-time password",
+  fieldLabel = "One-time password digit",
   defaultValue = "",
   onChange,
   style,
@@ -67,6 +70,7 @@ export function OTP({
               key={index}
               style={styles.field}
               editable={!(disabled || Boolean(readOnly))}
+              accessibilityLabel={fieldLabel}
               readOnly={Boolean(readOnly)}
               onChangeText={(text: string) => setValueValue(String(value ?? '').padEnd(index, ' ').slice(0, index) + String(text ?? '').slice(-1) + String(value ?? '').slice(index + 1))}
               accessibilityState={{ disabled: disabled }}

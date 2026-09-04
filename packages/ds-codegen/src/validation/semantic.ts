@@ -17,6 +17,7 @@
  *       exist elsewhere in the same contract.
  *         - anatomy.details keys ⊆ anatomy.parts
  *         - relationships[*].{from,to} ⊆ anatomy.parts
+ *         - aria-labelledby targets must not be anatomy decorations
  *         - channels[*].{value,defaultValue,onChange} ⊆ prop names
  *         - events[*].emittedVia[*] ⊆ prop names
  *         - form.<bucket>.via[*] of form `prop:<name>` ⊆ prop names
@@ -111,6 +112,10 @@ export function validateContractSemantics(
 
   // Build the lookup sets the rules consult, once per contract.
   const parts = anatomyParts(contract);
+  const anatomyDetails =
+    contract.anatomy && !Array.isArray(contract.anatomy)
+      ? contract.anatomy.details ?? {}
+      : {};
   const propNames = collectPropNames(contract);
   const channelNames = new Set(Object.keys(contract.channels ?? {}));
   const stateDimensions = collectStateDimensions(contract);
@@ -141,6 +146,19 @@ export function validateContractSemantics(
         issues.push({
           pointer: `/relationships/${index}/to`,
           message: `references part "${rel.to}" which is not declared in anatomy.parts`,
+        });
+      }
+      if (
+        rel.attribute === "aria-labelledby" &&
+        rel.to &&
+        parts.has(rel.to) &&
+        anatomyDetails[rel.to]?.role === "decoration"
+      ) {
+        issues.push({
+          pointer: `/relationships/${index}/to`,
+          message:
+            `[A11Y_IDREF_DECORATIVE_NAME_TARGET] aria-labelledby target "${rel.to}" ` +
+            "is declared as a decoration and cannot provide an accessible name",
         });
       }
     }

@@ -33,22 +33,11 @@ let nextInstanceId = 0;
     <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="(label ?? 'Command palette')">
       <div [ngClass]="'command__inputWrapper'">
         <span [ngClass]="'command__searchIcon'" aria-hidden="true"></span>
-        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" />
+        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [attr.aria-label]="(searchLabel ?? 'Search commands')" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" [attr.aria-controls]="instanceId + '-list'" />
       </div>
-      <div [ngClass]="'command__list'" role="listbox" id="fsds-command-listbox" [attr.aria-labelledby]="instanceId + '-input'">
+      <div [ngClass]="'command__list'" role="listbox" [attr.id]="instanceId + '-list'" [attr.aria-labelledby]="instanceId + '-input'">
         <div [ngClass]="'command__empty'"></div>
-        <div [ngClass]="'command__group'">
-          <div [ngClass]="'command__groupHeading'"></div>
-          <div [ngClass]="'command__groupItems'">
-            <div [ngClass]="'command__item'" role="option">
-              <span [ngClass]="'command__itemIcon'"></span>
-              <div [ngClass]="'command__itemContent'">
-                <span [ngClass]="'command__itemLabel'"></span>
-                <span [ngClass]="'command__itemDescription'"></span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ng-content select="[slot=items]" />
         <div [ngClass]="'command__separator'" role="separator" aria-hidden="true"></div>
       </div>
     </div>
@@ -64,6 +53,7 @@ export class CommandComponent implements OnInit, OnDestroy {
   @Input() defaultSearch?: string;
   @Input() onSearchChange?: (value: string) => void;
   @Input() placeholder?: string = "Search...";
+  @Input() searchLabel?: string = "Search commands";
   @Input() emptyMessage?: string = "No results found.";
   @Input() label?: string = "Command palette";
   @Input() shouldFilter?: boolean = true;
