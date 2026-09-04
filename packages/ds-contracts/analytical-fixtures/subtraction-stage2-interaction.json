@@ -51,5 +51,86 @@
     "field.additivity.semi-additive.nonAdditiveAlong#present": {
       "disposition": "unresolved"
     }
+  },
+  "measurements": {
+    "$comment": "Evidence gathered for the audit, before any verdict. Stimuli vary only the additivity declaration and the assertion shape, both of which stage-2 causes already range over, so no new authority is invented.",
+    "additivity": {
+      "observationalPartition": {
+        "$comment": "Each declaration crossed with the assertion shapes the stage-2 additivity causes reach, plus being the field a `normalize` rescales. Cell = the diagnostics produced.",
+        "classes": [
+          {
+            "members": [
+              "<absent>",
+              "additive"
+            ],
+            "behaviour": "no diagnostic under any stimulus"
+          },
+          {
+            "members": [
+              "semi[d1]"
+            ],
+            "behaviour": "SUM_SEMIADDITIVE on sum along d1 and on sum with no along"
+          },
+          {
+            "members": [
+              "semi[d2]"
+            ],
+            "behaviour": "SUM_SEMIADDITIVE on sum along d2 and on sum with no along"
+          },
+          {
+            "members": [
+              "semi[d1,d2]"
+            ],
+            "behaviour": "SUM_SEMIADDITIVE on either along and on sum with no along"
+          },
+          {
+            "members": [
+              "non-additive"
+            ],
+            "behaviour": "NORMALIZE_NONADDITIVE only when it is a normalize field"
+          },
+          {
+            "members": [
+              "ratio-measure"
+            ],
+            "behaviour": "RATIO_MEASURE_AVERAGED on sum and on mean"
+          }
+        ],
+        "findings": [
+          "SIX classes over seven declarations: `<absent>` and `additive` are observationally identical under every stimulus reached. Relevant to field.additivity#present in the holders basis — holder presence is observable through the OTHER three branches, not through `additive`.",
+          "The three semi[...] variants are mutually distinct, so which dimensions are blocked is real content.",
+          "The observable content factorizes into three independent facts: the set of dimensions along which summation is illegal, whether the mean is illegal, and whether normalizing the field is illegal. The tag makes them MUTUALLY EXCLUSIVE — a measure cannot be declared both semi-additive along a dimension and a ratio-measure. No stage-2 cause exercises that exclusivity, so it is unwitnessed rather than wrong; recorded here as an observation, not a verdict."
+        ]
+      },
+      "supportStatus": {
+        "$comment": "Every live additivity coordinate, by the strength of its support.",
+        "primitive": [
+          "field.additivity.kind",
+          "field.additivity.kind:additive~ratio-measure",
+          "field.additivity.semi-additive.nonAdditiveAlong#incidence"
+        ],
+        "interactionOnly": [
+          "field.additivity.kind:additive~semi-additive",
+          "field.additivity.kind:semi-additive~ratio-measure",
+          "field.additivity.semi-additive.nonAdditiveAlong#present"
+        ],
+        "unresolved": [
+          "field.additivity#present",
+          "field.additivity.kind:additive~non-additive",
+          "field.additivity.kind:semi-additive~non-additive",
+          "field.additivity.kind:non-additive~ratio-measure",
+          "field.additivity.semi-additive.nonAdditiveAlong#arity",
+          "field.additivity.semi-additive.nonAdditiveAlong#order"
+        ],
+        "controlledComparison": "EVERY interaction-only pair has `semi-additive` as a member, and `semi-additive` is the only branch carrying payload. The control is `additive~ratio-measure`: same enum, same rules, both branches tag-only, and it has a holding SINGLE-coordinate witness. So the 2-set requirement tracks payload shape, not semantic entanglement — substituting a payload-carrying member alone leaves the payload behind, and the second coordinate erases that remnant."
+      }
+    }
+  },
+  "openQuestion": {
+    "$comment": "The audit's three precommitted outcomes may not exhaust the cases. The measurement suggests a fourth, and it is recorded as a QUESTION rather than adopted, because adding an outcome class changes what the audit can conclude and that should not be decided by the party running it.",
+    "candidate": "substitutionHygiene",
+    "statement": "A minimal 2-set can arise for two different reasons. (a) TRUE INTERACTION: two coordinates jointly carry a distinction neither carries alone. (b) SUBSTITUTION HYGIENE: one coordinate carries the distinction and the second is only required to make the erasure well-formed, because the members have different payload shapes and rewriting one to the other leaves a remnant. Under (b) the second coordinate is canonical-form cleanup, not a co-equal carrier of meaning, and reading the 2-set as evidence about IT would be as wrong as reading it as ratification.",
+    "discriminator": "Compare against a control pair from the same enum whose branches are both tag-only. If that control has a single-coordinate witness while the payload-involving pairs need 2-sets, the 2-set tracks payload shape rather than semantics. For additivity the control is `additive~ratio-measure`, and it does.",
+    "consequenceIfAdopted": "It would also apply to the twenty derivedBy.kind pairs, whose members likewise have different required key-sets — and it would make `bin~normalize` the control for THAT enum, since it is the only pair there with matching payload shape and it holds on a single coordinate."
   }
 }
