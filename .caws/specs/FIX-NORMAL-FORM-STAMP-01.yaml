@@ -2,9 +2,10 @@ id: FIX-NORMAL-FORM-STAMP-01
 title: 'Re-verify and restamp normal-form doc after RN emitter realization slice'
 risk_tier: 3
 mode: doc
-lifecycle_state: draft
+lifecycle_state: active
+worktree: normal-form-restamp
 created_at: '2026-09-04T23:22:36.420Z'
-updated_at: '2026-09-04T23:22:36.420Z'
+updated_at: '2026-09-04T23:22:51.162Z'
 created_by_session: 'sess_b5ccec4e-abee-4004-b791-90b54bfe3547'
 blast_radius:
   modules:
