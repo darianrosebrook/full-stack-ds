@@ -1,0 +1,125 @@
+{
+  "$comment": "Precommitted expectations about which analytical distinctions survive decomposition, frozen at Stage 2 so the CLOSE COMPARISON is a measurement rather than a memory. THIS FILE IS NOT ADMISSIBLE EVIDENCE FOR A SUBTRACTION VERDICT. Agreement with it proves nothing; disagreement is the intended measurement. It is deliberately outside the subtraction's authority graph: it is not a `subtraction-*.json` basis, no analytical module reads it, and a test enforces that. Citing it while adjudicating would rebuild the circularity that `constructors.transitionLaw` was demoted to avoid — a subtraction discovering necessity from definitions its own author wrote.",
+  "spec": "REL-VIEW-ALGEBRA-01",
+  "frozenAt": "496ef69a",
+  "classes": {
+    "RESULT": "survived an actual falsifier or subtraction",
+    "OPEN_EXPECTATION": "implemented or apparently load-bearing, but still in an unresolved basis",
+    "PREDICTION": "expected to matter in a later stage; no current necessity standing"
+  },
+  "procedure": "Do NOT update `predictedDisposition` as the experiment proceeds. At Stage-2 close populate only `actualDisposition`. Where they disagree, the disagreement is the evidence — and if nothing disagrees, that is itself suspicious: a decomposition that confirms every prior did not decompose.",
+  "entries": [
+    {
+      "class": "RESULT",
+      "claim": "Value type is a set of lawful transformations, not a label taxonomy: capability state is primitive and scale labels are derived aliases.",
+      "basis": "8 labels decode onto 7 capability states with exactly one alias pair (ratio = count); the kernel carries no scale label. capabilities.ts, C5.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "RESULT",
+      "claim": "Existence, alternative identity, and alternative-specific payload are three separate degrees of freedom; 'alternative versus absence' is their cross-term.",
+      "basis": "13 discriminator member-absence candidates -> 3 holder-presence facts; census 191 -> 181 with no collateral. 496ef69a.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "RESULT",
+      "claim": "Proven illegality and missing premise are two occurrence classes, not one; a two-valued judgment cannot tell absent evidence from contradiction.",
+      "basis": "Separate diagnostics and obligations lists; 4 obligations and 4 unproven corpus cases at stage <= 2.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "RESULT",
+      "claim": "Declared relation grain and field-key membership are not the same fact IN THE CURRENT CORPUS.",
+      "basis": "26 of 115 relations diverge, in both directions: grain declared with no key marked, and a key set strictly larger than the grain (the fan-out setup). Does NOT yet prove every detail of the relation.grain coordinate survives subtraction.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "OPEN_EXPECTATION",
+      "claim": "Aggregability is a law of a measure, and the dimensions along which it holds are the substantive part.",
+      "basis": "field.additivity#present is unadjudicated in subtraction-stage2-holders.json. nonAdditiveAlong is the only payload any additivity branch carries, which is independent agreement about where the content is.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "OPEN_EXPECTATION",
+      "claim": "Commensurability is distinct from numeric representation: computability is not semantic composability.",
+      "basis": "unit coordinates are among the 105 unresolved; REL_UNIT_SUM_INCOMMENSURABLE and the unit:commensurable obligation are live.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "OPEN_EXPECTATION",
+      "claim": "Missingness has analytical semantics: 'no observation exists' differs from 'an observation exists whose value is unavailable'.",
+      "basis": "observation.null members and assertion.aggregate.nulls are among the 105 unresolved.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "OPEN_EXPECTATION",
+      "claim": "Temporal RESOLUTION compatibility is semantic; calendars are not.",
+      "basis": "field.temporality#present is unadjudicated in the holders basis; field.temporality.grain members are among the 105.",
+      "predictedDisposition": "survives",
+      "actualDisposition": null
+    },
+    {
+      "class": "OPEN_EXPECTATION",
+      "claim": "Some explicit discriminant is necessary where constructor identity is underdetermined by operand structure.",
+      "basis": "20 of 21 derivedBy.kind pairs have distinct required key-sets; only bin and normalize share {from, field}. Model fact, not engine output. The 21 pairs are unadjudicated.",
+      "predictedDisposition": "one pair survives; twenty are artifacts",
+      "actualDisposition": null
+    },
+    {
+      "class": "OPEN_EXPECTATION",
+      "claim": "The bare relation.derivedBy.kind leaf represents an independent degree of freedom.",
+      "basis": "Explicitly an open question: if pairs carry branch identity and #present carries existence, the leaf must name something else or it is an aggregate retained alongside its own decomposition.",
+      "predictedDisposition": "required derived vocabulary",
+      "actualDisposition": null
+    },
+    {
+      "class": "PREDICTION",
+      "claim": "Projection requires a claim-preservation contract: it may choose how a claim is knowable, not what is true.",
+      "basis": "No stage-2 case. Stage 3.",
+      "predictedDisposition": null,
+      "actualDisposition": null
+    },
+    {
+      "class": "PREDICTION",
+      "claim": "Projection may require an explicit LOSS CONTRACT permitting a realization to omit recoverable structure, while preventing omitted analytical standing from being silently contradicted or replaced.",
+      "basis": "NOT a stage-2 result. Stage 2's finding is narrower and a prohibition: discarding analytically authoritative nest membership is ILLEGAL (REL_DERIVATION_DISCARDS_MEMBERSHIP). The kernel has no admissible-because-declared lossy state. Whether a lawful-loss category exists is for the projection boundary to discover.",
+      "predictedDisposition": null,
+      "actualDisposition": null
+    },
+    {
+      "class": "PREDICTION",
+      "claim": "Adequacy is relative to an explicit intended inference, not to a form name; some task/invariant authority is required.",
+      "basis": "No stage-2 case. The current task vocabulary is explicitly not claimed as normal form.",
+      "predictedDisposition": null,
+      "actualDisposition": null
+    },
+    {
+      "class": "PREDICTION",
+      "claim": "Layout- and projection-generated values need a provenance class: a value may affect realization without acquiring standing as evidence about the represented domain.",
+      "basis": "No carrier and no case. Stage 3/5.",
+      "predictedDisposition": null,
+      "actualDisposition": null
+    },
+    {
+      "class": "PREDICTION",
+      "claim": "Provenance is an authority separate from evidence.",
+      "basis": "REMOVED from the survived register. At L3 the evidence points the other way: zero provenance coordinates in the 181-coordinate census, no corpus case, and the provenance-shaped reading of derivedBy was the DEFECT — the repair made it a semantic transition law. May re-enter for observation custody, imputation, or projection-generated values; that is a prediction to be earned.",
+      "predictedDisposition": null,
+      "actualDisposition": null
+    },
+    {
+      "class": "PREDICTION",
+      "claim": "Analytical structure is about recoverable relations rather than preserved physical topology.",
+      "basis": "An invariant ABOUT projections, so it presupposes the layer whose necessity stage 3 tests; it cannot be evidence for that layer. Heterogeneous realizations need identical analytical standing, not identical structure.",
+      "predictedDisposition": null,
+      "actualDisposition": null
+    }
+  ]
+}

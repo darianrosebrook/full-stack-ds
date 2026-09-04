@@ -49,6 +49,7 @@ describe("no live coordinate is an orphaned claim", () => {
       frozenAt: "0000000",
       candidates: orphans.slice(0, 3),
       unresolved: orphans.slice(0, 3),
+      retained: [],
     };
     const remaining = orphanedCoordinates([later]).map((o) => o.coordinate);
     expect(remaining).toEqual(orphans.slice(3));
@@ -72,6 +73,7 @@ describe("no live coordinate is an orphaned claim", () => {
       frozenAt: "0000000",
       candidates: [x],
       unresolved: [], // every verdict recorded; the experiment is done
+      retained: [],
     };
     expect(orphanedCoordinates([closed]).map((o) => o.coordinate)).toContain(x);
 
@@ -90,6 +92,7 @@ describe("no live coordinate is an orphaned claim", () => {
       frozenAt: "0000000",
       candidates: [x, y],
       unresolved: [y],
+      retained: [],
     };
     const remaining = orphanedCoordinates([open]).map((o) => o.coordinate);
     expect(remaining).toContain(x);

@@ -20,7 +20,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadCensus } from "./census.js";
-import { loadBases } from "./experiments.js";
+import { loadBases, orphanedCoordinates, type ExperimentBasis } from "./experiments.js";
 import { FIXTURES_DIR } from "./necessity.js";
 import { Derivation } from "./relation-model.js";
 import {
@@ -36,6 +36,7 @@ const ledgerOf = (over: Partial<SubtractionLedger>): SubtractionLedger => ({
   dispositions: {
     unresolved: "not yet adjudicated",
     witnessed: "a holding witness ratifies it",
+    "required-derived-vocabulary": "derivable from other facts, but external authority governs the name",
     "representation-artifact": "another coordinate already carries the distinction",
     "not-yet-admitted": "no active authority requires it",
   },
@@ -278,6 +279,84 @@ describe("the rule is on disk before any verdict cites it", () => {
       expect(fs.existsSync(path.join(FIXTURES_DIR, file)), `${b.file} policyRef names a missing ${file}`).toBe(true);
       expect(loadSubtraction(path.join(FIXTURES_DIR, file))[anchor as "adjudicationPolicy"]).toBeDefined();
     }
+  });
+});
+
+describe("the prediction register is outside the subtraction's authority graph", () => {
+  const REGISTER = "predictions-stage2.json";
+
+  it("is not registered as a basis, so it can never own or adjudicate a coordinate", () => {
+    expect(fs.existsSync(path.join(FIXTURES_DIR, REGISTER))).toBe(true);
+    expect(loadBases().map((b) => b.file)).not.toContain(REGISTER);
+  });
+
+  it("is unreachable from every analytical module, which is what makes 'not admissible evidence' a guard", () => {
+    // The banner in the file is a wish. This is the enforcement: a rule that
+    // cannot read the register cannot be influenced by it, so agreement with
+    // the predictions can never be manufactured by the code being adjudicated.
+    const dir = __dirname;
+    const readers = fs
+      .readdirSync(dir)
+      .filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"))
+      .filter((f) => fs.readFileSync(path.join(dir, f), "utf-8").includes(REGISTER));
+    expect(readers, "an analytical module reads the prediction register").toEqual([]);
+  });
+
+  it("keeps its outcomes blank, because a prediction updated during the experiment measures nothing", () => {
+    const reg = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, REGISTER), "utf-8")) as {
+      classes: Record<string, string>;
+      entries: { class: string; claim: string; basis: string; predictedDisposition: string | null; actualDisposition: string | null }[];
+    };
+    expect(Object.keys(reg.classes).sort()).toEqual(["OPEN_EXPECTATION", "PREDICTION", "RESULT"]);
+    for (const e of reg.entries) {
+      expect(reg.classes[e.class], `${e.claim.slice(0, 40)}: unknown class ${e.class}`).toBeDefined();
+      expect(e.basis.trim().length, `${e.claim.slice(0, 40)} cites no basis`).toBeGreaterThan(0);
+      // Populated only at close. Until then the comparison has not been run.
+      expect(e.actualDisposition, `${e.claim.slice(0, 40)} was scored early`).toBeNull();
+    }
+    // A RESULT must name what falsified it; a PREDICTION must not claim one.
+    for (const e of reg.entries.filter((x) => x.class === "RESULT")) expect(e.predictedDisposition).toBe("survives");
+    for (const e of reg.entries.filter((x) => x.class === "PREDICTION")) expect(e.predictedDisposition).toBeNull();
+  });
+});
+
+describe("required derived vocabulary is a third outcome, not a flavour of artifact", () => {
+  const withVerdict = (v: Record<string, unknown>) => check(ledgerOf({ verdicts: { "a.b": v as never, "c.d": { disposition: "unresolved" } } }));
+
+  it("demands BOTH halves of the classification, because either alone is a different verdict", () => {
+    const p = withVerdict({ disposition: "required-derived-vocabulary", reason: "r" }).problems;
+    expect(p).toContain("a.b: required-derived-vocabulary without saying what it is derivable from");
+    expect(p).toContain("a.b: required-derived-vocabulary without naming the authority that requires the name");
+    expect(
+      withVerdict({ disposition: "required-derived-vocabulary", reason: "r", derivableFrom: "x", requiredBy: "y" }).problems,
+    ).toEqual([]);
+  });
+
+  it("is the one decided verdict whose coordinate must REMAIN, so drift runs the other way", () => {
+    const v = { "a.b": { disposition: "required-derived-vocabulary" as const, reason: "r", derivableFrom: "x", requiredBy: "y" }, "c.d": { disposition: "unresolved" as const } };
+    // Present: the verdict holds.
+    expect(verdictDrift(ledgerOf({ verdicts: v }), new Set(["a.b"]), new Set())).toEqual([]);
+    // Gone: the verdict claimed the kernel keeps it, so its absence falsifies it.
+    expect(verdictDrift(ledgerOf({ verdicts: v }), new Set(), new Set())).toEqual([
+      "a.b: recorded required-derived-vocabulary, which claims the kernel keeps it, but it is gone",
+    ]);
+  });
+
+  it("accounts for its coordinate without owning it: decided, live, and not an orphan", () => {
+    // The third accounting mode. Without it, adjudicating a coordinate as
+    // required vocabulary would immediately orphan it — the invariant would
+    // punish the one verdict that says the coordinate legitimately persists.
+    const orphans = orphanedCoordinates([]).map((o) => o.coordinate);
+    const x = orphans[0];
+    const decided: ExperimentBasis = {
+      file: "subtraction-vocab.json",
+      spec: "REL-VOCAB-01",
+      frozenAt: "0000000",
+      candidates: [x],
+      unresolved: [],
+      retained: [x],
+    };
+    expect(orphanedCoordinates([decided]).map((o) => o.coordinate)).not.toContain(x);
   });
 });
 

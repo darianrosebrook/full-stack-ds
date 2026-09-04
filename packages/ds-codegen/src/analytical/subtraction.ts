@@ -39,7 +39,22 @@ import * as path from "node:path";
 import { orphanedCoordinates } from "./experiments.js";
 import { FIXTURES_DIR } from "./necessity.js";
 
-export type SubtractionDisposition = "unresolved" | "witnessed" | "representation-artifact" | "not-yet-admitted";
+export type SubtractionDisposition =
+  | "unresolved"
+  | "witnessed"
+  | "required-derived-vocabulary"
+  | "representation-artifact"
+  | "not-yet-admitted";
+
+/**
+ * Dispositions under which the coordinate is expected to STAY in the kernel.
+ *
+ * `required-derived-vocabulary` is the only decided verdict of this shape: the
+ * coordinate carries no independent semantic degree of freedom, but external
+ * authority names it, so deleting it would remove a governed name rather than a
+ * redundancy. Every other decided verdict expects the coordinate to be gone.
+ */
+export const RETAINING: ReadonlySet<string> = new Set(["required-derived-vocabulary"]);
 
 export interface CoordinateVerdict {
   disposition: SubtractionDisposition;
@@ -47,6 +62,9 @@ export interface CoordinateVerdict {
   reason?: string;
   /** For `not-yet-admitted`: the earliest stage allowed to re-earn it with its own witness. */
   reintroducibleAt?: number;
+  /** For `required-derived-vocabulary`: what the name is derivable FROM, and who requires it. */
+  derivableFrom?: string;
+  requiredBy?: string;
 }
 
 /**
@@ -147,6 +165,12 @@ export function checkSubtraction(file = SUBTRACTION_FILE, ledger = loadSubtracti
     if (v.disposition === "not-yet-admitted" && typeof v.reintroducibleAt !== "number") {
       problems.push(`${id}: not-yet-admitted with no reintroducibleAt stage`);
     }
+    // The whole point of this disposition is that TWO things are true at once.
+    // A verdict asserting only one of them has not made the classification.
+    if (v.disposition === "required-derived-vocabulary") {
+      if (!v.derivableFrom?.trim()) problems.push(`${id}: required-derived-vocabulary without saying what it is derivable from`);
+      if (!v.requiredBy?.trim()) problems.push(`${id}: required-derived-vocabulary without naming the authority that requires the name`);
+    }
   }
 
   const unresolved = basis.filter((id) => (ledger.verdicts[id]?.disposition ?? "unresolved") === "unresolved").sort();
@@ -181,6 +205,11 @@ export function verdictDrift(ledger: SubtractionLedger, live: Set<string>, ratif
     if (d === "witnessed" && !ratified.has(id)) out.push(`${id}: recorded witnessed, but no holding witness ratifies it`);
     if ((d === "not-yet-admitted" || d === "representation-artifact") && live.has(id)) {
       out.push(`${id}: recorded ${d}, but the kernel still carries it`);
+    }
+    // The opposite direction, and it is a real failure: this verdict CLAIMS the
+    // coordinate legitimately persists, so its disappearance falsifies it.
+    if (RETAINING.has(d) && !live.has(id)) {
+      out.push(`${id}: recorded ${d}, which claims the kernel keeps it, but it is gone`);
     }
     if (d === "unresolved" && ratified.has(id)) out.push(`${id}: is ratified but still recorded unresolved`);
   }

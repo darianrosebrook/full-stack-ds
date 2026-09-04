@@ -5,7 +5,8 @@
     "unresolved": "not yet adjudicated; the close condition is zero of these",
     "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
     "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
-    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it"
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it",
+    "required-derived-vocabulary": "no independent semantic degree of freedom — it is wholly derivable from other semantic facts — but external authority governs the NAME, so the coordinate legitimately stays in the kernel. The only decided verdict that does not expect the coordinate to disappear."
   },
   "adjudicationPolicy": {
     "$comment": "The rule this subtraction is adjudicated under, recorded BEFORE any verdict cites it. It is not a meaning of an individual disposition — it constrains what may be concluded at all — so it is kept out of `dispositions`.",
@@ -21,6 +22,12 @@
       "proves": "A discriminant is necessary to distinguish two constructors with the same structural operand signature.",
       "doesNotProve": "`derivedBy.kind` is a primitive analytical semantic axis.",
       "openQuestion": "Under the discriminator normal form, branch identity is carried by the `kind:A~B` pairs and holder existence by `relation.derivedBy#present`. What independent degree of freedom the BARE `relation.derivedBy.kind` leaf then represents is an explicit remaining question, not an automatic survivor: a `bin~normalize` witness may make the leaf look necessary because erasing the tag collapses them, while the pair establishes the same distinction. Test it after the 21 pair adjudications."
+    },
+    "normalFormProbes": {
+      "$comment": "Structural questions to ask of a candidate BEFORE looking for a witness. Each names a way a representation can generate propositions about itself. Discovered by subtraction, not assumed.",
+      "crossTerm": "Has the representation generated a cross-product between independent degrees of freedom? For an optional tagged holder those are existence, alternative identity, and alternative-specific payload; 'alternative A versus absence' is their cross-term and is never a fourth degree of freedom. Established by the 13 discriminator member-absence candidates collapsing to 3 holder-presence facts.",
+      "tagIsNotTheChoice": "A tag that names a semantic choice does not thereby constitute an independent semantic coordinate. If the tag is wholly derivable from the presence, structure, payload, or occurrence class it summarizes, retain the underlying distinction and classify the TAG by its actual role: primitive coordinate (removing it destroys an independently grounded distinction), required derived vocabulary (externally governed and name-bearing, but fully derivable from other semantic facts), or representation artifact (neither independently necessary nor externally required).",
+      "reportingVocabulary": "A reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE. Authority to name a conclusion does not imply independent semantic information in the name. The semantic normal form is not necessarily the vocabulary in which the system reports its conclusions. Two materially different instances so far: constructor law and operand structure beneath a derived constructor tag; diagnostic and obligation occurrence classes beneath a derived verdict status."
     }
   },
   "closeConditions": [

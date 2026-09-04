@@ -40,6 +40,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { loadCensus } from "./census.js";
 import { checkWitness, FIXTURES_DIR, loadOracle, loadWitnesses, ratifiedSet } from "./necessity.js";
+import { RETAINING } from "./subtraction.js";
 
 export interface ExperimentBasis {
   /** The file the basis was read from, for a failure message that names its owner. */
@@ -53,6 +54,13 @@ export interface ExperimentBasis {
    * reads as `unresolved`, matching `checkSubtraction`.
    */
   unresolved: string[];
+  /**
+   * Candidates it HAS decided, where the decision says the coordinate stays in
+   * the kernel without independent standing (`required-derived-vocabulary`).
+   * A third accounting mode: not owed a proof, not an orphan either, because an
+   * adjudicated verdict already explains why it is there.
+   */
+  retained: string[];
 }
 
 const BASIS_FILE = /^subtraction-.+\.json$/;
@@ -77,6 +85,7 @@ export function loadBases(dir = FIXTURES_DIR): ExperimentBasis[] {
         frozenAt: raw.basis?.frozenAt ?? "",
         candidates,
         unresolved: candidates.filter((id) => (verdicts[id]?.disposition ?? "unresolved") === "unresolved"),
+        retained: candidates.filter((id) => RETAINING.has(verdicts[id]?.disposition ?? "")),
       };
     });
 }
@@ -92,6 +101,11 @@ export interface Orphan {
  * The remedy a failure names is always the same and is never "delete it":
  * whichever slice admitted the coordinate opens a basis that takes
  * responsibility for adjudicating it.
+ *
+ * Three accounting modes, not two: ratified by a witness, owed a decision, or
+ * decided as required derived vocabulary — a name external authority governs
+ * that carries no independent semantic degree of freedom. The third is the only
+ * decided verdict under which a coordinate legitimately stays in the kernel.
  */
 export function orphanedCoordinates(bases: ExperimentBasis[] = loadBases()): Orphan[] {
   const kernel = loadCensus();
@@ -100,7 +114,7 @@ export function orphanedCoordinates(bases: ExperimentBasis[] = loadBases()): Orp
   // Ownership is unresolved responsibility. A basis that has already decided a
   // coordinate is not on the hook for it a second time, so its reappearance in
   // the kernel is an orphan until some experiment reopens it.
-  const owned = new Set(bases.flatMap((b) => b.unresolved));
+  const owned = new Set(bases.flatMap((b) => [...b.unresolved, ...b.retained]));
   return kernel
     .filter((c) => c.kind !== "reference")
     .filter((c) => !ratified.has(c.id) && !owned.has(c.id))
