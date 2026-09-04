@@ -28,3 +28,11 @@ acceptance:
     then: 'given the example was updated; when reviewed; then the consumer demonstrates the idiomatic generated surface (Button onClick handler, Field slots projection) instead of a suppressed or hand-tightened type'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run typecheck:example:react-native — tsc exits 0 inside worktree rn-example-fix against the generated workspace package"
+    recorded_at: "2026-09-04T23:14:32.382Z"
+    command: "pnpm run typecheck:example:react-native"
+    exit_code: 0
+    commit_sha: "532f0904"
