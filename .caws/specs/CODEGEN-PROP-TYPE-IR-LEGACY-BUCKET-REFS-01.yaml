@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: proptype-legacy-bucket-refs
 created_at: '2026-09-04T23:16:14.905Z'
-updated_at: '2026-09-04T23:16:29.718Z'
+updated_at: '2026-09-04T23:21:45.901Z'
 created_by_session: 'sess_841020c6-ac0e-4334-9975-5dc480cda4b5'
 blast_radius:
   modules:
@@ -32,6 +32,7 @@ scope:
     - 'packages/ds-figma-plugin/src/generated'
     - 'packages/ds-swiftui/Sources'
     - 'packages/ds-jetpack-compose'
+    - packages/ds-codegen/src/ir.ts
   out: []
 invariants:
   - 'Exactly one of type/propType is present on every prop member in every bucket (schema-enforced XOR on propMember as on designedPropMember/constrainedPropMember).'
