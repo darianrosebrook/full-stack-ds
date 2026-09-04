@@ -51,3 +51,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/frameworks/swift/swiftui/component-source.test.ts — 45/45 pass; alternate ActionControl/MediaAsset refs select the same structural classes and emit those types; wrong dismiss-event near miss is rejected
     recorded_at: "2026-09-04T23:16:57.364Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run governed:rail exit 0; pnpm test 3370/3370; pnpm run test:frameworks exit 0 (final package 82 files/152 tests); swift test 40 executed, 4 explicit AX-host skips, 0 failures; all-target regeneration changed only scoped Avatar/Chip Swift sources"
+    recorded_at: "2026-09-04T23:17:09.002Z"
