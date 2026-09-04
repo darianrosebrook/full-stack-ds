@@ -122,3 +122,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm test passes generated React Dialog (17), Sheet (13), and Command (12) suites; authored Dialog/Sheet custom-region assertions pin accessible-name/description targets and explicit aria-label/aria-describedby override precedence."
     recorded_at: "2026-09-04T21:46:41.746Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Integrated pnpm test and pnpm run test:frameworks pass generated axe suites; emitter tests assert the scan root contains the rendered component, and React/Vue/Svelte/Lit generated axe configuration disables only the document-level region rule rather than naming/structure rules."
+    recorded_at: "2026-09-04T21:47:15.544Z"
