@@ -24,3 +24,11 @@ acceptance:
     then: 'given docs/normal-form.md re-verified against current HEAD (claims checked: no per-component emitter lore, IR facts only, marked counts derived, suites green); when node scripts/docs-claims-check.mjs runs; then it exits 0 with the stamp fresh'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node scripts/docs-claims-check.mjs exits 0 — 60 marked claims match, 9 stamps fresh or ledgered; claims re-verified against 9219682d before restamping"
+    recorded_at: "2026-09-04T23:24:09.401Z"
+    command: node scripts/docs-claims-check.mjs
+    exit_code: 0
+    commit_sha: "7df9ef5"
