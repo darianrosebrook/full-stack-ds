@@ -61,14 +61,42 @@ test("generated framework change (.tsx): rail + generate:check + tests + typeche
 test("--full / indeterminate range: every group runs", () => {
   const r = classify([], { full: true });
   assert.ok(
-    on(r, "RUN_TOKEN_BUILD", "RUN_TOKEN_GATES", "RUN_GENERATE_CHECK", "RUN_DOCS_CLAIMS", "RUN_LINT", "RUN_TYPECHECK", "RUN_TESTS", "RUN_RAIL", "RUN_BEHAVIOR_AUDIT", "RUN_A11Y_AUDIT"),
+    on(
+      r,
+      "RUN_TOKEN_BUILD",
+      "RUN_TOKEN_GATES",
+      "RUN_GENERATE_CHECK",
+      "RUN_DOCS_CLAIMS",
+      "RUN_LINT",
+      "RUN_TYPECHECK",
+      "RUN_TESTS",
+      "RUN_RAIL",
+      "RUN_BEHAVIOR_AUDIT",
+      "RUN_A11Y_AUDIT",
+      "RUN_SWIFTUI_SEMANTIC_DEFAULTS",
+      "RUN_RAIL_TOOLCHAIN_COUPLING",
+    ),
   );
 });
 
 test("empty range (no files): nothing runs", () => {
   const r = classify([]);
   assert.ok(
-    off(r, "RUN_TOKEN_BUILD", "RUN_TOKEN_GATES", "RUN_GENERATE_CHECK", "RUN_DOCS_CLAIMS", "RUN_LINT", "RUN_TYPECHECK", "RUN_TESTS", "RUN_RAIL", "RUN_BEHAVIOR_AUDIT", "RUN_A11Y_AUDIT"),
+    off(
+      r,
+      "RUN_TOKEN_BUILD",
+      "RUN_TOKEN_GATES",
+      "RUN_GENERATE_CHECK",
+      "RUN_DOCS_CLAIMS",
+      "RUN_LINT",
+      "RUN_TYPECHECK",
+      "RUN_TESTS",
+      "RUN_RAIL",
+      "RUN_BEHAVIOR_AUDIT",
+      "RUN_A11Y_AUDIT",
+      "RUN_SWIFTUI_SEMANTIC_DEFAULTS",
+      "RUN_RAIL_TOOLCHAIN_COUPLING",
+    ),
   );
 });
 
@@ -102,6 +130,85 @@ test("CI and pre-push both check committed icon exports before the ledger", () =
     assert.notEqual(buildCheck, -1, `${surface} omits committed-export drift`);
     assert.notEqual(ledgerCheck, -1, `${surface} omits ledger drift`);
     assert.ok(buildCheck < ledgerCheck, `${surface} must byte-check before attesting`);
+  }
+});
+
+// --- native authority checks ------------------------------------------------
+// CI already runs the Swift defaults drift check. The scoped local hook must
+// run it for every input capable of changing the generated defaults table or
+// the component refs that select its rows.
+
+test("every Swift semantic-defaults input runs its local drift check", () => {
+  for (const path of [
+    "packages/ds-contracts/components/Card/Card.tokens.json",
+    "packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts",
+    "packages/ds-tokens/src/color/semantic/background.tokens.json",
+    "packages/ds-swiftui/Sources/DsSwiftUI/Components/Card/CardTokens.swift",
+    "packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift",
+    "scripts/generate-swiftui-semantic-defaults.mjs",
+  ]) {
+    assert.equal(
+      classify([path]).RUN_SWIFTUI_SEMANTIC_DEFAULTS,
+      true,
+      `${path} must run the Swift semantic-defaults drift check`,
+    );
+  }
+  assert.equal(
+    classify(["docs/architecture/tokens-architecture.md"])
+      .RUN_SWIFTUI_SEMANTIC_DEFAULTS,
+    false,
+  );
+});
+
+test("every rail-toolchain coupling authority runs the coupling check", () => {
+  for (const path of [
+    "packages/ds-codegen/src/validation/admission-descriptor.ts",
+    "packages/ds-codegen/src/validation/frameworks/react.ts",
+    "packages/ds-compose-smoke/compile-lane.json",
+    "packages/ds-swift-smoke/compile-lane.json",
+    "scripts/run-native-compile-lane.mjs",
+    "scripts/rail-toolchain-coupling-audit.mjs",
+    "scripts/prepush-scope.mjs",
+    "scripts/prepush-scope.test.mjs",
+    ".github/workflows/ci.yml",
+    ".githooks/pre-push",
+    "fsds.targets.json",
+    "package.json",
+  ]) {
+    assert.equal(
+      classify([path]).RUN_RAIL_TOOLCHAIN_COUPLING,
+      true,
+      `${path} must run the rail-toolchain coupling check`,
+    );
+  }
+  assert.equal(
+    classify(["docs/specifications/admission-rail.md"])
+      .RUN_RAIL_TOOLCHAIN_COUPLING,
+    false,
+  );
+});
+
+test("CI and pre-push execute the classifier contract and both authority checks", () => {
+  for (const [surface, url] of [
+    ["CI", new URL("../.github/workflows/ci.yml", import.meta.url)],
+    ["pre-push", new URL("../.githooks/pre-push", import.meta.url)],
+  ]) {
+    const source = readFileSync(url, "utf8");
+    assert.match(
+      source,
+      /node --test scripts\/prepush-scope\.test\.mjs/,
+      `${surface} does not execute the classifier contract`,
+    );
+    assert.match(
+      source,
+      /node scripts\/rail-toolchain-coupling-audit\.mjs --check/,
+      `${surface} does not execute the coupling check`,
+    );
+    assert.match(
+      source,
+      /pnpm run swiftui:semantic-defaults:check/,
+      `${surface} does not execute the Swift defaults drift check`,
+    );
   }
 });
 
