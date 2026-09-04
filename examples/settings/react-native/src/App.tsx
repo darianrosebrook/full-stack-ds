@@ -27,18 +27,32 @@ export function App() {
         <Card>
           <Stack>
             <Text>Profile</Text>
-            <Field name="displayName" label="Display name" required>
-              <Input value={displayName} onChange={setDisplayName} required />
-            </Field>
-            <Field name="email" label="Email" required>
-              <Input
-                type="email"
-                value={email}
-                onChange={setEmail}
-                required
-              />
-            </Field>
-            <Button onPress={() => undefined}>Save profile</Button>
+            <Field
+              name="displayName"
+              required
+              slots={{
+                label: "Display name",
+                control: (
+                  <Input value={displayName} onChange={setDisplayName} required />
+                ),
+              }}
+            />
+            <Field
+              name="email"
+              required
+              slots={{
+                label: "Email",
+                control: (
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={setEmail}
+                    required
+                  />
+                ),
+              }}
+            />
+            <Button onClick={() => undefined}>Save profile</Button>
           </Stack>
         </Card>
 
