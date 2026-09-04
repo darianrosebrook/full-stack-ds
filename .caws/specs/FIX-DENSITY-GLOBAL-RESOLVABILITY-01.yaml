@@ -51,3 +51,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/token-resolvability-audit/selfcheck.mjs: undeclared global read emits global:tokens.css + exact missing name"
     recorded_at: "2026-09-04T22:47:55.507Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run audit:token-resolvability (0 findings); pnpm run test:coverage:tokens (329/329); pnpm run governed:rail && pnpm test && pnpm run test:frameworks"
+    recorded_at: "2026-09-04T22:47:56.076Z"
