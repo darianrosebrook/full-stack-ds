@@ -2,9 +2,10 @@ id: DOC-VERIFIED-FRESHNESS-GATE-01
 title: 'Gate verified_at_commit freshness against governs globs; refresh normal-form'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: doc-freshness-gate
 created_at: '2026-09-04T22:16:14.112Z'
-updated_at: '2026-09-04T22:16:14.112Z'
+updated_at: '2026-09-04T22:16:33.783Z'
 created_by_session: 'sess_e3b94b1d-84ef-440f-9ea0-86af5d7e1382'
 blast_radius:
   modules:
