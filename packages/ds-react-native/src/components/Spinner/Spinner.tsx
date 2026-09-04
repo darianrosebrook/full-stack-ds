@@ -39,6 +39,7 @@ export function Spinner({
 }: SpinnerProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createSpinnerStyles(fsdsTheme), [fsdsTheme]);
+  const visualStyleForSize = size !== undefined ? ({ "xs": styles.visual_variant_xs, "sm": styles.visual_variant_sm, "md": styles.visual_variant_md, "lg": styles.visual_variant_lg } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
@@ -48,7 +49,7 @@ export function Spinner({
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
-        style={styles.visual}
+        style={[styles.visual, visualStyleForSize]}
         accessible={false}
       />
     </View>

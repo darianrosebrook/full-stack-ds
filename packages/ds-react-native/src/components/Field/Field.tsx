@@ -42,7 +42,6 @@ export interface FieldProps {
 export function Field({
   validating,
   slots,
-  children,
   style,
   testID,
   accessibilityLabel,

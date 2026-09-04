@@ -11,6 +11,7 @@ export function createCalendarStyles(theme?: FsdsTheme) {
     caption: {},
     cell: {},
     day: {},
+    day_state_selected: definedStyle({ backgroundColor: (tokens.root?.["calendar.color.day.selected.background"] as string | undefined) }),
     grid: {},
     header: {},
     nav: {},

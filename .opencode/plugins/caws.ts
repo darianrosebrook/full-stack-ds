@@ -155,8 +155,8 @@ interface Decision {
 // The dispatcher's stdout contains one JSON object per handler, and jq-emitted
 // objects (additionalContext) are pretty-printed across multiple lines — so a
 // naive line-by-line parse misses them. This scans for balanced objects.
-function extractJsonObjects(s: string): Record<string, any>[] {
-  const objs: Record<string, any>[] = [];
+function extractJsonObjects(s: string): Record<string, unknown>[] {
+  const objs: Record<string, unknown>[] = [];
   let i = 0;
   while (i < s.length) {
     const start = s.indexOf('{', i);
@@ -185,13 +185,29 @@ function extractJsonObjects(s: string): Record<string, any>[] {
     }
     if (end < 0) break;
     try {
-      objs.push(JSON.parse(s.slice(start, end + 1)));
+      const parsed: unknown = JSON.parse(s.slice(start, end + 1));
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        objs.push(parsed as Record<string, unknown>);
+      }
     } catch {
       // not a valid object boundary; advance and continue
     }
     i = end + 1;
   }
   return objs;
+}
+
+// A dispatcher JSON object is read defensively: every field is unknown, and
+// only the shapes below are consumed. Field reads go through these helpers
+// so a malformed object degrades to the defaults instead of throwing.
+function strField(value: unknown): string | undefined {
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
+}
+
+function subObject(value: unknown): Record<string, unknown> | undefined {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : undefined;
 }
 
 // Interpret a shared dispatcher's stdout JSON + exit code. Aggregates every
@@ -201,21 +217,24 @@ function extractJsonObjects(s: string): Record<string, any>[] {
 function readDecision(stdout: string, exitCode: number): Decision {
   const empty: Decision = { block: false, reason: '', warn: '', context: '', updatedInput: null };
   for (const obj of extractJsonObjects(stdout)) {
+    const hso = subObject(obj.hookSpecificOutput);
     const decision = obj.decision;
-    const hso = obj.hookSpecificOutput;
     const perm = hso?.permissionDecision;
     const reason =
-      obj.reason || hso?.permissionDecisionReason || 'CAWS guard blocked this operation.';
+      strField(obj.reason) ||
+      strField(hso?.permissionDecisionReason) ||
+      'CAWS guard blocked this operation.';
     if (decision === 'block') return { block: true, reason, warn: '', context: '', updatedInput: null };
     if (perm === 'ask' || perm === 'deny') return { block: true, reason, warn: '', context: '', updatedInput: null };
-    if (decision === 'warn' || (typeof obj.advisory === 'string' && obj.advisory)) {
-      empty.warn = obj.advisory || reason;
+    const advisory = strField(obj.advisory);
+    if (decision === 'warn' || advisory) {
+      empty.warn = advisory || reason;
     }
-    const ac = hso?.additionalContext;
-    if (typeof ac === 'string' && ac) {
+    const ac = strField(hso?.additionalContext);
+    if (ac) {
       empty.context = empty.context ? empty.context + '\n\n' + ac : ac;
     }
-    const ui = hso?.updatedInput ?? obj.updatedInput;
+    const ui = (hso?.updatedInput ?? obj.updatedInput) as unknown;
     if (ui && typeof ui === 'object') {
       empty.updatedInput = ui as Record<string, unknown>;
     }
@@ -250,9 +269,20 @@ interface CawsClient {
   };
 }
 
-function extractSessionId(obj: any): string | null {
-  if (!obj || typeof obj !== 'object') return null;
-  const candidates = [obj.sessionID, obj.id, obj.sessionId, obj.session?.id, obj.properties?.id, obj.properties?.session?.id];
+function extractSessionId(obj: unknown): string | null {
+  const record = subObject(obj);
+  if (!record) return null;
+  const session = subObject(record.session);
+  const properties = subObject(record.properties);
+  const propertiesSession = subObject(properties?.session);
+  const candidates = [
+    record.sessionID,
+    record.id,
+    record.sessionId,
+    session?.id,
+    properties?.id,
+    propertiesSession?.id,
+  ];
   for (const c of candidates) {
     if (typeof c === 'string' && c.length > 0 && c !== 'unknown') return c;
   }
@@ -358,12 +388,12 @@ export const CawsPlugin = async (ctx: CawsPluginCtx) => {
       }
     },
 
-    event: async (ev: { event?: { type?: string; properties?: any } } | undefined) => {
+    event: async (ev: { event?: { type?: string; properties?: unknown } } | undefined) => {
       try {
         const type = ev?.event?.type;
         const props = ev?.event?.properties;
         if (type && String(type).startsWith('session.')) {
-          const sid = extractSessionId(props) || extractSessionId(props?.session);
+          const sid = extractSessionId(props) || extractSessionId(subObject(props)?.session);
           if (sid) currentSessionId = sid;
         }
         if (!type) return;

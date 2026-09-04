@@ -41,7 +41,6 @@ export function Walkthrough({
   steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}],
   label = "Feature tour",
   slots,
-  children,
   style,
   testID,
   accessibilityLabel,

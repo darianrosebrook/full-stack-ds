@@ -431,7 +431,7 @@ function emitImports(ir: ComponentIR): string {
   if (usesNativeToggle(ir)) {
     rnValueImports.add("Switch as RNSwitch");
   } else {
-    collectRnComponents(ir.dom, rnValueImports);
+    collectRnComponents(ir.dom, rnValueImports, ir);
   }
   if (usesLinking(ir.dom)) rnValueImports.add("Linking");
   if (
@@ -523,7 +523,11 @@ function emitImports(ir: ComponentIR): string {
   ].filter(Boolean).join("\n");
 }
 
-function collectRnComponents(node: DomNodeIR | undefined, imports: Set<string>): void {
+function collectRnComponents(
+  node: DomNodeIR | undefined,
+  imports: Set<string>,
+  ir?: ComponentIR,
+): void {
   if (!node) {
     imports.add("View");
     return;
@@ -533,11 +537,13 @@ function collectRnComponents(node: DomNodeIR | undefined, imports: Set<string>):
   // collectRnComponentRefImports), not an RN primitive — skip the primitive
   // mapping but still recurse into children (which may use primitives).
   if (node.componentInstance) {
-    for (const child of node.children) collectRnComponents(child, imports);
+    for (const child of node.children) collectRnComponents(child, imports, ir);
     return;
   }
   if (node.content) imports.add("Text as RNText");
-  const component = rnComponentForNode(node);
+  // Resolve through the same IR-aware path emitNode uses, so a View-fallback
+  // part that is text-bearing (and therefore renders as RNText) is imported.
+  const component = ir ? rnComponentForNodeInIr(ir, node) : rnComponentForNode(node);
   imports.add(
     component === "RNText"
       ? "Text as RNText"
@@ -545,7 +551,7 @@ function collectRnComponents(node: DomNodeIR | undefined, imports: Set<string>):
         ? "Image as RNImage"
         : component,
   );
-  for (const child of node.children) collectRnComponents(child, imports);
+  for (const child of node.children) collectRnComponents(child, imports, ir);
 }
 
 function usesLinking(node: DomNodeIR | undefined): boolean {
@@ -568,7 +574,10 @@ function hasChildrenSlotUnderNonTextParent(node: DomNodeIR | undefined): boolean
   if (
     component !== "RNText" &&
     !VOID_RN_COMPONENTS.has(component) &&
-    node.children.some((child) => child.tag === "children" || child.tag === "slot")
+    node.children.some(
+      (child) =>
+        child.tag === "children" || (child.tag === "slot" && !child.slotName),
+    )
   ) {
     return true;
   }
@@ -723,8 +732,15 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
   collectNodeRuntimeUsage(ir.dom, ir, usage);
   if (!ir.dom) usage.props.add("children");
   if (ir.dom) {
+    const partSizeAxes = emSizedPartAxes(ir);
     for (const fact of variantStyleFacts(ir)) {
-      if (fact.viewEntries.length === 0 && fact.textEntries.length === 0) continue;
+      if (
+        fact.viewEntries.length === 0 &&
+        fact.textEntries.length === 0 &&
+        !partSizeAxes.has(fact.axis)
+      ) {
+        continue;
+      }
       usage.props.add(fact.axisSafeName);
     }
     if (loweredStateKeys(ir).includes("disabled")) {
@@ -759,7 +775,9 @@ function collectNodeRuntimeUsage(
 ): void {
   if (!node) return;
   if (node.tag === "children" || node.tag === "slot") {
-    usage.props.add("children");
+    // A named slot projects `slots.<name>` (ARCH-COMPOSER-SLOT-PROJECTION-001);
+    // only the default, unnamed projection consumes the children prop.
+    if (!node.slotName) usage.props.add("children");
     return;
   }
   // componentRef: the node renders a DS-RN sibling component. Collect the host
@@ -804,6 +822,9 @@ function collectNodeRuntimeUsage(
     collectNodeRuntimeUsage(child, ir, usage);
   }
   if (
+    // A content binding early-returns in emitNodeChildren — the children-slot
+    // fallback never renders for such roots, so it consumes no prop.
+    !node.content &&
     node.children.length === 0 &&
     node.part === "root" &&
     !VOID_RN_COMPONENTS.has(component)
@@ -878,6 +899,21 @@ function collectGuardRuntimeUsage(
 
 function emitComponent(ir: ComponentIR): string {
   const lines = ["// @generated:start component"];
+  if (selectionLowering(ir)) {
+    // Shared equality across primitive and Date channel payloads: Dates
+    // compare by epoch, everything else by SameValueZero.
+    lines.push(
+      "const isEntrySelected = (candidate: unknown, current: unknown): boolean => {",
+      `${INDENT}if (current === null || current === undefined) return false;`,
+      `${INDENT}const list = Array.isArray(current) ? current : [current];`,
+      `${INDENT}return list.some((entry) =>`,
+      `${INDENT}${INDENT}typeof entry === "object" && entry !== null && "getTime" in entry`,
+      `${INDENT}${INDENT}${INDENT}? (entry as Date).getTime() === (candidate as Date).getTime()`,
+      `${INDENT}${INDENT}${INDENT}: entry === candidate);`,
+      "};",
+      "",
+    );
+  }
   const usage = collectRuntimeUsage(ir);
   const destructured = propDestructureEntries(ir, usage);
   lines.push(`export function ${ir.name}({`);
@@ -1166,6 +1202,21 @@ function emitVariantStyleConsts(ir: ComponentIR): string[] {
       }
     }
   }
+  // Em-sized parts select their per-variant geometry entry from the same
+  // axis prop that drives the root/text variant consts above.
+  for (const part of emSizedParts(ir)) {
+    const pairs = facts
+      .filter((fact) => fact.axis === part.axis)
+      .filter((fact) => emSizeStyleEntries(fact, part.factor).length > 0)
+      .map(
+        (fact) =>
+          `${JSON.stringify(fact.value)}: styles.${part.styleKey}_variant_${sanitizeStyleKey(fact.value)}`,
+      );
+    if (pairs.length === 0) continue;
+    lines.push(
+      `${INDENT}const ${part.styleKey}StyleFor${capitalize(part.axisSafeName)} = ${part.axisSafeName} !== undefined ? ({ ${pairs.join(", ")} } as Record<string, ViewStyle | undefined>)[${part.axisSafeName}] : undefined;`,
+    );
+  }
   return lines;
 }
 
@@ -1405,15 +1456,29 @@ function emitNativeToggleReturn(ir: ComponentIR): string[] {
   const valueName = channel.name;
   const setterName = `set${capitalize(channel.name)}Value`;
   const disabledProp = findProp(ir, "disabled") ? "disabled" : "false";
-  const trackFalse = tokenStringAccess(ir, "root", `${ir.cssPrefix}.color.track.background.default`);
-  const trackTrue = tokenStringFallbackAccess(ir, `${ir.cssPrefix}.color.track.background.default`, [
-    "checked",
-    "root",
+  // Track/thumb colors resolve from the slots the CONTRACT actually declares,
+  // matched by semantic suffix — the canonical `color.track.background.*`
+  // names when present (Switch), else the component's own background slots
+  // (`color.background.default` / `.checked`, ToggleSwitch). A component that
+  // declares no thumb slot renders the platform thumb color.
+  const trackFalseSlot = declaredTokenSlotName(ir, [
+    "color.track.background.default",
+    "color.background.default",
   ]);
-  const thumbColor = tokenStringFallbackAccess(ir, `${ir.cssPrefix}.color.thumb.background.default`, [
-    "checked",
-    "root",
+  const trackTrueSlot = declaredTokenSlotName(ir, [
+    "color.track.background.default",
+    "color.background.checked",
   ]);
+  const thumbSlot = declaredTokenSlotName(ir, ["color.thumb.background.default"]);
+  const trackFalse = trackFalseSlot
+    ? tokenStringAccess(ir, "root", trackFalseSlot)
+    : undefined;
+  const trackTrue = trackTrueSlot
+    ? tokenStringFallbackAccess(ir, trackTrueSlot, ["checked", "root"])
+    : undefined;
+  const thumbColor = thumbSlot
+    ? tokenStringFallbackAccess(ir, thumbSlot, ["checked", "root"])
+    : undefined;
   const styleName = variantStyleExpression(ir);
   const lines: string[] = [];
   lines.push(`${INDENT}return (`);
@@ -1629,7 +1694,20 @@ function emitNodeProps(
       props.push(`${pad}style={[styles.${styleKey}${variantConsts}${stateParts}${dynamicStyle}, style]}`);
     }
   } else if (dynamicStyleEntries.length > 0) {
-    props.push(`${pad}style={[styles.${styleKey}${dynamicStyle}]}`);
+    props.push(
+      `${pad}style={[styles.${styleKey}${dynamicStyle}${selectionStyleAppendix(node, ir)}]}`,
+    );
+  } else if (emPartSizeConsts(node, ir).length > 0) {
+    const consts = emPartSizeConsts(node, ir)
+      .map((name) => `, ${name}`)
+      .join("");
+    props.push(
+      `${pad}style={[styles.${styleKey}${consts}${selectionStyleAppendix(node, ir)}]}`,
+    );
+  } else if (selectionStyleAppendix(node, ir)) {
+    props.push(
+      `${pad}style={[styles.${styleKey}${selectionStyleAppendix(node, ir)}]}`,
+    );
   } else {
     props.push(`${pad}style={styles.${styleKey}}`);
   }
@@ -1779,6 +1857,12 @@ function emitNodeProps(
       node.bindings["aria-pressed"] !== undefined,
     );
     if (accessibilityRole) props.push(`${pad}accessibilityRole=${JSON.stringify(accessibilityRole)}`);
+  }
+  const selection = selectionLowering(ir);
+  if (selection && selection.subjectNode === node) {
+    accessibilityState.push(
+      `selected: isEntrySelected(${selection.itemLocal}, ${selection.channel.name})`,
+    );
   }
   if (accessibilityState.length > 0) {
     props.push(`${pad}accessibilityState={{ ${accessibilityState.join(", ")} }}`);
@@ -2149,6 +2233,21 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
       if (!rootIsText && fact.textEntries.length > 0) {
         extraStyles.set(fact.textStyleKey, styleObjectLiteral(fact.textEntries));
       }
+    }
+    for (const part of emSizedParts(ir)) {
+      for (const fact of variantStyleFacts(ir)) {
+        if (fact.axis !== part.axis) continue;
+        const entries = emSizeStyleEntries(fact, part.factor);
+        if (entries.length === 0) continue;
+        extraStyles.set(
+          `${part.styleKey}_variant_${sanitizeStyleKey(fact.value)}`,
+          styleObjectLiteral(entries),
+        );
+      }
+    }
+    const selection = selectionLowering(ir);
+    if (selection) {
+      extraStyles.set(selection.styleKey, styleObjectLiteral(selection.entries));
     }
     for (const state of stateStyleFacts(ir)) {
       if (state.rootEntries.length > 0) {
@@ -2602,6 +2701,284 @@ function realizedVariantAxes(ir: ComponentIR): string[] {
   return axes;
 }
 
+/** Variant axes whose font-size token scales at least one em-sized part. */
+function emSizedPartAxes(ir: ComponentIR): Set<string> {
+  return new Set(emSizedParts(ir).map((part) => part.axis));
+}
+
+/** Selection-const names for an em-sized part node (e.g. visualStyleForSize). */
+function emPartSizeConsts(node: DomNodeIR, ir: ComponentIR): string[] {
+  if (node.part === undefined) return [];
+  return emSizedParts(ir)
+    .filter((part) => part.part === node.part)
+    .map((part) => `${part.styleKey}StyleFor${capitalize(part.axisSafeName)}`);
+}
+
+/**
+ * Selection realization: an `[aria-selected="true"]` state block in the
+ * contract styles lowers onto the tree node that mutates the selection
+ * channel with an iterated item. RN has a native `accessibilityState.selected`
+ * flag, so the subject carries it plus the selected style while selected.
+ * The subject is discovered from contract facts only — the attr-state block
+ * names the target part, and the dom tree supplies the iterated setter —
+ * never a component name.
+ */
+interface SelectionLowering {
+  /** The dom node that mutates the channel with the iterated item. */
+  subjectNode: DomNodeIR;
+  /** The channel whose value the subject mutates (e.g. "value"). */
+  channel: NormalizedChannelIR;
+  /** The iteration item variable in scope at the subject (e.g. "item"). */
+  itemLocal: string;
+  /** StyleSheet key of the selected-state style (e.g. "day_state_selected"). */
+  styleKey: string;
+  /** View-layer token entries realized from the attr-state block. */
+  entries: JoinedStyleEntry[];
+}
+
+const selectionLoweringCache = new WeakMap<ComponentIR, SelectionLowering | null>();
+
+const ARIA_SELECTED_SELECTOR =
+  /^\.([a-z0-9-]+)__([a-z0-9-]+)\[aria-selected="true"\](?: \.([a-z0-9-]+)__([a-z0-9-]+))?$/;
+
+function selectionLowering(ir: ComponentIR): SelectionLowering | null {
+  const cached = selectionLoweringCache.get(ir);
+  if (cached !== undefined) return cached;
+  const lowering = computeSelectionLowering(ir);
+  selectionLoweringCache.set(ir, lowering);
+  return lowering;
+}
+
+function computeSelectionLowering(ir: ComponentIR): SelectionLowering | null {
+  for (const block of ir.cssBlocks) {
+    const match = ARIA_SELECTED_SELECTOR.exec(block.selector);
+    if (!match || match[1] !== ir.cssPrefix) continue;
+    if (match[3] !== undefined && match[3] !== ir.cssPrefix) continue;
+    const targetPart = match[4] ?? match[2]!;
+    const subject = findSelectionSubject(ir, targetPart);
+    if (!subject) continue;
+    const channel = ir.behavior.normalizedChannels.find(
+      (candidate) => candidate.name === subject.channelName,
+    );
+    if (!channel) continue;
+    const entries = attrStateViewEntries(ir, block);
+    if (entries.length === 0) continue;
+    return {
+      subjectNode: subject.node,
+      channel,
+      itemLocal: subject.itemLocal,
+      styleKey: `${styleKeyForPart(targetPart)}_state_selected`,
+      entries,
+    };
+  }
+  return null;
+}
+
+interface SelectionSubject {
+  /** The dom node that mutates the channel with the iterated item. */
+  node: DomNodeIR;
+  channelName: string;
+  itemLocal: string;
+}
+
+function findSelectionSubject(
+  ir: ComponentIR,
+  targetPart: string,
+): SelectionSubject | null {
+  const visited = new Set<DomNodeIR>();
+  const walk = (
+    node: DomNodeIR | undefined,
+    itemLocals: string[],
+  ): SelectionSubject | null => {
+    if (!node || visited.has(node)) return null;
+    visited.add(node);
+    const locals = node.iteration?.itemVar
+      ? [...itemLocals, node.iteration.itemVar]
+      : itemLocals;
+    if (node.part === targetPart && node.part !== "root" && locals.length > 0) {
+      for (const binding of Object.values(node.events)) {
+        for (const local of locals) {
+          if (bindingReferencesLocal(binding, local)) {
+            const channelName = bindingChannelName(binding);
+            if (channelName) return { node, channelName, itemLocal: local };
+          }
+        }
+      }
+    }
+    for (const child of node.children) {
+      const found = walk(child, locals);
+      if (found) return found;
+    }
+    return null;
+  };
+  return walk(ir.dom, []);
+}
+
+function bindingChannelName(binding: BindingExpression): string | undefined {
+  if (
+    binding.kind === "channel" ||
+    binding.kind === "channelCall" ||
+    binding.kind === "channelUpdate"
+  ) {
+    return binding.channel;
+  }
+  return undefined;
+}
+
+function bindingReferencesLocal(
+  binding: BindingExpression,
+  local: string,
+): boolean {
+  switch (binding.kind) {
+    case "iterationLocal":
+      return binding.local === local;
+    case "conditional":
+      return (
+        bindingReferencesLocal(binding.condition, local) ||
+        bindingReferencesLocal(binding.whenTrue, local) ||
+        bindingReferencesLocal(binding.whenFalse, local)
+      );
+    case "channelCall":
+      return bindingReferencesLocal(binding.arg, local);
+    case "channelUpdate":
+      return binding.operands.some((operand) =>
+        bindingReferencesLocal(operand, local),
+      );
+    case "predicate":
+      return (
+        bindingReferencesLocal(binding.left, local) ||
+        bindingReferencesLocal(binding.right, local)
+      );
+    default:
+      return false;
+  }
+}
+
+/**
+ * View-layer entries from an attr-state block, resolved against every token
+ * scope (state blocks routinely reference component-level color tokens).
+ */
+function attrStateViewEntries(
+  ir: ComponentIR,
+  block: { declarations: Record<string, string> },
+): JoinedStyleEntry[] {
+  const out: JoinedStyleEntry[] = [];
+  for (const [cssProp, declValue] of Object.entries(block.declarations)) {
+    const mapping = CSS_TO_RN_STYLE[cssProp];
+    if (!mapping || mapping.layer !== "view") continue;
+    const varName = cssVarReference(declValue);
+    if (!varName) continue;
+    for (const scope of ir.tokenScopes) {
+      const token = scope.values.find((candidate) => candidate.cssVar === varName);
+      if (!token) continue;
+      if (
+        token.isLiteral &&
+        token.rawValue !== undefined &&
+        CSS_ONLY_LITERALS.has(token.rawValue.trim())
+      ) {
+        break;
+      }
+      out.push({
+        rnProp: mapping.prop,
+        layer: mapping.layer,
+        expr: `(tokens.${scope.scope}?.[${JSON.stringify(token.name)}] as ${mapping.cast})`,
+        tokenName: token.name,
+        ...(token.resolvesTo !== undefined && { resolvesTo: token.resolvesTo }),
+        ...(token.rawValue !== undefined && { rawValue: token.rawValue }),
+        isLiteral: token.isLiteral,
+      });
+      break;
+    }
+  }
+  return out;
+}
+
+/** Style-array appendix applying the selected style, or "" for non-subjects. */
+function selectionStyleAppendix(node: DomNodeIR, ir: ComponentIR): string {
+  const lowering = selectionLowering(ir);
+  if (!lowering || lowering.subjectNode !== node) return "";
+  return `, isEntrySelected(${lowering.itemLocal}, ${lowering.channel.name}) ? styles.${lowering.styleKey} : undefined`;
+}
+
+/**
+ * Em-sized part geometry: a part whose base block declares em-unit
+ * width/height (e.g. `.spinner__visual { width: 1em; height: 1em }`) scales
+ * with the root font-size on the web — the same declared fact the variant
+ * `--<axis>` font-size rules drive. RN has no em unit, so the axis's
+ * font-size token lowers directly onto the part's width/height at the
+ * declared factor (FEAT-RN-LINT-ZERO: realized, not ignored, sizing).
+ */
+interface EmSizedPart {
+  /** Anatomy part name (e.g. "visual"). */
+  part: string;
+  /** StyleSheet key base (styleKeyForPart of the part). */
+  styleKey: string;
+  /** Variant axis whose font-size token scales this part (e.g. "size"). */
+  axis: string;
+  axisSafeName: string;
+  /** em multiplier parsed from the declared literal (1em → 1). */
+  factor: number;
+}
+
+function emSizedParts(ir: ComponentIR): EmSizedPart[] {
+  const out: EmSizedPart[] = [];
+  for (const part of ir.parts) {
+    if (part.name === "root") continue;
+    const styleKey = styleKeyForPart(part.name);
+    const block = ir.cssBlocks.find(
+      (candidate) => candidate.selector === `.${ir.cssPrefix}__${part.name}`,
+    );
+    if (!block) continue;
+    const geometry = ["width", "height"]
+      .map((cssProp) => {
+        const raw = block.declarations[cssProp];
+        if (!raw) return null;
+        const match = /^([0-9.]+)em$/.exec(raw.trim());
+        return match ? { cssProp, factor: Number.parseFloat(match[1]!) } : null;
+      })
+      .filter((entry): entry is { cssProp: string; factor: number } => entry !== null);
+    if (geometry.length === 0) continue;
+    const factor = geometry[0]!.factor;
+    for (const fact of variantStyleFacts(ir)) {
+      const hasFontSizeEntry = fact.textEntries.some(
+        (entry) => entry.rnProp === "fontSize",
+      );
+      if (!hasFontSizeEntry) continue;
+      if (
+        out.some(
+          (existing) =>
+            existing.part === part.name && existing.axis === fact.axis,
+        )
+      ) {
+        continue;
+      }
+      out.push({
+        part: part.name,
+        styleKey,
+        axis: fact.axis,
+        axisSafeName: fact.axisSafeName,
+        factor,
+      });
+    }
+  }
+  return out;
+}
+
+/** The em-size StyleSheet entries for one variant fact on one part. */
+function emSizeStyleEntries(
+  fact: VariantStyleFact,
+  factor: number,
+): JoinedStyleEntry[] {
+  const fontEntry = fact.textEntries.find((entry) => entry.rnProp === "fontSize");
+  if (!fontEntry) return [];
+  const sizeExpr =
+    factor === 1 ? fontEntry.expr : `(${fontEntry.expr}) * ${JSON.stringify(factor)}`;
+  return [
+    { rnProp: "width", layer: "view" as const, expr: sizeExpr, tokenName: fontEntry.tokenName, isLiteral: false },
+    { rnProp: "height", layer: "view" as const, expr: sizeExpr, tokenName: fontEntry.tokenName, isLiteral: false },
+  ];
+}
+
 function variantStyleConstName(axisSafeName: string): string {
   return `variantStyleFor${capitalize(axisSafeName)}`;
 }
@@ -2932,6 +3309,26 @@ function hasToken(ir: ComponentIR, scope: string, name: string): boolean {
   return ir.tokenScopes.some((tokenScope) =>
     tokenScope.scope === scope && tokenScope.values.some((value) => value.name === name),
   );
+}
+
+/**
+ * The full name of the first declared component token slot whose name ends
+ * with one of the given semantic suffixes, in priority order. Drives native
+ * control color wiring from what the contract declares rather than one
+ * component's canonical slot spelling.
+ */
+function declaredTokenSlotName(
+  ir: ComponentIR,
+  suffixes: string[],
+): string | undefined {
+  const declared = ir.tokenScopes.flatMap((scope) =>
+    scope.values.map((value) => value.name),
+  );
+  for (const suffix of suffixes) {
+    const match = declared.find((name) => name.endsWith(`.${suffix}`));
+    if (match) return match;
+  }
+  return undefined;
 }
 
 function maxLinesExpressionForNode(node: DomNodeIR, ir: ComponentIR): string | undefined {

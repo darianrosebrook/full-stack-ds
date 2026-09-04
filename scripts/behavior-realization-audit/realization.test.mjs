@@ -264,9 +264,7 @@ check("Walkthrough consumes anchored positioning in ALL five frameworks", () => 
 // from the part's element. We build in-memory generated source with, and
 // without, the handler, and assert the realization flips.
 console.log("\nsynthetic falsification — matcher fails when the handler is stripped:");
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
 
 function readFileSyncSafe() {
   const here = new URL("./audit.mjs", import.meta.url);
