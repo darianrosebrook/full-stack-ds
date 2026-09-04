@@ -42,7 +42,7 @@ enum AvatarTokens {
     ]
 }
 
-/// Emitted through the src-or-fallback path: the owned Image renders when src is set; the name prop is the fallback content.
+/// Emitted through the src-or-fallback path: the referenced component renders when src is set; the name prop is the fallback content.
 public struct Avatar: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         AvatarTokens.scopes
