@@ -1,0 +1,1768 @@
+{
+  "$comment": "Measured semantic footprints (REL-VIEW-ALGEBRA-01). q is in the footprint of P iff q acts on some specimen AND erasing q after P changes nothing — i.e. E_q . E_P = E_P. Derived by measurement over the corpus plus every witness and closure stimulus, never by string prefix on coordinate ids. `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
+  "digests": {
+    "fixture.schema.json": "b1faba61e6b2048c05d4e6ee782c305c40cea5429da065f8af02c446249e0a88",
+    "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
+    "census.ts": "2cd03735368b2c7138bbc8cdee7ce3a1307c2f8b52a0068b3d587f83d4ee0043",
+    "erasure-plan.ts": "0c529f0fcd81a7563db3039f7739ff27229dd29ae1023616b23cb900800d776e",
+    "quotient.ts": "2465ac77fd507cc21ac06f8713015b0f9429d8d71a26b7d31d724163bee0131b",
+    "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
+    "closures-stage2.json": "a26ac911924f230e803871691e0ee60ecf60cf6ee2ab03771add0099aa0a7780"
+  },
+  "specimens": {
+    "corpus": 90,
+    "stimuli": 22,
+    "synthesized": 93,
+    "total": 205
+  },
+  "unbuilt": [
+    {
+      "coordinate": "relation.grain",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.transformation",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.temporality.kind",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.additivity.kind",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation; the erasure does not identify the two values"
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~semi-additive",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~non-additive",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~ratio-measure",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~nest",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~bin",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~normalize",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~bin",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~normalize",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~project",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:project~graph",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.join.cardinality",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#arity",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#incidence",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "structure.peers[]#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "structure.peers[]#arity",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "structure.peers[]#incidence",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "assertion.kind",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~ratio-comparison",
+      "reason": "erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "assertion.aggregate.op",
+      "reason": "erasing it produces a schema-invalid representation; the locator resolves to no slot, or the base binds too few names"
+    },
+    {
+      "coordinate": "evidence.rows.*#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values"
+    },
+    {
+      "coordinate": "evidence.grainWitness#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values"
+    }
+  ],
+  "invalidating": [
+    {
+      "coordinate": "assertion.kind",
+      "specimens": 112,
+      "error": "/assertions/0 must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.transformation",
+      "specimens": 112,
+      "error": "/structure/relations/survey/fields/respondent must have required property 'transformation'"
+    },
+    {
+      "coordinate": "relation.grain",
+      "specimens": 112,
+      "error": "/structure/relations/survey must have required property 'grain'"
+    },
+    {
+      "coordinate": "assertion.aggregate.op",
+      "specimens": 110,
+      "error": "/assertions/0 must have required property 'op'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind",
+      "specimens": 29,
+      "error": "/structure/relations/shares/derivedBy must have required property 'kind'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "specimens": 6,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~nest",
+      "specimens": 6,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:project~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#arity",
+      "specimens": 6,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "field.additivity.kind",
+      "specimens": 5,
+      "error": "/structure/relations/stock/fields/on_hand/additivity must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~semi-additive",
+      "specimens": 5,
+      "error": "/structure/relations/stock/fields/on_hand/additivity must NOT have additional properties"
+    },
+    {
+      "coordinate": "relation.derivedBy.join.cardinality",
+      "specimens": 4,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "specimens": 4,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
+      "specimens": 4,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "specimens": 4,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~bin",
+      "specimens": 4,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~normalize",
+      "specimens": 4,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~bin",
+      "specimens": 4,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~normalize",
+      "specimens": 4,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "structure.peers[]#arity",
+      "specimens": 4,
+      "error": "/structure/peers/0 must NOT have fewer than 2 items"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~ratio-measure",
+      "specimens": 3,
+      "error": "/structure/relations/regions/fields/gdp_per_capita/additivity/kind must be equal to constant"
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~ratio-comparison",
+      "specimens": 2,
+      "error": "/assertions/0 must have required property 'op'"
+    },
+    {
+      "coordinate": "field.temporality.kind",
+      "specimens": 2,
+      "error": "/structure/relations/daily/fields/day/temporality must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~non-additive",
+      "specimens": 1,
+      "error": "/structure/relations/regions/fields/avg_score/additivity/kind must be equal to constant"
+    }
+  ],
+  "footprints": {
+    "assertion.aggregate.along#arity": [
+      "assertion.aggregate.along#arity"
+    ],
+    "assertion.aggregate.along#incidence": [
+      "assertion.aggregate.along#incidence",
+      "assertion.aggregate.along#order"
+    ],
+    "assertion.aggregate.along#order": [
+      "assertion.aggregate.along#order"
+    ],
+    "assertion.aggregate.along#present": [
+      "assertion.aggregate.along#arity",
+      "assertion.aggregate.along#incidence",
+      "assertion.aggregate.along#order",
+      "assertion.aggregate.along#present"
+    ],
+    "assertion.aggregate.field#incidence": [
+      "assertion.aggregate.field#incidence"
+    ],
+    "assertion.aggregate.nulls": [
+      "assertion.aggregate.nulls",
+      "assertion.aggregate.nulls:as-observed~<absent>",
+      "assertion.aggregate.nulls:as-zero~<absent>",
+      "assertion.aggregate.nulls:as-zero~as-observed",
+      "assertion.aggregate.nulls:exclude~<absent>",
+      "assertion.aggregate.nulls:exclude~as-observed",
+      "assertion.aggregate.nulls:exclude~as-zero"
+    ],
+    "assertion.aggregate.nulls:as-observed~<absent>": [
+      "assertion.aggregate.nulls:as-observed~<absent>"
+    ],
+    "assertion.aggregate.nulls:as-zero~<absent>": [
+      "assertion.aggregate.nulls:as-zero~<absent>"
+    ],
+    "assertion.aggregate.nulls:as-zero~as-observed": [
+      "assertion.aggregate.nulls:as-zero~as-observed"
+    ],
+    "assertion.aggregate.nulls:exclude~<absent>": [
+      "assertion.aggregate.nulls:exclude~<absent>"
+    ],
+    "assertion.aggregate.nulls:exclude~as-observed": [
+      "assertion.aggregate.nulls:exclude~as-observed"
+    ],
+    "assertion.aggregate.nulls:exclude~as-zero": [
+      "assertion.aggregate.nulls:exclude~as-zero"
+    ],
+    "assertion.aggregate.op": [
+      "assertion.aggregate.op",
+      "assertion.aggregate.op:count~min",
+      "assertion.aggregate.op:mean~count",
+      "assertion.aggregate.op:mean~min",
+      "assertion.aggregate.op:sum~count",
+      "assertion.aggregate.op:sum~mean",
+      "assertion.aggregate.op:sum~min"
+    ],
+    "assertion.aggregate.op:count~min": [
+      "assertion.aggregate.op:count~min"
+    ],
+    "assertion.aggregate.op:mean~count": [
+      "assertion.aggregate.op:mean~count"
+    ],
+    "assertion.aggregate.op:mean~min": [
+      "assertion.aggregate.op:mean~min"
+    ],
+    "assertion.aggregate.op:sum~count": [
+      "assertion.aggregate.op:sum~count"
+    ],
+    "assertion.aggregate.op:sum~mean": [
+      "assertion.aggregate.op:sum~mean"
+    ],
+    "assertion.aggregate.op:sum~min": [
+      "assertion.aggregate.op:sum~min"
+    ],
+    "assertion.aggregate.relation#incidence": [
+      "assertion.aggregate.relation#incidence"
+    ],
+    "assertion.aggregate.uncertainty": [
+      "assertion.aggregate.uncertainty"
+    ],
+    "assertion.kind": [
+      "assertion.kind",
+      "assertion.kind:aggregate~ratio-comparison"
+    ],
+    "assertion.kind:aggregate~ratio-comparison": [
+      "assertion.kind:aggregate~ratio-comparison"
+    ],
+    "assertion.ratio-comparison.field#incidence": [
+      "assertion.ratio-comparison.field#incidence"
+    ],
+    "assertion.ratio-comparison.relation#incidence": [
+      "assertion.ratio-comparison.relation#incidence"
+    ],
+    "evidence.grainWitness#arity": [
+      "evidence.grainWitness#arity"
+    ],
+    "evidence.grainWitness#incidence": [
+      "evidence.grainWitness#incidence",
+      "evidence.grainWitness#order"
+    ],
+    "evidence.grainWitness#order": [
+      "evidence.grainWitness#order"
+    ],
+    "evidence.grainWitness#present": [
+      "evidence.grainWitness#arity",
+      "evidence.grainWitness#incidence",
+      "evidence.grainWitness#order",
+      "evidence.grainWitness#present"
+    ],
+    "evidence.rows.*#present": [
+      "evidence.rows.*#present",
+      "observation.null",
+      "observation.null:absent~<absent>",
+      "observation.null:absent~censored",
+      "observation.null:absent~suppressed",
+      "observation.null:censored~<absent>",
+      "observation.null:censored~suppressed",
+      "observation.null:suppressed~<absent>",
+      "observation.unit",
+      "observation.value"
+    ],
+    "field.additivity.kind": [
+      "field.additivity.kind",
+      "field.additivity.kind:additive~non-additive",
+      "field.additivity.kind:additive~ratio-measure",
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:non-additive~ratio-measure",
+      "field.additivity.kind:semi-additive~non-additive",
+      "field.additivity.kind:semi-additive~ratio-measure"
+    ],
+    "field.additivity.kind:additive~non-additive": [
+      "field.additivity.kind:additive~non-additive"
+    ],
+    "field.additivity.kind:additive~ratio-measure": [
+      "field.additivity.kind:additive~ratio-measure"
+    ],
+    "field.additivity.kind:additive~semi-additive": [
+      "field.additivity.kind:additive~semi-additive"
+    ],
+    "field.additivity.kind:non-additive~ratio-measure": [
+      "field.additivity.kind:non-additive~ratio-measure"
+    ],
+    "field.additivity.kind:semi-additive~non-additive": [
+      "field.additivity.kind:semi-additive~non-additive"
+    ],
+    "field.additivity.kind:semi-additive~ratio-measure": [
+      "field.additivity.kind:semi-additive~ratio-measure"
+    ],
+    "field.additivity.semi-additive.nonAdditiveAlong#arity": [
+      "field.additivity.semi-additive.nonAdditiveAlong#arity"
+    ],
+    "field.additivity.semi-additive.nonAdditiveAlong#incidence": [
+      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "field.additivity.semi-additive.nonAdditiveAlong#order"
+    ],
+    "field.additivity.semi-additive.nonAdditiveAlong#order": [
+      "field.additivity.semi-additive.nonAdditiveAlong#order"
+    ],
+    "field.additivity#present": [
+      "field.additivity#present",
+      "field.additivity.kind",
+      "field.additivity.kind:additive~non-additive",
+      "field.additivity.kind:additive~ratio-measure",
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:non-additive~ratio-measure",
+      "field.additivity.kind:semi-additive~non-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
+      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "field.additivity.semi-additive.nonAdditiveAlong#order"
+    ],
+    "field.base": [
+      "field.base"
+    ],
+    "field.cyclic": [
+      "field.cyclic"
+    ],
+    "field.index": [
+      "field.index"
+    ],
+    "field.key": [
+      "field.key"
+    ],
+    "field.permits.null": [
+      "field.permits.null"
+    ],
+    "field.permits.uncertainty": [
+      "field.permits.uncertainty"
+    ],
+    "field.proportion": [
+      "field.proportion"
+    ],
+    "field.temporality.grain": [
+      "field.temporality.grain",
+      "field.temporality.grain:day~<absent>",
+      "field.temporality.grain:day~month",
+      "field.temporality.grain:month~<absent>"
+    ],
+    "field.temporality.grain:day~<absent>": [
+      "field.temporality.grain:day~<absent>"
+    ],
+    "field.temporality.grain:day~month": [
+      "field.temporality.grain:day~month"
+    ],
+    "field.temporality.grain:month~<absent>": [
+      "field.temporality.grain:month~<absent>"
+    ],
+    "field.temporality.kind": [
+      "field.temporality.kind",
+      "field.temporality.kind:instant~interval"
+    ],
+    "field.temporality.kind:instant~interval": [
+      "field.temporality.kind:instant~interval"
+    ],
+    "field.temporality#present": [
+      "field.temporality#present",
+      "field.temporality.grain",
+      "field.temporality.grain:day~<absent>",
+      "field.temporality.grain:day~month",
+      "field.temporality.grain:month~<absent>",
+      "field.temporality.kind",
+      "field.temporality.kind:instant~interval"
+    ],
+    "field.transformation": [
+      "field.transformation",
+      "field.transformation:interval~ratio",
+      "field.transformation:nominal~interval",
+      "field.transformation:nominal~ordinal",
+      "field.transformation:nominal~ratio",
+      "field.transformation:ordinal~interval",
+      "field.transformation:ordinal~ratio"
+    ],
+    "field.transformation:interval~ratio": [
+      "field.transformation:interval~ratio"
+    ],
+    "field.transformation:nominal~interval": [
+      "field.transformation:nominal~interval"
+    ],
+    "field.transformation:nominal~ordinal": [
+      "field.transformation:nominal~ordinal"
+    ],
+    "field.transformation:nominal~ratio": [
+      "field.transformation:nominal~ratio"
+    ],
+    "field.transformation:ordinal~interval": [
+      "field.transformation:ordinal~interval"
+    ],
+    "field.transformation:ordinal~ratio": [
+      "field.transformation:ordinal~ratio"
+    ],
+    "field.unit.conversions": [
+      "field.unit.conversions"
+    ],
+    "field.unit.perRow": [
+      "field.unit.perRow"
+    ],
+    "field.unit.units": [
+      "field.unit.units"
+    ],
+    "field.whole": [
+      "field.whole"
+    ],
+    "field.whole.perRow#incidence": [
+      "field.whole.perRow#incidence"
+    ],
+    "observation.null": [
+      "observation.null",
+      "observation.null:absent~<absent>",
+      "observation.null:absent~censored",
+      "observation.null:absent~suppressed",
+      "observation.null:censored~<absent>",
+      "observation.null:censored~suppressed",
+      "observation.null:suppressed~<absent>"
+    ],
+    "observation.null:absent~<absent>": [
+      "observation.null:absent~<absent>"
+    ],
+    "observation.null:absent~censored": [
+      "observation.null:absent~censored"
+    ],
+    "observation.null:absent~suppressed": [
+      "observation.null:absent~suppressed"
+    ],
+    "observation.null:censored~<absent>": [
+      "observation.null:censored~<absent>"
+    ],
+    "observation.null:censored~suppressed": [
+      "observation.null:censored~suppressed"
+    ],
+    "observation.null:suppressed~<absent>": [
+      "observation.null:suppressed~<absent>"
+    ],
+    "observation.unit": [
+      "observation.unit"
+    ],
+    "observation.value": [
+      "observation.value"
+    ],
+    "relation.derivedBy.aggregate-to-grain.from#incidence": [
+      "relation.derivedBy.aggregate-to-grain.from#incidence"
+    ],
+    "relation.derivedBy.aggregate-to-grain.toGrain#arity": [
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity"
+    ],
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence": [
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order"
+    ],
+    "relation.derivedBy.aggregate-to-grain.toGrain#order": [
+      "relation.derivedBy.aggregate-to-grain.toGrain#order"
+    ],
+    "relation.derivedBy.bin.closure": [
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "relation.derivedBy.bin.closure:left-closed~right-closed",
+      "relation.derivedBy.bin.closure:right-closed~<absent>"
+    ],
+    "relation.derivedBy.bin.closure:left-closed~<absent>": [
+      "relation.derivedBy.bin.closure:left-closed~<absent>"
+    ],
+    "relation.derivedBy.bin.closure:left-closed~right-closed": [
+      "relation.derivedBy.bin.closure:left-closed~right-closed"
+    ],
+    "relation.derivedBy.bin.closure:right-closed~<absent>": [
+      "relation.derivedBy.bin.closure:right-closed~<absent>"
+    ],
+    "relation.derivedBy.bin.field#incidence": [
+      "relation.derivedBy.bin.field#incidence"
+    ],
+    "relation.derivedBy.bin.from#incidence": [
+      "relation.derivedBy.bin.from#incidence"
+    ],
+    "relation.derivedBy.graph.edgeFrom#incidence": [
+      "relation.derivedBy.graph.edgeFrom#incidence"
+    ],
+    "relation.derivedBy.graph.edgeTo#incidence": [
+      "relation.derivedBy.graph.edgeTo#incidence"
+    ],
+    "relation.derivedBy.graph.from#incidence": [
+      "relation.derivedBy.graph.from#incidence"
+    ],
+    "relation.derivedBy.graph.requiresConservation": [
+      "relation.derivedBy.graph.requiresConservation"
+    ],
+    "relation.derivedBy.graph.value#incidence": [
+      "relation.derivedBy.graph.value#incidence"
+    ],
+    "relation.derivedBy.graph.value#present": [
+      "relation.derivedBy.graph.value#incidence",
+      "relation.derivedBy.graph.value#present"
+    ],
+    "relation.derivedBy.join.cardinality": [
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+    ],
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": [
+      "relation.derivedBy.join.cardinality:many-to-one~many-to-many"
+    ],
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": [
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
+    ],
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-one": [
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-one"
+    ],
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": [
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-many"
+    ],
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-one": [
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-one"
+    ],
+    "relation.derivedBy.join.cardinality:one-to-one~one-to-many": [
+      "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+    ],
+    "relation.derivedBy.join.from#incidence": [
+      "relation.derivedBy.join.from#incidence"
+    ],
+    "relation.derivedBy.join.with#incidence": [
+      "relation.derivedBy.join.with#incidence"
+    ],
+    "relation.derivedBy.kind": [
+      "relation.derivedBy.kind",
+      "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:aggregate-to-grain~join",
+      "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "relation.derivedBy.kind:aggregate-to-grain~project",
+      "relation.derivedBy.kind:bin~graph",
+      "relation.derivedBy.kind:bin~normalize",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:join~bin",
+      "relation.derivedBy.kind:join~graph",
+      "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:join~normalize",
+      "relation.derivedBy.kind:join~project",
+      "relation.derivedBy.kind:nest~bin",
+      "relation.derivedBy.kind:nest~graph",
+      "relation.derivedBy.kind:nest~normalize",
+      "relation.derivedBy.kind:nest~project",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.kind:project~graph"
+    ],
+    "relation.derivedBy.kind:aggregate-to-grain~bin": [
+      "relation.derivedBy.kind:aggregate-to-grain~bin"
+    ],
+    "relation.derivedBy.kind:aggregate-to-grain~graph": [
+      "relation.derivedBy.kind:aggregate-to-grain~graph"
+    ],
+    "relation.derivedBy.kind:aggregate-to-grain~join": [
+      "relation.derivedBy.kind:aggregate-to-grain~join"
+    ],
+    "relation.derivedBy.kind:aggregate-to-grain~nest": [
+      "relation.derivedBy.kind:aggregate-to-grain~nest"
+    ],
+    "relation.derivedBy.kind:aggregate-to-grain~normalize": [
+      "relation.derivedBy.kind:aggregate-to-grain~normalize"
+    ],
+    "relation.derivedBy.kind:aggregate-to-grain~project": [
+      "relation.derivedBy.kind:aggregate-to-grain~project"
+    ],
+    "relation.derivedBy.kind:bin~graph": [
+      "relation.derivedBy.kind:bin~graph"
+    ],
+    "relation.derivedBy.kind:bin~normalize": [
+      "relation.derivedBy.kind:bin~normalize"
+    ],
+    "relation.derivedBy.kind:bin~project": [
+      "relation.derivedBy.kind:bin~project"
+    ],
+    "relation.derivedBy.kind:join~bin": [
+      "relation.derivedBy.kind:join~bin"
+    ],
+    "relation.derivedBy.kind:join~graph": [
+      "relation.derivedBy.kind:join~graph"
+    ],
+    "relation.derivedBy.kind:join~nest": [
+      "relation.derivedBy.kind:join~nest"
+    ],
+    "relation.derivedBy.kind:join~normalize": [
+      "relation.derivedBy.kind:join~normalize"
+    ],
+    "relation.derivedBy.kind:join~project": [
+      "relation.derivedBy.kind:join~project"
+    ],
+    "relation.derivedBy.kind:nest~bin": [
+      "relation.derivedBy.kind:nest~bin"
+    ],
+    "relation.derivedBy.kind:nest~graph": [
+      "relation.derivedBy.kind:nest~graph"
+    ],
+    "relation.derivedBy.kind:nest~normalize": [
+      "relation.derivedBy.kind:nest~normalize"
+    ],
+    "relation.derivedBy.kind:nest~project": [
+      "relation.derivedBy.kind:nest~project"
+    ],
+    "relation.derivedBy.kind:normalize~graph": [
+      "relation.derivedBy.kind:normalize~graph"
+    ],
+    "relation.derivedBy.kind:normalize~project": [
+      "relation.derivedBy.kind:normalize~project"
+    ],
+    "relation.derivedBy.kind:project~graph": [
+      "relation.derivedBy.kind:project~graph"
+    ],
+    "relation.derivedBy.nest.from#incidence": [
+      "relation.derivedBy.nest.from#incidence"
+    ],
+    "relation.derivedBy.nest.levels#arity": [
+      "relation.derivedBy.nest.levels#arity"
+    ],
+    "relation.derivedBy.nest.levels#incidence": [
+      "relation.derivedBy.nest.levels#incidence",
+      "relation.derivedBy.nest.levels#order"
+    ],
+    "relation.derivedBy.nest.levels#order": [
+      "relation.derivedBy.nest.levels#order"
+    ],
+    "relation.derivedBy.normalize.field#incidence": [
+      "relation.derivedBy.normalize.field#incidence"
+    ],
+    "relation.derivedBy.normalize.from#incidence": [
+      "relation.derivedBy.normalize.from#incidence"
+    ],
+    "relation.derivedBy.project.from#incidence": [
+      "relation.derivedBy.project.from#incidence"
+    ],
+    "relation.derivedBy.project.keep#arity": [
+      "relation.derivedBy.project.keep#arity"
+    ],
+    "relation.derivedBy.project.keep#incidence": [
+      "relation.derivedBy.project.keep#incidence",
+      "relation.derivedBy.project.keep#order"
+    ],
+    "relation.derivedBy.project.keep#order": [
+      "relation.derivedBy.project.keep#order"
+    ],
+    "relation.derivedBy#present": [
+      "relation.derivedBy#present",
+      "relation.derivedBy.aggregate-to-grain.from#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "relation.derivedBy.bin.closure:left-closed~right-closed",
+      "relation.derivedBy.bin.closure:right-closed~<absent>",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.bin.from#incidence",
+      "relation.derivedBy.graph.edgeFrom#incidence",
+      "relation.derivedBy.graph.edgeTo#incidence",
+      "relation.derivedBy.graph.from#incidence",
+      "relation.derivedBy.graph.requiresConservation",
+      "relation.derivedBy.graph.value#incidence",
+      "relation.derivedBy.graph.value#present",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+      "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+      "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+      "relation.derivedBy.join.from#incidence",
+      "relation.derivedBy.join.with#incidence",
+      "relation.derivedBy.kind",
+      "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:aggregate-to-grain~join",
+      "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "relation.derivedBy.kind:aggregate-to-grain~project",
+      "relation.derivedBy.kind:bin~graph",
+      "relation.derivedBy.kind:bin~normalize",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:join~bin",
+      "relation.derivedBy.kind:join~graph",
+      "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:join~normalize",
+      "relation.derivedBy.kind:join~project",
+      "relation.derivedBy.kind:nest~bin",
+      "relation.derivedBy.kind:nest~graph",
+      "relation.derivedBy.kind:nest~normalize",
+      "relation.derivedBy.kind:nest~project",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.kind:project~graph",
+      "relation.derivedBy.nest.from#incidence",
+      "relation.derivedBy.nest.levels#arity",
+      "relation.derivedBy.nest.levels#incidence",
+      "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
+      "relation.derivedBy.normalize.from#incidence",
+      "relation.derivedBy.project.from#incidence",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+      "relation.derivedBy.project.keep#order"
+    ],
+    "relation.grain": [
+      "relation.grain"
+    ],
+    "structure.peers[]#arity": [
+      "structure.peers[]#arity"
+    ],
+    "structure.peers[]#incidence": [
+      "structure.peers[]#incidence",
+      "structure.peers[]#order"
+    ],
+    "structure.peers[]#order": [
+      "structure.peers[]#order"
+    ],
+    "structure.peers[]#present": [
+      "structure.peers#present",
+      "structure.peers[]#arity",
+      "structure.peers[]#incidence",
+      "structure.peers[]#order",
+      "structure.peers[]#present"
+    ],
+    "structure.peers#present": [
+      "structure.peers#present",
+      "structure.peers[]#arity",
+      "structure.peers[]#incidence",
+      "structure.peers[]#order",
+      "structure.peers[]#present"
+    ]
+  },
+  "dead": [],
+  "unseparated": [
+    "assertion.kind",
+    "assertion.kind:aggregate~ratio-comparison",
+    "field.additivity.kind:additive~semi-additive",
+    "field.additivity.kind:semi-additive~non-additive",
+    "field.additivity.kind:semi-additive~ratio-measure",
+    "relation.derivedBy.kind:aggregate-to-grain~bin",
+    "relation.derivedBy.kind:aggregate-to-grain~graph",
+    "relation.derivedBy.kind:aggregate-to-grain~join",
+    "relation.derivedBy.kind:aggregate-to-grain~nest",
+    "relation.derivedBy.kind:aggregate-to-grain~normalize",
+    "relation.derivedBy.kind:aggregate-to-grain~project",
+    "relation.derivedBy.kind:bin~graph",
+    "relation.derivedBy.kind:bin~project",
+    "relation.derivedBy.kind:join~bin",
+    "relation.derivedBy.kind:join~graph",
+    "relation.derivedBy.kind:join~nest",
+    "relation.derivedBy.kind:join~normalize",
+    "relation.derivedBy.kind:join~project",
+    "relation.derivedBy.kind:nest~bin",
+    "relation.derivedBy.kind:nest~graph",
+    "relation.derivedBy.kind:nest~normalize",
+    "relation.derivedBy.kind:nest~project",
+    "relation.derivedBy.kind:normalize~graph",
+    "relation.derivedBy.kind:normalize~project",
+    "relation.derivedBy.kind:project~graph"
+  ],
+  "refuted": [],
+  "unclaimed": [
+    {
+      "destroys": "relation.derivedBy.kind:bin~normalize",
+      "supported": "relation.derivedBy.kind"
+    },
+    {
+      "destroys": "relation.derivedBy.nest.levels#incidence",
+      "supported": "relation.derivedBy.nest.levels#arity"
+    },
+    {
+      "destroys": "structure.peers[]#incidence",
+      "supported": "structure.peers[]#arity"
+    }
+  ],
+  "witnesses": [
+    {
+      "witness": "assertion.aggregate.along#incidence",
+      "declared": [
+        "assertion.aggregate.along#incidence"
+      ],
+      "actual": [
+        "assertion.aggregate.along#incidence",
+        "assertion.aggregate.along#order"
+      ],
+      "collateral": [
+        "assertion.aggregate.along#order"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.nulls",
+      "declared": [
+        "assertion.aggregate.nulls"
+      ],
+      "actual": [
+        "assertion.aggregate.nulls",
+        "assertion.aggregate.nulls:as-observed~<absent>",
+        "assertion.aggregate.nulls:as-zero~<absent>",
+        "assertion.aggregate.nulls:as-zero~as-observed",
+        "assertion.aggregate.nulls:exclude~<absent>",
+        "assertion.aggregate.nulls:exclude~as-observed",
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "collateral": [
+        "assertion.aggregate.nulls:as-observed~<absent>",
+        "assertion.aggregate.nulls:as-zero~<absent>",
+        "assertion.aggregate.nulls:as-zero~as-observed",
+        "assertion.aggregate.nulls:exclude~<absent>",
+        "assertion.aggregate.nulls:exclude~as-observed",
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.nulls",
+      "declared": [
+        "assertion.aggregate.nulls"
+      ],
+      "actual": [
+        "assertion.aggregate.nulls",
+        "assertion.aggregate.nulls:as-observed~<absent>",
+        "assertion.aggregate.nulls:as-zero~<absent>",
+        "assertion.aggregate.nulls:as-zero~as-observed",
+        "assertion.aggregate.nulls:exclude~<absent>",
+        "assertion.aggregate.nulls:exclude~as-observed",
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "collateral": [
+        "assertion.aggregate.nulls:as-observed~<absent>",
+        "assertion.aggregate.nulls:as-zero~<absent>",
+        "assertion.aggregate.nulls:as-zero~as-observed",
+        "assertion.aggregate.nulls:exclude~<absent>",
+        "assertion.aggregate.nulls:exclude~as-observed",
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.nulls:as-zero~as-observed",
+      "declared": [
+        "assertion.aggregate.nulls:as-zero~as-observed"
+      ],
+      "actual": [
+        "assertion.aggregate.nulls:as-zero~as-observed"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.nulls:exclude~as-observed",
+      "declared": [
+        "assertion.aggregate.nulls:exclude~as-observed"
+      ],
+      "actual": [
+        "assertion.aggregate.nulls:exclude~as-observed"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.nulls:exclude~as-zero",
+      "declared": [
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "actual": [
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op",
+      "declared": [
+        "assertion.aggregate.op"
+      ],
+      "actual": [
+        "assertion.aggregate.op",
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min"
+      ],
+      "collateral": [
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op:count~min",
+      "declared": [
+        "assertion.aggregate.op:count~min"
+      ],
+      "actual": [
+        "assertion.aggregate.op:count~min"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op:mean~count",
+      "declared": [
+        "assertion.aggregate.op:mean~count"
+      ],
+      "actual": [
+        "assertion.aggregate.op:mean~count"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op:mean~min",
+      "declared": [
+        "assertion.aggregate.op:mean~min"
+      ],
+      "actual": [
+        "assertion.aggregate.op:mean~min"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op:sum~count",
+      "declared": [
+        "assertion.aggregate.op:sum~count"
+      ],
+      "actual": [
+        "assertion.aggregate.op:sum~count"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op:sum~mean",
+      "declared": [
+        "assertion.aggregate.op:sum~mean"
+      ],
+      "actual": [
+        "assertion.aggregate.op:sum~mean"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.op:sum~min",
+      "declared": [
+        "assertion.aggregate.op:sum~min"
+      ],
+      "actual": [
+        "assertion.aggregate.op:sum~min"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.uncertainty",
+      "declared": [
+        "assertion.aggregate.uncertainty"
+      ],
+      "actual": [
+        "assertion.aggregate.uncertainty"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.kind + assertion.aggregate.op",
+      "declared": [
+        "assertion.aggregate.op",
+        "assertion.kind"
+      ],
+      "actual": [
+        "assertion.aggregate.op",
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min",
+        "assertion.kind",
+        "assertion.kind:aggregate~ratio-comparison"
+      ],
+      "collateral": [
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min",
+        "assertion.kind:aggregate~ratio-comparison"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "interaction-only"
+    },
+    {
+      "witness": "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
+      "declared": [
+        "assertion.aggregate.op",
+        "assertion.kind:aggregate~ratio-comparison"
+      ],
+      "actual": [
+        "assertion.aggregate.op",
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min",
+        "assertion.kind:aggregate~ratio-comparison"
+      ],
+      "collateral": [
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "interaction-only"
+    },
+    {
+      "witness": "evidence.grainWitness#present",
+      "declared": [
+        "evidence.grainWitness#present"
+      ],
+      "actual": [
+        "evidence.grainWitness#arity",
+        "evidence.grainWitness#incidence",
+        "evidence.grainWitness#order",
+        "evidence.grainWitness#present"
+      ],
+      "collateral": [
+        "evidence.grainWitness#arity",
+        "evidence.grainWitness#incidence",
+        "evidence.grainWitness#order"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.additivity.kind",
+      "declared": [
+        "field.additivity.kind"
+      ],
+      "actual": [
+        "field.additivity.kind",
+        "field.additivity.kind:additive~non-additive",
+        "field.additivity.kind:additive~ratio-measure",
+        "field.additivity.kind:additive~semi-additive",
+        "field.additivity.kind:non-additive~ratio-measure",
+        "field.additivity.kind:semi-additive~non-additive",
+        "field.additivity.kind:semi-additive~ratio-measure"
+      ],
+      "collateral": [
+        "field.additivity.kind:additive~non-additive",
+        "field.additivity.kind:additive~ratio-measure",
+        "field.additivity.kind:additive~semi-additive",
+        "field.additivity.kind:non-additive~ratio-measure",
+        "field.additivity.kind:semi-additive~non-additive",
+        "field.additivity.kind:semi-additive~ratio-measure"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.additivity.kind:additive~ratio-measure",
+      "declared": [
+        "field.additivity.kind:additive~ratio-measure"
+      ],
+      "actual": [
+        "field.additivity.kind:additive~ratio-measure"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "declared": [
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
+      ],
+      "actual": [
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+        "field.additivity.semi-additive.nonAdditiveAlong#order"
+      ],
+      "collateral": [
+        "field.additivity.semi-additive.nonAdditiveAlong#order"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.base",
+      "declared": [
+        "field.base"
+      ],
+      "actual": [
+        "field.base"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.cyclic",
+      "declared": [
+        "field.cyclic"
+      ],
+      "actual": [
+        "field.cyclic"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.index",
+      "declared": [
+        "field.index"
+      ],
+      "actual": [
+        "field.index"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.key",
+      "declared": [
+        "field.key"
+      ],
+      "actual": [
+        "field.key"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.permits.null",
+      "declared": [
+        "field.permits.null"
+      ],
+      "actual": [
+        "field.permits.null"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.permits.uncertainty",
+      "declared": [
+        "field.permits.uncertainty"
+      ],
+      "actual": [
+        "field.permits.uncertainty"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.proportion",
+      "declared": [
+        "field.proportion"
+      ],
+      "actual": [
+        "field.proportion"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.temporality.kind",
+      "declared": [
+        "field.temporality.kind"
+      ],
+      "actual": [
+        "field.temporality.kind",
+        "field.temporality.kind:instant~interval"
+      ],
+      "collateral": [
+        "field.temporality.kind:instant~interval"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.temporality.kind:instant~interval",
+      "declared": [
+        "field.temporality.kind:instant~interval"
+      ],
+      "actual": [
+        "field.temporality.kind:instant~interval"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation",
+      "declared": [
+        "field.transformation"
+      ],
+      "actual": [
+        "field.transformation",
+        "field.transformation:interval~ratio",
+        "field.transformation:nominal~interval",
+        "field.transformation:nominal~ordinal",
+        "field.transformation:nominal~ratio",
+        "field.transformation:ordinal~interval",
+        "field.transformation:ordinal~ratio"
+      ],
+      "collateral": [
+        "field.transformation:interval~ratio",
+        "field.transformation:nominal~interval",
+        "field.transformation:nominal~ordinal",
+        "field.transformation:nominal~ratio",
+        "field.transformation:ordinal~interval",
+        "field.transformation:ordinal~ratio"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation:interval~ratio",
+      "declared": [
+        "field.transformation:interval~ratio"
+      ],
+      "actual": [
+        "field.transformation:interval~ratio"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation:nominal~interval",
+      "declared": [
+        "field.transformation:nominal~interval"
+      ],
+      "actual": [
+        "field.transformation:nominal~interval"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation:nominal~ordinal",
+      "declared": [
+        "field.transformation:nominal~ordinal"
+      ],
+      "actual": [
+        "field.transformation:nominal~ordinal"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation:nominal~ratio",
+      "declared": [
+        "field.transformation:nominal~ratio"
+      ],
+      "actual": [
+        "field.transformation:nominal~ratio"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation:ordinal~interval",
+      "declared": [
+        "field.transformation:ordinal~interval"
+      ],
+      "actual": [
+        "field.transformation:ordinal~interval"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.transformation:ordinal~ratio",
+      "declared": [
+        "field.transformation:ordinal~ratio"
+      ],
+      "actual": [
+        "field.transformation:ordinal~ratio"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.unit.conversions",
+      "declared": [
+        "field.unit.conversions"
+      ],
+      "actual": [
+        "field.unit.conversions"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.unit.perRow",
+      "declared": [
+        "field.unit.perRow"
+      ],
+      "actual": [
+        "field.unit.perRow"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.unit.units",
+      "declared": [
+        "field.unit.units"
+      ],
+      "actual": [
+        "field.unit.units"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.whole",
+      "declared": [
+        "field.whole"
+      ],
+      "actual": [
+        "field.whole"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.whole.perRow#incidence",
+      "declared": [
+        "field.whole.perRow#incidence"
+      ],
+      "actual": [
+        "field.whole.perRow#incidence"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "observation.null",
+      "declared": [
+        "observation.null"
+      ],
+      "actual": [
+        "observation.null",
+        "observation.null:absent~<absent>",
+        "observation.null:absent~censored",
+        "observation.null:absent~suppressed",
+        "observation.null:censored~<absent>",
+        "observation.null:censored~suppressed",
+        "observation.null:suppressed~<absent>"
+      ],
+      "collateral": [
+        "observation.null:absent~<absent>",
+        "observation.null:absent~censored",
+        "observation.null:absent~suppressed",
+        "observation.null:censored~<absent>",
+        "observation.null:censored~suppressed",
+        "observation.null:suppressed~<absent>"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "observation.null:absent~censored",
+      "declared": [
+        "observation.null:absent~censored"
+      ],
+      "actual": [
+        "observation.null:absent~censored"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "observation.unit",
+      "declared": [
+        "observation.unit"
+      ],
+      "actual": [
+        "observation.unit"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "observation.value",
+      "declared": [
+        "observation.value"
+      ],
+      "actual": [
+        "observation.value"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "relation.derivedBy.kind:bin~normalize",
+      "declared": [
+        "relation.derivedBy.kind:bin~normalize"
+      ],
+      "actual": [
+        "relation.derivedBy.kind:bin~normalize"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "relation.grain",
+      "declared": [
+        "relation.grain"
+      ],
+      "actual": [
+        "relation.grain"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    }
+  ]
+}

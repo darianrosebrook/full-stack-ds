@@ -14,6 +14,17 @@
           "additionalProperties": {
             "$ref": "#/definitions/relation"
           }
+        },
+        "peers": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/name"
+            }
+          }
         }
       },
       "required": [
@@ -53,6 +64,13 @@
           "additionalProperties": {
             "$ref": "#/definitions/field"
           }
+        },
+        "derivedBy": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/derivation"
+            }
+          ]
         }
       },
       "required": [
@@ -180,6 +198,13 @@
             "instant",
             "interval"
           ]
+        },
+        "grain": {
+          "type": "string",
+          "enum": [
+            "day",
+            "month"
+          ]
         }
       },
       "required": [
@@ -228,6 +253,19 @@
           "properties": {
             "kind": {
               "type": "string",
+              "const": "non-additive"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
               "const": "ratio-measure"
             }
           },
@@ -251,6 +289,201 @@
         }
       },
       "additionalProperties": false
+    },
+    "derivation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "aggregate-to-grain"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "toGrain": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "toGrain"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "join"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "with": {
+              "$ref": "#/definitions/name"
+            },
+            "cardinality": {
+              "type": "string",
+              "enum": [
+                "one-to-one",
+                "one-to-many",
+                "many-to-one",
+                "many-to-many"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "with",
+            "cardinality"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "nest"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "levels": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "levels"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "bin"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            },
+            "closure": {
+              "type": "string",
+              "enum": [
+                "left-closed",
+                "right-closed"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "normalize"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "project"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "keep": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "keep"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "graph"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "edgeFrom": {
+              "$ref": "#/definitions/name"
+            },
+            "edgeTo": {
+              "$ref": "#/definitions/name"
+            },
+            "value": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/name"
+                }
+              ]
+            },
+            "requiresConservation": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "edgeFrom",
+            "edgeTo"
+          ],
+          "additionalProperties": false
+        }
+      ]
     }
   }
 }

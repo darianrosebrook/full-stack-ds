@@ -27,6 +27,7 @@ import {
   parseJsonl,
   type CorpusInput,
 } from "./corpus-integrity.js";
+import { RULE_SOURCES } from "./necessity.js";
 
 const PACK_DIR = resolve(__dirname, "../../../ds-contracts/analytical-pack");
 const DOCTRINE = resolve(
@@ -451,21 +452,19 @@ describe("peer-projection conservation cases", () => {
     ).toBe(false);
   });
 
-  it("the two derivation-origin cases arrive at stage 2 as unbound obligations, not as prose", () => {
+  it("the two derivation-origin cases are discharged by fixtures, not by prose", () => {
     const CONTRACTS = resolve(__dirname, "../../../ds-contracts");
-    const ENGINE_SOURCE = resolve(__dirname, "engines.ts");
-    const atStage2 = loadLedgerInput(CONTRACTS, DOCTRINE, ENGINE_SOURCE, 2);
-    const unbound = checkFixtureLedger(atStage2)
-      .filter((f) => f.code === "LEDGER_CASE_UNBOUND")
-      .map((f) => f.detail);
+    const atStage2 = loadLedgerInput(CONTRACTS, DOCTRINE, RULE_SOURCES, 2);
 
-    // REL-VIEW-ALGEBRA-01 cannot close while these have no fixture: the
-    // obligation is mechanical, which is the whole point of authoring them
-    // before the stage that must satisfy them.
-    expect(unbound.some((d) => d.includes("CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN"))).toBe(true);
-    expect(
-      unbound.some((d) => d.includes("CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP")),
-    ).toBe(true);
+    // These two arrived from the accessibility corpus as mechanical debt: the
+    // ledger reported them UNBOUND, and REL-VIEW-ALGEBRA-01 could not close
+    // while they were. That is what authoring them before the stage that must
+    // satisfy them was for. The debt is now discharged — each has a fixture,
+    // and the ledger reports nothing outstanding at stage 2.
+    expect(checkFixtureLedger(atStage2).filter((f) => f.code === "LEDGER_CASE_UNBOUND")).toEqual([]);
+    for (const c of ["CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN", "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP"]) {
+      expect(atStage2.bindings.cases[c], `${c} has no fixture`).toBeTruthy();
+    }
 
     // And they are genuinely stage-2 facts: both are decided by a derivation,
     // before any projection is chosen.

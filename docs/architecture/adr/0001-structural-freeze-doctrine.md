@@ -4,7 +4,7 @@ authority: adr
 status: active
 title: "ADR 0001: structural freeze doctrine — freeze what must remain deliberate, measure what is expected to grow, freeze nothing before a release candidate"
 owner: "@darianrosebrook"
-updated: 2026-08-17
+updated: 2026-09-03
 supersedes: null
 # Declared governance role: this ADR governs the ADMISSIBILITY of freeze-shaped
 # gates — whether a given ledger/ratchet/frozen expectation may be wired as
@@ -19,6 +19,7 @@ governs:
   modules:
     - packages/ds-tokens                 # token source, usage baseline, consumption ledgers
     - packages/ds-contracts              # closed vocabularies that ARE legitimately frozen (schemas)
+    - packages/ds-codegen/src/analytical # frozen answer key, rule digest, necessity census
     - packages/ds-codegen/src/highlight  # golden token-stream fixtures
     - packages/ds-codegen/src/markdown   # golden tree fixtures
     - packages/ds-codegen/src/validation # contrast ledgers + known-gaps files
@@ -282,6 +283,40 @@ applies to live, non-duplicate vocabulary. Non-consumption alone is never a
 deletion reason in FSDS; duplication, supersession, or an explicit family
 decision is.
 
+**A removal-shaped gate that is admissible anyway — the analytical necessity
+census.** `necessity.test.ts` refuses a kernel coordinate carrying no
+necessity witness, and its cheaper discharge is removal (record it in
+`removals.json`) rather than the harder one (find a witness). By the letter of
+§3 that reads as a deletion-biased gate. It is admissible, and the reason
+generalizes: §3 protects *vocabulary*, and this gate cannot reach vocabulary.
+What it removes is an encoding **coordinate** — a degree of freedom in how a
+thing is written down, not a thing the system can name — and
+`REL-VIEW-ALGEBRA-01` made that separation structural rather than cultural:
+coordinate verdicts are keyed by coordinate id, constructor dispositions by
+operator name, and the gate reads only the former, so no unwitnessed
+coordinate can retire an operator. Two mitigations keep removal reasoned
+rather than cheap: it must name the authority that fails to require the
+distinction, and it carries a re-earning stage, so absence is re-earnable
+rather than final. The generalization worth keeping: a gate whose *intended*
+outcome is removal is not a void hazard; a gate that measures presence and can
+be evaded by deleting the measured thing is.
+
+**A population pin caught before it shipped — the stage-2 subtraction gate.**
+Its first form asserted that every *live* kernel coordinate appears in the
+frozen stage-2 candidate set. That is a population pin in the §1.2 sense with
+the census as its population, and it would have made a stage-3 coordinate fail
+stage-2-era machinery — a closed experiment firing against work that neither
+caused it nor could discharge it. Disposition: `LOOSEN_TO_INVARIANT`, applied
+before the gate was ever wired. Two things replaced it. The gate proper became
+a **slice-completion proof obligation** over a basis frozen at one commit —
+every coordinate this experiment opened must receive a reasoned disposition
+before the slice may claim ratification — which is terminal at zero for the
+slice and deliberately absent from CI and hooks. The part worth keeping became
+a property that survives growth: every live coordinate is either ratified by a
+witness or owned by an explicitly open experiment. A later stage discharges it
+by opening a basis that adjudicates its own coordinates, never by deleting
+one; the remedy text says so and a test asserts that it does.
+
 ## 10. Classification of current FSDS gate surfaces
 
 | Surface | Class | Posture pre-RC | At RC |
@@ -295,6 +330,9 @@ decision is.
 | Native token-realization scoreboard | Population measurement (state freeze) | **removed** (FIX-UNWIND-FREEZE-RATCHETS-01) | re-introduce as measurement at RC, if wanted |
 | Token-consumption ledger | Population measurement (state freeze) | **removed** (FIX-UNWIND-FREEZE-RATCHETS-01) | re-introduce as measurement at RC, if wanted |
 | Emission manifest / drift diffs (`governed:rail`, CI tree diff) | Identity (bytes ↔ contract ↔ codegen ↔ env) | blocking | blocking |
+| Analytical oracle custody + holdout rule digest (`corpus-integrity.ts`, `holdout.json`) | Identity (the frozen answer key, and the rule surface answering it), discharge is hand re-derivation with a recorded reason | blocking | blocking |
+| Analytical necessity census (`necessity.test.ts` over the census, witnesses and removals) | Structural: a coordinate confers standing only with a witness. Freezes justification, not membership — see §9 for why its removal path is not a void hazard | blocking | blocking |
+| Stage-2 coordinate subtraction ledger (`analytical:subtraction --gate`) | Slice-completion proof obligation over a frozen basis — not repo admission, and unwired from CI and hooks on purpose | terminal at zero for `REL-VIEW-ALGEBRA-01` | inert; the ledger survives as historical evidence |
 
 ## 11. Canonical statement
 

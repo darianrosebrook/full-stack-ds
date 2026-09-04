@@ -119,7 +119,11 @@ export function alphaRename(fixture: Fixture, map: Record<string, string>): Fixt
       fields[r(fname)] = g;
     }
     const grain = rel.grain === undefined ? undefined : rel.grain === "unknown" ? "unknown" : names(rel.grain);
-    relations[r(name)] = { ...(grain !== undefined ? { grain } : {}), fields } as RelationDecl;
+    relations[r(name)] = {
+      ...(grain !== undefined ? { grain } : {}),
+      fields,
+      ...(rel.derivedBy ? { derivedBy: renameDerivation(rel.derivedBy, r, names) } : {}),
+    } as RelationDecl;
   }
   const assertions = fixture.assertions.map((a) => {
     const base = { ...a, ...(a.relation !== undefined ? { relation: r(a.relation) } : {}), ...(a.field !== undefined ? { field: r(a.field) } : {}) };
@@ -141,7 +145,42 @@ export function alphaRename(fixture: Fixture, map: Record<string, string>): Fixt
       );
     }
   }
-  return { id: fixture.id, structure: { relations }, assertions, ...(evidence ? { evidence } : {}) };
+  return {
+    id: fixture.id,
+    structure: { relations, ...(fixture.structure.peers ? { peers: fixture.structure.peers.map(names) } : {}) },
+    assertions,
+    ...(evidence ? { evidence } : {}),
+  } as Fixture;
+}
+
+/**
+ * Rename a derivation's name-bearing operands, and only those.
+ *
+ * `from` and `with` name relations; `toGrain`, `levels`, `keep`, `field`,
+ * `edgeFrom`, `edgeTo` and `value` name fields. `kind`, `cardinality`,
+ * `closure` and `requiresConservation` are VALUES of closed vocabularies, not
+ * identifiers, and renaming them would make a spelling confer standing rather
+ * than removing it.
+ *
+ * The slots are listed rather than inferred because a rebuild that names its
+ * keys stops covering any key added later — the failure this function is being
+ * repaired from. A `derivedBy` this did not carry was invisible to
+ * `canonical`, which made every derivation coordinate collide with everything
+ * and would have let a necessity witness pass without erasing anything.
+ */
+function renameDerivation(
+  d: NonNullable<RelationDecl["derivedBy"]>,
+  r: (s: string) => string,
+  names: (xs: unknown) => unknown,
+): NonNullable<RelationDecl["derivedBy"]> {
+  const out = { ...d } as Record<string, unknown>;
+  for (const slot of ["from", "with", "field", "edgeFrom", "edgeTo", "value"]) {
+    if (typeof out[slot] === "string") out[slot] = r(out[slot] as string);
+  }
+  for (const slot of ["toGrain", "levels", "keep"]) {
+    if (Array.isArray(out[slot])) out[slot] = names(out[slot]);
+  }
+  return out as NonNullable<RelationDecl["derivedBy"]>;
 }
 
 /** Apply a rename map to a judgment subject (`rel`, `rel.field`). */

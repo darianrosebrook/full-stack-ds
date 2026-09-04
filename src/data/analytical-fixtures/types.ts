@@ -22,11 +22,15 @@ export interface UnitSpec {
 
 export interface Temporality {
   kind: "instant" | "interval";
+  /** The grain the field's values are resolved to; members are earned per case. */
+  grain?: "day" | "month";
 }
 
 export type Additivity =
   | { kind: "additive" }
   | { kind: "semi-additive"; nonAdditiveAlong: string[] }
+  /** Admits no summation along any dimension. */
+  | { kind: "non-additive" }
   | { kind: "ratio-measure" };
 
 export interface Permits {
@@ -51,13 +55,35 @@ export interface FieldDef {
   permits?: Permits;
 }
 
+/** L3: a typed operator whose result is itself a relation. */
+export type Derivation =
+  | { kind: "aggregate-to-grain"; from: string; toGrain: string[] }
+  | { kind: "join"; from: string; with: string; cardinality: "one-to-one" | "one-to-many" | "many-to-one" | "many-to-many" }
+  | { kind: "nest"; from: string; levels: string[] }
+  | { kind: "bin"; from: string; field: string; closure?: "left-closed" | "right-closed" }
+  | { kind: "normalize"; from: string; field: string }
+  | { kind: "project"; from: string; keep: string[] }
+  | {
+      kind: "graph";
+      from: string;
+      edgeFrom: string;
+      edgeTo: string;
+      value?: string;
+      /** A requirement on the derivation, never a record that anything checked it. */
+      requiresConservation?: true;
+    };
+
 export interface RelationDef {
   grain: "unknown" | string[];
   fields: Record<string, FieldDef>;
+  /** Present iff this relation is the result of a derivation. */
+  derivedBy?: Derivation;
 }
 
 export interface RelationStructure {
   relations: Record<string, RelationDef>;
+  /** Sets of relations declared to carry the same claim about one authority. */
+  peers?: string[][];
 }
 
 // ---- assertions (assertion.schema.json, L0-L2 grammar) --------------------
@@ -76,7 +102,11 @@ export type Assertion =
 
 // ---- evidence (fixture.schema.json definitions) ---------------------------
 
-export type NullKind = "absent" | "censored";
+/**
+ * `censored`: a bound, not a measurement. `suppressed`: withheld by policy, so
+ * a value exists and is not zero. `absent`: any other missing kind.
+ */
+export type NullKind = "absent" | "censored" | "suppressed";
 
 /** One observation: a bare primitive or the qualified object form. */
 export type Observation =
