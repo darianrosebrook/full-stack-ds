@@ -30,6 +30,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Contract-oracle catalog integrity. This is the cheap, deterministic
+      # guard: every curated mutation must still resolve to its reviewed source
+      # value and change exactly one contract leaf. The expensive execution of
+      # those mutants lives in contract-oracle-mutations.yml, where reports and
+      # per-stage logs are retained instead of taxing every push.
+      - name: Check contract-oracle mutation catalog
+        run: pnpm run audit:contract-oracle-mutations:selfcheck
+
       # Design tokens — emit composed.tokens.json before contract
       # validation. `generate:check` (next step) loads the composed
       # token graph to verify every contract's `resolvesTo` path, but

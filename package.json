@@ -98,7 +98,8 @@
     "audit:motion-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/motion-realization-audit/selfcheck.mjs && node scripts/motion-realization-audit/audit.mjs",
     "audit:carrier-reachability": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts && node scripts/carrier-reachability-audit/audit.mjs",
     "audit:variant-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/variant-style-audit/realization.test.mjs && node scripts/variant-style-audit/audit.mjs",
-    "audit:contract-oracle-mutations": "node scripts/contract-oracle-mutation/selfcheck.mjs && node scripts/contract-oracle-mutation/run.mjs",
+    "audit:contract-oracle-mutations:selfcheck": "node scripts/contract-oracle-mutation/selfcheck.mjs",
+    "audit:contract-oracle-mutations": "pnpm run audit:contract-oracle-mutations:selfcheck && node scripts/contract-oracle-mutation/run.mjs",
     "parity:compose-tokens": "node scripts/compose-parity-diff.mjs"
   },
   "dependencies": {

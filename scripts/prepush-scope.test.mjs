@@ -76,6 +76,43 @@ test("mixed docs + contract: union (rail + generate + docs-claims + tests)", () 
   assert.ok(on(r, "RUN_DOCS_CLAIMS", "RUN_GENERATE_CHECK", "RUN_RAIL", "RUN_TESTS"));
 });
 
+// --- contract-oracle catalog integrity --------------------------------------
+// The local hook runs only the cheap pointer/one-leaf self-check. Full mutant
+// execution is a scheduled/manual CI lane because it runs the complete rail
+// once for the baseline and again for every curated contract mutation.
+
+test("a contract change runs the contract-oracle catalog self-check", () => {
+  assert.equal(
+    classify(["packages/ds-contracts/components/Dialog/Dialog.contract.json"])
+      .RUN_CONTRACT_ORACLE_SELFCHECK,
+    true,
+  );
+});
+
+test("editing the mutation tool runs its catalog self-check", () => {
+  assert.equal(
+    classify(["scripts/contract-oracle-mutation/catalog.mjs"])
+      .RUN_CONTRACT_ORACLE_SELFCHECK,
+    true,
+  );
+});
+
+test("editing package scripts runs the contract-oracle catalog self-check", () => {
+  assert.equal(classify(["package.json"]).RUN_CONTRACT_ORACLE_SELFCHECK, true);
+});
+
+test("docs-only and empty ranges skip the contract-oracle catalog self-check", () => {
+  assert.equal(classify(["docs/x.md"]).RUN_CONTRACT_ORACLE_SELFCHECK, false);
+  assert.equal(classify([]).RUN_CONTRACT_ORACLE_SELFCHECK, false);
+});
+
+test("a full pre-push run includes the contract-oracle catalog self-check", () => {
+  assert.equal(
+    classify([], { full: true }).RUN_CONTRACT_ORACLE_SELFCHECK,
+    true,
+  );
+});
+
 // --- styling-realization ledgers (RAIL-STYLING-REALIZATION-LEDGERS-01) -------
 // The ledgers classify contracts against committed generated React output, so
 // each of those inputs must trigger them; unrelated pushes must not.
@@ -347,4 +384,3 @@ test("a docs-only push does NOT run the realization audits", () => {
   assert.equal(r.RUN_BEHAVIOR_AUDIT, false);
   assert.equal(r.RUN_A11Y_AUDIT, false);
 });
-

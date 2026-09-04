@@ -8,6 +8,10 @@ Run the catalog self-check and full profile:
 
     pnpm run audit:contract-oracle-mutations
 
+Run only the fast catalog-integrity check used by push and ordinary CI:
+
+    pnpm run audit:contract-oracle-mutations:selfcheck
+
 Select a smaller sample or the shorter development profile:
 
     pnpm run audit:contract-oracle-mutations -- --only=dialog-name-to-body
@@ -44,3 +48,9 @@ checked. A survivor is a measured blind spot, not proof that the original fact
 was right. The default command reports survivors without failing so the first
 measurement can establish a baseline. Add `--max-survivors=N` only when a
 reviewed threshold is ready to become a gate.
+
+Ordinary CI and the change-scoped pre-push hook run only the self-check. The
+`Contract oracle mutations` workflow runs the full profile every Monday and on
+manual dispatch, fails when any curated mutant survives, and uploads the report
+plus per-stage logs for 30 days. That lane measures the catalog; it does not turn
+the contract into its own correctness oracle.
