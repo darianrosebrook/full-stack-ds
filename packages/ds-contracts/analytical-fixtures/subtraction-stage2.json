@@ -28,6 +28,24 @@
       "crossTerm": "Has the representation generated a cross-product between independent degrees of freedom? For an optional tagged holder those are existence, alternative identity, and alternative-specific payload; 'alternative A versus absence' is their cross-term and is never a fourth degree of freedom. Established by the 13 discriminator member-absence candidates collapsing to 3 holder-presence facts.",
       "tagIsNotTheChoice": "A tag that names a semantic choice does not thereby constitute an independent semantic coordinate. If the tag is wholly derivable from the presence, structure, payload, or occurrence class it summarizes, retain the underlying distinction and classify the TAG by its actual role: primitive coordinate (removing it destroys an independently grounded distinction), required derived vocabulary (externally governed and name-bearing, but fully derivable from other semantic facts), or representation artifact (neither independently necessary nor externally required).",
       "reportingVocabulary": "A reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE. Authority to name a conclusion does not imply independent semantic information in the name. The semantic normal form is not necessarily the vocabulary in which the system reports its conclusions. Two materially different instances so far: constructor law and operand structure beneath a derived constructor tag; diagnostic and obligation occurrence classes beneath a derived verdict status."
+    },
+    "witnessStrength": {
+      "$comment": "What each shape of witness may and may not ratify. The retention criterion says a distinction becomes unexpressible when EXACTLY the candidate is erased; only one shape of witness establishes that.",
+      "single": "A holding 1-coordinate witness ratifies PRIMITIVE COORDINATE STANDING: erasing exactly this coordinate destroys a distinction an independently grounded cause requires.",
+      "minimalMultiple": "A holding minimal >1-coordinate witness proves the SET is a necessary separating set, and — because checkWitness raises NOT_MINIMAL when any member alone already collides the stimuli — positively establishes that NO MEMBER separates alone. Acceptance and disqualification are the same fact. It must never ratify any member individually. What it leaves open is the factorization, and a 2-set pairing a candidate TAG with its branch PAYLOAD is evidence the present factorization may be non-orthogonal, not a successful tag verdict.",
+      "consequence": "`primitiveRatified` and `interactionProven` are separate in the code, `verdictDrift` refuses a `witnessed` verdict supported only by a multi-coordinate set, and the coordinates in that position are owned by subtraction-stage2-interaction.json rather than counted as ratified."
+    },
+    "threeLayers": {
+      "$comment": "The layers a candidate can belong to. Confusing any two of them has now produced a defect in both directions, so the separation is recorded rather than remembered.",
+      "semanticDistinction": "something the authority genuinely distinguishes",
+      "encodingFactorization": "the coordinates chosen to represent that distinction",
+      "reportingVocabulary": "names derived from those facts for external consumption",
+      "observedFailures": [
+        "A required NAME need not be primitive: `admissible | illegal | unproven` is a pure function of the diagnostic and obligation occurrence lists (judgment.ts), so the vocabulary is authoritative while carrying no independent semantic degree of freedom.",
+        "A schema can MULTIPLY one fact into cross-term coordinates: 13 discriminator member-absence candidates were three holder-presence facts.",
+        "A schema can also SPLIT one irreducible semantic object across several coordinates, none of which deserves primitive standing by itself — the inverse problem, and the one a minimal multi-coordinate witness reveals."
+      ],
+      "principle": "A semantic distinction can be irreducible while every coordinate in its current encoding is reducible. And: a reporting vocabulary may be AUTHORITATIVE without being PRIMITIVE — authority to name a conclusion does not imply independent semantic information in the name."
     }
   },
   "closeConditions": [

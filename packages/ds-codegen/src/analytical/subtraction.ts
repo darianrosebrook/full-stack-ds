@@ -194,15 +194,32 @@ export function checkSubtraction(file = SUBTRACTION_FILE, ledger = loadSubtracti
  * This is the live half of the ledger's honesty, and it is keyed to the FROZEN
  * basis rather than to the census: it never asks what the kernel contains, only
  * whether each verdict this experiment recorded has actually taken effect. A
- * `witnessed` coordinate must really be ratified; a coordinate ruled out must
+ * `witnessed` coordinate must really be ratified — by a SINGLE-coordinate
+ * witness, since a minimal multi-coordinate one proves the opposite about each
+ * member; a coordinate ruled out must
  * really be gone; a coordinate that quietly earned a witness must not still be
  * recorded as unresolved.
  */
-export function verdictDrift(ledger: SubtractionLedger, live: Set<string>, ratified: Set<string>): string[] {
+export function verdictDrift(
+  ledger: SubtractionLedger,
+  live: Set<string>,
+  /** PRIMITIVE ratification only: a holding single-coordinate witness. */
+  ratified: Set<string>,
+  /** Coordinates whose only support is a minimal multi-coordinate witness. */
+  interactionOnly: ReadonlySet<string> = new Set(),
+): string[] {
   const out: string[] = [];
   for (const id of ledger.basis.candidates) {
     const d = ledger.verdicts[id]?.disposition ?? "unresolved";
-    if (d === "witnessed" && !ratified.has(id)) out.push(`${id}: recorded witnessed, but no holding witness ratifies it`);
+    if (d === "witnessed" && !ratified.has(id)) {
+      // Two different failures needing different work: author a witness, versus
+      // resolve a factorization the harness has already shown is unsettled.
+      out.push(
+        interactionOnly.has(id)
+          ? `${id}: recorded witnessed, but its only support is a minimal multi-coordinate witness — that proves the SET separates and that this coordinate alone does not, so the factorization is open, not the standing`
+          : `${id}: recorded witnessed, but no holding witness ratifies it`,
+      );
+    }
     if ((d === "not-yet-admitted" || d === "representation-artifact") && live.has(id)) {
       out.push(`${id}: recorded ${d}, but the kernel still carries it`);
     }

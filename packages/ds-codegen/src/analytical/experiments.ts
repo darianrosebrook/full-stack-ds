@@ -39,7 +39,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { loadCensus } from "./census.js";
-import { checkWitness, FIXTURES_DIR, loadOracle, loadWitnesses, ratifiedSet } from "./necessity.js";
+import { checkWitness, FIXTURES_DIR, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { RETAINING } from "./subtraction.js";
 
 export interface ExperimentBasis {
@@ -102,6 +102,11 @@ export interface Orphan {
  * whichever slice admitted the coordinate opens a basis that takes
  * responsibility for adjudicating it.
  *
+ * Ratification here means PRIMITIVE ratification — a holding single-coordinate
+ * witness. A coordinate supported only by a minimal multi-coordinate witness has
+ * had the opposite established about it (neither member separates alone), so it
+ * is not ratified and must be owned by an experiment like anything else.
+ *
  * Three accounting modes, not two: ratified by a witness, owed a decision, or
  * decided as required derived vocabulary — a name external authority governs
  * that carries no independent semantic degree of freedom. The third is the only
@@ -110,7 +115,7 @@ export interface Orphan {
 export function orphanedCoordinates(bases: ExperimentBasis[] = loadBases()): Orphan[] {
   const kernel = loadCensus();
   const oracle = loadOracle();
-  const ratified = ratifiedSet(loadWitnesses().witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+  const ratified = primitiveRatified(loadWitnesses().witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
   // Ownership is unresolved responsibility. A basis that has already decided a
   // coordinate is not on the hook for it a second time, so its reappearance in
   // the kernel is an orphan until some experiment reopens it.

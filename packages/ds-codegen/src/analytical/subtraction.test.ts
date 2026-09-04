@@ -160,6 +160,28 @@ describe("a verdict must be true of the live tree, or it is a story about it", (
   });
 });
 
+describe("a witnessed verdict means a SINGLE-coordinate witness", () => {
+  const v = (d: string) => ({ "a.b": { disposition: d as never, reason: "r" }, "c.d": { disposition: "unresolved" as const } });
+
+  it("refuses a witnessed verdict whose only support is a minimal multi-coordinate set", () => {
+    // Without this the pair pass could produce verdicts that contradict the
+    // retention policy sitting beside them in the same file.
+    const drift = verdictDrift(ledgerOf({ verdicts: v("witnessed") }), new Set(["a.b"]), new Set(), new Set(["a.b"]));
+    expect(drift).toEqual([
+      "a.b: recorded witnessed, but its only support is a minimal multi-coordinate witness — that proves the SET separates and that this coordinate alone does not, so the factorization is open, not the standing",
+    ]);
+  });
+
+  it("distinguishes that from having no witness at all, because they need different work", () => {
+    const drift = verdictDrift(ledgerOf({ verdicts: v("witnessed") }), new Set(["a.b"]), new Set(), new Set());
+    expect(drift).toEqual(["a.b: recorded witnessed, but no holding witness ratifies it"]);
+  });
+
+  it("accepts it when a single-coordinate witness ratifies", () => {
+    expect(verdictDrift(ledgerOf({ verdicts: v("witnessed") }), new Set(["a.b"]), new Set(["a.b"]), new Set())).toEqual([]);
+  });
+});
+
 describe("constructor existence is governed separately from coordinate necessity", () => {
   const kinds = () => Derivation.options.map((o) => o.shape.kind.value as string).sort();
 

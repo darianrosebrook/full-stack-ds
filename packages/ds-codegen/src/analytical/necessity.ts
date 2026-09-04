@@ -398,11 +398,51 @@ export function loadCensusSnapshot(file = CENSUS_STAGE1_FILE): { derivedFrom: st
   return JSON.parse(fs.readFileSync(file, "utf-8")) as { derivedFrom: string; coordinates: Coordinate[] };
 }
 
-/** Kernel coordinates ratified by the given (already checked) witnesses. */
-export function ratifiedSet(witnesses: Witness[]): Set<string> {
+/**
+ * Coordinates a holding SINGLE-coordinate witness ratifies.
+ *
+ * This is the only evidence that meets the retention criterion as written:
+ * erasing exactly this coordinate destroys a distinction an independently
+ * grounded cause requires. Nothing else confers primitive standing.
+ */
+export function primitiveRatified(witnesses: Witness[]): Set<string> {
   const out = new Set<string>();
-  for (const w of witnesses) for (const c of w.coordinates) out.add(c);
+  for (const w of witnesses) if (w.coordinates.length === 1) out.add(w.coordinates[0]);
   return out;
+}
+
+/**
+ * Minimal separating SETS of more than one coordinate, and the coordinates in
+ * them — a strictly weaker claim that must not be mistaken for the above.
+ *
+ * A holding 2-set is guaranteed minimal: `checkWitness` raises NOT_MINIMAL when
+ * either coordinate alone already collides the stimuli. So such a witness
+ * proves that the semantic distinction is real AND that neither coordinate
+ * carries it alone. What remains open is the factorization: whether each is
+ * separately primitive, whether one is derivable from the other, or whether the
+ * schema split one irreducible semantic object across two mutually dependent
+ * coordinates.
+ *
+ * A semantic distinction can be irreducible while every coordinate in its
+ * current encoding is reducible. That is the inverse of the cross-term problem,
+ * and this function is what keeps the two apart.
+ */
+export function interactionProven(witnesses: Witness[]): { sets: string[][]; coordinates: Set<string> } {
+  const sets = witnesses.filter((w) => w.coordinates.length > 1).map((w) => [...w.coordinates]);
+  const coordinates = new Set<string>();
+  for (const s of sets) for (const c of s) coordinates.add(c);
+  return { sets, coordinates };
+}
+
+/**
+ * Coordinates whose ONLY support is membership in a multi-coordinate witness.
+ *
+ * Not ratified, and not unaccounted either: their distinction is proven, only
+ * its factorization is open. They are the population an interaction audit owns.
+ */
+export function interactionOnly(witnesses: Witness[]): string[] {
+  const primitive = primitiveRatified(witnesses);
+  return [...interactionProven(witnesses).coordinates].filter((c) => !primitive.has(c)).sort();
 }
 
 const pairId = (leaf: string, a: string, b: string) => `${leaf}:${a}~${b}`;

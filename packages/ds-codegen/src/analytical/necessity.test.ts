@@ -34,7 +34,8 @@ import {
   loadRemovals,
   loadWitnesses,
   outcomeFrom,
-  ratifiedSet,
+  primitiveRatified,
+  interactionOnly,
   resolveSide,
   type Witness,
 } from "./necessity.js";
@@ -79,7 +80,22 @@ const removedByVerdict = new Set(
     .filter(([, v]) => v.disposition === "representation-artifact" || v.disposition === "not-yet-admitted")
     .map(([id]) => id),
 );
-const ratifiedIds = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+const holding = witnesses.filter((w) => checkWitness(w, kernel, oracle).ok);
+/**
+ * STANDING: a holding single-coordinate witness. The only evidence that meets
+ * the retention criterion — erasing exactly this coordinate destroys the
+ * distinction.
+ */
+const ratifiedIds = primitiveRatified(holding);
+/** Supported only by a minimal multi-coordinate witness: distinction proven, factorization open. */
+const interactionIds = new Set(interactionOnly(holding));
+/**
+ * ACCOUNTING over the FROZEN stage-1 ledger: any holding witness. Stage 1.5
+ * closed under the older rule, and re-scoring its coordinates from outside it
+ * would rewrite a finished experiment's result. The newer rule reaches them
+ * through a bounded audit basis instead.
+ */
+const stage1Accounted = new Set([...ratifiedIds, ...interactionIds]);
 
 const count = (cs: Coordinate[]) => ({
   leaves: cs.filter((c) => c.kind === "leaf").length,
@@ -154,7 +170,7 @@ describe("C2 — every witness holds", () => {
 });
 
 describe("C1 — coverage: every kernel coordinate is ratified", () => {
-  const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+  const ratified = primitiveRatified(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
   it("every leaf and member pair of the kernel has a holding witness", () => {
     const missing = kernel
       .filter(isCoordinate)
@@ -433,8 +449,54 @@ describe("C3 — the harness is falsified", () => {
   });
 });
 
+describe("C1b — a minimal multi-coordinate witness is weaker evidence than a single one", () => {
+  /**
+   * The claim being separated. A holding 2-set proves:
+   *
+   *     erase c1        -> distinction remains
+   *     erase c2        -> distinction remains
+   *     erase c1 + c2   -> distinction disappears
+   *
+   * so it establishes that the SET is a necessary separating set, and — via the
+   * NOT_MINIMAL rule — positively establishes that neither member separates
+   * alone. Reading that as "each member has primitive standing" inverts it.
+   */
+  it("no coordinate gets standing from a multi-coordinate witness alone", () => {
+    const primitive = primitiveRatified(holding);
+    for (const id of interactionOnly(holding)) {
+      expect(primitive.has(id), `${id} has standing but only a multi-coordinate witness supports it`).toBe(false);
+    }
+  });
+
+  it("every multi-coordinate witness the harness accepts is minimal, which is what makes it weaker", () => {
+    // If a member alone already collided the stimuli, checkWitness would have
+    // raised NOT_MINIMAL. So acceptance IS the proof that neither separates
+    // alone — the evidence and the disqualification are the same fact.
+    for (const w of holding.filter((x) => x.coordinates.length > 1)) {
+      const coords = w.coordinates.map((id) => kernel.find((c) => c.id === id)!);
+      expect(coords.every(Boolean), `${w.coordinates.join(" + ")} names an unknown coordinate`).toBe(true);
+      const a = resolveSide(w.a, oracle).fixture;
+      const b = resolveSide(w.b, oracle).fixture;
+      for (const c of coords) {
+        expect(collides(a, b, c), `${c.id} alone already separates, so the set is not minimal`).toBe(false);
+      }
+    }
+  });
+
+  it("the interaction population is owned by an experiment, not silently accounted", () => {
+    // The audit basis exists precisely so these are questions rather than
+    // assumptions. If it were deleted they would become orphans, which is the
+    // invariant refusing to let the population disappear quietly.
+    const owned = new Set(loadBases().flatMap((b) => b.candidates));
+    for (const id of interactionOnly(holding)) {
+      expect(owned.has(id), `${id} is interaction-only and no basis owns it`).toBe(true);
+    }
+  });
+});
+
 describe("C4 — every stage-1 coordinate is dispositioned exactly once; the kernel equals the ratified set", () => {
-  const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+  // Accounting, not standing: see the note on `stage1Accounted`.
+  const ratified = stage1Accounted;
   const dispositions = stage1.coordinates.map((c) => [c, disposition(c, ratified, kernelIds, removals)] as const);
 
   it("every stage-1 coordinate is ratified, not-yet-admitted, or a name reference", () => {
@@ -512,12 +574,13 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
     // a `representation-artifact` still present would show up as a surplus here.
     const expected = [...new Set([...ratified, ...pendingIds])].filter((id) => !removedByVerdict.has(id)).sort();
     expect(live).toEqual(expected);
-    // Membership, not ownership: a candidate whose verdict is `witnessed` is
-    // both in the basis and ratified, which is one of the outcomes the basis
-    // exists to reach. What must never happen is being ratified while still
-    // OWED a decision.
+    // Membership is not ownership, and accounting is not standing. A candidate
+    // whose verdict is `witnessed` is both in a basis and ratified, which is one
+    // of the outcomes a basis exists to reach; an interaction-only coordinate is
+    // historically accounted AND owed an audit, which is that audit's premise.
+    // What must never coexist is PRIMITIVE STANDING and an open obligation.
     const stillOwed = new Set(loadBases().flatMap((b) => b.unresolved));
-    expect([...ratified].filter((id) => stillOwed.has(id))).toEqual([]);
+    expect([...ratifiedIds].filter((id) => stillOwed.has(id))).toEqual([]);
   });
   it("every ratified stage-1 coordinate resolves to a kernel coordinate that exists", () => {
     for (const [c, d] of dispositions) {
@@ -537,7 +600,7 @@ describe("C5 — D6: capabilities are primitive; scale labels are derived aliase
     expect(removals.factorized["field.scale"].aliases).toEqual([["ratio", "count"]]);
   });
   it("every stage-1 scale distinction is ratified through a capability coordinate, except the alias", () => {
-    const ratified = ratifiedSet(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
+    const ratified = primitiveRatified(witnesses.filter((w) => checkWitness(w, kernel, oracle).ok));
     const pairs = stage1.coordinates.filter((c) => c.kind === "member-pair" && c.leaf === "field.scale");
     expect(pairs).toHaveLength(28);
     const unratified = pairs.map((c) => [c.id, disposition(c, ratified, kernelIds, removals)] as const).filter(([, d]) => d.state !== "ratified");

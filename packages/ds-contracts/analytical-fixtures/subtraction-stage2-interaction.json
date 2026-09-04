@@ -1,0 +1,55 @@
+{
+  "$comment": "AUDIT of coordinates whose only ratification comes from a minimal MULTI-coordinate witness. A holding 2-set is guaranteed minimal — checkWitness raises NOT_MINIMAL when either coordinate alone already collides the stimuli — so for every coordinate here the harness has positively established that erasing it ALONE does not destroy the distinction. That is the retention criterion failing, and `ratifiedSet` was reading it as passing. What such a witness does prove is that the SEMANTIC DISTINCTION is real; what stays open is the factorization. The earlier witness record is deliberately NOT altered: stage 1.5 adjudicated under the older rule and closed, and rewriting a finished experiment's result from outside it is the thing this slice refuses everywhere else. The question is asked here instead.",
+  "spec": "REL-VIEW-ALGEBRA-01",
+  "policyRef": "subtraction-stage2.json#adjudicationPolicy",
+  "dispositions": {
+    "unresolved": "not yet adjudicated; the close condition is zero of these",
+    "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
+    "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it",
+    "required-derived-vocabulary": "no independent semantic degree of freedom — it is wholly derivable from other semantic facts — but external authority governs the NAME, so the coordinate legitimately stays in the kernel. The only decided verdict that does not expect the coordinate to disappear."
+  },
+  "outcomes": {
+    "$comment": "The three ways an entry can resolve. Naming them in advance keeps the audit from defaulting to the most convenient one.",
+    "bothReEarned": "each coordinate has its own holding single-coordinate falsifier; the 2-set was incidental, and both are primitive",
+    "onePrimitiveOneDerived": "one carrier holds the degree of freedom and the other is derivable from it — required derived vocabulary, or a representation artifact",
+    "compositeePrimitive": "neither is primitive in its current form: the semantic primitive is a composite the schema decomposed into two mutually dependent coordinates. A semantic distinction can be irreducible while every coordinate in its current encoding is reducible"
+  },
+  "basis": {
+    "frozenAt": "c1e9d533",
+    "reason": "the commit at which primitive ratification was separated from interaction evidence, which is what made this population visible; measured, not enumerated by hand",
+    "count": 5,
+    "candidates": [
+      "assertion.kind",
+      "assertion.kind:aggregate~ratio-comparison",
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+      "field.additivity.semi-additive.nonAdditiveAlong#present"
+    ]
+  },
+  "constructors": {},
+  "pairings": {
+    "assertion.kind": "assertion.aggregate.op",
+    "assertion.kind:aggregate~ratio-comparison": "assertion.aggregate.op",
+    "field.additivity.kind:additive~semi-additive": "field.additivity.semi-additive.nonAdditiveAlong#present",
+    "field.additivity.kind:semi-additive~ratio-measure": "field.additivity.semi-additive.nonAdditiveAlong#present",
+    "field.additivity.semi-additive.nonAdditiveAlong#present": "field.additivity.kind:additive~semi-additive | field.additivity.kind:semi-additive~ratio-measure"
+  },
+  "verdicts": {
+    "assertion.kind": {
+      "disposition": "unresolved"
+    },
+    "assertion.kind:aggregate~ratio-comparison": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:additive~semi-additive": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.kind:semi-additive~ratio-measure": {
+      "disposition": "unresolved"
+    },
+    "field.additivity.semi-additive.nonAdditiveAlong#present": {
+      "disposition": "unresolved"
+    }
+  }
+}
