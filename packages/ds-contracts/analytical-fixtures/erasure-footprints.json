@@ -8,7 +8,7 @@
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
     "erasureAuthorityDigest": "e2952b14e4f5554b2c8c56327d05871c41c8542fa6e766aa09813a384696c554",
-    "witnessAuthorityDigest": "0a5b5885c279efb204348634e5057315f4c7b7657a879e2f6ebdfa9b509c22e0",
+    "witnessAuthorityDigest": "707654d9e8ec6ea7ac0e5d074ed5b9cfd4e1be1b29227692b7af2665f76b7e43",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },

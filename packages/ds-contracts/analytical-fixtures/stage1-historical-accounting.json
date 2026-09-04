@@ -1,9 +1,15 @@
 {
-  "$comment": "The stage-1 accounting as the COMPLETED experiment concluded it. An INPUT to reconciliation, never a function of present support: derived from live standing plus the current exception ledger, it would lose a coordinate the moment a suspension was settled and gain one the moment new evidence arrived, and either way the past would be authored by the present. Recovered by running the historical tree's own code over the historical tree's own fixtures — see recoveredFrom — and frozen here. The three evidence classes are kept apart because they are different claims: a primitive ratification, an interaction-only 2-set, and representation in a not-refuted closure are not synonyms, and their union is an accounting figure, not a standing figure.",
+  "$comment": "The stage-1 accounting AND its dispositions, as the tree at `recoveredFrom.commit` concluded them. An INPUT to reconciliation, never a function of present support: derived from live standing plus the current exception ledger, it would lose a coordinate the moment a suspension was settled and gain one the moment new evidence arrived, and either way the past would be authored by the present. `dispositions` is the historical CONCLUSION and is what a reader should quote; `accounted`, `byEvidenceClass` and `kernelIds` are the inputs that conclusion was reached from. Recomputing the conclusion from those inputs through today's `disposition`, `removals` and kernel would reintroduce the same defect one level up — a later edit to a leaf mapping or a factorization can move which original coordinate reads as ratified, and change its `via`, while every recovered input stays byte-identical. The three evidence classes are kept apart because they are different claims: a primitive ratification, an interaction-only 2-set, and representation in a not-refuted closure are not synonyms, and their union is an accounting figure, not a standing figure.",
   "recoveredFrom": {
     "commit": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
-    "why": "the last tree before ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01 changed the erasure operations, so its witnesses were still scored by the instrument stage 1 concluded under",
-    "procedure": "git archive <commit> extracted to a scratch tree; that tree's necessity.ts and closure.ts were imported and run over that tree's analytical-fixtures. No module or file from the present tree was read.",
+    "what": "A PRE-CODOMAIN ACCOUNTING CHECKPOINT. This is the last tree before ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01 changed the erasure operations, so its witnesses were scored by the instrument in force immediately before that change.",
+    "nonClaim": "It is NOT established that this is the instrument, or the evidence-class scheme, under which the original stage-1 experiment closed. The tally it reproduces (81/177/10) agrees with the recorded stage-1 numbers, and agreement of a tally is not proof that the two epochs are interchangeable — `closures-stage2.json` and the primitive/interaction/closure classes both postdate stage 1. Read this as the checkpoint it is; a stronger claim needs the migration lineage between the two epochs, which is not recorded here.",
+    "procedure": "git archive <commit> extracted to a scratch tree; that tree's census.ts, closure.ts and necessity.ts were imported and run over that tree's analytical-fixtures. HISTORICAL PROJECT SOURCE AND DATA, EXECUTED UNDER THE DEPENDENCY ENVIRONMENT AVAILABLE NOW: the extracted tree ships no node_modules, so the current worktree's installed packages were linked in to resolve `ajv` and `zod`. Their identities are recorded below. No project source or fixture from the present tree was read.",
+    "dependencyEnvironment": {
+      "node": "v22.19.0",
+      "ajv": "8.20.0",
+      "zod": "4.5.4"
+    },
     "inputs": {
       "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
       "closures-stage2.json": "a26ac911924f230e803871691e0ee60ecf60cf6ee2ab03771add0099aa0a7780",
@@ -135,6 +141,1862 @@
     "relation.derivedBy.project.keep#incidence",
     "relation.derivedBy.project.keep#order",
     "relation.grain"
+  ],
+  "kernelIds": [
+    "assertion.aggregate.along",
+    "assertion.aggregate.along#arity",
+    "assertion.aggregate.along#incidence",
+    "assertion.aggregate.along#order",
+    "assertion.aggregate.along#present",
+    "assertion.aggregate.field",
+    "assertion.aggregate.field#incidence",
+    "assertion.aggregate.nulls",
+    "assertion.aggregate.nulls:as-observed~<absent>",
+    "assertion.aggregate.nulls:as-zero~<absent>",
+    "assertion.aggregate.nulls:as-zero~as-observed",
+    "assertion.aggregate.nulls:exclude~<absent>",
+    "assertion.aggregate.nulls:exclude~as-observed",
+    "assertion.aggregate.nulls:exclude~as-zero",
+    "assertion.aggregate.op",
+    "assertion.aggregate.op:count~min",
+    "assertion.aggregate.op:mean~count",
+    "assertion.aggregate.op:mean~min",
+    "assertion.aggregate.op:sum~count",
+    "assertion.aggregate.op:sum~mean",
+    "assertion.aggregate.op:sum~min",
+    "assertion.aggregate.relation",
+    "assertion.aggregate.relation#incidence",
+    "assertion.aggregate.uncertainty",
+    "assertion.kind",
+    "assertion.kind:aggregate~ratio-comparison",
+    "assertion.ratio-comparison.field",
+    "assertion.ratio-comparison.field#incidence",
+    "assertion.ratio-comparison.relation",
+    "assertion.ratio-comparison.relation#incidence",
+    "evidence.grainWitness",
+    "evidence.grainWitness#arity",
+    "evidence.grainWitness#incidence",
+    "evidence.grainWitness#order",
+    "evidence.grainWitness#present",
+    "evidence.rows.*#present",
+    "field.additivity#present",
+    "field.additivity.kind",
+    "field.additivity.kind:additive~non-additive",
+    "field.additivity.kind:additive~ratio-measure",
+    "field.additivity.kind:additive~semi-additive",
+    "field.additivity.kind:non-additive~ratio-measure",
+    "field.additivity.kind:semi-additive~non-additive",
+    "field.additivity.kind:semi-additive~ratio-measure",
+    "field.additivity.semi-additive.nonAdditiveAlong",
+    "field.additivity.semi-additive.nonAdditiveAlong#arity",
+    "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+    "field.additivity.semi-additive.nonAdditiveAlong#order",
+    "field.base",
+    "field.cyclic",
+    "field.index",
+    "field.key",
+    "field.permits.null",
+    "field.permits.uncertainty",
+    "field.proportion",
+    "field.temporality#present",
+    "field.temporality.grain",
+    "field.temporality.grain:day~<absent>",
+    "field.temporality.grain:day~month",
+    "field.temporality.grain:month~<absent>",
+    "field.temporality.kind",
+    "field.temporality.kind:instant~interval",
+    "field.transformation",
+    "field.transformation:interval~ratio",
+    "field.transformation:nominal~interval",
+    "field.transformation:nominal~ordinal",
+    "field.transformation:nominal~ratio",
+    "field.transformation:ordinal~interval",
+    "field.transformation:ordinal~ratio",
+    "field.unit.conversions",
+    "field.unit.perRow",
+    "field.unit.units",
+    "field.whole",
+    "field.whole.perRow",
+    "field.whole.perRow#incidence",
+    "observation.null",
+    "observation.null:absent~<absent>",
+    "observation.null:absent~censored",
+    "observation.null:absent~suppressed",
+    "observation.null:censored~<absent>",
+    "observation.null:censored~suppressed",
+    "observation.null:suppressed~<absent>",
+    "observation.unit",
+    "observation.value",
+    "relation.derivedBy#present",
+    "relation.derivedBy.aggregate-to-grain.from",
+    "relation.derivedBy.aggregate-to-grain.from#incidence",
+    "relation.derivedBy.aggregate-to-grain.toGrain",
+    "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+    "relation.derivedBy.aggregate-to-grain.toGrain#order",
+    "relation.derivedBy.bin.closure",
+    "relation.derivedBy.bin.closure:left-closed~<absent>",
+    "relation.derivedBy.bin.closure:left-closed~right-closed",
+    "relation.derivedBy.bin.closure:right-closed~<absent>",
+    "relation.derivedBy.bin.field",
+    "relation.derivedBy.bin.field#incidence",
+    "relation.derivedBy.bin.from",
+    "relation.derivedBy.bin.from#incidence",
+    "relation.derivedBy.graph.edgeFrom",
+    "relation.derivedBy.graph.edgeFrom#incidence",
+    "relation.derivedBy.graph.edgeTo",
+    "relation.derivedBy.graph.edgeTo#incidence",
+    "relation.derivedBy.graph.from",
+    "relation.derivedBy.graph.from#incidence",
+    "relation.derivedBy.graph.requiresConservation",
+    "relation.derivedBy.graph.value",
+    "relation.derivedBy.graph.value#incidence",
+    "relation.derivedBy.graph.value#present",
+    "relation.derivedBy.join.cardinality",
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+    "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+    "relation.derivedBy.join.from",
+    "relation.derivedBy.join.from#incidence",
+    "relation.derivedBy.join.with",
+    "relation.derivedBy.join.with#incidence",
+    "relation.derivedBy.kind",
+    "relation.derivedBy.kind:aggregate-to-grain~bin",
+    "relation.derivedBy.kind:aggregate-to-grain~graph",
+    "relation.derivedBy.kind:aggregate-to-grain~join",
+    "relation.derivedBy.kind:aggregate-to-grain~nest",
+    "relation.derivedBy.kind:aggregate-to-grain~normalize",
+    "relation.derivedBy.kind:aggregate-to-grain~project",
+    "relation.derivedBy.kind:bin~graph",
+    "relation.derivedBy.kind:bin~normalize",
+    "relation.derivedBy.kind:bin~project",
+    "relation.derivedBy.kind:join~bin",
+    "relation.derivedBy.kind:join~graph",
+    "relation.derivedBy.kind:join~nest",
+    "relation.derivedBy.kind:join~normalize",
+    "relation.derivedBy.kind:join~project",
+    "relation.derivedBy.kind:nest~bin",
+    "relation.derivedBy.kind:nest~graph",
+    "relation.derivedBy.kind:nest~normalize",
+    "relation.derivedBy.kind:nest~project",
+    "relation.derivedBy.kind:normalize~graph",
+    "relation.derivedBy.kind:normalize~project",
+    "relation.derivedBy.kind:project~graph",
+    "relation.derivedBy.nest.from",
+    "relation.derivedBy.nest.from#incidence",
+    "relation.derivedBy.nest.levels",
+    "relation.derivedBy.nest.levels#arity",
+    "relation.derivedBy.nest.levels#incidence",
+    "relation.derivedBy.nest.levels#order",
+    "relation.derivedBy.normalize.field",
+    "relation.derivedBy.normalize.field#incidence",
+    "relation.derivedBy.normalize.from",
+    "relation.derivedBy.normalize.from#incidence",
+    "relation.derivedBy.project.from",
+    "relation.derivedBy.project.from#incidence",
+    "relation.derivedBy.project.keep",
+    "relation.derivedBy.project.keep#arity",
+    "relation.derivedBy.project.keep#incidence",
+    "relation.derivedBy.project.keep#order",
+    "relation.grain",
+    "structure.peers#present",
+    "structure.peers[]",
+    "structure.peers[]#arity",
+    "structure.peers[]#incidence",
+    "structure.peers[]#order",
+    "structure.peers[]#present"
+  ],
+  "dispositions": [
+    {
+      "coordinate": "relation.grain",
+      "state": "ratified",
+      "via": [
+        "relation.grain"
+      ]
+    },
+    {
+      "coordinate": "field.scale",
+      "state": "ratified",
+      "via": [
+        "field.transformation",
+        "field.cyclic",
+        "field.proportion",
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~ordinal",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~ordinal"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~cyclic",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~ordinal",
+        "field.cyclic"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~interval",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~interval"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~ratio",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~ratio"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~count",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~ratio"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~proportion",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~ratio",
+        "field.proportion"
+      ]
+    },
+    {
+      "coordinate": "field.scale:nominal~index",
+      "state": "ratified",
+      "via": [
+        "field.transformation:nominal~ratio",
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ordinal~cyclic",
+      "state": "ratified",
+      "via": [
+        "field.cyclic"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ordinal~interval",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~interval"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ordinal~ratio",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ordinal~count",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ordinal~proportion",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio",
+        "field.proportion"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ordinal~index",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio",
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:cyclic~interval",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~interval",
+        "field.cyclic"
+      ]
+    },
+    {
+      "coordinate": "field.scale:cyclic~ratio",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio",
+        "field.cyclic"
+      ]
+    },
+    {
+      "coordinate": "field.scale:cyclic~count",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio",
+        "field.cyclic"
+      ]
+    },
+    {
+      "coordinate": "field.scale:cyclic~proportion",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio",
+        "field.cyclic",
+        "field.proportion"
+      ]
+    },
+    {
+      "coordinate": "field.scale:cyclic~index",
+      "state": "ratified",
+      "via": [
+        "field.transformation:ordinal~ratio",
+        "field.cyclic",
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:interval~ratio",
+      "state": "ratified",
+      "via": [
+        "field.transformation:interval~ratio"
+      ]
+    },
+    {
+      "coordinate": "field.scale:interval~count",
+      "state": "ratified",
+      "via": [
+        "field.transformation:interval~ratio"
+      ]
+    },
+    {
+      "coordinate": "field.scale:interval~proportion",
+      "state": "ratified",
+      "via": [
+        "field.transformation:interval~ratio",
+        "field.proportion"
+      ]
+    },
+    {
+      "coordinate": "field.scale:interval~index",
+      "state": "ratified",
+      "via": [
+        "field.transformation:interval~ratio",
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ratio~count",
+      "state": "not-yet-admitted",
+      "reason": "ratio and count decode to the same capability state (alias)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.scale:ratio~proportion",
+      "state": "ratified",
+      "via": [
+        "field.proportion"
+      ]
+    },
+    {
+      "coordinate": "field.scale:ratio~index",
+      "state": "ratified",
+      "via": [
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:count~proportion",
+      "state": "ratified",
+      "via": [
+        "field.proportion"
+      ]
+    },
+    {
+      "coordinate": "field.scale:count~index",
+      "state": "ratified",
+      "via": [
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.scale:proportion~index",
+      "state": "ratified",
+      "via": [
+        "field.proportion",
+        "field.index"
+      ]
+    },
+    {
+      "coordinate": "field.shape",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:scalar~interval",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:scalar~set",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:scalar~distribution",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:scalar~point",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:interval~set",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:interval~distribution",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:interval~point",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:set~distribution",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:set~point",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.shape:distribution~point",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.key",
+      "state": "ratified",
+      "via": [
+        "field.key"
+      ]
+    },
+    {
+      "coordinate": "field.unit.dimension",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:currency~time",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:currency~length",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:currency~mass",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:currency~temperature",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:currency~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:time~length",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:time~mass",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:time~temperature",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:time~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:length~mass",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:length~temperature",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:length~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:mass~temperature",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:mass~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.dimension:temperature~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.unit",
+      "state": "not-yet-admitted",
+      "reason": "a single unit name is never read at stage 1; only the unit set and its conversions are",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.units",
+      "state": "ratified",
+      "via": [
+        "field.unit.units"
+      ]
+    },
+    {
+      "coordinate": "field.unit.perRow",
+      "state": "ratified",
+      "via": [
+        "field.unit.perRow"
+      ]
+    },
+    {
+      "coordinate": "field.unit.conversions",
+      "state": "ratified",
+      "via": [
+        "field.unit.conversions"
+      ]
+    },
+    {
+      "coordinate": "field.unit.rate.numerator",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:currency~time",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:currency~length",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:currency~mass",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:currency~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:currency~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:time~length",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:time~mass",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:time~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:time~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:length~mass",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:length~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:length~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:mass~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:mass~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.numerator:temperature~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:currency~time",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:currency~length",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:currency~mass",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:currency~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:currency~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:time~length",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:time~mass",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:time~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:time~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:length~mass",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:length~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:length~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:mass~temperature",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:mass~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator:temperature~dimensionless",
+      "state": "not-yet-admitted",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.kind",
+      "state": "ratified",
+      "via": [
+        "field.temporality.kind"
+      ]
+    },
+    {
+      "coordinate": "field.temporality.kind:instant~interval",
+      "state": "ratified",
+      "via": [
+        "field.temporality.kind:instant~interval"
+      ]
+    },
+    {
+      "coordinate": "field.temporality.kind:instant~duration",
+      "state": "ratified",
+      "via": [
+        "field.temporality.kind:instant~interval"
+      ]
+    },
+    {
+      "coordinate": "field.temporality.kind:interval~duration",
+      "state": "not-yet-admitted",
+      "reason": "interval and duration are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.closure",
+      "state": "not-yet-admitted",
+      "reason": "boundary membership is a stage-2 cause (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.closure:half-open~closed",
+      "state": "not-yet-admitted",
+      "reason": "boundary membership is a stage-2 cause (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.closure:half-open~open",
+      "state": "not-yet-admitted",
+      "reason": "boundary membership is a stage-2 cause (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.closure:closed~open",
+      "state": "not-yet-admitted",
+      "reason": "boundary membership is a stage-2 cause (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~minute",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~hour",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~day",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~week",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~month",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~quarter",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:second~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:minute~hour",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:minute~day",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:minute~week",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:minute~month",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:minute~quarter",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:minute~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:hour~day",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:hour~week",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:hour~month",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:hour~quarter",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:hour~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:day~week",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:day~month",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:day~quarter",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:day~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:week~month",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:week~quarter",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:week~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:month~quarter",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:month~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain:quarter~year",
+      "state": "not-yet-admitted",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.calendar",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome reads the calendar",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.order.kind",
+      "state": "not-yet-admitted",
+      "reason": "an ordinal field's order is presupposed, not read, at stage 1; ordering as a claim is stage 3 (REL_SORT_AS_RENDER_OPTION)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.order.kind:total~partial",
+      "state": "not-yet-admitted",
+      "reason": "an ordinal field's order is presupposed, not read, at stage 1; ordering as a claim is stage 3 (REL_SORT_AS_RENDER_OPTION)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.order.values",
+      "state": "not-yet-admitted",
+      "reason": "an ordinal field's order is presupposed, not read, at stage 1",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.period",
+      "state": "not-yet-admitted",
+      "reason": "a cyclic field's period is presupposed, not read, at stage 1 (the linear mean is wrong for any period)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.whole",
+      "state": "ratified",
+      "via": [
+        "field.whole"
+      ]
+    },
+    {
+      "coordinate": "field.whole.perRow",
+      "state": "ratified",
+      "via": [
+        "field.whole.perRow#incidence"
+      ]
+    },
+    {
+      "coordinate": "field.base",
+      "state": "ratified",
+      "via": [
+        "field.base"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.kind",
+      "state": "ratified",
+      "via": [
+        "field.additivity.kind"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~semi-additive",
+      "state": "ratified",
+      "via": [
+        "field.additivity.kind:additive~semi-additive"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~non-additive",
+      "state": "not-yet-admitted",
+      "reason": "additive and non-additive are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~ratio-measure",
+      "state": "ratified",
+      "via": [
+        "field.additivity.kind:additive~ratio-measure"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~non-additive",
+      "state": "ratified",
+      "via": [
+        "field.additivity.kind:additive~semi-additive"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~ratio-measure",
+      "state": "ratified",
+      "via": [
+        "field.additivity.kind:semi-additive~ratio-measure"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.kind:non-additive~ratio-measure",
+      "state": "ratified",
+      "via": [
+        "field.additivity.kind:additive~ratio-measure"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.semi-additive.nonAdditiveAlong",
+      "state": "ratified",
+      "via": [
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
+      ]
+    },
+    {
+      "coordinate": "field.additivity.ratio-measure.numerator",
+      "state": "not-yet-admitted",
+      "reason": "a rate's numerator is read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.additivity.ratio-measure.denominator",
+      "state": "not-yet-admitted",
+      "reason": "a rate's denominator is read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null",
+      "state": "ratified",
+      "via": [
+        "field.permits.null"
+      ]
+    },
+    {
+      "coordinate": "field.permits.null:absent~not-applicable",
+      "state": "not-yet-admitted",
+      "reason": "absent and not-applicable are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:absent~censored",
+      "state": "not-yet-admitted",
+      "reason": "absent and censored are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:absent~suppressed",
+      "state": "not-yet-admitted",
+      "reason": "absent and suppressed are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:absent~unknown",
+      "state": "not-yet-admitted",
+      "reason": "absent and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:absent~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "absent and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:not-applicable~censored",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and censored are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:not-applicable~suppressed",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and suppressed are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:not-applicable~unknown",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:not-applicable~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:censored~suppressed",
+      "state": "not-yet-admitted",
+      "reason": "censored and suppressed are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:censored~unknown",
+      "state": "not-yet-admitted",
+      "reason": "censored and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:censored~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "censored and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:suppressed~unknown",
+      "state": "not-yet-admitted",
+      "reason": "suppressed and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:suppressed~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "suppressed and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.null:unknown~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "unknown and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.provenance",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.provenance:observed~derived",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.provenance:observed~imputed",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.provenance:observed~layout-generated",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.provenance:derived~imputed",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.provenance:derived~layout-generated",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.provenance:imputed~layout-generated",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.permits.uncertainty",
+      "state": "ratified",
+      "via": [
+        "field.permits.uncertainty"
+      ]
+    },
+    {
+      "coordinate": "field.permits.uncertainty:none~interval",
+      "state": "not-yet-admitted",
+      "reason": "none and interval are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:none~distribution",
+      "state": "not-yet-admitted",
+      "reason": "none and distribution are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:none~measurement-error",
+      "state": "not-yet-admitted",
+      "reason": "none and measurement-error are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:none~rounded",
+      "state": "not-yet-admitted",
+      "reason": "none and rounded are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:interval~distribution",
+      "state": "not-yet-admitted",
+      "reason": "interval and distribution are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:interval~measurement-error",
+      "state": "not-yet-admitted",
+      "reason": "interval and measurement-error are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:interval~rounded",
+      "state": "not-yet-admitted",
+      "reason": "interval and rounded are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:distribution~measurement-error",
+      "state": "not-yet-admitted",
+      "reason": "distribution and measurement-error are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:distribution~rounded",
+      "state": "not-yet-admitted",
+      "reason": "distribution and rounded are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.uncertainty:measurement-error~rounded",
+      "state": "not-yet-admitted",
+      "reason": "measurement-error and rounded are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.from.relation",
+      "state": "reference"
+    },
+    {
+      "coordinate": "relationship.from.field",
+      "state": "reference"
+    },
+    {
+      "coordinate": "relationship.to.relation",
+      "state": "reference"
+    },
+    {
+      "coordinate": "relationship.to.field",
+      "state": "reference"
+    },
+    {
+      "coordinate": "relationship.cardinality",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.cardinality:one-to-one~one-to-many",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.cardinality:one-to-one~many-to-one",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.cardinality:one-to-one~many-to-many",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.cardinality:one-to-many~many-to-one",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.cardinality:one-to-many~many-to-many",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "relationship.cardinality:many-to-one~many-to-many",
+      "state": "not-yet-admitted",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "assertion.kind",
+      "state": "ratified",
+      "via": [
+        "assertion.kind"
+      ]
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~ratio-comparison",
+      "state": "ratified",
+      "via": [
+        "assertion.kind:aggregate~ratio-comparison"
+      ]
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~rollup",
+      "state": "not-yet-admitted",
+      "reason": "aggregate and rollup are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "assertion.kind:ratio-comparison~rollup",
+      "state": "ratified",
+      "via": [
+        "assertion.kind:aggregate~ratio-comparison"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.relation",
+      "state": "reference"
+    },
+    {
+      "coordinate": "assertion.aggregate.field",
+      "state": "reference"
+    },
+    {
+      "coordinate": "assertion.aggregate.op",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:sum~mean",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:sum~mean"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:sum~count",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:sum~count"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:sum~min",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:sum~min"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:sum~max",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:sum~min"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:mean~count",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:mean~count"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:mean~min",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:mean~min"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:mean~max",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:mean~min"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:count~min",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:count~min"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:count~max",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:count~min"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.op:min~max",
+      "state": "not-yet-admitted",
+      "reason": "min and max are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "assertion.aggregate.along",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.along#incidence"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.nulls",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.nulls"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.nulls:exclude~as-zero",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.nulls:exclude~as-observed",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.nulls:exclude~as-observed"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.nulls:as-zero~as-observed",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.nulls:as-zero~as-observed"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.uncertainty",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.uncertainty"
+      ]
+    },
+    {
+      "coordinate": "assertion.aggregate.uncertainty:propagate~drop",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.uncertainty"
+      ]
+    },
+    {
+      "coordinate": "assertion.ratio-comparison.relation",
+      "state": "reference"
+    },
+    {
+      "coordinate": "assertion.ratio-comparison.field",
+      "state": "reference"
+    },
+    {
+      "coordinate": "assertion.rollup.relation",
+      "state": "reference"
+    },
+    {
+      "coordinate": "assertion.rollup.field",
+      "state": "reference"
+    },
+    {
+      "coordinate": "assertion.rollup.toGrain",
+      "state": "not-yet-admitted",
+      "reason": "no stage-1 outcome depends on the target grain; without it a rollup is an aggregate (assertion.kind rollup merged into aggregate)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "assertion.rollup.op",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op"
+      ]
+    },
+    {
+      "coordinate": "assertion.rollup.op:sum~mean",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:sum~mean"
+      ]
+    },
+    {
+      "coordinate": "assertion.rollup.op:sum~rederive",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:sum~count"
+      ]
+    },
+    {
+      "coordinate": "assertion.rollup.op:mean~rederive",
+      "state": "ratified",
+      "via": [
+        "assertion.aggregate.op:mean~count"
+      ]
+    },
+    {
+      "coordinate": "observation.value",
+      "state": "ratified",
+      "via": [
+        "observation.value"
+      ]
+    },
+    {
+      "coordinate": "observation.unit",
+      "state": "ratified",
+      "via": [
+        "observation.unit"
+      ]
+    },
+    {
+      "coordinate": "observation.null",
+      "state": "ratified",
+      "via": [
+        "observation.null"
+      ]
+    },
+    {
+      "coordinate": "observation.null:absent~not-applicable",
+      "state": "not-yet-admitted",
+      "reason": "absent and not-applicable are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:absent~censored",
+      "state": "ratified",
+      "via": [
+        "observation.null:absent~censored"
+      ]
+    },
+    {
+      "coordinate": "observation.null:absent~suppressed",
+      "state": "not-yet-admitted",
+      "reason": "absent and suppressed are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:absent~unknown",
+      "state": "not-yet-admitted",
+      "reason": "absent and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:absent~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "absent and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:not-applicable~censored",
+      "state": "ratified",
+      "via": [
+        "observation.null:absent~censored"
+      ]
+    },
+    {
+      "coordinate": "observation.null:not-applicable~suppressed",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and suppressed are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:not-applicable~unknown",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:not-applicable~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "not-applicable and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:censored~suppressed",
+      "state": "ratified",
+      "via": [
+        "observation.null:absent~censored"
+      ]
+    },
+    {
+      "coordinate": "observation.null:censored~unknown",
+      "state": "ratified",
+      "via": [
+        "observation.null:absent~censored"
+      ]
+    },
+    {
+      "coordinate": "observation.null:censored~missing-after-join",
+      "state": "ratified",
+      "via": [
+        "observation.null:absent~censored"
+      ]
+    },
+    {
+      "coordinate": "observation.null:suppressed~unknown",
+      "state": "not-yet-admitted",
+      "reason": "suppressed and unknown are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:suppressed~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "suppressed and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.null:unknown~missing-after-join",
+      "state": "not-yet-admitted",
+      "reason": "unknown and missing-after-join are merged in the kernel",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.provenance",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.provenance:observed~derived",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.provenance:observed~imputed",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.provenance:observed~layout-generated",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.provenance:derived~imputed",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.provenance:derived~layout-generated",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.provenance:imputed~layout-generated",
+      "state": "not-yet-admitted",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:none~interval",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:none~distribution",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:none~measurement-error",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:none~rounded",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:interval~distribution",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:interval~measurement-error",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:interval~rounded",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:distribution~measurement-error",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:distribution~rounded",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind:measurement-error~rounded",
+      "state": "not-yet-admitted",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.error",
+      "state": "not-yet-admitted",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.low",
+      "state": "not-yet-admitted",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.high",
+      "state": "not-yet-admitted",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.level",
+      "state": "not-yet-admitted",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "evidence.grainWitness",
+      "state": "ratified",
+      "via": [
+        "evidence.grainWitness#present"
+      ]
+    }
   ],
   "stage1Dispositions": {
     "ratified": 81,

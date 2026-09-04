@@ -24,8 +24,9 @@ import type { Coordinate } from "./census.js";
 import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity.js";
 import { DERIVATION_DIAG } from "./codes.js";
 import { type BoundaryFinding, checkDerivations } from "./derivation.js";
-import { canonical, collides, erase, eraseAll } from "./quotient.js";
-import { markersIn } from "./quotient-image.js";
+import { type ErasurePlan, resolveSlots, type StructuralLocator } from "./erasure-plan.js";
+import { canonical, collides, erase, eraseAll, planFor } from "./quotient.js";
+import { loadQuotientValidator, markersIn } from "./quotient-image.js";
 import type { RelationalStructure } from "./relation-model.js";
 import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
 
@@ -249,11 +250,32 @@ export type WitnessFailure =
   | "TOO_MANY_COORDINATES"
   | "UNKNOWN_COORDINATE"
   | "IDENTICAL_STIMULI"
-  | "ERASURE_NOT_ISOLATED";
+  | "ERASURE_NOT_ISOLATED"
+  /**
+   * The isolation obligation could not be evaluated at all.
+   *
+   * Distinct from `ERASURE_NOT_ISOLATED`, which says the erasure was shown to
+   * damage something. This says nothing was shown either way, and it is a
+   * failure because a witness rests on the claim that its collision is
+   * attributable to its coordinate — an unevaluated obligation leaves that
+   * claim unsupported rather than supported by default.
+   */
+  | "ERASURE_ISOLATION_UNEVALUATED";
 
 export interface WitnessCheck {
   ok: boolean;
   failures: { code: WitnessFailure; detail: string }[];
+  /**
+   * Every isolation obligation this witness carries, and how each was settled.
+   *
+   * Part of the RESULT, not a module-level tally. Two things follow. Admission
+   * can see the difference between a discharged obligation and an unevaluated
+   * one — which it could not while the check returned `string | undefined` and
+   * an inapplicable comparison read as a clean one. And the record identifies
+   * the witness, the side, the stimulus and the proof, where a set of
+   * coordinate ids identified none of them.
+   */
+  isolation: IsolationRecord[];
   a: ResolvedSide;
   b: ResolvedSide;
 }
@@ -263,10 +285,16 @@ export interface WitnessCheck {
  * differ, erasing the named coordinate(s) makes them collide, and for a 2-set
  * neither single coordinate suffices (invariant 7).
  */
-export function checkWitness(w: Witness, census: Coordinate[], oracle: Oracle): WitnessCheck {
+export function checkWitness(
+  w: Witness,
+  census: Coordinate[],
+  oracle: Oracle,
+  isolate: (fixture: Fixture, c: Coordinate) => IsolationResult = (f, c) => checkIsolation(f, c),
+): WitnessCheck {
   const a = resolveSide(w.a, oracle);
   const b = resolveSide(w.b, oracle);
   const failures: WitnessCheck["failures"] = [];
+  const isolation: IsolationRecord[] = [];
   const byId = new Map(census.map((c) => [c.id, c]));
   if (w.coordinates.length > 2) {
     failures.push({ code: "TOO_MANY_COORDINATES", detail: `${w.coordinates.length} coordinates; the stop condition is 2` });
@@ -285,7 +313,7 @@ export function checkWitness(w: Witness, census: Coordinate[], oracle: Oracle): 
     failures.push({ code: "IDENTICAL_STIMULI", detail: "the two stimuli are the same representation" });
   }
   if (sameOutcome(a.outcome, b.outcome)) failures.push({ code: "SAME_OUTCOME", detail: JSON.stringify(a.outcome) });
-  if (failures.length > 0 || coords.length !== w.coordinates.length) return { ok: false, failures, a, b };
+  if (failures.length > 0 || coords.length !== w.coordinates.length) return { ok: false, failures, isolation, a, b };
   if (canonical(eraseAll(a.fixture, coords)) !== canonical(eraseAll(b.fixture, coords))) {
     failures.push({ code: "NO_COLLISION", detail: `erasing ${w.coordinates.join(" + ")} does not identify the stimuli` });
   }
@@ -296,11 +324,17 @@ export function checkWitness(w: Witness, census: Coordinate[], oracle: Oracle): 
   }
   for (const [label, side] of [["a", a], ["b", b]] as const) {
     for (const c of coords) {
-      const violation = isolationViolation(side.fixture, c);
-      if (violation) failures.push({ code: "ERASURE_NOT_ISOLATED", detail: `${label}/${c.id}: ${violation}` });
+      const result = isolate(side.fixture, c);
+      isolation.push({ side: label, coordinate: c.id, fixture: side.fixture.id, result });
+      // An UNEVALUATED obligation fails the witness. It is not a refutation of
+      // the erasure and it is not evidence of damage — it is the absence of the
+      // support the witness claims to have, and admitting it would be exactly
+      // the collapse this record exists to end.
+      if (result.state === "violated") failures.push({ code: "ERASURE_NOT_ISOLATED", detail: `${label}/${c.id}: ${result.detail}` });
+      if (result.state === "unevaluated") failures.push({ code: "ERASURE_ISOLATION_UNEVALUATED", detail: `${label}/${c.id}: ${result.reason}` });
     }
   }
-  return { ok: failures.length === 0, failures, a, b };
+  return { ok: failures.length === 0, failures, isolation, a, b };
 }
 
 /**
@@ -328,15 +362,64 @@ function terminalPaths(node: unknown, path = "", out: Set<string> = new Set()): 
 }
 
 /**
- * Coordinates whose isolation check could not be run, because the engine has
- * nothing to say about their image.
+ * How the isolation obligation was DISCHARGED, named rather than inferred.
  *
- * A module-level record rather than a return value: `isolationViolation`
- * answers a yes/no question and "not asked" is neither. Left silent it would
- * read as "no violation", which is how a guard stops guarding without anyone
- * noticing — so the harness reports the set instead.
+ * The obligation is that erasing a coordinate removes one degree of freedom.
+ * There is more than one way to establish that, and which one was used is part
+ * of the result — an empty failure list is not a proof, it is the absence of a
+ * refutation, and the two were indistinguishable while this returned
+ * `string | undefined`.
+ *
+ * - `unchanged`: the erasure is a no-op on this stimulus, so there is nothing
+ *   it could have damaged. The `reference` kind is defined this way.
+ * - `engine-comparison`: both structures are source-representable, the
+ *   derivation boundary was asked about each, and the erasure introduced no
+ *   diagnostic. The strongest of the three, and the only one that can see a
+ *   MANUFACTURED semantic defect — the dangling input that gave this check its
+ *   reason to exist.
+ * - `quotient-legal-slot-local`: the image carries a marker, so the source
+ *   engine cannot be asked about it. What IS established is that the image is
+ *   legal in the quotient language and that every value the erasure changed
+ *   lies at or beneath a slot the coordinate's own locator resolves to.
+ *
+ * THE NON-CLAIM, stated because the third proof is weaker than the second and
+ * must not be read as equivalent: slot-locality plus quotient legality does not
+ * rule out a manufactured SEMANTIC defect, because no engine reads the image.
+ * The class that can manufacture one — replacing a resolvable reference name
+ * with a token, which is what dangles an input — writes no marker, so it is
+ * always proved by `engine-comparison`. That is an argument about which
+ * operations produce markers, not a general equivalence.
  */
-export const inapplicableIsolationChecks = new Set<string>();
+export type IsolationProof = "unchanged" | "engine-comparison" | "quotient-legal-slot-local";
+
+/**
+ * What one isolation obligation yielded, for one stimulus and one coordinate.
+ *
+ * `unevaluated` is the state whose absence let an unasked question read as an
+ * answered one. It is neither a discharge nor a refutation, and a witness
+ * carrying one must not reach standing — the obligation simply has not been
+ * met yet. An unexpected exception from the instrument is none of these three:
+ * it propagates.
+ */
+export type IsolationResult =
+  | { state: "discharged"; by: IsolationProof }
+  | { state: "violated"; detail: string }
+  | { state: "unevaluated"; reason: string };
+
+/**
+ * One isolation evaluation, identified well enough to be an admission record.
+ *
+ * A coordinate id alone was not: it named neither the witness, nor which
+ * stimulus, nor what proof discharged the obligation, so a set of ids could
+ * report that SOMETHING was inapplicable somewhere and nothing more.
+ */
+export interface IsolationRecord {
+  side: "a" | "b";
+  coordinate: string;
+  /** The stimulus it was evaluated on. */
+  fixture: string;
+  result: IsolationResult;
+}
 
 /**
  * Validate a `RelationalStructure` against the EMITTED contract for it.
@@ -347,6 +430,12 @@ export const inapplicableIsolationChecks = new Set<string>();
  * cannot drift from the model or disagree with the fixture validator about what
  * a structure is.
  */
+let quotientValidatorCache: ((image: unknown) => string[]) | undefined;
+function quotientValidator(): (image: unknown) => string[] {
+  quotientValidatorCache ??= loadQuotientValidator(CONTRACTS_DIR);
+  return quotientValidatorCache;
+}
+
 let structureValidatorCache: ((s: unknown) => string[]) | undefined;
 function structureValidator(): (s: unknown) => string[] {
   if (structureValidatorCache) return structureValidatorCache;
@@ -372,7 +461,56 @@ function structureValidator(): (s: unknown) => string[] {
  */
 export type DerivationChecker = (structure: RelationalStructure) => BoundaryFinding[];
 
-export function isolationViolation(fixture: Fixture, c: Coordinate, check: DerivationChecker = checkDerivations): string | undefined {
+/** The plan lookup, injectable for the same reason: `unevaluated` must be observable. */
+export type PlanLookup = (c: Coordinate) => ErasurePlan | undefined;
+
+/** Every path holding a scalar, with its value, so a difference can be located. */
+function valueMap(node: unknown, path = "", out: Map<string, string> = new Map()): Map<string, string> {
+  if (node === null || typeof node !== "object") {
+    if (path) out.set(path, JSON.stringify(node));
+    return out;
+  }
+  if (Array.isArray(node)) {
+    node.forEach((v, i) => valueMap(v, `${path}[${i}]`, out));
+    return out;
+  }
+  for (const [k, v] of Object.entries(node as Record<string, unknown>)) valueMap(v, `${path}.${k}`, out);
+  return out;
+}
+
+/** Every path at which two representations disagree, in either direction. */
+function changedPaths(before: unknown, after: unknown): string[] {
+  const b = valueMap(before);
+  const a = valueMap(after);
+  return [...new Set([...b.keys(), ...a.keys()])].filter((k) => b.get(k) !== a.get(k)).sort();
+}
+
+/**
+ * The paths a locator resolves to on this stimulus, found by writing a sentinel
+ * and observing where it lands.
+ *
+ * `resolveSlots` hands back parent/key pairs, which is what an executor needs
+ * and not what a locality proof needs. Rather than widen that signature — it
+ * belongs to the erasure authority, and this is a witness-side question — the
+ * slots are located by overwriting each with one scalar and reading off the
+ * minimal paths that changed. Minimal, because overwriting an object slot also
+ * removes every path beneath it, and it is the slot itself that bounds the
+ * erasure.
+ */
+const SENTINEL = "\u0000slot";
+function slotPaths(fixture: Fixture, locator: StructuralLocator): string[] {
+  const marked = JSON.parse(JSON.stringify(fixture)) as Fixture;
+  for (const s of resolveSlots(marked, locator)) (s.parent as Record<string, unknown>)[s.key as string] = SENTINEL;
+  const changed = changedPaths(fixture, marked);
+  return changed.filter((p) => !changed.some((q) => q !== p && p.startsWith(`${q}.`)) && !changed.some((q) => q !== p && p.startsWith(`${q}[`)));
+}
+
+export function checkIsolation(
+  fixture: Fixture,
+  c: Coordinate,
+  check: DerivationChecker = checkDerivations,
+  lookup: PlanLookup = planFor,
+): IsolationResult {
   const before = fixture as unknown as Record<string, unknown>;
   const after = erase(fixture, c) as unknown as Record<string, unknown>;
 
@@ -428,9 +566,8 @@ export function isolationViolation(fixture: Fixture, c: Coordinate, check: Deriv
   const inDomain = (s: RelationalStructure | undefined): s is RelationalStructure =>
     s !== undefined && markersIn(s).length === 0 && structureValidator()(s).length === 0;
 
-  const beforeInDomain = inDomain(sBefore);
-  const afterInDomain = inDomain(sAfter);
-  if (beforeInDomain && afterInDomain) {
+  const engineApplicable = inDomain(sBefore) && inDomain(sAfter);
+  if (engineApplicable) {
     const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
     const semanticIsThePoint = c.kind === "member-pair" && c.leaf.endsWith(".kind");
     const relevant = (d: { code?: string }) => !semanticIsThePoint || (d.code !== undefined && wellFormedness.has(d.code));
@@ -438,14 +575,15 @@ export function isolationViolation(fixture: Fixture, c: Coordinate, check: Deriv
     // propagate. Both arguments have already been shown to be in the checker's
     // declared domain, so there is nothing left for a throw to mean.
     const codes = (s: RelationalStructure) => check(s).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
-    const codesBefore = codes(sBefore);
-    const codesAfter = codes(sAfter);
+    const codesBefore = codes(sBefore as RelationalStructure);
+    const codesAfter = codes(sAfter as RelationalStructure);
     const introduced = codesAfter.filter((x) => !codesBefore.includes(x));
     if (introduced.length > 0) {
-      return `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`;
+      return {
+        state: "violated",
+        detail: `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`,
+      };
     }
-  } else {
-    inapplicableIsolationChecks.add(c.id);
   }
 
   // A member-absence erasure must remove ONLY the leaf it names.
@@ -466,9 +604,12 @@ export function isolationViolation(fixture: Fixture, c: Coordinate, check: Deriv
     const ap = terminalPaths(after);
     const collateral = [...bp].filter((p) => !ap.has(p) && p.split(".").pop() !== tag);
     if (collateral.length > 0) {
-      return `erasing ${c.id} also removed ${collateral.join(", ")}; the quotient is holder presence, not "${
-        c.members?.[0] ?? "the member"
-      } versus absent", so a collision may be attributable to the removed payload`;
+      return {
+        state: "violated",
+        detail: `erasing ${c.id} also removed ${collateral.join(", ")}; the quotient is holder presence, not "${
+          c.members?.[0] ?? "the member"
+        } versus absent", so a collision may be attributable to the removed payload`,
+      };
     }
   }
 
@@ -496,13 +637,56 @@ export function isolationViolation(fixture: Fixture, c: Coordinate, check: Deriv
     const bArr = JSON.parse(bJson) as string[];
     const aArr = JSON.parse(aJson) as string[];
     if (bArr.length !== aArr.length && c.facet !== "arity" && c.kind !== "leaf" && c.kind !== "member-absence") {
-      return `erasure changed the arity of ${path} (${bArr.length} -> ${aArr.length}) but the target facet is ${c.facet ?? c.kind}`;
+      return { state: "violated", detail: `erasure changed the arity of ${path} (${bArr.length} -> ${aArr.length}) but the target facet is ${c.facet ?? c.kind}` };
     }
     if (c.facet === "incidence" && bArr.length !== aArr.length) {
-      return `incidence erasure changed the arity of ${path} (${bArr.length} -> ${aArr.length}); it must preserve how many positions there are`;
+      return {
+        state: "violated",
+        detail: `incidence erasure changed the arity of ${path} (${bArr.length} -> ${aArr.length}); it must preserve how many positions there are`,
+      };
     }
   }
-  return undefined;
+
+  // NOTHING WAS REFUTED. That is where the collapse used to happen: an empty
+  // failure list was returned as `undefined` and every caller read it as a
+  // discharge, whether or not any check had been able to run. So the obligation
+  // is now discharged by a NAMED proof or by none.
+  const changed = changedPaths(before, after);
+  if (changed.length === 0) return { state: "discharged", by: "unchanged" };
+  if (engineApplicable) return { state: "discharged", by: "engine-comparison" };
+
+  // The image is out of the source engine's domain. That must not by itself
+  // refuse the witness — letting the source language decide which legal
+  // quotient images may support evidence is the confusion this whole slice
+  // exists to end. What it does mean is that a DIFFERENT proof has to be
+  // identified, and the two halves of it are legality and locality.
+  // DIFFERENTIAL, for the same reason the engine comparison is: what is under
+  // test is what the ERASURE did, not what its input already was. A hand-built
+  // probe carrying an id the corpus pattern rejects is invalid before anything
+  // is erased, and attributing that to the erasure would be the envelope
+  // deciding a structural question all over again.
+  const legal = quotientValidator();
+  const wasIllegal = legal(before);
+  const introduced = legal(after).filter((e) => !wasIllegal.includes(e));
+  if (introduced.length > 0) {
+    return { state: "violated", detail: `erasing ${c.id} makes the image illegal in the quotient language: ${introduced.slice(0, 3).join("; ")}` };
+  }
+  const plan = lookup(c);
+  if (plan === undefined) {
+    return {
+      state: "unevaluated",
+      reason: `${c.id} changed ${changed.length} path(s) and has no erasure plan, so no locator bounds where the change was allowed to reach`,
+    };
+  }
+  const slots = slotPaths(fixture, plan.locator);
+  const outside = changed.filter((p) => !slots.some((s) => p === s || p.startsWith(`${s}.`) || p.startsWith(`${s}[`)));
+  if (outside.length > 0) {
+    return {
+      state: "violated",
+      detail: `erasing ${c.id} changed ${outside.join(", ")}, which its own locator does not reach, so a collision may be attributable to the change outside the slot`,
+    };
+  }
+  return { state: "discharged", by: "quotient-legal-slot-local" };
 }
 
 export function loadWitnesses(file = WITNESSES_FILE): WitnessFile {
@@ -604,8 +788,24 @@ export interface HistoricalAccounting {
   recoveredFrom: {
     /** The tree the recovery was run at, and the digests of what it read. */
     commit: string;
-    why: string;
+    /** What the checkpoint IS — read with `nonClaim`, which says what it is not. */
+    what: string;
+    /**
+     * The bound on the claim, carried in the artifact rather than in a commit
+     * message. Reproducing a tally is agreement, not proof that two epochs are
+     * interchangeable, and the artifact must not be quotable as the latter.
+     */
+    nonClaim: string;
     procedure: string;
+    /**
+     * The dependency environment the historical source RAN UNDER.
+     *
+     * Recorded because the extracted tree ships no `node_modules`: `ajv` and
+     * `zod` were resolved from the current worktree. What was reproduced is
+     * historical source and data under a present-day dependency environment,
+     * and the artifact says so rather than claiming a fully historical runtime.
+     */
+    dependencyEnvironment: { node: string; ajv: string; zod: string };
     inputs: Record<string, string>;
   };
   byEvidenceClass: {
@@ -618,6 +818,20 @@ export interface HistoricalAccounting {
   };
   /** The union of the three, which is what the stage-1 dispositioner was given. */
   accounted: string[];
+  /** The kernel that dispositioner was given. An input to it, so it is recorded. */
+  kernelIds: string[];
+  /**
+   * WHAT THE HISTORICAL INTERPRETER CONCLUDED, per coordinate.
+   *
+   * The distinction this field exists to hold. `accounted` is the support the
+   * interpreter was given; this is the verdict it reached. Recomputing the
+   * verdict from the support through today's `disposition`, `removals` and
+   * kernel would leave the conclusion at the mercy of a present-day mapping: an
+   * edit to `leafMap`, a member map or a factorization can move which original
+   * coordinate reads as ratified, or change its `via`, while every recovered
+   * input stays byte-identical. History has to be read, not re-derived.
+   */
+  dispositions: (Disposition & { coordinate: string })[];
   stage1Dispositions: Record<string, number>;
 }
 
@@ -628,6 +842,53 @@ export function loadHistoricalAccounting(file = HISTORICAL_ACCOUNTING_FILE): His
 /** The historical accounting set, read from the artifact and nothing else. */
 export function historicallyAccounted(record: HistoricalAccounting = loadHistoricalAccounting()): Set<string> {
   return new Set(record.accounted);
+}
+
+/**
+ * The historical DISPOSITIONS, read from the artifact and nothing else.
+ *
+ * The counterpart to `historicallyAccounted`, and the one a reader should quote
+ * when asking what stage 1 concluded. Neither `disposition` nor `removals` nor
+ * the live kernel appears in this path, which is the point: a present-day
+ * mapping may reconcile against the historical conclusion, never rewrite it.
+ */
+export function historicalDispositions(
+  record: HistoricalAccounting = loadHistoricalAccounting(),
+): Map<string, Disposition> {
+  return new Map(record.dispositions.map(({ coordinate, ...d }) => [coordinate, d as Disposition]));
+}
+
+/**
+ * Where the CURRENT interpreter disagrees with the historical conclusion.
+ *
+ * Both are legitimate readings and they answer different questions:
+ * `D_then(coordinate, support_then, kernel_then, mappings_then)` is what was
+ * concluded, `D_now(coordinate, support_then, kernel_now, mappings_now)` is what
+ * today's mappings make of that same support. A difference is a mapping change
+ * to be reported, not a historical revision to be adopted.
+ */
+export interface DispositionDrift {
+  coordinate: string;
+  then: Disposition;
+  now: Disposition;
+}
+
+export function reinterpretHistorically(
+  record: HistoricalAccounting,
+  stage1: Coordinate[],
+  kernelIds: Set<string>,
+  removals: RemovalsFile,
+): DispositionDrift[] {
+  const then = historicalDispositions(record);
+  const support = historicallyAccounted(record);
+  const out: DispositionDrift[] = [];
+  for (const c of stage1) {
+    const was = then.get(c.id);
+    if (was === undefined) continue;
+    const now = disposition(c, support, kernelIds, removals);
+    if (JSON.stringify(was) !== JSON.stringify(now)) out.push({ coordinate: c.id, then: was, now });
+  }
+  return out;
 }
 
 /**

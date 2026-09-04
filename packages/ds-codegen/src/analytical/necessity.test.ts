@@ -21,7 +21,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { BASELINE_FILE, checkBaseline, type Baseline } from "./baseline.js";
 import { decodeScale, scaleAliases, type ScaleLabel } from "./capabilities.js";
-import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadBranchSignatures, loadCensus } from "./census.js";
+import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadBranchSignatures, loadCensus, loadPlans } from "./census.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import {
@@ -29,11 +29,13 @@ import {
   disposition,
   FIXTURES_DIR,
   CONTRACTS_DIR,
-  inapplicableIsolationChecks,
-  isolationViolation,
+  checkIsolation,
+  type IsolationResult,
   codomainHolds,
   evidenceStanding,
   historicallyAccounted,
+  historicalDispositions,
+  reinterpretHistorically,
   loadHistoricalAccounting,
   reconcileHistory,
   accountedBy,
@@ -440,7 +442,9 @@ describe("C3 — the harness is falsified", () => {
     // is the specific collateral this guard exists to catch; a message that only
     // says "a defect appeared" would go on passing if the guard started firing
     // on something else entirely.
-    expect(isolationViolation(fixture, coord)).toContain("REL_DERIVATION_INPUT_MISSING@out");
+    const r = checkIsolation(fixture, coord);
+    expect(r.state).toBe("violated");
+    expect(r.state === "violated" && r.detail).toContain("REL_DERIVATION_INPUT_MISSING@out");
   });
 
   /**
@@ -479,28 +483,66 @@ describe("C3 — the harness is falsified", () => {
     });
 
     it("gives the same derivation-isolation result at zero and at one assertion", () => {
-      const expected = "erasure introduced derivation defect(s) REL_DERIVATION_INPUT_MISSING@out, so any collision may be that defect rather than the coordinate";
-      expect(isolationViolation(bare, incidence)).toBe(expected);
-      expect(isolationViolation(wrapped, incidence)).toBe(expected);
-      // Non-vacuous on both sides: the result is a violation, so neither probe
-      // is passing by having had the check quietly switched off.
-      expect(inapplicableIsolationChecks.has(incidence.id)).toBe(false);
+      const expected: IsolationResult = {
+        state: "violated",
+        detail: "erasure introduced derivation defect(s) REL_DERIVATION_INPUT_MISSING@out, so any collision may be that defect rather than the coordinate",
+      };
+      expect(checkIsolation(bare, incidence)).toEqual(expected);
+      expect(checkIsolation(wrapped, incidence)).toEqual(expected);
     });
 
-    it("a forgotten discriminator is OUT OF DOMAIN, and no operator lookup is executed", () => {
+    it("a forgotten discriminator is out of the ENGINE's domain, and no operator lookup is executed", () => {
       // `erase` holes `derivedBy.kind`, and `OPERATOR_LAWS[d.kind]` is a lookup
       // on a string: handing the image to the engine THROWS. That throw is the
       // observable. If the comparison ran, this call could not return — so a
-      // clean `undefined` plus the coordinate in `inapplicableIsolationChecks`
-      // is direct evidence the lookup never happened, with nothing mocked.
+      // returned result is direct evidence the lookup never happened, with
+      // nothing mocked.
       const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
       const image = erase(bare, kindLeaf) as unknown as { structure: RelationalStructure };
       expect(markersIn(image.structure).map((m) => m.path)).toEqual(["relations.out.derivedBy.kind"]);
       expect(() => checkDerivations(image.structure)).toThrow();
 
-      inapplicableIsolationChecks.delete(kindLeaf.id);
-      expect(isolationViolation(bare, kindLeaf)).toBeUndefined();
-      expect(inapplicableIsolationChecks.has(kindLeaf.id)).toBe(true);
+      // AND THE OBLIGATION IS STILL DISCHARGED, by a named structural proof.
+      // This is the control that keeps the repair from becoming "an image with
+      // a marker may not support evidence" — which would hand the source
+      // engine's domain authority over the quotient language, the confusion the
+      // codomain exists to end.
+      expect(checkIsolation(bare, kindLeaf)).toEqual({ state: "discharged", by: "quotient-legal-slot-local" });
+    });
+
+    it("names the proof, so a discharge is never inferred from an empty failure list", () => {
+      // The three states are distinguishable at the call site, which is what
+      // `string | undefined` could not express: `undefined` meant both "the
+      // comparison ran and found nothing" and "no comparison ran".
+      const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
+      const byEngine = checkIsolation(bare, loadCensus().find((c) => c.id === "field.key")!);
+      expect(byEngine.state === "discharged" && byEngine.by).toBe("engine-comparison");
+      const byStructure = checkIsolation(bare, kindLeaf);
+      expect(byStructure.state === "discharged" && byStructure.by).toBe("quotient-legal-slot-local");
+      expect(byEngine).not.toEqual(byStructure);
+    });
+
+    it("an obligation nothing can bound is UNEVALUATED, not discharged", () => {
+      // The third state, reachable and observed. Without a plan there is no
+      // locator, so nothing says where the change was allowed to reach — and an
+      // unbounded change is not a proof of locality, it is the absence of one.
+      const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
+      const r = checkIsolation(bare, kindLeaf, checkDerivations, () => undefined);
+      expect(r.state).toBe("unevaluated");
+      expect(r.state === "unevaluated" && r.reason).toMatch(/no erasure plan/);
+    });
+
+    it("catches a change the coordinate's own locator does not reach", () => {
+      // Slot-locality can REFUTE, which is what makes it a proof rather than a
+      // formality. A plan whose locator resolves to a different slot leaves the
+      // real change outside every bound, and the result is a violation naming
+      // the path.
+      const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
+      const elsewhere = loadPlans().get("relation.grain")!;
+      const r = checkIsolation(bare, kindLeaf, checkDerivations, () => elsewhere);
+      expect(r.state).toBe("violated");
+      expect(r.state === "violated" && r.detail).toMatch(/derivedBy\.kind/);
+      expect(r.state === "violated" && r.detail).toMatch(/its own locator does not reach/);
     });
 
     it("an instrument failure on an in-domain structure propagates; it is neither inapplicable nor clean", () => {
@@ -512,9 +554,64 @@ describe("C3 — the harness is falsified", () => {
       const boom = () => {
         throw new TypeError("injected instrument failure");
       };
-      inapplicableIsolationChecks.delete(incidence.id);
-      expect(() => isolationViolation(bare, incidence, boom)).toThrow(/injected instrument failure/);
-      expect(inapplicableIsolationChecks.has(incidence.id)).toBe(false);
+      expect(() => checkIsolation(bare, incidence, boom)).toThrow(/injected instrument failure/);
+    });
+
+    it("is a pure function of its arguments: no accumulated state orders the results", () => {
+      // The hazard the module-level `inapplicableIsolationChecks` set carried.
+      // Two coordinates over the same stimulus — one the engine can read, one it
+      // cannot — must give the same pair of results in either evaluation order.
+      const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
+      const forward = [checkIsolation(bare, incidence), checkIsolation(bare, kindLeaf)];
+      const backward = [checkIsolation(bare, kindLeaf), checkIsolation(bare, incidence)];
+      expect(forward).toEqual([backward[1], backward[0]]);
+      expect(forward[0].state).toBe("violated");
+      expect(forward[1].state).toBe("discharged");
+    });
+  });
+
+  /**
+   * THE CONSUMER, which is where the collapse actually mattered.
+   *
+   * `checkIsolation` can distinguish three states perfectly and still change
+   * nothing if `checkWitness` folds two of them together. These range over
+   * admission and the standing set it feeds, not over the check in isolation.
+   */
+  describe("C3c — an unevaluated obligation does not become standing", () => {
+    const held = witnesses.find((w) => w.coordinates.length === 1 && checkWitness(w, kernel, oracle).ok)!;
+    const discharged = (): IsolationResult => ({ state: "discharged", by: "quotient-legal-slot-local" });
+    const unevaluated = (): IsolationResult => ({ state: "unevaluated", reason: "no proof was constructed" });
+
+    it("the control: an inapplicable engine comparison discharged by a structural proof still ratifies", () => {
+      // Stated first, because without it the test below would pass for a system
+      // that simply refused every marker-bearing image. The engine comparison is
+      // equally unavailable in both cases; only the alternative proof differs.
+      const r = checkWitness(held, kernel, oracle, discharged);
+      expect(r.ok).toBe(true);
+      expect(r.isolation.map((i) => i.result)).toEqual(r.isolation.map(discharged));
+      expect(primitiveRatified([held])).toContain(held.coordinates[0]);
+    });
+
+    it("the same witness, with no proof identified, fails and confers nothing", () => {
+      const r = checkWitness(held, kernel, oracle, unevaluated);
+      expect(r.ok).toBe(false);
+      expect(r.failures.map((f) => f.code)).toContain("ERASURE_ISOLATION_UNEVALUATED");
+      // And the standing consumer follows the admission result rather than
+      // re-deriving it: `primitiveRatified` is given the witnesses that HOLD.
+      const holding = [held].filter((w) => checkWitness(w, kernel, oracle, unevaluated).ok);
+      expect(holding).toEqual([]);
+      expect(primitiveRatified(holding)).not.toContain(held.coordinates[0]);
+    });
+
+    it("records which stimulus and which proof, so the admission record identifies more than a coordinate id", () => {
+      const r = checkWitness(held, kernel, oracle);
+      expect(r.isolation.length).toBe(2 * held.coordinates.length);
+      expect(r.isolation.map((i) => i.side).sort()).toEqual(["a", "b"]);
+      for (const rec of r.isolation) {
+        expect(rec.coordinate).toBe(held.coordinates[0]);
+        expect(rec.fixture, "the record must name the stimulus it was evaluated on").toMatch(/\S/);
+        expect(rec.result.state).toBe("discharged");
+      }
     });
   });
 
@@ -542,7 +639,7 @@ describe("C3 — the harness is falsified", () => {
     // Every position distinct: co-reference (region appearing twice) is gone,
     // which is exactly and only what incidence means.
     expect(new Set(after.assertions[0].along).size).toBe(before.length);
-    expect(isolationViolation(fixture, coord)).toBeUndefined();
+    expect(checkIsolation(fixture, coord)).toEqual({ state: "discharged", by: "engine-comparison" });
   });
   /**
    * A discriminator member-absence coordinate. Built rather than looked up: the
@@ -576,7 +673,9 @@ describe("C3 — the harness is falsified", () => {
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
     const coord = absenceCoord("relation.derivedBy.kind", "project");
-    const violation = isolationViolation(fixture, coord);
+    const r = checkIsolation(fixture, coord);
+    expect(r.state).toBe("violated");
+    const violation = r.state === "violated" ? r.detail : "";
     expect(violation).toMatch(/holder presence/);
     // The message must name what was destroyed, or it cannot be adjudicated.
     expect(violation).toMatch(/\.from|\.keep/);
@@ -600,7 +699,7 @@ describe("C3 — the harness is falsified", () => {
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
     const coord = absenceCoord("field.additivity.kind", "additive");
-    expect(isolationViolation(fixture, coord)).toBeUndefined();
+    expect(checkIsolation(fixture, coord)).toEqual({ state: "discharged", by: "engine-comparison" });
   });
 
   it("is measured per stimulus: the same coordinate is isolated or not depending on what the branch carries", () => {
@@ -622,8 +721,9 @@ describe("C3 — the harness is falsified", () => {
         assertions: [],
       }) as unknown as Fixture;
     const coord = absenceCoord("field.temporality.kind", "instant");
-    expect(isolationViolation(fieldWith({ kind: "instant" }), coord)).toBeUndefined();
-    expect(isolationViolation(fieldWith({ kind: "instant", grain: "day" }), coord)).toMatch(/holder presence/);
+    expect(checkIsolation(fieldWith({ kind: "instant" }), coord)).toEqual({ state: "discharged", by: "engine-comparison" });
+    const both = checkIsolation(fieldWith({ kind: "instant", grain: "day" }), coord);
+    expect(both.state === "violated" && both.detail).toMatch(/holder presence/);
   });
 
   it("rejects a pair the oracle does not tell apart", () => {
@@ -997,6 +1097,8 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
   const historicalSet = historicallyAccounted(historicalRecord);
   const ratifiedUnder = (live: ReadonlySet<string>) =>
     stage1.coordinates.filter((c) => disposition(c, live, kernelIds, removals).state === "ratified").map((c) => c.id);
+  /** Read, never recomputed: the historical interpreter's own verdicts. */
+  const ratifiedThen = [...historicalDispositions(historicalRecord)].filter(([, d]) => d.state === "ratified").map(([id]) => id);
 
   it("the historical record is recovered from a named tree, not inferred from today", () => {
     // What makes it an authority. The digests are of the files that tree held;
@@ -1027,7 +1129,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // the standing tally below, where 4 of those 77 rest on a provisional
     // closure and nothing stronger. Calling the figure "holding" would report
     // the weakest class with the authority of the strongest.
-    const historical = ratifiedUnder(historicalSet);
+    const historical = ratifiedThen;
     const current = ratifiedUnder(stage1Accounted);
     expect(historical).toHaveLength(81);
     expect(current).toHaveLength(77);
@@ -1095,7 +1197,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     for (const id of holds.keys()) {
       const c = byId.get(id);
       if (!c) continue; // kernel-only ids have no stage-1 disposition to preserve
-      expect(disposition(c, historicalSet, kernelIds, removals).state, id).toBe("ratified");
+      expect(historicalDispositions(historicalRecord).get(c.id)?.state, id).toBe("ratified");
     }
   });
 });
@@ -1141,7 +1243,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     const r = reconcileHistory(widened, historicalSet, holds);
     expect(r.unexplainedGain).toEqual(["field.temporality.grain:day~month"]);
     // And the historical dispositions are the same numbers as before.
-    const ratified = stage1.coordinates.filter((c) => disposition(c, historicalSet, kernelIds, removals).state === "ratified");
+    const ratified = [...historicalDispositions()].filter(([, d]) => d.state === "ratified");
     expect(ratified).toHaveLength(81);
   });
 
@@ -1156,6 +1258,91 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     const r = reconcileHistory(accountedBy(support), swapped, holds);
     expect(r.unexplainedLoss).toContain("assertion.aggregate.uncertainty:absolute~none");
     expect(r.unexplainedGain).toContain("assertion.aggregate.nulls");
+  });
+
+  it("a CURRENT MAPPING change cannot rewrite a historical disposition", () => {
+    // The defect one level up from history-from-live. The support set is an
+    // artifact and cannot move, but reading it through today's `removals` left
+    // the CONCLUSION at the mercy of a present-day mapping: re-point a leaf and
+    // a different original coordinate reads as ratified, with every recovered
+    // input byte-identical.
+    const record = loadHistoricalAccounting();
+    const before = historicalDispositions(record);
+    const moved: typeof removals = {
+      ...removals,
+      leafMap: { ...removals.leafMap, "field.scale": "field.cyclic" },
+      removed: [...removals.removed, { coordinate: "relation.grain", reason: "probe only", reintroducibleAt: 2 }],
+    };
+
+    // History is unchanged, by IDENTIFIER and not by count.
+    const after = historicalDispositions(record);
+    expect([...after].map(([id, d]) => `${id}:${d.state}`)).toEqual([...before].map(([id, d]) => `${id}:${d.state}`));
+    expect(after.get("relation.grain")).toEqual(before.get("relation.grain"));
+    expect(after.get("field.scale")).toEqual(before.get("field.scale"));
+
+    // And the reinterpretation reports the disagreement rather than adopting it.
+    const drift = reinterpretHistorically(record, stage1.coordinates, kernelIds, moved);
+    expect(drift.map((d) => d.coordinate)).toContain("relation.grain");
+    expect(drift.find((d) => d.coordinate === "relation.grain")!.then.state).toBe("ratified");
+    expect(drift.find((d) => d.coordinate === "relation.grain")!.now.state).toBe("not-yet-admitted");
+  });
+
+  it("a LIVE KERNEL change cannot rewrite one either, and today's reading agrees where nothing moved", () => {
+    const record = loadHistoricalAccounting();
+    const before = [...historicalDispositions(record)].map(([id, d]) => `${id}:${d.state}:${"via" in d ? d.via.join("+") : ""}`);
+    const shrunk = new Set([...kernelIds].filter((id) => id !== "field.transformation"));
+    expect(shrunk.size).toBe(kernelIds.size - 1);
+
+    const after = [...historicalDispositions(record)].map(([id, d]) => `${id}:${d.state}:${"via" in d ? d.via.join("+") : ""}`);
+    expect(after).toEqual(before);
+
+    // The kernel the historical interpreter was GIVEN is recorded, so the two
+    // readings can be told apart rather than silently conflated.
+    expect(record.kernelIds).toHaveLength(165);
+    // Under the unmodified present mappings the two readings still agree, which
+    // is what makes the two drift assertions above findings rather than noise.
+    expect(reinterpretHistorically(record, stage1.coordinates, kernelIds, removals)).toEqual([]);
+    // Under a shrunken kernel they need not, and the difference is reported.
+    const drift = reinterpretHistorically(record, stage1.coordinates, shrunk, removals);
+    for (const d of drift) expect(d.then).not.toEqual(d.now);
+  });
+
+  it("reports what the ARTIFACT says, even where recomputation would say otherwise", () => {
+    // The falsifier for "read, not derived", and the only one that bites: today
+    // the two readings agree, so a recomputing implementation would pass every
+    // comparison against the live tree. Handing it a record whose verdict
+    // disagrees with what recomputation produces separates them — a reader of
+    // the artifact returns the recorded verdict; a re-deriver silently corrects
+    // it, which is the present rewriting the past one coordinate at a time.
+    const record = loadHistoricalAccounting();
+    const real = historicalDispositions(record).get("relation.grain");
+    expect(real).toEqual({ state: "ratified", via: ["relation.grain"] });
+
+    const flipped: typeof record = {
+      ...record,
+      dispositions: record.dispositions.map((d) =>
+        d.coordinate === "relation.grain" ? { coordinate: d.coordinate, state: "not-yet-admitted" as const, reason: "probe only", reintroducibleAt: 2 } : d,
+      ),
+    };
+    expect(historicalDispositions(flipped).get("relation.grain")).toEqual({ state: "not-yet-admitted", reason: "probe only", reintroducibleAt: 2 });
+    // And the disagreement with today's mappings is reported, not resolved.
+    const drift = reinterpretHistorically(flipped, stage1.coordinates, kernelIds, removals);
+    expect(drift.map((d) => d.coordinate)).toEqual(["relation.grain"]);
+    expect(drift[0].now).toEqual(real);
+  });
+
+  it("says what the checkpoint is, and what it is not", () => {
+    // The provenance bound, carried in the artifact so a reader cannot quote it
+    // for more than the recovery performed.
+    const { what, nonClaim, procedure, dependencyEnvironment } = loadHistoricalAccounting().recoveredFrom;
+    expect(what).toMatch(/PRE-CODOMAIN ACCOUNTING CHECKPOINT/);
+    expect(nonClaim).toMatch(/not.*established/i);
+    expect(nonClaim, "reproducing a tally is agreement, not epoch equivalence").toMatch(/tally/);
+    // The dependency environment is named rather than the runtime being claimed
+    // historical: the extracted tree ships no node_modules.
+    expect(procedure).toMatch(/DEPENDENCY ENVIRONMENT AVAILABLE NOW/);
+    expect(dependencyEnvironment.ajv).toMatch(/^\d+\.\d+\.\d+/);
+    expect(dependencyEnvironment.node).toMatch(/^v\d+/);
   });
 
   it("a PROVISIONAL closure confers accounting, never primitive standing", () => {
@@ -1185,8 +1372,15 @@ describe("C4 — HISTORICAL accounting: what the completed stage-1 experiment co
   // finished record to match a later instrument, turning 81 into 77 as though
   // stage 1 had concluded something it did not. What is currently SUPPORTED is
   // a different question, asked in "C4b — current evidence standing" below.
-  const ratified = historicallyAccounted();
-  const dispositions = stage1.coordinates.map((c) => [c, disposition(c, ratified, kernelIds, removals)] as const);
+  // READ, not recomputed. `historicallyAccounted()` is the SUPPORT the
+  // historical interpreter was given; running today's `disposition` over it
+  // through today's `kernelIds` and `removals` would answer a different
+  // question — what present mappings make of that support — and report the
+  // answer as what stage 1 concluded. The two are compared explicitly in C4d.
+  const then = historicalDispositions();
+  const dispositions = stage1.coordinates.filter((c) => then.has(c.id)).map((c) => [c, then.get(c.id)!] as const);
+  /** The kernel-level SUPPORT the historical interpreter was given, as opposed to its verdicts. */
+  const accountedThen = historicallyAccounted();
 
   it("every stage-1 coordinate is ratified, not-yet-admitted, or a name reference", () => {
     const undecided = dispositions.filter(([, d]) => d.state !== "ratified" && d.state !== "not-yet-admitted" && d.state !== "reference");
@@ -1219,7 +1413,7 @@ describe("C4 — HISTORICAL accounting: what the completed stage-1 experiment co
       // mean stage 1.5's subtraction had been undone by drift.
       expect(r.reintroducibleAt, `${r.coordinate} re-admitted before its stage`).toBeLessThanOrEqual(2);
       expect(
-        ratified.has(r.coordinate) || pendingIds.has(r.coordinate),
+        accountedThen.has(r.coordinate) || pendingIds.has(r.coordinate),
         `${r.coordinate} is back in the kernel with neither a witness nor a pending entry`,
       ).toBe(true);
     }
@@ -1261,7 +1455,7 @@ describe("C4 — HISTORICAL accounting: what the completed stage-1 experiment co
     // A candidate whose verdict removed it is no longer expected in the kernel,
     // so the equality doubles as a check that the removal actually took effect:
     // a `representation-artifact` still present would show up as a surplus here.
-    const expected = [...new Set([...ratified, ...pendingIds])].filter((id) => !removedByVerdict.has(id)).sort();
+    const expected = [...new Set([...accountedThen, ...pendingIds])].filter((id) => !removedByVerdict.has(id)).sort();
     expect(live).toEqual(expected);
     // Membership is not ownership, and accounting is not standing. A candidate
     // whose verdict is `witnessed` is both in a basis and ratified, which is one
