@@ -84,3 +84,10 @@ evidence:
     command: "pnpm run governed:rail"
     exit_code: 0
     commit_sha: c56052e9
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Diff review of component-source.ts: new lowerings key on cssBlocks selectors, tokenScopes suffixes, and dom bindings only; grep for component names finds only pre-existing generic compound-selection machinery"
+    recorded_at: "2026-09-04T23:07:01.392Z"
+    command: "grep -nE 'Calendar|Spinner|ToggleSwitch' packages/ds-codegen/src/frameworks/react-native/component-source.ts (added-code review)"
+    exit_code: 0
+    commit_sha: c56052e9
