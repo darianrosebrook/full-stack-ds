@@ -2,9 +2,11 @@ id: FIX-RN-EXAMPLE-01
 title: 'Align RN example consumer with the generated component surface'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'RN settings example now uses the idiomatic generated surface (Field slots, Button onClick); typecheck:example:react-native compiles clean'
 created_at: '2026-09-04T23:11:40.706Z'
-updated_at: '2026-09-04T23:11:57.064Z'
+updated_at: '2026-09-04T23:14:45.784Z'
 created_by_session: 'sess_b5ccec4e-abee-4004-b791-90b54bfe3547'
 blast_radius:
   modules:
