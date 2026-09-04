@@ -366,7 +366,10 @@ const REREAD =
   "`carrier + normalization collides` remains a true fact about the encoding, but `the carrier is independently primitive` no longer follows from it. " +
   "The result becomes either a DERIVED DISCRIMINATOR (the branch payload already identifies the constructor, so the tag is reporting vocabulary or decoding convenience) " +
   "or a COMPOSITE CONSTRUCTOR (tag and payload jointly constitute one irreducible semantic object, and neither coordinate deserves primitive standing alone). " +
-  "Which one it is must be re-decided, never assumed.";
+  "Which one it is must be re-decided, never assumed. " +
+  "SCOPE OF `composite constructor`, and it is narrower than the phrase invites: it is a verdict about SEPARABILITY under THIS encoding and THIS authority, " +
+  "never proof that the underlying analytical concept is ontologically indivisible. A different representation might recover independent factors. " +
+  "What is established is only that the present schema's claimed factors cannot be independently supported by the evidence currently available.";
 
 /**
  * Check one closure against the eight proof obligations.
