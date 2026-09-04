@@ -262,7 +262,14 @@
         },
         {
           "name": "filterFn",
-          "type": "((option: SelectOption, searchTerm: string) => boolean)",
+          "propType": {
+            "kind": "callback",
+            "params": [
+              { "name": "option", "type": { "kind": "ref", "to": "SelectOption" } },
+              { "name": "searchTerm", "type": { "kind": "string" } }
+            ],
+            "returns": { "kind": "boolean" }
+          },
           "description": "Custom filter function for search."
         },
         {
