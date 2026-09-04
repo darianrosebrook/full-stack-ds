@@ -16,7 +16,7 @@ scope:
     - 'examples/settings/react-native'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The example consumer compiles against the generated @full-stack-ds/react-native surface exactly as committed — no local type patches, declaration overrides, or tsconfig exclusions'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
