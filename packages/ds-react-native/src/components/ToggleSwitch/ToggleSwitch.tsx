@@ -61,6 +61,8 @@ export function ToggleSwitch({
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="switch"
       accessibilityState={{ checked: checked, disabled: disabled }}
+      trackColor={{ false: (tokens.root?.["toggle-switch.color.background.default"] as string | undefined), true: (tokens.root?.["toggle-switch.color.background.checked"] as string | undefined) }}
+      ios_backgroundColor={(tokens.root?.["toggle-switch.color.background.default"] as string | undefined)}
     />
   );
 }

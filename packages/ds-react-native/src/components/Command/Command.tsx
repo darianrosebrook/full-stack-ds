@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Modal, Pressable, Text as RNText, TextInput, View } from "react-native";
+import { Modal, Pressable, TextInput, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCommandStyles } from "./Command.styles";
@@ -47,7 +47,6 @@ export function Command({
   defaultSearch = "",
   onSearchChange,
   slots,
-  children,
   style,
   testID,
   accessibilityLabel,

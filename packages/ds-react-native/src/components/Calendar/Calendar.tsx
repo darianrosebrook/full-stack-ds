@@ -31,6 +31,15 @@ export interface CalendarProps {
 // @generated:end
 
 // @generated:start component
+const isEntrySelected = (candidate: unknown, current: unknown): boolean => {
+  if (current === null || current === undefined) return false;
+  const list = Array.isArray(current) ? current : [current];
+  return list.some((entry) =>
+    typeof entry === "object" && entry !== null && "getTime" in entry
+      ? (entry as Date).getTime() === (candidate as Date).getTime()
+      : entry === candidate);
+};
+
 export function Calendar({
   value: controlledValue,
   days,
@@ -87,9 +96,10 @@ export function Calendar({
                   style={styles.cell}
                 >
                   <Pressable
-                    style={styles.day}
+                    style={[styles.day, isEntrySelected(item, value) ? styles.day_state_selected : undefined]}
                     onPress={() => setValueValue(item)}
                     accessibilityRole="button"
+                    accessibilityState={{ selected: isEntrySelected(item, value) }}
                   />
                 </View>
               ))}

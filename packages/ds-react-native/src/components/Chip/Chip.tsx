@@ -60,6 +60,7 @@ export function Chip({
   const styles = useMemo(() => createChipStyles(fsdsTheme), [fsdsTheme]);
   const variantStyleForVariant = variant !== undefined ? ({ "selected": styles.root_variant_selected } as Record<string, ViewStyle | undefined>)[variant] : undefined;
   const variantStyleForSize = size !== undefined ? ({ "small": styles.root_variant_small, "medium": styles.root_variant_medium, "large": styles.root_variant_large } as Record<string, ViewStyle | undefined>)[size] : undefined;
+  const iconStyleForSize = size !== undefined ? ({ "small": styles.icon_variant_small, "medium": styles.icon_variant_medium, "large": styles.icon_variant_large } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
@@ -78,7 +79,7 @@ export function Chip({
       >
         {icon ? (
         <View
-          style={styles.icon}
+          style={[styles.icon, iconStyleForSize]}
           accessible={false}
         />
         ) : null}

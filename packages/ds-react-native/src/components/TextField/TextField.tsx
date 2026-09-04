@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Text as RNText, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTextFieldStyles } from "./TextField.styles";
@@ -42,7 +42,6 @@ export function TextField({
   defaultValue = "",
   onChange,
   slots,
-  children,
   style,
   testID,
   accessibilityLabel,
