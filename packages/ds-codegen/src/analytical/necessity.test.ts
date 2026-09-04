@@ -557,6 +557,82 @@ describe("C1c — a multi-coordinate witness is classified, and the classificati
   });
 });
 
+describe("C1d — cleanup cardinality bounds which pairs a <=2-coordinate witness can even express", () => {
+  /**
+   * Erasing a discriminator rewrites one member's tag to the other's. Required
+   * payload each branch carries that the other does not is RESIDUE: it survives
+   * the rewrite and keeps the two encodings out of the same comparison class.
+   * So the smallest raw erasure set is 1 + the residue on each side.
+   *
+   * This is a fact about branch topology, not about any judgment, and it is
+   * pinned because it is what makes a whole class of witness search futile
+   * BEFORE anyone runs it.
+   */
+  const branchRequired = (): Map<string, string[]> => {
+    const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as Record<string, never>;
+    const defs = (schema["$defs"] ?? schema["definitions"]) as Record<string, { anyOf?: never[]; oneOf?: never[] }>;
+    const branches = (defs.derivation.anyOf ?? defs.derivation.oneOf ?? []) as {
+      properties?: { kind?: { const?: string } };
+      required?: string[];
+    }[];
+    const out = new Map<string, string[]>();
+    for (const b of branches) {
+      const tag = b.properties?.kind?.const;
+      if (tag) out.set(tag, (b.required ?? []).filter((k) => k !== "kind").sort());
+    }
+    return out;
+  };
+
+  const pairs = () => {
+    const req = branchRequired();
+    const kinds = [...req.keys()];
+    const rows: { pair: string; onlyA: string[]; onlyB: string[] }[] = [];
+    for (let i = 0; i < kinds.length; i++) {
+      for (let j = i + 1; j < kinds.length; j++) {
+        const [a, b] = [kinds[i], kinds[j]];
+        rows.push({
+          pair: `${a}~${b}`,
+          onlyA: req.get(a)!.filter((k) => !req.get(b)!.includes(k)),
+          onlyB: req.get(b)!.filter((k) => !req.get(a)!.includes(k)),
+        });
+      }
+    }
+    return rows;
+  };
+
+  it("exactly one derivation pair has no residue, and it is the control", () => {
+    const zero = pairs().filter((p) => p.onlyA.length === 0 && p.onlyB.length === 0);
+    expect(zero.map((p) => p.pair)).toEqual(["bin~normalize"]);
+  });
+
+  it("every other pair has residue on BOTH sides, so no unilateral-asymmetry witness exists", () => {
+    // The additivity hygiene witnesses fit in two coordinates because only one
+    // branch carried payload. No derivation pair but the control has that shape.
+    for (const p of pairs().filter((x) => x.pair !== "bin~normalize")) {
+      expect(p.onlyA.length, `${p.pair} has no residue on the left`).toBeGreaterThan(0);
+      expect(p.onlyB.length, `${p.pair} has no residue on the right`).toBeGreaterThan(0);
+    }
+  });
+
+  it("only the control is expressible within the <=2-coordinate contract", () => {
+    // The bound `checkWitness` enforces is 2. A pair needing 1 + residue > 2
+    // raw erasures cannot be put to it at all, so recording `interaction` for
+    // one of them would report a semantic difference where the test merely
+    // failed to erase the second branch's residue.
+    const expressible = pairs().filter((p) => 1 + p.onlyA.length + p.onlyB.length <= 2);
+    expect(expressible.map((p) => p.pair)).toEqual(["bin~normalize"]);
+  });
+
+  it("records the minimum raw edit per pair, which is 3, 4 or 5 for the twenty", () => {
+    const edits = pairs()
+      .filter((p) => p.pair !== "bin~normalize")
+      .map((p) => 1 + p.onlyA.length + p.onlyB.length);
+    expect(edits).toHaveLength(20);
+    expect(Math.min(...edits)).toBe(3);
+    expect(Math.max(...edits)).toBe(5); // join~graph: {with, cardinality} against {edgeFrom, edgeTo}
+  });
+});
+
 describe("C4 — every stage-1 coordinate is dispositioned exactly once; the kernel equals the ratified set", () => {
   // Accounting, not standing: see the note on `stage1Accounted`.
   const ratified = stage1Accounted;

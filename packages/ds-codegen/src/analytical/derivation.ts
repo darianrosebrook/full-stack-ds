@@ -182,10 +182,16 @@ function fieldDeclaration(f: unknown): string {
  * The per-operator transition law: what each operator is ALLOWED to produce.
  *
  * This is the authoritative locus the Stage-2 `operator-law-locus` close
- * condition asks for, in the one form that cannot drift: each operator's law is
- * STATED and CERTIFIED in the same entry, so a change to one is a change to the
- * other. `statement` is prose for a reader; `certify` is the executable form of
+ * condition asks for. Each operator's law is STATED and CERTIFIED in the same
+ * entry: `statement` is prose for a reader, `certify` is the executable form of
  * the same sentence, returning a refutation or undefined.
+ *
+ * What co-location buys is precise, and no more than this: there is no second
+ * place a law could be written, so there is no competing authority to diverge
+ * from, and prose sits where anyone editing the check will see it. It does not
+ * make the two incapable of drifting — a certifier can still stop matching its
+ * own sentence. The falsifiers are what make each law operational; this
+ * structure is what stops there being two of them.
  *
  * It is deliberately not the doctrine's job and not the subtraction ledger's
  * job: the doctrine names the operator set, `relation-model.ts` declares each
