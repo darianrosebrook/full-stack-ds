@@ -91,3 +91,10 @@ evidence:
     command: "grep -nE 'Calendar|Spinner|ToggleSwitch' packages/ds-codegen/src/frameworks/react-native/component-source.ts (added-code review)"
     exit_code: 0
     commit_sha: c56052e9
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "eslint on adapter/views/scripts exits 0 with zero warnings; adapter tsc --strict clean; root vitest 3363 passed; typecheck:react-native clean"
+    recorded_at: "2026-09-04T23:07:02.222Z"
+    command: "pnpm run lint && pnpm test"
+    exit_code: 0
+    commit_sha: c56052e9
