@@ -33,10 +33,13 @@
  * brand redesign, and it proved that by firing on the latter — but it is a real
  * loss and is recorded as such rather than implied away.
  *
- * SCOPE. Classification is against the generated React CSS only, mirroring the
- * sibling styling rails: all five web families lower from the same IR, so a
- * name mismatch in the IR surfaces identically in each. Read-only — this rail
- * changes no token, no contract and no artifact.
+ * SCOPE. Classification covers the generated global token CSS plus generated
+ * React component CSS. The component surface mirrors the sibling styling
+ * rails: all five web families lower from the same IR, so a name mismatch in
+ * the IR surfaces identically in each. The global sheet must be checked too:
+ * theme/brand/density layers can read graph names without any component CSS
+ * participating, and omitting that surface previously let broken density
+ * aliases pass. Read-only — this rail changes no token, contract, or artifact.
  */
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
@@ -168,6 +171,45 @@ export function buildGraph(css) {
   return graph;
 }
 
+/**
+ * Audit one CSS source against the complete set of names available to it.
+ *
+ * `component` is retained as the row key for ledger compatibility; for a
+ * non-component source it is a stable source id such as `global:tokens.css`.
+ * `candidateDeclared` stays graph-scoped so a casing suggestion never points
+ * at an unrelated component-local declaration.
+ */
+export function auditCssReferences(
+  component,
+  css,
+  availableDeclared,
+  graph = new Map(),
+  runtimeDeclared = new Set(),
+  candidateDeclared = availableDeclared,
+) {
+  const findings = new Map();
+  for (const { name, fallback } of readReferences(css)) {
+    if (availableDeclared.has(name)) continue;
+    if (runtimeDeclared.has(name)) continue;
+    if (findings.has(name)) continue;
+
+    const declaredAs = kebabCandidate(name, candidateDeclared);
+    const resolved = declaredAs ? resolveChain(graph, declaredAs) : null;
+    findings.set(name, {
+      component,
+      name,
+      fallback,
+      declaredAs,
+      declaredAsValue: resolved,
+      repairIsValuePreserving:
+        resolved === null
+          ? null
+          : normalizeValue(resolved) === normalizeValue(fallback),
+    });
+  }
+  return [...findings.values()];
+}
+
 export function auditComponent(component, globalDeclared, primitiveDeclared, graph = new Map()) {
   const dir = resolve(REACT, component);
   const structure = readText(resolve(dir, `${component}.css`));
@@ -180,38 +222,19 @@ export function auditComponent(component, globalDeclared, primitiveDeclared, gra
   ]);
   const runtime = runtimeSetNames(readText(resolve(dir, `${component}.tsx`)));
 
-  const findings = new Map();
-  for (const { name, fallback } of [...readReferences(structure), ...readReferences(tokens)]) {
-    if (localDeclared.has(name)) continue;
-    if (globalDeclared.has(name)) continue;
-    if (primitiveDeclared.has(name)) continue;
-    if (runtime.has(name)) continue;
-    // One row per (component, name): the same broken reference repeated across
-    // eight variant blocks is one defect to fix, not eight.
-    if (!findings.has(name)) {
-      // The kebab-cased spelling, when that is what the graph actually
-      // declares — this turns a report line into the fix itself.
-      const declaredAs = kebabCandidate(name, globalDeclared);
-      const resolved = declaredAs ? resolveChain(graph, declaredAs) : null;
-      findings.set(name, {
-        component,
-        name,
-        fallback,
-        declaredAs,
-        declaredAsValue: resolved,
-        // true  — the fallback already equals the token's fully-resolved value,
-        //         so repairing the name restores the token chain and renders
-        //         identically. Latent, not cosmetic.
-        // false — the fallback and the token DISAGREE. Repairing the name is a
-        //         visual change and must be reviewed as one, not batched.
-        // null  — no kebab candidate, or the chain has no single value (theme-
-        //         varying / cyclic / dangling). Unknown, not safe.
-        repairIsValuePreserving:
-          resolved === null ? null : normalizeValue(resolved) === normalizeValue(fallback),
-      });
-    }
-  }
-  return [...findings.values()];
+  const availableDeclared = new Set([
+    ...localDeclared,
+    ...globalDeclared,
+    ...primitiveDeclared,
+  ]);
+  return auditCssReferences(
+    component,
+    `${structure}\n${tokens}`,
+    availableDeclared,
+    graph,
+    runtime,
+    globalDeclared,
+  );
 }
 
 /**
@@ -243,6 +266,14 @@ export function runAudit() {
   }
 
   const findings = [];
+  findings.push(
+    ...auditCssReferences(
+      "global:tokens.css",
+      graphCss,
+      globalDeclared,
+      graph,
+    ),
+  );
   for (const component of readdirSync(REACT).sort()) {
     findings.push(...auditComponent(component, globalDeclared, primitiveDeclared, graph));
   }
@@ -278,13 +309,13 @@ if (RUN_DIRECTLY) {
   const md = [
     "# Token-reference resolvability matrix",
     "",
-    "`RAIL-TOKEN-REFERENCE-RESOLVABILITY-01` — read-only. A generated stylesheet that reads `var(--fsds-x)` where nothing declares `--fsds-x` does not error: CSS falls back to the literal, so the binding renders a plausible value while the token layer is decorative for that property.",
+    "`RAIL-TOKEN-REFERENCE-RESOLVABILITY-01` — read-only. A generated global or component stylesheet that reads `var(--fsds-x)` where nothing declares `--fsds-x` does not error: CSS falls back to the literal, so the binding renders a plausible value while the token layer is decorative for that property.",
     "",
     "`declared as` names the kebab-cased spelling the token graph actually ships, when the miss is a casing seam. A blank there means the name is missing for some other reason and needs its own diagnosis.",
     "",
     `Declarations in the graph: **${declaredCount}** · unresolvable references: **${findings.length}** across **${byName.size}** distinct name(s)`,
     "",
-    "| name | components | silent fallback | declared as | token value | repair |",
+    "| name | stylesheet sources | silent fallback | declared as | token value | repair |",
     "|---|---|---|---|---|---|",
   ];
   for (const [name, components] of [...byName.entries()].sort()) {
