@@ -176,7 +176,7 @@
     {
       "name": "filterFn",
       "safeName": "filterFn",
-      "type": "((option: SelectOption, searchTerm: string) => boolean)",
+      "type": "(option: SelectOption, searchTerm: string) => boolean",
       "required": false,
       "description": "Custom filter function for search.",
       "defaultExpr": null,

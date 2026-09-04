@@ -32,7 +32,7 @@ export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "child
   disabled?: boolean;
   triggerLabel?: string;
   size?: SelectSize;
-  filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
   position?: string;

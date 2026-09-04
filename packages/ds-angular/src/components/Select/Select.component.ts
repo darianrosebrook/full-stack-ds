@@ -66,7 +66,7 @@ export class SelectComponent {
   @Input() disabled?: boolean;
   @Input() triggerLabel?: string = "Select an option";
   @Input() size?: SelectSize = "md";
-  @Input() filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  @Input() filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   @Input() searchable?: boolean;
   @Input() empty?: boolean;
   @Input() class?: string;
