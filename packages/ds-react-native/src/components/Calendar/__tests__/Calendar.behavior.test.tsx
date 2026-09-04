@@ -25,7 +25,7 @@ function mountCalendar(props: Record<string, unknown> = {}) {
 const dayPressables = (r: ReactTestRenderer): ReactTestInstance[] =>
   r.root.findAll(
     (n) =>
-      n.type === "Pressable" &&
+      String(n.type) === "Pressable" &&
       typeof n.props.onPress === "function" &&
       n.props.accessibilityRole === "button",
   );
