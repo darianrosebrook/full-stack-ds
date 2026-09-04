@@ -36,3 +36,10 @@ evidence:
     command: "pnpm run typecheck:example:react-native"
     exit_code: 0
     commit_sha: "532f0904"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Diff review: consumer passes Field name/required/slots and Button onClick — every prop is contract-declared on the generated surface; no type patches or tsconfig exclusions"
+    recorded_at: "2026-09-04T23:14:33.196Z"
+    command: git show 532f0904 -- examples/settings/react-native/src/App.tsx
+    exit_code: 0
+    commit_sha: "532f0904"
