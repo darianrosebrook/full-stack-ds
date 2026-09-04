@@ -42,3 +42,8 @@ contracts:
   - name: 'global-token-resolvability'
     type: behavior
     path: 'scripts/token-resolvability-audit/audit.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-tokens/build/core/index.test.ts (20/20); pnpm run tokens:build:check"
+    recorded_at: "2026-09-04T22:47:54.899Z"
