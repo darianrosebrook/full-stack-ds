@@ -57,6 +57,7 @@ const bindings = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, "bindings.js
   cases: Record<string, string>;
   neighbours: Record<string, string>;
   triads: Record<string, { absent: string; satisfying: string; hostile: string }>;
+  holdout: string[];
 };
 const isCoordinate = (c: Coordinate) => c.kind !== "reference";
 
@@ -758,12 +759,18 @@ describe("C6 — conservation: the Phase-A ledger equals the live ledger modulo 
       .filter((d) => d.startsWith("fixture added since baseline:"))
       .map((d) => d.replace("fixture added since baseline: ", ""));
     expect(added.length).toBeGreaterThan(0);
-    // Every one of them is a stage-2 fixture the binding ledger accounts for,
-    // which is where new fixtures are governed.
+    // Every one of them is a fixture the binding ledger accounts for, which is
+    // where new fixtures are governed. All FOUR of its sections count: the
+    // holdout list is a binding section — `checkFixtureLedger` raises
+    // LEDGER_HOLDOUT_UNBOUND for an item missing from it — and omitting it here
+    // made this assertion narrower than the sentence above it. It passed only
+    // because every holdout item predated the baseline freeze, so the branch had
+    // never been reached.
     const bound = new Set([
       ...Object.values(bindings.cases),
       ...Object.values(bindings.neighbours),
       ...Object.values(bindings.triads).flatMap((t) => [t.absent, t.satisfying, t.hostile]),
+      ...bindings.holdout,
     ]);
     for (const id of added) expect(bound.has(id), `${id} is not bound by any ledger section`).toBe(true);
   });

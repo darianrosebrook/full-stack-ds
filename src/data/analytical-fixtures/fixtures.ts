@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: c1d0450ab89ce8786ee30c41cf8314bf00ffbdb66b26f79e16b6b8ef86e6e0d6
+// Source sha256: 4e23b40739798c0a4bc278e841965ff95ef08bc78821be1b58b9baba296736ba
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -4129,6 +4129,207 @@ export const FIXTURES: AnalyticalFixture[] = [
             "src": "b",
             "dst": "c",
             "amount": 3
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT",
+    "structure": {
+      "relations": {
+        "orders": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "flat": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "interval"
+            }
+          },
+          "derivedBy": {
+            "kind": "project",
+            "from": "orders",
+            "keep": [
+              "order_id",
+              "amount"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "orders",
+        "field": "amount",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_ORDERS_FLATTENED_DROPS_REGION",
+    "structure": {
+      "relations": {
+        "orders": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "flat": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "project",
+            "from": "orders",
+            "keep": [
+              "order_id",
+              "amount"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "orders",
+        "field": "amount",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE",
+    "structure": {
+      "relations": {
+        "edges": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio",
+              "permits": {
+                "null": true
+              }
+            }
+          }
+        },
+        "routed": {
+          "grain": [
+            "src",
+            "dst"
+          ],
+          "fields": {
+            "src": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "dst": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio",
+              "permits": {
+                "null": true
+              }
+            }
+          },
+          "derivedBy": {
+            "kind": "graph",
+            "from": "edges",
+            "edgeFrom": "src",
+            "edgeTo": "dst",
+            "value": "amount",
+            "requiresConservation": true
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "edges",
+        "field": "amount",
+        "op": "min",
+        "nulls": "exclude"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "edges": [
+          {
+            "src": "a",
+            "dst": "b",
+            "amount": 10
+          },
+          {
+            "src": "b",
+            "dst": "c",
+            "amount": 10
+          },
+          {
+            "src": "c",
+            "dst": "d",
+            "amount": {
+              "null": "absent"
+            }
           }
         ]
       }

@@ -346,16 +346,60 @@ describe("A8 — holdout authored against the recorded rule digest", () => {
   for (const item of live.holdout.items) {
     it(`${item.fixture} → ${item.expected.status}`, () => {
       const j = JSON.parse(canonicalJudgment(judgeFixture(fx(item.fixture)))) as Record<string, unknown>;
-      // The expectations were authored by hand before the derivation domain
-      // existed, so they are compared on exactly what they record. The domain
-      // they do not record is asserted EMPTY rather than quietly skipped: that
-      // is the reach argument in the re-record log made mechanical — the
-      // boundary cannot touch a holdout judgment because no holdout fixture
-      // declares a derivation for it to reach.
+      // Each item is compared on exactly the domains it records.
       expect(Object.fromEntries(Object.keys(item.expected).map((k) => [k, j[k]]))).toEqual(item.expected);
-      expect(j.derivations, `${item.fixture} now reaches the derivation boundary; re-derive its expectation by hand`).toEqual([]);
+      // The eight ORIGINAL items were authored before the derivation domain
+      // existed, so the domain they do not record is asserted EMPTY rather than
+      // quietly skipped: that is the reach argument in the re-record log made
+      // mechanical. An item that RECORDS `derivations` has had that domain
+      // hand-derived, and the line above is what holds it. Keeping the blanket
+      // assertion would have made the two indistinguishable — a fixture reaching
+      // the boundary would fail even with a correct hand expectation, and the
+      // only way to land one would be to weaken the guard for everybody.
+      if (!("derivations" in item.expected)) {
+        expect(j.derivations, `${item.fixture} now reaches the derivation boundary; re-derive its expectation by hand`).toEqual([]);
+      }
     });
   }
+
+  it("at least one holdout item reaches the derivation boundary in each of its three states", () => {
+    // Until this held, the derivation rules — including the project law and the
+    // fail-closed conservation walk — were held only to the stage-2 case
+    // fixtures and unit tests, never to a hand-authored answer key. That gap was
+    // recorded as an explicit non-claim in the re-record log twice before it was
+    // closed.
+    const reaching = live.holdout.items.filter((i) => "derivations" in i.expected);
+    expect(reaching.length).toBeGreaterThanOrEqual(3);
+    expect(new Set(reaching.map((i) => i.expected.status))).toEqual(new Set(["illegal", "unproven", "admissible"]));
+    // Each state comes from a DIFFERENT law, so a single rule cannot supply all
+    // three and leave the others unwitnessed.
+    const kinds = reaching.flatMap((i) => (i.expected.derivations ?? []).map((d) => `${d[0]}:${d[1]}`));
+    expect(kinds.sort()).toEqual(["diagnostic:REL_DERIVATION_RESULT_NOT_DERIVABLE", "obligation:invariant:conservation"]);
+  });
+
+  it("the conservation holdout separates `cannot be decided` from `conserved`", () => {
+    // The value of that fixture is precisely that the older skip-the-row
+    // behaviour would report NOTHING on it: dropping the unreadable edge leaves
+    // the middle node balanced 10 in / 10 out and the last node a pure sink,
+    // which the balance walk skips. Asserting the arithmetic here is what makes
+    // it a falsifier for the fail-closed repair rather than one more graph.
+    const f = fx("FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE");
+    const rows = f.evidence!.rows!.edges;
+    const readable = rows.filter((r) => typeof r.amount === "number") as { src: string; dst: string; amount: number }[];
+    expect(rows).toHaveLength(3);
+    expect(readable).toHaveLength(2);
+    const inflow = new Map<string, number>();
+    const outflow = new Map<string, number>();
+    for (const r of readable) {
+      outflow.set(r.src, (outflow.get(r.src) ?? 0) + r.amount);
+      inflow.set(r.dst, (inflow.get(r.dst) ?? 0) + r.amount);
+    }
+    // Every node with both an inflow and an outflow balances once the unreadable
+    // edge is dropped, so a walk that skipped it would find no imbalance at all.
+    const decidable = [...inflow.keys()].filter((n) => outflow.has(n));
+    expect(decidable).toEqual(["b"]);
+    for (const n of decidable) expect(inflow.get(n)).toBe(outflow.get(n));
+  });
 });
 
 describe("A9 — per-observation heterogeneity survives", () => {

@@ -541,6 +541,21 @@ export interface HoldoutExpectation {
   status: "admissible" | "illegal" | "unproven";
   diagnostics: [string, string, string, string, string][];
   obligations: [string, string, string, string, string][];
+  /**
+   * OPTIONAL, and the optionality is the record.
+   *
+   * The eight original items were authored before the derivation boundary
+   * existed, so they record no expectation for that domain and are held to an
+   * EMPTY one. An item that records `derivations` has had the domain
+   * hand-derived, and is held to what it records. Making the field required
+   * would force the eight to be back-filled with a value nobody derived by hand.
+   *
+   * Its tuple carries one field more than the others: the occurrence KIND, since
+   * a derivation occurrence can be a diagnostic or an obligation and the two
+   * mean opposite things about the same declaration.
+   * [kind, code|term, subject, derivation, engine, evidenceClass]
+   */
+  derivations?: [string, string, string, string, string, string][];
 }
 
 export interface Holdout {
