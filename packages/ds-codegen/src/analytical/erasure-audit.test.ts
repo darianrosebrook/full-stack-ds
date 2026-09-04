@@ -11,7 +11,10 @@
  */
 import { describe, expect, it } from "vitest";
 import { loadPlans } from "./census.js";
+import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { claimedFootprints, computeReport, loadReport, measure, specimens } from "./erasure-audit.js";
+import { loadOracle } from "./necessity.js";
+import { forgotten, loadQuotientValidator } from "./quotient-image.js";
 
 const recorded = loadReport();
 const live = computeReport();
@@ -87,30 +90,112 @@ describe("structural claims survive falsification", () => {
   });
 });
 
-describe("erasures that leave the language", () => {
-  it("names the four whose quotient is schema-invalid on every specimen it touches", () => {
-    // A necessity argument says no consumer of the QUOTIENTED representation
-    // can tell two stimuli apart. Where the quotient leaves the language there
-    // is no such consumer, and these four each support a HOLDING witness. Not
-    // acted on here: repairing it means deciding that deleting a required leaf
-    // deletes its declaration, which would move real evidence.
-    const worst = live.invalidating.filter((i) => i.specimens > 100).map((i) => i.coordinate).sort();
+describe("the two language questions, which used to be one", () => {
+  it("every specimen is a legal image of itself, so the codomain contains the domain", () => {
+    // The cheapest possible falsifier for the relaxation transform, and it has
+    // to hold before any count below means anything: if the quotient language
+    // did not admit an unerased fixture, every other number here would be
+    // measuring the schema rather than the erasures.
+    const validate = loadQuotientValidator(CONTRACTS_DIR);
+    const rejected = specimens().fixtures.filter((f) => validate(f).length > 0);
+    expect(rejected.map((f) => f.id)).toEqual([]);
+  });
+
+  it("admits a marker where the source language requires a value", () => {
+    const validate = loadQuotientValidator(CONTRACTS_DIR);
+    const source = loadOracle().validate;
+    const base = specimens().fixtures[0];
+    const holed = JSON.parse(JSON.stringify(base)) as Record<string, unknown>;
+    (holed.assertions as Record<string, unknown>[])[0].kind = forgotten(["assertion.kind"]);
+    // Departs the source language — and is a perfectly good quotient image.
+    expect(source(holed).length).toBeGreaterThan(0);
+    expect(validate(holed)).toEqual([]);
+  });
+
+  it("still refuses an image that is not a legal hole: a deleted required leaf leaves nothing behind", () => {
+    // `required` is deliberately NOT relaxed. The relaxation admits a marker
+    // where a value was; it does not admit the absence of both.
+    const validate = loadQuotientValidator(CONTRACTS_DIR);
+    const base = specimens().fixtures[0];
+    const gutted = JSON.parse(JSON.stringify(base)) as Record<string, unknown>;
+    delete (gutted.assertions as Record<string, unknown>[])[0].kind;
+    expect(validate(gutted).join("; ")).toMatch(/required property 'kind'/);
+  });
+
+  it("refuses a fake marker, because the tag is checked as a value and not as a key", () => {
+    const validate = loadQuotientValidator(CONTRACTS_DIR);
+    const base = specimens().fixtures[0];
+    const bad = JSON.parse(JSON.stringify(base)) as Record<string, unknown>;
+    (bad.assertions as Record<string, unknown>[])[0].kind = { "@q": "forgotten", by: ["x"], smuggled: 1 };
+    expect(validate(bad).length).toBeGreaterThan(0);
+  });
+
+  it("reports 34 erasures leaving the source language and, TODAY, all 34 illegal as images", () => {
+    // The measurement the codomain was introduced to make, and it does not say
+    // what the split was expected to say. None of the 34 is a benign departure:
+    // every one is also an illegal IMAGE, so all 34 are defects of the
+    // operations rather than shapes to be tolerated. The next commit drives the
+    // second count to 0; the first is expected to stay non-zero forever.
+    expect(live.sourceLanguageDeparture.length).toBe(34);
+    expect(live.quotientLanguageInvalid.length).toBe(34);
+    const benign = live.sourceLanguageDeparture.filter((d) => !live.quotientLanguageInvalid.some((i) => i.coordinate === d.coordinate));
+    expect(benign).toEqual([]);
+  });
+
+  it("separates three defect classes by OPERATION, each needing a different repair", () => {
+    // Classified by the operation, never by the validator's error string: ajv
+    // reports the first failing branch, so truncating `nest.levels` surfaces as
+    // a missing `toGrain` and would be filed under the wrong repair.
+    const plans = loadPlans();
+    const byOp = new Map<string, string[]>();
+    for (const i of live.quotientLanguageInvalid) {
+      const op = plans.get(i.coordinate)?.operation.kind ?? "(no plan)";
+      byOp.set(op, [...(byOp.get(op) ?? []), i.coordinate].sort());
+    }
+    expect([...byOp].map(([op, ids]) => `${op}: ${ids.length}`).sort()).toEqual([
+      "delete-slot: 8",
+      "forget-reference-arity: 2",
+      "merge-enum-members: 24",
+    ]);
+
+    // A branch tag written over another branch's payload: `{kind:"aggregate-to-grain",
+    // levels:[…]}` claims to be an aggregation while carrying a nesting. That is
+    // not forgetting the distinction, it is asserting something false about it.
+    // The repair is a member CLASS, which identifies the two without claiming
+    // either of them.
+    expect(byOp.get("merge-enum-members")).toContain("relation.derivedBy.kind:aggregate-to-grain~nest");
+
+    // A required leaf deleted with no hole left behind. The repair is a typed
+    // forgotten value — NOT deleting the enclosing declaration, which would
+    // forget the relation, the field, every other assertion parameter, and turn
+    // the present `subsumes-refinements` result into real sibling over-erasure.
+    expect(byOp.get("delete-slot")).toEqual([
+      "assertion.aggregate.op",
+      "assertion.kind",
+      "field.additivity.kind",
+      "field.temporality.kind",
+      "field.transformation",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.kind",
+      "relation.grain",
+    ]);
+
+    // Arity truncated below the representation's own floor: a peer group needs
+    // two members and `slice(0, 1)` leaves one. `slice` to the floor instead is
+    // also strictly LESS erasing — truncating a 2-list to 1 identifies [a,b]
+    // with [a,c], which differ in incidence and not in arity at all.
+    expect(byOp.get("forget-reference-arity")).toEqual(["relation.derivedBy.nest.levels#arity", "structure.peers[]#arity"]);
+  });
+
+  it("keeps each of the four high-reach cases attached to the witness it would move", () => {
+    // Recorded so that the cost of the repair stays visible: these are not
+    // orphaned erasures, they are the evidence four holding witnesses rest on.
+    const worst = live.quotientLanguageInvalid.filter((i) => i.specimens > 100).map((i) => i.coordinate).sort();
     expect(worst).toEqual(["assertion.aggregate.op", "assertion.kind", "field.transformation", "relation.grain"]);
     for (const id of worst) {
       const w = live.witnesses.find((x) => x.declared.includes(id));
       expect(w?.holds, `${id} has no holding witness`).toBe(true);
     }
-  });
-
-  it("counts the rest, which are branch residue and are what closures exist for", () => {
-    // Writing one branch's tag over another branch's payload cannot be
-    // schema-valid — `graph` requires `edgeFrom`/`edgeTo`, `aggregate-to-grain`
-    // requires `toGrain`. That is the residue the closure form normalizes, and
-    // it is confirmed here from a direction the closure ledger never looks:
-    // the specimen synthesizer cannot build a pair for any of them.
-    const residue = live.invalidating.filter((i) => i.coordinate.includes(".kind"));
-    expect(residue.length).toBeGreaterThan(20);
-    expect(live.invalidating.length).toBe(34);
   });
 });
 

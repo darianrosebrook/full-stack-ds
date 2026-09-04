@@ -72,6 +72,8 @@ import {
   type Witness,
 } from "./necessity.js";
 import { canonical } from "./quotient.js";
+import { loadQuotientValidator, QUOTIENT_SCHEMA_FILE, QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
+import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { parseFixtures, type Fixture } from "./structure.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -334,18 +336,29 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
 export interface FootprintReport {
   $comment: string;
   digests: Record<string, string>;
+  /** Which quotient language these images were measured in. */
+  quotientSchemaVersion: number;
   specimens: { corpus: number; stimuli: number; synthesized: number; total: number };
   /** Coordinates for which no separating pair could be written, and why. */
   unbuilt: PairFailure[];
   /**
-   * Erasures whose result is not a schema-valid representation.
+   * Erasures whose image is not an unmodified SOURCE declaration.
    *
-   * A necessity argument says "no consumer of the QUOTIENTED representation can
-   * tell the two apart". Where the quotient leaves the language, there is no
-   * such consumer, and the argument is standing on a shape the schema rejects.
-   * Reported, never acted on: four of these currently support holding witnesses.
+   * Usually expected, and not by itself a defect. An erasure is a map into a
+   * quotient language; nothing requires that language to be a subset of the
+   * source one, any more than a compiler IR must parse as source. This count
+   * exists to be READ, not to be driven to zero.
    */
-  invalidating: { coordinate: string; specimens: number; error: string }[];
+  sourceLanguageDeparture: LanguageReport[];
+  /**
+   * Erasures whose image is not a legal QUOTIENT image. Always a defect.
+   *
+   * The terminal invariant of this lane, and the one with teeth: a required leaf
+   * deleted with no marker left behind, an array emptied below its floor, a hole
+   * that serializes as `null`, a branch tag written over another branch's
+   * payload. Each of those has actually happened here.
+   */
+  quotientLanguageInvalid: LanguageReport[];
   /** Coordinate id -> measured footprint. Every plan appears, singleton or not. */
   footprints: Record<string, string[]>;
   /** Erasures no specimen distinguishes. A corpus fact; never read as a verdict. */
@@ -359,29 +372,50 @@ export interface FootprintReport {
   witnesses: WitnessAudit[];
 }
 
+export interface LanguageReport {
+  coordinate: string;
+  /** How many specimens the erasure produces an offending image from. */
+  specimens: number;
+  /** The first validator error, verbatim — enough to name the defect class. */
+  error: string;
+}
+
 /**
- * Which erasures produce a representation the schema rejects.
+ * Which erasures leave the source language, and which leave the quotient one.
+ *
+ * The same walk answers both, against two different validators, because the
+ * whole point is that these are different questions and were previously one.
+ * `source` rejecting an image is information; `quotient` rejecting it is a bug.
  *
  * Measured over the AUTHORED specimens only. A synthesized pair is discarded
  * unless both sides validate, so including them would make this look better by
  * construction — the population would be filtered by the property being tested.
  */
-export function invalidatingErasures(fixtures: Fixture[], plans: Map<string, ErasurePlan> = loadPlans()): FootprintReport["invalidating"] {
-  const validate = loadOracle().validate;
-  const out: FootprintReport["invalidating"] = [];
+export function languageReports(
+  fixtures: Fixture[],
+  plans: Map<string, ErasurePlan> = loadPlans(),
+): { sourceLanguageDeparture: LanguageReport[]; quotientLanguageInvalid: LanguageReport[] } {
+  const source = loadOracle().validate;
+  const quotient = loadQuotientValidator(CONTRACTS_DIR);
+  const tally = (into: Map<string, LanguageReport>, id: string, errors: string[]) => {
+    if (errors.length === 0) return;
+    const prev = into.get(id);
+    if (prev) prev.specimens++;
+    else into.set(id, { coordinate: id, specimens: 1, error: errors[0] });
+  };
+  const departed = new Map<string, LanguageReport>();
+  const illegal = new Map<string, LanguageReport>();
   for (const p of plans.values()) {
-    let count = 0;
-    let first = "";
     for (const f of fixtures) {
       if (!wouldChange(f, p)) continue;
-      const errors = validate(executePlan(f, p));
-      if (errors.length === 0) continue;
-      count++;
-      first ||= errors[0];
+      const image = executePlan(f, p);
+      tally(departed, p.id, source(image));
+      tally(illegal, p.id, quotient(image));
     }
-    if (count > 0) out.push({ coordinate: p.id, specimens: count, error: first });
   }
-  return out.sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
+  const order = (m: Map<string, LanguageReport>) =>
+    [...m.values()].sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
+  return { sourceLanguageDeparture: order(departed), quotientLanguageInvalid: order(illegal) };
 }
 
 export function computeReport(): FootprintReport {
@@ -389,9 +423,11 @@ export function computeReport(): FootprintReport {
   const m = measure(s.fixtures);
   return {
     $comment:
-      "Measured semantic footprints (REL-VIEW-ALGEBRA-01). q is in the footprint of P iff q acts on some specimen AND erasing q after P changes nothing — i.e. E_q . E_P = E_P. Derived by measurement over the corpus plus every witness and closure stimulus, never by string prefix on coordinate ids. `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
+      "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
     digests: {
       "fixture.schema.json": sha(fs.readFileSync(FIXTURE_SCHEMA)),
+      [QUOTIENT_SCHEMA_FILE]: sha(fs.readFileSync(path.join(CONTRACTS_DIR, QUOTIENT_SCHEMA_FILE))),
+      "quotient-image.ts": sha(fs.readFileSync(path.join(HERE, "quotient-image.ts"))),
       "fixtures.jsonl": sha(fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl"))),
       "census.ts": sha(fs.readFileSync(path.join(HERE, "census.ts"))),
       "erasure-plan.ts": sha(fs.readFileSync(path.join(HERE, "erasure-plan.ts"))),
@@ -399,9 +435,10 @@ export function computeReport(): FootprintReport {
       "witnesses.json": sha(fs.readFileSync(WITNESSES_FILE)),
       "closures-stage2.json": sha(fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json"))),
     },
+    quotientSchemaVersion: QUOTIENT_SCHEMA_VERSION,
     specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length },
     unbuilt: s.unbuilt,
-    invalidating: invalidatingErasures(s.fixtures.slice(0, s.corpus + s.stimuli)),
+    ...languageReports(s.fixtures.slice(0, s.corpus + s.stimuli)),
     footprints: Object.fromEntries([...m.footprints].sort(([a], [b]) => a.localeCompare(b))),
     dead: m.dead,
     unseparated: m.unseparated,
@@ -455,8 +492,12 @@ if (invokedDirectly) {
       const key = u.reason.startsWith("schema-invalid") ? "erasing it produces a schema-invalid representation" : u.reason;
       byReason.set(key, [...(byReason.get(key) ?? []), u.coordinate]);
     }
-    console.log(`  ${report.invalidating.length} erasure(s) leave the language (schema-invalid result):`);
-    for (const i of report.invalidating) console.log(`    ${String(i.specimens).padStart(3)}  ${i.coordinate.padEnd(50)} ${i.error}`);
+    // Two counts, deliberately printed with different framing. The first is a
+    // reading; the second is the terminal invariant, and it is the only one a
+    // reader should be alarmed by.
+    console.log(`  ${report.sourceLanguageDeparture.length} erasure(s) leave the SOURCE language (expected: a quotient image need not parse as a declaration)`);
+    console.log(`  ${report.quotientLanguageInvalid.length} erasure(s) produce an ILLEGAL quotient image (must be 0):`);
+    for (const i of report.quotientLanguageInvalid) console.log(`    ${String(i.specimens).padStart(3)}  ${i.coordinate.padEnd(50)} ${i.error}`);
     console.log(`  ${report.unbuilt.length} coordinate(s) with no separating pair:`);
     for (const [reason, ids] of [...byReason].sort((a, b) => b[1].length - a[1].length)) {
       console.log(`    ${String(ids.length).padStart(3)}  ${reason}`);

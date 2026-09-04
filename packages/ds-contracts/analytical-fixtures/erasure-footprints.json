@@ -1,7 +1,9 @@
 {
-  "$comment": "Measured semantic footprints (REL-VIEW-ALGEBRA-01). q is in the footprint of P iff q acts on some specimen AND erasing q after P changes nothing — i.e. E_q . E_P = E_P. Derived by measurement over the corpus plus every witness and closure stimulus, never by string prefix on coordinate ids. `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
+  "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixture.schema.json": "b1faba61e6b2048c05d4e6ee782c305c40cea5429da065f8af02c446249e0a88",
+    "quotient-image.schema.json": "1ebd02c8eeb5694898443a511de0cf94f756b0b96ae974319d9d76ca712f2df8",
+    "quotient-image.ts": "689ab013cadcf7f53c77e3f16f21de3bdf74bf28d791701fc71b3870aa727e1c",
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
     "census.ts": "2cd03735368b2c7138bbc8cdee7ce3a1307c2f8b52a0068b3d587f83d4ee0043",
     "erasure-plan.ts": "0c529f0fcd81a7563db3039f7739ff27229dd29ae1023616b23cb900800d776e",
@@ -9,6 +11,7 @@
     "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
     "closures-stage2.json": "a26ac911924f230e803871691e0ee60ecf60cf6ee2ab03771add0099aa0a7780"
   },
+  "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 90,
     "stimuli": 22,
@@ -173,7 +176,179 @@
       "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values"
     }
   ],
-  "invalidating": [
+  "sourceLanguageDeparture": [
+    {
+      "coordinate": "assertion.kind",
+      "specimens": 112,
+      "error": "/assertions/0 must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.transformation",
+      "specimens": 112,
+      "error": "/structure/relations/survey/fields/respondent must have required property 'transformation'"
+    },
+    {
+      "coordinate": "relation.grain",
+      "specimens": 112,
+      "error": "/structure/relations/survey must have required property 'grain'"
+    },
+    {
+      "coordinate": "assertion.aggregate.op",
+      "specimens": 110,
+      "error": "/assertions/0 must have required property 'op'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind",
+      "specimens": 29,
+      "error": "/structure/relations/shares/derivedBy must have required property 'kind'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "specimens": 6,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~nest",
+      "specimens": 6,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:project~graph",
+      "specimens": 6,
+      "error": "/structure/relations/routed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.nest.levels#arity",
+      "specimens": 6,
+      "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "field.additivity.kind",
+      "specimens": 5,
+      "error": "/structure/relations/stock/fields/on_hand/additivity must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.additivity.kind:additive~semi-additive",
+      "specimens": 5,
+      "error": "/structure/relations/stock/fields/on_hand/additivity must NOT have additional properties"
+    },
+    {
+      "coordinate": "relation.derivedBy.join.cardinality",
+      "specimens": 4,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "specimens": 4,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
+      "specimens": 4,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "specimens": 4,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:bin~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~bin",
+      "specimens": 4,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~normalize",
+      "specimens": 4,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~bin",
+      "specimens": 4,
+      "error": "/structure/relations/bucketed/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~normalize",
+      "specimens": 4,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:nest~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:normalize~project",
+      "specimens": 4,
+      "error": "/structure/relations/flat/derivedBy must have required property 'toGrain'"
+    },
+    {
+      "coordinate": "structure.peers[]#arity",
+      "specimens": 4,
+      "error": "/structure/peers/0 must NOT have fewer than 2 items"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~ratio-measure",
+      "specimens": 3,
+      "error": "/structure/relations/regions/fields/gdp_per_capita/additivity/kind must be equal to constant"
+    },
+    {
+      "coordinate": "assertion.kind:aggregate~ratio-comparison",
+      "specimens": 2,
+      "error": "/assertions/0 must have required property 'op'"
+    },
+    {
+      "coordinate": "field.temporality.kind",
+      "specimens": 2,
+      "error": "/structure/relations/daily/fields/day/temporality must have required property 'kind'"
+    },
+    {
+      "coordinate": "field.additivity.kind:semi-additive~non-additive",
+      "specimens": 1,
+      "error": "/structure/relations/regions/fields/avg_score/additivity/kind must be equal to constant"
+    }
+  ],
+  "quotientLanguageInvalid": [
     {
       "coordinate": "assertion.kind",
       "specimens": 112,
