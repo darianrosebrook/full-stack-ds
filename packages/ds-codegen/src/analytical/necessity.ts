@@ -290,6 +290,7 @@ export function checkWitness(
   census: Coordinate[],
   oracle: Oracle,
   isolate: (fixture: Fixture, c: Coordinate) => IsolationResult = (f, c) => checkIsolation(f, c),
+  combine: (fixture: Fixture, cs: readonly Coordinate[]) => IsolationResult = (f, cs) => checkCombinedIsolation(f, cs),
 ): WitnessCheck {
   const a = resolveSide(w.a, oracle);
   const b = resolveSide(w.b, oracle);
@@ -333,6 +334,17 @@ export function checkWitness(
       if (result.state === "violated") failures.push({ code: "ERASURE_NOT_ISOLATED", detail: `${label}/${c.id}: ${result.detail}` });
       if (result.state === "unevaluated") failures.push({ code: "ERASURE_ISOLATION_UNEVALUATED", detail: `${label}/${c.id}: ${result.reason}` });
     }
+    // AND THE IMAGE THE COLLISION IS ABOUT. Above, each coordinate is erased
+    // alone against the original stimulus; the collision is decided by
+    // `eraseAll`, whose saturated execution is not two independent runs. A 2-set
+    // whose members are each fine apart can compose into something neither of
+    // them is, and nothing looked at that until now.
+    if (coords.length > 1) {
+      const combined = combine(side.fixture, coords);
+      isolation.push({ side: label, coordinate: coords.map((c) => c.id).join(" + "), fixture: side.fixture.id, result: combined, composed: true });
+      if (combined.state === "violated") failures.push({ code: "ERASURE_NOT_ISOLATED", detail: `${label}/combined: ${combined.detail}` });
+      if (combined.state === "unevaluated") failures.push({ code: "ERASURE_ISOLATION_UNEVALUATED", detail: `${label}/combined: ${combined.reason}` });
+    }
   }
   return { ok: failures.length === 0, failures, isolation, a, b };
 }
@@ -370,27 +382,31 @@ function terminalPaths(node: unknown, path = "", out: Set<string> = new Set()): 
  * refutation, and the two were indistinguishable while this returned
  * `string | undefined`.
  *
+ * THESE ARE NOT RANKED. They establish different propositions, and admission is
+ * justified by the combination an operation requires, never by preferring a
+ * label. Reading one as a universal substitute for another is how a side
+ * condition gets mistaken for a definition.
+ *
  * - `unchanged`: the erasure is a no-op on this stimulus, so there is nothing
  *   it could have damaged. The `reference` kind is defined this way.
  * - `engine-comparison`: both structures are source-representable, the
  *   derivation boundary was asked about each, and the erasure introduced no
- *   diagnostic. The strongest of the three, and the only one that can see a
- *   MANUFACTURED semantic defect — the dangling input that gave this check its
- *   reason to exist.
- * - `quotient-legal-slot-local`: the image carries a marker, so the source
- *   engine cannot be asked about it. What IS established is that the image is
- *   legal in the quotient language and that every value the erasure changed
- *   lies at or beneath a slot the coordinate's own locator resolves to.
+ *   finding. This is the only route that can see a MANUFACTURED semantic
+ *   defect — the dangling input that gave this check its reason to exist — and
+ *   it sees nothing about WHERE the mutation happened.
+ * - `quotient-legal-slot-local`: the image introduced no quotient-language
+ *   error and every value the erasure changed lies at or beneath a slot the
+ *   coordinate's own locator resolves to. This is the only route that bounds
+ *   the mutation, and it says nothing about the semantics of the result.
  *
- * THE NON-CLAIM, stated because the third proof is weaker than the second and
- * must not be read as equivalent: slot-locality plus quotient legality does not
- * rule out a manufactured SEMANTIC defect, because no engine reads the image.
- * The class that can manufacture one — replacing a resolvable reference name
- * with a token, which is what dangles an input — writes no marker, so it is
- * always proved by `engine-comparison`. That is an argument about which
- * operations produce markers, not a general equivalence.
+ * WHAT NONE OF THEM ESTABLISHES: that the operation performed the forgetting it
+ * names. Legality and locality are side conditions — a merge writing the WRONG
+ * member class at exactly the right slot satisfies both — and the operation's
+ * own law is proved separately, over the finite operation vocabulary, in
+ * `erasure-plan.test.ts` and `quotient-image.test.ts`. Nothing here should be
+ * read as a substitute for that.
  */
-export type IsolationProof = "unchanged" | "engine-comparison" | "quotient-legal-slot-local";
+export type IsolationProof = "unchanged" | "no-introduced-finding" | "quotient-legal" | "slot-local";
 
 /**
  * What one isolation obligation yielded, for one stimulus and one coordinate.
@@ -402,7 +418,29 @@ export type IsolationProof = "unchanged" | "engine-comparison" | "quotient-legal
  * it propagates.
  */
 export type IsolationResult =
-  | { state: "discharged"; by: IsolationProof }
+  | {
+      state: "discharged";
+      /**
+       * EVERY proposition established, not the best-sounding one.
+       *
+       * A single label invited exactly the reading the names were meant to
+       * prevent: that one proof substitutes for another. It does not. The
+       * engine route sees only the `structure`, so it discharged an
+       * assertion-side erasure without anything bounding where the change
+       * landed — a ranking hiding a gap. Discharge now requires the
+       * combination an operation needs, and the set says which parts held.
+       */
+      by: IsolationProof[];
+      /**
+       * What a DIFFERENT route could not establish here, when one could not.
+       *
+       * Reported rather than dropped, because "the structural proof carried
+       * this" and "the structural proof carried this because the engine
+       * comparison was untrustworthy on this input" are different situations
+       * and only one of them is routine.
+       */
+      limitation?: string;
+    }
   | { state: "violated"; detail: string }
   | { state: "unevaluated"; reason: string };
 
@@ -415,10 +453,13 @@ export type IsolationResult =
  */
 export interface IsolationRecord {
   side: "a" | "b";
+  /** One coordinate id, or the joined set when this is the composed obligation. */
   coordinate: string;
   /** The stimulus it was evaluated on. */
   fixture: string;
   result: IsolationResult;
+  /** True where this is the obligation on the image the collision is decided by. */
+  composed?: boolean;
 }
 
 /**
@@ -464,22 +505,66 @@ export type DerivationChecker = (structure: RelationalStructure) => BoundaryFind
 /** The plan lookup, injectable for the same reason: `unevaluated` must be observable. */
 export type PlanLookup = (c: Coordinate) => ErasurePlan | undefined;
 
-/** Every path holding a scalar, with its value, so a difference can be located. */
-function valueMap(node: unknown, path = "", out: Map<string, string> = new Map()): Map<string, string> {
+/**
+ * Every path in a representation, with a token that identifies what is AT it.
+ *
+ * A token per NODE, not per scalar leaf. The earlier version recorded a value
+ * only when the walk reached a scalar, so a container with no scalar descendant
+ * contributed nothing and four kinds of real change were invisible: emptying an
+ * array then dropping its holder, deleting an empty object, an array becoming
+ * an object, and an array of empty objects growing. Each of those is a genuine
+ * mutation, and holder presence, empty evidence collections and absent
+ * declarations are exactly the distinctions this apparatus keeps having to
+ * recover — so an equality that cannot see them is the wrong equality.
+ *
+ * The token carries kind and arity, so container existence, container kind and
+ * array length are all observed; scalar values are carried directly. Two
+ * representations have equal maps if and only if they are equal, because object
+ * key sets are witnessed by their children's presence together with the
+ * parent's arity.
+ */
+export function valueMap(node: unknown, path = "", out: Map<string, string> = new Map()): Map<string, string> {
   if (node === null || typeof node !== "object") {
-    if (path) out.set(path, JSON.stringify(node));
+    out.set(path, JSON.stringify(node));
     return out;
   }
   if (Array.isArray(node)) {
+    out.set(path, `array:${node.length}`);
     node.forEach((v, i) => valueMap(v, `${path}[${i}]`, out));
     return out;
   }
-  for (const [k, v] of Object.entries(node as Record<string, unknown>)) valueMap(v, `${path}.${k}`, out);
+  const entries = Object.entries(node as Record<string, unknown>);
+  out.set(path, `object:${entries.length}`);
+  for (const [k, v] of entries) valueMap(v, `${path}.${k}`, out);
+  return out;
+}
+
+/**
+ * A finding's STABLE identity, and how many times it occurs.
+ *
+ * `${code}@${subject}` was a lossy projection of a `BoundaryFinding`, and the
+ * loss was load-bearing three ways: an obligation carries `term` and no `code`,
+ * so two different obligations at one subject both read `undefined@subject`; a
+ * second occurrence of the same key vanished into a set; and `derivation`,
+ * `engine` and `evidenceClass` — which say WHICH occurrence and under what
+ * authority — were dropped entirely.
+ *
+ * `detail` is deliberately excluded. It is prose that legitimately moves when
+ * the erasure changes a value it quotes, so including it would report a
+ * manufactured defect wherever the erasure worked as intended.
+ */
+export function findingId(d: BoundaryFinding): string {
+  return `${d.kind} ${d.code ?? d.term ?? "(unnamed)"}@${d.subject} via ${d.derivation} [${d.engine}/${d.evidenceClass}]`;
+}
+
+function tally(findings: readonly BoundaryFinding[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const d of findings) out.set(findingId(d), (out.get(findingId(d)) ?? 0) + 1);
   return out;
 }
 
 /** Every path at which two representations disagree, in either direction. */
-function changedPaths(before: unknown, after: unknown): string[] {
+export function changedPaths(before: unknown, after: unknown): string[] {
   const b = valueMap(before);
   const a = valueMap(after);
   return [...new Set([...b.keys(), ...a.keys()])].filter((k) => b.get(k) !== a.get(k)).sort();
@@ -503,6 +588,86 @@ function slotPaths(fixture: Fixture, locator: StructuralLocator): string[] {
   for (const s of resolveSlots(marked, locator)) (s.parent as Record<string, unknown>)[s.key as string] = SENTINEL;
   const changed = changedPaths(fixture, marked);
   return changed.filter((p) => !changed.some((q) => q !== p && p.startsWith(`${q}.`)) && !changed.some((q) => q !== p && p.startsWith(`${q}[`)));
+}
+
+const structureOf = (f: Record<string, unknown> | undefined) => f?.structure as RelationalStructure | undefined;
+
+/** Is this something the SOURCE engine can be asked about, as it stands? */
+const inDomain = (s: RelationalStructure | undefined): s is RelationalStructure =>
+  s !== undefined && markersIn(s).length === 0 && structureValidator()(s).length === 0;
+
+/**
+ * The obligation on the image `checkWitness` ACTUALLY COMPARES.
+ *
+ * A 2-set witness collides under `eraseAll`, but isolation was only ever
+ * evaluated one coordinate at a time against the ORIGINAL stimulus. That leaves
+ * the composed erasure — the thing the collision is about — unexamined:
+ * two operations individually within their slots can interact through a
+ * discriminator, a branch locator, a member class or a holder deletion, and
+ * saturated execution does not have the semantics of two independent runs.
+ *
+ * WHAT THIS COVERS, and no more: the combined image is legal in the quotient
+ * language, and the combined change lies inside the UNION of the coordinates'
+ * own locators. The per-coordinate refusals — holder presence, arity and order
+ * preservation — remain per-coordinate claims and are evaluated there; applying
+ * them to a combined image would fire on paths the OTHER coordinate legitimately
+ * removed. What the combined check cannot do is establish that the composition
+ * partitions as intended; that is the operation algebra's question, settled by
+ * the composition work rather than here.
+ */
+export function checkCombinedIsolation(
+  fixture: Fixture,
+  coords: readonly Coordinate[],
+  check: DerivationChecker = checkDerivations,
+  lookup: PlanLookup = planFor,
+): IsolationResult {
+  const before = fixture as unknown as Record<string, unknown>;
+  const after = eraseAll(fixture, coords) as unknown as Record<string, unknown>;
+  const changed = changedPaths(before, after);
+  if (changed.length === 0) return { state: "discharged", by: ["unchanged"] };
+
+  const by: IsolationProof[] = [];
+  let engineLimitation: string | undefined;
+  const sBefore = structureOf(before);
+  const sAfter = structureOf(after);
+  if (inDomain(sBefore) && inDomain(sAfter)) {
+    const findingsBefore = tally(check(sBefore));
+    const introduced = [...tally(check(sAfter))].filter(([k, n]) => n > (findingsBefore.get(k) ?? 0)).map(([k]) => k);
+    if (introduced.length > 0) {
+      return { state: "violated", detail: `the combined erasure introduced ${introduced.join(", ")}, so the collision may be that defect rather than the coordinates` };
+    }
+    engineLimitation =
+      findingsBefore.size === 0
+        ? undefined
+        : `the before-structure already carries ${[...findingsBefore.keys()].join(", ")}; a first-refutation checker cannot show that no different cause appeared behind them`;
+    if (engineLimitation === undefined) by.push("no-introduced-finding");
+  }
+
+  const legal = quotientValidator();
+  const wasIllegal = legal(before);
+  const introduced = legal(after).filter((e) => !wasIllegal.includes(e));
+  if (introduced.length > 0) {
+    return { state: "violated", detail: `the combined erasure makes the image illegal in the quotient language: ${introduced.slice(0, 3).join("; ")}` };
+  }
+
+  const plans = coords.map(lookup);
+  const unplanned = coords.filter((_, i) => plans[i] === undefined);
+  if (unplanned.length > 0 && changed.length > 0) {
+    return { state: "unevaluated", reason: `${unplanned.map((c) => c.id).join(", ")} has no erasure plan, so the union of locators does not bound the combined change` };
+  }
+  const slots = plans.flatMap((p) => (p ? slotPaths(fixture, p.locator) : []));
+  const within = (p: string) => slots.some((sl) => p === sl || p.startsWith(`${sl}.`) || p.startsWith(`${sl}[`));
+  const inside = changed.filter(within);
+  const impliedBy = (p: string) => inside.some((q) => q !== p && (q.startsWith(`${p}.`) || q.startsWith(`${p}[`)));
+  const outside = changed.filter((p) => !within(p) && !impliedBy(p));
+  if (outside.length > 0) {
+    return {
+      state: "violated",
+      detail: `the combined erasure changed ${outside.join(", ")}, which no locator in ${coords.map((c) => c.id).join(" + ")} reaches`,
+    };
+  }
+  by.push("slot-local");
+  return { state: "discharged", by, ...(engineLimitation ? { limitation: engineLimitation } : {}) };
 }
 
 export function checkIsolation(
@@ -560,31 +725,18 @@ export function checkIsolation(
   // Where it is out of domain the comparison is INAPPLICABLE: it neither
   // refutes nor discharges isolation, and the obligation is left unevaluated
   // and recorded in `inapplicableIsolationChecks` rather than turned into `[]`.
-  const structureOf = (f: Record<string, unknown> | undefined) => f?.structure as RelationalStructure | undefined;
   const sBefore = structureOf(before);
   const sAfter = structureOf(after);
-  const inDomain = (s: RelationalStructure | undefined): s is RelationalStructure =>
-    s !== undefined && markersIn(s).length === 0 && structureValidator()(s).length === 0;
 
-  const engineApplicable = inDomain(sBefore) && inDomain(sAfter);
-  if (engineApplicable) {
-    const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
-    const semanticIsThePoint = c.kind === "member-pair" && c.leaf.endsWith(".kind");
-    const relevant = (d: { code?: string }) => !semanticIsThePoint || (d.code !== undefined && wellFormedness.has(d.code));
-    // No try/catch: an exception here is an instrument failure and must
-    // propagate. Both arguments have already been shown to be in the checker's
-    // declared domain, so there is nothing left for a throw to mean.
-    const codes = (s: RelationalStructure) => check(s).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
-    const codesBefore = codes(sBefore as RelationalStructure);
-    const codesAfter = codes(sAfter as RelationalStructure);
-    const introduced = codesAfter.filter((x) => !codesBefore.includes(x));
-    if (introduced.length > 0) {
-      return {
-        state: "violated",
-        detail: `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`,
-      };
-    }
-  }
+  // Decided before anything else is asked: an erasure that changed nothing has
+  // nothing to have damaged, and running a comparison over it would attribute a
+  // proof to a check with no subject.
+  const changed = changedPaths(before, after);
+  if (changed.length === 0) return { state: "discharged", by: ["unchanged"] };
+
+  /** What was established here. Discharge is the conjunction, never one member. */
+  const by: IsolationProof[] = [];
+  /** Why the engine route could not contribute, when it could not. */
 
   // A member-absence erasure must remove ONLY the leaf it names.
   //
@@ -651,15 +803,51 @@ export function checkIsolation(
   // failure list was returned as `undefined` and every caller read it as a
   // discharge, whether or not any check had been able to run. So the obligation
   // is now discharged by a NAMED proof or by none.
-  const changed = changedPaths(before, after);
-  if (changed.length === 0) return { state: "discharged", by: "unchanged" };
-  if (engineApplicable) return { state: "discharged", by: "engine-comparison" };
 
   // The image is out of the source engine's domain. That must not by itself
   // refuse the witness — letting the source language decide which legal
   // quotient images may support evidence is the confusion this whole slice
   // exists to end. What it does mean is that a DIFFERENT proof has to be
   // identified, and the two halves of it are legality and locality.
+  let engineLimitation: string | undefined;
+  const engineApplicable = inDomain(sBefore) && inDomain(sAfter);
+  if (engineApplicable) {
+    const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
+    const semanticIsThePoint = c.kind === "member-pair" && c.leaf.endsWith(".kind");
+    const relevant = (d: { code?: string }) => !semanticIsThePoint || (d.code !== undefined && wellFormedness.has(d.code));
+    // No try/catch: an exception here is an instrument failure and must
+    // propagate. Both arguments have already been shown to be in the checker's
+    // declared domain, so there is nothing left for a throw to mean.
+    const findings = (s: RelationalStructure) => tally(check(s).filter(relevant));
+    const findingsBefore = findings(sBefore as RelationalStructure);
+    const findingsAfter = findings(sAfter as RelationalStructure);
+    const introduced = [...findingsAfter].filter(([k, n]) => n > (findingsBefore.get(k) ?? 0)).map(([k]) => k);
+    if (introduced.length > 0) {
+      return {
+        state: "violated",
+        detail: `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`,
+      };
+    }
+    // WHERE THE COMPARISON CANNOT ESTABLISH WHAT IT WOULD CLAIM.
+    //
+    // A finding is reported through a catalogue code, and `checkDerivations`
+    // returns at its first refutation, so a structure that already carries one
+    // can hide a DIFFERENT cause the erasure introduced behind the same
+    // identity. No richer key recovers that: the second cause was never
+    // computed. Detail cannot close it either — detail legitimately moves when
+    // the erasure changes a value it displays.
+    //
+    // So the engine route discharges only over a structure with nothing to
+    // mask. Where there is something, the limitation is reported and the
+    // obligation falls to the structural proof below, rather than the engine
+    // being credited with a comparison it could not make.
+    engineLimitation =
+      findingsBefore.size === 0
+        ? undefined
+        : `the before-structure already carries ${[...findingsBefore.keys()].join(", ")}; a first-refutation checker cannot show that no different cause appeared behind them`;
+    if (engineLimitation === undefined) by.push("no-introduced-finding");
+  }
+
   // DIFFERENTIAL, for the same reason the engine comparison is: what is under
   // test is what the ERASURE did, not what its input already was. A hand-built
   // probe carrying an id the corpus pattern rejects is invalid before anything
@@ -671,6 +859,7 @@ export function checkIsolation(
   if (introduced.length > 0) {
     return { state: "violated", detail: `erasing ${c.id} makes the image illegal in the quotient language: ${introduced.slice(0, 3).join("; ")}` };
   }
+  by.push("quotient-legal");
   const plan = lookup(c);
   if (plan === undefined) {
     return {
@@ -679,14 +868,23 @@ export function checkIsolation(
     };
   }
   const slots = slotPaths(fixture, plan.locator);
-  const outside = changed.filter((p) => !slots.some((s) => p === s || p.startsWith(`${s}.`) || p.startsWith(`${s}[`)));
+  const within = (p: string) => slots.some((s) => p === s || p.startsWith(`${s}.`) || p.startsWith(`${s}[`));
+  const inside = changed.filter(within);
+  // A container's ARITY token moves when a child is added or removed, so a
+  // legitimate deletion inside a slot also shows the enclosing holder as
+  // changed. That is a consequence of the change, not a second one — but only
+  // where the change beneath it is itself inside a slot. An unrelated empty
+  // container deleted elsewhere has no such descendant and is still reported.
+  const impliedBy = (p: string) => inside.some((q) => q !== p && (q.startsWith(`${p}.`) || q.startsWith(`${p}[`)));
+  const outside = changed.filter((p) => !within(p) && !impliedBy(p));
   if (outside.length > 0) {
     return {
       state: "violated",
       detail: `erasing ${c.id} changed ${outside.join(", ")}, which its own locator does not reach, so a collision may be attributable to the change outside the slot`,
     };
   }
-  return { state: "discharged", by: "quotient-legal-slot-local" };
+  by.push("slot-local");
+  return { state: "discharged", by, ...(engineLimitation ? { limitation: engineLimitation } : {}) };
 }
 
 export function loadWitnesses(file = WITNESSES_FILE): WitnessFile {

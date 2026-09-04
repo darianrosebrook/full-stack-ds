@@ -30,6 +30,9 @@ import {
   FIXTURES_DIR,
   CONTRACTS_DIR,
   checkIsolation,
+  checkCombinedIsolation,
+  changedPaths,
+  findingId,
   type IsolationResult,
   codomainHolds,
   evidenceStanding,
@@ -52,7 +55,7 @@ import {
   resolveSide,
   type Witness,
 } from "./necessity.js";
-import { checkDerivations } from "./derivation.js";
+import { checkDerivations, type BoundaryFinding } from "./derivation.js";
 import { markersIn } from "./quotient-image.js";
 import { canonical, collides, erase } from "./quotient.js";
 import { loadClosures } from "./closure.js";
@@ -485,7 +488,8 @@ describe("C3 — the harness is falsified", () => {
     it("gives the same derivation-isolation result at zero and at one assertion", () => {
       const expected: IsolationResult = {
         state: "violated",
-        detail: "erasure introduced derivation defect(s) REL_DERIVATION_INPUT_MISSING@out, so any collision may be that defect rather than the coordinate",
+        detail:
+          "erasure introduced derivation defect(s) diagnostic REL_DERIVATION_INPUT_MISSING@out via project(keep=2) [derivation-typing/schema], so any collision may be that defect rather than the coordinate",
       };
       expect(checkIsolation(bare, incidence)).toEqual(expected);
       expect(checkIsolation(wrapped, incidence)).toEqual(expected);
@@ -507,18 +511,27 @@ describe("C3 — the harness is falsified", () => {
       // a marker may not support evidence" — which would hand the source
       // engine's domain authority over the quotient language, the confusion the
       // codomain exists to end.
-      expect(checkIsolation(bare, kindLeaf)).toEqual({ state: "discharged", by: "quotient-legal-slot-local" });
+      expect(checkIsolation(bare, kindLeaf)).toEqual({ state: "discharged", by: ["quotient-legal", "slot-local"] });
     });
 
-    it("names the proof, so a discharge is never inferred from an empty failure list", () => {
+    it("names every proposition established, and the engine adds to them rather than replacing them", () => {
       // The three states are distinguishable at the call site, which is what
       // `string | undefined` could not express: `undefined` meant both "the
       // comparison ran and found nothing" and "no comparison ran".
+      //
+      // And a discharge is a CONJUNCTION. A single label let the engine route
+      // return before anything bounded where the change landed — which is how
+      // an assertion-side erasure earned a discharge from a comparison that
+      // reads only `structure`. Legality and locality are required of every
+      // discharge; the engine contributes one more proposition on top.
       const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
       const byEngine = checkIsolation(bare, loadCensus().find((c) => c.id === "field.key")!);
-      expect(byEngine.state === "discharged" && byEngine.by).toBe("engine-comparison");
+      expect(byEngine.state === "discharged" && byEngine.by).toEqual(["no-introduced-finding", "quotient-legal", "slot-local"]);
       const byStructure = checkIsolation(bare, kindLeaf);
-      expect(byStructure.state === "discharged" && byStructure.by).toBe("quotient-legal-slot-local");
+      expect(byStructure.state === "discharged" && byStructure.by).toEqual(["quotient-legal", "slot-local"]);
+      // The engine's contribution is additive: whatever it established, the
+      // structural propositions were established too.
+      expect(byEngine.state === "discharged" && byEngine.by).toEqual(expect.arrayContaining(byStructure.state === "discharged" ? [...byStructure.by] : []));
       expect(byEngine).not.toEqual(byStructure);
     });
 
@@ -571,6 +584,118 @@ describe("C3 — the harness is falsified", () => {
   });
 
   /**
+   * The two helpers the discharges REST ON, tested against structure rather
+   * than against themselves.
+   *
+   * Both were wrong in the same way: a projection that dropped exactly the
+   * information the check needed, while reporting confidently over what
+   * survived. Expected results here are direct structural assertions — deep
+   * equality, or a count read off the input — never the helper under test.
+   */
+  describe("C3d — the difference and the finding identity observe what they claim to", () => {
+    /** Independent of `valueMap`: two JSON values are equal iff their serializations are. */
+    const reallyEqual = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+
+    const structural: [string, unknown, unknown][] = [
+      ["an array emptied, then its holder dropped", { evidence: { rows: { r: [] } } }, { evidence: { rows: {} } }],
+      ["an empty object deleted", { evidence: {} }, {}],
+      ["an array becomes an object", { x: [] }, { x: {} }],
+      ["an array of empty objects grows", { x: [{}] }, { x: [{}, {}] }],
+    ];
+
+    it("sees a container change with no scalar descendant", () => {
+      // The blind spot, named case by case. The earlier walk recorded a value
+      // only on reaching a scalar, so a container with none contributed nothing
+      // — and holder presence, empty evidence collections and absent
+      // declarations are precisely the distinctions this work keeps having to
+      // recover. A no-op is still reported as one.
+      for (const [name, a, b] of structural) {
+        expect(reallyEqual(a, b), `${name}: the probe pair must actually differ`).toBe(false);
+        expect(changedPaths(a, b), name).not.toEqual([]);
+      }
+      expect(changedPaths({ evidence: { rows: {} } }, { evidence: { rows: {} } })).toEqual([]);
+      expect(changedPaths({ x: [1, 2] }, { x: [1, 2] })).toEqual([]);
+    });
+
+    it("locates the change at the container, not merely at some scalar under it", () => {
+      // Locality is computed from these paths, so a difference reported at the
+      // wrong depth would bound the erasure incorrectly even once it is seen.
+      expect(changedPaths({ x: [] }, { x: {} })).toEqual([".x"]);
+      expect(changedPaths({ x: [{}] }, { x: [{}, {}] })).toEqual(["", ".x", ".x[1]"].filter((p) => p !== ""));
+      expect(changedPaths({ evidence: {} }, {})).toEqual(["", ".evidence"]);
+    });
+
+    it("refuses locality when an unrelated empty container is deleted alongside a legitimate erasure", () => {
+      // The case that makes the repair load-bearing rather than cosmetic: an
+      // erasure that does its own job AND quietly removes something invisible
+      // must not pass. The plan is real; the extra deletion is not its business.
+      const withSpare = {
+        id: "fx_probe",
+        structure: {
+          relations: { r: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } } },
+        },
+        assertions: [],
+        spare: {},
+      } as unknown as Fixture;
+      const grain = loadCensus().find((c) => c.id === "relation.grain")!;
+      expect(checkIsolation(withSpare, grain).state).toBe("discharged");
+
+      // Same erasure, plus the deletion of an empty container nothing named.
+      const alsoDrops = (f: Fixture, c: Coordinate) => {
+        const r = checkIsolation(f, c);
+        void r;
+        const image = JSON.parse(JSON.stringify(erase(f, c))) as Record<string, unknown>;
+        delete image.spare;
+        return image;
+      };
+      const image = alsoDrops(withSpare, grain);
+      const outside = changedPaths(withSpare, image).filter((p) => !p.includes("grain") && p !== "");
+      expect(outside, "the extra deletion must be visible as a change outside the erased slot").toContain(".spare");
+    });
+
+    it("distinguishes findings the coarse key collapsed", () => {
+      // Three losses, each reproduced against the identity rather than argued.
+      const f = (over: Partial<BoundaryFinding>): BoundaryFinding =>
+        ({ kind: "diagnostic", subject: "out", derivation: "project(keep=2)", engine: "declaration-missing", evidenceClass: "declared", detail: "", ...over }) as BoundaryFinding;
+      // An obligation carries `term` and no `code`; two different ones at one
+      // subject both read `undefined@out` under the old projection.
+      expect(findingId(f({ kind: "obligation", code: undefined, term: "grain:declared" }))).not.toBe(
+        findingId(f({ kind: "obligation", code: undefined, term: "conservation" })),
+      );
+      // Which occurrence, and under what authority, were dropped entirely.
+      expect(findingId(f({ code: "X", derivation: "project(keep=2)" }))).not.toBe(findingId(f({ code: "X", derivation: "join(one-to-many)" })));
+      expect(findingId(f({ code: "X", engine: "declaration-missing" }))).not.toBe(findingId(f({ code: "X", engine: "additivity" })));
+      // `detail` is prose that legitimately moves when the erasure changes a
+      // value it quotes, so it is deliberately NOT part of the identity.
+      expect(findingId(f({ code: "X", detail: "keep set misses the grain" }))).toBe(findingId(f({ code: "X", detail: "input lacks revenue" })));
+    });
+
+    it("does not credit the engine where a pre-existing finding could mask a new cause", () => {
+      // The consequence of that last exclusion, and the honest response to it.
+      // `checkDerivations` returns at its first refutation, so a structure that
+      // already carries a broad code can hide a DIFFERENT cause behind the same
+      // identity — and no richer key recovers a cause that was never computed.
+      // So the engine route does not discharge there; the limitation is named
+      // and the structural proof carries the obligation.
+      const corpus = [...oracle.fixtures.values()];
+      const masking = corpus.find((f) => f.id === "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT")!;
+      expect(checkDerivations(masking.structure).map((d) => d.code)).toContain("REL_DERIVATION_RESULT_NOT_DERIVABLE");
+
+      const results = kernel.map((c) => checkIsolation(masking, c));
+      expect(results.filter((r) => r.state === "discharged" && r.by.includes("no-introduced-finding")), "the engine cannot have contributed anything here").toEqual([]);
+      const limited = results.filter((r) => r.state === "discharged" && r.limitation !== undefined);
+      expect(limited.length).toBeGreaterThan(0);
+      for (const r of limited) expect(r.state === "discharged" && r.limitation).toMatch(/first-refutation checker cannot show/);
+
+      // The control: a clean structure still earns an engine discharge, so the
+      // rule is a response to masking and not a blanket withdrawal.
+      const clean = corpus.find((f) => checkDerivations(f.structure).length === 0)!;
+      const cleanResults = kernel.map((c) => checkIsolation(clean, c));
+      expect(cleanResults.some((r) => r.state === "discharged" && r.by.includes("no-introduced-finding"))).toBe(true);
+    });
+  });
+
+  /**
    * THE CONSUMER, which is where the collapse actually mattered.
    *
    * `checkIsolation` can distinguish three states perfectly and still change
@@ -579,7 +704,7 @@ describe("C3 — the harness is falsified", () => {
    */
   describe("C3c — an unevaluated obligation does not become standing", () => {
     const held = witnesses.find((w) => w.coordinates.length === 1 && checkWitness(w, kernel, oracle).ok)!;
-    const discharged = (): IsolationResult => ({ state: "discharged", by: "quotient-legal-slot-local" });
+    const discharged = (): IsolationResult => ({ state: "discharged", by: ["quotient-legal", "slot-local"] });
     const unevaluated = (): IsolationResult => ({ state: "unevaluated", reason: "no proof was constructed" });
 
     it("the control: an inapplicable engine comparison discharged by a structural proof still ratifies", () => {
@@ -601,6 +726,43 @@ describe("C3 — the harness is falsified", () => {
       const holding = [held].filter((w) => checkWitness(w, kernel, oracle, unevaluated).ok);
       expect(holding).toEqual([]);
       expect(primitiveRatified(holding)).not.toContain(held.coordinates[0]);
+    });
+
+    it("carries an obligation on the COMBINED image, which is the one the collision is about", () => {
+      // Individually-checked coordinates say nothing about their composition,
+      // and the collision is decided by `eraseAll`. A 2-set therefore carries a
+      // third record, over the image admission actually compares.
+      const pair = witnesses.find((w) => w.coordinates.length === 2)!;
+      const r = checkWitness(pair, kernel, oracle);
+      const composed = r.isolation.filter((i) => i.composed);
+      expect(composed).toHaveLength(2); // one per side
+      expect(composed.map((i) => i.coordinate)).toEqual([pair.coordinates.join(" + "), pair.coordinates.join(" + ")]);
+      // And it is not a restatement of the singles: it names the set, and the
+      // per-coordinate records are still present beside it.
+      expect(r.isolation.filter((i) => !i.composed)).toHaveLength(2 * pair.coordinates.length);
+    });
+
+    it("the combined obligation can refute where the individual ones do not", () => {
+      // Non-redundancy, shown rather than asserted. Both coordinates pass alone;
+      // the composition is judged against a locator union that does not bound
+      // it, and fails.
+      const pair = witnesses.find((w) => w.coordinates.length === 2)!;
+      const coords = pair.coordinates.map((id) => kernel.find((c) => c.id === id)!);
+      const stimulus = resolveSide(pair.a, oracle).fixture;
+      for (const c of coords) expect(checkIsolation(stimulus, c).state).not.toBe("violated");
+
+      const elsewhere = loadPlans().get("field.key")!;
+      const combined = checkCombinedIsolation(stimulus, coords, checkDerivations, () => elsewhere);
+      expect(combined.state).toBe("violated");
+      expect(combined.state === "violated" && combined.detail).toMatch(/no locator in .* reaches/);
+    });
+
+    it("a violated combined obligation fails the witness, though every single one passes", () => {
+      const pair = witnesses.find((w) => w.coordinates.length === 2)!;
+      const r = checkWitness(pair, kernel, oracle, discharged, () => ({ state: "violated", detail: "the composition left the union of its locators" }));
+      expect(r.ok).toBe(false);
+      expect(r.failures.filter((f) => f.detail.startsWith("a/combined") || f.detail.startsWith("b/combined"))).toHaveLength(2);
+      expect(r.failures.map((f) => f.code)).toContain("ERASURE_NOT_ISOLATED");
     });
 
     it("records which stimulus and which proof, so the admission record identifies more than a coordinate id", () => {
@@ -639,7 +801,7 @@ describe("C3 — the harness is falsified", () => {
     // Every position distinct: co-reference (region appearing twice) is gone,
     // which is exactly and only what incidence means.
     expect(new Set(after.assertions[0].along).size).toBe(before.length);
-    expect(checkIsolation(fixture, coord)).toEqual({ state: "discharged", by: "engine-comparison" });
+    expect(checkIsolation(fixture, coord)).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
   });
   /**
    * A discriminator member-absence coordinate. Built rather than looked up: the
@@ -699,7 +861,7 @@ describe("C3 — the harness is falsified", () => {
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
     const coord = absenceCoord("field.additivity.kind", "additive");
-    expect(checkIsolation(fixture, coord)).toEqual({ state: "discharged", by: "engine-comparison" });
+    expect(checkIsolation(fixture, coord)).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
   });
 
   it("is measured per stimulus: the same coordinate is isolated or not depending on what the branch carries", () => {
@@ -721,7 +883,7 @@ describe("C3 — the harness is falsified", () => {
         assertions: [],
       }) as unknown as Fixture;
     const coord = absenceCoord("field.temporality.kind", "instant");
-    expect(checkIsolation(fieldWith({ kind: "instant" }), coord)).toEqual({ state: "discharged", by: "engine-comparison" });
+    expect(checkIsolation(fieldWith({ kind: "instant" }), coord)).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
     const both = checkIsolation(fieldWith({ kind: "instant", grain: "day" }), coord);
     expect(both.state === "violated" && both.detail).toMatch(/holder presence/);
   });
