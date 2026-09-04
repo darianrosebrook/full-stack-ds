@@ -41,6 +41,9 @@ describe("tokenPathToCSSVar", () => {
     expect(tokenPathToCSSVar("spacing.size.sm")).toBe(
       "--fsds-core-spacing-size-sm",
     );
+    expect(tokenPathToCSSVar("spacing.density.compact.sm")).toBe(
+      "--fsds-core-spacing-density-compact-sm",
+    );
     expect(tokenPathToCSSVar("elevation.level.1")).toBe(
       "--fsds-core-elevation-level-1",
     );
@@ -49,6 +52,12 @@ describe("tokenPathToCSSVar", () => {
     );
     expect(tokenPathToCSSVar("motion.duration.fast")).toBe(
       "--fsds-core-motion-duration-fast",
+    );
+    expect(tokenPathToCSSVar("elevation.surface.raised")).toBe(
+      "--fsds-semantic-elevation-surface-raised",
+    );
+    expect(tokenPathToCSSVar("interaction.stateLayer.hover")).toBe(
+      "--fsds-semantic-interaction-state-layer-hover",
     );
   });
 
@@ -63,6 +72,9 @@ describe("tokenPathToCSSVar", () => {
 
   it("emits unknown namespaces without a namespace prefix", () => {
     expect(tokenPathToCSSVar("brand.accent")).toBe("--fsds-brand-accent");
+    expect(tokenPathToCSSVar("interaction.future.token")).toBe(
+      "--fsds-interaction-future-token",
+    );
     expect(tokenPathToCSSVar("custom.app.token")).toBe(
       "--fsds-custom-app-token",
     );

@@ -187,7 +187,7 @@ function determineNamespace(tokenPath: string): "core" | "semantic" | null {
   const corePatterns = [
     /^color\.(mode|palette|datavis)/, // color.mode.*, color.palette.*, color.datavis.*
     /^typography\.(fontFamily|weight|ramp|features)/, // typography.fontFamily.*, typography.weight.*, typography.ramp.*, etc.
-    /^spacing\.size/, // spacing.size.*
+    /^spacing\.(size|density)/, // spacing.size.*, spacing.density.*
     /^elevation\.(level|offset|blur|spread)/, // elevation.level.*, elevation.offset.*, etc.
     /^opacity\.(50|100|200|300|400|500|600|700|800|900|full)/, // opacity.50, opacity.100, etc.
     /^dimension\.(breakpoint|tapTarget|actionMinHeight)/, // dimension.breakpoint.*, etc.
@@ -204,6 +204,18 @@ function determineNamespace(tokenPath: string): "core" | "semantic" | null {
   // If it matches core patterns, it's core
   if (corePatterns.some((pattern) => pattern.test(tokenPath))) {
     return "core";
+  }
+
+  // Semantic token families that legacy/override shards may reference
+  // without the explicit `semantic.` prefix. Keep this list narrow: unknown
+  // application namespaces must remain unprefixed instead of being silently
+  // reclassified as design-system semantics.
+  const semanticPatterns = [
+    /^elevation\.surface/, // elevation.surface.*
+    /^interaction\.stateLayer/, // interaction.stateLayer.*
+  ];
+  if (semanticPatterns.some((pattern) => pattern.test(tokenPath))) {
+    return "semantic";
   }
 
   // Unknown namespace — emit without prefix rather than guessing 'semantic'.
