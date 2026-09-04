@@ -130,3 +130,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run audit:a11y-realization PASS: 105 obligations / 630 exact carrier-target-endpoint checks, all 161 unrealized findings ledgered; focused semantic/emitter tests reject decoration-owned labels, dangling IDREFs, and empty scan roots; full mutation run at 3022618b killed the initial 5/5 curated mutants, including Dialog name-to-body via authored assertion."
     recorded_at: "2026-09-04T21:47:28.621Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "Integrated pnpm run governed:rail PASS (51/51 contracts, 431 generated groups, six admitted targets pass); pnpm test PASS 254 files / 3363 tests; pnpm run test:frameworks PASS; docs:check-claims PASS 100 markers; docs:check-links PASS 66 links; mutation self-check PASS 5 one-leaf mutants."
+    recorded_at: "2026-09-04T21:47:37.928Z"
