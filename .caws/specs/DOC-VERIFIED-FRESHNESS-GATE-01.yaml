@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/docs-claims-freshness.selftest.mjs — ledgered-pass (exit 0), ledger-mismatch / obsolete-entry / dangling-entry (exit 1); real repo: doc-freshness-baseline.json exempts exactly 6 known-stale stamps, canonical run reports '9 verified stamp(s) fresh or ledgered (6 ledgered stale)'"
     recorded_at: "2026-09-04T22:29:16.473Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "node scripts/docs-claims-freshness.selftest.mjs — fix-never-restamps: --fix run over a stale stamp exits 1 with 'not auto-fixable' and the stamp is byte-identical afterward"
+    recorded_at: "2026-09-04T22:29:27.159Z"
