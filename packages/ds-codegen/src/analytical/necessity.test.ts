@@ -1321,24 +1321,11 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     }
   });
 
-  it("names the invalidated witness for every suspended coordinate, and suspends nothing else", () => {
-    const suspended = [...new Set([...accountedBy(support), ...holds.keys()])]
-      .map((id) => [id, evidenceStanding(id, support, holds)] as const)
-      .filter(([, s]) => s.state === "suspended");
-    // Three, not four. `assertion.aggregate.op` is DECLARED by the 2-set
-    // witness that lapsed, and holds a primitive witness of its own that the
-    // lapse did not touch — so it lost nothing. Coverage by a failed witness is
-    // not a standing loss, and the ledger keeps the two apart: it appears under
-    // `declares`, and under neither loss field.
-    const covering = loadCodomainAdjudications().awaiting.filter((a) => a.declares.includes("assertion.aggregate.op"));
-    expect(covering).toHaveLength(2);
-    for (const a of covering) {
-      expect(a.lost).not.toContain("assertion.aggregate.op");
-      expect(a.interactionOnlyLost ?? []).not.toContain("assertion.aggregate.op");
-    }
-    expect(holds.has("assertion.aggregate.op")).toBe(false);
-    expect(evidenceStanding("assertion.aggregate.op", support, holds)).toEqual({ state: "holding", via: "primitive", evidence: ["assertion.aggregate.op"] });
-
+  it("re-evaluates rather than handing back a stored suspension when acceptance moves", () => {
+    // Its OWN test on purpose. It was first appended to the block above, where
+    // an earlier assertion failed first under the very mutant it exists to
+    // catch — so it never ran, and the kill came from a neighbour instead.
+    const holds = codomainHolds();
     // THE STALE-STANDING TEST, at the consumer that turns a stored suspension
     // into standing.
     //
@@ -1373,6 +1360,25 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
       const s = evidenceStanding(id, weakened, holds);
       expect(s.state, `${id} was handed back a stored suspension under an acceptance boundary that no longer produces it`).toBe("holding");
     }
+  });
+
+  it("names the invalidated witness for every suspended coordinate, and suspends nothing else", () => {
+    const suspended = [...new Set([...accountedBy(support), ...holds.keys()])]
+      .map((id) => [id, evidenceStanding(id, support, holds)] as const)
+      .filter(([, s]) => s.state === "suspended");
+    // Three, not four. `assertion.aggregate.op` is DECLARED by the 2-set
+    // witness that lapsed, and holds a primitive witness of its own that the
+    // lapse did not touch — so it lost nothing. Coverage by a failed witness is
+    // not a standing loss, and the ledger keeps the two apart: it appears under
+    // `declares`, and under neither loss field.
+    const covering = loadCodomainAdjudications().awaiting.filter((a) => a.declares.includes("assertion.aggregate.op"));
+    expect(covering).toHaveLength(2);
+    for (const a of covering) {
+      expect(a.lost).not.toContain("assertion.aggregate.op");
+      expect(a.interactionOnlyLost ?? []).not.toContain("assertion.aggregate.op");
+    }
+    expect(holds.has("assertion.aggregate.op")).toBe(false);
+    expect(evidenceStanding("assertion.aggregate.op", support, holds)).toEqual({ state: "holding", via: "primitive", evidence: ["assertion.aggregate.op"] });
     expect(suspended.map(([id]) => id).sort()).toEqual([
       "assertion.kind",
       "assertion.kind:aggregate~ratio-comparison",
