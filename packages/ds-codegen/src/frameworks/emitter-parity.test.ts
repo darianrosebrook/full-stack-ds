@@ -7,6 +7,8 @@ import { generateVueComponentSource } from "./vue/component-source.js";
 import { generateSvelteComponentSource } from "./svelte/component-source.js";
 import { generateLitComponentSource } from "./lit/component-source.js";
 import { generateAngularComponentSource } from "./angular/component-source.js";
+import { createVueEmitter } from "./vue/factory.js";
+import { createSvelteEmitter } from "./svelte/factory.js";
 
 /**
  * Cross-emitter parity. The contract is the single source of truth, so when
@@ -209,6 +211,46 @@ describe("nested interactive labels remain contract-owned", () => {
       '[attr.aria-controls]="instanceId + \'-list\'"',
     );
     expect(sources.angular).toContain('[attr.id]="instanceId + \'-list\'"');
+  });
+
+  it("Command realizes consumer-composed item anatomy as typed subcomponents in every web emitter", () => {
+    const ir = corpusIR("Command");
+    const expectedParts = [
+      "groupHeading",
+      "groupItems",
+      "itemIcon",
+      "itemContent",
+      "itemLabel",
+      "itemDescription",
+    ];
+    for (const part of expectedParts) {
+      expect(ir.compoundParts.map((entry) => entry.name)).toContain(part);
+    }
+
+    const react = generateReactComponentSource(ir, "../../primitives");
+    const angular = generateAngularComponentSource(ir);
+    const lit = generateLitComponentSource(ir);
+    expect(react).toContain("export function CommandItemIcon");
+    expect(react).toContain('<Stack as="span" className={classNames}');
+    expect(angular).toContain("export class CommandItemIconComponent");
+    expect(angular).toContain('<fsds-stack as="span"');
+    expect(lit).toContain("export class CommandItemIconElement");
+    expect(lit).toContain('<fsds-stack as="span"');
+
+    const options = {
+      componentsRoot: "/tmp/fsds-emitter-parity/components",
+      contractsRoot: "/tmp/fsds-emitter-parity/contracts",
+    };
+    const vueFiles = createVueEmitter().emitComponent(ir, options);
+    const svelteFiles = createSvelteEmitter().emitComponent(ir, options);
+    const vueIcon = vueFiles.find((file) =>
+      file.relativePath.endsWith("CommandItemIcon.vue"),
+    );
+    const svelteIcon = svelteFiles.find((file) =>
+      file.relativePath.endsWith("CommandItemIcon.svelte"),
+    );
+    expect(vueIcon?.contents).toContain('<Stack as="span"');
+    expect(svelteIcon?.contents).toContain('<Stack as="span"');
   });
 
   it("Select names its nested trigger through a consumer-overridable prop", () => {

@@ -73,6 +73,8 @@ export interface PartIR {
   semanticElement: string | undefined;
   /** True when the codegen treats this part as a separate sub-component. */
   isCompound: boolean;
+  /** True only when `anatomy.details.<part>.subcomponent` opted in explicitly. */
+  isExplicitSubcomponent?: true;
   /** True when the part is rendered only as part of the root render tree. */
   isRootOnly: boolean;
   /** Optional layout hint used by emitters for horizontal vs vertical stacks. */
@@ -97,9 +99,11 @@ export interface PartIR {
    *     custom elements cannot be valid native table children); the root
    *     Lit class owns the full native template via shadow-DOM slots.
    *
-   * For parts not in the table composition set, nativeTag is still
-   * populated when declared, but emitters MAY ignore it (no general
-   * native-leaf policy is implied by this slice).
+   * An explicitly declared subcomponent also carries its non-`div` nativeTag
+   * through Stack's polymorphic `as` input. Legacy name-classified compound
+   * parts retain their established `semanticElement`; their contract tag did
+   * not historically govern the wrapper and changing that is a separate
+   * semantic migration with authored runtime witnesses of its own.
    */
   nativeTag?: string;
   /**
@@ -4440,10 +4444,15 @@ function buildParts(contract: ComponentContract): PartIR[] {
       name !== "root" &&
       name !== "container" &&
       !partsInDomTree.has(name);
+    const isExplicitSubcomponent = details?.subcomponent === true;
     return {
       name,
       semanticElement,
-      isCompound: isCompoundPart(name) || isTableCompositionPart,
+      isCompound:
+        isExplicitSubcomponent ||
+        isCompoundPart(name) ||
+        isTableCompositionPart,
+      isExplicitSubcomponent: isExplicitSubcomponent || undefined,
       isRootOnly: ROOT_ONLY_PARTS.has(name),
       layoutVariant:
         name === "footer" || name === "list" ? "horizontal" : undefined,

@@ -91,13 +91,15 @@
         "tag": "div",
         "description": "Label for a command option group.",
         "role": "label",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "groupItems": {
         "tag": "div",
         "description": "Container for the command options inside a group.",
         "role": "group",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "item": {
         "tag": "div",
@@ -114,25 +116,29 @@
         "tag": "span",
         "description": "Optional glyph associated with a command option.",
         "role": "decoration",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "itemContent": {
         "tag": "div",
         "description": "Text content wrapper for a command option label and description.",
         "role": "content",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "itemLabel": {
         "tag": "span",
         "description": "Primary text label for a command option.",
         "role": "label",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "itemDescription": {
         "tag": "span",
         "description": "Secondary explanatory text for a command option.",
         "role": "content",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "separator": {
         "tag": "div",

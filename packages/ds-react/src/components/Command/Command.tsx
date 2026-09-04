@@ -78,6 +78,44 @@ export function CommandGroup({
   );
 }
 
+export interface CommandGroupHeadingProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CommandGroupHeading({
+  children,
+  className,
+  "data-testid": testId,
+}: CommandGroupHeadingProps) {
+  const classNames = ["command__groupHeading", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CommandGroupItemsProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CommandGroupItems({
+  children,
+  className,
+  "data-testid": testId,
+}: CommandGroupItemsProps) {
+  const classNames = ["command__groupItems", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
 export interface CommandItemProps {
   children?: ReactNode;
   className?: string;
@@ -92,6 +130,82 @@ export function CommandItem({
   const classNames = ["command__item", className].filter(Boolean).join(" ");
   return (
     <Stack as="li" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CommandItemIconProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CommandItemIcon({
+  children,
+  className,
+  "data-testid": testId,
+}: CommandItemIconProps) {
+  const classNames = ["command__itemIcon", className].filter(Boolean).join(" ");
+  return (
+    <Stack as="span" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CommandItemContentProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CommandItemContent({
+  children,
+  className,
+  "data-testid": testId,
+}: CommandItemContentProps) {
+  const classNames = ["command__itemContent", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CommandItemLabelProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CommandItemLabel({
+  children,
+  className,
+  "data-testid": testId,
+}: CommandItemLabelProps) {
+  const classNames = ["command__itemLabel", className].filter(Boolean).join(" ");
+  return (
+    <Stack as="span" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CommandItemDescriptionProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CommandItemDescription({
+  children,
+  className,
+  "data-testid": testId,
+}: CommandItemDescriptionProps) {
+  const classNames = ["command__itemDescription", className].filter(Boolean).join(" ");
+  return (
+    <Stack as="span" className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );

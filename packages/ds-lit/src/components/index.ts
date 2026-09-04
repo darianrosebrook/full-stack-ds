@@ -12,7 +12,7 @@ export { CheckboxElement } from "./Checkbox/Checkbox.js";
 export { ChipElement } from "./Chip/Chip.js";
 export { CodeBlockElement } from "./CodeBlock/CodeBlock.js";
 export { CodeSnippetElement } from "./CodeSnippet/CodeSnippet.js";
-export { CommandElement, CommandGroupElement, CommandItemElement, CommandListElement } from "./Command/Command.js";
+export { CommandElement, CommandGroupElement, CommandGroupHeadingElement, CommandGroupItemsElement, CommandItemContentElement, CommandItemDescriptionElement, CommandItemElement, CommandItemIconElement, CommandItemLabelElement, CommandListElement } from "./Command/Command.js";
 export { DetailsElement, DetailsContentElement } from "./Details/Details.js";
 export { DialogElement, DialogBodyElement, DialogFooterElement, DialogHeaderElement, DialogTitleElement } from "./Dialog/Dialog.js";
 export { DividerElement } from "./Divider/Divider.js";

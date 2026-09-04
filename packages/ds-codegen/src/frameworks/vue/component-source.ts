@@ -424,7 +424,13 @@ function callbackArgument(propType: string, valueType: string | undefined): stri
  */
 export function generateVueCompoundPartSource(
   cssPrefix: string,
-  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const cssClass = `${cssPrefix}__${part.name}`;
 
@@ -480,9 +486,12 @@ export function generateVueCompoundPartSource(
     ].join("\n");
   }
 
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";

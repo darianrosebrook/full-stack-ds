@@ -184,6 +184,13 @@ export interface ContractPartDetails {
    * component's — enforced by the layer-ordering validator.
    */
   componentRef?: string;
+  /**
+   * True when this part is a separately consumable compound subcomponent
+   * rather than a node owned by the root anatomy.dom tree. This is the
+   * contract-authored replacement for adding more names to the legacy global
+   * COMPOUND_PARTS classifier.
+   */
+  subcomponent?: boolean;
   role?: string;
   multiple?: boolean;
   focusable?: boolean | 'roving';

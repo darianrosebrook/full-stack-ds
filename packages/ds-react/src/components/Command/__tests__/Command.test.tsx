@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { Command, CommandList, CommandGroup, CommandItem } from "../Command";
+import { Command, CommandList, CommandGroup, CommandGroupHeading, CommandGroupItems, CommandItem, CommandItemIcon, CommandItemContent, CommandItemLabel, CommandItemDescription } from "../Command";
 
 declare module "vitest" {
   interface Assertion<T> {

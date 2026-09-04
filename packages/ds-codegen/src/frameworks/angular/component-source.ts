@@ -1023,7 +1023,13 @@ export function generateAngularCompoundStateParts(
  */
 function generateCompoundPartComponent(
   ir: ComponentIR,
-  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
   const className = `${subName}Component`;
@@ -1067,9 +1073,12 @@ function generateCompoundPartComponent(
   }
 
   const selector = toKebab(subName);
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";

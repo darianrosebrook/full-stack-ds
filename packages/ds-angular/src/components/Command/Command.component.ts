@@ -142,6 +142,38 @@ export class CommandGroupComponent {
 }
 
 @Component({
+  selector: "fsds-command-group-heading",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandGroupHeadingComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__groupHeading", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-group-items",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandGroupItemsComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__groupItems", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
   selector: "fsds-command-item",
   standalone: true,
   imports: [NgClass, StackComponent],
@@ -154,6 +186,70 @@ export class CommandItemComponent {
 
   classes(): string {
     return ["command__item", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-icon",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="span" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemIconComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemIcon", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-content",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemContentComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemContent", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-label",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="span" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemLabelComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemLabel", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-description",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="span" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemDescriptionComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemDescription", this.class].filter(Boolean).join(" ");
   }
 }
 // @generated:end

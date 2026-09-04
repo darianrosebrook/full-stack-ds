@@ -762,7 +762,9 @@ function generateSubComponent(
     ].join("\n");
   }
 
-  const asElement = part.semanticElement;
+  const asElement = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asProp = asElement && asElement !== "div" ? ` as="${asElement}"` : "";
   const layoutProp =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";

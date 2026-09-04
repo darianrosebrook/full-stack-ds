@@ -48,7 +48,7 @@ enum CommandTokens {
 }
 
 /// Emitted through the centered-modal surface path: presented as a sheet whose native dismissal (Esc, overlay click) drives the openness channel back through onOpenChange — the contract's escape/overlayClick dismissal triggers realized by the platform.
-public struct Command<List: View, Group: View, Item: View>: View {
+public struct Command<List: View, Group: View, GroupHeading: View, GroupItems: View, Item: View, ItemIcon: View, ItemContent: View, ItemLabel: View, ItemDescription: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         CommandTokens.scopes
     }
@@ -57,7 +57,13 @@ public struct Command<List: View, Group: View, Item: View>: View {
     @StateObject private var search: ControllableValue<String>
     private let list: List
     private let group: Group
+    private let groupHeading: GroupHeading
+    private let groupItems: GroupItems
     private let item: Item
+    private let itemIcon: ItemIcon
+    private let itemContent: ItemContent
+    private let itemLabel: ItemLabel
+    private let itemDescription: ItemDescription
     @Environment(\.fsdsTheme) private var fsdsTheme
 
     public init(
@@ -69,14 +75,26 @@ public struct Command<List: View, Group: View, Item: View>: View {
         onSearchChange: ((String) -> Void)? = nil,
         @ViewBuilder list: () -> List = { EmptyView() },
         @ViewBuilder group: () -> Group = { EmptyView() },
-        @ViewBuilder item: () -> Item = { EmptyView() }
+        @ViewBuilder groupHeading: () -> GroupHeading = { EmptyView() },
+        @ViewBuilder groupItems: () -> GroupItems = { EmptyView() },
+        @ViewBuilder item: () -> Item = { EmptyView() },
+        @ViewBuilder itemIcon: () -> ItemIcon = { EmptyView() },
+        @ViewBuilder itemContent: () -> ItemContent = { EmptyView() },
+        @ViewBuilder itemLabel: () -> ItemLabel = { EmptyView() },
+        @ViewBuilder itemDescription: () -> ItemDescription = { EmptyView() }
     ) {
         self._open = StateObject(wrappedValue: ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange))
         self.openControlled = open
         self._search = StateObject(wrappedValue: ControllableValue(controlled: search, defaultValue: defaultSearch, onChange: onSearchChange))
         self.list = list()
         self.group = group()
+        self.groupHeading = groupHeading()
+        self.groupItems = groupItems()
         self.item = item()
+        self.itemIcon = itemIcon()
+        self.itemContent = itemContent()
+        self.itemLabel = itemLabel()
+        self.itemDescription = itemDescription()
     }
 
 
@@ -117,7 +135,13 @@ public struct Command<List: View, Group: View, Item: View>: View {
             )
             list
             group
+            groupHeading
+            groupItems
             item
+            itemIcon
+            itemContent
+            itemLabel
+            itemDescription
         }
             .padding(.vertical, blockPadding)
             .padding(.horizontal, inlinePadding)

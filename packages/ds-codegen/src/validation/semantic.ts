@@ -77,7 +77,7 @@
  * the contract to hide it.
  */
 
-import type { ComponentContract } from "../contract.js";
+import type { ComponentContract, ContractDomNode } from "../contract.js";
 import type { ValidationIssue } from "../validate.js";
 
 /**
@@ -123,11 +123,20 @@ export function validateContractSemantics(
   // --- Rule 1: anatomy.details keys ⊆ anatomy.parts -----------------
   if (typeof contract.anatomy === "object" && !Array.isArray(contract.anatomy)) {
     const details = contract.anatomy.details ?? {};
+    const domParts = collectDomParts(contract.anatomy.dom);
     for (const key of Object.keys(details)) {
       if (!parts.has(key)) {
         issues.push({
           pointer: `/anatomy/details/${key}`,
           message: `references part "${key}" which is not declared in anatomy.parts`,
+        });
+      }
+      if (details[key]?.subcomponent === true && domParts.has(key)) {
+        issues.push({
+          pointer: `/anatomy/details/${key}/subcomponent`,
+          message:
+            `[SUBCOMPONENT_OWNERSHIP_COLLISION] part "${key}" is marked as a ` +
+            "consumer-composed subcomponent but anatomy.dom also renders it",
         });
       }
     }
@@ -405,6 +414,16 @@ export function validateContractSemantics(
   issues.push(...validateTextOverflow(contract, propNames));
 
   return issues;
+}
+
+function collectDomParts(
+  node: ContractDomNode | undefined,
+  parts: Set<string> = new Set(),
+): Set<string> {
+  if (!node) return parts;
+  if (node.part) parts.add(node.part);
+  for (const child of node.children ?? []) collectDomParts(child, parts);
+  return parts;
 }
 
 /**

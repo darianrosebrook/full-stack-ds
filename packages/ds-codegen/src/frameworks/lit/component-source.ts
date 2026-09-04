@@ -617,15 +617,24 @@ function generateClassMapObject(ir: ComponentIR): string {
  */
 function generateCompoundPartClass(
   ir: ComponentIR,
-  part: { name: string; semanticElement?: string; layoutVariant?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
   const className = `${subName}Element`;
   const elementName = `fsds-${toKebabCase(subName)}`;
   const cssClass = `${ir.cssPrefix}__${part.name}`;
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -634,7 +643,7 @@ function generateCompoundPartClass(
   // item inside the consumer's list — same host-role compensation. Stamped
   // in connectedCallback, not the constructor (custom-elements spec).
   const hostRoleLines =
-    part.semanticElement === "li"
+    renderedTag === "li"
       ? [
           `  override connectedCallback(): void {`,
           `    super.connectedCallback();`,

@@ -1378,6 +1378,10 @@
           "pattern": "^fsds\\.[A-Z][A-Za-z0-9]*$",
           "description": "Reference to another design-system component this part is realized as, in `fsds.<Name>` form (e.g. \"fsds.Input\"). When set, the part is lowered by-reference: the emitter imports the referenced component and emits a component-instance element rather than a native `tag`. The referenced component's `layer` must be lower-or-equal to this component's. Mutually exclusive with `tag`."
         },
+        "subcomponent": {
+          "type": "boolean",
+          "description": "When true, this part is a consumer-composed compound subcomponent rather than a node owned by the root anatomy.dom tree. The IR emits a separately consumable wrapper carrying this part's class; semantic validation rejects dual ownership by anatomy.dom."
+        },
         "role": {
           "type": "string",
           "description": "Conceptual role this part plays in the component's interaction model.",
