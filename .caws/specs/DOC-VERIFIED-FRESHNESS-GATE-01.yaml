@@ -2,9 +2,11 @@ id: DOC-VERIFIED-FRESHNESS-GATE-01
 title: 'Gate verified_at_commit freshness against governs globs; refresh normal-form'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Freshness gate landed: verified_at_commit now checked against governs-glob history with a two-directional ledger ratchet; normal-form refreshed for the 9-target world.'
 created_at: '2026-09-04T22:16:14.112Z'
-updated_at: '2026-09-04T22:16:33.783Z'
+updated_at: '2026-09-04T22:29:42.351Z'
 created_by_session: 'sess_e3b94b1d-84ef-440f-9ea0-86af5d7e1382'
 blast_radius:
   modules:
