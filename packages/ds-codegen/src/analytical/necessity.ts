@@ -21,6 +21,7 @@ import { fileURLToPath } from "node:url";
 import { decodeScale, type ScaleLabel } from "./capabilities.js";
 import type { Coordinate } from "./census.js";
 import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity.js";
+import { DERIVATION_DIAG } from "./codes.js";
 import { checkDerivations } from "./derivation.js";
 import { canonical, collides, erase, eraseAll } from "./quotient.js";
 import type { RelationalStructure } from "./relation-model.js";
@@ -302,12 +303,28 @@ export function isolationViolation(fixture: Fixture, c: Coordinate): string | un
   const after = erase(fixture, c) as unknown as Record<string, unknown>;
 
   // Erasure may not manufacture a derivation-boundary defect.
+  //
+  // With one exception that is not a loophole. For a member pair on a
+  // DISCRIMINATOR, changing which operator applies is the entire content of the
+  // coordinate, and the substitution touches nothing but the tag — so a
+  // SEMANTIC finding that appears is the distinction under test, not collateral
+  // damage. Refusing it would make every discriminator pair unwitnessable by
+  // construction, which is the instrument deciding the outcome.
+  //
+  // The boundary's own WELL-FORMEDNESS refusals stay collateral for every class
+  // including this one: a dangling input or an underivable result means the
+  // erasure broke the structure, and a collision would be that break. That is
+  // the named trap, and it is the line `codes.ts` already draws between
+  // `DERIVATION_DIAG` and the doctrine catalogue.
   const structureOf = (f: Record<string, unknown>) => f.structure as RelationalStructure | undefined;
   const sBefore = structureOf(before);
   const sAfter = structureOf(after);
   if (sBefore && sAfter) {
-    const codesBefore = checkDerivations(sBefore).map((d) => `${d.code}@${d.subject}`).sort();
-    const codesAfter = checkDerivations(sAfter).map((d) => `${d.code}@${d.subject}`).sort();
+    const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
+    const semanticIsThePoint = c.kind === "member-pair" && c.leaf.endsWith(".kind");
+    const relevant = (d: { code?: string }) => !semanticIsThePoint || (d.code !== undefined && wellFormedness.has(d.code));
+    const codesBefore = checkDerivations(sBefore).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
+    const codesAfter = checkDerivations(sAfter).filter(relevant).map((d) => `${d.code}@${d.subject}`).sort();
     const introduced = codesAfter.filter((x) => !codesBefore.includes(x));
     if (introduced.length > 0) {
       return `erasure introduced derivation defect(s) ${introduced.join(", ")}, so any collision may be that defect rather than the coordinate`;

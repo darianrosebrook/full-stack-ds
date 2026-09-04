@@ -512,7 +512,12 @@ describe("C4 — every stage-1 coordinate is dispositioned exactly once; the ker
     // a `representation-artifact` still present would show up as a surplus here.
     const expected = [...new Set([...ratified, ...pendingIds])].filter((id) => !removedByVerdict.has(id)).sort();
     expect(live).toEqual(expected);
-    expect([...ratified].filter((id) => pendingIds.has(id))).toEqual([]);
+    // Membership, not ownership: a candidate whose verdict is `witnessed` is
+    // both in the basis and ratified, which is one of the outcomes the basis
+    // exists to reach. What must never happen is being ratified while still
+    // OWED a decision.
+    const stillOwed = new Set(loadBases().flatMap((b) => b.unresolved));
+    expect([...ratified].filter((id) => stillOwed.has(id))).toEqual([]);
   });
   it("every ratified stage-1 coordinate resolves to a kernel coordinate that exists", () => {
     for (const [c, d] of dispositions) {

@@ -515,7 +515,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.kind:bin~normalize": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED. bin and normalize share the required key-set {field, from} — the only such pair among the seven constructors — so rewriting one to the other is a schema-VALID substitution that alters nothing but the discriminant. The witness pairs FX_READINGS_BINNED_NO_CLOSURE (CASE_WHICH_BIN_GETS_TEN: an undeclared-closure bin is illegal, a rule keyed to the bin constructor because partitioning a range is what raises the question of which side owns a boundary) against the same bytes under `normalize`, where that question does not arise and the CASE_NORMALIZED_AVERAGES rule does not fire because the only assertion is `min` over the source relation. WHAT THIS ESTABLISHES, precisely: a discriminant is necessary to distinguish two constructors with the same structural operand signature. It does NOT establish that `derivedBy.kind` is a primitive analytical semantic axis."
     },
     "relation.derivedBy.kind:bin~project": {
       "disposition": "unresolved"
