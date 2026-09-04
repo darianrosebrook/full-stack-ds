@@ -41,8 +41,9 @@ import {
   type Witness,
 } from "./necessity.js";
 import { canonical, collides, erase } from "./quotient.js";
+import { loadClosures } from "./closure.js";
 import { loadBases, orphanedCoordinates } from "./experiments.js";
-import { loadSubtraction, verdictDrift } from "./subtraction.js";
+import { basesForSpec, loadSubtraction, verdictDrift } from "./subtraction.js";
 import type { RelationalStructure } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
 
@@ -76,9 +77,18 @@ const subtraction = loadSubtraction();
 // propositions somebody has opened. (Ownership — who is still on the hook — is
 // the narrower `unresolved` question, and lives in experiments.ts.)
 const pendingIds = new Set(loadBases().flatMap((b) => b.candidates));
-/** Candidates a verdict has already removed from the kernel. */
+/**
+ * Candidates a verdict has already removed from the kernel, across EVERY basis
+ * the spec opened.
+ *
+ * Reading only `subtraction-stage2.json` was the same gap the gate had: a
+ * verdict recorded in a sibling basis did not count, so a coordinate correctly
+ * adjudicated `representation-artifact` there still read as expected-in-kernel
+ * and the equality below failed against a removal that had in fact taken effect.
+ */
 const removedByVerdict = new Set(
-  Object.entries(subtraction.verdicts)
+  basesForSpec("REL-VIEW-ALGEBRA-01")
+    .flatMap(({ ledger }) => Object.entries(ledger.verdicts))
     .filter(([, v]) => v.disposition === "representation-artifact" || v.disposition === "not-yet-admitted")
     .map(([id]) => id),
 );
@@ -97,7 +107,25 @@ const interactionIds = new Set(interactionOnly(holding));
  * would rewrite a finished experiment's result. The newer rule reaches them
  * through a bounded audit basis instead.
  */
-const stage1Accounted = new Set([...ratifiedIds, ...interactionIds]);
+/**
+ * Closure carriers whose stimuli exist and whose argument is not refuted.
+ *
+ * Accounting must follow the evidence when the evidence changes FORM. The two
+ * additivity hygiene 2-sets became closures — same stimuli, same causes, a
+ * structurally derived operation in place of a synthetic presence coordinate —
+ * and leaving them out here would re-score a finished experiment's coordinates
+ * as unaccounted because a later stage improved how their argument is written.
+ * That is the precise thing the note above forbids.
+ *
+ * It confers no STANDING: `primitiveRatified` is untouched, and a provisional
+ * closure still leaves its candidate `unresolved`.
+ */
+const closureAccounted = new Set(
+  loadClosures()
+    .closures.filter((c) => c.a !== undefined && c.b !== undefined && c.promotion !== "refuted")
+    .flatMap((c) => [c.carrier, ...c.dependencies]),
+);
+const stage1Accounted = new Set([...ratifiedIds, ...interactionIds, ...closureAccounted]);
 
 const count = (cs: Coordinate[]) => ({
   leaves: cs.filter((c) => c.kind === "leaf").length,
@@ -120,7 +148,12 @@ describe("C0 — provenance of the two censuses", () => {
     // cross-terms with the three holder-presence facts they were spelling
     // (`relation.derivedBy`, `field.additivity`, `field.temporality`), which
     // are owned by their own basis rather than appended to the frozen 118.
-    expect(count(kernel)).toEqual({ leaves: 52, pairs: 55, references: 25 });
+    // 52 -> 36: the SECOND instance of that class. A property required by an
+    // optional holder's branch has present(p) = present(H) AND branch(H) = k,
+    // which the holder-presence coordinate and the `kind` member pairs already
+    // carry between them, so sixteen inherited-only presence facets were
+    // derived conjunctions rather than degrees of freedom.
+    expect(count(kernel)).toEqual({ leaves: 36, pairs: 55, references: 25 });
     const unaccounted = kernel
       .filter(isCoordinate)
       .filter((c) => !ratifiedIds.has(c.id) && !pendingIds.has(c.id))
@@ -207,15 +240,36 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
     const phantom = [...ratified].filter((id) => !kernelIds.has(id));
     expect(phantom).toEqual([]);
   });
-  it("the separating-set bound is 2 and the 2-sets are exactly the four precommitted shapes", () => {
+  it("the separating-set bound is 2, and the two 2-sets left are the assertion cluster", () => {
     const twoSets = witnesses.filter((w) => w.coordinates.length === 2).map((w) => w.coordinates.join(" + ")).sort();
     expect(witnesses.every((w) => w.coordinates.length <= 2)).toBe(true);
     expect(twoSets).toEqual([
       "assertion.kind + assertion.aggregate.op",
       "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
-      "field.additivity.kind:additive~semi-additive + field.additivity.semi-additive.nonAdditiveAlong#present",
-      "field.additivity.kind:semi-additive~ratio-measure + field.additivity.semi-additive.nonAdditiveAlong#present",
     ]);
+  });
+
+  it("the two additivity 2-sets became closures rather than disappearing", () => {
+    // They named `field.additivity.semi-additive.nonAdditiveAlong#present`,
+    // which the required-child presence rule removes as a derived conjunction.
+    // They were expressible as plain 2-sets ONLY because that synthetic
+    // proposition made a branch-field deletion look like a coordinate erasure,
+    // so this is a change of FORM, not a loss of evidence — and an honest
+    // downgrade, since a closure confers no standing where a holding 2-set
+    // conferred interaction-only support. The check is that the argument
+    // survived, not merely that the witnesses left.
+    const migrated = loadClosures().closures.filter((c) => c.carrier.startsWith("field.additivity.kind:"));
+    expect(migrated.map((c) => c.carrier).sort()).toEqual([
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+    ]);
+    for (const c of migrated) {
+      expect(c.a, `${c.carrier} lost its stimuli in the migration`).toBeDefined();
+      expect(c.b, `${c.carrier} lost its stimuli in the migration`).toBeDefined();
+      expect(c.normalization.map((n) => `${n.holder}.${n.branch}.${n.field}`)).toEqual([
+        "field.additivity.semi-additive.nonAdditiveAlong",
+      ]);
+    }
   });
   it("witness evidence class: schema-role coordinates witnessed only with rows are exactly the three null-handling distinctions (invariant 9)", () => {
     const hasRows = (w: Witness) =>
@@ -509,14 +563,32 @@ describe("C1c — a multi-coordinate witness is classified, and the classificati
     }
   });
 
+  it("no LIVE witness is hygienic any more: that argument moved to the closure ledger", () => {
+    // The two hygiene witnesses named a coordinate the required-child presence
+    // rule removes. They are closures now — same stimuli, same causes, a
+    // structurally derived `forget-branch-field` operation in place of a
+    // synthetic presence coordinate. This asserts the migration is COMPLETE, so
+    // the two authorities cannot both be answering the hygiene question.
+    expect(multi.filter((w) => classify(w).klass === "quotient-hygiene")).toEqual([]);
+    expect(loadClosures().closures.filter((c) => c.carrier.startsWith("field.additivity.kind:"))).toHaveLength(2);
+  });
+
   it("hygiene requires all five conditions, so dropping the control changes the verdict", () => {
     // Condition 5 is what makes this empirical rather than an excuse: without a
-    // control, "the payload got in the way" is unfalsifiable.
-    const hygienic = multi.filter((w) => classify(w).klass === "quotient-hygiene");
-    expect(hygienic.length, "no hygiene witness to test the conditions against").toBeGreaterThan(0);
-    for (const w of hygienic) {
-      expect(classifyWitness(w, kernel, oracle, new Set()).klass).not.toBe("quotient-hygiene");
-    }
+    // control, "the payload got in the way" is unfalsifiable. The corpus no
+    // longer supplies an instance, so the classifier is exercised on a
+    // reconstructed one — otherwise the branch would be dead code that still
+    // compiles, and a later edit to it would break nothing.
+    const closure = loadClosures().closures.find((c) => c.carrier === "field.additivity.kind:additive~semi-additive")!;
+    const reconstructed: Witness = {
+      coordinates: [closure.carrier, "field.additivity.semi-additive.nonAdditiveAlong#incidence"],
+      a: closure.a!,
+      b: closure.b!,
+    };
+    const withControl = new Set(["field.additivity.kind:additive~ratio-measure"]);
+    expect(classifyWitness(reconstructed, kernel, oracle, withControl).klass).toBe("quotient-hygiene");
+    // and the same witness without a control is NOT hygienic
+    expect(classifyWitness(reconstructed, kernel, oracle, new Set()).klass).not.toBe("quotient-hygiene");
   });
 
   it("an UNAVAILABLE control reports indeterminate, never interaction", () => {

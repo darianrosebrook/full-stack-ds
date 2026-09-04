@@ -86,18 +86,19 @@ export interface SemanticErasureClosure {
   /** Exactly one discriminator member-pair coordinate. */
   carrier: string;
   /**
-   * The branch-conditional payload coordinates. Authored for inspectability,
-   * but obligation 2 requires it to equal the set DERIVED from the two branch
-   * signatures — the author must not be able to pick whatever makes the
-   * collision happen.
+   * The branch-field operations. Authored for inspectability, but obligation 2
+   * requires them to equal the set DERIVED from the two branch signatures, and
+   * each `footprint` to equal what the census actually carries under that
+   * field — the author must not be able to pick whatever makes the collision
+   * happen, nor to under-report what the erasure costs.
    */
-  normalization: string[];
+  normalization: BranchNormalization[];
   control: WitnessRef;
   /**
-   * Coordinates whose standing must be settled before promotion: the
-   * normalization set, plus anything reached transitively when a normalization
-   * coordinate is itself the carrier of another closure. That transitivity is
-   * where a cycle would appear.
+   * Every coordinate whose standing must be settled before promotion: the union
+   * of the operations' footprints, plus anything reached transitively when a
+   * footprint coordinate is itself the carrier of another closure. That
+   * transitivity is where a cycle would appear.
    */
   dependencies: string[];
   /** 1 + the residue on each side; the smallest raw erasure set. */
@@ -135,33 +136,66 @@ export function parseCarrier(id: string): { leaf: string; holder: string; member
 }
 
 /**
- * The coordinate whose erasure DELETES a branch payload field from the
- * encoding.
+ * One normalization step: FORGET a branch-conditional field.
  *
- * A reference-typed field gets a presence facet; a plain enum or scalar leaf
- * does not, and erasing the bare leaf deletes the key. Choosing by what the
- * census actually emits rather than by a naming convention is not cosmetic: an
- * earlier hand-written selector assumed `#present` universally and named
- * `relation.derivedBy.join.cardinality#present`, which does not exist.
+ * Normalization is an OPERATION, not a coordinate, and conflating the two
+ * under-approximated the dependency set. Deleting `toGrain` from the encoding
+ * does not erase only some `toGrain#present` proposition; it destroys the value
+ * and therefore every semantic coordinate carried inside it — `#arity`,
+ * `#order`, `#incidence`. Naming the operation after the handle that happened
+ * to implement it made a closure look like it depended on one coordinate when
+ * it depended on four. For `join.cardinality` the gap is larger: forgetting the
+ * field forgets all six cardinality member pairs, not a bare leaf.
+ *
+ * So the operation is identified structurally, and its FOOTPRINT — what the
+ * operation actually costs — is derived from the census rather than authored.
  */
-function payloadCoordinate(holder: string, member: string, field: string, byId: Map<string, Coordinate>): string | undefined {
-  const base = `${holder}.${member}.${field}`;
-  if (byId.has(`${base}#present`)) return `${base}#present`;
-  if (byId.has(base)) return base;
-  return undefined;
+export interface BranchNormalization {
+  holder: string;
+  branch: string;
+  field: string;
+  operation: "forget-branch-field";
+  /** Every live semantic coordinate at or below the forgotten field. Derived, never authored. */
+  footprint: string[];
+}
+
+/** The path a branch-field operation forgets. */
+export const branchFieldPath = (n: Pick<BranchNormalization, "holder" | "branch" | "field">) => `${n.holder}.${n.branch}.${n.field}`;
+
+/**
+ * The erasure handle for a branch-field operation.
+ *
+ * Synthetic on purpose: the operation is "delete this path", which is what a
+ * `leaf` erasure does, and it must not depend on the census happening to emit a
+ * coordinate at that path. Under the required-child presence rule it no longer
+ * does — the `#present` propositions these used to borrow were derived
+ * conjunctions of holder existence and branch identity, and are gone.
+ */
+export const forgetPath = (path: string): Coordinate => ({ id: `forget(${path})`, kind: "leaf", leaf: path, role: "schema" });
+
+export const forgetBranchField = (n: Pick<BranchNormalization, "holder" | "branch" | "field">): Coordinate =>
+  forgetPath(branchFieldPath(n));
+
+/** Live semantic coordinates at or below a path. References are listed for exhaustiveness and confer no standing. */
+export function footprintOf(path: string, census: Coordinate[]): string[] {
+  return census
+    .filter((c) => c.kind !== "reference")
+    .filter((c) => c.id === path || c.id.startsWith(`${path}#`) || c.id.startsWith(`${path}.`) || c.id.startsWith(`${path}:`))
+    .map((c) => c.id)
+    .sort();
 }
 
 export interface DerivedNormalization {
   /** Required payload each branch carries that the other does not. */
   residue: { [member: string]: string[] };
-  /** The census coordinates that erase that residue, sorted. */
-  normalization: string[];
-  /** 1 + the residue on each side. */
+  /** The branch-field operations that erase that residue, in path order. */
+  normalization: BranchNormalization[];
+  /** Union of the operations' footprints: what the closure actually depends on. */
+  footprint: string[];
+  /** 1 + the residue on each side. The count of raw EDITS, not of dependencies. */
   minRawEdit: number;
   /** Residue on BOTH sides — the shape a <=2-coordinate witness cannot express. */
   bilateral: boolean;
-  /** Payload fields with no erasing coordinate; a derivation failure, never a pass. */
-  unmapped: string[];
 }
 
 /**
@@ -186,27 +220,25 @@ export function deriveNormalization(
   const reqB = sig.required[b];
   if (!reqA || !reqB) return { error: `${parsed.leaf} has no branch ${!reqA ? a : b}` };
 
-  const byId = new Map(census.map((c) => [c.id, c]));
   const residue: DerivedNormalization["residue"] = {
     [a]: reqA.filter((f) => !reqB.includes(f)),
     [b]: reqB.filter((f) => !reqA.includes(f)),
   };
-  const normalization: string[] = [];
-  const unmapped: string[] = [];
-  for (const [member, fields] of Object.entries(residue)) {
-    for (const f of fields) {
-      const id = payloadCoordinate(parsed.holder, member, f, byId);
-      if (id) normalization.push(id);
-      else unmapped.push(`${parsed.holder}.${member}.${f}`);
+  const normalization: BranchNormalization[] = [];
+  for (const [branch, fields] of Object.entries(residue)) {
+    for (const field of fields) {
+      const n = { holder: parsed.holder, branch, field, operation: "forget-branch-field" as const, footprint: [] as string[] };
+      normalization.push({ ...n, footprint: footprintOf(branchFieldPath(n), census) });
     }
   }
+  normalization.sort((x, y) => branchFieldPath(x).localeCompare(branchFieldPath(y)));
   const counts = [residue[a].length, residue[b].length];
   return {
     residue,
-    normalization: normalization.sort(),
+    normalization,
+    footprint: [...new Set(normalization.flatMap((n) => n.footprint))].sort(),
     minRawEdit: 1 + counts[0] + counts[1],
     bilateral: counts[0] > 0 && counts[1] > 0,
-    unmapped: unmapped.sort(),
   };
 }
 
@@ -362,16 +394,18 @@ export function checkClosure(
     problems.push(`${closure.carrier}: ${derived.error}`);
     return { carrier: closure.carrier, ok: false, problems, obligations, promotion: "refuted", standing: [] };
   }
-  const authored = [...closure.normalization].sort();
-  const c2 = derived.unmapped.length === 0 && authored.join("\n") === derived.normalization.join("\n") && closure.minRawEdit === derived.minRawEdit;
+  const norm = (ns: BranchNormalization[]) =>
+    [...ns]
+      .sort((x, y) => branchFieldPath(x).localeCompare(branchFieldPath(y)))
+      .map((n) => `${n.operation}(${branchFieldPath(n)})=[${[...n.footprint].sort().join(",")}]`)
+      .join("\n");
+  const c2 = norm(closure.normalization) === norm(derived.normalization) && closure.minRawEdit === derived.minRawEdit;
   obligations.push({
     id: "2-mechanically-derived-normalization",
     held: c2,
     detail: c2
-      ? `[${derived.normalization.join(", ")}] is the symmetric difference of the branch signatures; minRawEdit ${derived.minRawEdit}`
-      : derived.unmapped.length > 0
-        ? `no erasing coordinate for payload ${derived.unmapped.join(", ")}`
-        : `authored [${authored.join(", ")}] (minRawEdit ${closure.minRawEdit}) is not the derived [${derived.normalization.join(", ")}] (minRawEdit ${derived.minRawEdit})`,
+      ? `${derived.normalization.length} branch-field operation(s) from the symmetric difference of the branch signatures; minRawEdit ${derived.minRawEdit}; footprint of ${derived.footprint.length} coordinate(s)`
+      : `authored operations/footprints do not match the derived ones:\n      authored: ${norm(closure.normalization).replace(/\n/g, "\n      ")}\n      derived:  ${norm(derived.normalization).replace(/\n/g, "\n      ")}`,
   });
   if (!c2) problems.push(`${closure.carrier}: authored normalization does not equal the derived set`);
   // A closure with nothing to normalize is not a weak closure; it is a
@@ -381,16 +415,18 @@ export function checkClosure(
     problems.push(`${closure.carrier}: derives an EMPTY normalization set, so it is a single-coordinate witness and belongs in witnesses.json`);
   }
 
-  // Dependencies: the normalization set, plus whatever it reaches transitively
-  // through the closures of its own members. A cycle would show up here.
+  // Dependencies: the FOOTPRINT — every coordinate the operations destroy —
+  // plus whatever it reaches transitively through the closures of its own
+  // members. Walking the operation handles instead would under-report by
+  // exactly the coordinates that made this refactor necessary.
   const byCarrier = new Map(ledger.map((c) => [c.carrier, c]));
   const deps = new Set<string>();
-  const stack = [...derived.normalization];
+  const stack = [...derived.footprint];
   while (stack.length > 0) {
     const id = stack.pop()!;
     if (deps.has(id)) continue;
     deps.add(id);
-    for (const n of byCarrier.get(id)?.normalization ?? []) stack.push(n);
+    for (const n of byCarrier.get(id)?.normalization ?? []) for (const f of n.footprint) stack.push(f);
   }
   const depList = [...deps].sort();
   const declaredDeps = [...closure.dependencies].sort();
@@ -411,16 +447,21 @@ export function checkClosure(
   // 3. CONTROLLED STIMULI: identical outside the discriminated holder, and
   //    their required outcomes differ under authority that is not the engine.
   //
-  //    "Identical outside the holder" is checked by erasing the holder's WHOLE
-  //    contribution from both — every census coordinate under `<holder>.` plus
-  //    the discriminator leaf — and comparing canonical forms. That is a
-  //    stronger and better-defined statement than a hand-written path deletion,
-  //    and it reuses the quotient rather than reimplementing it.
-  const holderCoords = census.filter((c) => c.id === parsed.leaf || c.id.startsWith(`${parsed.holder}.`));
+  //    "Identical outside the holder" is checked by FORGETTING the holder path
+  //    in both and comparing canonical forms.
+  //
+  //    This used to gather every census coordinate under `<holder>.` and erase
+  //    those instead, which made a structural question depend on which
+  //    coordinates the census happened to emit: once the required-child presence
+  //    rule removed the coordinates that DELETE a required branch field, nothing
+  //    in the set could remove it any more, and two stimuli differing only
+  //    inside the holder began reporting as differing outside it. The same
+  //    conflation the footprint model exists to fix, reached from a third side.
   if (!stimuli) {
     obligations.push(unevaluable("3-controlled-stimuli", "no stimuli constructed"));
   } else {
-    const outside = canonical(eraseAll(a!.fixture, holderCoords)) === canonical(eraseAll(b!.fixture, holderCoords));
+    const forgetHolder = [forgetPath(parsed.holder)];
+    const outside = canonical(eraseAll(a!.fixture, forgetHolder)) === canonical(eraseAll(b!.fixture, forgetHolder));
     const differ = !sameOutcome(a!.outcome, b!.outcome);
     const vocabulary = groundedVocabulary(oracle);
     const ungrounded = ([["a", closure.a!], ["b", closure.b!]] as const)
@@ -444,9 +485,14 @@ export function checkClosure(
     }
   }
 
-  const collidesUnder = (ids: string[]): boolean => {
-    const cs = ids.map((id) => coord(id)).filter((c): c is Coordinate => c !== undefined);
-    if (cs.length !== ids.length) return false;
+  /** Erase the carrier (a census coordinate) and/or a set of branch-field operations. */
+  const collidesUnder = (withCarrier: boolean, ops: BranchNormalization[]): boolean => {
+    const cs: Coordinate[] = [...ops.map(forgetBranchField)];
+    if (withCarrier) {
+      const cc = coord(closure.carrier);
+      if (!cc) return false;
+      cs.push(cc);
+    }
     return canonical(eraseAll(a!.fixture, cs)) === canonical(eraseAll(b!.fixture, cs));
   };
 
@@ -463,11 +509,11 @@ export function checkClosure(
     // subsets at all, and folding the two together silently skipped the one
     // clause obligation 4 exists for — reporting PASS for a carrier that in
     // fact collided on its own.
-    if (collidesUnder([closure.carrier])) offenders.push("the carrier alone");
+    if (collidesUnder(true, [])) offenders.push("the carrier alone");
     for (let mask = 1; mask < 1 << n.length; mask++) {
       const subset = n.filter((_, i) => (mask >> i) & 1);
       if (subset.length === n.length) continue;
-      if (collidesUnder([closure.carrier, ...subset])) offenders.push(`carrier + ${subset.join(" + ")}`);
+      if (collidesUnder(true, subset)) offenders.push(`carrier + ${subset.map(branchFieldPath).join(" + ")}`);
     }
     obligations.push({
       id: "4-carrier-insufficient-before-normalization",
@@ -483,7 +529,7 @@ export function checkClosure(
   if (!stimuli) {
     obligations.push(unevaluable("5-complete-closure-sufficiency", "no stimuli constructed"));
   } else {
-    const held = collidesUnder([closure.carrier, ...derived.normalization]);
+    const held = collidesUnder(true, derived.normalization);
     obligations.push({
       id: "5-complete-closure-sufficiency",
       held,
@@ -494,8 +540,9 @@ export function checkClosure(
   // 6. NORMALIZATION IS NOT THE CITED CAUSE: without the carrier it must not
   //    collide, every member must lie in payload conditional on one branch, and
   //    no member gains standing by appearing here.
-  const branchPrefixes = parsed.members.map((m) => `${parsed.holder}.${m}.`);
-  const misplaced = derived.normalization.filter((id) => !branchPrefixes.some((p) => id.startsWith(p)));
+  const misplaced = derived.normalization
+    .filter((n) => n.holder !== parsed.holder || !parsed.members.includes(n.branch))
+    .map(branchFieldPath);
   if (!stimuli) {
     obligations.push(
       misplaced.length > 0
@@ -503,13 +550,13 @@ export function checkClosure(
         : unevaluable("6-normalization-is-not-the-cited-cause", "branch-conditionality holds; the collision half needs stimuli"),
     );
   } else {
-    const alone = collidesUnder(derived.normalization);
+    const alone = collidesUnder(false, derived.normalization);
     const held = !alone && misplaced.length === 0;
     obligations.push({
       id: "6-normalization-is-not-the-cited-cause",
       held,
       detail: held
-        ? `all under ${branchPrefixes.join(" or ")}, and erasing them without the carrier leaves the stimuli distinct`
+        ? `every operation is under ${parsed.holder}.{${parsed.members.join(",")}}., and applying them without the carrier leaves the stimuli distinct`
         : alone
           ? "the normalization set alone already collides the stimuli, so IT carries the distinction"
           : `outside the branch payload: ${misplaced.join(", ")}`,
@@ -540,19 +587,39 @@ export function checkClosure(
     });
   }
 
-  // 8. DEPENDENCY AND FIXED-POINT DISCHARGE.
+  // 8. DEPENDENCY AND FIXED-POINT DISCHARGE, over the FOOTPRINT.
+  //
+  //   unresolved            -> the closure stays provisional
+  //   interaction-only      -> the factorization stays open
+  //   primitive             -> this closure cannot prove the carrier primitive:
+  //                            tag and payload are composite under this encoding
+  //   resolved non-primitive-> may advance, subject to the final quotient
+  //
+  // A coordinate retained as `required-derived-vocabulary` is reported
+  // separately rather than folded into "removed artifact": it carries no
+  // primitive semantics but it IS governed authority, and a closure that
+  // silently treated the two alike would be erasing a name somebody requires.
   const standing = depList.map((coordinate) => ({ coordinate, standing: standingIndex.of(coordinate) }));
   const open = standing.filter((s) => s.standing.state === "unresolved" || s.standing.state === "unowned");
-  const supported = standing.filter((s) => s.standing.state === "primitive" || s.standing.state === "interaction-only");
-  const c8 = open.length === 0 && supported.length === 0;
+  const primitiveDeps = standing.filter((s) => s.standing.state === "primitive");
+  const interactionDeps = standing.filter((s) => s.standing.state === "interaction-only");
+  const governed = standing.filter((s) => s.standing.state === "resolved" && s.standing.disposition === "required-derived-vocabulary");
+  const c8 = open.length === 0 && primitiveDeps.length === 0 && interactionDeps.length === 0;
+  const say = (rows: typeof standing) => rows.map((s) => s.coordinate).join(", ");
   obligations.push({
     id: "8-dependency-and-fixed-point-discharge",
     held: c8,
     detail: c8
-      ? `every dependency resolved and none independently supported; the simultaneous final quotient remains a close condition of the slice`
-      : open.length > 0
-        ? `${open.length} dependency/dependencies not yet adjudicated: ${open.map((s) => `${s.coordinate} (${s.standing.state})`).join(", ")}`
-        : `${supported.length} dependency/dependencies carry standing of their own: ${supported.map((s) => `${s.coordinate} (${s.standing.state})`).join(", ")}`,
+      ? `all ${standing.length} footprint coordinate(s) adjudicated non-primitive${governed.length > 0 ? ` (${governed.length} retained as required derived vocabulary: ${say(governed)})` : ""}; the simultaneous final quotient remains a close condition of the slice`
+      : [
+          open.length > 0 ? `${open.length} of ${standing.length} footprint coordinate(s) unadjudicated: ${say(open)}` : "",
+          interactionDeps.length > 0 ? `${interactionDeps.length} interaction-only, so the factorization stays open: ${say(interactionDeps)}` : "",
+          primitiveDeps.length > 0
+            ? `${primitiveDeps.length} PRIMITIVE, so this closure cannot prove the carrier primitive — constructor and payload are composite under this encoding: ${say(primitiveDeps)}`
+            : "",
+        ]
+          .filter(Boolean)
+          .join("; "),
   });
 
   // Promotion. `refuted` is reserved for the three named causes; everything
@@ -571,7 +638,7 @@ export function checkClosure(
     promotion,
     derived,
     classification: indeterminate ? "indeterminate" : undefined,
-    rereadIf: supported.length > 0 || open.length > 0 ? REREAD : undefined,
+    rereadIf: primitiveDeps.length > 0 || interactionDeps.length > 0 || open.length > 0 ? REREAD : undefined,
     standing,
   };
 }
@@ -597,7 +664,10 @@ export interface ClosureGateResult {
  * never be able to delete the competing carrier that stood in its way.
  */
 export function closureCycles(closures: SemanticErasureClosure[]): string[][] {
-  const edges = new Map(closures.map((c) => [c.carrier, c.normalization]));
+  // Edges run carrier -> FOOTPRINT: a cycle is a footprint coordinate whose
+  // own support eventually depends back on the carrier, which is the signature
+  // of a composite semantic object rather than two independent coordinates.
+  const edges = new Map(closures.map((c) => [c.carrier, c.normalization.flatMap((n) => n.footprint)]));
   const index = new Map<string, number>();
   const low = new Map<string, number>();
   const onStack = new Set<string>();

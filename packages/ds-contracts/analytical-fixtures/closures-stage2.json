@@ -1,23 +1,63 @@
 {
-  "$comment": "Stage-2 semantic-erasure-closure measurements (REL-VIEW-ALGEBRA-01). A closure separates ONE semantic intervention (the `carrier`, a single discriminator substitution) from the deterministic representational `normalization` it induces, because a tagged union is a dependent sum rather than a product of independently present coordinates: `toGrain` exists only under aggregate-to-grain, `keep` only under project. It is a WITNESS CLASSIFICATION, never a sixth subtraction disposition — the code-owned ledger vocabulary is unchanged and a `provisional` closure leaves its candidate `unresolved`. Nothing here writes to witnesses.json and no coordinate named here reaches primitiveRatified; closure.ts asserts that directly. This file is AUTHORED, not regenerated: `checkClosures` re-derives the normalization set from the branch signatures and fails when a hand edit moves it, which is only evidence for as long as no command exists to rewrite the file into agreement with itself.",
+  "$comment": "Stage-2 semantic-erasure-closure measurements (REL-VIEW-ALGEBRA-01). A closure separates ONE semantic intervention (the `carrier`, a single discriminator substitution) from the deterministic representational normalization it induces, because a tagged union is a dependent sum rather than a product of independently present coordinates: `toGrain` exists only under aggregate-to-grain, `keep` only under project. NORMALIZATION IS AN OPERATION, NOT A COORDINATE — `forget-branch-field` deletes a branch-conditional field, which destroys every semantic coordinate carried inside it, and that FOOTPRINT is what the closure depends on. Naming the dependency after the handle that implemented the deletion under-reported it: `toGrain` costs four coordinates, not one, and `join.cardinality` costs seven. It is a WITNESS CLASSIFICATION, never a sixth subtraction disposition — the code-owned ledger vocabulary is unchanged and a `provisional` closure leaves its candidate `unresolved`. Nothing here writes to witnesses.json and no coordinate named here reaches primitiveRatified; closure.ts asserts that directly. This file is AUTHORED, not regenerated: `checkClosures` re-derives operations and footprints from the branch signatures and the census, and fails when a hand edit moves either.",
   "spec": "REL-VIEW-ALGEBRA-01",
   "policyRef": "subtraction-stage2.json#adjudicationPolicy.witnessStrength.classification.semanticErasureClosure",
-  "$control": "relation.derivedBy.kind:bin~normalize needs no closure at all: bin and normalize require the same payload {field, from}, so their symmetric difference is empty and a single-coordinate witness already separates them. It is the strongest result on this enum and no dependency resolution can weaken it, which is exactly what makes it the control the other 20 pairs cite.",
+  "$control": "relation.derivedBy.kind:bin~normalize needs no closure at all: bin and normalize require the same payload {field, from}, so their symmetric difference is empty and a single-coordinate witness already separates them. It is the strongest result on this enum and no dependency resolution can weaken it, which is exactly what makes it the control the other twenty cite.",
   "closures": [
     {
       "carrier": "relation.derivedBy.kind:aggregate-to-grain~join",
       "normalization": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "aggregate-to-grain",
+          "field": "toGrain",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+            "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+            "relation.derivedBy.aggregate-to-grain.toGrain#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "cardinality",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.cardinality",
+            "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "with",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.with#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
+        "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+        "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+        "relation.derivedBy.aggregate-to-grain.toGrain#order",
         "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present"
+        "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+        "relation.derivedBy.join.with#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -25,15 +65,39 @@
     {
       "carrier": "relation.derivedBy.kind:aggregate-to-grain~nest",
       "normalization": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.nest.levels#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "aggregate-to-grain",
+          "field": "toGrain",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+            "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+            "relation.derivedBy.aggregate-to-grain.toGrain#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "nest",
+          "field": "levels",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.nest.levels#arity",
+            "relation.derivedBy.nest.levels#incidence",
+            "relation.derivedBy.nest.levels#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.nest.levels#present"
+        "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+        "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+        "relation.derivedBy.aggregate-to-grain.toGrain#order",
+        "relation.derivedBy.nest.levels#arity",
+        "relation.derivedBy.nest.levels#incidence",
+        "relation.derivedBy.nest.levels#order"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -41,15 +105,35 @@
     {
       "carrier": "relation.derivedBy.kind:aggregate-to-grain~bin",
       "normalization": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.bin.field#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "aggregate-to-grain",
+          "field": "toGrain",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+            "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+            "relation.derivedBy.aggregate-to-grain.toGrain#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "bin",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.bin.field#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.bin.field#present"
+        "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+        "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+        "relation.derivedBy.aggregate-to-grain.toGrain#order",
+        "relation.derivedBy.bin.field#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -57,15 +141,35 @@
     {
       "carrier": "relation.derivedBy.kind:aggregate-to-grain~normalize",
       "normalization": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.normalize.field#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "aggregate-to-grain",
+          "field": "toGrain",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+            "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+            "relation.derivedBy.aggregate-to-grain.toGrain#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "normalize",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.normalize.field#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.normalize.field#present"
+        "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+        "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+        "relation.derivedBy.aggregate-to-grain.toGrain#order",
+        "relation.derivedBy.normalize.field#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -73,15 +177,39 @@
     {
       "carrier": "relation.derivedBy.kind:aggregate-to-grain~project",
       "normalization": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.project.keep#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "aggregate-to-grain",
+          "field": "toGrain",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+            "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+            "relation.derivedBy.aggregate-to-grain.toGrain#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "project",
+          "field": "keep",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.project.keep#arity",
+            "relation.derivedBy.project.keep#incidence",
+            "relation.derivedBy.project.keep#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.project.keep#present"
+        "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+        "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+        "relation.derivedBy.aggregate-to-grain.toGrain#order",
+        "relation.derivedBy.project.keep#arity",
+        "relation.derivedBy.project.keep#incidence",
+        "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 3,
       "promotion": "provisional",
@@ -111,22 +239,50 @@
         },
         "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: a nest over levels [country, state] declares exactly its prefixes as grains, so a subtotal to [sale_id] is not one of them. The aggregate-to-grain law is otherwise satisfied — the declared result grain IS the target grain, the target is a field of the input, and the result invents no field — so the target grain is determined and no grain obligation arises. Side a is the corpus case CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP unmodified. Both readings are mechanical over existing Stage-2 causes, and the patch changes nothing but `flat.derivedBy`."
       },
-      "note": "The one closure in this ledger whose stimuli have been constructed, and the record that makes the proof form falsifiable rather than declarative. Obligations 1-7 are discharged; obligation 8 is not, because both normalization coordinates are `unresolved` in the stage-2 basis. So the carrier does NOT gain primitive standing and the candidate's verdict stays `unresolved`."
+      "note": "The one derivation closure whose stimuli have been constructed, and the record that makes the proof form falsifiable rather than declarative. Obligations 1-7 are discharged; obligation 8 is not, because the FOOTPRINT of the two operations — the topology facets of toGrain and keep, not merely some presence proposition — is unadjudicated. So the carrier gains no standing and the candidate's verdict stays `unresolved`."
     },
     {
       "carrier": "relation.derivedBy.kind:aggregate-to-grain~graph",
       "normalization": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "aggregate-to-grain",
+          "field": "toGrain",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+            "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+            "relation.derivedBy.aggregate-to-grain.toGrain#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeFrom",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeFrom#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeTo",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeTo#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present"
+        "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+        "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+        "relation.derivedBy.aggregate-to-grain.toGrain#order",
+        "relation.derivedBy.graph.edgeFrom#incidence",
+        "relation.derivedBy.graph.edgeTo#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -134,17 +290,57 @@
     {
       "carrier": "relation.derivedBy.kind:join~nest",
       "normalization": [
-        "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present",
-        "relation.derivedBy.nest.levels#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "cardinality",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.cardinality",
+            "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "with",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.with#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "nest",
+          "field": "levels",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.nest.levels#arity",
+            "relation.derivedBy.nest.levels#incidence",
+            "relation.derivedBy.nest.levels#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
         "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present",
-        "relation.derivedBy.nest.levels#present"
+        "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+        "relation.derivedBy.join.with#incidence",
+        "relation.derivedBy.nest.levels#arity",
+        "relation.derivedBy.nest.levels#incidence",
+        "relation.derivedBy.nest.levels#order"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -152,17 +348,53 @@
     {
       "carrier": "relation.derivedBy.kind:join~bin",
       "normalization": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "bin",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.bin.field#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "cardinality",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.cardinality",
+            "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "with",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.with#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.bin.field#present",
+        "relation.derivedBy.bin.field#incidence",
         "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present"
+        "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+        "relation.derivedBy.join.with#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -170,17 +402,53 @@
     {
       "carrier": "relation.derivedBy.kind:join~normalize",
       "normalization": [
-        "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present",
-        "relation.derivedBy.normalize.field#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "cardinality",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.cardinality",
+            "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "with",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.with#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "normalize",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.normalize.field#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
         "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present",
-        "relation.derivedBy.normalize.field#present"
+        "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+        "relation.derivedBy.join.with#incidence",
+        "relation.derivedBy.normalize.field#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -188,17 +456,57 @@
     {
       "carrier": "relation.derivedBy.kind:join~project",
       "normalization": [
-        "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present",
-        "relation.derivedBy.project.keep#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "cardinality",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.cardinality",
+            "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "with",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.with#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "project",
+          "field": "keep",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.project.keep#arity",
+            "relation.derivedBy.project.keep#incidence",
+            "relation.derivedBy.project.keep#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
         "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present",
-        "relation.derivedBy.project.keep#present"
+        "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+        "relation.derivedBy.join.with#incidence",
+        "relation.derivedBy.project.keep#arity",
+        "relation.derivedBy.project.keep#incidence",
+        "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -206,19 +514,63 @@
     {
       "carrier": "relation.derivedBy.kind:join~graph",
       "normalization": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeFrom",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeFrom#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeTo",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeTo#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "cardinality",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.cardinality",
+            "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+            "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+            "relation.derivedBy.join.cardinality:one-to-one~one-to-many"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "join",
+          "field": "with",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.join.with#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
+        "relation.derivedBy.graph.edgeFrom#incidence",
+        "relation.derivedBy.graph.edgeTo#incidence",
         "relation.derivedBy.join.cardinality",
-        "relation.derivedBy.join.with#present"
+        "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+        "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+        "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+        "relation.derivedBy.join.with#incidence"
       ],
       "minRawEdit": 5,
       "promotion": "provisional"
@@ -226,15 +578,35 @@
     {
       "carrier": "relation.derivedBy.kind:nest~bin",
       "normalization": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.nest.levels#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "bin",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.bin.field#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "nest",
+          "field": "levels",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.nest.levels#arity",
+            "relation.derivedBy.nest.levels#incidence",
+            "relation.derivedBy.nest.levels#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.nest.levels#present"
+        "relation.derivedBy.bin.field#incidence",
+        "relation.derivedBy.nest.levels#arity",
+        "relation.derivedBy.nest.levels#incidence",
+        "relation.derivedBy.nest.levels#order"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -242,15 +614,35 @@
     {
       "carrier": "relation.derivedBy.kind:nest~normalize",
       "normalization": [
-        "relation.derivedBy.nest.levels#present",
-        "relation.derivedBy.normalize.field#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "nest",
+          "field": "levels",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.nest.levels#arity",
+            "relation.derivedBy.nest.levels#incidence",
+            "relation.derivedBy.nest.levels#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "normalize",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.normalize.field#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.nest.levels#present",
-        "relation.derivedBy.normalize.field#present"
+        "relation.derivedBy.nest.levels#arity",
+        "relation.derivedBy.nest.levels#incidence",
+        "relation.derivedBy.nest.levels#order",
+        "relation.derivedBy.normalize.field#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -258,15 +650,39 @@
     {
       "carrier": "relation.derivedBy.kind:nest~project",
       "normalization": [
-        "relation.derivedBy.nest.levels#present",
-        "relation.derivedBy.project.keep#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "nest",
+          "field": "levels",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.nest.levels#arity",
+            "relation.derivedBy.nest.levels#incidence",
+            "relation.derivedBy.nest.levels#order"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "project",
+          "field": "keep",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.project.keep#arity",
+            "relation.derivedBy.project.keep#incidence",
+            "relation.derivedBy.project.keep#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.nest.levels#present",
-        "relation.derivedBy.project.keep#present"
+        "relation.derivedBy.nest.levels#arity",
+        "relation.derivedBy.nest.levels#incidence",
+        "relation.derivedBy.nest.levels#order",
+        "relation.derivedBy.project.keep#arity",
+        "relation.derivedBy.project.keep#incidence",
+        "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -274,17 +690,45 @@
     {
       "carrier": "relation.derivedBy.kind:nest~graph",
       "normalization": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.nest.levels#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeFrom",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeFrom#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeTo",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeTo#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "nest",
+          "field": "levels",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.nest.levels#arity",
+            "relation.derivedBy.nest.levels#incidence",
+            "relation.derivedBy.nest.levels#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.nest.levels#present"
+        "relation.derivedBy.graph.edgeFrom#incidence",
+        "relation.derivedBy.graph.edgeTo#incidence",
+        "relation.derivedBy.nest.levels#arity",
+        "relation.derivedBy.nest.levels#incidence",
+        "relation.derivedBy.nest.levels#order"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -292,15 +736,35 @@
     {
       "carrier": "relation.derivedBy.kind:bin~project",
       "normalization": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.project.keep#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "bin",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.bin.field#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "project",
+          "field": "keep",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.project.keep#arity",
+            "relation.derivedBy.project.keep#incidence",
+            "relation.derivedBy.project.keep#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.project.keep#present"
+        "relation.derivedBy.bin.field#incidence",
+        "relation.derivedBy.project.keep#arity",
+        "relation.derivedBy.project.keep#incidence",
+        "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -308,17 +772,41 @@
     {
       "carrier": "relation.derivedBy.kind:bin~graph",
       "normalization": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "bin",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.bin.field#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeFrom",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeFrom#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeTo",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeTo#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.bin.field#present",
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present"
+        "relation.derivedBy.bin.field#incidence",
+        "relation.derivedBy.graph.edgeFrom#incidence",
+        "relation.derivedBy.graph.edgeTo#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -326,15 +814,35 @@
     {
       "carrier": "relation.derivedBy.kind:normalize~project",
       "normalization": [
-        "relation.derivedBy.normalize.field#present",
-        "relation.derivedBy.project.keep#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "normalize",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.normalize.field#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "project",
+          "field": "keep",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.project.keep#arity",
+            "relation.derivedBy.project.keep#incidence",
+            "relation.derivedBy.project.keep#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.normalize.field#present",
-        "relation.derivedBy.project.keep#present"
+        "relation.derivedBy.normalize.field#incidence",
+        "relation.derivedBy.project.keep#arity",
+        "relation.derivedBy.project.keep#incidence",
+        "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -342,17 +850,41 @@
     {
       "carrier": "relation.derivedBy.kind:normalize~graph",
       "normalization": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.normalize.field#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeFrom",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeFrom#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeTo",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeTo#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "normalize",
+          "field": "field",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.normalize.field#incidence"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.normalize.field#present"
+        "relation.derivedBy.graph.edgeFrom#incidence",
+        "relation.derivedBy.graph.edgeTo#incidence",
+        "relation.derivedBy.normalize.field#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -360,20 +892,145 @@
     {
       "carrier": "relation.derivedBy.kind:project~graph",
       "normalization": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.project.keep#present"
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeFrom",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeFrom#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "graph",
+          "field": "edgeTo",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.graph.edgeTo#incidence"
+          ]
+        },
+        {
+          "holder": "relation.derivedBy",
+          "branch": "project",
+          "field": "keep",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "relation.derivedBy.project.keep#arity",
+            "relation.derivedBy.project.keep#incidence",
+            "relation.derivedBy.project.keep#order"
+          ]
+        }
       ],
       "control": {
         "coordinate": "relation.derivedBy.kind:bin~normalize"
       },
       "dependencies": [
-        "relation.derivedBy.graph.edgeFrom#present",
-        "relation.derivedBy.graph.edgeTo#present",
-        "relation.derivedBy.project.keep#present"
+        "relation.derivedBy.graph.edgeFrom#incidence",
+        "relation.derivedBy.graph.edgeTo#incidence",
+        "relation.derivedBy.project.keep#arity",
+        "relation.derivedBy.project.keep#incidence",
+        "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
+    },
+    {
+      "carrier": "field.additivity.kind:additive~semi-additive",
+      "normalization": [
+        {
+          "holder": "field.additivity",
+          "branch": "semi-additive",
+          "field": "nonAdditiveAlong",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "field.additivity.semi-additive.nonAdditiveAlong#arity",
+            "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+            "field.additivity.semi-additive.nonAdditiveAlong#order"
+          ]
+        }
+      ],
+      "control": {
+        "coordinate": "field.additivity.kind:additive~ratio-measure"
+      },
+      "dependencies": [
+        "field.additivity.semi-additive.nonAdditiveAlong#arity",
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+        "field.additivity.semi-additive.nonAdditiveAlong#order"
+      ],
+      "minRawEdit": 2,
+      "promotion": "provisional",
+      "a": {
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
+      },
+      "b": {
+        "base": "FX_STOCK_SUM_ALONG_DATE",
+        "patch": [
+          {
+            "set": "structure.relations.stock.fields.on_hand.additivity",
+            "value": {
+              "kind": "additive"
+            }
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE requires the measure to be declared non-additive along the dimension; an additive measure sums along any"
+      },
+      "note": "Migrated from witnesses.json, where it was a 2-set naming a coordinate the required-child presence rule removes. a semi-additive declaration is kind plus its dimension set; neither alone separates it from additive"
+    },
+    {
+      "carrier": "field.additivity.kind:semi-additive~ratio-measure",
+      "normalization": [
+        {
+          "holder": "field.additivity",
+          "branch": "semi-additive",
+          "field": "nonAdditiveAlong",
+          "operation": "forget-branch-field",
+          "footprint": [
+            "field.additivity.semi-additive.nonAdditiveAlong#arity",
+            "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+            "field.additivity.semi-additive.nonAdditiveAlong#order"
+          ]
+        }
+      ],
+      "control": {
+        "coordinate": "field.additivity.kind:additive~ratio-measure"
+      },
+      "dependencies": [
+        "field.additivity.semi-additive.nonAdditiveAlong#arity",
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+        "field.additivity.semi-additive.nonAdditiveAlong#order"
+      ],
+      "minRawEdit": 2,
+      "promotion": "provisional",
+      "a": {
+        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+      },
+      "b": {
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+        "patch": [
+          {
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
+            "value": {
+              "kind": "semi-additive",
+              "nonAdditiveAlong": [
+                "year"
+              ]
+            }
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE names a sum along the dimension (doctrine L2: inventory averages over time); REL_RATIO_MEASURE_AVERAGED names a rate; a semi-additive measure combined by mean exhibits neither"
+      },
+      "note": "Migrated from witnesses.json, where it was a 2-set naming a coordinate the required-child presence rule removes."
     }
   ]
 }

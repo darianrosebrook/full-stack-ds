@@ -1,57 +1,197 @@
 {
   "$comment": "REL-FIELD-ALGEBRA-02 Phase B: the stage-1 coordinates (census-stage1.json) that carry no necessity witness and therefore leave the kernel as not-yet-admitted, each with the earliest later stage allowed to re-earn it with its own witness. leafMap/memberMap/factorized record how the kernel carries the stage-1 coordinates that DID survive under another id or member; necessity.test.ts derives every stage-1 coordinate's disposition from this file plus witnesses.json and requires the kernel census to equal exactly the ratified set. keyRewrites are the assertion-key rewrites these removals imply for the frozen Phase-A ledger (baseline --check --ledger-only --rewrites). Content dropped inside surviving coordinates (not coordinates themselves): field.unit.conversions rate values (now a unit-code list), field.whole fixed-whole text (now the literal 'fixed'), field.base text (now true).",
   "removed": [
-    { "coordinate": "field.shape", "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)", "reintroducibleAt": 2 },
-    { "coordinate": "field.unit.dimension", "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)", "reintroducibleAt": 3 },
-    { "coordinate": "field.unit.unit", "reason": "a single unit name is never read at stage 1; only the unit set and its conversions are", "reintroducibleAt": 3 },
-    { "coordinate": "field.unit.rate.numerator", "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2", "reintroducibleAt": 2 },
-    { "coordinate": "field.unit.rate.denominator", "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2", "reintroducibleAt": 2 },
-    { "coordinate": "field.temporality.closure", "reason": "boundary membership is a stage-2 cause (REL_BIN_CLOSURE_UNDECLARED)", "reintroducibleAt": 2 },
-    { "coordinate": "field.temporality.grain", "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)", "reintroducibleAt": 2 },
-    { "coordinate": "field.temporality.calendar", "reason": "no stage-1 outcome reads the calendar", "reintroducibleAt": 2 },
-    { "coordinate": "field.order.kind", "reason": "an ordinal field's order is presupposed, not read, at stage 1; ordering as a claim is stage 3 (REL_SORT_AS_RENDER_OPTION)", "reintroducibleAt": 3 },
-    { "coordinate": "field.order.values", "reason": "an ordinal field's order is presupposed, not read, at stage 1", "reintroducibleAt": 3 },
-    { "coordinate": "field.period", "reason": "a cyclic field's period is presupposed, not read, at stage 1 (the linear mean is wrong for any period)", "reintroducibleAt": 2 },
-    { "coordinate": "field.additivity.ratio-measure.numerator", "reason": "a rate's numerator is read only by re-derivation at a target grain, which is stage 2", "reintroducibleAt": 2 },
-    { "coordinate": "field.additivity.ratio-measure.denominator", "reason": "a rate's denominator is read only by re-derivation at a target grain, which is stage 2", "reintroducibleAt": 2 },
-    { "coordinate": "field.permits.provenance", "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)", "reintroducibleAt": 3 },
-    { "coordinate": "relationship.cardinality", "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation", "reintroducibleAt": 2 },
-    { "coordinate": "assertion.rollup.toGrain", "reason": "no stage-1 outcome depends on the target grain; without it a rollup is an aggregate (assertion.kind rollup merged into aggregate)", "reintroducibleAt": 2 },
-    { "coordinate": "observation.provenance", "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)", "reintroducibleAt": 3 },
-    { "coordinate": "observation.uncertainty.kind", "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)", "reintroducibleAt": 3 },
-    { "coordinate": "observation.uncertainty.error", "reason": "observation-level uncertainty is stage 3", "reintroducibleAt": 3 },
-    { "coordinate": "observation.uncertainty.low", "reason": "observation-level uncertainty is stage 3", "reintroducibleAt": 3 },
-    { "coordinate": "observation.uncertainty.high", "reason": "observation-level uncertainty is stage 3", "reintroducibleAt": 3 },
-    { "coordinate": "observation.uncertainty.level", "reason": "observation-level uncertainty is stage 3", "reintroducibleAt": 3 }
+    {
+      "coordinate": "field.shape",
+      "reason": "no stage-1 outcome depends on value shape (scalar/interval/set/distribution/point); bins and extents enter at stage 2 (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.dimension",
+      "reason": "commensurability at stage 1 is decided by declared units and conversions, never by dimension; shared-scale dimensional analysis is stage 3 (REL_UNIT_INCOMMENSURABLE_SHARED_SCALE)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.unit",
+      "reason": "a single unit name is never read at stage 1; only the unit set and its conversions are",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.unit.rate.numerator",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.unit.rate.denominator",
+      "reason": "rate dimensions are read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.closure",
+      "reason": "boundary membership is a stage-2 cause (REL_BIN_CLOSURE_UNDECLARED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.grain",
+      "reason": "temporal grain mixing is a stage-2 cause (REL_TEMPORAL_GRAIN_MIXED)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.temporality.calendar",
+      "reason": "no stage-1 outcome reads the calendar",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.order.kind",
+      "reason": "an ordinal field's order is presupposed, not read, at stage 1; ordering as a claim is stage 3 (REL_SORT_AS_RENDER_OPTION)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.order.values",
+      "reason": "an ordinal field's order is presupposed, not read, at stage 1",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "field.period",
+      "reason": "a cyclic field's period is presupposed, not read, at stage 1 (the linear mean is wrong for any period)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.additivity.ratio-measure.numerator",
+      "reason": "a rate's numerator is read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.additivity.ratio-measure.denominator",
+      "reason": "a rate's denominator is read only by re-derivation at a target grain, which is stage 2",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "field.permits.provenance",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "relationship.cardinality",
+      "reason": "declared relationships are read only under joins, which are stage 2 (REL_GRAIN_FANOUT, REL_GRAIN_SUBTOTAL_MISMATCH); the stage-1 grain witness is per relation",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "assertion.rollup.toGrain",
+      "reason": "no stage-1 outcome depends on the target grain; without it a rollup is an aggregate (assertion.kind rollup merged into aggregate)",
+      "reintroducibleAt": 2
+    },
+    {
+      "coordinate": "observation.provenance",
+      "reason": "provenance is a stage-3 engine (REL_PROVENANCE_LAYOUT_GEOMETRY_CLAIM)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.kind",
+      "reason": "stage 1 reads only the field's permission to carry uncertainty; observation-level uncertainty is stage 3 (REL_UNCERTAINTY_DROPPED_UNDECLARED)",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.error",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.low",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.high",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    },
+    {
+      "coordinate": "observation.uncertainty.level",
+      "reason": "observation-level uncertainty is stage 3",
+      "reintroducibleAt": 3
+    }
   ],
   "leafMap": {
     "assertion.rollup.op": "assertion.aggregate.op",
     "assertion.aggregate.along": "assertion.aggregate.along#incidence",
     "field.whole.perRow": "field.whole.perRow#incidence",
-    "field.additivity.semi-additive.nonAdditiveAlong": "field.additivity.semi-additive.nonAdditiveAlong#present",
+    "field.additivity.semi-additive.nonAdditiveAlong": "field.additivity.semi-additive.nonAdditiveAlong#incidence",
     "evidence.grainWitness": "evidence.grainWitness#present"
   },
   "memberMap": {
-    "field.temporality.kind": { "duration": "interval" },
-    "field.additivity.kind": { "non-additive": "additive" },
-    "field.permits.null": { "absent": null, "not-applicable": null, "censored": null, "suppressed": null, "unknown": null, "missing-after-join": null },
-    "field.permits.uncertainty": { "none": null, "interval": null, "distribution": null, "measurement-error": null, "rounded": null },
-    "assertion.kind": { "rollup": "aggregate" },
-    "assertion.aggregate.op": { "max": "min" },
-    "assertion.rollup.op": { "rederive": "count" },
-    "assertion.aggregate.uncertainty": { "drop": null },
-    "observation.null": { "not-applicable": "absent", "suppressed": "absent", "unknown": "absent", "missing-after-join": "absent" }
+    "field.temporality.kind": {
+      "duration": "interval"
+    },
+    "field.additivity.kind": {
+      "non-additive": "additive"
+    },
+    "field.permits.null": {
+      "absent": null,
+      "not-applicable": null,
+      "censored": null,
+      "suppressed": null,
+      "unknown": null,
+      "missing-after-join": null
+    },
+    "field.permits.uncertainty": {
+      "none": null,
+      "interval": null,
+      "distribution": null,
+      "measurement-error": null,
+      "rounded": null
+    },
+    "assertion.kind": {
+      "rollup": "aggregate"
+    },
+    "assertion.aggregate.op": {
+      "max": "min"
+    },
+    "assertion.rollup.op": {
+      "rederive": "count"
+    },
+    "assertion.aggregate.uncertainty": {
+      "drop": null
+    },
+    "observation.null": {
+      "not-applicable": "absent",
+      "suppressed": "absent",
+      "unknown": "absent",
+      "missing-after-join": "absent"
+    }
   },
   "factorized": {
     "field.scale": {
-      "into": ["field.transformation", "field.cyclic", "field.proportion", "field.index"],
-      "aliases": [["ratio", "count"]]
+      "into": [
+        "field.transformation",
+        "field.cyclic",
+        "field.proportion",
+        "field.index"
+      ],
+      "aliases": [
+        [
+          "ratio",
+          "count"
+        ]
+      ]
     }
   },
   "keyRewrites": [
-    ["rollup:", "aggregate:"],
-    ["\\(toGrain=[^)]*\\)", ""],
-    ["aggregate:max", "aggregate:min"],
-    ["aggregate:rederive", "aggregate:count"]
+    [
+      "rollup:",
+      "aggregate:"
+    ],
+    [
+      "\\(toGrain=[^)]*\\)",
+      ""
+    ],
+    [
+      "aggregate:max",
+      "aggregate:min"
+    ],
+    [
+      "aggregate:rederive",
+      "aggregate:count"
+    ]
   ]
 }

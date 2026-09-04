@@ -23,10 +23,12 @@ import {
   closureCycles,
   compatibleControls,
   deriveNormalization,
+  footprintOf,
   groundedVocabulary,
   loadClosures,
   loadStanding,
   parseCarrier,
+  type BranchNormalization,
   type SemanticErasureClosure,
   type StandingIndex,
 } from "./closure.js";
@@ -54,16 +56,26 @@ const AGG_PROJECT_SIDES = {
 
 const closureOf = (over: Partial<SemanticErasureClosure> & { carrier: string }): SemanticErasureClosure => {
   const d = deriveNormalization(over.carrier, census, signatures);
-  const normalization = "error" in d ? [] : d.normalization;
   return {
-    normalization,
+    normalization: "error" in d ? [] : d.normalization,
     control: { coordinate: CONTROL },
-    dependencies: normalization,
+    dependencies: "error" in d ? [] : d.footprint,
     minRawEdit: "error" in d ? 0 : d.minRawEdit,
     promotion: "provisional",
     ...over,
   };
 };
+
+/** A branch-field operation with its footprint taken from the live census. */
+const op = (holder: string, branch: string, field: string): BranchNormalization => ({
+  holder,
+  branch,
+  field,
+  operation: "forget-branch-field",
+  footprint: footprintOf(`${holder}.${branch}.${field}`, census),
+});
+
+const DERIVATION = (c: { carrier: string }) => c.carrier.startsWith("relation.derivedBy.kind:");
 
 const check = (c: SemanticErasureClosure, index: StandingIndex = standing) => checkClosure(c, census, oracle, index, ledger.closures, signatures);
 const obligation = (c: SemanticErasureClosure, prefix: string, index?: StandingIndex) =>
@@ -79,7 +91,7 @@ describe("the committed closure ledger", () => {
   it("covers exactly the derivation pairs that need normalization, and not the control", () => {
     const pairs = census.filter((c) => c.kind === "member-pair" && c.leaf === "relation.derivedBy.kind").map((c) => c.id);
     expect(pairs).toHaveLength(21);
-    expect(ledger.closures).toHaveLength(20);
+    expect(ledger.closures.filter(DERIVATION)).toHaveLength(20);
     expect(ledger.closures.map((c) => c.carrier)).not.toContain(CONTROL);
     // The control is the one pair whose branches require the same payload, so
     // it needs no normalization and a single-coordinate witness already holds.
@@ -88,28 +100,31 @@ describe("the committed closure ledger", () => {
     expect(primitiveRatified(loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok))).toContain(CONTROL);
   });
 
-  it("records every carrier as provisional, so none of the twenty has been promoted", () => {
-    expect(ledger.closures.map((c) => c.promotion)).toEqual(Array(20).fill("provisional"));
-    expect(checkClosures().checks.map((c) => c.promotion)).toEqual(Array(20).fill("provisional"));
+  it("records every carrier as provisional, so none has been promoted", () => {
+    // 22: the twenty derivation pairs plus the two additivity hygiene
+    // witnesses, migrated here when the required-child presence rule removed the
+    // coordinate they named.
+    expect(ledger.closures).toHaveLength(22);
+    expect(ledger.closures.map((c) => c.promotion)).toEqual(Array(22).fill("provisional"));
+    expect(checkClosures().checks.map((c) => c.promotion)).toEqual(Array(22).fill("provisional"));
   });
 
-  it("collapses twenty pairwise questions onto nine distinct dependency coordinates", () => {
-    // This is the point of recording the twenty structurally rather than
-    // hunting twenty bespoke witnesses: adjudicating nine payload coordinates
-    // once settles more than twenty pairwise combinations would.
+  it("reports what the operations DESTROY, not the handles that implement them", () => {
+    // The handle model said nine coordinates. Forgetting `toGrain` costs four —
+    // the reference's arity, order and incidence go with it — and forgetting
+    // `join.cardinality` costs seven, since every cardinality member pair is
+    // inside the field. Naming the dependency after the eraser under-reported it
+    // by more than half, and obligation 8 could have gone green over the gap.
     const r = checkClosures();
-    expect(r.dependencies.map((d) => d.coordinate)).toEqual([
-      "relation.derivedBy.aggregate-to-grain.toGrain#present",
-      "relation.derivedBy.bin.field#present",
-      "relation.derivedBy.graph.edgeFrom#present",
-      "relation.derivedBy.graph.edgeTo#present",
-      "relation.derivedBy.join.cardinality",
-      "relation.derivedBy.join.with#present",
-      "relation.derivedBy.nest.levels#present",
-      "relation.derivedBy.normalize.field#present",
-      "relation.derivedBy.project.keep#present",
-    ]);
-    expect(r.dependencies.every((d) => d.standing.state === "unresolved")).toBe(true);
+    const derivation = r.dependencies.filter((d) => d.coordinate.startsWith("relation.derivedBy."));
+    expect(derivation).toHaveLength(21);
+    expect(r.dependencies.length).toBeGreaterThan(21);
+    // Every one is a topology facet or a member pair — never a presence facet,
+    // because those were the derived conjunctions the census no longer emits.
+    expect(derivation.filter((d) => d.coordinate.endsWith("#present"))).toEqual([]);
+    const cardinality = derivation.filter((d) => d.coordinate.startsWith("relation.derivedBy.join.cardinality"));
+    expect(cardinality).toHaveLength(7);
+    expect(derivation.every((d) => d.standing.state === "unresolved")).toBe(true);
   });
 
   it("has no dependency cycle, so no carrier's normalization depends back on it", () => {
@@ -117,10 +132,14 @@ describe("the committed closure ledger", () => {
   });
 
   it("records the measured minimum raw edit, which is 3, 4 or 5 for the twenty", () => {
-    const edits = ledger.closures.map((c) => c.minRawEdit).sort();
+    // Scoped to the derivation family: the additivity closures have UNILATERAL
+    // residue and sit at 2, which is exactly why they fitted the <=2-coordinate
+    // bound and the derivation pairs never could.
+    const edits = ledger.closures.filter(DERIVATION).map((c) => c.minRawEdit).sort();
     expect(edits[0]).toBe(3);
     expect(edits[edits.length - 1]).toBe(5);
     expect(ledger.closures.find((c) => c.carrier === "relation.derivedBy.kind:join~graph")!.minRawEdit).toBe(5);
+    expect(ledger.closures.filter((c) => !DERIVATION(c)).map((c) => c.minRawEdit)).toEqual([2, 2]);
   });
 });
 
@@ -131,10 +150,24 @@ describe("adopting the closure form confers no standing", () => {
     for (const c of ledger.closures) expect(primitive.has(c.carrier), `${c.carrier} must not be ratified by a closure`).toBe(false);
   });
 
-  it("leaves every normalization coordinate unresolved rather than dispositioned by appearing here", () => {
-    for (const { coordinate, standing: s } of checkClosures().dependencies) {
+  it("no coordinate gains standing by appearing in a closure, and one that already had it is reported", () => {
+    // The derivation footprints are all unresolved. The additivity footprint is
+    // not: `nonAdditiveAlong#incidence` is PRIMITIVELY ratified, which is the
+    // fact the handle model hid — under the handle the dependency looked merely
+    // unadjudicated, and obligation 8 would have read as "not yet" rather than
+    // as the composite-constructor finding it actually is.
+    const r = checkClosures();
+    for (const { coordinate, standing: s } of r.dependencies.filter((d) => d.coordinate.startsWith("relation.derivedBy."))) {
       expect(s.state, `${coordinate} must not gain standing by appearing in a closure`).toBe("unresolved");
     }
+    const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
+    expect(primitiveDeps.map((d) => d.coordinate)).toEqual(["field.additivity.semi-additive.nonAdditiveAlong#incidence"]);
+    const affected = r.checks.filter((c) => c.obligations.find((o) => o.id.startsWith("8-"))!.detail.includes("PRIMITIVE"));
+    expect(affected.map((c) => c.carrier).sort()).toEqual([
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+    ]);
+    for (const c of affected) expect(c.rereadIf).toContain("COMPOSITE CONSTRUCTOR");
   });
 
   it("refuses a carrier already ratified while its closure is not holding", () => {
@@ -156,26 +189,38 @@ describe("the closure form agrees with the 2-set witnesses that already hold", (
   const single = primitiveRatified(holding);
   const multi = holding.filter((w) => w.coordinates.length > 1);
 
-  it("reproduces the observed residue of every classified witness that has a carrier", () => {
-    const classified = multi.map((w) => ({ w, k: classifyWitness(w, census, oracle, single) })).filter(({ k }) => k.carrier !== undefined);
-    expect(classified.length).toBeGreaterThan(0);
-    for (const { k } of classified) {
+  it("the residue of the one classified witness left equals the operation's footprint", () => {
+    const classified = multi.map((w) => classifyWitness(w, census, oracle, single)).filter((k) => k.carrier !== undefined);
+    expect(classified.map((k) => k.klass)).toEqual(["indeterminate"]);
+    for (const k of classified) {
       const d = deriveNormalization(k.carrier!, census, signatures);
       expect("error" in d).toBe(false);
       if ("error" in d) continue;
-      expect(d.normalization, `${k.carrier} residue must equal the derived normalization`).toEqual([...k.residue!].sort());
+      // The witness names one coordinate; the operation that implements the
+      // same erasure destroys seven. Erasing the `assertion.aggregate.op` LEAF
+      // deletes the key, and every member pair under it goes with it.
+      expect(k.residue).toEqual(["assertion.aggregate.op"]);
+      expect(d.normalization.map((n) => `${n.branch}.${n.field}`)).toEqual(["aggregate.op"]);
+      expect(d.footprint).toHaveLength(7);
+      expect(d.footprint).toContain("assertion.aggregate.op");
+      expect(d.footprint.filter((f) => f.includes("~"))).toHaveLength(6);
+      // So the under-approximation the footprint model fixes is NOT confined to
+      // closures: this witness lives in witnesses.json and its recorded
+      // coordinate set understates what its own erasure destroys by six. It is
+      // recorded here rather than repaired, because changing what a holding
+      // witness supports is a standing question, not a bookkeeping one.
+      expect(d.footprint.length).toBeGreaterThan(k.residue!.length);
     }
   });
 
-  it("covers both hygiene witnesses and the indeterminate one, and no more", () => {
-    const withCarrier = multi.map((w) => classifyWitness(w, census, oracle, single)).filter((k) => k.carrier !== undefined);
-    expect(withCarrier.map((k) => k.klass).sort()).toEqual(["indeterminate", "quotient-hygiene", "quotient-hygiene"]);
-    // The one witness with no carrier pairs a BARE enum leaf with payload, so
-    // no discriminator substitution is under test and no closure applies.
-    const noCarrier = multi.map((w) => ({ w, k: classifyWitness(w, census, oracle, single) })).filter(({ k }) => k.carrier === undefined);
-    expect(noCarrier).toHaveLength(1);
-    expect(noCarrier[0].w.coordinates).toContain("assertion.kind");
-    expect(noCarrier[0].k.klass).toBe("interaction");
+  it("the two hygiene witnesses are gone from witnesses.json and present as closures", () => {
+    expect(multi.map((w) => classifyWitness(w, census, oracle, single).klass).sort()).toEqual(["indeterminate", "interaction"]);
+    const migrated = ledger.closures.filter((c) => c.carrier.startsWith("field.additivity.kind:"));
+    expect(migrated).toHaveLength(2);
+    for (const c of migrated) {
+      expect(c.a).toBeDefined();
+      expect(c.normalization.map((n) => n.field)).toEqual(["nonAdditiveAlong"]);
+    }
   });
 
   it("agrees that both unilateral-residue pairs fit inside the <=2-coordinate bound", () => {
@@ -233,26 +278,41 @@ describe("obligation 2 — the normalization set is derived, not chosen", () => 
     expect("error" in d).toBe(false);
     if ("error" in d) return;
     expect(d.residue).toEqual({ "aggregate-to-grain": ["toGrain"], project: ["keep"] });
-    expect(d.normalization).toEqual([
-      "relation.derivedBy.aggregate-to-grain.toGrain#present",
-      "relation.derivedBy.project.keep#present",
-    ]);
+    expect(d.normalization.map((n) => `${n.branch}.${n.field}`)).toEqual(["aggregate-to-grain.toGrain", "project.keep"]);
     expect(d.minRawEdit).toBe(3);
     expect(d.bilateral).toBe(true);
-    expect(d.unmapped).toEqual([]);
   });
 
-  it("selects the coordinate the census actually emits, not a presumed `#present`", () => {
-    // `join.cardinality` is a plain enum leaf and has no presence facet;
-    // erasing the bare leaf is what deletes the key. A selector that assumed
-    // `#present` universally named a coordinate that does not exist.
+  it("the footprint is what the operation destroys, which is more than the edit count", () => {
+    // minRawEdit counts EDITS; the footprint counts semantic coordinates. Two
+    // edits, six coordinates: the topology of both references goes with them.
+    const d = deriveNormalization(AGG_PROJECT, census, signatures);
+    if ("error" in d) throw new Error(d.error);
+    expect(d.minRawEdit).toBe(3);
+    expect(d.footprint).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+      "relation.derivedBy.project.keep#order",
+    ]);
+  });
+
+  it("forgetting an enum field forgets every member pair inside it", () => {
+    // The largest gap the handle model hid: `join.cardinality` is a plain enum
+    // leaf, and deleting it forgets all six cardinality distinctions, not a
+    // bare leaf.
     const d = deriveNormalization("relation.derivedBy.kind:join~project", census, signatures);
-    expect("error" in d ? [] : d.normalization).toContain("relation.derivedBy.join.cardinality");
+    if ("error" in d) throw new Error(d.error);
+    const cardinality = d.footprint.filter((f) => f.startsWith("relation.derivedBy.join.cardinality"));
+    expect(cardinality).toHaveLength(7);
+    expect(cardinality.filter((f) => f.includes("~"))).toHaveLength(6);
     expect(census.map((c) => c.id)).not.toContain("relation.derivedBy.join.cardinality#present");
   });
 
   it("rejects an authored set narrower than the derived one", () => {
-    const c = closureOf({ carrier: AGG_PROJECT, normalization: ["relation.derivedBy.project.keep#present"] });
+    const c = closureOf({ carrier: AGG_PROJECT, normalization: [op("relation.derivedBy", "project", "keep")] });
     expect(obligation(c, "2-").held).toBe(false);
     expect(check(c).ok).toBe(false);
   });
@@ -261,12 +321,25 @@ describe("obligation 2 — the normalization set is derived, not chosen", () => 
     const c = closureOf({
       carrier: AGG_PROJECT,
       normalization: [
-        "relation.derivedBy.aggregate-to-grain.toGrain#present",
-        "relation.derivedBy.project.keep#present",
-        "relation.derivedBy.nest.levels#present",
+        op("relation.derivedBy", "aggregate-to-grain", "toGrain"),
+        op("relation.derivedBy", "project", "keep"),
+        op("relation.derivedBy", "nest", "levels"),
       ],
     });
     expect(obligation(c, "2-").held).toBe(false);
+  });
+
+  it("rejects an UNDER-REPORTED footprint even when the operations are right", () => {
+    // The defect this model exists to close: the operations can be exactly
+    // derived while the record understates what they destroy, and obligation 8
+    // would then reason over a set that is too small.
+    const full = op("relation.derivedBy", "aggregate-to-grain", "toGrain");
+    const c = closureOf({
+      carrier: AGG_PROJECT,
+      normalization: [{ ...full, footprint: full.footprint.slice(0, 1) }, op("relation.derivedBy", "project", "keep")],
+    });
+    expect(obligation(c, "2-").held).toBe(false);
+    expect(check(c).ok).toBe(false);
   });
 
   it("rejects a minRawEdit that does not match the derived residue", () => {
@@ -371,7 +444,7 @@ describe("obligation 4 — the carrier is insufficient before normalization", ()
     });
     const o = obligation(c, "4-");
     expect(o.held).toBe(false);
-    expect(o.detail).toContain("carrier + relation.derivedBy.aggregate-to-grain.toGrain#present");
+    expect(o.detail).toContain("carrier + relation.derivedBy.aggregate-to-grain.toGrain");
   });
 });
 
@@ -442,20 +515,25 @@ describe("obligation 7 — a same-enum control", () => {
 });
 
 describe("obligation 8 — dependency and fixed-point discharge", () => {
-  it("does not hold while any dependency is unadjudicated", () => {
+  it("does not hold while any footprint coordinate is unadjudicated", () => {
     const o = obligation(ledger.closures.find((c) => c.carrier === AGG_PROJECT)!, "8-");
     expect(o.held).toBe(false);
-    expect(o.detail).toContain("not yet adjudicated");
+    expect(o.detail).toContain("footprint coordinate(s) unadjudicated");
   });
 
-  it("does not hold when a dependency carries standing of its own", () => {
-    // `assertion.aggregate.op` is primitively ratified, so the closure over
-    // `assertion.kind` depends on a coordinate that has already earned its
-    // place. That is the case the re-reading rule exists for.
-    const r = check(closureOf({ carrier: "assertion.kind:aggregate~ratio-comparison" }));
+  it("reports a PRIMITIVE footprint coordinate as composite, not as merely unadjudicated", () => {
+    // The two readings are opposite. "Not yet adjudicated" says the work is
+    // outstanding; a primitive dependency says this closure CANNOT prove its
+    // carrier primitive, because constructor and payload are composite under
+    // this encoding. Under the handle model both additivity closures reported
+    // the first, because the handle was unresolved and the primitive coordinate
+    // inside the footprint was never named.
+    const r = check(ledger.closures.find((c) => c.carrier === "field.additivity.kind:additive~semi-additive")!);
     const o = r.obligations.find((x) => x.id.startsWith("8-"))!;
     expect(o.held).toBe(false);
-    expect(o.detail).toContain("carry standing of their own");
+    expect(o.detail).toContain("PRIMITIVE");
+    expect(o.detail).toContain("composite under this encoding");
+    expect(o.detail).toContain("field.additivity.semi-additive.nonAdditiveAlong#incidence");
     expect(r.rereadIf).toContain("DERIVED DISCRIMINATOR");
     expect(r.rereadIf).toContain("COMPOSITE CONSTRUCTOR");
   });
@@ -482,19 +560,28 @@ describe("the dependency graph makes a composite object visible", () => {
     // constituting one irreducible object rather than two independent
     // coordinates, and it must stay unresolved rather than let one delete the
     // other.
+    const reaches = (holder: string, target: string): BranchNormalization => ({
+      holder,
+      branch: "b",
+      field: "f",
+      operation: "forget-branch-field",
+      footprint: [target],
+    });
     const cyclic: SemanticErasureClosure[] = [
-      closureOf({ carrier: "x.kind:a~b", normalization: ["y.kind:c~d"], dependencies: ["y.kind:c~d"] }),
-      closureOf({ carrier: "y.kind:c~d", normalization: ["x.kind:a~b"], dependencies: ["x.kind:a~b"] }),
+      closureOf({ carrier: "x.kind:a~b", normalization: [reaches("x", "y.kind:c~d")] }),
+      closureOf({ carrier: "y.kind:c~d", normalization: [reaches("y", "x.kind:a~b")] }),
     ];
     expect(closureCycles(cyclic)).toEqual([["x.kind:a~b", "y.kind:c~d"]]);
   });
 
   it("finds a self-loop", () => {
-    expect(closureCycles([closureOf({ carrier: "x.kind:a~b", normalization: ["x.kind:a~b"] })])).toEqual([["x.kind:a~b"]]);
+    const self: BranchNormalization = { holder: "x", branch: "b", field: "f", operation: "forget-branch-field", footprint: ["x.kind:a~b"] };
+    expect(closureCycles([closureOf({ carrier: "x.kind:a~b", normalization: [self] })])).toEqual([["x.kind:a~b"]]);
   });
 
   it("reports no cycle for an acyclic ledger", () => {
-    expect(closureCycles([closureOf({ carrier: "x.kind:a~b", normalization: ["p.q"] })])).toEqual([]);
+    const plain: BranchNormalization = { holder: "x", branch: "b", field: "f", operation: "forget-branch-field", footprint: ["p.q"] };
+    expect(closureCycles([closureOf({ carrier: "x.kind:a~b", normalization: [plain] })])).toEqual([]);
   });
 });
 

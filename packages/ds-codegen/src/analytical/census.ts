@@ -202,7 +202,20 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * They are not the same permission and the difference decides whether a
    * member-absence coordinate exists at all — see `addLeaf`.
    */
-  type Opt = { self: boolean; holder: boolean };
+  type Opt = {
+    self: boolean;
+    holder: boolean;
+    /**
+     * Id of the coordinate that already carries the nearest optional ancestor's
+     * EXISTENCE, when one is emitted. A required child of such a holder cannot
+     * vary independently of it, so its own presence proposition is a derived
+     * conjunction rather than a degree of freedom.
+     *
+     * Absent when nothing carries that existence — then the child's presence IS
+     * the carrier and must be emitted.
+     */
+    carrier?: string;
+  };
   const OPT_REQUIRED: Opt = { self: false, holder: false };
 
   /**
@@ -216,13 +229,27 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     seen.add(id);
     const r = role(rawPath);
     out.push({ id, kind: "reference", leaf: id, role: r });
-    // Presence is a degree of freedom the spelling is not. Reachable absence
-    // is the same test the member-absence class uses: the reference may be
-    // omitted, or its holder may be, and `field.whole.perRow` is the case that
-    // forces the second disjunct — it is required inside `{perRow}` while that
-    // object is one branch of an optional union, so dropping it is lawful and
-    // is exactly what its witness erases.
-    if (optional.self || optional.holder) out.push({ id: `${id}#present`, kind: "leaf", leaf: id, role: r });
+    // Presence is a degree of freedom the spelling is not — but only where it
+    // can vary INDEPENDENTLY. For a reference required by its holder,
+    //
+    //   present(p) = present(H)                     required by every branch
+    //   present(p) = present(H) AND branch(H) = k   required by branch k
+    //
+    // and neither is a third degree of freedom: there is no valid state where
+    // the holder exists as branch k while its required property is absent. So
+    // the coordinate is emitted when the reference is optional IN its holder,
+    // or when the holder's existence is carried by nothing else. `carrier` is
+    // what distinguishes the two — not the bare fact that some ancestor was
+    // optional, which is how sixteen synthetic presence propositions arose.
+    //
+    // (The previous rationale here cited `field.whole.perRow#present` as
+    // forcing the inherited disjunct. That coordinate is not emitted and never
+    // was: `walkUnion`'s NON-discriminated path re-enters `walk` without the
+    // holder's optionality, so `perRow` is walked as required-of-required. The
+    // example did not hold up the rule it was cited for.)
+    if (optional.self || (optional.holder && !optional.carrier)) {
+      out.push({ id: `${id}#present`, kind: "leaf", leaf: id, role: r });
+    }
     const facets: ReferenceFacet[] = list ? ["arity", "order", "incidence"] : ["incidence"];
     for (const facet of facets) {
       out.push({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet });
@@ -234,12 +261,13 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * discriminator's member-absence cross-terms were standing in for. Emitted
    * once per holder rather than once per branch.
    */
-  const addHolderPresence = (rawPath: string, optional: Opt) => {
-    if (!(optional.self || optional.holder)) return;
+  const addHolderPresence = (rawPath: string, optional: Opt): string | undefined => {
+    if (!(optional.self || optional.holder)) return undefined;
     const id = `${label(rawPath)}#present`;
-    if (seen.has(id)) return;
+    if (seen.has(id)) return id;
     seen.add(id);
     out.push({ id, kind: "leaf", leaf: label(rawPath), role: role(rawPath) });
+    return id;
   };
 
   const addLeaf = (rawPath: string, enumMembers?: string[], optional: Opt = OPT_REQUIRED) => {
@@ -311,11 +339,13 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
         // Tagged but not a union (`temporality`): its `kind` reaches addLeaf
         // directly, so its holder needs the presence coordinate here.
         const kindProp = (n.properties as Record<string, Node>).kind;
-        if (kindProp && Array.isArray(resolve(kindProp).enum)) addHolderPresence(rawPath, optional);
+        const carrier = kindProp && Array.isArray(resolve(kindProp).enum) ? addHolderPresence(rawPath, optional) : optional.carrier;
         for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) {
           // A property of an optional holder is itself absent whenever the
-          // holder is: `additivity.kind` is absent if `additivity` is.
-          walk(v, rawPath ? `${rawPath}.${k}` : k, { self: !required.has(k), holder: optional.self || optional.holder });
+          // holder is: `additivity.kind` is absent if `additivity` is. That is
+          // exactly why a REQUIRED one gets no presence coordinate of its own
+          // once `carrier` names what already says so.
+          walk(v, rawPath ? `${rawPath}.${k}` : k, { self: !required.has(k), holder: optional.self || optional.holder, carrier });
         }
         return;
       }
@@ -343,7 +373,10 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       objects.length === resolved.length && objects.every((b) => (b.properties as Record<string, Node>).kind?.const !== undefined);
     if (discriminated) {
       const kinds = objects.map((b) => String((b.properties as Record<string, Node>).kind.const));
-      addHolderPresence(rawPath, optional);
+      // Existence is carried here, alternative identity by the `kind` member
+      // pairs below. A property required by branch k is present exactly when
+      // both hold, so it contributes no third degree of freedom.
+      const carrier = addHolderPresence(rawPath, optional) ?? optional.carrier;
       addLeaf(`${rawPath}.kind`, kinds, optional);
       signatures.set(label(`${rawPath}.kind`), {
         required: Object.fromEntries(
@@ -355,7 +388,9 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       objects.forEach((b, i) => {
         const req = new Set((Array.isArray(b.required) ? b.required : []) as string[]);
         for (const [k, v] of Object.entries(b.properties as Record<string, Node>)) {
-          if (k !== "kind") walk(v, `${rawPath}.${kinds[i]}.${k}`, { self: !req.has(k), holder: optional.self || optional.holder });
+          if (k !== "kind") {
+            walk(v, `${rawPath}.${kinds[i]}.${k}`, { self: !req.has(k), holder: optional.self || optional.holder, carrier });
+          }
         }
       });
       return;

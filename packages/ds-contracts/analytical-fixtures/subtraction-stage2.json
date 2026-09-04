@@ -459,7 +459,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.aggregate-to-grain.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#arity": {
       "disposition": "unresolved"
@@ -471,7 +472,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.bin.closure": {
       "disposition": "unresolved"
@@ -489,31 +491,36 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.bin.field#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.bin.from#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.bin.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.graph.edgeFrom#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.graph.edgeFrom#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.graph.edgeTo#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.graph.edgeTo#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.graph.from#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.graph.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.graph.requiresConservation": {
       "disposition": "unresolved"
@@ -549,13 +556,15 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.join.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.join.with#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.join.with#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.kind": {
       "disposition": "unresolved"
@@ -656,7 +665,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.nest.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.nest.levels#arity": {
       "disposition": "unresolved"
@@ -668,25 +678,29 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.nest.levels#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.normalize.field#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.normalize.field#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.normalize.from#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.normalize.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.project.from#incidence": {
       "disposition": "unresolved"
     },
     "relation.derivedBy.project.from#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.project.keep#arity": {
       "disposition": "unresolved"
@@ -698,7 +712,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.project.keep#present": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "structure.peers#present": {
       "disposition": "unresolved"

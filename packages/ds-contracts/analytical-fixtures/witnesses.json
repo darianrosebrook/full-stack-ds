@@ -1,67 +1,841 @@
 {
   "$comment": "REL-FIELD-ALGEBRA-02 Phase B necessity witnesses. One entry per kernel coordinate (or minimal 2-set): a pair of stimuli whose oracle-required outcomes differ while erasing the coordinate(s) makes them the same representation (quotient.ts). A side is either an oracle-adjudicated corpus fixture ({fixture}: its outcome is derived from the corpus verdict, neighbour admissibility, triad role, or the pre-harness holdout expectation) or a patched fixture with a hand adjudication citing its cause ({base, patch, outcome, cause}), recorded here before the harness ran. Engine output is never a required outcome; necessity.test.ts separately checks the engine agrees with every hand adjudication, as evidence, not as the source.",
   "witnesses": [
-    { "coordinates": ["relation.grain"], "a": { "fixture": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN" }, "b": { "base": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN", "patch": [{ "set": "structure.relations.orders.grain", "value": ["order_id"] }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "doctrine L1: grain unknown makes grain-dependent judgments unproven with grain:declared; a declared grain discharges it (triad grain:declared)" } },
-
-    { "coordinates": ["field.transformation"], "a": { "fixture": "FX_REGION_MAX" }, "b": { "fixture": "FX_N_ORDINAL_MAX" } },
-    { "coordinates": ["field.transformation:nominal~ordinal"], "a": { "fixture": "FX_REGION_MAX" }, "b": { "fixture": "FX_N_ORDINAL_MAX" } },
-    { "coordinates": ["field.transformation:nominal~interval"], "a": { "fixture": "FX_REGION_MAX" }, "b": { "base": "FX_REGION_MAX", "patch": [{ "set": "structure.relations.sites.fields.region.transformation", "value": "interval" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; an interval scale has one" } },
-    { "coordinates": ["field.transformation:nominal~ratio"], "a": { "fixture": "FX_REGION_MAX" }, "b": { "base": "FX_REGION_MAX", "patch": [{ "set": "structure.relations.sites.fields.region.transformation", "value": "ratio" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; a ratio scale has one" } },
-    { "coordinates": ["field.transformation:ordinal~interval"], "a": { "fixture": "FX_SURVEY_MEAN_SATISFACTION" }, "b": { "fixture": "FX_N_TEMP_MEAN" } },
-    { "coordinates": ["field.transformation:ordinal~ratio"], "a": { "fixture": "FX_SURVEY_MEAN_SATISFACTION" }, "b": { "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE" } },
-    { "coordinates": ["field.transformation:interval~ratio"], "a": { "fixture": "FX_TEMP_RATIO_COMPARISON" }, "b": { "fixture": "FX_N_TEMP_KELVIN_RATIO_COMPARISON" } },
-    { "coordinates": ["field.cyclic"], "a": { "fixture": "FX_SURVEY_MEAN_SATISFACTION" }, "b": { "fixture": "FX_LOGIN_HOUR_MEAN" }, "note": "ordinal mean vs ordinal+cyclic mean: different causes (ORDINAL_MEAN vs CYCLIC_LINEAR_MEAN)" },
-    { "coordinates": ["field.proportion"], "a": { "fixture": "FX_PCT_MEAN_NO_WHOLE" }, "b": { "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE" } },
-    { "coordinates": ["field.index"], "a": { "fixture": "FX_INDEX_MEAN_NO_BASE" }, "b": { "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE" } },
-
-    { "coordinates": ["field.key"], "a": { "base": "FX_USER_ID_SUM", "patch": [{ "set": "structure.relations.users.fields.user_id.transformation", "value": "ratio" }], "outcome": { "status": "illegal", "codes": ["REL_IDENTITY_AGGREGATED"], "terms": [] }, "cause": "REL_IDENTITY_AGGREGATED: a key is not a quantity; no aggregate over it is meaningful, whatever its transformation class" }, "b": { "base": "FX_USER_ID_SUM", "patch": [{ "set": "structure.relations.users.fields.user_id.transformation", "value": "ratio" }, { "delete": "structure.relations.users.fields.user_id.key" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "a ratio quantity that is not a key sums; no catalogue cause applies" } },
-
-    { "coordinates": ["field.unit.units"], "a": { "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED" }, "b": { "base": "FX_SALES_SUM_MIXED_UNITS_DECLARED", "patch": [{ "delete": "structure.relations.sales.fields.amount.unit" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_UNIT_SUM_INCOMMENSURABLE names values in different declared units; with no unit declared there is nothing incommensurable" } },
-    { "coordinates": ["field.unit.perRow"], "a": { "fixture": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS" }, "b": { "base": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS", "patch": [{ "delete": "structure.relations.sales.fields.amount.unit" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "unit:commensurable is owed only when each observation carries its own unit; with no unit declared the obligation does not arise" } },
-    { "coordinates": ["field.unit.conversions"], "a": { "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED" }, "b": { "fixture": "FX_N_SALES_SUM_WITH_CONVERSIONS" } },
-
-    { "coordinates": ["field.temporality.kind"], "a": { "fixture": "FX_TEMP_SUM" }, "b": { "fixture": "FX_EVENT_AT_SUM" }, "note": "interval scale summed (INTERVAL_SUM) vs instant summed (TEMPORAL_INSTANT_SUM)" },
-    { "coordinates": ["field.temporality.kind:instant~interval"], "a": { "fixture": "FX_N_DURATION_SUM" }, "b": { "base": "FX_N_DURATION_SUM", "patch": [{ "set": "structure.relations.sessions.fields.length.temporality.kind", "value": "instant" }], "outcome": { "status": "illegal", "codes": ["REL_TEMPORAL_INSTANT_SUM"], "terms": [] }, "cause": "REL_TEMPORAL_INSTANT_SUM: instants are interval-scaled in time; only their differences, which are durations, are meaningful" } },
-
-    { "coordinates": ["field.whole"], "a": { "fixture": "FX_PCT_MEAN_NO_WHOLE" }, "b": { "fixture": "FX_N_PCT_MEAN_WITH_WHOLE" } },
-    { "coordinates": ["field.whole.perRow#incidence"], "a": { "fixture": "FX_N_SHARE_SUM_WITHIN_MARKET" }, "b": { "base": "FX_N_SHARE_SUM_WITHIN_MARKET", "patch": [{ "set": "structure.relations.shares.fields.share.whole.perRow", "value": "company" }], "outcome": { "status": "illegal", "codes": ["REL_PROPORTION_SUM_ACROSS_WHOLES"], "terms": [] }, "cause": "REL_PROPORTION_SUM_ACROSS_WHOLES: proportions of different wholes are not additive; summing along the field that names the whole crosses wholes" } },
-    { "coordinates": ["field.base"], "a": { "fixture": "FX_INDEX_MEAN_NO_BASE" }, "b": { "fixture": "FX_N_INDEX_MEAN_WITH_BASE" } },
-
-    { "coordinates": ["field.additivity.kind"], "a": { "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN" }, "b": { "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN", "patch": [{ "set": "structure.relations.regions.fields.gdp_per_capita.additivity", "value": { "kind": "additive" } }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause" } },
-    { "coordinates": ["field.additivity.kind:additive~ratio-measure"], "a": { "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN" }, "b": { "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN", "patch": [{ "set": "structure.relations.regions.fields.gdp_per_capita.additivity", "value": { "kind": "additive" } }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause" } },
-    { "coordinates": ["field.additivity.kind:additive~semi-additive", "field.additivity.semi-additive.nonAdditiveAlong#present"], "a": { "fixture": "FX_STOCK_SUM_ALONG_DATE" }, "b": { "base": "FX_STOCK_SUM_ALONG_DATE", "patch": [{ "set": "structure.relations.stock.fields.on_hand.additivity", "value": { "kind": "additive" } }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE requires the measure to be declared non-additive along the dimension; an additive measure sums along any" }, "note": "a semi-additive declaration is kind plus its dimension set; neither alone separates it from additive" },
-    { "coordinates": ["field.additivity.kind:semi-additive~ratio-measure", "field.additivity.semi-additive.nonAdditiveAlong#present"], "a": { "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN" }, "b": { "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN", "patch": [{ "set": "structure.relations.regions.fields.gdp_per_capita.additivity", "value": { "kind": "semi-additive", "nonAdditiveAlong": ["year"] } }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE names a sum along the dimension (doctrine L2: inventory averages over time); REL_RATIO_MEASURE_AVERAGED names a rate; a semi-additive measure combined by mean exhibits neither" } },
-    { "coordinates": ["field.additivity.semi-additive.nonAdditiveAlong#incidence"], "a": { "fixture": "FX_STOCK_SUM_ALONG_DATE" }, "b": { "base": "FX_STOCK_SUM_ALONG_DATE", "patch": [{ "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong", "value": ["product"] }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE: the measure is declared non-additive along THAT dimension; summing along another is admissible" } },
-
-    { "coordinates": ["field.permits.null"], "a": { "fixture": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS" }, "b": { "base": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS", "patch": [{ "delete": "structure.relations.cells.fields.n.permits" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "null:missing-mechanism is owed only for a field that permits missing values" } },
-    { "coordinates": ["field.permits.uncertainty"], "a": { "fixture": "FX_MASS_SUM_UNHANDLED_ERROR" }, "b": { "base": "FX_MASS_SUM_UNHANDLED_ERROR", "patch": [{ "delete": "structure.relations.readings.fields.mass.permits" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_UNCERTAINTY_UNPROPAGATED names an aggregate over uncertain values; a field that permits no uncertainty has none to carry" } },
-
-    { "coordinates": ["assertion.kind", "assertion.aggregate.op"], "a": { "fixture": "FX_TEMP_RATIO_COMPARISON" }, "b": { "fixture": "FX_N_TEMP_MEAN" }, "note": "a ratio comparison carries no op; kind and op together separate it from an aggregate mean" },
-    { "coordinates": ["assertion.kind:aggregate~ratio-comparison", "assertion.aggregate.op"], "a": { "fixture": "FX_TEMP_RATIO_COMPARISON" }, "b": { "fixture": "FX_N_TEMP_MEAN" } },
-
-    { "coordinates": ["assertion.aggregate.op"], "a": { "fixture": "FX_SURVEY_MEAN_SATISFACTION" }, "b": { "fixture": "FX_N_ORDINAL_MAX" } },
-    { "coordinates": ["assertion.aggregate.op:sum~mean"], "a": { "fixture": "FX_TEMP_SUM" }, "b": { "fixture": "FX_N_TEMP_MEAN" } },
-    { "coordinates": ["assertion.aggregate.op:sum~count"], "a": { "fixture": "FX_USER_ID_SUM" }, "b": { "fixture": "FX_N_USER_ID_COUNT" } },
-    { "coordinates": ["assertion.aggregate.op:sum~min"], "a": { "fixture": "FX_TEMP_SUM" }, "b": { "base": "FX_TEMP_SUM", "patch": [{ "set": "assertions.0.op", "value": "min" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "REL_MEANINGFULNESS_INTERVAL_SUM names the sum; an order statistic is invariant under the affine transformations an interval scale admits" } },
-    { "coordinates": ["assertion.aggregate.op:mean~count"], "a": { "fixture": "FX_LOGIN_HOUR_MEAN" }, "b": { "fixture": "FX_N_LOGIN_HOUR_COUNT" } },
-    { "coordinates": ["assertion.aggregate.op:mean~min"], "a": { "fixture": "FX_SURVEY_MEAN_SATISFACTION" }, "b": { "fixture": "FX_N_ORDINAL_MAX" } },
-    { "coordinates": ["assertion.aggregate.op:count~min"], "a": { "fixture": "FX_N_USER_ID_COUNT" }, "b": { "base": "FX_N_USER_ID_COUNT", "patch": [{ "set": "assertions.0.op", "value": "min" }], "outcome": { "status": "illegal", "codes": ["REL_IDENTITY_AGGREGATED"], "terms": [] }, "cause": "REL_IDENTITY_AGGREGATED: a key is not a quantity; counting rows by key is the one aggregate that reads no key value (neighbour of the cause)" } },
-
-    { "coordinates": ["assertion.aggregate.along#incidence"], "a": { "fixture": "FX_STOCK_SUM_ALONG_DATE" }, "b": { "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT" }, "note": "same arity, same order, different MEETING with the measure's nonAdditiveAlong set: no renaming makes these equal" },
-
-    { "coordinates": ["assertion.aggregate.nulls"], "a": { "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS" }, "b": { "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED" } },
-    { "coordinates": ["assertion.aggregate.nulls"], "a": { "fixture": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS" }, "b": { "base": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS", "patch": [{ "set": "assertions.0.nulls", "value": "exclude" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "null:missing-mechanism is the obligation to declare a handling for permitted missing values; exclusion declares one and coerces nothing (schema-class twin of the rows witness above)" } },
-    { "coordinates": ["assertion.aggregate.nulls:exclude~as-zero"], "a": { "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED" }, "b": { "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED", "patch": [{ "set": "assertions.0.nulls", "value": "as-zero" }], "outcome": { "status": "illegal", "codes": ["REL_NULL_CENSORED_AS_OBSERVED"], "terms": [] }, "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement; coercing it to zero measures it" } },
-    { "coordinates": ["assertion.aggregate.nulls:exclude~as-observed"], "a": { "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED" }, "b": { "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED", "patch": [{ "set": "assertions.0.nulls", "value": "as-observed" }], "outcome": { "status": "illegal", "codes": ["REL_NULL_CENSORED_AS_OBSERVED"], "terms": [] }, "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement" } },
-    { "coordinates": ["assertion.aggregate.nulls:as-zero~as-observed"], "a": { "fixture": "FX_T_SUPPRESSED_ROWS_AS_ZERO" }, "b": { "base": "FX_T_SUPPRESSED_ROWS_AS_ZERO", "patch": [{ "set": "assertions.0.nulls", "value": "as-observed" }], "outcome": { "status": "unproven", "codes": [], "terms": ["null:missing-mechanism"] }, "cause": "an absent value has nothing to observe; the mechanism that produced the gap is still undeclared, so null:missing-mechanism stands (REL_NULL_SUPPRESSED_AS_ZERO names the collapse to zero specifically)" }, "note": "instance-class witness: the distinction is visible only with rows (invariant 9)" },
-
-    { "coordinates": ["assertion.aggregate.uncertainty"], "a": { "fixture": "FX_MASS_SUM_UNHANDLED_ERROR" }, "b": { "fixture": "FX_N_MASS_SUM_PROPAGATE" } },
-
-    { "coordinates": ["observation.value"], "a": { "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS" }, "b": { "fixture": "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS" }, "note": "instance-class witness through the stage-2 fan-out branch (invariant 9)" },
-    { "coordinates": ["observation.unit"], "a": { "fixture": "FX_T_CURRENCY_ROWS_ONE_UNIT" }, "b": { "fixture": "FX_T_CURRENCY_ROWS_MIXED" } },
-    { "coordinates": ["observation.null"], "a": { "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS" }, "b": { "base": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS", "patch": [{ "delete": "evidence.rows.survival.1.days" }], "outcome": { "status": "admissible", "codes": [], "terms": [] }, "cause": "with no missing value among the rows there is nothing censored and no mechanism owed (triad null:missing-mechanism, satisfying)" } },
-    { "coordinates": ["observation.null:absent~censored"], "a": { "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS" }, "b": { "base": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS", "patch": [{ "set": "evidence.rows.survival.1.days.null", "value": "absent" }], "outcome": { "status": "unproven", "codes": [], "terms": ["null:missing-mechanism"] }, "cause": "an absent value with no declared handling leaves null:missing-mechanism outstanding; REL_NULL_CENSORED_AS_OBSERVED names a bound, which an absent value is not" } },
-    { "coordinates": ["evidence.grainWitness#present"], "a": { "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS" }, "b": { "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS", "patch": [{ "delete": "evidence.grainWitness" }], "outcome": { "status": "unproven", "codes": [], "terms": ["grain:declared"] }, "cause": "rows without a declared witness declare no grain; grain:declared stands (triad grain:declared, absent)" } },
-    {"coordinates": ["relation.derivedBy.kind:bin~normalize"], "a": {"fixture": "FX_READINGS_BINNED_NO_CLOSURE"}, "b": {"base": "FX_READINGS_BINNED_NO_CLOSURE", "patch": [{"set": "structure.relations.bucketed.derivedBy.kind", "value": "normalize"}], "outcome": {"status": "admissible", "codes": [], "terms": []}, "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} — the only such pair among the seven constructors — the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."}}
+    {
+      "coordinates": [
+        "relation.grain"
+      ],
+      "a": {
+        "fixture": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN"
+      },
+      "b": {
+        "base": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN",
+        "patch": [
+          {
+            "set": "structure.relations.orders.grain",
+            "value": [
+              "order_id"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "doctrine L1: grain unknown makes grain-dependent judgments unproven with grain:declared; a declared grain discharges it (triad grain:declared)"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation"
+      ],
+      "a": {
+        "fixture": "FX_REGION_MAX"
+      },
+      "b": {
+        "fixture": "FX_N_ORDINAL_MAX"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation:nominal~ordinal"
+      ],
+      "a": {
+        "fixture": "FX_REGION_MAX"
+      },
+      "b": {
+        "fixture": "FX_N_ORDINAL_MAX"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation:nominal~interval"
+      ],
+      "a": {
+        "fixture": "FX_REGION_MAX"
+      },
+      "b": {
+        "base": "FX_REGION_MAX",
+        "patch": [
+          {
+            "set": "structure.relations.sites.fields.region.transformation",
+            "value": "interval"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; an interval scale has one"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation:nominal~ratio"
+      ],
+      "a": {
+        "fixture": "FX_REGION_MAX"
+      },
+      "b": {
+        "base": "FX_REGION_MAX",
+        "patch": [
+          {
+            "set": "structure.relations.sites.fields.region.transformation",
+            "value": "ratio"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; a ratio scale has one"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation:ordinal~interval"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation:ordinal~ratio"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation:interval~ratio"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_RATIO_COMPARISON"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_KELVIN_RATIO_COMPARISON"
+      }
+    },
+    {
+      "coordinates": [
+        "field.cyclic"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_LOGIN_HOUR_MEAN"
+      },
+      "note": "ordinal mean vs ordinal+cyclic mean: different causes (ORDINAL_MEAN vs CYCLIC_LINEAR_MEAN)"
+    },
+    {
+      "coordinates": [
+        "field.proportion"
+      ],
+      "a": {
+        "fixture": "FX_PCT_MEAN_NO_WHOLE"
+      },
+      "b": {
+        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
+      }
+    },
+    {
+      "coordinates": [
+        "field.index"
+      ],
+      "a": {
+        "fixture": "FX_INDEX_MEAN_NO_BASE"
+      },
+      "b": {
+        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
+      }
+    },
+    {
+      "coordinates": [
+        "field.key"
+      ],
+      "a": {
+        "base": "FX_USER_ID_SUM",
+        "patch": [
+          {
+            "set": "structure.relations.users.fields.user_id.transformation",
+            "value": "ratio"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_IDENTITY_AGGREGATED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_IDENTITY_AGGREGATED: a key is not a quantity; no aggregate over it is meaningful, whatever its transformation class"
+      },
+      "b": {
+        "base": "FX_USER_ID_SUM",
+        "patch": [
+          {
+            "set": "structure.relations.users.fields.user_id.transformation",
+            "value": "ratio"
+          },
+          {
+            "delete": "structure.relations.users.fields.user_id.key"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "a ratio quantity that is not a key sums; no catalogue cause applies"
+      }
+    },
+    {
+      "coordinates": [
+        "field.unit.units"
+      ],
+      "a": {
+        "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED"
+      },
+      "b": {
+        "base": "FX_SALES_SUM_MIXED_UNITS_DECLARED",
+        "patch": [
+          {
+            "delete": "structure.relations.sales.fields.amount.unit"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_UNIT_SUM_INCOMMENSURABLE names values in different declared units; with no unit declared there is nothing incommensurable"
+      }
+    },
+    {
+      "coordinates": [
+        "field.unit.perRow"
+      ],
+      "a": {
+        "fixture": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS"
+      },
+      "b": {
+        "base": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
+        "patch": [
+          {
+            "delete": "structure.relations.sales.fields.amount.unit"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "unit:commensurable is owed only when each observation carries its own unit; with no unit declared the obligation does not arise"
+      }
+    },
+    {
+      "coordinates": [
+        "field.unit.conversions"
+      ],
+      "a": {
+        "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED"
+      },
+      "b": {
+        "fixture": "FX_N_SALES_SUM_WITH_CONVERSIONS"
+      }
+    },
+    {
+      "coordinates": [
+        "field.temporality.kind"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_SUM"
+      },
+      "b": {
+        "fixture": "FX_EVENT_AT_SUM"
+      },
+      "note": "interval scale summed (INTERVAL_SUM) vs instant summed (TEMPORAL_INSTANT_SUM)"
+    },
+    {
+      "coordinates": [
+        "field.temporality.kind:instant~interval"
+      ],
+      "a": {
+        "fixture": "FX_N_DURATION_SUM"
+      },
+      "b": {
+        "base": "FX_N_DURATION_SUM",
+        "patch": [
+          {
+            "set": "structure.relations.sessions.fields.length.temporality.kind",
+            "value": "instant"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_TEMPORAL_INSTANT_SUM"
+          ],
+          "terms": []
+        },
+        "cause": "REL_TEMPORAL_INSTANT_SUM: instants are interval-scaled in time; only their differences, which are durations, are meaningful"
+      }
+    },
+    {
+      "coordinates": [
+        "field.whole"
+      ],
+      "a": {
+        "fixture": "FX_PCT_MEAN_NO_WHOLE"
+      },
+      "b": {
+        "fixture": "FX_N_PCT_MEAN_WITH_WHOLE"
+      }
+    },
+    {
+      "coordinates": [
+        "field.whole.perRow#incidence"
+      ],
+      "a": {
+        "fixture": "FX_N_SHARE_SUM_WITHIN_MARKET"
+      },
+      "b": {
+        "base": "FX_N_SHARE_SUM_WITHIN_MARKET",
+        "patch": [
+          {
+            "set": "structure.relations.shares.fields.share.whole.perRow",
+            "value": "company"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_PROPORTION_SUM_ACROSS_WHOLES"
+          ],
+          "terms": []
+        },
+        "cause": "REL_PROPORTION_SUM_ACROSS_WHOLES: proportions of different wholes are not additive; summing along the field that names the whole crosses wholes"
+      }
+    },
+    {
+      "coordinates": [
+        "field.base"
+      ],
+      "a": {
+        "fixture": "FX_INDEX_MEAN_NO_BASE"
+      },
+      "b": {
+        "fixture": "FX_N_INDEX_MEAN_WITH_BASE"
+      }
+    },
+    {
+      "coordinates": [
+        "field.additivity.kind"
+      ],
+      "a": {
+        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+      },
+      "b": {
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+        "patch": [
+          {
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
+            "value": {
+              "kind": "additive"
+            }
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause"
+      }
+    },
+    {
+      "coordinates": [
+        "field.additivity.kind:additive~ratio-measure"
+      ],
+      "a": {
+        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+      },
+      "b": {
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+        "patch": [
+          {
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
+            "value": {
+              "kind": "additive"
+            }
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause"
+      }
+    },
+    {
+      "coordinates": [
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
+      ],
+      "a": {
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
+      },
+      "b": {
+        "base": "FX_STOCK_SUM_ALONG_DATE",
+        "patch": [
+          {
+            "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong",
+            "value": [
+              "product"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE: the measure is declared non-additive along THAT dimension; summing along another is admissible"
+      }
+    },
+    {
+      "coordinates": [
+        "field.permits.null"
+      ],
+      "a": {
+        "fixture": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS"
+      },
+      "b": {
+        "base": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS",
+        "patch": [
+          {
+            "delete": "structure.relations.cells.fields.n.permits"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "null:missing-mechanism is owed only for a field that permits missing values"
+      }
+    },
+    {
+      "coordinates": [
+        "field.permits.uncertainty"
+      ],
+      "a": {
+        "fixture": "FX_MASS_SUM_UNHANDLED_ERROR"
+      },
+      "b": {
+        "base": "FX_MASS_SUM_UNHANDLED_ERROR",
+        "patch": [
+          {
+            "delete": "structure.relations.readings.fields.mass.permits"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_UNCERTAINTY_UNPROPAGATED names an aggregate over uncertain values; a field that permits no uncertainty has none to carry"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.kind",
+        "assertion.aggregate.op"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_RATIO_COMPARISON"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      },
+      "note": "a ratio comparison carries no op; kind and op together separate it from an aggregate mean"
+    },
+    {
+      "coordinates": [
+        "assertion.kind:aggregate~ratio-comparison",
+        "assertion.aggregate.op"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_RATIO_COMPARISON"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_N_ORDINAL_MAX"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:sum~mean"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_SUM"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:sum~count"
+      ],
+      "a": {
+        "fixture": "FX_USER_ID_SUM"
+      },
+      "b": {
+        "fixture": "FX_N_USER_ID_COUNT"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:sum~min"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_SUM"
+      },
+      "b": {
+        "base": "FX_TEMP_SUM",
+        "patch": [
+          {
+            "set": "assertions.0.op",
+            "value": "min"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_MEANINGFULNESS_INTERVAL_SUM names the sum; an order statistic is invariant under the affine transformations an interval scale admits"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:mean~count"
+      ],
+      "a": {
+        "fixture": "FX_LOGIN_HOUR_MEAN"
+      },
+      "b": {
+        "fixture": "FX_N_LOGIN_HOUR_COUNT"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:mean~min"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_N_ORDINAL_MAX"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:count~min"
+      ],
+      "a": {
+        "fixture": "FX_N_USER_ID_COUNT"
+      },
+      "b": {
+        "base": "FX_N_USER_ID_COUNT",
+        "patch": [
+          {
+            "set": "assertions.0.op",
+            "value": "min"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_IDENTITY_AGGREGATED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_IDENTITY_AGGREGATED: a key is not a quantity; counting rows by key is the one aggregate that reads no key value (neighbour of the cause)"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.along#incidence"
+      ],
+      "a": {
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
+      },
+      "b": {
+        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
+      },
+      "note": "same arity, same order, different MEETING with the measure's nonAdditiveAlong set: no renaming makes these equal"
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls"
+      ],
+      "a": {
+        "fixture": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS"
+      },
+      "b": {
+        "base": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "exclude"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "null:missing-mechanism is the obligation to declare a handling for permitted missing values; exclusion declares one and coerces nothing (schema-class twin of the rows witness above)"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "a": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      },
+      "b": {
+        "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "as-zero"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_NULL_CENSORED_AS_OBSERVED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement; coercing it to zero measures it"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:exclude~as-observed"
+      ],
+      "a": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      },
+      "b": {
+        "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "as-observed"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_NULL_CENSORED_AS_OBSERVED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:as-zero~as-observed"
+      ],
+      "a": {
+        "fixture": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+      },
+      "b": {
+        "base": "FX_T_SUPPRESSED_ROWS_AS_ZERO",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "as-observed"
+          }
+        ],
+        "outcome": {
+          "status": "unproven",
+          "codes": [],
+          "terms": [
+            "null:missing-mechanism"
+          ]
+        },
+        "cause": "an absent value has nothing to observe; the mechanism that produced the gap is still undeclared, so null:missing-mechanism stands (REL_NULL_SUPPRESSED_AS_ZERO names the collapse to zero specifically)"
+      },
+      "note": "instance-class witness: the distinction is visible only with rows (invariant 9)"
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.uncertainty"
+      ],
+      "a": {
+        "fixture": "FX_MASS_SUM_UNHANDLED_ERROR"
+      },
+      "b": {
+        "fixture": "FX_N_MASS_SUM_PROPAGATE"
+      }
+    },
+    {
+      "coordinates": [
+        "observation.value"
+      ],
+      "a": {
+        "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
+      },
+      "b": {
+        "fixture": "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS"
+      },
+      "note": "instance-class witness through the stage-2 fan-out branch (invariant 9)"
+    },
+    {
+      "coordinates": [
+        "observation.unit"
+      ],
+      "a": {
+        "fixture": "FX_T_CURRENCY_ROWS_ONE_UNIT"
+      },
+      "b": {
+        "fixture": "FX_T_CURRENCY_ROWS_MIXED"
+      }
+    },
+    {
+      "coordinates": [
+        "observation.null"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "base": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+        "patch": [
+          {
+            "delete": "evidence.rows.survival.1.days"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "with no missing value among the rows there is nothing censored and no mechanism owed (triad null:missing-mechanism, satisfying)"
+      }
+    },
+    {
+      "coordinates": [
+        "observation.null:absent~censored"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "base": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+        "patch": [
+          {
+            "set": "evidence.rows.survival.1.days.null",
+            "value": "absent"
+          }
+        ],
+        "outcome": {
+          "status": "unproven",
+          "codes": [],
+          "terms": [
+            "null:missing-mechanism"
+          ]
+        },
+        "cause": "an absent value with no declared handling leaves null:missing-mechanism outstanding; REL_NULL_CENSORED_AS_OBSERVED names a bound, which an absent value is not"
+      }
+    },
+    {
+      "coordinates": [
+        "evidence.grainWitness#present"
+      ],
+      "a": {
+        "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
+      },
+      "b": {
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "patch": [
+          {
+            "delete": "evidence.grainWitness"
+          }
+        ],
+        "outcome": {
+          "status": "unproven",
+          "codes": [],
+          "terms": [
+            "grain:declared"
+          ]
+        },
+        "cause": "rows without a declared witness declare no grain; grain:declared stands (triad grain:declared, absent)"
+      }
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.kind:bin~normalize"
+      ],
+      "a": {
+        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
+      },
+      "b": {
+        "base": "FX_READINGS_BINNED_NO_CLOSURE",
+        "patch": [
+          {
+            "set": "structure.relations.bucketed.derivedBy.kind",
+            "value": "normalize"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} — the only such pair among the seven constructors — the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."
+      }
+    }
   ]
 }
