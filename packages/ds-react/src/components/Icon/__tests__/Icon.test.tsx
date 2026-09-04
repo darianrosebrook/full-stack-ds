@@ -69,6 +69,17 @@ describe("Icon — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Icon — authored accessibility policy", () => {
+  it("defaults an unlabeled icon to decorative presentation semantics", () => {
+    render(<Icon data-testid="default-icon" name="check" />);
+
+    const icon = screen.getByTestId("default-icon");
+    expect(icon).toHaveAttribute("role", "presentation");
+    expect(icon).toHaveAttribute("aria-hidden", "true");
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+});
+
 describe("Icon — catalog glyph rendering (ICON-CATALOG-RUNTIME-DELIVERY-01)", () => {
   it("renders the authored 16-grid check glyph at size=sm", () => {
     const { container } = render(<Icon name="check" size="sm" />);
