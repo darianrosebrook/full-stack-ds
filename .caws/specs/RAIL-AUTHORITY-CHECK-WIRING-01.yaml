@@ -49,3 +49,7 @@ evidence:
     status: pass
     evidence_ref: node --test scripts/prepush-scope.test.mjs (coupling input and docs-only exclusion cases); node scripts/rail-toolchain-coupling-audit.mjs --check
     recorded_at: "2026-09-04T23:50:47.022Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "node --test scripts/prepush-scope.test.mjs (55/55; command-removal mutation fails); bash -n .githooks/pre-push; CI YAML parse; pnpm run governed:rail; pnpm test (3370/3370); pnpm run test:frameworks"
+    recorded_at: "2026-09-04T23:50:59.588Z"
