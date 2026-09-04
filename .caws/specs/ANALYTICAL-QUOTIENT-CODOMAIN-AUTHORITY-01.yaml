@@ -1,0 +1,39 @@
+id: ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01
+title: 'The quotient has a declared codomain: erased representations are typed images, not damaged source declarations'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-04T18:35:46.514Z'
+updated_at: '2026-09-04T18:35:46.514Z'
+created_by_session: 'b2dd0282-810d-45e6-99c5-ae3bd21162f1'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical (a typed QuotientImage authority; executor and canonicalizer retargeted off Fixture; the audit split into source-language departure vs quotient-language invalidity; three-part evidence identity)'
+    - 'packages/ds-contracts (emitted quotient-image schema, erasure evidence authority record, specimen population)'
+    - 'package.json (quotient validation and authority-digest commands)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-contracts/quotient-image.schema.json'
+    - 'package.json'
+  out: []
+invariants:
+  - 'The terminal invariant is quotientLanguageInvalid == 0, NOT sourceLanguageDeparture == 0. An erasure image that cannot be parsed as an unmodified source declaration is often expected and is not by itself a defect: a compiler IR is not invalid because it does not parse as source. What must never happen is an image that is invalid in the language of quotient images.'
+  - 'Deleting a required leaf must NOT delete its enclosing declaration. That repair is refused as the general rule: it forgets the whole semantic object rather than the named leaf, and it would convert the present subsumes-refinements result on assertion.aggregate.op into real sibling over-erasure. Declaration deletion stays reachable only through an explicit holder-presence or composite-declaration operation.'
+  - 'No standing moves as a byproduct of the codomain change. Every witness or closure verdict that changes under quotient images is reported for adjudication with its old and new outcome; none is applied silently, and none is preserved merely because it is the incumbent.'
+  - 'The digest is attribution, not correctness: the tests prove behavior, the digest proves the recorded verdicts still refer to that behavior. erasureAuthorityDigest must therefore cover executor and compiler SOURCE, not only the declarative plan registry - the session that produced this spec found two defects (a slot written into existence, an array element deleted as a null hole) where the declarative plan was unchanged and the executor was wrong.'
+  - 'The oracle stays frozen: packages/ds-contracts/analytical-pack is scope.out and closure must show corpus.jsonl 86f2b03a9fe7affe, corpus-case.schema.json e961af232d3ede45, vocabulary.json 5bd9dfddab19dc33, form-names.json 0564902cf8d7d4ff and the doctrine catalogue+appendix 123e73dfc61ab2ab unchanged.'
+  - 'REL-VIEW-ALGEBRA-01 stays open and blocked on this spec. The three holder-presence coordinates, the 24 footprint dependency coordinates, join.cardinality and the four required-leaf witnesses are NOT adjudicated until this spec merges.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'quotient-image'
+    type: schema
+    path: 'packages/ds-contracts/quotient-image.schema.json'
