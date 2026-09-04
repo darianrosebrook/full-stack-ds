@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/docs-claims-freshness.selftest.mjs — fix-never-restamps: --fix run over a stale stamp exits 1 with 'not auto-fixable' and the stamp is byte-identical afterward"
     recorded_at: "2026-09-04T22:29:27.159Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims on merged main (781d7bad): 'OK — 69 marked claim(s) match derived values; 9 verified stamp(s) fresh or ledgered' — normal-form.md carries verified_at_commit bdce5b6b (fresh) and names all 9 registered targets with rail/explicit status via governed markers (registered-target-count, web-framework-count, target-component-count:swiftui/jetpack-compose)"
+    recorded_at: "2026-09-04T22:29:32.924Z"
