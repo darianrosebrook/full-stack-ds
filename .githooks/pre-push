@@ -222,14 +222,16 @@ else say "skip governed:rail"; fi
 # tree. Each flag fires on that audit's exact input surface — see
 # scripts/prepush-scope.mjs.
 
-# Iconography emission ledger: only when ds-iconography changed. Separate
-# emission model from the codegen rail — the ledger gate proves the committed
-# content-addressed edge set matches a fresh regeneration. Wired in by
-# ICONOGRAPHY-TOKEN-DISCIPLINE-02 (Phase 4).
+# Iconography committed-output gates: only when ds-iconography changed. The
+# byte check proves the package-root exports equal a fresh build; the ledger
+# check separately proves the content-addressed attachment edge set. The
+# ledger rebuild cannot substitute for the git diff against committed bytes.
 if [ "${RUN_ICONOGRAPHY:-false}" = true ]; then
-  echo ""; say "iconography:ledger:check"
+  echo ""; say "iconography:build:check"
+  pnpm run iconography:build:check
+  say "iconography:ledger:check"
   pnpm run iconography:ledger:check
-else say "skip iconography ledger"; fi
+else say "skip iconography drift checks"; fi
 
 # Behavior-realization rail (RAIL-BEHAVIOR-REALIZATION-AUDIT-01): derives
 # interactivity obligations (event wires, compound/disclosure wiring, portal
