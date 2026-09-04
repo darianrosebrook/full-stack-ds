@@ -46,3 +46,7 @@ evidence:
     status: pass
     evidence_ref: "packages/ds-iconography/package.json build:check rebuilds then git diff --exit-code index.mjs index.d.ts; scripts/prepush-scope.test.mjs pins CI ordering before ledger"
     recorded_at: "2026-09-04T22:55:31.430Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node --test scripts/prepush-scope.test.mjs (52/52): iconography changes set RUN_ICONOGRAPHY and CI/pre-push contain both ordered checks"
+    recorded_at: "2026-09-04T22:55:31.880Z"
