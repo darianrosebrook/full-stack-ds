@@ -655,11 +655,13 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
   const CORPUS_DEAD: Record<string, string> = {
     "relation.derivedBy.bin.closure:left-closed~right-closed": "no fixture declares right-closed, so rewriting it to left-closed rewrites nothing",
     "relation.derivedBy.bin.closure:right-closed~<absent>": "no fixture declares right-closed",
-    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": "the corpus only ever joins one-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": "the corpus only ever joins one-to-many",
-    "relation.derivedBy.join.cardinality:one-to-many~many-to-one": "the corpus only ever joins one-to-many",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": "the corpus only ever joins one-to-many",
-    "relation.derivedBy.join.cardinality:one-to-one~many-to-one": "the corpus only ever joins one-to-many",
+    // The corpus now declares one-to-many AND many-to-one — the join holdout
+    // item added the second — so the three pairs that separate them are live
+    // and only the many-to-many pairs remain dead. That is the ratchet biting
+    // in the direction a superset list could not see.
+    "relation.derivedBy.join.cardinality:many-to-one~many-to-many": "no fixture joins many-to-many",
+    "relation.derivedBy.join.cardinality:one-to-many~many-to-many": "no fixture joins many-to-many",
+    "relation.derivedBy.join.cardinality:one-to-one~many-to-many": "no fixture joins many-to-many",
     "assertion.aggregate.along#order": "every corpus `along` is one name or already sorted, so sorting is identity",
     "evidence.grainWitness#arity": "every corpus grain witness names one column, so truncating to one is identity",
     "evidence.grainWitness#order": "every corpus grain witness is one name or already sorted",

@@ -11,6 +11,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { casesAdjudicableAt, checkFixtureLedger, loadCorpusInput, loadLedgerInput, sha256, type LedgerInput } from "./corpus-integrity.js";
 import { DIAG, OBLIGATION, RULES, judge } from "./engines.js";
+import { OPERATOR_LAWS } from "./derivation.js";
 import { assertionKey, canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
 import { RULE_SOURCES } from "./necessity.js";
 import { alphaRename, normalizeObservation, renameSubject, type Fixture, type RelationalStructure } from "./structure.js";
@@ -371,10 +372,24 @@ describe("A8 — holdout authored against the recorded rule digest", () => {
     const reaching = live.holdout.items.filter((i) => "derivations" in i.expected);
     expect(reaching.length).toBeGreaterThanOrEqual(3);
     expect(new Set(reaching.map((i) => i.expected.status))).toEqual(new Set(["illegal", "unproven", "admissible"]));
-    // Each state comes from a DIFFERENT law, so a single rule cannot supply all
-    // three and leave the others unwitnessed.
+    // Both occurrence kinds are represented, so a refutation and an obligation
+    // are each held to a hand-derived answer rather than only one of them.
     const kinds = reaching.flatMap((i) => (i.expected.derivations ?? []).map((d) => `${d[0]}:${d[1]}`));
-    expect(kinds.sort()).toEqual(["diagnostic:REL_DERIVATION_RESULT_NOT_DERIVABLE", "obligation:invariant:conservation"]);
+    expect(new Set(kinds)).toEqual(new Set(["diagnostic:REL_DERIVATION_RESULT_NOT_DERIVABLE", "obligation:invariant:conservation"]));
+  });
+
+  it("holds EVERY operator law to a hand-derived expectation, not two of seven", () => {
+    // The non-claim this closes, recorded twice in the re-record log: three
+    // items exercised `project` and `graph`, and the other five laws were held
+    // to the stage-2 case fixtures and unit tests alone. The law set is read
+    // from OPERATOR_LAWS rather than listed here, so an eighth operator arrives
+    // with this test already failing for it.
+    const reached = new Set(
+      live.holdout.items
+        .flatMap((i) => i.expected.derivations ?? [])
+        .map((d) => String(d[3]).split("(")[0]),
+    );
+    expect([...reached].sort()).toEqual(Object.keys(OPERATOR_LAWS).sort());
   });
 
   it("the conservation holdout separates `cannot be decided` from `conserved`", () => {

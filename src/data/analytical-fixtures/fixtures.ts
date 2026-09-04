@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: 4e23b40739798c0a4bc278e841965ff95ef08bc78821be1b58b9baba296736ba
+// Source sha256: 668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -4334,5 +4334,354 @@ export const FIXTURES: AnalyticalFixture[] = [
         ]
       }
     }
+  },
+  {
+    "id": "FX_H_DAILY_ROLLUP_INVENTS_MARGIN",
+    "structure": {
+      "relations": {
+        "daily": {
+          "grain": [
+            "day",
+            "region"
+          ],
+          "fields": {
+            "day": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "by_region": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            },
+            "margin": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "aggregate-to-grain",
+            "from": "daily",
+            "toGrain": [
+              "region"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "daily",
+        "field": "amount",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT",
+    "structure": {
+      "relations": {
+        "orders": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "cust_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "customers": {
+          "grain": [
+            "cust_id"
+          ],
+          "fields": {
+            "cust_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "tier": {
+              "transformation": "nominal"
+            }
+          }
+        },
+        "enriched": {
+          "grain": [
+            "order_id"
+          ],
+          "fields": {
+            "order_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            },
+            "tier": {
+              "transformation": "nominal"
+            },
+            "discount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "join",
+            "from": "orders",
+            "with": "customers",
+            "cardinality": "many-to-one"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "orders",
+        "field": "amount",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_SALES_NESTED_DROPS_STATE",
+    "structure": {
+      "relations": {
+        "sales": {
+          "grain": [
+            "txn_id"
+          ],
+          "fields": {
+            "txn_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "state": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "hierarchy": {
+          "grain": [
+            "txn_id"
+          ],
+          "fields": {
+            "txn_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "country": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "amount": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "nest",
+            "from": "sales",
+            "levels": [
+              "country",
+              "state"
+            ]
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "sales",
+        "field": "amount",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_READINGS_BINNED_DROPS_TEMP",
+    "structure": {
+      "relations": {
+        "readings": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "temp": {
+              "transformation": "interval"
+            },
+            "value": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "bucketed": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "value": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "bin",
+            "from": "readings",
+            "field": "temp",
+            "closure": "left-closed"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "readings",
+        "field": "value",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_SHARES_NORMALIZED_ON_ABSENT_FIELD",
+    "structure": {
+      "relations": {
+        "base": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "value": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "scaled": {
+          "grain": [
+            "region"
+          ],
+          "fields": {
+            "region": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "value": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "normalize",
+            "from": "base",
+            "field": "revenue"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "base",
+        "field": "value",
+        "op": "min"
+      }
+    ]
+  },
+  {
+    "id": "FX_H_READINGS_BINNED_KEEPS_TEMP",
+    "structure": {
+      "relations": {
+        "readings": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "temp": {
+              "transformation": "interval"
+            },
+            "value": {
+              "transformation": "ratio"
+            }
+          }
+        },
+        "bucketed": {
+          "grain": [
+            "reading_id"
+          ],
+          "fields": {
+            "reading_id": {
+              "transformation": "nominal",
+              "key": true
+            },
+            "temp": {
+              "transformation": "interval"
+            },
+            "value": {
+              "transformation": "ratio"
+            }
+          },
+          "derivedBy": {
+            "kind": "bin",
+            "from": "readings",
+            "field": "temp",
+            "closure": "left-closed"
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "readings",
+        "field": "value",
+        "op": "min"
+      }
+    ]
   }
 ];

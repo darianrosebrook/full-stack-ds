@@ -27,7 +27,7 @@ describe("the committed footprint report", () => {
 
   it("is measured over the corpus, every authored stimulus, and synthesized separating pairs", () => {
     const s = specimens();
-    expect(s.corpus).toBe(84);
+    expect(s.corpus).toBe(90);
     // Without the authored stimuli, a coordinate whose only evidence is a
     // patched pair reads as dead — the exact misreading this lane prevents.
     expect(s.stimuli).toBeGreaterThan(0);

@@ -13,7 +13,10 @@ import { loadCensus } from "./census.js";
 import { checkFreeze, computeFreeze, corpus, loadFreeze, type Stage2Freeze } from "./freeze.js";
 
 const frozen = loadFreeze();
-const live = computeFreeze();
+// Scoped to the fixtures the freeze was taken over. Unscoped, a later fixture
+// would move every erasure record and the freeze would fire on work that
+// neither caused nor could discharge it.
+const live = computeFreeze({}, frozen.fixtures);
 
 /**
  * Every coordinate whose erasure changes nothing anywhere in the corpus, minus
@@ -135,12 +138,26 @@ describe("stage-2 erasure freeze", () => {
    */
   it("census.ts and quotient.ts both moved while every erasure digest held", () => {
     const r = checkFreeze(frozen, live);
-    expect(r.movedInputs).toEqual(["census.ts", "quotient.ts"]);
+    expect(r.movedInputs).toContain("census.ts");
+    expect(r.movedInputs).toContain("quotient.ts");
     expect(r.divergences).toEqual([]);
+    // `fixtures.jsonl` moves too, and for an unrelated reason — holdout items
+    // were added after the freeze. That is precisely why the record is scoped
+    // to named fixtures instead of to whatever the corpus currently holds.
+    expect(r.movedInputs).toContain("fixtures.jsonl");
   });
 
-  it("is recorded over the whole corpus, not a sample", () => {
-    expect(corpus().length).toBe(84);
+  it("is recorded over a named fixture scope, and covers every coordinate in it", () => {
+    // 84 fixtures: the whole corpus AS OF the freeze. The corpus has grown
+    // since — holdout items reaching the derivation boundary — and the scope is
+    // what keeps that growth from reading as a walker regression.
+    expect(frozen.fixtures.length).toBe(84);
+    expect(corpus().length).toBeGreaterThanOrEqual(frozen.fixtures.length);
     expect(Object.keys(frozen.erasure).length).toBe(loadCensus().length);
+  });
+
+  it("reports a fixture that LEAVES the scope, which is a finding rather than growth", () => {
+    const r = checkFreeze({ ...frozen, fixtures: [...frozen.fixtures, "FX_NEVER_EXISTED"] }, live);
+    expect(r.divergences.map((d) => d.key)).toContain("fixture:FX_NEVER_EXISTED");
   });
 });
