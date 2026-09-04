@@ -47,3 +47,8 @@ contracts:
   - name: 'docs-claims-freshness'
     type: behavior
     path: 'scripts/docs-claims-check.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node scripts/docs-claims-freshness.selftest.mjs — stale-fail (exit 1, names docs/a.md + lastTouch commit) and unresolvable-stamp scenarios; real-repo form: any unledgered stale stamp fails docs:check-claims"
+    recorded_at: "2026-09-04T22:29:10.000Z"
