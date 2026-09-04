@@ -41,3 +41,8 @@ contracts:
   - name: 'iconography-drift-wiring'
     type: contract-test
     path: 'scripts/prepush-scope.test.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "packages/ds-iconography/package.json build:check rebuilds then git diff --exit-code index.mjs index.d.ts; scripts/prepush-scope.test.mjs pins CI ordering before ledger"
+    recorded_at: "2026-09-04T22:55:31.430Z"
