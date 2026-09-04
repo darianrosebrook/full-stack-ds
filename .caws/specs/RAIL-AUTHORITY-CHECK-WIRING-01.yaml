@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "node --test scripts/prepush-scope.test.mjs (SwiftUI input and docs-only exclusion cases); pnpm run swiftui:semantic-defaults:check"
     recorded_at: "2026-09-04T23:50:34.347Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: node --test scripts/prepush-scope.test.mjs (coupling input and docs-only exclusion cases); node scripts/rail-toolchain-coupling-audit.mjs --check
+    recorded_at: "2026-09-04T23:50:47.022Z"
