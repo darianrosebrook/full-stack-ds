@@ -47,3 +47,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-tokens/build/core/index.test.ts (20/20); pnpm run tokens:build:check"
     recorded_at: "2026-09-04T22:47:54.899Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node scripts/token-resolvability-audit/selfcheck.mjs: undeclared global read emits global:tokens.css + exact missing name"
+    recorded_at: "2026-09-04T22:47:55.507Z"
