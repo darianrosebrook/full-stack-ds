@@ -101,7 +101,10 @@ const PATTERNS = {
   typed: /^(packages|src)\/.*\.(ts|tsx|vue|svelte)$/,
   // vitest only discovers tests under packages|src
   testable: /^(packages|src)\/.*\.(ts|tsx|js|jsx|mjs|vue|svelte)$/,
-  docs: /\.(md|mdx)$/,
+  // The docs family covers the claims gate's own inputs too: the checker,
+  // its selftest, and the freshness ledger only feed docs:check-claims, so
+  // a change to any of them must re-run the gate it changes.
+  docs: /\.(md|mdx)$|^(scripts\/docs-claims-check\.mjs|scripts\/docs-claims-freshness\.selftest\.mjs|doc-freshness-baseline\.json)$/,
 };
 
 export function classify(files, opts = {}) {
