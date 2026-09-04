@@ -83,3 +83,11 @@ evidence:
     command: "pnpm run governed:rail"
     exit_code: 0
     commit_sha: e18800d5
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "packages/ds-codegen/src/prop-type-ir.test.ts 'legacy-bucket members author structured propType' describe + prop-surface-inventory.test.ts styled-migration ratchet"
+    recorded_at: "2026-09-04T23:44:37.019Z"
+    test_nodeid: "packages/ds-codegen/src/prop-type-ir.test.ts > legacy-bucket members author structured propType (LEGACY-BUCKET-REFS-01)"
+    command: pnpm exec vitest run src/prop-type-ir.test.ts src/prop-surface-inventory.test.ts
+    exit_code: 0
+    commit_sha: e18800d5
