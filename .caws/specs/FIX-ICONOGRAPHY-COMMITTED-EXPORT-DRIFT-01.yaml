@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: "node --test scripts/prepush-scope.test.mjs (52/52): iconography changes set RUN_ICONOGRAPHY and CI/pre-push contain both ordered checks"
     recorded_at: "2026-09-04T22:55:31.880Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run iconography:build:check; pnpm run iconography:ledger:check (266/266 edges); governed:rail; root + framework suites"
+    recorded_at: "2026-09-04T22:55:32.395Z"
