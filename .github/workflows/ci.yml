@@ -171,8 +171,9 @@ jobs:
       #      match, no untracked generated files, framework checks
       #      pass). See packages/ds-codegen/src/validation/required-mode.ts.
       #
-      #   2. `git diff --exit-code` over the six generated framework src
-      #      trees proves THAT regenerated workspace was already
+      #   2. `git diff --exit-code` over the six rail-admitted framework src
+      #      trees plus the registered native generated roots proves THAT
+      #      regenerated workspace was already
       #      committed — i.e. the source-of-truth contracts didn't
       #      change without their emitted artifacts also being
       #      updated and committed.

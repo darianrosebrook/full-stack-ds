@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 const PATTERNS = {
   tokens: /^packages\/ds-tokens\//,
   codegen: /^packages\/ds-(contracts|codegen)\//,
-  // generated framework src trees — matches CI's six-tree drift diff exactly
+  // generated target trees — matches CI's rail-admitted + native drift diff
   // (react-native was added to CI by 289058a4 but missing here; this closes
   // that latent gap the hook's own lockstep comment warns about).
   // swiftui/jetpack-compose generated trees joined the CI+pre-push drift

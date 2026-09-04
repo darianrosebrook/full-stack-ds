@@ -1,11 +1,11 @@
 /**
  * Runtime visual proof rail.
  *
- * Spins up the Vite dev server and renders each of the 5 components
- * that gained new behavior in Commits 1-6 (Progress, Truncate,
- * ShowMore, OTP, Calendar) through every framework reachable by this
- * rail's navigable /preview/{framework}/<Name> route — now including
- * Angular (React, Vue, Svelte, Lit, Angular).
+ * Spins up the Vite dev server and renders the contract-fact suites declared
+ * below through every framework reachable by this rail's navigable
+ * /preview/{framework}/<Name> route (React, Vue, Svelte, Lit, Angular).
+ * `src/runtime/rail-coverage.ts` projects the named component/framework/prop
+ * surface into the showcase; its coherence test rejects projection drift.
  *
  * Angular DEFAULT-props facts are covered (RUNTIME-RAIL-ANGULAR-01).
  * Its preview is executable (live AOT compile + bootstrapApplication,

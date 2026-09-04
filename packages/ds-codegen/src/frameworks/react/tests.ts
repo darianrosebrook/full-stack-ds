@@ -20,8 +20,7 @@ import { generateReactSurfaceTest } from "./surface-tests.js";
  * errors when the channel type was actually string, number, union,
  * or Date.
  *
- * Coverage across the 53 component contracts (verified by
- * `grep -rh "\"valueType\":" packages/ds-contracts/components/`):
+ * Corpus value types currently include:
  *   - boolean
  *   - string
  *   - string | string[]
