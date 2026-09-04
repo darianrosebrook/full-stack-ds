@@ -118,3 +118,7 @@ evidence:
     status: pass
     evidence_ref: "Integrated pnpm test: 254 files / 3363 tests pass, including relationship-lowering (16), idref-slot-gate (5), and generated Dialog/Sheet/Command tests; integrated pnpm run test:frameworks exits 0 across Vue, Lit, Svelte, Angular, and React Native."
     recorded_at: "2026-09-04T21:46:30.638Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm test passes generated React Dialog (17), Sheet (13), and Command (12) suites; authored Dialog/Sheet custom-region assertions pin accessible-name/description targets and explicit aria-label/aria-describedby override precedence."
+    recorded_at: "2026-09-04T21:46:41.746Z"
