@@ -30,6 +30,8 @@ export interface SpinnerProps {
 // @generated:start component
 export function Spinner({
   size,
+  ariaHidden,
+  label,
   style,
   testID,
   accessibilityLabel,
@@ -41,7 +43,8 @@ export function Spinner({
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel ?? label}
+      accessible={!(String(ariaHidden) === "true")}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View

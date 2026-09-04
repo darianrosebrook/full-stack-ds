@@ -30,6 +30,10 @@
     "dom": {
       "tag": "div",
       "part": "root",
+      "bindings": {
+        "aria-label": "prop:label",
+        "aria-hidden": "prop:ariaHidden"
+      },
       "children": [
         {
           "tag": "span",

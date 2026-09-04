@@ -5,7 +5,7 @@
     "name": "Icon",
     "cssPrefix": "icon",
     "rootElement": "div",
-    "effectiveRole": null
+    "effectiveRole": "img"
   },
   "anatomy": [
     {
@@ -34,6 +34,24 @@
       "required": false,
       "description": "Rendered glyph size. Maps to pixels (sm=16, md=20, lg=24, xl=32 — mirroring the icon.size token scale) and selects the nearest authored size variant.",
       "defaultExpr": "\"md\"",
+      "nodeKind": null
+    },
+    {
+      "name": "decorative",
+      "safeName": "decorative",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether assistive technology should ignore the icon.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name used when decorative is false.",
+      "defaultExpr": null,
       "nodeKind": null
     }
   ],
@@ -71,6 +89,9 @@
   },
   "root": {
     "element": "div",
+    "explicitRole": "img",
+    "effectiveRole": "img",
+    "rootRole": "img",
     "labeling": [
       "aria-label",
       "aria-hidden"

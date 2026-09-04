@@ -594,10 +594,6 @@ function buildHostAttrsExtendsClause(
   }
   omit.add("className");
   omit.add("data-testid");
-  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
-    omit.add("aria-label");
-    omit.add("aria-labelledby");
-  }
   // `children` is always re-declared by the props interface when the
   // component renders children, with type `ReactNode`. React's
   // HTMLAttributes also declares `children?: ReactNode`, so the types
@@ -644,12 +640,6 @@ function generatePropsInterface(ir: ComponentIR): string {
   }
   if (!propNames.has("className")) lines.push(`  className?: string;`);
   if (!propNames.has("data-testid")) lines.push(`  "data-testid"?: string;`);
-  // When the dom tree has a dialog node, include aria-label/aria-labelledby so
-  // consumers can name the dialog and tests/axe can find it.
-  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
-    if (!propNames.has("aria-label")) lines.push(`  "aria-label"?: string;`);
-    if (!propNames.has("aria-labelledby")) lines.push(`  "aria-labelledby"?: string;`);
-  }
   // Only expose a `children` prop when the component actually renders
   // children. For dom-tree components, that means a `{ tag: "children" }`
   // placeholder in the contract. For legacy no-dom-tree components, the
@@ -772,7 +762,9 @@ function generateSubComponent(
     ].join("\n");
   }
 
-  const asElement = part.semanticElement;
+  const asElement = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asProp = asElement && asElement !== "div" ? ` as="${asElement}"` : "";
   const layoutProp =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -1417,6 +1409,7 @@ function generateDisclosureStateRootComponent(ir: ComponentIR): string {
   lines.push(`        ref={rootRef}`);
   lines.push(`        className={classNames}`);
   lines.push(`        data-testid={testId}`);
+  lines.push(`        data-fsds-component="${ir.cssPrefix}"`);
   lines.push(`        onKeyDown={handleKeyDown}`);
   lines.push(`        {...rest}`);
   lines.push(`      >`);
@@ -1529,6 +1522,7 @@ function generateCompoundStateRootComponent(ir: ComponentIR): string {
   lines.push(`      <div`);
   lines.push(`        className={classNames}`);
   lines.push(`        data-testid={testId}`);
+  lines.push(`        data-fsds-component="${ir.cssPrefix}"`);
   lines.push(`        {...rest}`);
   lines.push(`      >`);
   lines.push(`        {children}`);
@@ -1675,12 +1669,6 @@ function wrapReactPortal(treeJsx: string, wrap: boolean): string {
 // ---------------------------------------------------------------------------
 
 /** Returns true if any node in the dom tree has the given role attribute. */
-function domTreeHasRole(node: DomNodeIR | null | undefined, role: string): boolean {
-  if (!node) return false;
-  if (node.attrs["role"] === role) return true;
-  return node.children.some((child) => domTreeHasRole(child, role));
-}
-
 /**
  * DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01. Walks the tree once
  * to find every node carrying `propertyBindings` (DOM-property-only facts,
@@ -1896,15 +1884,6 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   }
   destructured.push('"data-testid": testId');
   handled.add("data-testid");
-  // When the dom tree contains a dialog node, extract aria-label/aria-labelledby
-  // from props so they can be forwarded to the dialog element (not the root).
-  const hasDialogNode = domTreeHasRole(ir.dom, "dialog");
-  if (hasDialogNode) {
-    destructured.push('"aria-label": ariaLabel');
-    destructured.push('"aria-labelledby": ariaLabelledBy');
-    handled.add("aria-label");
-    handled.add("aria-labelledby");
-  }
   if (!handled.has("children") && hasChildrenPlaceholder(ir)) {
     destructured.push("children");
     handled.add("children");
@@ -2189,8 +2168,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     overlayClickSetter,
     overlayClickEnabledProp: overlayClickTrigger?.enabledByProp,
-    forwardAriaLabel: hasDialogNode,
-    rootRole: ir.root.effectiveRole,
+    rootRole: ir.root.rootRole,
     rootTagOverride,
     propertyBindingRefs,
     iconGlyphIdents,
@@ -2282,8 +2260,6 @@ interface ReactRenderContext {
   overlayClickSetter?: string;
   /** Prop name that controls whether overlay click dismissal is enabled. */
   overlayClickEnabledProp?: string;
-  /** When true, forward aria-label/aria-labelledby props to this node's element. */
-  forwardAriaLabel?: boolean;
   /**
    * Effective ARIA role to emit on the root node, when the contract's
    * `a11y.role` differs from the element's implicit role and the dom tree
@@ -2755,22 +2731,6 @@ function renderReactDomNode(
     attrs.push(`{...rest}`);
   } else if (classParts.length > 0) {
     attrs.unshift(`className=${classPartsExpr(classParts)}`);
-  }
-
-  // Forward aria-label/aria-labelledby to the dialog element so axe can find
-  // the name. Only inject when the contract didn't already declare a literal
-  // attr OR a binding for that attribute — contract authorship wins.
-  if (!ctx.isRoot && node.attrs["role"] === "dialog") {
-    if (ctx.forwardAriaLabel) {
-      const hasLabelAttr =
-        node.attrs["aria-label"] !== undefined ||
-        node.bindings["aria-label"] !== undefined;
-      const hasLabelledByAttr =
-        node.attrs["aria-labelledby"] !== undefined ||
-        node.bindings["aria-labelledby"] !== undefined;
-      if (!hasLabelAttr) attrs.push(`aria-label={ariaLabel}`);
-      if (!hasLabelledByAttr) attrs.push(`aria-labelledby={ariaLabelledBy}`);
-    }
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: when this node is iterated, React needs

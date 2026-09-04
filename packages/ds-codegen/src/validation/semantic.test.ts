@@ -87,6 +87,54 @@ describe("validateContractSemantics — cross-reference rules", () => {
     expect(issueAt(issues, "/relationships/0/to")).toBe(true);
   });
 
+  it("rejects a decorative part as an aria-labelledby target", () => {
+    const c = base({
+      anatomy: {
+        parts: ["root", "icon"],
+        details: {
+          root: { description: "Interactive owner", role: "root" },
+          icon: { description: "Decorative glyph", role: "decoration" },
+        },
+      },
+      relationships: [
+        { from: "root", to: "icon", attribute: "aria-labelledby" },
+      ],
+    });
+
+    const issues = validateContractSemantics(c);
+    expect(issues).toContainEqual({
+      pointer: "/relationships/0/to",
+      message:
+        '[A11Y_IDREF_DECORATIVE_NAME_TARGET] aria-labelledby target "icon" is declared as a decoration and cannot provide an accessible name',
+    });
+  });
+
+  it("rejects a subcomponent that is also owned by the root DOM tree", () => {
+    const c = base({
+      anatomy: {
+        parts: ["root", "label"],
+        details: {
+          label: {
+            description: "Consumer-composed label",
+            role: "label",
+            subcomponent: true,
+          },
+        },
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [{ tag: "span", part: "label" }],
+        },
+      },
+    });
+
+    expect(validateContractSemantics(c)).toContainEqual({
+      pointer: "/anatomy/details/label/subcomponent",
+      message:
+        '[SUBCOMPONENT_OWNERSHIP_COLLISION] part "label" is marked as a consumer-composed subcomponent but anatomy.dom also renders it',
+    });
+  });
+
   it("flags channels.value referencing a missing prop", () => {
     const c = base({
       layer: "composer",

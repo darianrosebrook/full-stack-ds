@@ -28,6 +28,7 @@ interface Props {
   onOpenChange?: (open: boolean) => void;
   multiple?: boolean;
   disabled?: boolean;
+  triggerLabel?: string;
   size?: SelectSize;
   filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   searchable?: boolean;
@@ -46,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   defaultOpen: true,
   multiple: undefined,
   disabled: undefined,
+  triggerLabel: "Select an option",
   size: "md",
   searchable: undefined,
   empty: undefined,
@@ -84,8 +86,8 @@ const instanceId = useId();
 </script>
 
 <template>
-  <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']" data-fsds-component="select">
-    <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" :disabled="props.disabled" :aria-controls="`${instanceId}-options`">
+  <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-label="props.triggerLabel" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']" data-fsds-component="select">
+    <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" :disabled="props.disabled" :aria-label="props.triggerLabel" :aria-expanded="behavior.open.value" :aria-controls="`${instanceId}-options`">
       <span :class="'select__text'"></span>
     </button>
     <div v-if="behavior.open.value" :class="'select__content'" role="listbox" id="fsds-select-listbox">

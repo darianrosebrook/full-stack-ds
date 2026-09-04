@@ -219,6 +219,7 @@ export class SelectElement extends LitElement {
   @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: Boolean }) multiple?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
+  @property({ type: String }) triggerLabel?: string = "Select an option";
   @property({ type: String }) size?: SelectSize = "md";
   @property({ attribute: false }) filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   @property({ type: Boolean }) searchable?: boolean;
@@ -250,8 +251,8 @@ export class SelectElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))}>
-  <button class=${'select__trigger'} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} ?disabled=${this.disabled ?? false} aria-controls="select-options">
+    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label=${ifDefined((this.triggerLabel ?? "Select an option"))} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))}>
+  <button class=${'select__trigger'} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined((this.triggerLabel ?? "Select an option"))} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-controls="select-options">
     <span class=${'select__text'}></span>
   </button>
   ${this.behavior.open ? html`

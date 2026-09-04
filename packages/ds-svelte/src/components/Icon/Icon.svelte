@@ -11,10 +11,12 @@ import { resolveIcon } from "@full-stack-ds/iconography";
 interface Props {
   name: string;
   size?: "sm" | "md" | "lg" | "xl";
+  decorative?: boolean;
+  ariaLabel?: string;
   class?: string;
 }
 
-let { name, size = "md", class: className }: Props = $props();
+let { name, size = "md", decorative = true, ariaLabel, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start iconGlyph
@@ -38,7 +40,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<span class={classes} aria-hidden="true" data-fsds-component="icon">
+<span class={classes} role={(decorative ? "presentation" : "img")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="icon">
   {#if iconGlyph}
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon={iconGlyph.name} viewBox={iconGlyph.viewBox} width={iconGlyphPx ?? iconGlyph.size} height={iconGlyphPx ?? iconGlyph.size}>
     {#each iconGlyph.paths as glyphPath, glyphIndex (glyphIndex)}

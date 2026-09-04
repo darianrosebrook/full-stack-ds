@@ -23,7 +23,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
   imports: [NgClass],
   host: { "data-fsds-component": "checkbox" },
   template: `<label [ngClass]="classes()">
-  <input [ngClass]="'checkbox__input'" type="checkbox" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" [attr.aria-checked]="(indeterminate ? 'mixed' : behavior.checked())" [indeterminate]="indeterminate" />
+  <input [ngClass]="'checkbox__input'" type="checkbox" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="ariaLabelledby" [attr.aria-checked]="(indeterminate ? 'mixed' : behavior.checked())" [indeterminate]="indeterminate" />
   <span [ngClass]="'checkbox__indicator'" aria-hidden="true"></span>
 </label>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +37,8 @@ export class CheckboxComponent {
   @Input() disabled?: boolean;
   @Input() name?: string;
   @Input() value?: string;
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);

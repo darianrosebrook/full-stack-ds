@@ -21,6 +21,8 @@ export interface InputProps {
   invalid?: boolean;
   required?: boolean;
   name?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -35,6 +37,8 @@ export function Input({
   value: controlledValue,
   placeholder,
   disabled,
+  ariaLabel,
+  ariaLabelledby,
   defaultValue = "",
   onChange,
   style,
@@ -59,9 +63,9 @@ export function Input({
       editable={!(disabled)}
       secureTextEntry={type === "password"}
       placeholder={placeholder}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy ?? ariaLabelledby}
       onChangeText={(next: string) => setValueValue(next)}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityState={{ disabled: disabled }}
     />
   );

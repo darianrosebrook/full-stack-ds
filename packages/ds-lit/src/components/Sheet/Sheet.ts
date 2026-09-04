@@ -207,6 +207,10 @@ export class SheetElement extends LitElement {
   @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: String }) side?: SheetSide = "right";
   @property({ type: Boolean }) modal?: boolean = true;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
+  @property({ type: String }) ariaLabelledby?: string;
+  @property({ type: String }) ariaDescribedby?: string;
 
   private behavior = new SheetBehavior(this, {
     open: () => this.open,
@@ -259,18 +263,18 @@ export class SheetElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null ? 'sheet-title' : null].filter(Boolean).join(' ') || undefined)}>
+    return html`<div class="${this.computeClasses()}">
   ${this.behavior.openness ? html`
   <div class=${'sheet__overlay'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'sheet__content'} role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" data-side=${ifDefined((this.side ?? "right"))} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'sheet__content'} role="dialog" aria-modal="true" aria-label=${ifDefined(this.ariaLabel ?? undefined)} data-side=${ifDefined((this.side ?? "right"))} aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null && !this.ariaLabel ? 'sheet-title' : null, this.ariaLabelledby].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined([this.querySelector('[slot="description"]') !== null ? 'sheet-description' : null, this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'sheet__header'}>
       <h2 class=${'sheet__title'} id="sheet-title">
         <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>
       </h2>
-      <p class=${'sheet__description'}>
-        <slot name="description"></slot>
+      <p class=${'sheet__description'} id="sheet-description">
+        <slot name="description" @slotchange=${() => this.requestUpdate()}></slot>
       </p>
       <button class=${'sheet__close'} type="button" aria-label="Close sheet" @click=${() => this.behavior.setOpenness(!this.behavior.openness)}></button>
     </div>

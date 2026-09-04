@@ -12,166 +12,153 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("List — unit", () => {
   it("renders with default props", () => {
-    render(<List data-testid="list">content</List>);
+    render(<List data-testid="list"><li>content</li></List>);
     expect(screen.getByTestId("list")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<List data-testid="list">content</List>);
+    render(<List data-testid="list"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list");
   });
 
   it("merges custom className", () => {
-    render(<List data-testid="list" className="custom">content</List>);
+    render(<List data-testid="list" className="custom"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list", "custom");
   });
 
   it("applies as=ul variant class", () => {
-    render(<List data-testid="list" as="ul">content</List>);
+    render(<List data-testid="list" as="ul"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--ul");
   });
 
   it("applies as=ol variant class", () => {
-    render(<List data-testid="list" as="ol">content</List>);
+    render(<List data-testid="list" as="ol"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--ol");
   });
 
   it("applies as=dl variant class", () => {
-    render(<List data-testid="list" as="dl">content</List>);
+    render(<List data-testid="list" as="dl"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--dl");
   });
 
   it("applies variant=default variant class", () => {
-    render(<List data-testid="list" variant="default">content</List>);
+    render(<List data-testid="list" variant="default"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--variant-default");
   });
 
   it("applies variant=unstyled variant class", () => {
-    render(<List data-testid="list" variant="unstyled">content</List>);
+    render(<List data-testid="list" variant="unstyled"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--variant-unstyled");
   });
 
   it("applies variant=inline variant class", () => {
-    render(<List data-testid="list" variant="inline">content</List>);
+    render(<List data-testid="list" variant="inline"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--variant-inline");
   });
 
   it("applies variant=divided variant class", () => {
-    render(<List data-testid="list" variant="divided">content</List>);
+    render(<List data-testid="list" variant="divided"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--variant-divided");
   });
 
   it("applies variant=spaced variant class", () => {
-    render(<List data-testid="list" variant="spaced">content</List>);
+    render(<List data-testid="list" variant="spaced"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--variant-spaced");
   });
 
   it("applies marker=default variant class", () => {
-    render(<List data-testid="list" marker="default">content</List>);
+    render(<List data-testid="list" marker="default"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-default");
   });
 
   it("applies marker=none variant class", () => {
-    render(<List data-testid="list" marker="none">content</List>);
+    render(<List data-testid="list" marker="none"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-none");
   });
 
   it("applies marker=disc variant class", () => {
-    render(<List data-testid="list" marker="disc">content</List>);
+    render(<List data-testid="list" marker="disc"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-disc");
   });
 
   it("applies marker=circle variant class", () => {
-    render(<List data-testid="list" marker="circle">content</List>);
+    render(<List data-testid="list" marker="circle"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-circle");
   });
 
   it("applies marker=square variant class", () => {
-    render(<List data-testid="list" marker="square">content</List>);
+    render(<List data-testid="list" marker="square"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-square");
   });
 
   it("applies marker=decimal variant class", () => {
-    render(<List data-testid="list" marker="decimal">content</List>);
+    render(<List data-testid="list" marker="decimal"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-decimal");
   });
 
   it("applies marker=alpha variant class", () => {
-    render(<List data-testid="list" marker="alpha">content</List>);
+    render(<List data-testid="list" marker="alpha"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-alpha");
   });
 
   it("applies marker=roman variant class", () => {
-    render(<List data-testid="list" marker="roman">content</List>);
+    render(<List data-testid="list" marker="roman"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--marker-roman");
   });
 
   it("applies spacing=none variant class", () => {
-    render(<List data-testid="list" spacing="none">content</List>);
+    render(<List data-testid="list" spacing="none"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--spacing-none");
   });
 
   it("applies spacing=sm variant class", () => {
-    render(<List data-testid="list" spacing="sm">content</List>);
+    render(<List data-testid="list" spacing="sm"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--spacing-sm");
   });
 
   it("applies spacing=md variant class", () => {
-    render(<List data-testid="list" spacing="md">content</List>);
+    render(<List data-testid="list" spacing="md"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--spacing-md");
   });
 
   it("applies spacing=lg variant class", () => {
-    render(<List data-testid="list" spacing="lg">content</List>);
+    render(<List data-testid="list" spacing="lg"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--spacing-lg");
   });
 
   it("applies size=sm variant class", () => {
-    render(<List data-testid="list" size="sm">content</List>);
+    render(<List data-testid="list" size="sm"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--size-sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<List data-testid="list" size="md">content</List>);
+    render(<List data-testid="list" size="md"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--size-md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<List data-testid="list" size="lg">content</List>);
+    render(<List data-testid="list" size="lg"><li>content</li></List>);
     expect(screen.getByTestId("list")).toHaveClass("list--size-lg");
   });
 });
 
 describe("List — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><List aria-label="Test List">content</List></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><List aria-label="Test List"><li>content</li></List></>);
+    const component = baseElement.querySelector('[data-fsds-component="list"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

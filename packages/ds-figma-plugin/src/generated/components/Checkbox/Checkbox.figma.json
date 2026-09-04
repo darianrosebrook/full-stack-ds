@@ -105,6 +105,24 @@
       "description": "Form value submitted when checked.",
       "defaultExpr": null,
       "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Direct accessible name for the native checkbox input.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabelledby",
+      "safeName": "ariaLabelledby",
+      "type": "string",
+      "required": false,
+      "description": "Space-separated ids of elements that name the native checkbox input.",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {

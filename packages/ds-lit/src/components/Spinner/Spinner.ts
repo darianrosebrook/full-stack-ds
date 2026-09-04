@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -135,7 +136,7 @@ export class SpinnerElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="status">
+    return html`<div class="${this.computeClasses()}" role="status" aria-label=${ifDefined(this.label)} aria-hidden=${ifDefined(this.ariaHidden === undefined ? undefined : (this.ariaHidden ? 'true' : 'false'))}>
   <span class=${'spinner__visual'} aria-hidden="true"></span>
 </div>`;
   }

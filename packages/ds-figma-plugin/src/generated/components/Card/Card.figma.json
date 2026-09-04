@@ -194,6 +194,7 @@
     "element": "div",
     "explicitRole": "group",
     "effectiveRole": "group",
+    "rootRole": "group",
     "labeling": [
       "aria-label",
       "aria-labelledby"

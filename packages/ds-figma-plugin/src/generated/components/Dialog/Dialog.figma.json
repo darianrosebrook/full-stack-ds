@@ -163,6 +163,33 @@
       "description": "CSS selector or element ID to return focus to on close.",
       "defaultExpr": null,
       "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Explicit accessible name used instead of the title relationship.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabelledby",
+      "safeName": "ariaLabelledby",
+      "type": "string",
+      "required": false,
+      "description": "Additional consumer-owned IDs that label the dialog.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaDescribedby",
+      "safeName": "ariaDescribedby",
+      "type": "string",
+      "required": false,
+      "description": "Additional consumer-owned IDs that describe the dialog.",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {

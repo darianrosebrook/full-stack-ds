@@ -220,6 +220,7 @@
     "element": "div",
     "explicitRole": "alert",
     "effectiveRole": "alert",
+    "rootRole": "alert",
     "labeling": [
       "aria-label",
       "aria-live",

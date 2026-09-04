@@ -25,17 +25,17 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "sheet" },
-  template: `<div [ngClass]="classes()" [attr.aria-labelledby]="instanceId + '-title'">
+  template: `<div [ngClass]="classes()">
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'sheet__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" [attr.data-side]="(side ?? 'right')">
+    <div [ngClass]="'sheet__content'" role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.data-side]="(side ?? 'right')" [attr.aria-labelledby]="contentAriaLabelledby" [attr.aria-describedby]="contentAriaDescribedby">
       <div [ngClass]="'sheet__header'">
         <h2 [ngClass]="'sheet__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
         </h2>
-        <p [ngClass]="'sheet__description'">
+        <p [ngClass]="'sheet__description'" [attr.id]="instanceId + '-description'">
           <ng-content select="[slot=description]" />
         </p>
         <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet" (click)="behavior.setOpenness(!behavior.openness())"></button>
@@ -55,6 +55,9 @@ export class SheetComponent implements OnInit, OnDestroy {
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() side?: SheetSide = "right";
   @Input() modal?: boolean = true;
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
+  @Input() ariaDescribedby?: string;
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-sheet-${nextInstanceId++}`;
@@ -75,6 +78,14 @@ export class SheetComponent implements OnInit, OnDestroy {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  get contentAriaLabelledby(): string | undefined {
+    return [!this.ariaLabel ? `${this.instanceId}-title` : null, this.ariaLabelledby].filter(Boolean).join(" ") || undefined;
+  }
+
+  get contentAriaDescribedby(): string | undefined {
+    return [`${this.instanceId}-description`, this.ariaDescribedby].filter(Boolean).join(" ") || undefined;
+  }
 
   private _el = inject(ElementRef<HTMLElement>);
   private _portalOriginParent: Node | null = null;

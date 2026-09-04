@@ -10,7 +10,9 @@ describe("generateLitTest", () => {
 
     expect(source).toContain(`import { axe } from "vitest-axe";`);
     expect(source).toContain(`import "../Switch";`);
-    expect(source).toContain(`unexpectedViolations`);
+    expect(source).toContain(`componentAxeOptions`);
+    expect(source).toContain(`region: { enabled: false }`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
     expect(source).toContain("switch");
   });
 
@@ -78,11 +80,32 @@ describe("generateLitTest — real corpus contracts", () => {
     expect(source).toContain(`import "../Accordion";`);
   });
 
+  it("includes required props in the axe fixture", () => {
+    const source = generateLitTest(corpusIR("Details"));
+
+    expect(source).toContain(
+      `renderElement("fsds-details", { "summary": "placeholder",`,
+    );
+  });
+
+  it("does not leak component-local type aliases into the runtime fixture", () => {
+    const source = generateLitTest(corpusIR("Postcard"));
+
+    expect(source).toContain(`"author": {}`);
+    expect(source).not.toContain(`as PostcardAuthor`);
+  });
+
   it("emits the Dialog plan with dismissal coverage", () => {
     const source = generateLitTest(corpusIR("Dialog"));
 
     expect(source).toContain(`import "../Dialog";`);
     expect(source).toContain(`"onOpenChange"`);
+    expect(source).toContain(
+      `renderElement("fsds-dialog", { "open": true }, [{"slotName":"title","html":"<span>Test Dialog title</span>"}`,
+    );
+    expect(source).toContain(`{"html":"<span>content</span>"}`);
+    expect(source).not.toContain(`knownScaffoldViolationIds`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
   });
 
   it("keeps the generic plan for the Popover surface", () => {

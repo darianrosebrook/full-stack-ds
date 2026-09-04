@@ -268,11 +268,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     });
   }
 
-  // SwiftUI target — explicit-only native target (selectable via
-  // --target=swiftui; never in fsds.targets.json or --target=all until the
-  // emitter covers the corpus). No railFrameworkId: outside the admission
-  // rail entirely in this slice. The output root is a SwiftPM package
-  // (Package.swift marker), not a pnpm workspace package.
+  // SwiftUI target — registered in fsds.targets.json and therefore selected
+  // by --target=all, with that registry's component allowlist bounding corpus
+  // emission. No railFrameworkId: registration/default selection do not make
+  // it a member of the AdmissionDescriptor rail. The output root is a SwiftPM
+  // package (Package.swift marker), not a pnpm workspace package.
   const swiftUIRoot = path.join(
     opts.workspaceRoot,
     "packages",
@@ -294,15 +294,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     });
   }
 
-  // Jetpack Compose target — explicit-only native target (selectable via
-  // --target=jetpack-compose), the Compose twin of the SwiftUI registration:
-  // the emitter implements the native-collapse path only (Switch/ToggleSwitch
-  // via native-toggle-affordance) and throws on every other shape. No
-  // railFrameworkId: outside the admission rail entirely in this slice. The
-  // output root is a Gradle package (settings.gradle.kts marker), not a pnpm
-  // workspace package. Declared-admission ladder: JVM real-runtime compile
-  // here (rung 1 of 3); full Android SDK + Gradle compile lane (rung 2) and
-  // runtime admission (rung 3) are reserved follow-up specs.
+  // Jetpack Compose target — registered in fsds.targets.json and selected by
+  // --target=all under its component allowlist, the Compose twin of the
+  // SwiftUI registration. No railFrameworkId: it remains outside the
+  // AdmissionDescriptor rail. The output root is a Gradle package
+  // (settings.gradle.kts marker), not a pnpm workspace package.
   const jetpackComposeRoot = path.join(
     opts.workspaceRoot,
     "packages",

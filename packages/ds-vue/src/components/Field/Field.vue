@@ -77,9 +77,9 @@ provideFieldAssociation(fieldAssociationValue);
 </script>
 
 <template>
-  <div :class="classNames" role="group" :data-testid="props['data-testid']" data-fsds-component="field">
+  <div :class="classNames" :aria-labelledby="$slots.label ? `${instanceId}-label` : undefined" role="group" :data-testid="props['data-testid']" data-fsds-component="field">
     <div :class="'field__header'">
-      <label :class="'field__label'" :for="`${instanceId}-control`">
+      <label :class="'field__label'" :id="`${instanceId}-label`" :for="`${instanceId}-control`">
         <slot name="label" />
       </label>
     </div>

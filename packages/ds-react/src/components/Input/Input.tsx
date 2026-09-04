@@ -19,7 +19,7 @@ import "./Input.css";
 // @custom:end
 
 // @generated:start props
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "invalid" | "name" | "onChange" | "placeholder" | "required" | "type" | "value"> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "ariaLabel" | "ariaLabelledby" | "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "invalid" | "name" | "onChange" | "placeholder" | "required" | "type" | "value"> {
   type?: string;
   value?: string;
   defaultValue?: string;
@@ -29,6 +29,8 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   invalid?: boolean;
   required?: boolean;
   name?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   className?: string;
   "data-testid"?: string;
 }
@@ -51,6 +53,8 @@ export function Input({
   placeholder,
   required,
   name,
+  ariaLabel,
+  ariaLabelledby,
   ...rest
 }: InputProps) {
   const { value, setValue } = useInput({
@@ -71,7 +75,7 @@ export function Input({
   const fieldAssociation = useFieldAssociation();
 
   return (
-  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} data-fsds-component="input" id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} {...rest} />
+  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} role="textbox" data-testid={testId} data-fsds-component="input" id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} {...rest} />
   );
 }
 // @generated:end

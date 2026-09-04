@@ -18,16 +18,17 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
 // @custom:end
 
 // @generated:start props
-export interface SheetProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-label" | "aria-labelledby" | "children" | "className" | "data-testid" | "defaultOpen" | "modal" | "onOpenChange" | "open" | "side"> {
+export interface SheetProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDescribedby" | "ariaLabel" | "ariaLabelledby" | "children" | "className" | "data-testid" | "defaultOpen" | "modal" | "onOpenChange" | "open" | "side"> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   side?: SheetSide;
   modal?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   className?: string;
   "data-testid"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
   children?: ReactNode;
   slots?: {
     description?: ReactNode;
@@ -160,10 +161,11 @@ export function Sheet({
   side = "right",
   className,
   "data-testid": testId,
-  "aria-label": ariaLabel,
-  "aria-labelledby": ariaLabelledBy,
   children,
   modal = true,
+  ariaLabel,
+  ariaLabelledby,
+  ariaDescribedby,
   slots,
   ...rest
 }: SheetProps) {
@@ -186,17 +188,17 @@ export function Sheet({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} role="dialog" data-testid={testId} data-fsds-component="sheet" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="sheet" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
       {openness ? (
         <div className="sheet__overlay" aria-hidden="true" />
       ) : null}
       {openness ? (
-        <div className="sheet__content" role="dialog" aria-modal="true" aria-labelledby={"sheet-title-id"} aria-describedby={"sheet-description-id"} data-side={side} aria-label={ariaLabel}>
+        <div className="sheet__content" role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
           <div className="sheet__header">
             <h2 className="sheet__title" id={`${instanceId}-title`}>
               {slots?.title}
             </h2>
-            <p className="sheet__description">
+            <p className="sheet__description" id={`${instanceId}-description`}>
               {slots?.description}
             </p>
             <button className="sheet__close" type="button" aria-label="Close sheet" onClick={() => setOpenness(!openness)} />

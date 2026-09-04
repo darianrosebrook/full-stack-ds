@@ -108,6 +108,8 @@ export class OTPElement extends LitElement {
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) readOnly?: boolean;
   @property({ type: String }) label?: string = "One-time password";
+  @property({ type: String }) fieldLabel?: string = "One-time password digit";
+  @property({ type: String }) ariaDescribedby?: string;
 
   private behavior = new OTPBehavior(this, {
     value: () => this.value,
@@ -129,10 +131,10 @@ export class OTPElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="group" aria-label=${ifDefined((this.label ?? "One-time password"))} aria-describedby="otp-error-id">
+    return html`<div class="${this.computeClasses()}" role="group" aria-label=${ifDefined((this.label ?? "One-time password"))} aria-describedby=${ifDefined(this.ariaDescribedby)}>
   <div class=${'otp__group'}>
     ${Array.from({ length: (this.length ?? 6) }, (_, index) => html`
-    <input class=${'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" @input=${(e: Event) => this.behavior.setValue(String(this.behavior.value ?? '').padEnd(index, ' ').slice(0, index) + String((e.target as HTMLInputElement).value ?? '').slice(-1) + String(this.behavior.value ?? '').slice(index + 1))} ?disabled=${this.disabled ?? false} aria-readonly=${ifDefined(this.readOnly === undefined ? undefined : (this.readOnly ? 'true' : 'false'))} data-otp-index=${index} />
+    <input class=${'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" @input=${(e: Event) => this.behavior.setValue(String(this.behavior.value ?? '').padEnd(index, ' ').slice(0, index) + String((e.target as HTMLInputElement).value ?? '').slice(-1) + String(this.behavior.value ?? '').slice(index + 1))} ?disabled=${this.disabled ?? false} aria-label=${ifDefined((this.fieldLabel ?? "One-time password digit"))} aria-readonly=${ifDefined(this.readOnly === undefined ? undefined : (this.readOnly ? 'true' : 'false'))} data-otp-index=${index} />
     `)}
   </div>
 </div>`;

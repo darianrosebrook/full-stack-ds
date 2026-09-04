@@ -46,6 +46,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="spinner" role="status">
+<div class={classes} aria-label={label} aria-hidden={ariaHidden} data-fsds-component="spinner" role="status">
   <span class={'spinner__visual'} aria-hidden="true"></span>
 </div>

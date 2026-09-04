@@ -156,6 +156,15 @@
       "nodeKind": null
     },
     {
+      "name": "triggerLabel",
+      "safeName": "triggerLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name for the button that opens the option list.",
+      "defaultExpr": "\"Select an option\"",
+      "nodeKind": null
+    },
+    {
       "name": "size",
       "safeName": "size",
       "type": "SelectSize",

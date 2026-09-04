@@ -118,7 +118,7 @@
       "label": "tests",
       "kind": "test",
       "spec": "RAIL-CUSTOM-REGION-GATE-01",
-      "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+      "note": "Authored oracle coverage fixes the accessibility policy that an unlabeled Icon defaults to decorative presentation semantics, alongside exact catalog-glyph geometry and fallback behavior. These facts intentionally do not derive their expected values from the component contract."
     },
     {
       "file": "packages/ds-react/src/components/OTP/__tests__/OTP.test.tsx",
@@ -140,6 +140,13 @@
       "kind": "test",
       "spec": "RAIL-CUSTOM-REGION-GATE-01",
       "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Sheet/__tests__/Sheet.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "FIX-A11Y-ORACLE-IDREF-01",
+      "note": "Hand-authored relationship-ownership tests independently assert that the Sheet dialog is named and described by the intended live targets, and that a consumer ariaLabel takes precedence. The contract cannot generate these correctness judgments about itself."
     },
     {
       "file": "packages/ds-react/src/components/ShowMore/__tests__/ShowMore.test.tsx",

@@ -103,6 +103,30 @@ describe("deriveWebDomCarriers — part carriers reflect the realization", () =>
     expect(carriersOf(c).classes.has("test__indicator")).toBe(true);
   });
 
+  it("an explicitly consumer-composed part is a produced carrier without a root DOM placeholder", () => {
+    const c = base({
+      anatomy: {
+        parts: ["root", "ornament"],
+        details: {
+          ornament: {
+            description: "Consumer-composed ornament wrapper",
+            tag: "span",
+            role: "decoration",
+            subcomponent: true,
+          },
+        },
+        dom: { tag: "div", part: "root" },
+      },
+    } as Partial<ComponentContract>);
+
+    const ir = buildComponentIR(c);
+    expect(ir.compoundParts.map((part) => part.name)).toContain("ornament");
+    expect(ir.compoundParts.find((part) => part.name === "ornament")?.nativeTag).toBe(
+      "span",
+    );
+    expect(deriveWebDomCarriers(ir, c).classes.has("test__ornament")).toBe(true);
+  });
+
   it("the ROOT part carries `.base`, never `.base__<part>`", () => {
     // Toast names its root part `viewport`; `.toast__viewport` is never placed.
     const c = base({

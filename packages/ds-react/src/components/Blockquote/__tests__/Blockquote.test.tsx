@@ -12,81 +12,68 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Blockquote — unit", () => {
   it("renders with default props", () => {
-    render(<Blockquote data-testid="blockquote">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Blockquote data-testid="blockquote">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote");
   });
 
   it("merges custom className", () => {
-    render(<Blockquote data-testid="blockquote" className="custom">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" className="custom"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote", "custom");
   });
 
   it("applies variant=default variant class", () => {
-    render(<Blockquote data-testid="blockquote" variant="default">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" variant="default"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote--default");
   });
 
   it("applies variant=bordered variant class", () => {
-    render(<Blockquote data-testid="blockquote" variant="bordered">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" variant="bordered"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote--bordered");
   });
 
   it("applies variant=highlighted variant class", () => {
-    render(<Blockquote data-testid="blockquote" variant="highlighted">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" variant="highlighted"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote--highlighted");
   });
 
   it("applies size=sm variant class", () => {
-    render(<Blockquote data-testid="blockquote" size="sm">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" size="sm"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote--sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<Blockquote data-testid="blockquote" size="md">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" size="md"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote--md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<Blockquote data-testid="blockquote" size="lg">content</Blockquote>);
+    render(<Blockquote data-testid="blockquote" size="lg"><span>content</span></Blockquote>);
     expect(screen.getByTestId("blockquote")).toHaveClass("blockquote--lg");
   });
 });
 
 describe("Blockquote — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Blockquote>content</Blockquote></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Blockquote><span>content</span></Blockquote></>);
+    const component = baseElement.querySelector('[data-fsds-component="blockquote"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

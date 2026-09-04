@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 const PATTERNS = {
   tokens: /^packages\/ds-tokens\//,
   codegen: /^packages\/ds-(contracts|codegen)\//,
-  // generated framework src trees — matches CI's six-tree drift diff exactly
+  // generated target trees — matches CI's rail-admitted + native drift diff
   // (react-native was added to CI by 289058a4 but missing here; this closes
   // that latent gap the hook's own lockstep comment warns about).
   // swiftui/jetpack-compose generated trees joined the CI+pre-push drift
@@ -86,6 +86,14 @@ const PATTERNS = {
   // files, the fixture corpus, the sync script, and the dump itself.
   analytical:
     /^(packages\/ds-codegen\/src\/analytical\/|packages\/ds-contracts\/(analytical-fixtures\/|relation\.contract\.schema\.json)|scripts\/sync-analytical-fixtures\.mjs|src\/data\/analytical-fixtures\/)/,
+  // Contract-oracle catalog integrity. The full mutation run is deliberately
+  // periodic/manual because it exercises every expensive gate per mutant;
+  // this cheap check proves the curated pointers still resolve, start at their
+  // reviewed source values, and change exactly one leaf. Any contract change
+  // can drift one of those pointers, while changes to the tool or package
+  // command can invalidate the measurement front door itself.
+  contractOracleSelfcheck:
+    /^(packages\/ds-contracts\/|scripts\/contract-oracle-mutation\/|package\.json$)/,
   // eslint runs over the whole repo, so ANY lintable file (incl. scripts/*.mjs)
   lintable: /\.(ts|tsx|js|jsx|mjs|cjs|vue|svelte)$/,
   // tsc / vue-tsc only cover the packages|src trees — loose scripts/*.mjs aren't
@@ -114,6 +122,7 @@ export function classify(files, opts = {}) {
   const testable = full || has("testable");
   const docs = full || has("docs");
   const analytical = full || has("analytical");
+  const contractOracleSelfcheck = full || has("contractOracleSelfcheck");
 
   // generate:check + governed:rail run when a contract/codegen/token/generated
   // input could change emitted output or the resolvesTo graph.
@@ -169,6 +178,10 @@ export function classify(files, opts = {}) {
     // (fixtures.jsonl -> showcase dump). Own flag: neither needs the token
     // graph or regeneration, and a fixture-only change moves both verdicts.
     RUN_ANALYTICAL_CHECKS: analytical,
+    // Cheap catalog-drift guard. This does not execute mutants and makes no
+    // claim about their survival; the scheduled/manual workflow owns that
+    // measurement and retains its per-stage evidence as an artifact.
+    RUN_CONTRACT_ORACLE_SELFCHECK: contractOracleSelfcheck,
   };
   const active = Object.entries(flags)
     .filter(([, v]) => v)

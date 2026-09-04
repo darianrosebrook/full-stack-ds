@@ -18,9 +18,11 @@ import "./Icon.css";
 // @custom:end
 
 // @generated:start props
-export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "name" | "size"> {
+export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, "ariaLabel" | "children" | "className" | "data-testid" | "decorative" | "name" | "size"> {
   name: string;
   size?: "sm" | "md" | "lg" | "xl";
+  decorative?: boolean;
+  ariaLabel?: string;
   className?: string;
   "data-testid"?: string;
 }
@@ -38,6 +40,8 @@ export function Icon({
   className,
   "data-testid": testId,
   name,
+  decorative = true,
+  ariaLabel,
   ...rest
 }: IconProps) {
   const classNames = [
@@ -52,7 +56,7 @@ export function Icon({
   const iconGlyph = resolveIcon(name, iconGlyphPx ?? Number.NaN);
 
   return (
-  <Stack layout="native" as="span" className={`${classNames}`} aria-hidden="true" data-testid={testId} data-fsds-component="icon" {...rest}>
+  <Stack layout="native" as="span" className={`${classNames}`} role={(decorative ? "presentation" : "img")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} data-fsds-component="icon" {...rest}>
     {iconGlyph ? (
       <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon={iconGlyph.name} viewBox={iconGlyph.viewBox} width={iconGlyphPx ?? iconGlyph.size} height={iconGlyphPx ?? iconGlyph.size}>
         {iconGlyph.paths.map((glyphPath, glyphIndex) => (

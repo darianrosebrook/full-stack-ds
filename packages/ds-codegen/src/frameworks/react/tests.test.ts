@@ -14,7 +14,7 @@ describe("generateReactTest", () => {
     expect(source).toContain(`import { Switch } from "../Switch";`);
     expect(source).toContain(`expect(screen.getByTestId("switch")).toHaveClass("switch");`);
     expect(source).toContain(`expect(screen.getByTestId("switch")).toHaveClass("switch--small");`);
-    expect(source).toContain(`unexpectedViolations`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
   });
 
   it("emits a channel interaction test for a boolean channel", () => {
@@ -99,6 +99,32 @@ describe("generateReactTest — real corpus contracts", () => {
     expect(source).toContain(`import { render, screen, act, fireEvent }`);
     expect(source).toContain(`closes on Escape key`);
     expect(source).toContain(`fireEvent.click(screen.getByTestId("dialog"));`);
+  });
+
+  it("scans the realized component subtree and does not suppress dialog naming failures", () => {
+    const source = generateReactTest(corpusIR("Dialog"));
+
+    expect(source).toContain(
+      `const component = baseElement.querySelector('[data-fsds-component="dialog"]');`,
+    );
+    expect(source).toContain(`expect(component).not.toBeNull();`);
+    expect(source).toContain(
+      `const results = await axe(component!, componentAxeOptions)`,
+    );
+    expect(source).toContain(`region: { enabled: false }`);
+    expect(source).not.toContain(`"button-name"`);
+    expect(source).not.toContain(`"aria-required-children"`);
+    expect(source).not.toContain(`knownScaffoldViolationIds`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
+    expect(source).not.toContain(`const { container } = render(`);
+  });
+
+  it("lets the accessible-name fixture replace the required placeholder", () => {
+    const source = generateReactTest(corpusIR("Avatar"));
+    const axeRender = source.split(`describe("Avatar — accessibility"`)[1];
+
+    expect(axeRender).toContain(`<Avatar name="Test Avatar"`);
+    expect(axeRender).not.toContain(`name={"placeholder"}`);
   });
 
   it("routes anchored surfaces (Popover) to the surface test plan", () => {

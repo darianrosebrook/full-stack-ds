@@ -22,6 +22,9 @@ export interface DialogProps {
   closeOnBackdropClick?: boolean;
   initialFocus?: string;
   returnFocus?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   slots?: {
     title?: ReactNode;
   };
@@ -38,6 +41,7 @@ export function Dialog({
   open: controlledOpenness,
   closeOnEscape = true,
   closeOnBackdropClick = true,
+  ariaLabel,
   defaultOpen = false,
   onOpenChange,
   slots,
@@ -79,7 +83,7 @@ export function Dialog({
         {openness ? (
         <View
           style={styles.modal}
-          accessibilityLabelledBy={"dialog-title-id"}
+          accessibilityLabel={ariaLabel}
         >
           <View
             style={styles.header}

@@ -154,7 +154,7 @@ export function Walkthrough({
     renderInPortal(
     <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} data-fsds-component="walkthrough" ref={(el) => setAnchoredRootEl(el instanceof HTMLElement ? el : null)} data-placement={anchoredPosition.placement} style={{ position: "fixed", top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? "visible" : "hidden" }} {...rest}>
       <div className="walkthrough__content" role="group" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
-        <h3 className="walkthrough__title" id={`${instanceId}-title`}>
+        <h3 className="walkthrough__title" aria-label={label} id={`${instanceId}-title`}>
           {slots?.title}
         </h3>
         <p className="walkthrough__description" id={`${instanceId}-description`}>
@@ -162,13 +162,13 @@ export function Walkthrough({
         </p>
       </div>
       <div className="walkthrough__controls">
-        <button className="walkthrough__skip" type="button" />
-        <button className="walkthrough__prev" type="button" />
+        <button className="walkthrough__skip" type="button" aria-label={"Skip tour"} />
+        <button className="walkthrough__prev" type="button" aria-label={"Previous step"} />
         <div className="walkthrough__dots">
           {(steps ?? []).map((item, index) => <button className="walkthrough__dot" type="button" aria-label={item.title} data-step-index={index} key={index} />)}
         </div>
         <span className="walkthrough__counter" />
-        <button className="walkthrough__next" type="button" />
+        <button className="walkthrough__next" type="button" aria-label={"Next step"} />
       </div>
     </Stack>
     )

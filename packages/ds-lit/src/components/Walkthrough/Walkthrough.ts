@@ -267,7 +267,7 @@ export class WalkthroughElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="status" aria-label=${ifDefined((this.label ?? "Feature tour"))}>
   <div class=${'walkthrough__content'} role="group" aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null ? 'walkthrough-title' : null].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined([this.querySelector('[slot="description"]') !== null ? 'walkthrough-description' : null].filter(Boolean).join(' ') || undefined)}>
-    <h3 class=${'walkthrough__title'} id="walkthrough-title">
+    <h3 class=${'walkthrough__title'} aria-label=${ifDefined((this.label ?? "Feature tour"))} id="walkthrough-title">
       <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>
     </h3>
     <p class=${'walkthrough__description'} id="walkthrough-description">
@@ -275,15 +275,15 @@ export class WalkthroughElement extends LitElement {
     </p>
   </div>
   <div class=${'walkthrough__controls'}>
-    <button class=${'walkthrough__skip'} type="button"></button>
-    <button class=${'walkthrough__prev'} type="button"></button>
+    <button class=${'walkthrough__skip'} type="button" aria-label="Skip tour"></button>
+    <button class=${'walkthrough__prev'} type="button" aria-label="Previous step"></button>
     <div class=${'walkthrough__dots'}>
       ${((this.steps ?? [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}])).map((item, index) => html`
       <button class=${'walkthrough__dot'} type="button" aria-label=${item.title} data-step-index=${index}></button>
       `)}
     </div>
     <span class=${'walkthrough__counter'}></span>
-    <button class=${'walkthrough__next'} type="button"></button>
+    <button class=${'walkthrough__next'} type="button" aria-label="Next step"></button>
   </div>
 </div>`;
   }

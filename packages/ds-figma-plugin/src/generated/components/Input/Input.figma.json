@@ -98,6 +98,24 @@
       "description": "Form name for native submission.",
       "defaultExpr": null,
       "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Direct accessible name for the native input.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabelledby",
+      "safeName": "ariaLabelledby",
+      "type": "string",
+      "required": false,
+      "description": "Space-separated ids of elements that name the native input.",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {},
@@ -172,6 +190,7 @@
     "element": "div",
     "explicitRole": "textbox",
     "effectiveRole": "textbox",
+    "rootRole": "textbox",
     "labeling": [
       "aria-label",
       "aria-labelledby",

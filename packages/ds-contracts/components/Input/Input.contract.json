@@ -18,7 +18,9 @@
         "focusable": true,
         "aria": {
           "attributes": [
-            "aria-invalid"
+            "aria-invalid",
+            "aria-label",
+            "aria-labelledby"
           ]
         }
       }
@@ -33,7 +35,9 @@
         "type": "prop:type",
         "placeholder": "prop:placeholder",
         "name": "prop:name",
-        "required": "prop:required"
+        "required": "prop:required",
+        "aria-label": "prop:ariaLabel",
+        "aria-labelledby": "prop:ariaLabelledby"
       },
       "events": {
         "change": "channel:value.onChange"
@@ -91,6 +95,16 @@
           "name": "name",
           "propType": { "kind": "string" },
           "description": "Form name for native submission."
+        },
+        {
+          "name": "ariaLabel",
+          "propType": { "kind": "string" },
+          "description": "Direct accessible name for the native input."
+        },
+        {
+          "name": "ariaLabelledby",
+          "propType": { "kind": "string" },
+          "description": "Space-separated ids of elements that name the native input."
         }
       ]
     }

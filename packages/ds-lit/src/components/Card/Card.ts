@@ -249,6 +249,7 @@ export class CardElement extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute("data-fsds-component", "card");
+    if (!this.hasAttribute("role")) this.setAttribute("role", "group");
   }
 
   @property({ type: Boolean })
@@ -265,7 +266,7 @@ export class CardElement extends LitElement {
       [`card--${(this.density ?? "default")}`]: !!(this.density ?? "default"),
       'card--interactive': !!this.interactive,
     };
-    return html`<fsds-stack role="group" class=${classMap(classes)}><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class=${classMap(classes)}><slot></slot></fsds-stack>`;
   }
 }
 

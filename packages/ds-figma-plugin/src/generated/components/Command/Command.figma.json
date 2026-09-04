@@ -76,7 +76,7 @@
       "name": "groupHeading",
       "semanticElement": null,
       "nativeTag": "div",
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -84,7 +84,7 @@
       "name": "groupItems",
       "semanticElement": null,
       "nativeTag": "div",
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -100,7 +100,7 @@
       "name": "itemIcon",
       "semanticElement": null,
       "nativeTag": "span",
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -108,7 +108,7 @@
       "name": "itemContent",
       "semanticElement": null,
       "nativeTag": "div",
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -116,7 +116,7 @@
       "name": "itemLabel",
       "semanticElement": null,
       "nativeTag": "span",
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -124,7 +124,7 @@
       "name": "itemDescription",
       "semanticElement": null,
       "nativeTag": "span",
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -207,6 +207,15 @@
       "required": false,
       "description": "Placeholder text for the search input.",
       "defaultExpr": "\"Search...\"",
+      "nodeKind": null
+    },
+    {
+      "name": "searchLabel",
+      "safeName": "searchLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the command search input.",
+      "defaultExpr": "\"Search commands\"",
       "nodeKind": null
     },
     {

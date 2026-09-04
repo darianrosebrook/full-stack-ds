@@ -109,9 +109,9 @@ export function Field({
 
   return (
   <FieldAssociationContext.Provider value={fieldAssociationValue}>
-    <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} data-fsds-component="field" {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.label ? `${instanceId}-label` : undefined} role="group" data-testid={testId} data-fsds-component="field" {...rest}>
       <div className="field__header">
-        <label className="field__label" htmlFor={`${instanceId}-control`}>
+        <label className="field__label" id={`${instanceId}-label`} htmlFor={`${instanceId}-control`}>
           {slots?.label}
         </label>
       </div>

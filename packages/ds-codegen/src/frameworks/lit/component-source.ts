@@ -617,15 +617,24 @@ function generateClassMapObject(ir: ComponentIR): string {
  */
 function generateCompoundPartClass(
   ir: ComponentIR,
-  part: { name: string; semanticElement?: string; layoutVariant?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
   const className = `${subName}Element`;
   const elementName = `fsds-${toKebabCase(subName)}`;
   const cssClass = `${ir.cssPrefix}__${part.name}`;
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -634,7 +643,7 @@ function generateCompoundPartClass(
   // item inside the consumer's list — same host-role compensation. Stamped
   // in connectedCallback, not the constructor (custom-elements spec).
   const hostRoleLines =
-    part.semanticElement === "li"
+    renderedTag === "li"
       ? [
           `  override connectedCallback(): void {`,
           `    super.connectedCallback();`,
@@ -663,9 +672,6 @@ function generateClassBody(ir: ComponentIR): string {
   const elementName = `fsds-${toKebabCase(ir.name)}`;
   const className = `${ir.name}Element`;
   const asAttr = ir.root.element !== "div" ? ` as="${ir.root.element}"` : "";
-  const roleAttr = ir.root.effectiveRole
-    ? ` role="${ir.root.effectiveRole}"`
-    : "";
   const hasClassMap =
     ir.classRecipe.valueModifiers.length > 0 ||
     ir.classRecipe.booleanModifiers.length > 0;
@@ -680,6 +686,12 @@ function generateClassBody(ir: ComponentIR): string {
   lines.push(`  override connectedCallback(): void {`);
   lines.push(`    super.connectedCallback();`);
   lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
+  if (ir.root.effectiveRole) {
+    // The custom-element host is the public accessibility surface. Keeping
+    // the role on an inner shadow node makes consumer aria-* attributes land
+    // on a role-less host, where axe correctly reports aria-prohibited-attr.
+    lines.push(`    if (!this.hasAttribute("role")) this.setAttribute("role", "${ir.root.effectiveRole}");`);
+  }
   lines.push(`  }`);
   lines.push(``);
 
@@ -695,11 +707,11 @@ function generateClassBody(ir: ComponentIR): string {
     lines.push(generateClassMapObject(ir));
     lines.push(`    };`);
     lines.push(
-      `    return html\`<fsds-stack${asAttr}${roleAttr} class=\${classMap(classes)}><slot></slot></fsds-stack>\`;`,
+      `    return html\`<fsds-stack${asAttr} class=\${classMap(classes)}><slot></slot></fsds-stack>\`;`,
     );
   } else {
     lines.push(
-      `    return html\`<fsds-stack${asAttr}${roleAttr} class="${ir.classRecipe.base}"><slot></slot></fsds-stack>\`;`,
+      `    return html\`<fsds-stack${asAttr} class="${ir.classRecipe.base}"><slot></slot></fsds-stack>\`;`,
     );
   }
   lines.push(`  }`);
@@ -1760,10 +1772,10 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   // `<button>` role, which makes `aria-checked` an axe-illegal attribute.
   // Mirrors how React's emitter spreads `role="switch"` onto the element.
   const rootForRender: DomNodeIR =
-    ir.root.effectiveRole && !ir.dom.attrs["role"] && !ir.dom.bindings["role"]
+    ir.root.rootRole && !ir.dom.attrs["role"] && !ir.dom.bindings["role"]
       ? {
           ...ir.dom,
-          attrs: { ...ir.dom.attrs, role: ir.root.effectiveRole },
+          attrs: { ...ir.dom.attrs, role: ir.root.rootRole },
         }
       : ir.dom;
   const template = renderLitDomNode(rootForRender, ctx, 0);

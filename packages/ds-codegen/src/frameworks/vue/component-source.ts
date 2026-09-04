@@ -194,23 +194,8 @@ function generatePropsInterface(ir: ComponentIR): string {
   // don't declare it; `className` is React-only (Vue uses `class`).
   if (!propNames.has("class")) lines.push(`  class?: string;`);
   if (!propNames.has("data-testid")) lines.push(`  "data-testid"?: string;`);
-  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
-    if (!propNames.has("aria-label")) lines.push(`  "aria-label"?: string;`);
-    if (!propNames.has("aria-labelledby"))
-      lines.push(`  "aria-labelledby"?: string;`);
-  }
   lines.push(`}`);
   return lines.join("\n");
-}
-
-/** Returns true if any node in the dom tree has the given role attribute. */
-function domTreeHasRole(
-  node: DomNodeIR | null | undefined,
-  role: string,
-): boolean {
-  if (!node) return false;
-  if (node.attrs["role"] === role) return true;
-  return node.children.some((child) => domTreeHasRole(child, role));
 }
 
 function generateDefineProps(ir: ComponentIR): string {
@@ -439,7 +424,13 @@ function callbackArgument(propType: string, valueType: string | undefined): stri
  */
 export function generateVueCompoundPartSource(
   cssPrefix: string,
-  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const cssClass = `${cssPrefix}__${part.name}`;
 
@@ -495,9 +486,12 @@ export function generateVueCompoundPartSource(
     ].join("\n");
   }
 
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -1831,7 +1825,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     isRoot: true,
     cssPrefix: ir.cssPrefix,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
-    rootRole: ir.root.effectiveRole,
+    rootRole: ir.root.rootRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     fieldAssociationConsumer: assocConsumes,
