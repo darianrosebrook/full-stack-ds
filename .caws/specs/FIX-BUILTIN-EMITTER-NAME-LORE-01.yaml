@@ -42,3 +42,8 @@ contracts:
   - name: 'emitter-semantic-authority'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/no-component-name-lore.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/frameworks/no-component-name-lore.test.ts — 10/10 pass; live corpus names and all 9 BUILTIN_TARGET_PACKS emitter roots scanned; hostile detector fixtures cover host/ref and reversed predicates
+    recorded_at: "2026-09-04T23:16:48.932Z"
