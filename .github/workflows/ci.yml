@@ -30,6 +30,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The changed-path classifier is executable governance, not a helper:
+      # its contract test proves each input family still reaches its local
+      # pre-push gate. The coupling audit separately checks that admitted TS
+      # targets and non-pnpm native compiler lanes remain in their declared
+      # authorities. Both are cheap and unconditional here so neither can
+      # become a dormant script by misclassifying its own edit.
+      - name: Check pre-push scope and rail toolchain coupling
+        run: |
+          node --test scripts/prepush-scope.test.mjs
+          node scripts/rail-toolchain-coupling-audit.mjs --check
+
       # Contract-oracle catalog integrity. This is the cheap, deterministic
       # guard: every curated mutation must still resolve to its reviewed source
       # value and change exactly one contract leaf. The expensive execution of
