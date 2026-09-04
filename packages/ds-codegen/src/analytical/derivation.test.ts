@@ -10,8 +10,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
-import { OBLIGATION } from "./codes.js";
-import { checkDerivations, DERIVATION_DIAG, derivationKey, inputsOf } from "./derivation.js";
+import { DIAG, OBLIGATION } from "./codes.js";
+import { checkDerivations, DERIVATION_DIAG, derivationKey, inputsOf, OPERATOR_LAWS } from "./derivation.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import { CONTRACTS_DIR } from "./necessity.js";
@@ -575,5 +575,146 @@ describe("silence is proven admissibility, not absence of contradiction", () => 
     expect(termsOf(j)).toContain(OBLIGATION.GRAIN_DECLARED);
     expect(j.diagnostics.map((d) => d.code)).toContain("REL_MEANINGFULNESS_ORDINAL_MEAN");
     expect(j.status).toBe("illegal");
+  });
+});
+
+describe("the project transition law: remove fields, never reinterpret retained ones", () => {
+  /**
+   * The defect: certification compared field NAMES. A projection could change a
+   * retained field from ratio to nominal and `checkDerivations` returned
+   * nothing, so every downstream judgment about that field was about a
+   * different field wearing the old name.
+   */
+  const src = {
+    grain: ["k"],
+    fields: {
+      k: { transformation: "nominal", key: true },
+      v: { transformation: "ratio", unit: { units: ["usd"] } },
+      dropped: { transformation: "ordinal" },
+    },
+  };
+  const structure = (outFields: Record<string, unknown>, keep: string[] = ["k", "v"]) =>
+    ({
+      relations: {
+        src,
+        out: { grain: ["k"], fields: outFields, derivedBy: { kind: "project", from: "src", keep } },
+      },
+    }) as unknown as RelationalStructure;
+
+  const codes = (s: RelationalStructure) => checkDerivations(s).map((f) => f.code ?? f.term);
+
+  it("an identical retained declaration is valid", () => {
+    expect(codes(structure({ k: src.fields.k, v: src.fields.v }))).toEqual([]);
+  });
+
+  it("a retained field whose transformation changed is refuted, even though its name survived", () => {
+    const s = structure({ k: src.fields.k, v: { transformation: "nominal", unit: { units: ["usd"] } } });
+    expect(codes(s)).toEqual([DERIVATION_DIAG.RESULT_NOT_DERIVABLE]);
+    expect(checkDerivations(s)[0].detail).toMatch(/retains v by name but redeclares/);
+  });
+
+  it("a retained field whose unit changed is refuted: reinterpretation is not only about transformation", () => {
+    const s = structure({ k: src.fields.k, v: { transformation: "ratio", unit: { units: ["eur"] } } });
+    expect(codes(s)).toEqual([DERIVATION_DIAG.RESULT_NOT_DERIVABLE]);
+  });
+
+  it("a renamed field is refuted, which the name check already caught and must keep catching", () => {
+    expect(codes(structure({ k: src.fields.k, w: src.fields.v }))).toEqual([DERIVATION_DIAG.RESULT_NOT_DERIVABLE]);
+  });
+
+  it("CONTROL: a DROPPED field's declaration is irrelevant, or projection would be impossible", () => {
+    // The over-broad version of this check would require the output to equal
+    // its input, defeating the operator. `dropped` is not kept, so nothing about
+    // it — including its absence — may be refuted.
+    expect(codes(structure({ k: src.fields.k, v: src.fields.v }))).toEqual([]);
+  });
+
+  it("the law is STATED where it is certified, so the prose and the check cannot drift", () => {
+    expect(OPERATOR_LAWS.project.statement).toMatch(/may not reinterpret/);
+    for (const [name, law] of Object.entries(OPERATOR_LAWS)) {
+      expect(law.statement.trim().length, `${name} states no law`).toBeGreaterThan(0);
+      expect(typeof law.certify, `${name} has no certifier`).toBe("function");
+    }
+  });
+});
+
+describe("conservation fails closed on evidence it cannot read", () => {
+  /**
+   * The defect: a row missing `from`, `to`, or a numeric value was skipped.
+   * An unread edge is missing from BOTH sides of the balance, so silence could
+   * turn an unbalanced graph into an apparently balanced one.
+   */
+  const structure = {
+    relations: {
+      edges: {
+        grain: ["src", "dst"],
+        fields: {
+          src: { transformation: "nominal", key: true },
+          dst: { transformation: "nominal", key: true },
+          qty: { transformation: "ratio" },
+        },
+      },
+      flow: {
+        grain: ["src", "dst"],
+        fields: {
+          src: { transformation: "nominal", key: true },
+          dst: { transformation: "nominal", key: true },
+          qty: { transformation: "ratio" },
+        },
+        derivedBy: { kind: "graph", from: "edges", edgeFrom: "src", edgeTo: "dst", value: "qty", requiresConservation: true },
+      },
+    },
+  } as unknown as RelationalStructure;
+
+  const run = (rows: Record<string, unknown>[]) =>
+    checkDerivations(structure, { rows: { edges: rows } } as never).map((f) => f.code ?? f.term);
+
+  // a -> b -> c, balanced at b.
+  const BALANCED = [
+    { src: "a", dst: "b", qty: 5 },
+    { src: "b", dst: "c", qty: 5 },
+  ];
+
+  it("CONTROL: all rows complete and balanced yields no finding", () => {
+    expect(run(BALANCED)).toEqual([]);
+  });
+
+  it("CONTROL: all rows complete and unbalanced is a DIAGNOSTIC, not an obligation", () => {
+    expect(
+      run([
+        { src: "a", dst: "b", qty: 5 },
+        { src: "b", dst: "c", qty: 3 },
+      ]),
+    ).toEqual([DIAG.FLOW_NOT_CONSERVED]);
+  });
+
+  for (const [label, row] of [
+    ["from", { dst: "c", qty: 5 }],
+    ["to", { src: "b", qty: 5 }],
+    ["value", { src: "b", dst: "c" }],
+  ] as const) {
+    it(`a row missing ${label} yields an obligation, never silence`, () => {
+      expect(run([{ src: "a", dst: "b", qty: 5 }, row as Record<string, unknown>])).toEqual([OBLIGATION.CONSERVATION]);
+    });
+  }
+
+  it("a null value is unusable, so an absent observation cannot discharge the invariant", () => {
+    expect(run([{ src: "a", dst: "b", qty: 5 }, { src: "b", dst: "c", qty: null }])).toEqual([OBLIGATION.CONSERVATION]);
+  });
+
+  it("MIXED: complete rows alongside an incomplete one cannot decide, even when the readable rows balance", () => {
+    // The mutant killer. An implementation that used "whatever rows it could
+    // understand" would return no finding here, because a->b->c balances on its
+    // own — while the unread edge could carry any amount into or out of b.
+    const mixed = [...BALANCED, { src: "b", qty: 99 } as Record<string, unknown>];
+    expect(run(mixed)).toEqual([OBLIGATION.CONSERVATION]);
+    const detail = checkDerivations(structure, { rows: { edges: mixed } } as never)[0].detail;
+    expect(detail).toMatch(/1 of 3 edge observation\(s\) cannot be read/);
+    expect(detail).toMatch(/missing from both sides of the balance/);
+  });
+
+  it("an obligation narrows the judgment rather than blocking it", () => {
+    const findings = checkDerivations(structure, { rows: { edges: [...BALANCED, { src: "b" }] } } as never);
+    expect(findings.every((f) => f.kind === "obligation")).toBe(true);
   });
 });

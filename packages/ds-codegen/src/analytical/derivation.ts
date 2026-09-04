@@ -159,65 +159,124 @@ const sameGrain = (x: RelationDecl["grain"], y: RelationDecl["grain"]) =>
   x === "unknown" || y === "unknown" ? x === y : sameSet(x, y);
 
 /**
- * Is the declared result a lawful output of `d` over `inputs`?
- *
- * Returns a refutation string, or undefined when nothing is refuted. Whether
- * "nothing refuted" also means "proven" is decided by `determinedGrain`, whose
- * `undefined` becomes an obligation rather than silence.
+ * The analytical declaration of a field, canonically, for comparing whether a
+ * transition PRESERVED a field rather than merely kept its name.
  */
-function resultIsDerivable(d: DerivationDecl, inputs: RelationDecl[], out: RelationDecl): string | undefined {
-  const [a, b] = inputs;
-  switch (d.kind) {
-    case "aggregate-to-grain": {
-      // The result's grain IS the target grain: that is what the operator does.
+function fieldDeclaration(f: unknown): string {
+  const norm = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(norm);
+    if (v && typeof v === "object") {
+      return Object.fromEntries(
+        Object.entries(v as Record<string, unknown>)
+          .filter(([, x]) => x !== undefined)
+          .sort(([x], [y]) => x.localeCompare(y))
+          .map(([k, x]) => [k, norm(x)]),
+      );
+    }
+    return v;
+  };
+  return JSON.stringify(norm(f));
+}
+
+/**
+ * The per-operator transition law: what each operator is ALLOWED to produce.
+ *
+ * This is the authoritative locus the Stage-2 `operator-law-locus` close
+ * condition asks for, in the one form that cannot drift: each operator's law is
+ * STATED and CERTIFIED in the same entry, so a change to one is a change to the
+ * other. `statement` is prose for a reader; `certify` is the executable form of
+ * the same sentence, returning a refutation or undefined.
+ *
+ * It is deliberately not the doctrine's job and not the subtraction ledger's
+ * job: the doctrine names the operator set, `relation-model.ts` declares each
+ * signature, and this states what the operator MEANS for a declared result.
+ */
+export const OPERATOR_LAWS: {
+  [K in DerivationDecl["kind"]]: {
+    statement: string;
+    certify: (d: Extract<DerivationDecl, { kind: K }>, inputs: RelationDecl[], out: RelationDecl) => string | undefined;
+  };
+} = {
+  "aggregate-to-grain": {
+    statement:
+      "Combines rows to a declared coarser grain. The result's grain IS the target grain; the target must be drawn from the input, and no field may be invented.",
+    certify: (d, [a], out) => {
       if (out.grain === "unknown") return "the result of an aggregate-to-grain has the target grain, not unknown grain";
       if (!sameSet(out.grain, d.toGrain)) {
         return `declared result grain [${out.grain.join(", ")}] is not the target grain [${d.toGrain.join(", ")}]`;
       }
-      // The target grain must be drawn from the input: aggregating cannot
-      // invent a dimension to group by.
       const missing = d.toGrain.filter((g) => !fieldNames(a).includes(g));
       if (missing.length > 0) return `target grain names ${missing.join(", ")}, which the input does not declare`;
-      // Every surviving field must come from the input.
       const invented = fieldNames(out).filter((f) => !fieldNames(a).includes(f));
       if (invented.length > 0) return `result declares ${invented.join(", ")}, which the input does not carry`;
       return undefined;
-    }
-    case "project": {
+    },
+  },
+  project: {
+    statement:
+      "Relational projection: keep exactly these fields. A projected RETAINED field preserves its entire analytical declaration — project may remove fields, but may not reinterpret the fields it retains. What is dropped is derived, not declared, and a dropped field's declaration is irrelevant.",
+    certify: (d, [a], out) => {
       if (!sameSet(fieldNames(out), d.keep)) {
         return `a projection keeping [${d.keep.join(", ")}] cannot yield fields [${fieldNames(out).join(", ")}]`;
       }
       const invented = d.keep.filter((f) => !fieldNames(a).includes(f));
       if (invented.length > 0) return `projection keeps ${invented.join(", ")}, which the input does not carry`;
+      // The name surviving is not the field surviving. A retained field whose
+      // transformation, unit, additivity, temporality or any other analytical
+      // declaration has changed is a REINTERPRETATION wearing the old name, and
+      // every downstream judgment about it would be about a different field.
+      // Only KEPT fields are compared: requiring more would make projection
+      // impossible by demanding the output equal its input.
+      const reinterpreted = d.keep.filter((f) => fieldDeclaration(a.fields[f]) !== fieldDeclaration(out.fields[f]));
+      if (reinterpreted.length > 0) {
+        return `projection retains ${reinterpreted.join(", ")} by name but redeclares ${
+          reinterpreted.length === 1 ? "it" : "them"
+        }: ${reinterpreted.map((f) => `${f} ${fieldDeclaration(a.fields[f])} -> ${fieldDeclaration(out.fields[f])}`).join("; ")}`;
+      }
       return undefined;
-    }
-    case "join": {
+    },
+  },
+  join: {
+    statement: "Declared relationship between two relations. The result may carry only fields one of the two inputs carries.",
+    certify: (_d, [a, b], out) => {
       if (!b) return "a join reads two relations";
       const available = [...fieldNames(a), ...fieldNames(b)];
       const invented = fieldNames(out).filter((f) => !available.includes(f));
       if (invented.length > 0) return `result declares ${invented.join(", ")}, which neither input carries`;
       return undefined;
-    }
-    case "nest": {
+    },
+  },
+  nest: {
+    statement:
+      "Imposes a hierarchy. The levels must be fields of the input, and the result must retain them: nesting does not drop the membership that defines its own hierarchy.",
+    certify: (d, [a], out) => {
       const missing = d.levels.filter((l) => !fieldNames(a).includes(l));
       if (missing.length > 0) return `nest levels ${missing.join(", ")} are not fields of the input`;
-      // Nesting imposes a hierarchy; it does not drop the membership that
-      // defines it, which is the whole point of the level declaration.
       const lost = d.levels.filter((l) => !fieldNames(out).includes(l));
       if (lost.length > 0) return `result drops nest level(s) ${lost.join(", ")}, so its own hierarchy is unrecoverable`;
       return undefined;
-    }
-    case "bin": {
+    },
+  },
+  bin: {
+    statement: "Partitions a field's range into intervals. The binned field must exist in the input and survive into the result.",
+    certify: (d, [a], out) => {
       if (!fieldNames(a).includes(d.field)) return `binned field ${d.field} is not a field of the input`;
       if (!fieldNames(out).includes(d.field)) return `result drops the binned field ${d.field}`;
       return undefined;
-    }
-    case "normalize": {
+    },
+  },
+  normalize: {
+    statement: "Rescales a field against a whole. The normalized field must exist in the input and survive into the result.",
+    certify: (d, [a], out) => {
       if (!fieldNames(a).includes(d.field)) return `normalized field ${d.field} is not a field of the input`;
       if (!fieldNames(out).includes(d.field)) return `result drops the normalized field ${d.field}`;
       return undefined;
-    }
-    case "graph": {
+    },
+  },
+  graph: {
+    statement:
+      "Reads a relation as edges. Every named slot must be a field of the input, and an edge whose endpoints are the same field has no direction.",
+    certify: (d, [a]) => {
       for (const [slot, name] of [
         ["edgeFrom", d.edgeFrom],
         ["edgeTo", d.edgeTo],
@@ -227,9 +286,23 @@ function resultIsDerivable(d: DerivationDecl, inputs: RelationDecl[], out: Relat
       }
       if (d.edgeFrom === d.edgeTo) return "edgeFrom and edgeTo name the same field, so the edge has no direction";
       return undefined;
-    }
-  }
+    },
+  },
+};
+
+/**
+ * Is the declared result a lawful output of `d` over `inputs`?
+ *
+ * A dispatcher into `OPERATOR_LAWS`. Returns a refutation string, or undefined
+ * when nothing is refuted. Whether "nothing refuted" also means "proven" is
+ * decided by `determinedGrain`, whose `undefined` becomes an obligation rather
+ * than silence.
+ */
+function resultIsDerivable(d: DerivationDecl, inputs: RelationDecl[], out: RelationDecl): string | undefined {
+  const law = OPERATOR_LAWS[d.kind] as { certify: (x: DerivationDecl, i: RelationDecl[], o: RelationDecl) => string | undefined };
+  return law.certify(d, inputs, out);
 }
+
 
 /**
  * Is `toGrain` one of the grains the nest hierarchy declares?
@@ -282,13 +355,40 @@ function conservationFindings(
   const inflow = new Map<string, number>();
   const outflow = new Map<string, number>();
   const add = (m: Map<string, number>, k: string, v: number) => m.set(k, (m.get(k) ?? 0) + v);
-  for (const r of rows) {
+  // Every observation participating in a conservation check must be USABLE
+  // before the check can discharge. Skipping an unusable row removes its value
+  // from both the inflow of its target and the outflow of its source, so it can
+  // turn an unbalanced graph into an apparently balanced one — and an apparent
+  // imbalance into an artifact of what was dropped. The check cannot decide
+  // either way, which is what an obligation is for.
+  const unusable: string[] = [];
+  for (const [i, r] of rows.entries()) {
     const from = nodeOf(r[d.edgeFrom]);
     const to = nodeOf(r[d.edgeTo]);
     const v = numberOf(r[d.value]);
-    if (from === undefined || to === undefined || v === undefined) continue;
+    if (from === undefined || to === undefined || v === undefined) {
+      const missing = [
+        from === undefined ? d.edgeFrom : "",
+        to === undefined ? d.edgeTo : "",
+        v === undefined ? d.value : "",
+      ].filter(Boolean);
+      unusable.push(`row ${i} (no usable ${missing.join(", ")})`);
+      continue;
+    }
     add(outflow, from, v);
     add(inflow, to, v);
+  }
+  if (unusable.length > 0) {
+    out.push({
+      kind: "obligation",
+      term: OBLIGATION.CONSERVATION,
+      subject: name,
+      derivation: key,
+      engine: "task-invariant",
+      evidenceClass: "instance",
+      detail: `declares conserved flow, but ${unusable.length} of ${rows.length} edge observation(s) cannot be read: ${unusable.join("; ")} — an unread edge is missing from both sides of the balance, so the rows that remain cannot decide it`,
+    });
+    return;
   }
   for (const node of [...inflow.keys()].sort()) {
     if (!outflow.has(node)) continue; // a sink: flow arrives and stops
