@@ -1,0 +1,30 @@
+id: FIX-RN-EXAMPLE-01
+title: 'Align RN example consumer with the generated component surface'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-04T23:11:40.706Z'
+updated_at: '2026-09-04T23:11:40.706Z'
+created_by_session: 'sess_b5ccec4e-abee-4004-b791-90b54bfe3547'
+blast_radius:
+  modules:
+    - 'react-native example consumer'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'examples/settings/react-native'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the hand-authored RN settings example; when pnpm run typecheck:example:react-native runs; then tsc exits 0 with no errors and the example passes only props the generated RN components actually declare'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the example was updated; when reviewed; then the consumer demonstrates the idiomatic generated surface (Button onClick handler, Field slots projection) instead of a suppressed or hand-tightened type'
+non_functional: {}
+contracts: []
