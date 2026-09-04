@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { buildComponentIR, normalizePropType, canonicalTsType } from "./ir.js";
 import { generateReactComponentSource } from "./frameworks/react/component-source.js";
 import { generateVueComponentSource } from "./frameworks/vue/component-source.js";
@@ -321,5 +323,62 @@ describe("V2 kinds lower through the emitters from propType (A1/A5)", () => {
   it("lit: callback propType reflects @property({ attribute: false })", () => {
     const src = generateLitComponentSource(buildComponentIR(v2MigratedContract()));
     expect(src).toContain("@property({ attribute: false }) onValueChange?: (value: string) => void;");
+  });
+});
+
+// Contract: CODEGEN-PROP-TYPE-IR-LEGACY-BUCKET-REFS-01, contract
+// `proptypeir-legacy-bucket-xor`. Object-literal aliases are referenced via
+// structured propType on legacy-bucket (styled/hook) members, not legacy
+// TS-string `type`. The schema XOR lives in validate.test.ts; this block
+// proves the IR lowers the migrated corpus signatures through the same
+// canonical path designed members use.
+describe("legacy-bucket members author structured propType (LEGACY-BUCKET-REFS-01)", () => {
+  it("lowers the migrated corpus signatures to their canonical TS strings", () => {
+    // Postcard author/stats/embed: ref lowers to the bare alias name, so the
+    // migration is byte-identical in every target.
+    expect(canonicalTsType({ kind: "ref", to: "PostcardAuthor" })).toBe("PostcardAuthor");
+    // Walkthrough steps: array-of-ref lowers to `X[]`.
+    expect(
+      canonicalTsType({ kind: "array", items: { kind: "ref", to: "WalkthroughStepSpec" } }),
+    ).toBe("WalkthroughStepSpec[]");
+    // Select filterFn: callback with a ref param. NOTE — this is the one
+    // deliberate byte change of the migration: the legacy string carried
+    // redundant double parens, the canonical form does not.
+    expect(
+      canonicalTsType({
+        kind: "callback",
+        params: [
+          { name: "option", type: { kind: "ref", to: "SelectOption" } },
+          { name: "searchTerm", type: { kind: "string" } },
+        ],
+        returns: { kind: "boolean" },
+      }),
+    ).toBe("(option: SelectOption, searchTerm: string) => boolean");
+  });
+
+  it("normalizes a propType-authored styled member through the structured path — legacy stays fallback", () => {
+    expect(normalizePropType({ propType: { kind: "ref", to: "PostcardAuthor" } })).toEqual({
+      kind: "ref",
+      to: "PostcardAuthor",
+    });
+    // The IR does not retro-parse legacy strings (byte-drift guard).
+    expect(normalizePropType({ type: "PostcardAuthor" })).toEqual({
+      kind: "fallback",
+      raw: "PostcardAuthor",
+    });
+  });
+
+  // Regression for buildSurfaceIR: the selector-anchor array-typedness check
+  // used to sniff the raw `member.type` string, so a propType-authored anchor
+  // prop threw "must be array-typed (got 'undefined')". The check now judges
+  // the canonical TS string, so both authored forms admit.
+  it("buildComponentIR admits the real Walkthrough's array-of-ref selector-anchor prop", () => {
+    const raw = readFileSync(
+      resolve(__dirname, "../../ds-contracts/components/Walkthrough/Walkthrough.contract.json"),
+      "utf8",
+    );
+    const ir = buildComponentIR(JSON.parse(raw) as ComponentContract);
+    expect(ir.styledProps.find((p) => p.name === "steps")?.type).toBe("WalkthroughStepSpec[]");
+    expect(ir.surface?.selectorAnchor?.prop).toBe("steps");
   });
 });
