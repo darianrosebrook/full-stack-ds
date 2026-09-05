@@ -1,0 +1,50 @@
+id: FIX-USAGE-SIDECAR-RENDER-PROJECTION-01
+title: 'Project usage sidecar content through contract render semantics'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-05T00:10:22.224Z'
+updated_at: '2026-09-05T00:10:22.224Z'
+created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
+blast_radius:
+  modules:
+    - 'usage sidecar validation and React showcase projection'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Status/Status.usage.jsonl'
+    - 'packages/ds-contracts/components/Command/Command.usage.jsonl'
+    - 'packages/ds-codegen/src/validation/usage.ts'
+    - 'packages/ds-codegen/src/validation/usage.test.ts'
+    - 'src/lib/render-usage.tsx'
+    - 'src/lib/render-usage.test.tsx'
+    - 'src/views/sections/UsageExamples.tsx'
+    - 'src/views/sections/UsageExamples.test.tsx'
+    - 'src/types/data.ts'
+  out: []
+invariants:
+  - 'Usage sidecars remain framework-neutral; delivery semantics derive from contract anatomy DOM and compound-part declarations, never component-name switches.'
+  - 'The renderer fails visibly when a sidecar region has no admitted delivery path; it never silently drops authored content.'
+acceptance:
+  - id: A1
+    given: 'a usage region whose contract DOM declares a named slot'
+    when: 'the React example is rendered'
+    then: 'content is supplied through the generated slots object and remains visible'
+  - id: A2
+    given: 'a component with ordinary children plus authored usage regions'
+    when: 'the example is rendered'
+    then: 'existing children and projected region content coexist without silent replacement'
+  - id: A3
+    given: 'an anatomy region with no named-slot, compound-part, or children delivery path'
+    when: 'usage validation runs'
+    then: 'validation rejects the sidecar rather than accepting content the preview will drop'
+  - id: A4
+    given: 'the Status and Command curated examples'
+    when: 'their Design pages render'
+    then: 'Status has visible status labels and Command has visible command content sourced from their JSONL sidecars'
+non_functional: {}
+contracts:
+  - name: 'usage-sidecar-render-projection'
+    type: behavior
+    path: 'packages/ds-codegen/src/validation/usage.ts'
