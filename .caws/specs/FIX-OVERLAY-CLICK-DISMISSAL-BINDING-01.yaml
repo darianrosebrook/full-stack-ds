@@ -88,3 +88,10 @@ evidence:
     command: git show 125bd6f0 --stat -- packages/ds-angular/src
     exit_code: 0
     commit_sha: "125bd6f0"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "validateDismissalTargetParts throws on missing targetPart or unknown part; verified by generate:check 51/51 over the migrated corpus (all three contracts declare targetPart)"
+    recorded_at: "2026-09-05T00:36:14.005Z"
+    command: "pnpm run generate:check"
+    exit_code: 0
+    commit_sha: "125bd6f0"
