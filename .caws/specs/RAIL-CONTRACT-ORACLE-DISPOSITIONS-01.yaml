@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run audit:contract-oracle-mutations:selfcheck: count-preserving detected-to-survived swap yields dispositionMismatches=2 and unexpectedSurvivors=1; PASS (7 one-leaf mutants)"
     recorded_at: "2026-09-05T01:34:43.393Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm run audit:contract-oracle-mutations:selfcheck: expected-survivor changed to detected yields unexpectedDetections=1 and contributes a disposition mismatch; PASS (7 one-leaf mutants)"
+    recorded_at: "2026-09-05T01:34:51.856Z"
