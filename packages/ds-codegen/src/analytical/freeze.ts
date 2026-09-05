@@ -229,18 +229,50 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
 };
 
 /**
+ * The divergence a supersession IS. Recorded as the block's
+ * `erasureAuthorityDigest`, never counted as a class: since a moved authority
+ * became a divergence, every genuine supersession carries this key, and
+ * classifying it by plan lookup found no plan and refused as "(no plan)" -- the
+ * mechanism refusing its own use case.
+ */
+const SUPERSESSION_SUBJECT = "authority:erasureAuthorityDigest";
+
+/**
  * The classes a re-record supersedes, counted from the divergences it clears.
  *
- * Throws where a class has no authored effect: an unexplained divergence must
- * not be absorbed by a re-record.
+ * Throws in three cases, each a different refusal. The erasure authority has
+ * not moved: a supersession states what a NEW erasure behaviour replaced, and
+ * a block recorded without one would name the current behaviour as its own
+ * predecessor. Another authority moved as well: a supersession absorbs ONE
+ * cause, and a re-record taken for an erasure change must not carry an
+ * unreviewed acceptance or coordinate change with it. A class has no authored
+ * effect: an unexplained divergence must not be absorbed by a re-record.
  */
 export function supersessionOf(prior: Stage2Freeze, check: FreezeCheck = checkFreeze(prior)): NonNullable<Stage2Freeze["supersedes"]> {
+  if (!check.divergences.some((d) => d.key === SUPERSESSION_SUBJECT)) {
+    throw new Error(
+      "freeze: refusing to supersede — the erasure authority has not moved, so there is no new erasure behaviour for this record to state. " +
+        "Re-record plainly, or adjudicate the diverging keys individually.",
+    );
+  }
   const plans = loadPlans();
   const counts = new Map<string, number>();
+  const otherAuthorities: string[] = [];
   for (const d of check.divergences) {
+    if (d.key === SUPERSESSION_SUBJECT) continue;
+    if (d.key.startsWith("authority:")) {
+      otherAuthorities.push(d.key);
+      continue;
+    }
     const prefixed = /^(census|verdict|fixture):/.exec(d.key);
     const op = prefixed ? prefixed[1] : (plans.get(d.key)?.operation.kind ?? "(no plan)");
     counts.set(op, (counts.get(op) ?? 0) + 1);
+  }
+  if (otherAuthorities.length > 0) {
+    throw new Error(
+      `freeze: refusing to supersede — ${otherAuthorities.sort().join(", ")} moved as well; a supersession absorbs only the erasure authority's movement. ` +
+        "Adjudicate those transitions individually, or re-record them first.",
+    );
   }
   const unexplained = [...counts.keys()].filter((op) => SUPERSESSION_EFFECT[op] === undefined).sort();
   if (unexplained.length > 0) {
@@ -359,7 +391,7 @@ export function checkFreeze(
   // behind after a re-record shows up in `stale`. Re-recording clears it,
   // because `--record` recomputes the authority block.
   for (const { identity, invalidates } of movedAuthority) {
-    divergences.push({ key: `authority:${identity}`, detail: `recorded under a different ${identity} — ${invalidates}`, transition: { from: String(was[identity]), to: String(now[identity]) } });
+    divergences.push({ key: `authority:${identity}`, detail: `recorded under a different ${identity} — ${invalidates}`, transition: { from: was[identity] === undefined ? NOTHING : String(was[identity]), to: String(now[identity]) } });
   }
 
   // Census population first: an erasure difference on a coordinate that no

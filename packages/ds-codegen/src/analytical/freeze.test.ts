@@ -307,11 +307,54 @@ describe("stage-2 erasure freeze", () => {
 
   it("refuses to supersede a divergence class nobody has explained", () => {
     // The ratchet on the supersession mechanism itself. Without it, a re-record
-    // would absorb any future change as easily as this one.
+    // would absorb any future change as easily as this one. The erasure
+    // authority is moved here so the refusal is for the CLASS, not for the
+    // precondition tested below.
     const invented = { ...live.erasure, "field.key": { reach: 0, digest: "0".repeat(64) } };
-    expect(() => supersessionOf({ ...frozen, erasure: invented }, checkFreeze({ ...frozen, erasure: invented }, live))).toThrow(
-      /refusing to supersede/,
-    );
+    const prior = { ...frozen, erasure: invented, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
+    expect(() => supersessionOf(prior, checkFreeze(prior, live))).toThrow(/no authored effect: delete-slot/);
+  });
+
+  it("a moved erasure authority is the supersession's SUBJECT, not an unexplained class", () => {
+    // `--supersede` exists for exactly this divergence, and since a moved
+    // authority became a divergence every genuine supersession carries it. It
+    // was classified by plan lookup, found no plan, and was refused as
+    // "(no plan)" -- the mechanism refusing its own use case.
+    const prior = { ...frozen, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
+    const check = checkFreeze(prior, live);
+    expect(check.divergences.map((d) => d.key)).toEqual(["authority:erasureAuthorityDigest"]);
+    let s: ReturnType<typeof supersessionOf> | undefined;
+    expect(() => { s = supersessionOf(prior, check); }).not.toThrow();
+    expect(s?.erasureAuthorityDigest, "the block must name the authority it replaces").toBe("0".repeat(64));
+    expect(s?.divergences, "the subject is not also a counted class").toEqual([]);
+  });
+
+  it("refuses to supersede when the erasure authority has not moved", () => {
+    // A supersession states what a NEW erasure behaviour replaced. With the
+    // authority unmoved there is nothing to state, and a block recorded anyway
+    // would name the current behaviour as its own predecessor.
+    const invented = { ...live.erasure, "field.key": { reach: 0, digest: "0".repeat(64) } };
+    const prior = { ...frozen, erasure: invented };
+    expect(() => supersessionOf(prior, checkFreeze(prior, live))).toThrow(/erasure authority has not moved/);
+  });
+
+  it("refuses to fold a moved WITNESS authority into an erasure supersession", () => {
+    // One cause per supersession: a re-record taken for an erasure change must
+    // not carry an unreviewed acceptance change with it.
+    const prior = { ...frozen, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64), witnessAuthorityDigest: "1".repeat(64) } };
+    expect(() => supersessionOf(prior, checkFreeze(prior, live))).toThrow(/authority:witnessAuthorityDigest moved as well/);
+  });
+
+  it("names a record with no authority block as coming from nowhere, not from 'undefined'", () => {
+    // `(absent)` is the vocabulary for a missing endpoint everywhere else in
+    // this consumer; `authority:x@undefined->...` is a stringified JS artefact,
+    // not a transition anyone reviewed.
+    const { authority: _a, ...legacy } = frozen;
+    void _a;
+    const r = checkFreeze(legacy as unknown as Stage2Freeze, live);
+    const auth = r.divergences.filter((d) => d.key.startsWith("authority:"));
+    expect(auth.length).toBeGreaterThan(0);
+    for (const d of auth) expect(d.transition.from, d.key).toBe("(absent)");
   });
 
   it("is recorded over a named fixture scope, and covers every coordinate in it", () => {

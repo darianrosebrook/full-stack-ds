@@ -607,6 +607,10 @@ export function loadReport(file = FOOTPRINTS_FILE): FootprintReport {
 }
 
 /** Which recorded facts the live tree no longer produces. */
+type ScopeKey = "sourceLanguageDeparture" | "quotientLanguageInvalid";
+/** A scope AFTER admission: a count that is a count, a digest that is a digest. Only these are compared. */
+type AdmittedScope = { specimens: number; populationDigest: string };
+
 export function checkReport(recorded = loadReport(), live = computeReport()): { ok: boolean; problems: string[] } {
   const problems: string[] = [];
   // Over the REQUIRED set, so a comparison cannot be removed by removing the
@@ -650,7 +654,7 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   // report whose scope count contradicted its own named population, or whose
   // named-population digest contradicted its own scope digest, was certified.
   // Presence was required on both sides; agreement was required on neither.
-  const coherent = (r: FootprintReport, side: "RECORDED" | "CURRENT"): string[] => {
+  const coherent = (r: FootprintReport, side: "RECORDED" | "CURRENT"): { problems: string[]; scopes: Partial<Record<ScopeKey, AdmittedScope>> } => {
     const out: string[] = [];
     // COMPLETENESS FIRST. Admission establishes that the required bindings are
     // present AND are evidence; only then does comparison decide whether their
@@ -719,7 +723,7 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
       }
     }
 
-    const scopeOf = (k: "sourceLanguageDeparture" | "quotientLanguageInvalid"): { specimens: number; populationDigest: string } | undefined => {
+    const scopeOf = (k: ScopeKey): AdmittedScope | undefined => {
       const sc = (r.scopes as unknown as Record<string, unknown> | undefined)?.[k];
       if (!obj(sc)) {
         out.push(sc === undefined
@@ -730,7 +734,7 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
       let ok = true;
       if (!count(sc.specimens)) { out.push(`the ${side} report's ${k} scope count is not a count: ${JSON.stringify(sc.specimens)}`); ok = false; }
       if (!digest(sc.populationDigest)) { out.push(`the ${side} report's ${k} scope populationDigest is not a sha256 digest: ${JSON.stringify(sc.populationDigest)}`); ok = false; }
-      return ok ? (sc as { specimens: number; populationDigest: string }) : undefined;
+      return ok ? (sc as AdmittedScope) : undefined;
     };
     const src = scopeOf("sourceLanguageDeparture");
     const q = scopeOf("quotientLanguageInvalid");
@@ -753,9 +757,12 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
         out.push(`the ${side} report's sourceLanguageDeparture scope covers ${src.specimens} specimens, not the ${authored} authored (corpus + stimuli) it is measured over`);
       }
     }
-    return out;
+    // What admission RETURNS is what the cross-record comparison below reads.
+    return { problems: out, scopes: { sourceLanguageDeparture: src, quotientLanguageInvalid: q } };
   };
-  problems.push(...coherent(recorded, "RECORDED"), ...coherent(live, "CURRENT"));
+  const admittedRecorded = coherent(recorded, "RECORDED");
+  const admittedLive = coherent(live, "CURRENT");
+  problems.push(...admittedRecorded.problems, ...admittedLive.problems);
 
   // CROSS-RECORD STABILITY, which is a different claim from coverage: two
   // reports agreeing with each other proves neither covered what it names.
@@ -766,9 +773,17 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   // source-departure scope was skipped silently. Absence is now reported, and
   // reported separately on each side: a pre-scope record stays readable as
   // historical data, it just cannot receive the same certification.
+  //
+  // COMPARED OVER WHAT ADMISSION RETURNED, not over what the report carries.
+  // A scope that failed admission was reported for its side and is not here to
+  // compare -- by construction, not by a second predicate. The earlier form
+  // read `recorded.scopes?.[k]` directly, so a PRESENT scope with a malformed
+  // digest (recorded side only; current report valid and unchanged) was
+  // reported by admission and then dereferenced here: three variants threw a
+  // TypeError out of the gate, and a thrown error is not a refusal.
   for (const k of ["sourceLanguageDeparture", "quotientLanguageInvalid"] as const) {
-    const was = recorded.scopes?.[k];
-    const now = live.scopes?.[k];
+    const was = admittedRecorded.scopes[k];
+    const now = admittedLive.scopes[k];
     if (was && now && was.populationDigest !== now.populationDigest) {
       problems.push(`the ${k} population moved: ${was.specimens} -> ${now.specimens} specimens, digest ${was.populationDigest.slice(0, 12)} -> ${now.populationDigest.slice(0, 12)}`);
     }

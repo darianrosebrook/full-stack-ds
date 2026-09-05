@@ -555,6 +555,33 @@ describe("the terminal invariant is measured over the population the report name
     expectProblem(absent, "CURRENT", "sourceLanguageDeparture scope populationDigest is not a sha256 digest", "source digest absent both");
     expectProblem(run((r, l) => { for (const x of [r, l]) x.scopes.quotientLanguageInvalid.specimens = "208"; }), "RECORDED", "quotientLanguageInvalid scope count is not a count", "string count");
     expectProblem(run((r, l) => { for (const x of [r, l]) x.specimens = null; }), "CURRENT", "carries no specimen manifest", "manifest null");
+
+    // ONE-SIDED corruption INSIDE a present scope: the recorded digest is
+    // malformed, the current report is valid and unchanged. Admission reports
+    // it; the comparison must then not touch it. Before these rows the gate
+    // reported the admission problem and then threw a TypeError out of the
+    // cross-record comparison (three variants), and a thrown error is not a
+    // refusal: `--check` would die with a stack trace instead of a problem list.
+    // The symmetric rows above never reached that line, because equal malformed
+    // digests compare equal.
+    for (const [label, v] of [["null", null], ["0", 0], ["absent", undefined]] as const) {
+      const p = run((r) => { if (v === undefined) delete r.scopes.quotientLanguageInvalid.populationDigest; else r.scopes.quotientLanguageInvalid.populationDigest = v; });
+      expectProblem(p, "RECORDED", "quotientLanguageInvalid scope populationDigest is not a sha256 digest", `recorded quotient digest ${label}, current valid`);
+      expect(p.filter((x) => x.includes("CURRENT")), `recorded quotient digest ${label}: the valid current report was blamed`).toEqual([]);
+    }
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.populationDigest = 0; }), "RECORDED", "sourceLanguageDeparture scope populationDigest is not a sha256 digest", "recorded source digest 0, current valid");
+    // The mirror: recorded valid, CURRENT digest malformed -- a defective
+    // producer. Reported for the current side, and not dereferenced either;
+    // "either side" is a claim about both directions.
+    const badLive = run((_r, l) => { l.scopes.quotientLanguageInvalid.populationDigest = null; });
+    expectProblem(badLive, "CURRENT", "quotientLanguageInvalid scope populationDigest is not a sha256 digest", "current quotient digest null, recorded valid");
+    expect(badLive.filter((x) => x.includes("RECORDED")), "current quotient digest null: the valid recorded report was blamed").toEqual([]);
+    // And when both sides ARE admitted the comparison still runs: a current
+    // source scope over a different membership is a movement, which no
+    // internal coherence check can see -- the source digest is cross-checked
+    // against nothing else in its own report.
+    const moved = run((_r, l) => { l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
+    expect(moved.filter((x) => x.includes("the sourceLanguageDeparture population moved")), `current source membership changed: ${JSON.stringify(moved)}`).toHaveLength(1);
   });
 
   it("admits only the quotient-language version this checker validates, and checks the top-level copy against it", () => {
