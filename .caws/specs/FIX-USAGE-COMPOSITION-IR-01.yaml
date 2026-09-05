@@ -70,3 +70,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run generate:validate-usage; pnpm exec vitest run src/lib/render-usage.test.tsx — 51 sidecars, 107 examples, zero fallback"
     recorded_at: "2026-09-05T03:23:56.345Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: src/lib/render-usage.test.tsx compound-family and native-table assertions; pnpm test — 3460 passed
+    recorded_at: "2026-09-05T03:23:57.195Z"
