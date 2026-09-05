@@ -40,7 +40,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run full mutation profile
-        run: pnpm run audit:contract-oracle-mutations -- --profile=full --max-survivors=0
+        run: pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions
 
       - name: Upload mutation report and stage logs
         if: always()

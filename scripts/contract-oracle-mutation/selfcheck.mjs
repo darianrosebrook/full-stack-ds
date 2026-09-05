@@ -31,6 +31,24 @@ check(
 );
 
 for (const mutant of CONTRACT_MUTANTS) {
+  check(
+    mutant.id + " declares a valid expected outcome",
+    ["detected", "survived"].includes(mutant.expectedOutcome),
+    true,
+  );
+  if (mutant.expectedOutcome === "survived") {
+    check(
+      mutant.id + " names the spec owning its blind spot",
+      typeof mutant.gap?.spec === "string" && mutant.gap.spec.length > 0,
+      true,
+    );
+    check(
+      mutant.id + " explains why its blind spot is retained",
+      typeof mutant.gap?.note === "string" && mutant.gap.note.length > 0,
+      true,
+    );
+  }
+
   const path = resolve(process.cwd(), mutant.contractPath);
   const contract = JSON.parse(readFileSync(path, "utf8"));
   const before = structuredClone(contract);
@@ -59,27 +77,38 @@ const summary = summarizeMutationResults([
   {
     fieldClass: "relationship-target",
     outcome: "detected",
+    expectedOutcome: "detected",
     firstDetection: { evidenceClass: "structural" },
   },
   {
     fieldClass: "relationship-target",
-    outcome: "detected",
-    firstDetection: { evidenceClass: "mixed-test" },
+    outcome: "survived",
+    expectedOutcome: "detected",
   },
   {
     fieldClass: "boolean-default",
     outcome: "survived",
+    expectedOutcome: "survived",
+  },
+  {
+    fieldClass: "boolean-default",
+    outcome: "detected",
+    expectedOutcome: "survived",
+    firstDetection: { evidenceClass: "mixed-test" },
   },
 ]);
 check("summary counts detected mutants", summary.detected, 2);
-check("summary counts surviving mutants", summary.survived, 1);
+check("summary counts surviving mutants", summary.survived, 2);
 check("summary groups detector evidence", summary.byEvidenceClass, {
   structural: 1,
   "mixed-test": 1,
 });
+check("summary rejects outcome swaps hidden by an unchanged count", summary.dispositionMismatches, 2);
+check("summary names newly surviving protected mutants", summary.unexpectedSurvivors, 1);
+check("summary names newly detected blind-spot sentinels", summary.unexpectedDetections, 1);
 check("summary reports per-field survival", summary.byFieldClass["boolean-default"], {
-  total: 1,
-  detected: 0,
+  total: 2,
+  detected: 1,
   survived: 1,
 });
 

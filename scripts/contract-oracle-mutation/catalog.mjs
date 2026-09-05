@@ -16,6 +16,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: "searchIcon",
     hypothesis:
       "A naming relationship to a decorative part should be rejected before emission.",
+    expectedOutcome: "detected",
   },
   {
     id: "dialog-name-to-body",
@@ -27,6 +28,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: "body",
     hypothesis:
       "A real but wrong naming target requires a test or runtime oracle to contradict it.",
+    expectedOutcome: "detected",
   },
   {
     id: "icon-decorative-default-false",
@@ -38,6 +40,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: false,
     hypothesis:
       "Changing an accessibility default should be contradicted independently of regenerated tests.",
+    expectedOutcome: "detected",
   },
   {
     id: "dialog-size-default-lg",
@@ -49,6 +52,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: "lg",
     hypothesis:
       "Changing a valid visual default should require authored behavioral or visual evidence.",
+    expectedOutcome: "detected",
   },
   {
     id: "dialog-size-variant-full-to-wide",
@@ -60,6 +64,39 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: "wide",
     hypothesis:
       "Renaming a variant while leaving its style selector behind should be detected by realization checks.",
+    expectedOutcome: "detected",
+  },
+  {
+    id: "badge-rtl-flip-icon-false",
+    fieldClass: "rtl-policy",
+    contractPath:
+      "packages/ds-contracts/components/Badge/Badge.contract.json",
+    pointer: ["rtl", "flipIcon"],
+    from: true,
+    to: false,
+    hypothesis:
+      "Changing a directional icon policy should be contradicted by emitted behavior or an authored runtime fact.",
+    expectedOutcome: "survived",
+    gap: {
+      spec: "RAIL-CONTRACT-ORACLE-DISPOSITIONS-01",
+      note: "The core profile realized both values without contradiction; the scheduled full profile ratchets this as an explicit unprotected contract fact.",
+    },
+  },
+  {
+    id: "badge-ssr-hydrate-on-interaction",
+    fieldClass: "hydration-policy",
+    contractPath:
+      "packages/ds-contracts/components/Badge/Badge.contract.json",
+    pointer: ["ssr", "hydrateOn"],
+    from: "none",
+    to: "interaction",
+    hypothesis:
+      "Changing a hydration policy should be contradicted by emitted behavior or an authored runtime fact.",
+    expectedOutcome: "survived",
+    gap: {
+      spec: "RAIL-CONTRACT-ORACLE-DISPOSITIONS-01",
+      note: "The core profile realized both values without contradiction; the scheduled full profile ratchets this as an explicit unprotected contract fact.",
+    },
   },
 ]);
 
@@ -138,6 +175,9 @@ export function summarizeMutationResults(results) {
     survived: 0,
     byEvidenceClass: {},
     byFieldClass: {},
+    dispositionMismatches: 0,
+    unexpectedSurvivors: 0,
+    unexpectedDetections: 0,
   };
 
   for (const result of results) {
@@ -148,6 +188,12 @@ export function summarizeMutationResults(results) {
       const evidenceClass = result.firstDetection.evidenceClass;
       totals.byEvidenceClass[evidenceClass] =
         (totals.byEvidenceClass[evidenceClass] ?? 0) + 1;
+    }
+
+    if (result.outcome !== result.expectedOutcome) {
+      totals.dispositionMismatches += 1;
+      if (result.outcome === "survived") totals.unexpectedSurvivors += 1;
+      if (result.outcome === "detected") totals.unexpectedDetections += 1;
     }
 
     const field = (totals.byFieldClass[result.fieldClass] ??= {
