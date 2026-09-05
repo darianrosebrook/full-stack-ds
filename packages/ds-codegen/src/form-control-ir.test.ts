@@ -28,6 +28,7 @@ describe("FormControlIR", () => {
     ["Checkbox", "input", "checked", "boolean", "change", "change"],
     ["Switch", "input", "checked", "boolean", "change", "change"],
     ["ToggleSwitch", "root", "checked", "boolean", "activation", "click"],
+    ["Command", "input", "search", "text", "input", "input"],
   ] as const)(
     "lowers %s control facts and synthesizes its commit event",
     (name, part, channel, valueModel, commit, event) => {
@@ -111,6 +112,14 @@ describe("form-control emitter consumption", () => {
 
     // Lit intentionally does not bridge light/shadow-root idrefs.
     expect(generateLitComponentSource(ir)).not.toContain("controlId");
+  });
+
+  it("does not bind association to unnamed parts when no consumer exists", () => {
+    const ir = irFor("Icon");
+    expect(ir.fieldAssociation).toBeUndefined();
+    expect(generateReactComponentSource(ir, "../../primitives")).not.toContain(
+      "fieldAssociation?.controlId",
+    );
   });
 });
 

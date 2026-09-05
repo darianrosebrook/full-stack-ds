@@ -494,6 +494,7 @@
     "kind": "coachmark",
     "presence": "persistent",
     "modality": "non-blocking",
+    "attachment": "selector",
     "selectorAnchor": {
       "prop": "steps",
       "path": "anchor",

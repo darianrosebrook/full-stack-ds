@@ -314,7 +314,7 @@ export class CommandElement extends LitElement {
   <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${ifDefined((this.label ?? "Command palette"))} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'command__inputWrapper'}>
       <fsds-icon class=${'command__searchIcon'} name="search" size="sm"></fsds-icon>
-      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" @change=${(e: Event) => this.handleSearchChange(e)} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-label=${ifDefined((this.searchLabel ?? "Search commands"))} placeholder=${ifDefined((this.placeholder ?? "Search..."))} .value=${this.behavior.search} id="command-input" aria-controls="command-list" />
+      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" @input=${(e: Event) => this.handleSearchChange(e)} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-label=${ifDefined((this.searchLabel ?? "Search commands"))} placeholder=${ifDefined((this.placeholder ?? "Search..."))} .value=${this.behavior.search} id="command-input" aria-controls="command-list" />
     </div>
     <div class=${'command__list'} role="listbox" id="command-list" aria-labelledby="command-input">
       <div class=${'command__empty'}></div>

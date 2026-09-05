@@ -2074,7 +2074,10 @@ function renderSvelteDomNode(
     );
   }
 
-  if (ctx.fieldAssociationConsumerPart === node.part) {
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
     attrs.push(`id={fieldAssociation?.().controlId}`);
     attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
   }

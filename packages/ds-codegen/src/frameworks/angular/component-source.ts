@@ -2592,7 +2592,10 @@ function renderAngularDomNode(
     }
   }
 
-  if (ctx.fieldAssociationConsumerPart === node.part) {
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
     attrs.push(`[attr.id]="fieldAssociation?.current?.controlId"`);
     attrs.push(
       `[attr.aria-describedby]="fieldAssociation?.current?.describedBy"`,

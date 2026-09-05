@@ -2303,7 +2303,10 @@ function renderVueDomNode(
     attrs.push(`@click.self="${guardExpr}"`);
   }
 
-  if (ctx.fieldAssociationConsumerPart === node.part) {
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
     // Template scope auto-unwraps the injected ComputedRef (top-level
     // script-setup binding), so the accessor is `.controlId`, not
     // `.value.controlId`.

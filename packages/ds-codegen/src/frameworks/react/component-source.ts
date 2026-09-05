@@ -2709,7 +2709,10 @@ function renderReactDomNode(
 
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: bind the ambient association to the
   // actual control part, which may be nested below the component root.
-  if (ctx.fieldAssociationConsumerPart === node.part) {
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
     attrs.push(`id={fieldAssociation?.controlId}`);
     attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
   }
