@@ -70,3 +70,10 @@ evidence:
     command: "FSDS_E2E_BASE=http://127.0.0.1:5182 pnpm exec playwright test e2e/showcase-portal-containment.spec.ts"
     exit_code: 0
     commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Playwright containment rail asserts every open overlay frame is at least 420px tall, clips the root, and leaves banner/main visible"
+    recorded_at: "2026-09-05T01:35:54.548Z"
+    command: "FSDS_E2E_BASE=http://127.0.0.1:5182 pnpm exec playwright test e2e/showcase-portal-containment.spec.ts"
+    exit_code: 0
+    commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
