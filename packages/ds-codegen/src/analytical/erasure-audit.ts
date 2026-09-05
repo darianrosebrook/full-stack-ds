@@ -587,7 +587,34 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   // invariant, and it must be measured over every specimen the report names --
   // not over a prefix of them. Checked by MEMBERSHIP: a population of the same
   // size is not the same population.
-  // MISSING EVIDENCE IS INSUFFICIENT EVIDENCE, not a skipped comparison.
+  // INTERNAL COHERENCE, ASSERTED OF EACH REPORT SEPARATELY.
+  //
+  // These checks only ever ran against `live`. A freshly computed coherent
+  // report does not make a stored incoherent one coherent, so a recorded
+  // report whose scope count contradicted its own named population, or whose
+  // named-population digest contradicted its own scope digest, was certified.
+  // Presence was required on both sides; agreement was required on neither.
+  const coherent = (r: FootprintReport, side: "RECORDED" | "CURRENT"): string[] => {
+    const out: string[] = [];
+    const q = r.scopes?.quotientLanguageInvalid;
+    const named = r.specimens?.populationDigest;
+    if (r.scopes?.sourceLanguageDeparture === undefined) out.push(`the ${side} report carries no sourceLanguageDeparture scope; it cannot state what it validated`);
+    if (q === undefined) out.push(`the ${side} report carries no quotientLanguageInvalid scope; it cannot be shown to cover the population it names`);
+    if (named === undefined) out.push(`the ${side} report names no population digest; coverage could only be compared by count, which two different populations can share`);
+    // The count catches a scope that admits it saw fewer...
+    if (q !== undefined && q.specimens !== r.specimens.total) {
+      out.push(`the ${side} report's terminal invariant was measured over ${q.specimens} of ${r.specimens.total} specimens; a report must not name a population it did not check`);
+    }
+    // ...the digest catches one that saw as many, but not the same ones.
+    if (q !== undefined && named !== undefined && q.populationDigest !== named) {
+      out.push(`the ${side} report's terminal invariant covers a membership that is not the population it names: ${q.populationDigest.slice(0, 12)} vs ${named.slice(0, 12)}`);
+    }
+    return out;
+  };
+  problems.push(...coherent(recorded, "RECORDED"), ...coherent(live, "CURRENT"));
+
+  // CROSS-RECORD STABILITY, which is a different claim from coverage: two
+  // reports agreeing with each other proves neither covered what it names.
   //
   // The first version read `live.scopes` while its message said "recorded",
   // and compared with `if (was && now && ...)` -- so deleting a recorded scope
@@ -598,33 +625,10 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   for (const k of ["sourceLanguageDeparture", "quotientLanguageInvalid"] as const) {
     const was = recorded.scopes?.[k];
     const now = live.scopes?.[k];
-    if (was === undefined) problems.push(`the RECORDED report carries no ${k} scope; it cannot be shown to cover the population it names`);
-    if (now === undefined) problems.push(`the CURRENT report carries no ${k} scope; the check cannot state what it validated`);
     if (was && now && was.populationDigest !== now.populationDigest) {
       problems.push(`the ${k} population moved: ${was.specimens} -> ${now.specimens} specimens, digest ${was.populationDigest.slice(0, 12)} -> ${now.populationDigest.slice(0, 12)}`);
     }
   }
-
-  // COVERAGE, which is a different claim from stability. Two reports agreeing
-  // with each other proves neither validated the population it names. The
-  // terminal invariant must have been computed over exactly the manifest the
-  // report declares -- compared by digest under one recipe, so a
-  // same-cardinality substitution cannot pass on a matching count.
-  const q = live.scopes?.quotientLanguageInvalid;
-  const named = live.specimens.populationDigest;
-  // BOTH, because they catch different lies. The count catches a scope that
-  // admits it saw fewer; the digest catches one that saw as many but not the
-  // same ones. Replacing the count with the digest let a scope claiming 112 of
-  // 208 pass while carrying the 208-population digest.
-  if (q !== undefined && q.specimens !== live.specimens.total) {
-    problems.push(`the terminal invariant was measured over ${q.specimens} of ${live.specimens.total} specimens; a report must not name a population it did not check`);
-  }
-  if (q !== undefined && named !== undefined && q.populationDigest !== named) {
-    problems.push(
-      `the terminal invariant was measured over ${q.specimens} specimen(s) whose membership is not the population the report names (${live.specimens.total}): digest ${q.populationDigest.slice(0, 12)} vs ${named.slice(0, 12)}`,
-    );
-  }
-  if (named === undefined) problems.push("the report names no population digest; coverage can only be compared by count, which two different populations can share");
 
   const key = (w: WitnessAudit) => `${w.witness}: ${w.verdict}`;
   const was = recorded.witnesses.map(key).sort();
@@ -632,6 +636,30 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   for (const w of was.filter((x) => !is.includes(x))) problems.push(`witness classification gone: ${w}`);
   for (const w of is.filter((x) => !was.includes(x))) problems.push(`witness classification new: ${w}`);
   return { ok: problems.length === 0, problems };
+}
+
+/**
+ * What the `--check` gate refuses, and why, over ONE report.
+ *
+ * Exported so the decision is reachable from a test rather than only from
+ * `process.argv`. Both obligations must hold OF THE SAME OBJECT: the block
+ * previously called `checkReport()` -- which computes its own live report
+ * through its default argument -- and then `computeReport()` again, so
+ * consistency described one sweep and legality another, and their conjunction
+ * rested on the unstated assumption that the two agree.
+ *
+ * The causes stay named apart. Consistency is the report checker's obligation
+ * and a report may faithfully describe a defect; zero illegal images is the
+ * acceptance path's, and `footprints --check: OK` must not be readable as the
+ * second when it only established the first.
+ */
+export function gateProblems(recorded: FootprintReport, live: FootprintReport): string[] {
+  return [
+    ...checkReport(recorded, live).problems.map((p) => `consistency: ${p}`),
+    ...live.quotientLanguageInvalid.map(
+      (i) => `terminal invariant: ${i.coordinate} produces an illegal quotient image on ${i.specimens} specimen(s), first ${i.specimen}: ${i.error}`,
+    ),
+  ];
 }
 
 const invokedDirectly = process.argv[1] !== undefined && import.meta.url.endsWith(path.basename(process.argv[1]));
@@ -651,13 +679,18 @@ if (invokedDirectly) {
     // acceptance path. The gate must satisfy both, or `footprints --check: OK`
     // gets read as evidence that no illegal image exists when it only says the
     // report has not drifted.
-    const r = checkReport();
+    // ONE REPORT, CERTIFIED BY BOTH OBLIGATIONS. See `gateProblems`.
+    //
+    // This read `checkReport()` -- which computes its own live report through
+    // its default argument -- and then `computeReport()` again. Consistency and
+    // coverage therefore applied to the first object while legality and the
+    // success message described the second, and the conjunction held only under
+    // the unstated assumption that two sweeps agree. The gate must preserve the
+    // identity of what it certifies; sharing the snapshot also removes a second
+    // full population sweep.
+    const recorded = loadReport();
     const live = computeReport();
-    const illegal = live.quotientLanguageInvalid;
-    const problems = [
-      ...r.problems.map((p) => `consistency: ${p}`),
-      ...illegal.map((i) => `terminal invariant: ${i.coordinate} produces an illegal quotient image on ${i.specimens} specimen(s), first ${i.specimen}: ${i.error}`),
-    ];
+    const problems = gateProblems(recorded, live);
     const ok = problems.length === 0;
     console.log(
       ok

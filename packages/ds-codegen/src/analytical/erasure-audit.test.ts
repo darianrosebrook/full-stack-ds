@@ -12,7 +12,7 @@
 import { describe, expect, it } from "vitest";
 import { loadDerivation, loadLocators, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
-import { claimedFootprints, computeReport, loadReport, measure, specimens } from "./erasure-audit.js";
+import { claimedFootprints, computeReport, gateProblems, languageReports, loadReport, measure, specimens } from "./erasure-audit.js";
 import { executePlan, planAt, wouldChange } from "./erasure-plan.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
@@ -355,6 +355,37 @@ describe("the terminal invariant is measured over the population the report name
     expect(live.scopes.sourceLanguageDeparture.populationDigest).not.toBe(live.scopes.quotientLanguageInvalid.populationDigest);
   });
 
+  it("the gate certifies ONE report, and names the cause it refused for", () => {
+    // The `--check` decision, exercised directly rather than through argv.
+    //
+    // It read `checkReport()` -- which computes its own live report via its
+    // default argument -- and then `computeReport()` again, so consistency
+    // described one object and legality another. Replayed: a report faithfully
+    // describing an illegal image is CONSISTENT, and a clean report over a
+    // changed population is LEGAL; combining the two accepted, though neither
+    // satisfied both.
+    const illegal = { coordinate: "probe:faulty", specimens: 1, error: "must have required property 'transformation'", specimen: "fx_probe" };
+    const consistentButIllegal = { ...recorded, quotientLanguageInvalid: [illegal] };
+    const cleanButChanged = {
+      ...live,
+      specimens: { ...live.specimens, total: 112, populationDigest: "a".repeat(64) },
+      scopes: { ...live.scopes, quotientLanguageInvalid: { specimens: 112, populationDigest: "a".repeat(64) } },
+    };
+
+    // Each fails, and each for ITS OWN reason -- not because some other branch
+    // happened to make the result false.
+    const a = gateProblems(consistentButIllegal, consistentButIllegal);
+    expect(a.filter((p) => p.startsWith("consistency:")), "this report is consistent; the refusal must not come from there").toEqual([]);
+    expect(a.filter((p) => p.startsWith("terminal invariant:")).length).toBe(1);
+
+    const b = gateProblems(recorded, cleanButChanged);
+    expect(b.filter((p) => p.startsWith("terminal invariant:")), "this report is clean; the refusal must not come from there").toEqual([]);
+    expect(b.filter((p) => p.startsWith("consistency:")).length).toBeGreaterThan(0);
+
+    // The positive control: the real pair satisfies both, of one object.
+    expect(gateProblems(recorded, live)).toEqual([]);
+  });
+
   it("the skipped pairs are covered too: a no-op leaves a legal image", () => {
     // The measurement skips execution where `wouldChange(f, p)` is false, while
     // the scope digest names every specimen. That is only sound for A1 if a
@@ -424,7 +455,28 @@ describe("the terminal invariant is measured over the population the report name
     expect(found!.specimen, "the finding must name which specimen it came from").toMatch(/\S/);
     expect(found!.error).toMatch(/required/i);
 
-    // (5) And the A1 assertion itself fails on that finding, while the report
+    // (5) THE FINDING IS ATTRIBUTED TO THE SUFFIX, not merely present.
+    //
+    // Asserting only that SOME finding exists does not establish that the
+    // suffix was validated: measured, every locator path this plan can target
+    // damages the authored prefix too (`field.transformation` 112/112,
+    // `relation.grain` 112/112, the narrowest being `field.temporality.kind`
+    // at 2 authored and 5 synthesized). No shape is exclusive to the suffix in
+    // the current locator vocabulary, so exclusivity cannot be the discriminator
+    // and a CONTRIBUTION count is used instead: the full population must report
+    // strictly more damaged specimens than the authored prefix alone.
+    //
+    // This is what separates detection from metadata. A mutant that skips
+    // suffix validation INSIDE the loop, leaving the scope untouched, changes
+    // this count and nothing else.
+    const authoredOnly = languageReports(s.fixtures.slice(0, s.corpus + s.stimuli), s.corpus + s.stimuli, faulty).quotientLanguageInvalid.find(
+      (r) => r.coordinate === "probe:delete-required-leaf",
+    );
+    expect(authoredOnly, "the control must find it in the prefix too, or the comparison below is trivial").toBeDefined();
+    expect(found!.specimens, "the synthesized suffix contributed no findings; it was not validated").toBeGreaterThan(authoredOnly!.specimens);
+    expect(found!.specimens - authoredOnly!.specimens).toBe(s.synthesized);
+
+    // (6) And the A1 assertion itself fails on that finding, while the report
     // still covers the whole population it names.
     expect(report.quotientLanguageInvalid).not.toEqual([]);
     expect(report.scopes.quotientLanguageInvalid.populationDigest).toBe(report.specimens.populationDigest);
