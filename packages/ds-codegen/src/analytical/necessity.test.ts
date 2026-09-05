@@ -670,28 +670,148 @@ describe("C3 — the harness is falsified", () => {
       expect(findingId(f({ code: "X", detail: "keep set misses the grain" }))).toBe(findingId(f({ code: "X", detail: "input lacks revenue" })));
     });
 
-    it("does not credit the engine where a pre-existing finding could mask a new cause", () => {
-      // The consequence of that last exclusion, and the honest response to it.
+    it("does not credit the engine where a finding still present could mask a new cause, and does not discharge around it either", () => {
       // `checkDerivations` returns at its first refutation, so a structure that
-      // already carries a broad code can hide a DIFFERENT cause behind the same
-      // identity — and no richer key recovers a cause that was never computed.
-      // So the engine route does not discharge there; the limitation is named
-      // and the structural proof carries the obligation.
+      // still carries a broad code after the erasure can hide a DIFFERENT cause
+      // behind the same identity — and no richer key recovers a cause that was
+      // never computed. The engine route contributes nothing there. It used to
+      // say so as a `limitation` on a discharge the structural proofs carried,
+      // and nothing at admission read the limitation. The obligation is now
+      // UNEVALUATED: the structural proofs bound the change and the image, and
+      // say nothing about a defect introduced inside the slot.
       const corpus = [...oracle.fixtures.values()];
       const masking = corpus.find((f) => f.id === "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT")!;
       expect(checkDerivations(masking.structure).map((d) => d.code)).toContain("REL_DERIVATION_RESULT_NOT_DERIVABLE");
+      const at = (id: string) => checkIsolation(masking, kernel.find((c) => c.id === id)!);
 
-      const results = kernel.map((c) => checkIsolation(masking, c));
-      expect(results.filter((r) => r.state === "discharged" && r.by.includes("no-introduced-finding")), "the engine cannot have contributed anything here").toEqual([]);
-      const limited = results.filter((r) => r.state === "discharged" && r.limitation !== undefined);
-      expect(limited.length).toBeGreaterThan(0);
-      for (const r of limited) expect(r.state === "discharged" && r.limitation).toMatch(/first-refutation checker cannot show/);
+      // The table over the real fixture, one row per way the engine's answer can go.
+      // The key persists with the SAME cause behind it: unsettled.
+      expect(at("relation.derivedBy.project.keep#order")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat.*first-refutation checker cannot show/) });
+      // The key persists with a DIFFERENT cause behind it (see the next test): unsettled — the engine cannot tell these two rows apart.
+      expect(at("relation.derivedBy.project.keep#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/first-refutation checker cannot show/) });
+      // A different key appears: refuted, as before.
+      expect(at("relation.derivedBy.project.from#incidence")).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_INPUT_MISSING@flat/) });
+      // The defective derivation itself is deleted and the finding goes with it:
+      // the after-structure carries nothing, so there is nothing to hide behind,
+      // and the engine HAS answered. Not a blanket withdrawal.
+      expect(at("relation.derivedBy#present")).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
+      // No discharge on this fixture carries a hidden caveat any more: the field is gone.
+      for (const c of kernel) expect(Object.keys(checkIsolation(masking, c)), c.id).not.toContain("limitation");
 
       // The control: a clean structure still earns an engine discharge, so the
       // rule is a response to masking and not a blanket withdrawal.
       const clean = corpus.find((f) => checkDerivations(f.structure).length === 0)!;
       const cleanResults = kernel.map((c) => checkIsolation(clean, c));
       expect(cleanResults.some((r) => r.state === "discharged" && r.by.includes("no-introduced-finding"))).toBe(true);
+    });
+
+    /**
+     * THE REAL BROAD-CODE MASKING FIXTURE, through the witness the collision is
+     * about. Side b is the same declaration with `keep` reordered and the
+     * reinterpretation repaired: admissible, and it collides with a under
+     * {keep#incidence, interval~ratio} while neither coordinate alone identifies
+     * them — so the witness reaches the isolation loop on its own merits.
+     */
+    const MASKING_BASE = "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT";
+    const repairedAndReordered = {
+      base: MASKING_BASE,
+      patch: [
+        { set: "structure.relations.flat.derivedBy.keep", value: ["amount", "order_id"] },
+        { set: "structure.relations.flat.fields.amount.transformation", value: "ratio" },
+      ],
+      outcome: { status: "admissible" as const, codes: [], terms: [] },
+      cause: "keep reordered; reinterpretation repaired",
+    };
+    const reachesIsolation = (codes: string[]) => {
+      for (const gate of ["SCHEMA_INVALID", "IDENTICAL_STIMULI", "SAME_OUTCOME", "NO_COLLISION", "NOT_MINIMAL", "UNKNOWN_COORDINATE"]) {
+        expect(codes, `the witness must reach the isolation loop on its own merits; ${gate} fired`).not.toContain(gate);
+      }
+    };
+
+    it("a keep-set defect introduced behind the reinterpretation's key does not admit the witness", () => {
+      const census = loadCensus();
+      const keepInc = census.find((c) => c.id === "relation.derivedBy.project.keep#incidence")!;
+      const a = oracle.fixtures.get(MASKING_BASE)!;
+
+      // THE MASKING, from the instrument's own output rather than argued: one
+      // finding before, one after, the same identity — and a different cause
+      // behind it. The erasure writes tokens, not markers, so the engine can be
+      // asked, and this is what it says.
+      const image = erase(a, keepInc);
+      expect(markersIn(image)).toEqual([]);
+      const before = checkDerivations(a.structure);
+      const after = checkDerivations((image as unknown as Fixture).structure);
+      expect(after.map(findingId)).toEqual(before.map(findingId));
+      expect(before[0].detail).toMatch(/retains amount by name but redeclares it/);
+      expect(after[0].detail).toMatch(/keeping \[zz_erased_reference_0, zz_erased_reference_1\] cannot yield fields \[order_id, amount\]/);
+
+      const r = checkWitness({ coordinates: [keepInc.id, "field.transformation:interval~ratio"], a: { fixture: MASKING_BASE }, b: repairedAndReordered }, census, oracle);
+      expect(checkDerivations(r.b.fixture.structure), "b must be clean, or the comparison below is not a comparison").toEqual([]);
+      const codes = r.failures.map((f) => f.code);
+      reachesIsolation(codes);
+
+      // The SAME erasure. On the clean side the engine sees the finding it
+      // introduces and refuses...
+      const onB = r.isolation.find((i) => i.side === "b" && i.coordinate === keepInc.id)!.result;
+      expect(onB).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat/) });
+      // ...and on the hostile side the same key was already there to hide it,
+      // so the obligation is unsettled — not discharged with a caveat, as it was.
+      const onA = r.isolation.find((i) => i.side === "a" && i.coordinate === keepInc.id)!.result;
+      expect(onA).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat via project\(keep=2\)/) });
+      // The combined image the collision is about, on the clean side: legal and
+      // local, and the set now SAYS both (the combined route used to name only locality).
+      const combinedB = r.isolation.find((i) => i.side === "b" && i.composed)!.result;
+      expect(combinedB).toEqual({ state: "discharged", by: ["quotient-legal", "slot-local"] });
+      // And a combined image the engine CAN be asked about — two token-writing
+      // erasures over the hostile side — is unsettled for the same reason.
+      const keepOrder = census.find((c) => c.id === "relation.derivedBy.project.keep#order")!;
+      expect(checkCombinedIsolation(a, [keepInc, keepOrder])).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat/) });
+
+      expect(r.ok).toBe(false);
+      expect(codes).toContain("ERASURE_ISOLATION_UNEVALUATED");
+      expect(r.failures.find((f) => f.code === "ERASURE_ISOLATION_UNEVALUATED")!.detail).toMatch(/^a\/relation\.derivedBy\.project\.keep#incidence: /);
+    });
+
+    it("the control with the same pre-existing defect and nothing introduced is unevaluated too, and says so, rather than admitted", () => {
+      // keep#order on the same stimulus introduces nothing: the finding and the
+      // cause behind it are byte-identical before and after. The consumer cannot
+      // tell that from the case above — the engine returns at its first
+      // refutation either way — so it says so. This witness WAS admitted, through
+      // a discharge whose limitation nothing read. That is the cost of the rule,
+      // stated: a witness over a stimulus that still carries a finding cannot
+      // earn standing from a comparison the engine could not make. Telling the
+      // two rows apart would need the rule surface to report every refutation,
+      // which is frozen under the holdout digest and is not this consumer's to change.
+      const census = loadCensus();
+      const keepOrder = census.find((c) => c.id === "relation.derivedBy.project.keep#order")!;
+      const a = oracle.fixtures.get(MASKING_BASE)!;
+      const before = checkDerivations(a.structure);
+      const after = checkDerivations((erase(a, keepOrder) as unknown as Fixture).structure);
+      expect(after.map(findingId)).toEqual(before.map(findingId));
+      expect(after[0].detail).toBe(before[0].detail);
+
+      const r = checkWitness({ coordinates: [keepOrder.id, "field.transformation:interval~ratio"], a: { fixture: MASKING_BASE }, b: repairedAndReordered }, census, oracle);
+      const codes = r.failures.map((f) => f.code);
+      reachesIsolation(codes);
+      expect(r.isolation.find((i) => i.side === "a" && i.coordinate === keepOrder.id)!.result).toMatchObject({ state: "unevaluated" });
+      // b's keep is already in order: nothing to erase, nothing to ask.
+      expect(r.isolation.find((i) => i.side === "b" && i.coordinate === keepOrder.id)!.result).toEqual({ state: "discharged", by: ["unchanged"] });
+      // The ONLY reason it is refused. Everything else about this witness holds.
+      expect(r.ok).toBe(false);
+      expect(codes).toEqual(["ERASURE_ISOLATION_UNEVALUATED"]);
+    });
+
+    it("a definite structural refutation outranks an unsettled engine comparison", () => {
+      // The order matters: the structural proofs still run when the engine
+      // cannot settle, and a change outside the slot is REFUTED, not left as
+      // unevaluated. Forced by handing the locality proof the wrong locator, so
+      // that keep#order's change lies outside the slot it is measured against.
+      const census = loadCensus();
+      const keepOrder = census.find((c) => c.id === "relation.derivedBy.project.keep#order")!;
+      const grainPlan = loadPlans().get("relation.grain")!;
+      const a = oracle.fixtures.get(MASKING_BASE)!;
+      expect(checkIsolation(a, keepOrder), "engine unsettled, structure fine").toMatchObject({ state: "unevaluated" });
+      expect(checkIsolation(a, keepOrder, checkDerivations, () => grainPlan)).toMatchObject({ state: "violated", detail: expect.stringMatching(/which its own locator does not reach/) });
     });
   });
 

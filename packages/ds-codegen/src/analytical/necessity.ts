@@ -414,8 +414,12 @@ export type IsolationProof = "unchanged" | "no-introduced-finding" | "quotient-l
  * `unevaluated` is the state whose absence let an unasked question read as an
  * answered one. It is neither a discharge nor a refutation, and a witness
  * carrying one must not reach standing — the obligation simply has not been
- * met yet. An unexpected exception from the instrument is none of these three:
- * it propagates.
+ * met yet. It is also the state of an obligation the engine WAS asked and could
+ * not settle: a structure that still carries a finding after the erasure can
+ * hide a different cause behind the same key, and a discharge used to carry
+ * that as a `limitation` nothing at admission read (see the masking block in
+ * `checkIsolation`). An unexpected exception from the instrument is none of
+ * these three: it propagates.
  */
 export type IsolationResult =
   | {
@@ -431,15 +435,6 @@ export type IsolationResult =
        * combination an operation needs, and the set says which parts held.
        */
       by: IsolationProof[];
-      /**
-       * What a DIFFERENT route could not establish here, when one could not.
-       *
-       * Reported rather than dropped, because "the structural proof carried
-       * this" and "the structural proof carried this because the engine
-       * comparison was untrustworthy on this input" are different situations
-       * and only one of them is routine.
-       */
-      limitation?: string;
     }
   | { state: "violated"; detail: string }
   | { state: "unevaluated"; reason: string };
@@ -627,7 +622,7 @@ export function checkCombinedIsolation(
   if (changed.length === 0) return { state: "discharged", by: ["unchanged"] };
 
   const by: IsolationProof[] = [];
-  let engineLimitation: string | undefined;
+  let engineInconclusive: string | undefined;
   const sBefore = structureOf(before);
   const sAfter = structureOf(after);
   if (inDomain(sBefore) && inDomain(sAfter)) {
@@ -636,11 +631,16 @@ export function checkCombinedIsolation(
     if (introduced.length > 0) {
       return { state: "violated", detail: `the combined erasure introduced ${introduced.join(", ")}, so the collision may be that defect rather than the coordinates` };
     }
-    engineLimitation =
-      findingsBefore.size === 0
+    void findingsBefore;
+    // Same rule as the per-coordinate route (see the masking block in
+    // `checkIsolation`): a finding still present after the erasure can hide an
+    // introduced cause, so the comparison is unsettled, not a caveat.
+    const findingsAfter = tally(check(sAfter));
+    engineInconclusive =
+      findingsAfter.size === 0
         ? undefined
-        : `the before-structure already carries ${[...findingsBefore.keys()].join(", ")}; a first-refutation checker cannot show that no different cause appeared behind them`;
-    if (engineLimitation === undefined) by.push("no-introduced-finding");
+        : `the after-structure still carries ${[...findingsAfter.keys()].join(", ")}; a first-refutation checker cannot show that no different cause appeared behind it`;
+    if (engineInconclusive === undefined) by.push("no-introduced-finding");
   }
 
   const legal = quotientValidator();
@@ -649,6 +649,9 @@ export function checkCombinedIsolation(
   if (introduced.length > 0) {
     return { state: "violated", detail: `the combined erasure makes the image illegal in the quotient language: ${introduced.slice(0, 3).join("; ")}` };
   }
+  // Named, as the per-coordinate route names it: the set says which parts
+  // held. This route had established legality and then reported only locality.
+  by.push("quotient-legal");
 
   const plans = coords.map(lookup);
   const unplanned = coords.filter((_, i) => plans[i] === undefined);
@@ -667,7 +670,10 @@ export function checkCombinedIsolation(
     };
   }
   by.push("slot-local");
-  return { state: "discharged", by, ...(engineLimitation ? { limitation: engineLimitation } : {}) };
+  if (engineInconclusive !== undefined) {
+    return { state: "unevaluated", reason: `${engineInconclusive}; ${by.join(" and ")} held, and neither speaks to a defect introduced inside the slot` };
+  }
+  return { state: "discharged", by };
 }
 
 export function checkIsolation(
@@ -809,7 +815,7 @@ export function checkIsolation(
   // quotient images may support evidence is the confusion this whole slice
   // exists to end. What it does mean is that a DIFFERENT proof has to be
   // identified, and the two halves of it are legality and locality.
-  let engineLimitation: string | undefined;
+  let engineInconclusive: string | undefined;
   const engineApplicable = inDomain(sBefore) && inDomain(sAfter);
   if (engineApplicable) {
     const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
@@ -831,21 +837,36 @@ export function checkIsolation(
     // WHERE THE COMPARISON CANNOT ESTABLISH WHAT IT WOULD CLAIM.
     //
     // A finding is reported through a catalogue code, and `checkDerivations`
-    // returns at its first refutation, so a structure that already carries one
-    // can hide a DIFFERENT cause the erasure introduced behind the same
-    // identity. No richer key recovers that: the second cause was never
-    // computed. Detail cannot close it either — detail legitimately moves when
-    // the erasure changes a value it displays.
+    // returns at its first refutation, so a structure that STILL carries one
+    // after the erasure can hide a DIFFERENT cause the erasure introduced
+    // behind the same identity. No richer key recovers that: the second cause
+    // was never computed. Detail cannot close it either — detail legitimately
+    // moves when the erasure changes a value it displays.
     //
-    // So the engine route discharges only over a structure with nothing to
-    // mask. Where there is something, the limitation is reported and the
-    // obligation falls to the structural proof below, rather than the engine
-    // being credited with a comparison it could not make.
-    engineLimitation =
-      findingsBefore.size === 0
+    // Demonstrated on the real fixture rather than argued. Over
+    // FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT, forgetting keep#incidence
+    // leaves `REL_DERIVATION_RESULT_NOT_DERIVABLE@flat via project(keep=2)` as
+    // the one finding before and after, while the cause behind it moves from
+    // "retains amount by name but redeclares it" to "a projection keeping
+    // [zz_erased_reference_0, zz_erased_reference_1] cannot yield fields" — a
+    // keep-set defect the erasure introduced. The SAME erasure on a clean
+    // stimulus is refused as violated. Here the engine cannot see it.
+    //
+    // So where the after-structure still carries a finding, the obligation is
+    // UNEVALUATED. It used to be discharged by the structural proofs below with
+    // the limitation attached, and nothing at admission read the limitation —
+    // a witness over a stimulus already carrying a finding was admitted with a
+    // possibly introduced defect hidden behind it. The structural proofs still
+    // run: they bound where the change landed and that the image is legal, and
+    // a definite refutation from them outranks an unsettled comparison. What
+    // they cannot speak to is a semantic defect inside the slot, which is
+    // exactly what the engine was asked. Where the after-structure carries
+    // NOTHING, the engine has answered: there is no finding to hide behind.
+    engineInconclusive =
+      findingsAfter.size === 0
         ? undefined
-        : `the before-structure already carries ${[...findingsBefore.keys()].join(", ")}; a first-refutation checker cannot show that no different cause appeared behind them`;
-    if (engineLimitation === undefined) by.push("no-introduced-finding");
+        : `the after-structure still carries ${[...findingsAfter.keys()].join(", ")}; a first-refutation checker cannot show that no different cause appeared behind it`;
+    if (engineInconclusive === undefined) by.push("no-introduced-finding");
   }
 
   // DIFFERENTIAL, for the same reason the engine comparison is: what is under
@@ -884,7 +905,10 @@ export function checkIsolation(
     };
   }
   by.push("slot-local");
-  return { state: "discharged", by, ...(engineLimitation ? { limitation: engineLimitation } : {}) };
+  if (engineInconclusive !== undefined) {
+    return { state: "unevaluated", reason: `${engineInconclusive}; ${by.join(" and ")} held, and neither speaks to a defect introduced inside the slot` };
+  }
+  return { state: "discharged", by };
 }
 
 export function loadWitnesses(file = WITNESSES_FILE): WitnessFile {
