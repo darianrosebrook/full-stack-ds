@@ -110,3 +110,10 @@ evidence:
     test_nodeid: "packages/ds-codegen/src/analytical/erasure-plan.test.ts > gives every coordinate a locator and every non-reference coordinate exactly one plan"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A6
+    status: unchecked
+    evidence_ref: "Rerun under the codomain: 3 witnesses held open in codomain-adjudications.json with historical standing and live-remeasured currentFailure, nothing applied, 4th re-held. OPEN: the two bounded migration reevaluations (invariant amended e6d744e7 to permit them; a non-promoting result is legitimate)."
+    recorded_at: "2026-09-05T06:54:58.611Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > every suspension points from a recorded historical standing to a measured current failure"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
