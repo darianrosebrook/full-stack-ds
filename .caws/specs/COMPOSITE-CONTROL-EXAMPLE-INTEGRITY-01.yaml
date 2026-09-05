@@ -67,3 +67,8 @@ contracts:
   - name: 'usage-example-integrity'
     type: behavior
     path: 'packages/ds-codegen/src/validation/usage.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/composite-control-ir.test.ts packages/ds-codegen/src/dom-tree.test.ts packages/ds-codegen/src/frameworks/iteration-bindings.test.ts — 258 tests passed; audit:behavior-realization — 20 event wires x 5 web frameworks realized"
+    recorded_at: "2026-09-05T06:10:07.694Z"
