@@ -12,7 +12,7 @@
 import { describe, expect, it } from "vitest";
 import { loadDerivation, loadLocators, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
-import { claimedFootprints, computeReport, gateProblems, languageReports, loadReport, measure, specimens } from "./erasure-audit.js";
+import { checkReport, claimedFootprints, computeReport, gateProblems, languageReports, loadReport, measure, specimens, type FootprintReport } from "./erasure-audit.js";
 import { executePlan, planAt, wouldChange } from "./erasure-plan.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
@@ -353,6 +353,42 @@ describe("the terminal invariant is measured over the population the report name
     // being silently equal.
     expect(live.scopes.sourceLanguageDeparture.specimens).toBe(live.specimens.corpus + live.specimens.stimuli);
     expect(live.scopes.sourceLanguageDeparture.populationDigest).not.toBe(live.scopes.quotientLanguageInvalid.populationDigest);
+  });
+
+  it("refuses scope evidence that is present but self-contradictory, on EITHER side", () => {
+    // Presence checks are not coherence checks. These lived only on `live`, so
+    // a stored report whose scope count contradicted its own named population
+    // -- or whose named digest contradicted its own scope digest -- was
+    // certified on the strength of a freshly computed coherent one. A fresh
+    // coherent report does not make a stored incoherent one coherent.
+    const clone = (o: FootprintReport) => JSON.parse(JSON.stringify(o)) as FootprintReport;
+    const say = (r: FootprintReport, l: FootprintReport) => checkReport(r, l).problems;
+
+    // The positive control first: the real pair carries coherent evidence.
+    expect(say(recorded, live)).toEqual([]);
+
+    for (const side of ["RECORDED", "CURRENT"] as const) {
+      const bend = (f: (r: FootprintReport) => void) => {
+        const r = clone(recorded);
+        const l = clone(live);
+        f(side === "RECORDED" ? r : l);
+        return say(r, l).filter((p) => p.includes(side));
+      };
+      // A scope admitting it saw fewer than the population it names.
+      expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
+        expect.stringContaining("measured over 112 of 208 specimens"),
+      ]);
+      // No named population at all: coverage could only be compared by count.
+      expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
+        expect.stringContaining("names no population digest"),
+      ]);
+      // Same count, different membership: the case a count cannot see.
+      expect(bend((x) => { x.specimens.populationDigest = "0".repeat(64); }), `${side}: named digest contradicts its own scope`).toEqual([
+        expect.stringContaining("covers a membership that is not the population it names"),
+      ]);
+      // And a scope absent entirely.
+      expect(bend((x) => { delete (x as unknown as Record<string, unknown>).scopes; }).length, `${side}: scopes absent`).toBeGreaterThan(0);
+    }
   });
 
   it("the gate certifies ONE report, and names the cause it refused for", () => {
