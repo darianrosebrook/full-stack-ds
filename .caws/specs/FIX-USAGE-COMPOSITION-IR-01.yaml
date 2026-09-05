@@ -74,3 +74,7 @@ evidence:
     status: pass
     evidence_ref: src/lib/render-usage.test.tsx compound-family and native-table assertions; pnpm test — 3460 passed
     recorded_at: "2026-09-05T03:23:57.195Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/validation/usage.test.ts — recursive typed object/collection prop validation passed
+    recorded_at: "2026-09-05T03:23:57.882Z"
