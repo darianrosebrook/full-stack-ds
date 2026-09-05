@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx — Calendar caption/day assertion passed; live browser at 127.0.0.1:5175 rendered September 2026 and day buttons 1-14"
     recorded_at: "2026-09-05T06:10:10.731Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx packages/ds-react/src/components/Icon/__tests__/Icon.test.tsx — passed; live browser computed Status/Icon/path color rgb(110, 177, 87) with check glyph"
+    recorded_at: "2026-09-05T06:10:12.956Z"
