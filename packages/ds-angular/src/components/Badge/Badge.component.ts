@@ -26,7 +26,9 @@ export type BadgeSize = "sm" | "md" | "lg";
   host: { "data-fsds-component": "badge" },
   template: `<span [ngClass]="classes()">
   <ng-container *ngIf="icon">
-    <span [ngClass]="'badge__icon'" aria-hidden="true"></span>
+    <span [ngClass]="'badge__icon'" aria-hidden="true">
+      {{ icon }}
+    </span>
   </ng-container>
   <span [ngClass]="'badge__content'">
     <ng-content />

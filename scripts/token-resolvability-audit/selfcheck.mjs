@@ -20,6 +20,7 @@
 import assert from "node:assert/strict";
 
 import {
+  auditCssReferences,
   buildGraph,
   declaredNames,
   declaredValue,
@@ -67,6 +68,37 @@ check("readReferences records a null fallback when there is none", () => {
   assert.deepEqual(readReferences(".a { color: var(--fsds-x); }"), [
     { name: "--fsds-x", fallback: null },
   ]);
+});
+
+check("global CSS reads are audited against declarations from the same graph", () => {
+  const css = `
+:root { --fsds-core-spacing-density-compact-sm: 8px; }
+[data-density="compact"] {
+  --fsds-semantic-spacing-gap-stack:
+    var(--fsds-core-spacing-density-compact-sm);
+}`;
+  assert.deepEqual(
+    auditCssReferences("global:tokens.css", css, declaredNames(css), buildGraph(css)),
+    [],
+  );
+});
+
+check("an undeclared global CSS read becomes a named finding", () => {
+  const css = `
+[data-density="compact"] {
+  --fsds-semantic-spacing-gap-stack:
+    var(--fsds-spacing-density-compact-sm, 8px);
+}`;
+  const findings = auditCssReferences(
+    "global:tokens.css",
+    css,
+    declaredNames(css),
+    buildGraph(css),
+  );
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].component, "global:tokens.css");
+  assert.equal(findings[0].name, "--fsds-spacing-density-compact-sm");
+  assert.equal(findings[0].fallback, "8px");
 });
 
 // --- the casing seam this rail was built to surface ------------------------

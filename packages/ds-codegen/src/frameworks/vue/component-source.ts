@@ -33,7 +33,9 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   canonicalTsType,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -194,23 +196,8 @@ function generatePropsInterface(ir: ComponentIR): string {
   // don't declare it; `className` is React-only (Vue uses `class`).
   if (!propNames.has("class")) lines.push(`  class?: string;`);
   if (!propNames.has("data-testid")) lines.push(`  "data-testid"?: string;`);
-  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
-    if (!propNames.has("aria-label")) lines.push(`  "aria-label"?: string;`);
-    if (!propNames.has("aria-labelledby"))
-      lines.push(`  "aria-labelledby"?: string;`);
-  }
   lines.push(`}`);
   return lines.join("\n");
-}
-
-/** Returns true if any node in the dom tree has the given role attribute. */
-function domTreeHasRole(
-  node: DomNodeIR | null | undefined,
-  role: string,
-): boolean {
-  if (!node) return false;
-  if (node.attrs["role"] === role) return true;
-  return node.children.some((child) => domTreeHasRole(child, role));
 }
 
 function generateDefineProps(ir: ComponentIR): string {
@@ -439,7 +426,13 @@ function callbackArgument(propType: string, valueType: string | undefined): stri
  */
 export function generateVueCompoundPartSource(
   cssPrefix: string,
-  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const cssClass = `${cssPrefix}__${part.name}`;
 
@@ -495,9 +488,12 @@ export function generateVueCompoundPartSource(
     ].join("\n");
   }
 
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -923,9 +919,9 @@ export function generateVueDisclosureStateParts(
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
   const triggerTag = itemNode?.tag ?? "button";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = vueFindDomNode(ir.dom, regionPart.name);
   const innerChild = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -1000,8 +996,14 @@ export function generateVueDisclosureStateParts(
   triggerInner.push(`${triggerIndent}  @click="ctx.toggleItem(props.value)"`);
   triggerInner.push(`${triggerIndent}>`);
   triggerInner.push(`${triggerIndent}  <slot />`);
-  if (chevronPartName) {
-    triggerInner.push(`${triggerIndent}  <span class="${cssPrefix}__${chevronPartName}"></span>`);
+  if (chevronNode) {
+    triggerInner.push(
+      renderVueDomNode(
+        chevronNode,
+        { classRecipe: cssPrefix, channelByName: new Map(), isRoot: false },
+        triggerIndent.length + 2,
+      ),
+    );
   }
   triggerInner.push(`${triggerIndent}</${triggerTag}>`);
 
@@ -1010,6 +1012,9 @@ export function generateVueDisclosureStateParts(
     `// @generated:start imports`,
     `import { computed } from "vue";`,
     `import { use${name}Context } from "./use${name}.js";`,
+    ...(chevronNode?.componentRef
+      ? [`import ${chevronNode.componentRef} from "../${chevronNode.componentRef}/${chevronNode.componentRef}.vue";`]
+      : []),
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -1539,7 +1544,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   // field-association primitive.
   const needsInstanceId = componentNeedsInstanceId(ir);
   const assocProvides = ir.fieldAssociation?.provides;
-  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const assocConsumerPart = ir.fieldAssociation?.consumerPart;
   const providerNeedsSlots =
     assocProvides !== undefined &&
     assocProvides.describedBy.some((ref) => ref.slotGate !== undefined);
@@ -1569,7 +1574,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       `import { provideFieldAssociation } from "../../primitives/index.js";`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     importLines.push(
       `import { useFieldAssociation } from "../../primitives/index.js";`,
     );
@@ -1816,7 +1821,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       `provideFieldAssociation(fieldAssociationValue);`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     fieldAssocLines.push(`const fieldAssociation = useFieldAssociation();`);
   }
   const fieldAssocBody = fieldAssocLines.join("\n");
@@ -1831,15 +1836,16 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     isRoot: true,
     cssPrefix: ir.cssPrefix,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
-    rootRole: ir.root.effectiveRole,
+    rootRole: ir.root.rootRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
-    fieldAssociationConsumer: assocConsumes,
+    fieldAssociationConsumerPart: assocConsumerPart,
     rootSelectorAnchored: selectorAnchor !== null,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
           overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+          overlayClickTargetPart: overlayClickTrigger.targetPart,
         }
       : {}),
   };
@@ -1953,6 +1959,7 @@ interface VueRenderContext {
   autoDismissPause?: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  overlayClickTargetPart?: string;
   /**
    * Effective ARIA role to emit on the root unless the dom tree already
    * declares one. Parity with React's `ReactRenderContext.rootRole`.
@@ -1963,11 +1970,9 @@ interface VueRenderContext {
     defaultTag: string;
   };
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `:id` /
-   * `:aria-describedby` from the injected `fieldAssociation` ref.
+   * Anatomy part that consumes ambient field association.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
   /**
    * Selector-anchored root panel: the root element gets the anchored
    * position wiring (`:ref`, fixed-position `:style`, `:data-placement`)
@@ -2282,6 +2287,34 @@ function renderVueDomNode(
     );
   }
 
+  // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal click binds on the
+  // declared targetPart element (the full-cover overlay), never on the root —
+  // the root is pointer-events:none under the overlay and can never be the
+  // hit target. `.self` fires only when the click target is the overlay
+  // itself, not a descendant — avoids a click handler on the inner
+  // non-interactive panel (a11y lint).
+  if (
+    ctx.overlayClickSetter &&
+    node.part !== undefined &&
+    node.part === ctx.overlayClickTargetPart
+  ) {
+    const guardExpr = ctx.overlayClickEnabledProp
+      ? `props.${propAccess(ctx.overlayClickEnabledProp)} !== false && ${ctx.overlayClickSetter}(false)`
+      : `${ctx.overlayClickSetter}(false)`;
+    attrs.push(`@click.self="${guardExpr}"`);
+  }
+
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
+    // Template scope auto-unwraps the injected ComputedRef (top-level
+    // script-setup binding), so the accessor is `.controlId`, not
+    // `.value.controlId`.
+    attrs.push(`:id="fieldAssociation?.controlId"`);
+    attrs.push(`:aria-describedby="fieldAssociation?.describedBy"`);
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       // The root node's BEM class is included in `classNames` (computed).
@@ -2300,17 +2333,6 @@ function renderVueDomNode(
     if (ctx.cssPrefix) {
       attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
     }
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association on its root. Vue's implicit fallthrough
-    // applies consumer attrs after template bindings, so an explicit
-    // consumer id still wins.
-    // Template scope auto-unwraps the injected ComputedRef (top-level
-    // script-setup binding), so the accessor is `.controlId`, not
-    // `.value.controlId`.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`:id="fieldAssociation?.controlId"`);
-      attrs.push(`:aria-describedby="fieldAssociation?.describedBy"`);
-    }
     // Selector-anchored root: fixed-position style computed against the
     // active step's page anchor, hidden until the first measurement so the
     // panel never flashes at (0,0).
@@ -2323,15 +2345,6 @@ function renderVueDomNode(
     }
     if (ctx.autoDismissPause) {
       attrs.push(`v-on="autoDismiss.pauseListeners"`);
-    }
-    if (ctx.overlayClickSetter) {
-      const guardExpr = ctx.overlayClickEnabledProp
-        ? `props.${propAccess(ctx.overlayClickEnabledProp)} !== false && ${ctx.overlayClickSetter}(false)`
-        : `${ctx.overlayClickSetter}(false)`;
-      // `.self` fires the handler only when the click target is the overlay
-      // itself, not a descendant. This avoids needing a click handler on the
-      // inner non-interactive panel (which would trip a11y lint rules).
-      attrs.push(`@click.self="${guardExpr}"`);
     }
     if (ctx.rootPolymorphicTag && !node.componentRef) {
       attrs.unshift(
@@ -2592,6 +2605,14 @@ function renderVueTextContent(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? `{{ ${appendPath(name, expr.path)} }}` : null;
     }
+    case "projection": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `{{ ${lowered} }}`;
+    }
+    case "valueMap": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `{{ ${lowered} }}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2665,6 +2686,14 @@ function renderVueBinding(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? `:${attr}="${appendPath(name, expr.path)}"` : null;
     }
+    case "projection": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `:${attr}="${lowered}"`;
+    }
+    case "valueMap": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `:${attr}="${lowered}"`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2678,8 +2707,8 @@ function renderVueBinding(
         if (!ch.defaultValueProp) return null;
         return `:${attr}="props.${propAccess(ch.defaultValueProp)}"`;
       }
-      // Event handler synthesis. For `onChange` (mapped to `@change`),
-      // unwrap the DOM event based on valueType. For other events
+      // Event handler synthesis. Value-bearing `input` / `change` events
+      // unwrap the DOM event based on valueType. For activation events
       // (`onClick` → `@click`, etc.), boolean channels toggle; other
       // valueTypes pass through the current value (no DOM payload).
       // Event-shaped channels skip unwrapping entirely.
@@ -2688,22 +2717,16 @@ function renderVueBinding(
         return `@${eventName}="props.${propAccess(ch.changeHandlerProp)}"`;
       }
       const setter = `behavior.set${capitalize(ch.name)}`;
-      const isChangeEvent = attr === "onChange";
-      if (isChangeEvent) {
+      const isValueEvent = attr === "onChange" || attr === "onInput";
+      if (isValueEvent) {
         if (ch.valueType === "boolean") {
-          // Boolean controls (checkbox/switch) fire the native `change`
-          // event on toggle; there is no keystroke concept.
           return `@${eventName}="(e) => ${setter}((e.target as HTMLInputElement).checked)"`;
         }
-        // Text-value channels (string/number) must fire on keystroke, not on
-        // blur. React's `onChange` already means the input event, so Vue's
-        // faithful realization of the same value-change semantic is `@input`
-        // (native `change` is blur-timed and would defer keystroke validation).
         if (ch.valueType === "number") {
-          return `@input="(e) => ${setter}(Number((e.target as HTMLInputElement).value))"`;
+          return `@${eventName}="(e) => ${setter}(Number((e.target as HTMLInputElement).value))"`;
         }
         if (ch.valueType === "string" || ch.valueType === undefined) {
-          return `@input="(e) => ${setter}((e.target as HTMLInputElement).value)"`;
+          return `@${eventName}="(e) => ${setter}((e.target as HTMLInputElement).value)"`;
         }
         return `@${eventName}="(e) => ${setter}(e as unknown as ${ch.valueType})"`;
       }
@@ -2815,6 +2838,18 @@ function renderVueBindingValue(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
     }
+    case "projection": {
+      const source = renderVueBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
+    case "valueMap": {
+      const source = renderVueBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeValueMapExpression(expr, source, singleQuotedJsString);
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2888,6 +2923,10 @@ function renderVueEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
+    case "valueMap":
+      return null;
     case "channel": {
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderVueBinding(jsxAttr, expr, ctx);

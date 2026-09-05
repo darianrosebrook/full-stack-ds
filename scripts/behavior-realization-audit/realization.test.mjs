@@ -67,7 +67,7 @@ check("garbage expr parses to null (skip signal, not a crash)", () => {
 });
 
 // -- obligation FLOORS (>=, never frozen exact) -------------------------------
-// Current live corpus (main): 19 event wires, 2 compound containers,
+// Current live corpus: at least 19 event wires, 2 compound containers,
 // 3 root-portal surfaces. These are floors — a new interactive contract raises
 // them and MUST NOT be able to pass by editing a hardcoded number down.
 const EVENT_FLOOR = 19;
@@ -95,9 +95,9 @@ check(`root-portal surfaces >= ${ROOT_PORTAL_FLOOR}`, () => {
 });
 
 // -- derived deferral (no allowlist) ------------------------------------------
-// OTP gained an events wire (channelUpdate setCharAt) under
-// FEAT-CHANNEL-UPDATE-OPERATIONS-01, so it is no longer the no-obligation
-// witness; Badge declares no events wire and is non-interactive by contract.
+// OTP's compositeControl injects its channelUpdate setCharAt event into the
+// normalized DOM IR, so it is not a no-obligation witness. Badge declares no
+// control capability or event wire and remains non-interactive by contract.
 console.log("\nderived deferral — Badge has no events wire, so ZERO event obligations:");
 check("Badge derives zero event obligations (absence is derived, not listed)", () => {
   const badge = deriveEventObligations("Badge", corpus).filter((o) => !o.skip);
@@ -264,9 +264,7 @@ check("Walkthrough consumes anchored positioning in ALL five frameworks", () => 
 // from the part's element. We build in-memory generated source with, and
 // without, the handler, and assert the realization flips.
 console.log("\nsynthetic falsification — matcher fails when the handler is stripped:");
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
 
 function readFileSyncSafe() {
   const here = new URL("./audit.mjs", import.meta.url);
@@ -312,41 +310,34 @@ check("componentRef Chip.action flips false in svelte when onClick prop is strip
   assert.ok(!realizedIn(stripped), "matcher passed a stripped Button (false positive!)");
 });
 
-console.log("\nchange-as-input — a value channel's change wire is realized keystroke-timed:");
-check("TextField.field.change reads realized in every framework via change OR input", () => {
-  // FIX-SETTINGS-FIELD-VUE-FINDINGS-01 #6: the string value channel's onChange
-  // now lowers to @input (keystroke) in the vue/svelte/lit/angular emitters;
-  // react's onChange already IS the input event. The matcher must accept the
-  // input token for a `change` obligation so this faithful realization is not a
-  // false negative.
+console.log("\ntext-input timing — a formControl input commit is realized keystroke-timed:");
+check("TextField.field.input reads realized in every framework", () => {
+  // formControl owns the semantic timing and injects an input event into the
+  // normalized DOM IR. Framework spellings differ, but all must retain that
+  // keystroke-timed obligation.
   const ob = deriveEventObligations("TextField", corpus).find(
-    (o) => o.part === "field" && o.event === "change",
+    (o) => o.part === "field" && o.event === "input",
   );
-  assert.ok(ob, "no TextField.field.change obligation");
+  assert.ok(ob, "no TextField.field.input obligation");
   for (const fw of FRAMEWORKS) {
     const r = isEventRealized(fw, ob);
     assert.ok(r.realized, `${fw.id}: ${r.reason}`);
   }
 });
-check("change-as-input loosening still FALSIFIES — both change and input absent reads unrealized", () => {
+check("input matching still FALSIFIES — an absent handler reads unrealized", () => {
   const ob = deriveEventObligations("TextField", corpus).find(
-    (o) => o.part === "field" && o.event === "change",
+    (o) => o.part === "field" && o.event === "input",
   );
   const vue = FRAMEWORKS.find((f) => f.id === "vue");
-  const changeRe = vue.handler.change;
   const inputRe = vue.handler.input;
-  // Reconstruct the accept-either regex exactly as isEventRealized does.
-  const eitherRe = new RegExp(`(?:${changeRe.source})|(?:${inputRe.source})`);
   const line = (src) => src.split("\n");
   const realizedIn = (src) =>
-    line(src).some((l) => l.includes(ob.classToken) && eitherRe.test(l));
+    line(src).some((l) => l.includes(ob.classToken) && inputRe.test(l));
 
   const withInput = `<input :class="'text-field__field'" @input="(e) => behavior.setValue((e.target).value)" />`;
-  const withChange = `<input :class="'text-field__field'" @change="(e) => behavior.setValue((e.target).value)" />`;
   const stripped = `<input :class="'text-field__field'" :value="behavior.value.value" />`;
 
   assert.ok(realizedIn(withInput), "matcher missed a real @input (false negative)");
-  assert.ok(realizedIn(withChange), "matcher missed a real @change (false negative)");
   assert.ok(!realizedIn(stripped), "matcher passed a handler-less element (false positive!)");
 });
 

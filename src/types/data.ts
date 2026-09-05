@@ -54,6 +54,8 @@ export interface DomBinding {
 
 export interface DomNode {
   tag?: string;
+  /** Name of a consumer-provided region when tag is the `slot` sentinel. */
+  name?: string;
   part?: string;
   bindings?: DomBinding;
   on?: DomBinding;
@@ -85,6 +87,8 @@ export interface PartDetails {
     attributes?: string[];
   };
   collapsibleTo?: "native-toggle-affordance" | "native-disclosure";
+  /** Contract-authored public compound subcomponent. */
+  subcomponent?: boolean;
 }
 
 export interface AnatomyDetailed {
@@ -204,6 +208,15 @@ export interface ComponentContract {
   events?: Record<string, unknown>;
   /** Form participation; carried through to the A2UI descriptor unchanged. */
   form?: unknown;
+  portal?: {
+    enabled?: boolean;
+    defaultTarget?: string;
+  };
+  surface?: {
+    positioning?: {
+      strategy?: "anchored" | "centered" | "viewport-edge" | string;
+    };
+  };
 }
 
 /**
@@ -234,13 +247,30 @@ export interface UsageNodeBody {
   slots?: Record<string, UsageTreeNode | string>;
 }
 
+export interface UsageSubcomponentIR {
+  part: string;
+  ref: string;
+  allowedProps: string[];
+}
+
+/** Serializable contract/IR projection consumed by the usage renderer. */
+export interface UsageCompositionIR {
+  rootRef: string;
+  acceptsChildren: boolean;
+  childrenRegion: string | null;
+  namedSlots: string[];
+  subcomponents: UsageSubcomponentIR[];
+  propMaterializers: Record<string, "date" | "date-array">;
+}
+
 export type UsagePropValue =
   | string
   | number
   | boolean
   | null
   | UsageTreeNode
-  | Array<string | UsageTreeNode>;
+  | UsagePropValue[]
+  | { [key: string]: UsagePropValue };
 
 export interface UsageLine {
   name: string;
@@ -280,6 +310,8 @@ export interface ComponentBundle {
    * treat that as "no examples to show" without erroring.
    */
   usage: UsageLine[];
+  /** Contract-derived consumer composition surface for usage examples. */
+  usageComposition: UsageCompositionIR;
   /**
    * Normalized box-model material surface (see BoxModelSurfaceSlot). Computed
    * at bundle-build time by the data plugin using the codegen merge as the

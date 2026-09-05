@@ -7,112 +7,97 @@ import Image from "../Image.svelte";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Image — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("image");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("image");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder" } });
     expect(container.firstElementChild?.getAttribute("role")).toBe("img");
   });
 
   it("applies size=xs variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "xs" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "xs" } });
     expect(container.firstElementChild?.className).toContain("image--size-xs");
   });
 
   it("applies size=sm variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "sm" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "sm" } });
     expect(container.firstElementChild?.className).toContain("image--size-sm");
   });
 
   it("applies size=md variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "md" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "md" } });
     expect(container.firstElementChild?.className).toContain("image--size-md");
   });
 
   it("applies size=lg variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "lg" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "lg" } });
     expect(container.firstElementChild?.className).toContain("image--size-lg");
   });
 
   it("applies size=xl variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "xl" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "xl" } });
     expect(container.firstElementChild?.className).toContain("image--size-xl");
   });
 
   it("applies size=full variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "full" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "full" } });
     expect(container.firstElementChild?.className).toContain("image--size-full");
   });
 
   it("applies radius=none variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "none" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "radius": "none" } });
     expect(container.firstElementChild?.className).toContain("image--radius-none");
   });
 
   it("applies radius=sm variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "sm" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "radius": "sm" } });
     expect(container.firstElementChild?.className).toContain("image--radius-sm");
   });
 
   it("applies radius=md variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "md" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "radius": "md" } });
     expect(container.firstElementChild?.className).toContain("image--radius-md");
   });
 
   it("applies radius=lg variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "lg" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "radius": "lg" } });
     expect(container.firstElementChild?.className).toContain("image--radius-lg");
   });
 
   it("applies radius=full variant class", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "full" } });
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "radius": "full" } });
     expect(container.firstElementChild?.className).toContain("image--radius-full");
   });
 });
 
 describe("Image — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Image" } });
-    const results = await axe(container);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "aria-label": "Test Image" } });
+    const results = await axe(container, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { View } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createAvatarStyles } from "./Avatar.styles";
@@ -15,6 +15,7 @@ import { Image } from "../Image/Image";
 export interface AvatarProps {
   src?: string;
   name: string;
+  initials?: string;
   priority?: boolean;
   size?: "small" | "medium" | "large" | "extra-large";
   children?: ReactNode;
@@ -29,6 +30,7 @@ export interface AvatarProps {
 export function Avatar({
   src,
   name,
+  initials,
   size,
   style,
   testID,
@@ -50,6 +52,13 @@ export function Avatar({
         src={src}
         alt={""}
       />
+      ) : null}
+      {initials ? (
+      <View
+        style={styles.initials}
+      >
+        <RNText>{initials}</RNText>
+      </View>
       ) : null}
     </View>
   );

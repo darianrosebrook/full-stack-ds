@@ -112,10 +112,13 @@
             "role": "group"
           },
           "children": [
-            {
-              "tag": "h3",
-              "part": "title",
-              "children": [
+        {
+          "tag": "h3",
+          "part": "title",
+          "bindings": {
+            "aria-label": "prop:label"
+          },
+          "children": [
                 {
                   "tag": "slot",
                   "name": "title"
@@ -141,15 +144,21 @@
             {
               "tag": "button",
               "part": "skip",
-              "attrs": {
-                "type": "button"
+          "attrs": {
+            "type": "button"
+          },
+          "bindings": {
+            "aria-label": "literal:Skip tour"
               }
             },
             {
               "tag": "button",
               "part": "prev",
-              "attrs": {
-                "type": "button"
+          "attrs": {
+            "type": "button"
+          },
+          "bindings": {
+            "aria-label": "literal:Previous step"
               }
             },
             {
@@ -183,6 +192,9 @@
               "part": "next",
               "attrs": {
                 "type": "button"
+              },
+              "bindings": {
+                "aria-label": "literal:Next step"
               }
             }
           ]
@@ -196,7 +208,7 @@
       "members": [
         {
           "name": "steps",
-          "type": "WalkthroughStepSpec[]",
+          "propType": { "kind": "array", "items": { "kind": "ref", "to": "WalkthroughStepSpec" } },
           "description": "Array of step definitions, each specifying an anchor target and content.",
           "default": [
             { "anchor": "#step-1", "title": "Welcome to the tour" },

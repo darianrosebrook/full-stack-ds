@@ -43,7 +43,9 @@ import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
   channelUpdateMethodName,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -596,9 +598,9 @@ export function generateAngularDisclosureStateParts(
   const headerNode = angularFindParentOf(ir.dom, itemPart.name);
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = angularFindDomNode(ir.dom, regionPart.name);
   const innerChild = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -651,12 +653,26 @@ export function generateAngularDisclosureStateParts(
   // Trigger component
   const triggerTemplateOpen = headerPartName ? `<${headerTag} class="${cssPrefix}__${headerPartName}">` : "";
   const triggerTemplateClose = headerPartName ? `</${headerTag}>` : "";
-  const chevronMarkup = chevronPartName ? `<span class="${cssPrefix}__${chevronPartName}"></span>` : "";
+  const chevronMarkup = chevronNode
+    ? renderAngularDomNode(
+        chevronNode,
+        {
+          classRecipe: cssPrefix,
+          channelByName: new Map(),
+          styledByName: new Map(),
+          isRoot: false,
+        },
+        0,
+      )
+    : "";
   const triggerContent = [
     `// @generated:start imports`,
     `import { Component, Input, computed, ChangeDetectionStrategy } from "@angular/core";`,
     `import { NgClass } from "@angular/common";`,
     `import { use${name}Context } from "./use${name}.js";`,
+    ...(chevronNode?.componentRef
+      ? [`import { ${chevronNode.componentRef}Component } from "../${chevronNode.componentRef}/${chevronNode.componentRef}.component.js";`]
+      : []),
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -667,7 +683,7 @@ export function generateAngularDisclosureStateParts(
     `@Component({`,
     `  selector: "fsds-${toKebab(triggerName)}",`,
     `  standalone: true,`,
-    `  imports: [NgClass],`,
+    `  imports: [NgClass${chevronNode?.componentRef ? `, ${chevronNode.componentRef}Component` : ""}],`,
     `  template: \`${triggerTemplateOpen}<button`,
     `  type="button"`,
     `  [ngClass]="classes()"`,
@@ -1023,7 +1039,13 @@ export function generateAngularCompoundStateParts(
  */
 function generateCompoundPartComponent(
   ir: ComponentIR,
-  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
   const className = `${subName}Component`;
@@ -1067,9 +1089,12 @@ function generateCompoundPartComponent(
   }
 
   const selector = toKebab(subName);
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -1459,7 +1484,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
     lines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
   }
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: field-association provider/consumer.
-  if (ir.fieldAssociation?.provides || ir.fieldAssociation?.consumes) {
+  if (ir.fieldAssociation?.provides || ir.fieldAssociation?.consumerPart) {
     lines.push(
       `import { FieldAssociationService } from "../../primitives/index.js";`,
     );
@@ -1606,7 +1631,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // and class getters for idref attributes that need conditions/joining.
   const needsInstanceId = componentNeedsInstanceId(ir);
   const assocProvides = ir.fieldAssociation?.provides;
-  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const assocConsumerPart = ir.fieldAssociation?.consumerPart;
   const idRefGetters = new Map<DomNodeIR, Map<string, string>>();
   const idRefGetterLines: string[] = [];
   {
@@ -1686,13 +1711,14 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     contentTransformGetters,
-    fieldAssociationConsumer: assocConsumes,
+    fieldAssociationConsumerPart: assocConsumerPart,
     idRefGetters,
     rootSelectorAnchored: selectorAnchor !== null,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
           overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+          overlayClickTargetPart: overlayClickTrigger.targetPart,
         }
       : {}),
   };
@@ -1817,7 +1843,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       `  }));`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     lines.push(
       `  protected fieldAssociation = inject(FieldAssociationService, { optional: true });`,
     );
@@ -2378,6 +2404,7 @@ interface AngularRenderContext {
   autoDismissPause?: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  overlayClickTargetPart?: string;
   /**
    * Identifier names introduced by enclosing `*ngFor` iterations. After
    * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` lowering no
@@ -2426,11 +2453,9 @@ interface AngularRenderContext {
    */
   rootSelectorAnchored?: boolean;
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `[attr.id]` /
-   * `[attr.aria-describedby]` from the optionally injected service.
+   * Anatomy part that consumes ambient field association.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
   /**
    * Class-getter names for idref attributes that need conditions or
    * joining (FEAT-A11Y-LABEL-ID-ASSOCIATION-01), keyed by node identity
@@ -2568,16 +2593,18 @@ function renderAngularDomNode(
     }
   }
 
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
+    attrs.push(`[attr.id]="fieldAssociation?.current?.controlId"`);
+    attrs.push(
+      `[attr.aria-describedby]="fieldAssociation?.current?.describedBy"`,
+    );
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association (optional DI) on its root element.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`[attr.id]="fieldAssociation?.current?.controlId"`);
-      attrs.push(
-        `[attr.aria-describedby]="fieldAssociation?.current?.describedBy"`,
-      );
-    }
     if (ctx.autoDismissPause) {
       attrs.push(
         `(pointerenter)="autoDismiss.pauseListeners.pointerenter()"`,
@@ -2600,13 +2627,17 @@ function renderAngularDomNode(
     }
   } else if (
     ctx.overlayClickSetter &&
-    (node.part === "overlay" || node.part === "backdrop")
+    ctx.overlayClickTargetPart !== undefined &&
+    node.part === ctx.overlayClickTargetPart
   ) {
     // The overlay child node owns the dismissal click and the
     // `role="presentation"` hook the generated test queries by. Putting the
     // handler here (instead of on the root) means inner content clicks
     // don't bubble through a target===currentTarget guard, which never
     // matches when the test clicks the overlay child directly.
+    // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the part is the contract's
+    // declared dismissal `targetPart` (an IR fact), not a hardcoded
+    // overlay/backdrop name guess.
     const guardExpr = ctx.overlayClickEnabledProp
       ? `${ctx.overlayClickEnabledProp} !== false && behavior.${ctx.overlayClickSetter}(false)`
       : `behavior.${ctx.overlayClickSetter}(false)`;
@@ -2937,6 +2968,7 @@ function renderAngularDomNode(
 const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>> = {
   label: new Set(["form"]),
   svg: new Set(["height", "width"]),
+  time: new Set(["datetime"]),
 };
 
 function angularAttrBinding(
@@ -3170,6 +3202,18 @@ function renderAngularBinding(
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? `${angularAttrBinding(attr, tag, refBinding)}="${appendPath(name, expr.path)}"` : null;
     }
+    case "projection": {
+      const lowered = renderAngularBindingValue(expr, ctx);
+      return lowered === null
+        ? null
+        : `${angularAttrBinding(attr, tag, refBinding)}="${lowered}"`;
+    }
+    case "valueMap": {
+      const lowered = renderAngularBindingValue(expr, ctx);
+      return lowered === null
+        ? null
+        : `${angularAttrBinding(attr, tag, refBinding)}="${lowered}"`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3283,6 +3327,22 @@ function renderAngularBindingValue(
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
     }
+    case "projection": {
+      const source = renderAngularBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
+    case "valueMap": {
+      const source = renderAngularBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeValueMapExpression(
+            expr,
+            source,
+            (value) => `'${value.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+          );
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3374,6 +3434,10 @@ function renderAngularEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
+    case "valueMap":
+      return null;
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

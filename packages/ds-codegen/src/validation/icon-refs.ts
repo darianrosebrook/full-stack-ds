@@ -146,13 +146,13 @@ export function validateContractIconRefs(
       if (target) {
         const iconProps = iconNamePropsOf(target);
         for (const propName of iconProps) {
-          const literal = literalPropValue(node, propName);
-          if (literal === undefined) continue;
-          checkIconName(literal, `${pointer}/attrs/${propName}`, issues, () =>
-            `supplies icon name "${literal}" to ${refName}.${propName}, ` +
-            `which is not in the icon corpus ` +
-            `(packages/ds-iconography/icons/). Author the icon or fix the name.`,
-          );
+          for (const literal of literalPropValues(node, propName)) {
+            checkIconName(literal.value, `${pointer}/${literal.pointer}`, issues, () =>
+              `supplies icon name "${literal.value}" to ${refName}.${propName}, ` +
+              `which is not in the icon corpus ` +
+              `(packages/ds-iconography/icons/). Author the icon or fix the name.`,
+            );
+          }
         }
       }
     }
@@ -190,17 +190,33 @@ export function usageIconRefIssue(
 }
 
 /** Static-attr or `literal:` binding value for a prop on a componentRef node. */
-function literalPropValue(
+function literalPropValues(
   node: ContractDomNode,
   propName: string,
-): string | undefined {
+): Array<{ value: string; pointer: string }> {
   const attr = node.attrs?.[propName];
-  if (typeof attr === "string") return attr;
+  if (typeof attr === "string") return [{ value: attr, pointer: `attrs/${propName}` }];
   const binding = node.bindings?.[propName];
   if (typeof binding === "string" && binding.startsWith("literal:")) {
-    return binding.slice("literal:".length);
+    return [{
+      value: binding.slice("literal:".length),
+      pointer: `bindings/${propName}`,
+    }];
   }
-  return undefined;
+  if (typeof binding === "object" && binding.kind === "map") {
+    const values = Object.entries(binding.values).map(([key, value]) => ({
+      value,
+      pointer: `bindings/${propName}/values/${key}`,
+    }));
+    if (binding.fallback !== undefined) {
+      values.push({
+        value: binding.fallback,
+        pointer: `bindings/${propName}/fallback`,
+      });
+    }
+    return values;
+  }
+  return [];
 }
 
 function checkIconName(

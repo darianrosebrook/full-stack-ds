@@ -50,17 +50,17 @@ const classes = $derived(
 <article class={classes} data-fsds-component="postcard">
   <div class={'postcard__header'}>
     <div class={'postcard__userInfo'}>
-      <span class={'postcard__displayName'}></span>
-      <span class={'postcard__handle'}></span>
+      <span class={'postcard__displayName'}>{author.name}</span>
+      <span class={'postcard__handle'}>{author.handle}</span>
     </div>
-    <time class={'postcard__timestamp'}></time>
+    <time class={'postcard__timestamp'} datetime={timestamp}>{timestamp}</time>
   </div>
   <div class={'postcard__content'}>
     {@render children?.()}
   </div>
   <div class={'postcard__footer'}>
     <div class={'postcard__stats'}>
-      <span class={'postcard__stat'}></span>
+      <span class={'postcard__stat'}>{stats.likes}</span>
     </div>
   </div>
 </article>

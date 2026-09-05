@@ -37,6 +37,7 @@
         "focusable": true,
         "aria": {
           "attributes": [
+            "aria-label",
             "aria-readonly"
           ]
         }
@@ -50,7 +51,7 @@
       },
       "bindings": {
         "aria-label": "prop:label",
-        "aria-describedby": "literal:otp-error-id"
+        "aria-describedby": "prop:ariaDescribedby"
       },
       "children": [
         {
@@ -72,17 +73,22 @@
               },
               "bindings": {
                 "disabled": "prop:disabled",
+                "aria-label": "prop:fieldLabel",
                 "aria-readonly": "prop:readOnly",
-                "data-otp-index": "prop:index"
-              },
-              "events": {
-                "input": "channel:value.onChange:setCharAt(iter:index)"
+                "data-otp-index": "iter:index"
               }
             }
           ]
         }
       ]
     }
+  },
+  "compositeControl": {
+    "part": "field",
+    "channel": "value",
+    "interactionModel": "segmented-text",
+    "commit": "input",
+    "update": "channel:value.onChange:setCharAt(iter:index)"
   },
   "props": {
     "designed": {
@@ -142,6 +148,17 @@
           "propType": { "kind": "string" },
           "description": "Accessible label for the OTP group.",
           "default": "One-time password"
+        },
+        {
+          "name": "fieldLabel",
+          "propType": { "kind": "string" },
+          "description": "Accessible label applied to each one-character OTP field.",
+          "default": "One-time password digit"
+        },
+        {
+          "name": "ariaDescribedby",
+          "propType": { "kind": "string" },
+          "description": "External description element id for the OTP group."
         }
       ]
     }
@@ -245,14 +262,7 @@
   "rtl": {
     "flipIcon": false
   },
-  "relationships": [
-    {
-      "from": "field",
-      "to": "group",
-      "attribute": "aria-label",
-      "description": "Each individual input field carries an aria-label like 'Digit N of M' for screen reader enumeration."
-    }
-  ],
+  "relationships": [],
   "a11y": {
     "role": "group",
     "apgPattern": "spinbutton",

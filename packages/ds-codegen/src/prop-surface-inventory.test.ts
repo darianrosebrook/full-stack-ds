@@ -34,11 +34,19 @@ describe("prop-surface inventory — scanner (A1)", () => {
 });
 
 describe("prop-surface harness — internal consistency (A2)", () => {
-  it("no styled member authors a propType (legacy lane stays type-only)", () => {
-    const offenders = reports
-      .filter((r) => r.styledWithPropType.length > 0)
-      .map((r) => `${r.component}: ${r.styledWithPropType.join()}`);
-    expect(offenders).toEqual([]);
+  // LEGACY-BUCKET-REFS-01 retired the old "legacy lane stays type-only"
+  // prohibition: the schema now admits propType on styled/hook members so
+  // object-literal alias references can migrate in place. Internal
+  // consistency is now that the scanner SEES every styled-authored
+  // propType — the set is pinned so each further in-place migration is a
+  // deliberate, visible edit here.
+  it("styled members authoring a propType are exactly the in-place migrations, and obey the shared rules", () => {
+    const styledMigrated = reports.filter((r) => r.styledWithPropType.length > 0);
+    expect(styledMigrated.map((r) => r.component).sort()).toEqual(["Postcard", "Walkthrough"]);
+    for (const r of styledMigrated) {
+      expect(r.doubleAuthored).toEqual([]);
+      expect(r.refs.every((x) => x.resolves)).toBe(true);
+    }
   });
 
   it("no member authors BOTH type and propType (exactly one source)", () => {

@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { StyleProp, ViewStyle } from "react-native";
+import type { AccessibilityRole, StyleProp, ViewStyle } from "react-native";
 import { View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -14,6 +14,8 @@ import { createIconStyles } from "./Icon.styles";
 export interface IconProps {
   name: string;
   size?: "sm" | "md" | "lg" | "xl";
+  decorative?: boolean;
+  ariaLabel?: string;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -25,6 +27,8 @@ export interface IconProps {
 // @generated:start component
 export function Icon({
   size = "md",
+  decorative = true,
+  ariaLabel,
   style,
   testID,
   accessibilityLabel,
@@ -37,8 +41,9 @@ export function Icon({
     <View
       testID={testID}
       style={[styles.root, variantStyleForSize, style]}
-      accessible={false}
-      accessibilityLabel={accessibilityLabel}
+      accessibilityRole={(((decorative ? "presentation" : "img") === "presentation" ? "none" : (decorative ? "presentation" : "img")) as AccessibilityRole)}
+      accessible={!(String((decorative ? "true" : "false")) === "true")}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View

@@ -4,6 +4,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { classify } from "./prepush-scope.mjs";
 
 const on = (r, ...k) => k.every((key) => r[key] === true);
@@ -60,20 +61,192 @@ test("generated framework change (.tsx): rail + generate:check + tests + typeche
 test("--full / indeterminate range: every group runs", () => {
   const r = classify([], { full: true });
   assert.ok(
-    on(r, "RUN_TOKEN_BUILD", "RUN_TOKEN_GATES", "RUN_GENERATE_CHECK", "RUN_DOCS_CLAIMS", "RUN_LINT", "RUN_TYPECHECK", "RUN_TESTS", "RUN_RAIL", "RUN_BEHAVIOR_AUDIT", "RUN_A11Y_AUDIT"),
+    on(
+      r,
+      "RUN_TOKEN_BUILD",
+      "RUN_TOKEN_GATES",
+      "RUN_GENERATE_CHECK",
+      "RUN_DOCS_CLAIMS",
+      "RUN_LINT",
+      "RUN_TYPECHECK",
+      "RUN_TESTS",
+      "RUN_RAIL",
+      "RUN_BEHAVIOR_AUDIT",
+      "RUN_A11Y_AUDIT",
+      "RUN_SWIFTUI_SEMANTIC_DEFAULTS",
+      "RUN_RAIL_TOOLCHAIN_COUPLING",
+    ),
   );
 });
 
 test("empty range (no files): nothing runs", () => {
   const r = classify([]);
   assert.ok(
-    off(r, "RUN_TOKEN_BUILD", "RUN_TOKEN_GATES", "RUN_GENERATE_CHECK", "RUN_DOCS_CLAIMS", "RUN_LINT", "RUN_TYPECHECK", "RUN_TESTS", "RUN_RAIL", "RUN_BEHAVIOR_AUDIT", "RUN_A11Y_AUDIT"),
+    off(
+      r,
+      "RUN_TOKEN_BUILD",
+      "RUN_TOKEN_GATES",
+      "RUN_GENERATE_CHECK",
+      "RUN_DOCS_CLAIMS",
+      "RUN_LINT",
+      "RUN_TYPECHECK",
+      "RUN_TESTS",
+      "RUN_RAIL",
+      "RUN_BEHAVIOR_AUDIT",
+      "RUN_A11Y_AUDIT",
+      "RUN_SWIFTUI_SEMANTIC_DEFAULTS",
+      "RUN_RAIL_TOOLCHAIN_COUPLING",
+    ),
   );
 });
 
 test("mixed docs + contract: union (rail + generate + docs-claims + tests)", () => {
   const r = classify(["docs/x.md", "packages/ds-contracts/components/Card/Card.contract.json"]);
   assert.ok(on(r, "RUN_DOCS_CLAIMS", "RUN_GENERATE_CHECK", "RUN_RAIL", "RUN_TESTS"));
+});
+
+// --- iconography committed-output drift ------------------------------------
+// The emission ledger attests the freshly generated edge set, but its own
+// check rebuilds before comparing that edge set. It cannot by itself prove the
+// committed package-root index files equal those fresh bytes. Both automation
+// surfaces therefore owe the byte-diff check before ledger attestation.
+
+test("an iconography change runs its dedicated gate group", () => {
+  assert.equal(
+    classify(["packages/ds-iconography/icons/Add/Add.icon.json"])
+      .RUN_ICONOGRAPHY,
+    true,
+  );
+});
+
+test("CI and pre-push both check committed icon exports before the ledger", () => {
+  for (const [surface, url] of [
+    ["CI", new URL("../.github/workflows/ci.yml", import.meta.url)],
+    ["pre-push", new URL("../.githooks/pre-push", import.meta.url)],
+  ]) {
+    const source = readFileSync(url, "utf8");
+    const buildCheck = source.indexOf("pnpm run iconography:build:check");
+    const ledgerCheck = source.indexOf("pnpm run iconography:ledger:check");
+    assert.notEqual(buildCheck, -1, `${surface} omits committed-export drift`);
+    assert.notEqual(ledgerCheck, -1, `${surface} omits ledger drift`);
+    assert.ok(buildCheck < ledgerCheck, `${surface} must byte-check before attesting`);
+  }
+});
+
+// --- native authority checks ------------------------------------------------
+// CI already runs the Swift defaults drift check. The scoped local hook must
+// run it for every input capable of changing the generated defaults table or
+// the component refs that select its rows.
+
+test("every Swift semantic-defaults input runs its local drift check", () => {
+  for (const path of [
+    "packages/ds-contracts/components/Card/Card.tokens.json",
+    "packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts",
+    "packages/ds-tokens/src/color/semantic/background.tokens.json",
+    "packages/ds-swiftui/Sources/DsSwiftUI/Components/Card/CardTokens.swift",
+    "packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift",
+    "scripts/generate-swiftui-semantic-defaults.mjs",
+  ]) {
+    assert.equal(
+      classify([path]).RUN_SWIFTUI_SEMANTIC_DEFAULTS,
+      true,
+      `${path} must run the Swift semantic-defaults drift check`,
+    );
+  }
+  assert.equal(
+    classify(["docs/architecture/tokens-architecture.md"])
+      .RUN_SWIFTUI_SEMANTIC_DEFAULTS,
+    false,
+  );
+});
+
+test("every rail-toolchain coupling authority runs the coupling check", () => {
+  for (const path of [
+    "packages/ds-codegen/src/validation/admission-descriptor.ts",
+    "packages/ds-codegen/src/validation/frameworks/react.ts",
+    "packages/ds-compose-smoke/compile-lane.json",
+    "packages/ds-swift-smoke/compile-lane.json",
+    "scripts/run-native-compile-lane.mjs",
+    "scripts/rail-toolchain-coupling-audit.mjs",
+    "scripts/prepush-scope.mjs",
+    "scripts/prepush-scope.test.mjs",
+    ".github/workflows/ci.yml",
+    ".githooks/pre-push",
+    "fsds.targets.json",
+    "package.json",
+  ]) {
+    assert.equal(
+      classify([path]).RUN_RAIL_TOOLCHAIN_COUPLING,
+      true,
+      `${path} must run the rail-toolchain coupling check`,
+    );
+  }
+  assert.equal(
+    classify(["docs/specifications/admission-rail.md"])
+      .RUN_RAIL_TOOLCHAIN_COUPLING,
+    false,
+  );
+});
+
+test("CI and pre-push execute the classifier contract and both authority checks", () => {
+  for (const [surface, url] of [
+    ["CI", new URL("../.github/workflows/ci.yml", import.meta.url)],
+    ["pre-push", new URL("../.githooks/pre-push", import.meta.url)],
+  ]) {
+    const source = readFileSync(url, "utf8");
+    assert.match(
+      source,
+      /node --test scripts\/prepush-scope\.test\.mjs/,
+      `${surface} does not execute the classifier contract`,
+    );
+    assert.match(
+      source,
+      /node scripts\/rail-toolchain-coupling-audit\.mjs --check/,
+      `${surface} does not execute the coupling check`,
+    );
+    assert.match(
+      source,
+      /pnpm run swiftui:semantic-defaults:check/,
+      `${surface} does not execute the Swift defaults drift check`,
+    );
+  }
+});
+
+// --- contract-oracle catalog integrity --------------------------------------
+// The local hook runs only the cheap pointer/one-leaf self-check. Full mutant
+// execution is a scheduled/manual CI lane because it runs the complete rail
+// once for the baseline and again for every curated contract mutation.
+
+test("a contract change runs the contract-oracle catalog self-check", () => {
+  assert.equal(
+    classify(["packages/ds-contracts/components/Dialog/Dialog.contract.json"])
+      .RUN_CONTRACT_ORACLE_SELFCHECK,
+    true,
+  );
+});
+
+test("editing the mutation tool runs its catalog self-check", () => {
+  assert.equal(
+    classify(["scripts/contract-oracle-mutation/catalog.mjs"])
+      .RUN_CONTRACT_ORACLE_SELFCHECK,
+    true,
+  );
+});
+
+test("editing package scripts runs the contract-oracle catalog self-check", () => {
+  assert.equal(classify(["package.json"]).RUN_CONTRACT_ORACLE_SELFCHECK, true);
+});
+
+test("docs-only and empty ranges skip the contract-oracle catalog self-check", () => {
+  assert.equal(classify(["docs/x.md"]).RUN_CONTRACT_ORACLE_SELFCHECK, false);
+  assert.equal(classify([]).RUN_CONTRACT_ORACLE_SELFCHECK, false);
+});
+
+test("a full pre-push run includes the contract-oracle catalog self-check", () => {
+  assert.equal(
+    classify([], { full: true }).RUN_CONTRACT_ORACLE_SELFCHECK,
+    true,
+  );
 });
 
 // --- styling-realization ledgers (RAIL-STYLING-REALIZATION-LEDGERS-01) -------
@@ -347,4 +520,3 @@ test("a docs-only push does NOT run the realization audits", () => {
   assert.equal(r.RUN_BEHAVIOR_AUDIT, false);
   assert.equal(r.RUN_A11Y_AUDIT, false);
 });
-

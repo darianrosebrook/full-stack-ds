@@ -83,7 +83,8 @@ function collectSlotNames(dom: DomNodeIR): Set<string> {
 /** A part's element "hosts a slot" when consumer content IS its semantic body. */
 function hostsSlot(node: DomNodeIR): boolean {
   return (
-    node.tag === "slot" || node.children.some((child) => child.tag === "slot")
+    node.tag === "slot" ||
+    (node.children.length === 1 && node.children[0].tag === "slot")
   );
 }
 
@@ -248,7 +249,16 @@ export function resolveIdRelationships(
     pushIdRef(from.node, rel.attribute, {
       slug: rel.to,
       when: gate,
-      slotGate: resolved.slotGate ?? targetSlotName(to.node),
+      // A naming/description IDREF should disappear with empty consumer
+      // content; aria-controls still points at a live target even when that
+      // target's slot is empty (Command's empty listbox is the canonical
+      // case). Do not let a target slot silently gate structural IDREFs.
+      slotGate:
+        resolved.slotGate ??
+        (rel.attribute === "aria-labelledby" ||
+        rel.attribute === "aria-describedby"
+          ? targetSlotName(to.node)
+          : undefined),
     });
     if (passthrough !== null) {
       const entry = from.node.idRefAttrs.find(

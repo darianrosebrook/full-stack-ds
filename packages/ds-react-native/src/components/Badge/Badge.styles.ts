@@ -11,6 +11,9 @@ export function createBadgeStyles(theme?: FsdsTheme) {
   return StyleSheet.create({
     content: {},
     icon: {},
+    icon_variant_lg: definedStyle({ width: (tokens.variant_lg?.["badge.size.fontSize"] as number | undefined), height: (tokens.variant_lg?.["badge.size.fontSize"] as number | undefined) }),
+    icon_variant_md: definedStyle({ width: (tokens.variant_md?.["badge.size.fontSize"] as number | undefined), height: (tokens.variant_md?.["badge.size.fontSize"] as number | undefined) }),
+    icon_variant_sm: definedStyle({ width: (tokens.variant_sm?.["badge.size.fontSize"] as number | undefined), height: (tokens.variant_sm?.["badge.size.fontSize"] as number | undefined) }),
     root: { paddingTop: (tokens.root?.["box-model.padding-block-start"] as number | undefined), paddingBottom: (tokens.root?.["box-model.padding-block-end"] as number | undefined), minHeight: (tokens.root?.["box-model.min-height"] as number | undefined), paddingLeft: (tokens.root?.["box-model.padding-inline-start"] as number | undefined), paddingRight: (tokens.root?.["box-model.padding-inline-end"] as number | undefined), gap: (tokens.root?.["box-model.gap"] as number | undefined), minWidth: (tokens.root?.["box-model.min-width"] as number | undefined), backgroundColor: (tokens.root?.["badge.color.background.default"] as string | undefined), borderColor: (tokens.root?.["badge.color.border.default"] as string | undefined), borderWidth: (tokens.root?.["badge.size.border"] as number | undefined), borderRadius: (tokens.root?.["badge.size.radius"] as number | undefined) },
     rootText: definedStyle({ color: (tokens.root?.["badge.color.foreground.primary"] as string | undefined), fontSize: (tokens.root?.["badge.size.fontSize"] as number | undefined), fontWeight: (tokens.root?.["badge.text.weight"] as TextStyle["fontWeight"]) }),
     rootText_variant_counter: definedStyle({ color: (tokens.variant_counter?.["badge.color.foreground.primary"] as string | undefined) }),

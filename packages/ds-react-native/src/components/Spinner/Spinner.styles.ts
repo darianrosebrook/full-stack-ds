@@ -14,6 +14,10 @@ export function createSpinnerStyles(theme?: FsdsTheme) {
     rootText_variant_sm: definedStyle({ fontSize: (tokens.root?.["spinner.size.sm"] as number | undefined) }),
     rootText_variant_xs: definedStyle({ fontSize: (tokens.root?.["spinner.size.xs"] as number | undefined) }),
     visual: {},
+    visual_variant_lg: definedStyle({ width: (tokens.root?.["spinner.size.lg"] as number | undefined), height: (tokens.root?.["spinner.size.lg"] as number | undefined) }),
+    visual_variant_md: definedStyle({ width: (tokens.root?.["spinner.size.md"] as number | undefined), height: (tokens.root?.["spinner.size.md"] as number | undefined) }),
+    visual_variant_sm: definedStyle({ width: (tokens.root?.["spinner.size.sm"] as number | undefined), height: (tokens.root?.["spinner.size.sm"] as number | undefined) }),
+    visual_variant_xs: definedStyle({ width: (tokens.root?.["spinner.size.xs"] as number | undefined), height: (tokens.root?.["spinner.size.xs"] as number | undefined) }),
   });
 }
 

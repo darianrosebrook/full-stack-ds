@@ -181,6 +181,7 @@ export class CalendarElement extends LitElement {
     }
   `;
 
+  @property({ type: String }) caption?: string = "Calendar";
   @property({ attribute: false }) value?: Date | Date[] | null;
   @property({ attribute: false }) defaultValue?: Date | Date[] | null;
   @property({ attribute: false }) onChange?: (value: Date | Date[] | null) => void;
@@ -216,7 +217,7 @@ export class CalendarElement extends LitElement {
     return html`<div class="${this.computeClasses()}" role="application">
   <div class=${'calendar__header'}>
     <button class=${'calendar__nav'} aria-label="Previous month"></button>
-    <span class=${'calendar__caption'}></span>
+    <span class=${'calendar__caption'}>${(this.caption ?? "Calendar")}</span>
     <button class=${'calendar__nav'} aria-label="Next month"></button>
   </div>
   <table class=${'calendar__grid'} role="grid" aria-label="Calendar">
@@ -224,7 +225,7 @@ export class CalendarElement extends LitElement {
       <tr>
         ${(this.days ?? []).map((item, index) => html`
         <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${index}>
-          <button class=${'calendar__day'} @click=${() => this.behavior.setValue(item)}></button>
+          <button class=${'calendar__day'} @click=${() => this.behavior.setValue(item)}>${item.getDate()}</button>
         </td>
         `)}
       </tr>

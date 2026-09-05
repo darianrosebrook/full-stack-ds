@@ -1,8 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../contract.js";
 import { buildComponentIR } from "../ir.js";
+import { corpusIR } from "./corpus-fixtures.js";
 import { generateReactComponentSource } from "./react/component-source.js";
 import { generateVueComponentSource } from "./vue/component-source.js";
+import { generateSvelteComponentSource } from "./svelte/component-source.js";
+import { generateLitComponentSource } from "./lit/component-source.js";
+import { generateAngularComponentSource } from "./angular/component-source.js";
+import { createVueEmitter } from "./vue/factory.js";
+import { createSvelteEmitter } from "./svelte/factory.js";
 
 /**
  * Cross-emitter parity. The contract is the single source of truth, so when
@@ -38,12 +44,13 @@ describe("emitter parity: Vue Props interface declares every bound attribute", (
     expect(propsInterface(vue)).toContain(`"data-testid"?: string;`);
   });
 
-  it("dialog dom tree adds aria-label and aria-labelledby to Props", () => {
+  it("dialog labeling props come from the contract rather than emitter injection", () => {
     const contract = makeDialogContract();
     const vue = generateVueComponentSource(buildComponentIR(contract));
 
-    expect(propsInterface(vue)).toContain(`"aria-label"?: string;`);
-    expect(propsInterface(vue)).toContain(`"aria-labelledby"?: string;`);
+    expect(propsInterface(vue)).toContain(`ariaLabel?: string;`);
+    expect(propsInterface(vue)).toContain(`ariaLabelledby?: string;`);
+    expect(propsInterface(vue)).not.toContain(`"aria-label"?: string;`);
   });
 
   it("React and Vue Props expose the same root-attribute additions for the same contract", () => {
@@ -61,6 +68,17 @@ describe("emitter parity: Vue Props interface declares every bound attribute", (
     expect(react).toContain(`"data-testid"?: string;`);
     expect(propsInterface(vue)).toContain(`class?: string;`);
     expect(propsInterface(vue)).toContain(`"data-testid"?: string;`);
+  });
+});
+
+describe("emitter parity: Lit legacy Stack accessibility surface", () => {
+  it("puts the contract role on the public custom-element host", () => {
+    const lit = generateLitComponentSource(corpusIR("Card"));
+
+    expect(lit).toContain(
+      `if (!this.hasAttribute("role")) this.setAttribute("role", "group");`,
+    );
+    expect(lit).not.toContain(`<fsds-stack role="group"`);
   });
 });
 
@@ -125,22 +143,13 @@ describe("textContent binding renders as child text node", () => {
   });
 });
 
-describe("dialog injection respects contract attrs", () => {
-  it("React: skips aria-labelledby injection when contract attrs has it", () => {
+describe("dialog labeling remains contract-owned", () => {
+  it("React: emits a contract-authored aria-labelledby once", () => {
     const contract = makeDialogWithLiteralLabelledby();
     const react = generateReactComponentSource(
       buildComponentIR(contract),
       "../../primitives",
     );
-    // Count aria-labelledby occurrences in the JSX body (rough but precise)
-    const matches = react.match(/aria-labelledby/g) ?? [];
-    // 1 in Omit<HTMLAttributes...> clause + 1 in Props interface declaration
-    // + 1 destructured + 1 in JSX = 4 max.
-    // The original bug emitted 5: the extra duplicate JSX attribute. The
-    // precise "no duplicate JSX attribute" assertion is below; this is a
-    // coarse upper bound.
-    expect(matches.length).toBeLessThanOrEqual(4);
-    // Specifically, the JSX line should have the literal once, not twice
     const jsxLine = react
       .split("\n")
       .find((l) => l.includes('role="dialog"') && l.includes("aria-labelledby"));
@@ -149,26 +158,164 @@ describe("dialog injection respects contract attrs", () => {
     expect(labelledbyCount).toBe(1);
   });
 
-  it("React: still injects aria-label when no literal is present", () => {
+  it("React: does not invent labeling props for a bare dialog", () => {
     const contract = makeDialogBare();
     const react = generateReactComponentSource(
       buildComponentIR(contract),
       "../../primitives",
     );
-    // Inner dialog node receives the forwarded prop
-    expect(react).toContain("aria-label={ariaLabel}");
-    expect(react).toContain("aria-labelledby={ariaLabelledBy}");
+    expect(react).not.toContain("aria-label={ariaLabel}");
+    expect(react).not.toContain("aria-labelledby={ariaLabelledBy}");
+    expect(react).not.toContain(`"aria-label"?: string;`);
   });
 });
 
+describe("nested interactive labels remain contract-owned", () => {
+  it("Command exposes and binds the search input label in React and Vue", () => {
+    const ir = corpusIR("Command");
+    const react = generateReactComponentSource(ir, "../../primitives");
+    const vue = generateVueComponentSource(ir);
+
+    expect(react).toContain(`searchLabel?: string;`);
+    expect(react).toContain(`searchLabel = "Search commands"`);
+    expect(react).toContain(`aria-label={searchLabel}`);
+    expect(propsInterface(vue)).toContain(`searchLabel?: string;`);
+    expect(vue).toContain(`:aria-label="props.searchLabel"`);
+    expect(react).toContain(`{slots?.items}`);
+    expect(react).not.toContain(`<div className="command__item" role="option">`);
+    expect(vue).toContain(`<slot name="items" />`);
+  });
+
+  it("Command derives its input/listbox IDREF pair per instance in every web emitter", () => {
+    const ir = corpusIR("Command");
+    const sources = {
+      react: generateReactComponentSource(ir, "../../primitives"),
+      vue: generateVueComponentSource(ir),
+      svelte: generateSvelteComponentSource(ir),
+      lit: generateLitComponentSource(ir),
+      angular: generateAngularComponentSource(ir),
+    };
+
+    for (const source of Object.values(sources)) {
+      expect(source).not.toContain("fsds-command-listbox");
+    }
+    expect(sources.react).toContain('aria-controls={`${instanceId}-list`}');
+    expect(sources.react).toContain('id={`${instanceId}-list`}');
+    expect(sources.vue).toContain(':aria-controls="`${instanceId}-list`"');
+    expect(sources.vue).toContain(':id="`${instanceId}-list`"');
+    expect(sources.svelte).toContain('aria-controls={`${instanceId}-list`}');
+    expect(sources.svelte).toContain('id={`${instanceId}-list`}');
+    expect(sources.lit).toContain('aria-controls="command-list"');
+    expect(sources.lit).toContain('id="command-list"');
+    expect(sources.angular).toContain(
+      '[attr.aria-controls]="instanceId + \'-list\'"',
+    );
+    expect(sources.angular).toContain('[attr.id]="instanceId + \'-list\'"');
+  });
+
+  it("Command realizes consumer-composed item anatomy as typed subcomponents in every web emitter", () => {
+    const ir = corpusIR("Command");
+    const expectedParts = [
+      "groupHeading",
+      "groupItems",
+      "itemIcon",
+      "itemContent",
+      "itemLabel",
+      "itemDescription",
+    ];
+    for (const part of expectedParts) {
+      expect(ir.compoundParts.map((entry) => entry.name)).toContain(part);
+    }
+
+    const react = generateReactComponentSource(ir, "../../primitives");
+    const angular = generateAngularComponentSource(ir);
+    const lit = generateLitComponentSource(ir);
+    expect(react).toContain("export function CommandItemIcon");
+    expect(react).toContain('<Stack as="span" className={classNames}');
+    expect(angular).toContain("export class CommandItemIconComponent");
+    expect(angular).toContain('<fsds-stack as="span"');
+    expect(lit).toContain("export class CommandItemIconElement");
+    expect(lit).toContain('<fsds-stack as="span"');
+
+    const options = {
+      componentsRoot: "/tmp/fsds-emitter-parity/components",
+      contractsRoot: "/tmp/fsds-emitter-parity/contracts",
+    };
+    const vueFiles = createVueEmitter().emitComponent(ir, options);
+    const svelteFiles = createSvelteEmitter().emitComponent(ir, options);
+    const vueIcon = vueFiles.find((file) =>
+      file.relativePath.endsWith("CommandItemIcon.vue"),
+    );
+    const svelteIcon = svelteFiles.find((file) =>
+      file.relativePath.endsWith("CommandItemIcon.svelte"),
+    );
+    expect(vueIcon?.contents).toContain('<Stack as="span"');
+    expect(svelteIcon?.contents).toContain('<Stack as="span"');
+  });
+
+  it("Select names its nested trigger through a consumer-overridable prop", () => {
+    const ir = corpusIR("Select");
+    const react = generateReactComponentSource(ir, "../../primitives");
+    const vue = generateVueComponentSource(ir);
+
+    expect(react).toContain(`triggerLabel?: string;`);
+    expect(react).toContain(`triggerLabel = "Select an option"`);
+    expect(react).toContain(`aria-label={triggerLabel}`);
+    expect(
+      react
+        .split("\n")
+        .find((line) => line.includes(`<button className="select__trigger"`)),
+    ).toContain(`aria-expanded={open}`);
+    expect(propsInterface(vue)).toContain(`triggerLabel?: string;`);
+    expect(vue).toContain(`:aria-label="props.triggerLabel"`);
+    expect(
+      vue
+        .split("\n")
+        .find((line) => line.includes(`<button :class="'select__trigger'"`)),
+    ).toContain(`:aria-expanded="behavior.open.value"`);
+  });
+
+  it("OTP names every field and does not emit a fabricated dangling description id", () => {
+    const ir = corpusIR("OTP");
+    const react = generateReactComponentSource(ir, "../../primitives");
+    const vue = generateVueComponentSource(ir);
+
+    expect(react).toContain(`fieldLabel?: string;`);
+    expect(react).toContain(`aria-label={fieldLabel}`);
+    expect(react).toContain(`aria-describedby={ariaDescribedby}`);
+    expect(react).not.toContain(`otp-error-id`);
+    expect(vue).toContain(`:aria-label="props.fieldLabel"`);
+    expect(vue).toContain(`:aria-describedby="props.ariaDescribedby"`);
+    expect(vue).not.toContain(`otp-error-id`);
+  });
+});
+
+describe("React component scan identity", () => {
+  it.each(["Accordion", "Tabs"])(
+    "%s compound roots retain the same data-fsds identity as generic roots",
+    (name) => {
+      const react = generateReactComponentSource(
+        corpusIR(name),
+        "../../primitives",
+      );
+
+      expect(react).toContain(
+        `data-fsds-component="${name.toLowerCase()}"`,
+      );
+    },
+  );
+});
+
 describe("renderBinding: host attribute drives event-handler shape", () => {
-  it("boolean channel onChange → e.target.checked unwrap", () => {
+  it("boolean channel onChange → currentTarget.checked unwrap", () => {
     const contract = makeChannelContract("onChange", "boolean");
     const react = generateReactComponentSource(
       buildComponentIR(contract),
       "../../primitives",
     );
-    expect(react).toContain("(e) => setExpanded(e.target.checked)");
+    expect(react).toContain(
+      "(e) => setExpanded((e.currentTarget as HTMLInputElement).checked)",
+    );
     expect(react).not.toMatch(/onClick=\{.*e\.target\.checked/);
   });
 
@@ -185,13 +332,15 @@ describe("renderBinding: host attribute drives event-handler shape", () => {
     expect(react).toContain("setExpanded(!expanded)");
   });
 
-  it("string channel onChange → e.target.value unwrap", () => {
+  it("string channel onChange → currentTarget.value unwrap", () => {
     const contract = makeChannelContract("onChange", "string");
     const react = generateReactComponentSource(
       buildComponentIR(contract),
       "../../primitives",
     );
-    expect(react).toContain("(e) => setExpanded(e.target.value)");
+    expect(react).toContain(
+      "(e) => setExpanded((e.currentTarget as HTMLInputElement).value)",
+    );
   });
 
   it("Vue: boolean channel onClick → toggle callback", () => {
@@ -461,12 +610,21 @@ function makeDialogContract(): ComponentContract {
         tag: "div",
         part: "root",
         attrs: { role: "dialog" },
+        bindings: {
+          "aria-label": "prop:ariaLabel",
+          "aria-labelledby": "prop:ariaLabelledby",
+        },
       },
     },
     props: {
       styled: {
-        members: [{ name: "open", type: "boolean" }],
+        members: [
+          { name: "open", type: "boolean" },
+          { name: "ariaLabel", type: "string" },
+          { name: "ariaLabelledby", type: "string" },
+        ],
       },
     },
+    a11y: { role: "dialog", labeling: ["aria-label", "aria-labelledby"] },
   };
 }

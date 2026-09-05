@@ -40,7 +40,7 @@
     "generate:watch": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --watch",
     "validate:generated": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/validation/validate-cli.js",
     "validate:generated:react-native": "echo \"React Native is part of the default rail: use pnpm run governed:rail (all targets) or governed:rail:react-native (targeted) so validation runs against a fresh emission manifest.\" && exit 1",
-    "docs:check-claims": "node scripts/docs-claims-check.mjs",
+    "docs:check-claims": "node scripts/docs-claims-freshness.selftest.mjs && node scripts/docs-claims-check.mjs",
     "docs:check-links": "node scripts/docs-link-check.mjs",
     "docs:check-claims:fix": "node scripts/docs-claims-check.mjs --fix",
     "iconography:build": "pnpm --filter @full-stack-ds/iconography run build",
@@ -92,7 +92,7 @@
     "typecheck:example:compose": "./examples/settings/compose/gradlew -p examples/settings/compose compileKotlin --no-daemon",
     "typecheck:all": "pnpm run typecheck && pnpm run typecheck:vue && pnpm run typecheck:angular && pnpm run typecheck:lit && pnpm run typecheck:svelte && pnpm run typecheck:react-native",
     "build:react": "pnpm --filter @full-stack-ds/react run build",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed",
@@ -110,6 +110,8 @@
     "audit:motion-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/motion-realization-audit/selfcheck.mjs && node scripts/motion-realization-audit/audit.mjs",
     "audit:carrier-reachability": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && pnpm exec vitest run packages/ds-codegen/src/carrier-reachability.test.ts && node scripts/carrier-reachability-audit/audit.mjs",
     "audit:variant-realization": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node scripts/lib/ledger-ratchet.test.mjs && node scripts/variant-style-audit/realization.test.mjs && node scripts/variant-style-audit/audit.mjs",
+    "audit:contract-oracle-mutations:selfcheck": "node scripts/contract-oracle-mutation/selfcheck.mjs",
+    "audit:contract-oracle-mutations": "pnpm run audit:contract-oracle-mutations:selfcheck && node scripts/contract-oracle-mutation/run.mjs",
     "parity:compose-tokens": "node scripts/compose-parity-diff.mjs"
   },
   "dependencies": {

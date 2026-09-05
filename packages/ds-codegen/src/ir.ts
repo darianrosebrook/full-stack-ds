@@ -21,6 +21,7 @@ import type {
   ContractDismissal,
   ContractDismissalTrigger,
   ContractDomNode,
+  ContractValueMapBinding,
   ContractEventPayloadField,
   ContractContentTransform,
   ContractEventSignature,
@@ -56,7 +57,8 @@ import {
   ROOT_ONLY_PARTS,
   SEMANTIC_ELEMENTS,
   getRootElement,
-  isAnchoredPresenceKind,
+  resolveSurfaceAttachment,
+  type SurfaceAttachment,
   isCompoundPart,
 } from "./semantics.js";
 import { resolveStyleProfile } from "./box-model.js";
@@ -73,6 +75,8 @@ export interface PartIR {
   semanticElement: string | undefined;
   /** True when the codegen treats this part as a separate sub-component. */
   isCompound: boolean;
+  /** True only when `anatomy.details.<part>.subcomponent` opted in explicitly. */
+  isExplicitSubcomponent?: true;
   /** True when the part is rendered only as part of the root render tree. */
   isRootOnly: boolean;
   /** Optional layout hint used by emitters for horizontal vs vertical stacks. */
@@ -97,9 +101,11 @@ export interface PartIR {
    *     custom elements cannot be valid native table children); the root
    *     Lit class owns the full native template via shadow-DOM slots.
    *
-   * For parts not in the table composition set, nativeTag is still
-   * populated when declared, but emitters MAY ignore it (no general
-   * native-leaf policy is implied by this slice).
+   * An explicitly declared subcomponent also carries its non-`div` nativeTag
+   * through Stack's polymorphic `as` input. Legacy name-classified compound
+   * parts retain their established `semanticElement`; their contract tag did
+   * not historically govern the wrapper and changing that is a separate
+   * semantic migration with authored runtime witnesses of its own.
    */
   nativeTag?: string;
   /**
@@ -323,6 +329,19 @@ export type BindingExpression =
   | { kind: "literal"; value: string }
   | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] }
   | {
+      /** Closed, value-shaped projection over a binding source. */
+      kind: "projection";
+      op: "dateDayOfMonth";
+      source: BindingExpression;
+    }
+  | {
+      /** Contract-authored literal projection, generic across components. */
+      kind: "valueMap";
+      source: BindingExpression;
+      values: Record<string, string>;
+      fallback?: string;
+    }
+  | {
       kind: "conditional";
       condition: BindingExpression;
       whenTrue: BindingExpression;
@@ -371,6 +390,43 @@ export type BindingExpression =
  * narrowing — the parser already guarantees the kind at construction time.
  */
 export type PropBindingExpression = Extract<BindingExpression, { kind: "prop" }>;
+
+/** Lower a normalized value map once a backend has rendered its source. */
+export function composeValueMapExpression(
+  binding: Extract<BindingExpression, { kind: "valueMap" }>,
+  sourceExpression: string,
+  renderLiteral: (value: string) => string = JSON.stringify,
+): string {
+  const entries = Object.entries(binding.values);
+  if (entries.length === 0) {
+    return binding.fallback === undefined
+      ? '""'
+      : renderLiteral(binding.fallback);
+  }
+  const fallback = binding.fallback;
+  const hasFallback = fallback !== undefined;
+  const terminal = fallback !== undefined
+    ? renderLiteral(fallback)
+    : renderLiteral(entries[entries.length - 1][1]);
+  const cases = hasFallback ? entries : entries.slice(0, -1);
+  return cases.reduceRight(
+    (otherwise, [sourceValue, targetValue]) =>
+      `(${sourceExpression} === ${renderLiteral(sourceValue)} ? ` +
+      `${renderLiteral(targetValue)} : ${otherwise})`,
+    terminal,
+  );
+}
+
+/** Lower the closed projection vocabulary after a backend renders its source. */
+export function composeBindingProjectionExpression(
+  op: Extract<BindingExpression, { kind: "projection" }>['op'],
+  sourceExpression: string,
+): string {
+  switch (op) {
+    case "dateDayOfMonth":
+      return `${sourceExpression}.getDate()`;
+  }
+}
 
 /**
  * Closed set of named channel-update operations
@@ -735,8 +791,29 @@ export interface FieldAssociationProviderIR {
 
 export interface FieldAssociationIR {
   provides?: FieldAssociationProviderIR;
-  /** True when this component consumes ambient field association (a control). */
-  consumes: boolean;
+  /** Target part when this control consumes ambient field association. */
+  consumerPart: string | undefined;
+}
+
+export interface FormControlIR {
+  /** Rendered anatomy part that owns interaction and field association. */
+  part: PartIR;
+  /** Normalized controlled/uncontrolled value channel. */
+  channel: NormalizedChannelIR;
+  valueModel: "text" | "boolean";
+  commit: "input" | "change" | "activation";
+  /** Web DOM event derived from commit semantics and injected on `part`. */
+  event: "input" | "change" | "click";
+}
+
+export interface CompositeControlIR {
+  /** Repeated anatomy part instantiated by an enclosing iteration. */
+  part: PartIR;
+  channel: NormalizedChannelIR;
+  interactionModel: "collection-selection" | "segmented-text";
+  commit: "input" | "activation";
+  event: "input" | "click";
+  update: Extract<BindingExpression, { kind: "channelCall" | "channelUpdate" }>;
 }
 
 /**
@@ -1239,6 +1316,14 @@ export interface RootSemanticsIR {
    * `undefined` when no role attribute is needed.
    */
   effectiveRole: string | undefined;
+  /**
+   * Role attribute to synthesize on the rendered DOM root. This is narrower
+   * than `effectiveRole`: when `anatomy.dom` already assigns that role to an
+   * authored node (including an inner dialog panel), the authored node owns
+   * it and this field is undefined so emitters cannot duplicate the role on
+   * the outer layout host.
+   */
+  rootRole: string | undefined;
   /** Required labeling attributes from the contract. */
   labeling: string[];
   /** Keyboard interactions declared in the a11y block. */
@@ -1368,6 +1453,13 @@ export interface NormalizedDismissalTriggerIR {
   /** Prop name controlling whether the trigger is active. */
   enabledByProp?: string;
   defaultEnabled: boolean;
+  /**
+   * Anatomy part that owns this trigger's interaction. Required for
+   * `overlayClick` (validated against the dom tree): the dismissal click
+   * binds on this element because the root is pointer-events:none under a
+   * full-cover overlay and can never be the hit target.
+   */
+  targetPart?: string;
   description?: string;
 }
 
@@ -1472,6 +1564,8 @@ export interface SurfaceIR {
   kind: ContractSurfaceKind;
   presence: ContractSurfacePresence;
   modality: ContractSurfaceModality;
+  /** Axis-derived attachment target used to select shared surface machinery. */
+  attachment: SurfaceAttachment;
   anchor: SurfaceAnchorIR | undefined;
   /** Selector-sourced anchor — mutually exclusive with `anchor` (validated
    * fail-loud in buildSurfaceIR). */
@@ -1572,6 +1666,12 @@ export interface ComponentIR {
    * consumed starting with Phase F-2 (Tooltip migration).
    */
   surface: SurfaceIR | undefined;
+
+  /** Interactive control capability, independent of native form submission. */
+  formControl: FormControlIR | undefined;
+
+  /** Repeated-item interaction capability with iteration-aware updates. */
+  compositeControl: CompositeControlIR | undefined;
 
   /**
    * Target-neutral text-overflow intent — present only when
@@ -1722,6 +1822,20 @@ export const LAYER_ORDER: Record<string, number> = {
   assembly: 3,
 };
 
+/**
+ * True when the authored DOM tree already places `role` on one of its nodes.
+ * Role ownership is a normalized IR fact: emitters must not independently
+ * rediscover whether an inner panel or the outer host owns the component role.
+ */
+function domTreeOwnsRole(
+  node: DomNodeIR | null | undefined,
+  role: string,
+): boolean {
+  if (!node) return false;
+  if (node.attrs.role === role) return true;
+  return node.children.some((child) => domTreeOwnsRole(child, role));
+}
+
 export function buildComponentIR(
   contract: ComponentContract,
   options?: BuildComponentIROptions,
@@ -1764,6 +1878,23 @@ export function buildComponentIR(
   const surface = buildSurfaceIR(contract, parts);
   const textOverflow = buildTextOverflowIR(contract);
   const dom = buildDomTree(contract);
+  const formControl = buildFormControlIR(
+    contract,
+    parts,
+    behavior.normalizedChannels,
+    dom,
+  );
+  const compositeControl = buildCompositeControlIR(
+    contract,
+    parts,
+    behavior.normalizedChannels,
+    dom,
+  );
+  validateDismissalTargetParts(contract, dom);
+  const rootRole =
+    effectiveRole && !domTreeOwnsRole(dom, effectiveRole)
+      ? effectiveRole
+      : undefined;
 
   if (dom) {
     enrichMarkdownTagsInTree(
@@ -1813,9 +1944,17 @@ export function buildComponentIR(
     const provides = dom
       ? resolveIdRelationships(dom, contract, propNames)
       : undefined;
-    const consumes = contract.fieldAssociation === "control";
-    if (provides || consumes) {
-      fieldAssociation = { provides, consumes };
+    const consumerPart =
+      contract.fieldAssociation === "control"
+        ? formControl?.part.name
+        : undefined;
+    if (contract.fieldAssociation === "control" && !consumerPart) {
+      throw new Error(
+        `Contract "${contract.name}": fieldAssociation "control" requires formControl so association can target the rendered control part.`,
+      );
+    }
+    if (provides || consumerPart) {
+      fieldAssociation = { provides, consumerPart };
     }
   }
 
@@ -1862,6 +2001,7 @@ export function buildComponentIR(
       explicitRole,
       implicitRole,
       effectiveRole,
+      rootRole,
       labeling: contract.a11y?.labeling ?? [],
       keyboard: contract.a11y?.keyboard,
       polymorphicTagProp,
@@ -1873,6 +2013,8 @@ export function buildComponentIR(
     tokenScopes,
     behavior,
     surface,
+    formControl,
+    compositeControl,
     textOverflow,
     dom,
     fieldAssociation,
@@ -2010,6 +2152,7 @@ function validateDomBindings(
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
   const knownProps = new Set(styledProps.map((p) => p.name));
   const propTypes = new Map(styledProps.map((p) => [p.name, p.type]));
+  const propTypeIR = new Map(styledProps.map((p) => [p.name, p.propType]));
   const channelValuePropByName = new Map(channels.map((c) => [c.name, c.valueProp]));
   // FEAT-CHANNEL-UPDATE-OPERATIONS-01: channel name → declared valueType, so
   // `channelUpdate` validation can check operation/valueType compatibility
@@ -2030,6 +2173,7 @@ function validateDomBindings(
     channelValueProps,
     knownProps,
     propTypes,
+    propTypeIR,
     componentName,
     cssPrefix,
     channelValueTypes,
@@ -2090,6 +2234,7 @@ function validateDomNode(
   channelValueProps: Set<string>,
   knownProps: Set<string>,
   propTypes: Map<string, string>,
+  propTypeIR: Map<string, PropTypeIR>,
   componentName: string,
   cssPrefix: string,
   channelValueTypes: Map<string, string>,
@@ -2308,6 +2453,15 @@ function validateDomNode(
   }
 
   for (const [attr, binding] of Object.entries(node.bindings)) {
+    if (binding.kind === "valueMap") {
+      validateValueMapBinding(
+        binding,
+        attr,
+        propTypeIR,
+        componentTypes,
+        componentName,
+      );
+    }
     validateBindingAgainstScope(
       binding,
       `binding "${attr}"`,
@@ -2466,12 +2620,87 @@ function validateDomNode(
       channelValueProps,
       knownProps,
       propTypes,
+      propTypeIR,
       componentName,
       cssPrefix,
       channelValueTypes,
       activeIterations,
       anatomyDetails,
       componentTypes,
+    );
+  }
+}
+
+function literalDomainForProp(
+  propType: PropTypeIR | undefined,
+  componentTypes: Record<string, ContractTypeDef>,
+): string[] | undefined {
+  if (!propType) return undefined;
+  if (propType.kind === "enum") return propType.values;
+  if (propType.kind === "literal" && typeof propType.value === "string") {
+    return [propType.value];
+  }
+  if (propType.kind === "union") {
+    const domains = propType.of.map((member) =>
+      literalDomainForProp(member, componentTypes),
+    );
+    return domains.some((domain) => domain === undefined)
+      ? undefined
+      : domains.flatMap((domain) => domain!);
+  }
+  if (propType.kind === "ref") {
+    const def = componentTypes[propType.to];
+    return def?.kind === "union" && Array.isArray(def.values)
+      ? def.values
+      : undefined;
+  }
+  return undefined;
+}
+
+function validateValueMapBinding(
+  binding: Extract<BindingExpression, { kind: "valueMap" }>,
+  attr: string,
+  propTypes: Map<string, PropTypeIR>,
+  componentTypes: Record<string, ContractTypeDef>,
+  componentName: string,
+): void {
+  if (
+    binding.source.kind !== "prop" ||
+    (binding.source.path?.length ?? 0) > 0
+  ) {
+    throw new Error(
+      `[${componentName}] DOM binding "${attr}" value map source must be a ` +
+        `bare prop:<name> reference so its finite domain can be verified.`,
+    );
+  }
+  const domain = literalDomainForProp(
+    propTypes.get(binding.source.prop),
+    componentTypes,
+  );
+  if (!domain) {
+    if (binding.fallback === undefined) {
+      throw new Error(
+        `[${componentName}] DOM binding "${attr}" value map source prop ` +
+          `'${binding.source.prop}' has no enumerable literal domain; declare ` +
+          `a fallback or use an enum/string-union prop.`,
+      );
+    }
+    return;
+  }
+  const authored = Object.keys(binding.values);
+  const unknown = authored.filter((key) => !domain.includes(key));
+  if (unknown.length > 0) {
+    throw new Error(
+      `[${componentName}] DOM binding "${attr}" value map has unknown key(s) ` +
+        `[${unknown.join(", ")}] outside source prop '${binding.source.prop}' ` +
+        `domain [${domain.join(", ")}].`,
+    );
+  }
+  const missing = domain.filter((key) => !(key in binding.values));
+  if (missing.length > 0 && binding.fallback === undefined) {
+    throw new Error(
+      `[${componentName}] DOM binding "${attr}" value map must be exhaustive ` +
+        `for source prop '${binding.source.prop}'; missing [${missing.join(", ")}].`,
     );
   }
 }
@@ -2529,6 +2758,42 @@ function validateBindingAgainstScope(
    */
   channelValueTypes: Map<string, string> = new Map(),
 ): void {
+  if (binding.kind === "projection") {
+    validateBindingAgainstScope(
+      binding.source,
+      `${siteLabel} projection source`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+      false,
+    );
+    if (
+      binding.op === "dateDayOfMonth" &&
+      binding.source.kind === "iterationLocal" &&
+      binding.source.local === "item" &&
+      enclosingIteration?.itemType !== "Date"
+    ) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses project:dateDayOfMonth(iter:item), but the enclosing iteration itemType is '${enclosingIteration?.itemType ?? "(unspecified)"}', not 'Date'.`,
+      );
+    }
+    return;
+  }
+  if (binding.kind === "valueMap") {
+    validateBindingAgainstScope(
+      binding.source,
+      `${siteLabel} value map source`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+      false,
+    );
+    return;
+  }
   if (binding.kind === "channelUpdate") {
     // channelUpdate reuses the events-only gate: like channelCall it lowers
     // to a `() => …` handler, not a value.
@@ -3145,7 +3410,7 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
             `(DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)`,
         );
       }
-      bindings[attr] = parseBindingExpression(expr);
+      bindings[attr] = parseDomBindingExpression(expr);
     }
   }
   const propertyBindings: Record<string, BindingExpression> = {};
@@ -3612,6 +3877,24 @@ export function parseBindingExpression(expr: string): BindingExpression {
     if (parsed) return parsed;
   }
 
+  const projectionMatch = expr.match(
+    /^project:(dateDayOfMonth)\((.*)\)$/,
+  );
+  if (projectionMatch) {
+    const source = parseBindingExpression(projectionMatch[2]);
+    if (
+      source.kind === "prop" ||
+      source.kind === "channel" ||
+      source.kind === "iterationLocal"
+    ) {
+      return {
+        kind: "projection",
+        op: projectionMatch[1] as "dateDayOfMonth",
+        source,
+      };
+    }
+  }
+
   // Path: zero or more `.segment` tails. Anchored to consume the rest of
   // the string after the root so an unexpected suffix (operators, brackets,
   // optional chaining) falls through to `literal` instead of being
@@ -3706,6 +3989,18 @@ export function parseBindingExpression(expr: string): BindingExpression {
   // Unrecognized — treat the whole expression as a literal so the contract's
   // intent (whatever it was) appears in output for visible failure.
   return { kind: "literal", value: expr };
+}
+
+function parseDomBindingExpression(
+  expr: string | ContractValueMapBinding,
+): BindingExpression {
+  if (typeof expr === "string") return parseBindingExpression(expr);
+  return {
+    kind: "valueMap",
+    source: parseBindingExpression(expr.source),
+    values: { ...expr.values },
+    ...(expr.fallback === undefined ? {} : { fallback: expr.fallback }),
+  };
 }
 
 /**
@@ -4007,6 +4302,16 @@ export function promoteIterationLocals(
   binding: BindingExpression,
   iteration: { indexVar: string; itemVar?: string },
 ): BindingExpression {
+  if (binding.kind === "projection") {
+    const source = promoteIterationLocals(binding.source, iteration);
+    if (source === binding.source) return binding;
+    return { ...binding, source };
+  }
+  if (binding.kind === "valueMap") {
+    const source = promoteIterationLocals(binding.source, iteration);
+    if (source === binding.source) return binding;
+    return { ...binding, source };
+  }
   // BINDING-EXPRESSION-V2-PREDICATE-01: predicate operands are themselves
   // BindingExpressions. Walk into both sides so any V1-style
   // `prop:<indexVar>` / `prop:<itemVar>` reference inside an operand gets
@@ -4135,9 +4440,13 @@ export function buildSurfaceIR(
         `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" is not a declared prop.`,
       );
     }
-    if (!member.type?.trim().endsWith("[]")) {
+    // Array-typedness is judged on the canonical TS string, so it holds for
+    // both authored forms: structured {kind:"array"} members and legacy
+    // TS-string members (which normalize to fallback{raw} and lower verbatim).
+    const resolvedType = canonicalTsType(normalizePropType(member));
+    if (!resolvedType.endsWith("[]")) {
       throw new Error(
-        `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" must be array-typed (got "${member.type ?? "undefined"}").`,
+        `Contract "${contract.name}": surface.anchor.selector.prop "${prop}" must be array-typed (got "${resolvedType}").`,
       );
     }
     if (!path) {
@@ -4218,6 +4527,7 @@ export function buildSurfaceIR(
     kind: surface.kind,
     presence: surface.presence,
     modality: surface.modality,
+    attachment: resolveSurfaceAttachment(surface),
     anchor,
     selectorAnchor,
     content,
@@ -4225,6 +4535,219 @@ export function buildSurfaceIR(
     dismissal: surface.dismissal ?? [],
     openTriggers,
     timing,
+  };
+}
+
+/**
+ * Lower the form-control capability and inject its one authoritative channel
+ * commit onto the declared DOM part. The contract's DOM tree remains
+ * structural; framework event spelling and timing are selected from this
+ * semantic fact instead of being repeated in every emitter or DOM node.
+ */
+export function buildFormControlIR(
+  contract: ComponentContract,
+  parts: PartIR[],
+  channels: NormalizedChannelIR[],
+  dom: DomNodeIR | undefined,
+): FormControlIR | undefined {
+  const control = contract.formControl;
+  if (!control) return undefined;
+
+  const part = parts.find((candidate) => candidate.name === control.part);
+  if (!part) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.part "${control.part}" is not declared in anatomy.parts.`,
+    );
+  }
+  if (part.details?.interactive !== true) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.part "${control.part}" must declare details.interactive === true.`,
+    );
+  }
+
+  const channel = channels.find((candidate) => candidate.name === control.channel);
+  if (!channel) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.channel "${control.channel}" is not a declared channel.`,
+    );
+  }
+  const expectedValueType = control.valueModel === "text" ? "string" : "boolean";
+  if (channel.valueType !== expectedValueType) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.valueModel "${control.valueModel}" requires channel "${control.channel}" to have valueType "${expectedValueType}" (got "${channel.valueType ?? "undefined"}").`,
+    );
+  }
+  if (control.commit === "input" && control.valueModel !== "text") {
+    throw new Error(
+      `Contract "${contract.name}": formControl.commit "input" requires valueModel "text".`,
+    );
+  }
+  if (control.commit === "activation" && control.valueModel !== "boolean") {
+    throw new Error(
+      `Contract "${contract.name}": formControl.commit "activation" requires valueModel "boolean".`,
+    );
+  }
+  if (!dom) {
+    throw new Error(
+      `Contract "${contract.name}": formControl requires anatomy.dom so part "${control.part}" has a rendered target.`,
+    );
+  }
+
+  const targets: DomNodeIR[] = [];
+  const visit = (node: DomNodeIR): void => {
+    if (node.part === control.part) targets.push(node);
+    for (const child of node.children) visit(child);
+  };
+  visit(dom);
+  if (targets.length !== 1) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.part "${control.part}" must render exactly once in anatomy.dom (got ${targets.length}).`,
+    );
+  }
+
+  const event =
+    control.commit === "input"
+      ? "input"
+      : control.commit === "change"
+        ? "change"
+        : "click";
+  const target = targets[0];
+  for (const [authoredEvent, binding] of Object.entries(target.events)) {
+    if (
+      binding.kind === "channel" &&
+      binding.channel === control.channel &&
+      binding.field === "onChange"
+    ) {
+      throw new Error(
+        `Contract "${contract.name}": formControl owns the ${control.channel} commit; remove anatomy.dom event "${authoredEvent}" from part "${control.part}".`,
+      );
+    }
+  }
+  if (target.events[event]) {
+    throw new Error(
+      `Contract "${contract.name}": formControl-derived event "${event}" collides with an authored event on part "${control.part}".`,
+    );
+  }
+  target.events[event] = parseBindingExpression(
+    `channel:${control.channel}.onChange`,
+  );
+
+  return {
+    part,
+    channel,
+    valueModel: control.valueModel,
+    commit: control.commit,
+    event,
+  };
+}
+
+/**
+ * Lower a repeated-item control and inject its iteration-aware update onto
+ * the declared DOM part. The update stays inside the closed binding grammar;
+ * contracts select semantic operations, never executable emitter snippets.
+ */
+export function buildCompositeControlIR(
+  contract: ComponentContract,
+  parts: PartIR[],
+  channels: NormalizedChannelIR[],
+  dom: DomNodeIR | undefined,
+): CompositeControlIR | undefined {
+  const control = contract.compositeControl;
+  if (!control) return undefined;
+
+  const part = parts.find((candidate) => candidate.name === control.part);
+  if (!part) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" is not declared in anatomy.parts.`,
+    );
+  }
+  if (part.details?.interactive !== true || part.details?.multiple !== true) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" must declare details.interactive === true and details.multiple === true.`,
+    );
+  }
+
+  const channel = channels.find((candidate) => candidate.name === control.channel);
+  if (!channel) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.channel "${control.channel}" is not a declared channel.`,
+    );
+  }
+  if (control.interactionModel === "segmented-text" && channel.valueType !== "string") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl interactionModel "segmented-text" requires a string channel (got "${channel.valueType ?? "undefined"}").`,
+    );
+  }
+  if (control.interactionModel === "segmented-text" && control.commit !== "input") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl interactionModel "segmented-text" requires commit "input".`,
+    );
+  }
+  if (control.interactionModel === "collection-selection" && control.commit !== "activation") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl interactionModel "collection-selection" requires commit "activation".`,
+    );
+  }
+  if (!dom) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl requires anatomy.dom so part "${control.part}" has a rendered target.`,
+    );
+  }
+
+  const targets: Array<{ node: DomNodeIR; repeated: boolean }> = [];
+  const visit = (node: DomNodeIR, insideIteration: boolean): void => {
+    const repeated = insideIteration || node.iteration !== undefined;
+    if (node.part === control.part) targets.push({ node, repeated });
+    for (const child of node.children) visit(child, repeated);
+  };
+  visit(dom, false);
+  if (targets.length !== 1) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" must occur exactly once as a repeated DOM template (got ${targets.length}).`,
+    );
+  }
+  const target = targets[0];
+  if (!target.repeated) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" must be inside an anatomy.dom iteration.`,
+    );
+  }
+
+  const update = parseBindingExpression(control.update);
+  if (update.kind !== "channelCall" && update.kind !== "channelUpdate") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.update must be a closed channelCall or channelUpdate expression.`,
+    );
+  }
+  if (update.channel !== control.channel) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.update targets channel "${update.channel}" instead of declared channel "${control.channel}".`,
+    );
+  }
+  if (
+    control.interactionModel === "segmented-text" &&
+    (update.kind !== "channelUpdate" || update.op !== "setCharAt")
+  ) {
+    throw new Error(
+      `Contract "${contract.name}": segmented-text compositeControl.update must use the setCharAt operation.`,
+    );
+  }
+
+  const event = control.commit === "input" ? "input" : "click";
+  if (Object.keys(target.node.events).length > 0) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl owns the ${control.channel} commit; remove authored anatomy.dom events from part "${control.part}".`,
+    );
+  }
+  target.node.events[event] = update;
+
+  return {
+    part,
+    channel,
+    interactionModel: control.interactionModel,
+    commit: control.commit,
+    event,
+    update,
   };
 }
 
@@ -4333,8 +4856,50 @@ function buildDismissalTriggersIR(
     event: t.event,
     enabledByProp: t.enabledBy,
     defaultEnabled: t.defaultEnabled !== false,
+    targetPart: t.targetPart,
     description: t.description,
   }));
+}
+
+/**
+ * Fail loud when an `overlayClick` trigger cannot receive its dismissal
+ * click: the trigger must name a `targetPart`, and that part must exist in
+ * the dom tree. The root is not a fallback binding site — under a
+ * full-cover pointer-events:auto overlay the root (pointer-events:none) can
+ * never be the hit target, so a root-bound self-target handler is dead code
+ * (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01).
+ */
+function validateDismissalTargetParts(
+  contract: ComponentContract,
+  dom: DomNodeIR | undefined,
+): void {
+  const overlayClickTriggers = (contract.dismissal?.triggers ?? []).filter(
+    (t) => t.event === "overlayClick",
+  );
+  if (overlayClickTriggers.length === 0) return;
+
+  const partNames = new Set<string>();
+  if (dom) {
+    const stack: DomNodeIR[] = [dom];
+    while (stack.length > 0) {
+      const node = stack.pop()!;
+      if (node.part) partNames.add(node.part);
+      for (const child of node.children) stack.push(child);
+    }
+  }
+
+  for (const trigger of overlayClickTriggers) {
+    if (!trigger.targetPart) {
+      throw new Error(
+        `Contract "${contract.name}": dismissal trigger 'overlayClick' must declare 'targetPart' — the anatomy part that receives the dismissal click (the root is pointer-events:none under a full-cover overlay and can never be the hit target).`,
+      );
+    }
+    if (!partNames.has(trigger.targetPart)) {
+      throw new Error(
+        `Contract "${contract.name}": dismissal trigger 'overlayClick' targets part '${trigger.targetPart}', which does not exist in the anatomy (known parts: [${[...partNames].sort().join(", ")}]).`,
+      );
+    }
+  }
 }
 
 function buildEventsIR(
@@ -4413,10 +4978,15 @@ function buildParts(contract: ComponentContract): PartIR[] {
       name !== "root" &&
       name !== "container" &&
       !partsInDomTree.has(name);
+    const isExplicitSubcomponent = details?.subcomponent === true;
     return {
       name,
       semanticElement,
-      isCompound: isCompoundPart(name) || isTableCompositionPart,
+      isCompound:
+        isExplicitSubcomponent ||
+        isCompoundPart(name) ||
+        isTableCompositionPart,
+      isExplicitSubcomponent: isExplicitSubcomponent || undefined,
       isRootOnly: ROOT_ONLY_PARTS.has(name),
       layoutVariant:
         name === "footer" || name === "list" ? "horizontal" : undefined,
@@ -5049,7 +5619,8 @@ export function expandOptionsForContract(
 
   const isAnchoredSurface =
     contract.surface !== undefined &&
-    isAnchoredPresenceKind(contract.surface.kind);
+    resolveSurfaceAttachment(contract.surface) === "part" &&
+    contract.surface.positioning?.strategy === "anchored";
 
   const surfacePartSelectors: Record<string, string> | undefined =
     isAnchoredSurface

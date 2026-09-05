@@ -9,6 +9,7 @@ export function createBreadcrumbsStyles(theme?: FsdsTheme) {
   const tokens = resolveBreadcrumbsTokens(theme);
   return StyleSheet.create({
     current: {},
+    item: {},
     link: {},
     list: {},
     overflow: {},

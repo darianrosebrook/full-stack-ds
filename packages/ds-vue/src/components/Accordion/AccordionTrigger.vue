@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed } from "vue";
 import { useAccordionContext } from "./useAccordion.js";
+import Icon from "../Icon/Icon.vue";
 // @generated:end
 
 // @custom:start imports
@@ -54,7 +55,7 @@ const classNames = computed(() =>
       @click="ctx.toggleItem(props.value)"
     >
       <slot />
-      <span class="accordion__chevron"></span>
+      <Icon :class="'accordion__chevron'" name="chevron-down" size="sm" />
     </button>
   </h3>
 </template>

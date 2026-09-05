@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
+import { IconComponent } from "../Icon/Icon.component.js";
 import { useCommand } from "./useCommand.js";
 // @generated:end
 
@@ -23,7 +24,7 @@ let nextInstanceId = 0;
 @Component({
   selector: "fsds-command",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, IconComponent],
   host: { "data-fsds-component": "command" },
   template: `<div [ngClass]="classes()">
   <ng-container *ngIf="behavior.open()">
@@ -32,23 +33,12 @@ let nextInstanceId = 0;
   <ng-container *ngIf="behavior.open()">
     <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="(label ?? 'Command palette')">
       <div [ngClass]="'command__inputWrapper'">
-        <span [ngClass]="'command__searchIcon'" aria-hidden="true"></span>
-        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" />
+        <fsds-icon [ngClass]="'command__searchIcon'" name="search" size="sm"></fsds-icon>
+        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" (input)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [attr.aria-label]="(searchLabel ?? 'Search commands')" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" [attr.aria-controls]="instanceId + '-list'" />
       </div>
-      <div [ngClass]="'command__list'" role="listbox" id="fsds-command-listbox" [attr.aria-labelledby]="instanceId + '-input'">
+      <div [ngClass]="'command__list'" role="listbox" [attr.id]="instanceId + '-list'" [attr.aria-labelledby]="instanceId + '-input'">
         <div [ngClass]="'command__empty'"></div>
-        <div [ngClass]="'command__group'">
-          <div [ngClass]="'command__groupHeading'"></div>
-          <div [ngClass]="'command__groupItems'">
-            <div [ngClass]="'command__item'" role="option">
-              <span [ngClass]="'command__itemIcon'"></span>
-              <div [ngClass]="'command__itemContent'">
-                <span [ngClass]="'command__itemLabel'"></span>
-                <span [ngClass]="'command__itemDescription'"></span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ng-content select="[slot=items]" />
         <div [ngClass]="'command__separator'" role="separator" aria-hidden="true"></div>
       </div>
     </div>
@@ -64,6 +54,7 @@ export class CommandComponent implements OnInit, OnDestroy {
   @Input() defaultSearch?: string;
   @Input() onSearchChange?: (value: string) => void;
   @Input() placeholder?: string = "Search...";
+  @Input() searchLabel?: string = "Search commands";
   @Input() emptyMessage?: string = "No results found.";
   @Input() label?: string = "Command palette";
   @Input() shouldFilter?: boolean = true;
@@ -152,6 +143,38 @@ export class CommandGroupComponent {
 }
 
 @Component({
+  selector: "fsds-command-group-heading",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandGroupHeadingComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__groupHeading", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-group-items",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandGroupItemsComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__groupItems", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
   selector: "fsds-command-item",
   standalone: true,
   imports: [NgClass, StackComponent],
@@ -164,6 +187,70 @@ export class CommandItemComponent {
 
   classes(): string {
     return ["command__item", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-icon",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="span" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemIconComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemIcon", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-content",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemContentComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemContent", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-label",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="span" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemLabelComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemLabel", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-command-item-description",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="span" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CommandItemDescriptionComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["command__itemDescription", this.class].filter(Boolean).join(" ");
   }
 }
 // @generated:end

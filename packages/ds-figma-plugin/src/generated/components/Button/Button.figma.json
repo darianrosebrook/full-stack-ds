@@ -19,7 +19,7 @@
     {
       "name": "spinner",
       "semanticElement": null,
-      "nativeTag": "span",
+      "nativeTag": null,
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null

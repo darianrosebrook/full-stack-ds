@@ -12,106 +12,93 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Badge — unit", () => {
   it("renders with default props", () => {
-    render(<Badge data-testid="badge">content</Badge>);
+    render(<Badge data-testid="badge"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Badge data-testid="badge">content</Badge>);
+    render(<Badge data-testid="badge"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge");
   });
 
   it("merges custom className", () => {
-    render(<Badge data-testid="badge" className="custom">content</Badge>);
+    render(<Badge data-testid="badge" className="custom"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge", "custom");
   });
 
   it("applies variant=default variant class", () => {
-    render(<Badge data-testid="badge" variant="default">content</Badge>);
+    render(<Badge data-testid="badge" variant="default"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--default");
   });
 
   it("applies variant=status variant class", () => {
-    render(<Badge data-testid="badge" variant="status">content</Badge>);
+    render(<Badge data-testid="badge" variant="status"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--status");
   });
 
   it("applies variant=counter variant class", () => {
-    render(<Badge data-testid="badge" variant="counter">content</Badge>);
+    render(<Badge data-testid="badge" variant="counter"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--counter");
   });
 
   it("applies variant=tag variant class", () => {
-    render(<Badge data-testid="badge" variant="tag">content</Badge>);
+    render(<Badge data-testid="badge" variant="tag"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--tag");
   });
 
   it("applies intent=info variant class", () => {
-    render(<Badge data-testid="badge" intent="info">content</Badge>);
+    render(<Badge data-testid="badge" intent="info"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--info");
   });
 
   it("applies intent=success variant class", () => {
-    render(<Badge data-testid="badge" intent="success">content</Badge>);
+    render(<Badge data-testid="badge" intent="success"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--success");
   });
 
   it("applies intent=warning variant class", () => {
-    render(<Badge data-testid="badge" intent="warning">content</Badge>);
+    render(<Badge data-testid="badge" intent="warning"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--warning");
   });
 
   it("applies intent=danger variant class", () => {
-    render(<Badge data-testid="badge" intent="danger">content</Badge>);
+    render(<Badge data-testid="badge" intent="danger"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--danger");
   });
 
   it("applies size=sm variant class", () => {
-    render(<Badge data-testid="badge" size="sm">content</Badge>);
+    render(<Badge data-testid="badge" size="sm"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<Badge data-testid="badge" size="md">content</Badge>);
+    render(<Badge data-testid="badge" size="md"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<Badge data-testid="badge" size="lg">content</Badge>);
+    render(<Badge data-testid="badge" size="lg"><span>content</span></Badge>);
     expect(screen.getByTestId("badge")).toHaveClass("badge--lg");
   });
 });
 
 describe("Badge — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Badge>content</Badge></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Badge><span>content</span></Badge></>);
+    const component = baseElement.querySelector('[data-fsds-component="badge"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

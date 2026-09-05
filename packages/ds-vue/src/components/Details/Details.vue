@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed, useId } from "vue";
 import { useDetails } from "./useDetails.js";
+import Icon from "../Icon/Icon.vue";
 // @generated:end
 
 // @custom:start imports
@@ -73,7 +74,7 @@ const instanceId = useId();
   <details :class="classNames" :open="behavior.open.value" role="group" :data-testid="props['data-testid']" data-fsds-component="details">
     <summary :class="'details__summary'" :aria-controls="props.open ? `${instanceId}-content` : undefined">
       <span :class="'details__summaryContent'">
-        <span :class="'details__icon'"></span>
+        <Icon :class="'details__icon'" name="chevron-down" size="sm" />
         <span :class="'details__summaryText'">
           {{ props.summary }}
         </span>

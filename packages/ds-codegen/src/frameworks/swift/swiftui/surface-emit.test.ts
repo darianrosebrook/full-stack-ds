@@ -70,7 +70,9 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
   });
 
   it("emits the anchored tooltip with hover-driven open channel and placement edge", () => {
-    const { componentFile } = generateSwiftUISurfaceFiles(irFor("Tooltip"));
+    const ir = irFor("Tooltip");
+    expect(ir.surface?.openTriggers).toEqual(["hover", "focus"]);
+    const { componentFile } = generateSwiftUISurfaceFiles(ir);
     expect(componentFile).toContain(
       "public struct Tooltip<Trigger: View, Content: View>: View {",
     );
@@ -78,6 +80,7 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     expect(componentFile).toContain("arrowEdge: placementEdge");
     expect(componentFile).toContain(".onHover { hovering in");
     expect(componentFile).toContain("if !disabled { open.set(hovering) }");
+    expect(componentFile).not.toContain("SwiftUI.Button(action: { open.toggle() })");
     expect(componentFile).toContain("ControllableValue(controlled: open");
     // placement union lowers through the grammar table, auto → platform default.
     expect(componentFile).toContain("case .auto: return .bottom");
@@ -87,6 +90,21 @@ describe("generateSwiftUISurfaceFiles — centered modal (Dialog)", () => {
     // Dismissal flags are omitted, not accepted-and-ignored.
     expect(componentFile).not.toContain("closeOnEscape");
     expect(componentFile).not.toContain("closeOnBlur");
+  });
+
+  it("lowers a click-triggered popover to a disabled-aware native button", () => {
+    const ir = irFor("Popover");
+    expect(ir.surface?.openTriggers).toEqual(["click"]);
+    const { componentFile } = generateSwiftUISurfaceFiles(ir);
+
+    expect(componentFile).toContain(
+      "public struct Popover<Trigger: View, Content: View>: View {",
+    );
+    expect(componentFile).toContain("SwiftUI.Button(action: { open.toggle() }) {");
+    expect(componentFile).toContain(".buttonStyle(.plain)");
+    expect(componentFile).toContain(".disabled(disabled)");
+    expect(componentFile).toContain(".popover(isPresented: presentationBinding");
+    expect(componentFile).not.toContain(".onHover { hovering in");
   });
 });
 

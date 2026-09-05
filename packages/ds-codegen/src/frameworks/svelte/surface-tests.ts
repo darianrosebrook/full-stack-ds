@@ -12,7 +12,7 @@
  * cannot render an in-test compound tree without a fixture SFC.
  */
 import type { ComponentIR } from "../../ir.js";
-import { anchoredPortalsContentToBody, isAnchoredPresenceKind } from "../../semantics.js";
+import { anchoredPortalsContentToBody, isPartAnchoredSurface } from "../../semantics.js";
 
 /**
  * The literal content-query expression used throughout the hand-authored
@@ -50,10 +50,10 @@ export function generateSvelteSurfaceTestFiles(ir: ComponentIR): SvelteSurfaceTe
       `generateSvelteSurfaceTestFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `Svelte surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
-        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
+        `Declare part attachment with anchored positioning when its substrate is ready.`,
     );
   }
   // Test-body shape is kind-specific (Tooltip's hover/focus contract

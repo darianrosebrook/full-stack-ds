@@ -4,6 +4,7 @@ import { Modal, Pressable, TextInput, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCommandStyles } from "./Command.styles";
+import { Icon } from "../Icon/Icon";
 // @generated:end
 
 // @generated:start types
@@ -19,10 +20,14 @@ export interface CommandProps {
   defaultSearch?: string;
   onSearchChange?: (value: string) => void;
   placeholder?: string;
+  searchLabel?: string;
   emptyMessage?: string;
   label?: string;
   shouldFilter?: boolean;
   filter?: ((value: string, search: string) => number) | undefined;
+  slots?: {
+    items?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -36,11 +41,13 @@ export function Command({
   open: controlledOpen,
   search: controlledSearch,
   placeholder = "Search...",
+  searchLabel = "Search commands",
   label = "Command palette",
   defaultOpen = false,
   onOpenChange,
   defaultSearch = "",
   onSearchChange,
+  slots,
   style,
   testID,
   accessibilityLabel,
@@ -90,12 +97,13 @@ export function Command({
           <View
             style={styles.inputWrapper}
           >
-            <View
-              style={styles.searchIcon}
-              accessible={false}
+            <Icon
+              name="search"
+              size="sm"
             />
             <TextInput
               style={styles.input}
+              accessibilityLabel={searchLabel}
               placeholder={placeholder}
               value={String(search ?? "")}
               onChangeText={(next: string) => setSearchValue(next)}
@@ -104,39 +112,11 @@ export function Command({
           </View>
           <View
             style={styles.list}
-            nativeID="fsds-command-listbox"
           >
             <View
               style={styles.empty}
             />
-            <View
-              style={styles.group}
-            >
-              <View
-                style={styles.groupHeading}
-              />
-              <View
-                style={styles.groupItems}
-              >
-                <View
-                  style={styles.item}
-                >
-                  <View
-                    style={styles.itemIcon}
-                  />
-                  <View
-                    style={styles.itemContent}
-                  >
-                    <View
-                      style={styles.itemLabel}
-                    />
-                    <View
-                      style={styles.itemDescription}
-                    />
-                  </View>
-                </View>
-              </View>
-            </View>
+            {slots?.items}
             <View
               style={styles.separator}
               accessible={false}

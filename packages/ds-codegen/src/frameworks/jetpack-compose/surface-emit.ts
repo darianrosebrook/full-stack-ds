@@ -23,10 +23,10 @@
  * is more complex than a single `MutableState<Boolean>`.
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind } from "../../semantics.js";
+import { isPartAnchoredSurface } from "../../semantics.js";
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface != null && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface != null && isPartAnchoredSurface(ir.surface);
 }
 
 export interface JetpackComposeSurfaceFiles {

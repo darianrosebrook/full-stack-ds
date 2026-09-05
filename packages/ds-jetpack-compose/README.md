@@ -26,7 +26,8 @@ bootstraps the Gradle distribution and Maven artifacts — network required).
 The package ships a hand-authored theme module,
 `com.fullstackds.tokens.FsdsTheme` (beside the generated components,
 mirroring the React Native normal form): a `LocalFsdsTheme` composition
-local, scope-data resolution `literal → theme.tokens[ref] → fallback`,
+local, scope-data resolution `theme.tokens[name] → theme.tokens[ref] →
+literal → fallback`,
 dp/color accessors, a light-half semantic-defaults table derived from the
 token graph, and an `fsdsMaterialColorScheme()` Material 3 bridge. The
 emitter ships per-component scope data (`<Name>TokenScopes`), and the
@@ -34,6 +35,10 @@ native-toggle path resolves its checked/unchecked track+thumb colors and
 default (md) dims through the theme — install
 `FsdsThemeProvider(FsdsSemanticDefaults.light)` plus the bridge to render
 graph colors (as the settings example lane does).
+
+That precedence is executed from the same committed conformance fixture by
+the React Native Vitest, Swift XCTest (ordinary and layered), and Compose
+Gradle test runners; source agreement alone is not treated as proof.
 
 ## Named non-claims (rung 1)
 

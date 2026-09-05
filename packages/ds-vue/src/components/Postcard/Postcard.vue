@@ -51,17 +51,25 @@ const classNames = computed(() => [
   <article :class="classNames" :data-testid="props['data-testid']" data-fsds-component="postcard">
     <div :class="'postcard__header'">
       <div :class="'postcard__userInfo'">
-        <span :class="'postcard__displayName'"></span>
-        <span :class="'postcard__handle'"></span>
+        <span :class="'postcard__displayName'">
+          {{ props.author.name }}
+        </span>
+        <span :class="'postcard__handle'">
+          {{ props.author.handle }}
+        </span>
       </div>
-      <time :class="'postcard__timestamp'"></time>
+      <time :class="'postcard__timestamp'" :datetime="props.timestamp">
+        {{ props.timestamp }}
+      </time>
     </div>
     <div :class="'postcard__content'">
       <slot />
     </div>
     <div :class="'postcard__footer'">
       <div :class="'postcard__stats'">
-        <span :class="'postcard__stat'"></span>
+        <span :class="'postcard__stat'">
+          {{ props.stats.likes }}
+        </span>
       </div>
     </div>
   </article>

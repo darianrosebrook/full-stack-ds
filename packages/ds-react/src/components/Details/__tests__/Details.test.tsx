@@ -12,91 +12,78 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Details — unit", () => {
   it("renders with default props", () => {
-    render(<Details data-testid="details" summary={"placeholder"} open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details");
   });
 
   it("merges custom className", () => {
-    render(<Details data-testid="details" summary={"placeholder"} className="custom" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} className="custom" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details", "custom");
   });
 
   it("has the correct ARIA role", () => {
-    render(<Details data-testid="details" summary={"placeholder"}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveAttribute("role", "group");
   });
 
   it("applies variant=default variant class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} variant="default" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} variant="default" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--default");
   });
 
   it("applies variant=inline variant class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} variant="inline" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} variant="inline" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--inline");
   });
 
   it("applies variant=compact variant class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} variant="compact" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} variant="compact" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--compact");
   });
 
   it("applies icon=left variant class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} icon="left" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} icon="left" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--left");
   });
 
   it("applies icon=right variant class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} icon="right" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} icon="right" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--right");
   });
 
   it("applies icon=none variant class", () => {
-    render(<Details data-testid="details" summary={"placeholder"} icon="none" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} icon="none" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--none");
   });
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Details data-testid="details" summary={"placeholder"} open={false} onOpenChange={onOpenChangeSpy}>content</Details>)).not.toThrow();
+    expect(() => render(<Details data-testid="details" summary={"placeholder"} open={false} onOpenChange={onOpenChangeSpy}><span>content</span></Details>)).not.toThrow();
   });
 });
 
 describe("Details — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Details aria-label="Test Details" summary={"placeholder"} open={true}>content</Details></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Details aria-label="Test Details" summary={"placeholder"} open={true}><span>content</span></Details></>);
+    const component = baseElement.querySelector('[data-fsds-component="details"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

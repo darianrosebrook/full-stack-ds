@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import '../Icon/Icon.js';
 import { DetailsBehavior } from './DetailsBehavior.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
@@ -195,7 +196,7 @@ export class DetailsElement extends LitElement {
     return html`<details class="${this.computeClasses()}" role="group" ?open=${this.behavior.open}>
   <summary class=${'details__summary'} aria-controls=${ifDefined([this.open ? 'details-content' : null].filter(Boolean).join(' ') || undefined)}>
     <span class=${'details__summaryContent'}>
-      <span class=${'details__icon'}></span>
+      <fsds-icon class=${'details__icon'} name="chevron-down" size="sm"></fsds-icon>
       <span class=${'details__summaryText'}>${this.summary}</span>
     </span>
   </summary>

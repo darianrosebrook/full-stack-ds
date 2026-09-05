@@ -42,6 +42,38 @@ function loadContract(name: string): unknown {
   return contract;
 }
 
+function replaceComponentRef(value: unknown, from: string, to: string): void {
+  if (Array.isArray(value)) {
+    value.forEach((entry) => replaceComponentRef(entry, from, to));
+    return;
+  }
+  if (value === null || typeof value !== "object") return;
+  const record = value as Record<string, unknown>;
+  if (record.componentRef === from) record.componentRef = to;
+  Object.values(record).forEach((entry) => replaceComponentRef(entry, from, to));
+}
+
+function findRecordByPart(
+  value: unknown,
+  part: string,
+): Record<string, unknown> | undefined {
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const match = findRecordByPart(entry, part);
+      if (match) return match;
+    }
+    return undefined;
+  }
+  if (value === null || typeof value !== "object") return undefined;
+  const record = value as Record<string, unknown>;
+  if (record.part === part) return record;
+  for (const entry of Object.values(record)) {
+    const match = findRecordByPart(entry, part);
+    if (match) return match;
+  }
+  return undefined;
+}
+
 function loadGolden(relative: string): string {
   const path = resolve(
     repoRoot(),
@@ -190,12 +222,17 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
   it("emits one ViewBuilder region per compound part", () => {
     const source = emitCard();
     expect(source).toContain(
-      "public struct Card<Header: View, Content: View, Footer: View, Description: View>: View {",
+      "public struct Card<Header: View, Media: View, Content: View, Footer: View, Actions: View, Badge: View, Description: View, Link: View, Note: View>: View {",
     );
     expect(source).toContain("@ViewBuilder header: () -> Header = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder media: () -> Media = { EmptyView() }");
     expect(source).toContain("@ViewBuilder content: () -> Content = { EmptyView() }");
     expect(source).toContain("@ViewBuilder footer: () -> Footer = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder actions: () -> Actions = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder badge: () -> Badge = { EmptyView() }");
     expect(source).toContain("@ViewBuilder description: () -> Description = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder link: () -> Link = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder note: () -> Note = { EmptyView() }");
     expect(source).toContain("VStack(spacing: gap) {");
   });
 
@@ -483,10 +520,10 @@ describe("generateSwiftUIComponentSource — compositeref batch (TextField, Chip
     expect(source).not.toContain("ariaDescribedby:");
   });
 
-  it("emits Chip as the dual FsdsButton composition", () => {
+  it("emits Chip as the dual referenced-action composition", () => {
     const source = emit("Chip");
     expect(source).toContain("public struct Chip<Text: View, IconRegion: View>: View {");
-    expect(source).toContain("FsdsButton(");
+    expect(source).toContain("DsSwiftUI.FsdsButton(");
     expect(source).toContain("onTap: onClick");
     expect(source).toContain("onTap: onDismiss");
     expect(source).toContain("if dismissible {");
@@ -555,8 +592,50 @@ describe("generateSwiftUIComponentSource — emission-class assignment", () => {
 
   it("Chip is a dual-action composite, not an action — its role is button but its root element is not", () => {
     const source = emit("Chip");
-    expect(source).toContain("Emitted through the dual-action chip path");
+    expect(source).toContain("Emitted through the dual-action composite path");
     expect(source).not.toContain(ACTION);
+  });
+
+  it("selects the dual-action path structurally and emits the referenced action type", () => {
+    const contract = structuredClone(loadContract("Chip"));
+    replaceComponentRef(contract, "fsds.Button", "fsds.ActionControl");
+
+    const source = generateSwiftUIComponentSource(
+      buildComponentIR(contract as Parameters<typeof buildComponentIR>[0]),
+    );
+
+    expect(source).toContain("Emitted through the dual-action composite path");
+    expect(source).toContain("DsSwiftUI.ActionControl(");
+    expect(source).not.toContain("DsSwiftUI.FsdsButton(");
+  });
+
+  it("rejects a dual-reference shape whose dismiss event does not carry onDismiss", () => {
+    const contract = structuredClone(loadContract("Chip"));
+    const dismiss = findRecordByPart(contract, "dismiss");
+    expect(dismiss).toBeDefined();
+    const events = dismiss?.events;
+    expect(events).toBeTypeOf("object");
+    (events as Record<string, unknown>).click = "prop:onClick";
+
+    const ir = buildComponentIR(
+      contract as Parameters<typeof buildComponentIR>[0],
+    );
+    expect(() => generateSwiftUIComponentSource(ir)).toThrow(
+      /no emission class matches/,
+    );
+  });
+
+  it("selects the src-fallback path structurally and emits the referenced media type", () => {
+    const contract = structuredClone(loadContract("Avatar"));
+    replaceComponentRef(contract, "fsds.Image", "fsds.MediaAsset");
+
+    const source = generateSwiftUIComponentSource(
+      buildComponentIR(contract as Parameters<typeof buildComponentIR>[0]),
+    );
+
+    expect(source).toContain("Emitted through the src-or-fallback path");
+    expect(source).toContain("DsSwiftUI.MediaAsset(src: src, alt: name)");
+    expect(source).not.toContain("DsSwiftUI.Image(src:");
   });
 
   it("ShowMore is expandable content, not an action — role button over a div root", () => {

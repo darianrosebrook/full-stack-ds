@@ -23,10 +23,11 @@ interface Props {
   onOpenChange?: (open: boolean) => void;
   side?: SheetSide;
   modal?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   class?: string;
   "data-testid"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
 }
 // @generated:end
 
@@ -67,14 +68,14 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" role="dialog" :data-testid="props['data-testid']" data-fsds-component="sheet" @click.self="behavior.setOpenness(false)">
-      <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true"></div>
-      <div v-if="behavior.openness.value" :class="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" :data-side="props.side">
+    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="sheet">
+      <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true" @click.self="behavior.setOpenness(false)"></div>
+      <div v-if="behavior.openness.value" :class="'sheet__content'" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :data-side="props.side" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'sheet__header'">
           <h2 :class="'sheet__title'" :id="`${instanceId}-title`">
             <slot name="title" />
           </h2>
-          <p :class="'sheet__description'">
+          <p :class="'sheet__description'" :id="`${instanceId}-description`">
             <slot name="description" />
           </p>
           <button :class="'sheet__close'" type="button" aria-label="Close sheet" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
@@ -82,7 +83,9 @@ const instanceId = useId();
         <div :class="'sheet__body'">
           <slot />
         </div>
-        <div :class="'sheet__footer'"></div>
+        <div :class="'sheet__footer'">
+          <slot name="footer" />
+        </div>
       </div>
     </div>
   </Teleport>

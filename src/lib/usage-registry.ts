@@ -31,6 +31,23 @@ export function resolveRootComponent(ref: string): AnyComponent | null {
   return isComponent(comp) ? (comp as AnyComponent) : null;
 }
 
+/** Resolve either a root ref (`fsds.Table`) or an explicit contract part ref
+ * (`fsds.Table.head`) to its generated React consumer surface. */
+export function resolveUsageComponent(ref: string): {
+  Component: AnyComponent;
+  rootRef: string;
+  part: string | null;
+} | null {
+  const match = /^fsds\.([A-Z][A-Za-z0-9]*)(?:\.([a-z][A-Za-z0-9]*))?$/.exec(ref);
+  if (!match) return null;
+  const rootRef = `fsds.${match[1]}`;
+  const part = match[2] ?? null;
+  const Component = part
+    ? resolveSlot(rootRef, part)
+    : resolveRootComponent(rootRef);
+  return Component ? { Component, rootRef, part } : null;
+}
+
 /**
  * Resolve a slot (anatomy part) on a target component. Tries:
  *   1. Root[CapitalizedSlot] — static-property compound (Popover.Trigger).

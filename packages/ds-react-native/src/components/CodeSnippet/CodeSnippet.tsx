@@ -26,7 +26,6 @@ export interface CodeSnippetProps {
 export function CodeSnippet({
   text,
   as = "code",
-  children,
   style,
   testID,
   accessibilityLabel,

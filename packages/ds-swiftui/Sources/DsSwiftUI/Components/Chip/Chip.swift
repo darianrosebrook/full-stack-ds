@@ -21,7 +21,7 @@ public enum ChipSize: String, CaseIterable {
 // @generated:end
 
 // @generated:start component
-/// Emitted through the dual-action chip path: the owned Button components compose the action/dismiss pair (same-module FsdsButton).
+/// Emitted through the dual-action composite path: the referenced components compose the action/dismiss pair within DsSwiftUI.
 public struct Chip<Text: View, IconRegion: View>: View {
     private let disabled: Bool
     private let dismissible: Bool
@@ -51,7 +51,7 @@ public struct Chip<Text: View, IconRegion: View>: View {
 
     public var body: some View {
         HStack(spacing: 4) {
-            FsdsButton(
+            DsSwiftUI.FsdsButton(
                 disabled: disabled,
                 onTap: onClick
             ) {
@@ -60,7 +60,7 @@ public struct Chip<Text: View, IconRegion: View>: View {
             }
             .fsdsAccessibilityLabel(accessibilityLabel)
             if dismissible {
-                FsdsButton(
+                DsSwiftUI.FsdsButton(
                     disabled: disabled,
                     onTap: onDismiss
                 ) {

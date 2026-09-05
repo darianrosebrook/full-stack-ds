@@ -4,6 +4,7 @@ import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createButtonStyles } from "./Button.styles";
+import { Spinner } from "../Spinner/Spinner";
 // @generated:end
 
 // @generated:start types
@@ -66,9 +67,10 @@ export function Button({
       accessibilityState={{ disabled: disabled, expanded: String(ariaExpanded) === "true", selected: String(ariaPressed) === "true", busy: String(loading) === "true" }}
     >
       {loading ? (
-      <View
-        style={styles.spinner}
-        accessible={false}
+      <Spinner
+        inline={loading}
+        ariaHidden={loading}
+        size="sm"
       />
       ) : null}
       <View

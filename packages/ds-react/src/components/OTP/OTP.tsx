@@ -18,7 +18,7 @@ export type OTPMode = "numeric" | "alphanumeric";
 // @custom:end
 
 // @generated:start props
-export interface OTPProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "label" | "length" | "mode" | "onChange" | "onComplete" | "readOnly" | "value"> {
+export interface OTPProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDescribedby" | "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "fieldLabel" | "label" | "length" | "mode" | "onChange" | "onComplete" | "readOnly" | "value"> {
   length?: number;
   value?: string;
   defaultValue?: string;
@@ -28,6 +28,8 @@ export interface OTPProps extends Omit<HTMLAttributes<HTMLDivElement>, "children
   disabled?: boolean;
   readOnly?: boolean;
   label?: string;
+  fieldLabel?: string;
+  ariaDescribedby?: string;
   className?: string;
   "data-testid"?: string;
 }
@@ -67,6 +69,8 @@ export function OTP({
   onComplete,
   readOnly,
   label = "One-time password",
+  fieldLabel = "One-time password digit",
+  ariaDescribedby,
   ...rest
 }: OTPProps) {
   const { value, setValue } = useOTP({
@@ -85,9 +89,9 @@ export function OTP({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="group" aria-label={label} aria-describedby={"otp-error-id"} data-testid={testId} data-fsds-component="otp" {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="group" aria-label={label} aria-describedby={ariaDescribedby} data-testid={testId} data-fsds-component="otp" {...rest}>
     <div className="otp__group">
-      {Array.from({ length: length }, (_, index) => <input className="otp__field" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={1} onInput={(e) => setValue(String(value ?? '').padEnd(index, ' ').slice(0, index) + String(e.currentTarget.value ?? '').slice(-1) + String(value ?? '').slice(index + 1))} disabled={disabled} aria-readonly={readOnly} data-otp-index={index} key={index} />)}
+      {Array.from({ length: length }, (_, index) => <input className="otp__field" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={1} onInput={(e) => setValue(String(value ?? '').padEnd(index, ' ').slice(0, index) + String(e.currentTarget.value ?? '').slice(-1) + String(value ?? '').slice(index + 1))} disabled={disabled} aria-label={fieldLabel} aria-readonly={readOnly} data-otp-index={index} key={index} />)}
     </div>
   </Stack>
   );

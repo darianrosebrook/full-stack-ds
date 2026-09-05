@@ -85,7 +85,7 @@ const instanceId = $props.id();
 
 <div class={classes} role="status" aria-label={label} data-fsds-component="walkthrough" use:portal={{ enabled: true }} bind:this={anchoredRootEl} data-placement={anchoredPosition.state.placement} style="position: fixed; top: {anchoredPosition.state.top}px; left: {anchoredPosition.state.left}px; visibility: {anchoredPosition.state.ready ? 'visible' : 'hidden'};">
   <div class={'walkthrough__content'} role="group" aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={description ? `${instanceId}-description` : undefined}>
-    <h3 class={'walkthrough__title'} id={`${instanceId}-title`}>
+    <h3 class={'walkthrough__title'} aria-label={label} id={`${instanceId}-title`}>
       {@render title?.()}
     </h3>
     <p class={'walkthrough__description'} id={`${instanceId}-description`}>
@@ -93,14 +93,14 @@ const instanceId = $props.id();
     </p>
   </div>
   <div class={'walkthrough__controls'}>
-    <button class={'walkthrough__skip'} type="button"></button>
-    <button class={'walkthrough__prev'} type="button"></button>
+    <button class={'walkthrough__skip'} type="button" aria-label="Skip tour"></button>
+    <button class={'walkthrough__prev'} type="button" aria-label="Previous step"></button>
     <div class={'walkthrough__dots'}>
       {#each (steps ?? []) as item, index (index)}
       <button class={'walkthrough__dot'} type="button" aria-label={item.title} data-step-index={index}></button>
       {/each}
     </div>
     <span class={'walkthrough__counter'}></span>
-    <button class={'walkthrough__next'} type="button"></button>
+    <button class={'walkthrough__next'} type="button" aria-label="Next step"></button>
   </div>
 </div>

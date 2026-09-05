@@ -37,7 +37,9 @@ import type {
 import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -617,15 +619,24 @@ function generateClassMapObject(ir: ComponentIR): string {
  */
 function generateCompoundPartClass(
   ir: ComponentIR,
-  part: { name: string; semanticElement?: string; layoutVariant?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
   const className = `${subName}Element`;
   const elementName = `fsds-${toKebabCase(subName)}`;
   const cssClass = `${ir.cssPrefix}__${part.name}`;
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -634,7 +645,7 @@ function generateCompoundPartClass(
   // item inside the consumer's list — same host-role compensation. Stamped
   // in connectedCallback, not the constructor (custom-elements spec).
   const hostRoleLines =
-    part.semanticElement === "li"
+    renderedTag === "li"
       ? [
           `  override connectedCallback(): void {`,
           `    super.connectedCallback();`,
@@ -663,9 +674,6 @@ function generateClassBody(ir: ComponentIR): string {
   const elementName = `fsds-${toKebabCase(ir.name)}`;
   const className = `${ir.name}Element`;
   const asAttr = ir.root.element !== "div" ? ` as="${ir.root.element}"` : "";
-  const roleAttr = ir.root.effectiveRole
-    ? ` role="${ir.root.effectiveRole}"`
-    : "";
   const hasClassMap =
     ir.classRecipe.valueModifiers.length > 0 ||
     ir.classRecipe.booleanModifiers.length > 0;
@@ -680,6 +688,12 @@ function generateClassBody(ir: ComponentIR): string {
   lines.push(`  override connectedCallback(): void {`);
   lines.push(`    super.connectedCallback();`);
   lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
+  if (ir.root.effectiveRole) {
+    // The custom-element host is the public accessibility surface. Keeping
+    // the role on an inner shadow node makes consumer aria-* attributes land
+    // on a role-less host, where axe correctly reports aria-prohibited-attr.
+    lines.push(`    if (!this.hasAttribute("role")) this.setAttribute("role", "${ir.root.effectiveRole}");`);
+  }
   lines.push(`  }`);
   lines.push(``);
 
@@ -695,11 +709,11 @@ function generateClassBody(ir: ComponentIR): string {
     lines.push(generateClassMapObject(ir));
     lines.push(`    };`);
     lines.push(
-      `    return html\`<fsds-stack${asAttr}${roleAttr} class=\${classMap(classes)}><slot></slot></fsds-stack>\`;`,
+      `    return html\`<fsds-stack${asAttr} class=\${classMap(classes)}><slot></slot></fsds-stack>\`;`,
     );
   } else {
     lines.push(
-      `    return html\`<fsds-stack${asAttr}${roleAttr} class="${ir.classRecipe.base}"><slot></slot></fsds-stack>\`;`,
+      `    return html\`<fsds-stack${asAttr} class="${ir.classRecipe.base}"><slot></slot></fsds-stack>\`;`,
     );
   }
   lines.push(`  }`);
@@ -1308,13 +1322,22 @@ function generateDisclosureItemClass(ir: ComponentIR, multipleName: string): str
   ].join("\n");
 }
 
-function generateDisclosureTriggerClass(ir: ComponentIR, itemName: string, chevronPartName: string | undefined): string {
+function generateDisclosureTriggerClass(ir: ComponentIR, itemName: string, chevronNode: DomNodeIR | undefined): string {
   const subName = `${ir.name}${itemName[0].toUpperCase()}${itemName.slice(1)}`;
   const className = `${subName}Element`;
   const elementName = `fsds-${toKebabCase(subName)}`;
   const cssClass = `${ir.classRecipe.base}__${itemName}`;
-  const chevronMarkup = chevronPartName
-    ? `<span class="${ir.classRecipe.base}__${chevronPartName}"></span>`
+  const chevronMarkup = chevronNode
+    ? renderLitDomNode(
+        chevronNode,
+        {
+          classRecipe: ir.classRecipe.base,
+          channelByName: new Map(),
+          styledByName: new Map(),
+          isRoot: false,
+        },
+        0,
+      )
     : "";
   const lines: string[] = [];
   // Host IS the interactive control (role=button on host, ARIA in light DOM so
@@ -1434,13 +1457,16 @@ function generateDisclosureStateSource(ir: ComponentIR): string {
   const itemPart = getInteractiveItemPart(ir);
   const regionPart = getRegionPart(ir);
   const multiplePart = getMultipleItemPart(ir);
-  const importsBody = generateCompoundStateImports(ir);
+  let importsBody = generateCompoundStateImports(ir);
   const typesBody = generateDisclosureContextTypesLit(ir);
 
   const itemNode = ir.dom && itemPart ? litFindDomNode(ir.dom, itemPart.name) : undefined;
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
+  if (chevronNode?.componentRef) {
+    importsBody += `\nimport '../${chevronNode.componentRef}/${chevronNode.componentRef}.js';`;
+  }
   const innerNode = ir.dom && regionPart ? litFindDomNode(ir.dom, regionPart.name) : undefined;
   const innerPartName = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -1451,7 +1477,7 @@ function generateDisclosureStateSource(ir: ComponentIR): string {
     "",
     generateDisclosureItemClass(ir, multiplePart!.name),
     "",
-    generateDisclosureTriggerClass(ir, itemPart!.name, chevronPartName),
+    generateDisclosureTriggerClass(ir, itemPart!.name, chevronNode),
     "",
     generateDisclosureContentClass(ir, regionPart!.name, innerPartName),
   ].join("\n");
@@ -1760,10 +1786,10 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   // `<button>` role, which makes `aria-checked` an axe-illegal attribute.
   // Mirrors how React's emitter spreads `role="switch"` onto the element.
   const rootForRender: DomNodeIR =
-    ir.root.effectiveRole && !ir.dom.attrs["role"] && !ir.dom.bindings["role"]
+    ir.root.rootRole && !ir.dom.attrs["role"] && !ir.dom.bindings["role"]
       ? {
           ...ir.dom,
-          attrs: { ...ir.dom.attrs, role: ir.root.effectiveRole },
+          attrs: { ...ir.dom.attrs, role: ir.root.rootRole },
         }
       : ir.dom;
   const template = renderLitDomNode(rootForRender, ctx, 0);
@@ -2941,6 +2967,12 @@ function renderLitBinding(
 ): string | null {
   const attr = litDomAttrName(rawAttr);
   switch (expr.kind) {
+    case "valueMap": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      if (lowered === null) return null;
+      if (refBinding?.kind === "prop") return `.${attr}=\${${lowered}}`;
+      return `${attr}=\${${lowered}}`;
+    }
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
       // BINDING-EXPRESSION-V2-PATH-01: when a path is present, the
@@ -3079,6 +3111,14 @@ function renderLitBinding(
       }
       return `.${attr}=\${${acc}}`;
     }
+    case "projection": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      if (lowered === null) return null;
+      if (isAttributeOnlyBinding(attr) || attr.startsWith("aria-")) {
+        return `${attr}=\${${lowered}}`;
+      }
+      return `.${attr}=\${${lowered}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3207,6 +3247,14 @@ function renderLitContent(
       const name = litIterationLocalName(expr.local, ctx);
       return name ? `\${${appendPath(name, expr.path)}}` : null;
     }
+    case "projection": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      return lowered === null ? null : `\${${lowered}}`;
+    }
+    case "valueMap": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      return lowered === null ? null : `\${${lowered}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3281,6 +3329,16 @@ function renderLitBindingValue(
     case "iterationLocal": {
       const name = litIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
+    }
+    case "projection": {
+      const source = renderLitBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
+    case "valueMap": {
+      const source = renderLitBindingValue(expr.source, ctx);
+      return source === null ? null : composeValueMapExpression(expr, source);
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -3358,6 +3416,10 @@ function renderLitEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
+    case "valueMap":
+      return null;
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

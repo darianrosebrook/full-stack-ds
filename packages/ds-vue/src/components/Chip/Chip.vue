@@ -66,7 +66,9 @@ const classNames = computed(() => [
 <template>
   <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="chip">
     <Button :class="'chip__action'" variant="ghost" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :ariaLabel="props.ariaLabel" :ariaExpanded="props.ariaExpanded" :ariaPressed="props.ariaPressed">
-      <span v-if="props.icon" :class="'chip__icon'" aria-hidden="true"></span>
+      <span v-if="props.icon" :class="'chip__icon'" aria-hidden="true">
+        {{ props.icon }}
+      </span>
       <span :class="'chip__text'">
         <slot />
       </span>

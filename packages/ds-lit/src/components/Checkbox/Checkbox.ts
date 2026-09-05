@@ -118,6 +118,9 @@ export class CheckboxElement extends LitElement {
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: String }) name?: string;
   @property({ type: String }) value?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
+  @property({ type: String }) ariaLabelledby?: string;
 
   private behavior = new CheckboxBehavior(this, {
     checked: () => this.checked,
@@ -145,7 +148,7 @@ export class CheckboxElement extends LitElement {
 
   override render() {
     return html`<label class="${this.computeClasses()}">
-  <input class=${'checkbox__input'} type="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} aria-checked=${(this.indeterminate ? "mixed" : this.behavior.checked)} .indeterminate=${this.indeterminate ?? false} />
+  <input class=${'checkbox__input'} type="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-labelledby=${ifDefined(this.ariaLabelledby)} aria-checked=${(this.indeterminate ? "mixed" : this.behavior.checked)} .indeterminate=${this.indeterminate ?? false} />
   <span class=${'checkbox__indicator'} aria-hidden="true"></span>
 </label>`;
   }

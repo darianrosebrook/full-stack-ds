@@ -306,6 +306,12 @@
     "form": {
       "$ref": "#/$defs/formContract"
     },
+    "formControl": {
+      "$ref": "#/$defs/formControlContract"
+    },
+    "compositeControl": {
+      "$ref": "#/$defs/compositeControlContract"
+    },
     "motion": {
       "$ref": "#/$defs/motionContract"
     },
@@ -463,9 +469,40 @@
         "bindings": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "source",
+                  "values"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "map"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "type": "object",
+                    "minProperties": 1,
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "fallback": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
           },
-          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\". Event handlers belong under `events`; inner content under `content`; JS-only DOM properties (no HTML attribute equivalent, e.g. `indeterminate`) belong under `properties`. Legacy authoring with `bindings.onX` or `bindings.children`/`bindings.textContent` hard-fails at IR-build with a redirect message (IR-DOM-BINDING-CAPABILITY-01/4C removed the auto-translate path); `bindings.indeterminate` hard-fails the same way, redirecting to `properties.indeterminate`."
+          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). A value is either a binding-expression string or a closed `{kind: \"map\", source, values, fallback?}` projection. Maps lower generically through IR and must exhaust an enumerable source-prop domain unless a fallback is declared. Event handlers belong under `events`; inner content under `content`; JS-only DOM properties belong under `properties`."
         },
         "properties": {
           "type": "object",
@@ -719,11 +756,22 @@
     },
     "propMember": {
       "type": "object",
-      "description": "A single prop exposed by the component.",
+      "description": "A single prop exposed by the component. Declares its type as EITHER a legacy TS-string `type` OR a structured framework-neutral `propType` (exactly one) — the same XOR as designedPropMember/constrainedPropMember, so legacy-bucket (styled/hook) members can migrate to the structured grammar in place (CODEGEN-PROP-TYPE-IR-LEGACY-BUCKET-REFS-01).",
       "required": [
         "name",
-        "type",
         "description"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "required": [
+            "propType"
+          ]
+        }
       ],
       "additionalProperties": false,
       "properties": {
@@ -734,6 +782,9 @@
         "type": {
           "type": "string",
           "description": "TypeScript type expression (e.g. \"string\", \"ReactElement\", \"TooltipPlacement\")."
+        },
+        "propType": {
+          "$ref": "#/$defs/propType"
         },
         "required": {
           "type": "boolean",
@@ -1378,6 +1429,10 @@
           "pattern": "^fsds\\.[A-Z][A-Za-z0-9]*$",
           "description": "Reference to another design-system component this part is realized as, in `fsds.<Name>` form (e.g. \"fsds.Input\"). When set, the part is lowered by-reference: the emitter imports the referenced component and emits a component-instance element rather than a native `tag`. The referenced component's `layer` must be lower-or-equal to this component's. Mutually exclusive with `tag`."
         },
+        "subcomponent": {
+          "type": "boolean",
+          "description": "When true, this part is a consumer-composed compound subcomponent rather than a node owned by the root anatomy.dom tree. The IR emits a separately consumable wrapper carrying this part's class; semantic validation rejects dual ownership by anatomy.dom."
+        },
         "role": {
           "type": "string",
           "description": "Conceptual role this part plays in the component's interaction model.",
@@ -1588,6 +1643,87 @@
               "channel"
             ]
           }
+        }
+      }
+    },
+    "formControlContract": {
+      "type": "object",
+      "description": "Declares the interactive control capability independently from native form serialization. The target part, value channel, value model, and commit semantic are lowered once into IR and shared by framework emitters.",
+      "required": [
+        "part",
+        "channel",
+        "valueModel",
+        "commit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "part": {
+          "type": "string",
+          "description": "Rendered anatomy part that owns focus, the value interaction, and any ambient Field association."
+        },
+        "channel": {
+          "type": "string",
+          "description": "Controlled/uncontrolled channel updated by this control."
+        },
+        "valueModel": {
+          "type": "string",
+          "enum": [
+            "text",
+            "boolean"
+          ],
+          "description": "Semantic shape of the value admitted by this capability. Composite selection controls require a separate capability."
+        },
+        "commit": {
+          "type": "string",
+          "enum": [
+            "input",
+            "change",
+            "activation"
+          ],
+          "description": "When a user interaction commits the channel: per-edit input, platform change, or an activation toggle. Codegen maps this fact to each target's event idiom."
+        }
+      }
+    },
+    "compositeControlContract": {
+      "type": "object",
+      "description": "Declares a repeated-item control whose channel update consumes an enclosing iteration item or index. The capability owns the event; anatomy.dom owns only structure.",
+      "required": [
+        "part",
+        "channel",
+        "interactionModel",
+        "commit",
+        "update"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "part": {
+          "type": "string",
+          "description": "Repeated rendered anatomy part that owns the item interaction."
+        },
+        "channel": {
+          "type": "string",
+          "description": "Controlled/uncontrolled channel updated by item interaction."
+        },
+        "interactionModel": {
+          "type": "string",
+          "enum": [
+            "collection-selection",
+            "segmented-text"
+          ],
+          "description": "Whether repeated instances select collection values or edit positions in one text value."
+        },
+        "commit": {
+          "type": "string",
+          "enum": [
+            "input",
+            "activation"
+          ],
+          "description": "When the repeated item commits its channel update."
+        },
+        "update": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Closed channelCall or channelUpdate BindingExpression carrying the iteration payload."
         }
       }
     },
@@ -2013,6 +2149,11 @@
         },
         "defaultEnabled": {
           "type": "boolean"
+        },
+        "targetPart": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anatomy part that owns this trigger's interaction (required for overlayClick): the dismissal click handler binds on this element, not the root — the root is pointer-events:none under a full-cover overlay and can never be the hit target (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01)."
         },
         "description": {
           "type": "string"

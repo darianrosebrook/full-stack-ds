@@ -7,6 +7,7 @@ import { portalsRootToBody, selectorAnchoredRootPortal } from "../../semantics.j
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
+  runtimeRequiredPropExpression,
 } from "../../test-plan.js";
 
 export function generateVueTest(ir: ComponentIR): string {
@@ -51,6 +52,14 @@ export function generateVueTest(ir: ComponentIR): string {
   ].join("\n");
 
   const lines: string[] = [];
+  lines.push(`const componentAxeOptions = {`);
+  lines.push(`  rules: {`);
+  lines.push(`    // \`region\` asks whether all page content is landmark-contained.`);
+  lines.push(`    // These tests scan one component subtree, not a complete page.`);
+  lines.push(`    region: { enabled: false },`);
+  lines.push(`  },`);
+  lines.push(`};`);
+  lines.push(``);
   lines.push(`describe("${plan.name} — unit", () => {`);
   if (portalRoot) {
     // Teleported roots accumulate in document.body across mounts; reset so
@@ -246,16 +255,32 @@ export function generateVueTest(ir: ComponentIR): string {
       },
       attachTo: "document.body",
     });
+    // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: dispatch the click on the
+    // overlay element itself — jsdom does no hit-testing, so triggering on
+    // the root proved nothing while the overlay child swallows every scrim
+    // click at hit-test time in a real browser.
+    const overlaySelector = testCase.trigger.targetPart
+      ? `.${plan.cssPrefix}__${testCase.trigger.targetPart}`
+      : null;
     if (portalRoot) {
       // The teleported root lives in document.body, so trigger the click on
       // the resolved DOM node (wrapper no longer wraps the root element).
       lines.push(`    ${wrapper};`);
       lines.push(rootDecl);
-      lines.push(`    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));`);
+      if (overlaySelector) {
+        lines.push(`    root?.querySelector<HTMLElement>("${overlaySelector}")?.click();`);
+      } else {
+        lines.push(`    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));`);
+      }
       lines.push(`    await Promise.resolve();`);
     } else {
       lines.push(`    const wrapper = ${wrapper};`);
-      lines.push(`    await wrapper.trigger("click");`);
+      if (overlaySelector) {
+        lines.push(`    wrapper.element.querySelector<HTMLElement>("${overlaySelector}")?.click();`);
+      } else {
+        lines.push(`    await wrapper.trigger("click");`);
+      }
+      lines.push(`    await Promise.resolve();`);
     }
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
     lines.push(`  });`);
@@ -267,11 +292,36 @@ export function generateVueTest(ir: ComponentIR): string {
   lines.push(
     `  it("has no unexpected axe violations with default props", async () => {`,
   );
+  const axeLabelInput = plan.accessibility.labelInput;
+  const axeProps: Record<string, MountValue> = Object.fromEntries(
+    plan.requiredProps.map((prop) => [
+      prop.name,
+      { code: runtimeRequiredPropExpression(prop.expression) },
+    ]),
+  );
+  for (const prop of plan.accessibility.props) {
+    axeProps[prop.name] = prop.value;
+  }
+  if (axeLabelInput?.kind === "prop") {
+    axeProps[axeLabelInput.name] = axeLabelInput.value;
+  }
+  const axeAttrs: Record<string, string> =
+    axeLabelInput?.kind === "attribute"
+      ? { [axeLabelInput.name]: axeLabelInput.value }
+      : {};
+  const axeSlots = Object.fromEntries(
+    plan.accessibility.content.map((fixture) => [
+      fixture.slotName ?? "default",
+      fixture.html,
+    ]),
+  );
   if (portalRoot) {
     // Teleported root lives in document.body; resolve it and run axe on it.
     lines.push(
       `    ${mountExpression(plan.name, plan, {
-        attrs: attrsFromAxeProps(plan.accessibility.axeProps),
+        props: axeProps,
+        attrs: axeAttrs,
+        slots: axeSlots,
         attachTo: "document.body",
       })};`,
     );
@@ -279,53 +329,27 @@ export function generateVueTest(ir: ComponentIR): string {
     if (plan.accessibility.needsListParent) {
       lines.push(`    const list = document.createElement("ul");`);
       lines.push(`    if (root) list.append(root);`);
-      lines.push(`    const results = await axe(list);`);
+      lines.push(`    const results = await axe(list, componentAxeOptions);`);
     } else {
-      lines.push(`    const results = await axe(root as Element);`);
+      lines.push(`    const results = await axe(root as Element, componentAxeOptions);`);
     }
   } else {
     lines.push(
       `    const wrapper = ${mountExpression(plan.name, plan, {
-        attrs: attrsFromAxeProps(plan.accessibility.axeProps),
+        props: axeProps,
+        attrs: axeAttrs,
+        slots: axeSlots,
       })};`,
     );
     if (plan.accessibility.needsListParent) {
       lines.push(`    const list = document.createElement("ul");`);
       lines.push(`    list.append(wrapper.element);`);
-      lines.push(`    const results = await axe(list);`);
+      lines.push(`    const results = await axe(list, componentAxeOptions);`);
     } else {
-      lines.push(`    const results = await axe(wrapper.element);`);
+      lines.push(`    const results = await axe(wrapper.element, componentAxeOptions);`);
     }
   }
-  // Scaffold violations the auto-test can't satisfy — consumers fill these
-  // via slot content or labeling props. Aligned with the React/Svelte/Lit
-  // generators so all framework axe tests treat scaffold gaps the same.
-  lines.push(`    const knownScaffoldViolationIds = new Set([`);
-  lines.push(`      "aria-dialog-name",`);
-  lines.push(`      "aria-input-field-name",`);
-  lines.push(`      "aria-progressbar-name",`);
-  lines.push(`      "aria-prohibited-attr",`);
-  lines.push(`      "aria-required-attr",`);
-  lines.push(`      "aria-required-children",`);
-  lines.push(`      "aria-required-parent",`);
-  lines.push(`      "aria-toggle-field-name",`);
-  lines.push(`      "aria-tooltip-name",`);
-  lines.push(`      "button-name",`);
-  lines.push(`      "empty-heading",`);
-  lines.push(`      "image-alt",`);
-  lines.push(`      "label",`);
-  lines.push(`      "link-name",`);
-  lines.push(`      "list",`);
-  lines.push(`      "region",`);
-  lines.push(`      "role-img-alt",`);
-  lines.push(`      "summary-name",`);
-  lines.push(`    ]);`);
-  lines.push(`    const unexpectedViolations = results.violations.filter(`);
-  lines.push(`      (violation) => !knownScaffoldViolationIds.has(violation.id),`);
-  lines.push(`    );`);
-  // Use the unexpected rule IDs as the assertion subject so failures name
-  // the offending rule(s) instead of a bare length mismatch.
-  lines.push(`    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`);
+  lines.push(`    expect(results.violations.map((v) => v.id)).toEqual([]);`);
   lines.push(`  });`);
   lines.push(`});`);
 
@@ -341,21 +365,32 @@ export function generateVueTest(ir: ComponentIR): string {
   return renderSections(sections, "line");
 }
 
-type MountValue = string | boolean | { code: string };
+type MountValue = string | number | boolean | { code: string };
 
 interface MountOverrides {
   props?: Record<string, MountValue>;
   attrs?: Record<string, string>;
+  slots?: Record<string, string>;
   /** When set, emits `attachTo: <value>` so the component is mounted in the real DOM (needed for document-level event listeners). */
   attachTo?: string;
 }
 
 function mountExpression(
   componentName: string,
-  plan: { renderOpenProp?: string; testId: string },
+  plan: {
+    renderOpenProp?: string;
+    requiredProps: Array<{ name: string; expression: string }>;
+    testId: string;
+  },
   overrides: MountOverrides = {},
 ): string {
   const props: Record<string, MountValue> = {
+    ...Object.fromEntries(
+      plan.requiredProps.map((prop) => [
+        prop.name,
+        { code: runtimeRequiredPropExpression(prop.expression) },
+      ]),
+    ),
     ...(plan.renderOpenProp ? { [plan.renderOpenProp]: true } : {}),
     ...(overrides.props ?? {}),
   };
@@ -364,14 +399,9 @@ function mountExpression(
     ...(overrides.attrs ?? {}),
   };
   const attachToPart = overrides.attachTo ? `, attachTo: ${overrides.attachTo}` : "";
+  const slots = { default: "content", ...(overrides.slots ?? {}) };
 
-  return `mount(${componentName} as Component, { props: ${objectLiteral(props)}, attrs: ${objectLiteral(attrs)}, slots: { default: "content" }${attachToPart} })`;
-}
-
-function attrsFromAxeProps(axeProps: string): Record<string, string> {
-  if (!axeProps) return {};
-  const labelMatch = /aria-label="([^"]+)"/.exec(axeProps);
-  return labelMatch ? { "aria-label": labelMatch[1] } : {};
+  return `mount(${componentName} as Component, { props: ${objectLiteral(props)}, attrs: ${objectLiteral(attrs)}, slots: ${objectLiteral(slots)}${attachToPart} })`;
 }
 
 function objectLiteral(values: Record<string, MountValue>): string {
@@ -384,6 +414,6 @@ function objectLiteral(values: Record<string, MountValue>): string {
 
 function literal(value: MountValue): string {
   if (typeof value === "object") return value.code;
-  if (typeof value === "boolean") return String(value);
+  if (typeof value === "boolean" || typeof value === "number") return String(value);
   return JSON.stringify(value);
 }

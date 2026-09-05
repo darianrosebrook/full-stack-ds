@@ -1,8 +1,10 @@
 {
   "root": {
     "color": {
-      "resolvesTo": "icon.color.foreground.default",
-      "fallback": "#141414"
+      "literal": "currentColor",
+      "platforms": [
+        "web"
+      ]
     },
     "box-sizing": {
       "literal": "border-box",

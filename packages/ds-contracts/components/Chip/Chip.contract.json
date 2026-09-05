@@ -82,6 +82,7 @@
               "attrs": {
                 "aria-hidden": "true"
               },
+              "content": "prop:icon",
               "if": "icon"
             },
             {

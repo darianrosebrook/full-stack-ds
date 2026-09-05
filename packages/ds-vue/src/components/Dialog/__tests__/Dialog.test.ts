@@ -7,25 +7,33 @@ import Dialog from "../Dialog.vue";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Dialog — unit", () => {
   afterEach(() => {
     document.body.innerHTML = "";
   });
 
   it("renders with default props", () => {
-    const wrapper = mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog" }, slots: { default: "content" } });
+    const wrapper = mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog")).toBe(true);
   });
 
   it("merges custom class", () => {
-    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog", "class": "custom" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog", "class": "custom" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog")).toBe(true);
@@ -33,35 +41,35 @@ describe("Dialog — unit", () => {
   });
 
   it("applies size=sm variant class", () => {
-    mount(Dialog as Component, { props: { "open": true, "size": "sm" }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "size": "sm" }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog--sm")).toBe(true);
   });
 
   it("applies size=md variant class", () => {
-    mount(Dialog as Component, { props: { "open": true, "size": "md" }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "size": "md" }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog--md")).toBe(true);
   });
 
   it("applies size=lg variant class", () => {
-    mount(Dialog as Component, { props: { "open": true, "size": "lg" }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "size": "lg" }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog--lg")).toBe(true);
   });
 
   it("applies size=xl variant class", () => {
-    mount(Dialog as Component, { props: { "open": true, "size": "xl" }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "size": "xl" }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog--xl")).toBe(true);
   });
 
   it("applies size=full variant class", () => {
-    mount(Dialog as Component, { props: { "open": true, "size": "full" }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "size": "full" }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
     expect(root?.classList.contains("dialog--full")).toBe(true);
@@ -69,17 +77,17 @@ describe("Dialog — unit", () => {
 
   it("closes on Escape key", async () => {
     const onOpenChangeSpy = vi.fn();
-    mount(Dialog as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 
   it("closes on overlay click", async () => {
     const onOpenChangeSpy = vi.fn();
-    mount(Dialog as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
-    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    root?.querySelector<HTMLElement>(".dialog__backdrop")?.click();
     await Promise.resolve();
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
@@ -87,34 +95,11 @@ describe("Dialog — unit", () => {
 
 describe("Dialog — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog", "aria-label": "Test Dialog" }, slots: { default: "content" }, attachTo: document.body });
+    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog" }, slots: { "default": "<span>content</span>", "title": "<span>Test Dialog title</span>" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
-    const results = await axe(root as Element);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const results = await axe(root as Element, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

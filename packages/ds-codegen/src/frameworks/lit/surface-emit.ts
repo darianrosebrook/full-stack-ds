@@ -3,7 +3,7 @@
  *
  * Activated for any contract whose IR has a `surface` block of an
  * anchored-presence kind (Tooltip, Popover, ...). Surface kind
- * eligibility is decided by `isAnchoredPresenceKind` in shared
+ * eligibility is decided by `isPartAnchoredSurface` in shared
  * semantics, and per-kind policy (`AnchoredSurfacePolicy`) drives
  * default content role and public dismissal props. This emitter
  * MUST NOT branch on component identity or on `surface.kind` for
@@ -42,7 +42,7 @@
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
-  isAnchoredPresenceKind,
+  isPartAnchoredSurface,
   resolveAnchoredSurfacePolicy,
   anchoredPortalsContentToBody,
   type AnchoredSurfacePolicy,
@@ -79,7 +79,7 @@ export interface LitSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface !== undefined && isPartAnchoredSurface(ir.surface);
 }
 
 export function generateLitSurfaceFiles(ir: ComponentIR): LitSurfaceFiles {

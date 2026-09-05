@@ -1,0 +1,52 @@
+name: Contract oracle mutations
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 9 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-oracle-mutations
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    name: Full contract-oracle mutation measurement
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run full mutation profile
+        run: pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions
+
+      - name: Upload mutation report and stage logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-oracle-mutation-${{ github.run_id }}
+          path: tmp/contract-oracle-mutation/
+          if-no-files-found: warn
+          retention-days: 30

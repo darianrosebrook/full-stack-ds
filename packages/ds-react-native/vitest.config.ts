@@ -18,7 +18,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/components/**/*.test.tsx"],
+    include: ["src/components/**/*.test.tsx", "src/tokens/**/*.test.ts"],
     exclude: ["node_modules/**"],
     coverage: {
       provider: "v8",

@@ -41,7 +41,6 @@ export function Walkthrough({
   steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}],
   label = "Feature tour",
   slots,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -61,6 +60,7 @@ export function Walkthrough({
       >
         <View
           style={styles.title}
+          accessibilityLabel={label}
         >
           {slots?.title}
         </View>
@@ -76,10 +76,12 @@ export function Walkthrough({
       >
         <Pressable
           style={styles.skip}
+          accessibilityLabel={"Skip tour"}
           accessibilityRole="button"
         />
         <Pressable
           style={styles.prev}
+          accessibilityLabel={"Previous step"}
           accessibilityRole="button"
         />
         <View
@@ -99,6 +101,7 @@ export function Walkthrough({
         />
         <Pressable
           style={styles.next}
+          accessibilityLabel={"Next step"}
           accessibilityRole="button"
         />
       </View>

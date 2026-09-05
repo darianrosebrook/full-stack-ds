@@ -20,8 +20,10 @@ allowlist** (the <!-- target-component-count:swiftui -->51 allowlisted component
 `pnpm run governed:rail` emit exactly that set and skip the rest by
 declaration. Explicit single-component requests bypass the allowlist and
 surface the emitter's own fail-loud errors. The target remains outside the
-admission rail (no railFrameworkId, not in CI's generated-driff diff) —
-registration governs generation scope only.
+admission rail because it declares no `railFrameworkId`. Its generated
+`Components/` and `primitives/` roots are nevertheless included in CI and
+pre-push byte-drift checks; registration, drift gating, and admission are
+separate claims.
 
 ## Build
 
@@ -39,25 +41,26 @@ swift build --package-path packages/ds-swiftui
 | Controlled/uncontrolled channel semantics survive the projection | The `checked` channel lowers to `Binding<Bool>?` + `@State` + `onChange` with controlled-takes-precedence, matching React's `useControllableState` rule |
 | Size variants resolve from typed token facts | Yes — `ir.tokenFacts` (FEAT-MOBILE-IR-001), not CSS parsing; `sm`/`lg` fall through to `md` until those tokens are authored |
 | The Stack primitive lowers from `PrimitiveIR` like the web targets | Yes — axis (VStack/HStack) from `axisByVariant`, gated on `axisModes` only (native = neutral container, no imposed spacing); emitted via `emitPrimitives` with mutation-pinned gating |
-| Multi-part anatomy emits with theme-driven styling | Yes — the projected-children action path (root button + single content region) emits `FsdsButton`; styling comes from `ir.tokenScopes` shipped as data and resolved through the hand-authored `FsdsTheme` (RN normal form), layering root + variant_<size> + variant_<intent> |
+| Multi-part anatomy emits with theme-driven styling | Yes — the projected-children action path (root button + single content region) emits `FsdsButton`; styling comes from `ir.tokenScopes` shipped as data and resolved through the hand-authored `FsdsTheme`, layering root + variant_<size> + variant_<intent>. The shared native conformance fixture pins slot-name override → semantic-ref override → authored literal/fallback for ordinary and layered resolution. |
 | SwiftUI type collisions are handled grammatically | Yes — a reserved-type table exports colliding names with an `Fsds` prefix (`Button` → `FsdsButton`), the SwiftUI analog of Lit's `StackElement` rename |
 | Compound-part composers emit as region closures | Yes — Card is one ViewBuilder region per compound part (header/content/footer/description), chrome presence-driven through FsdsTheme; axes without authored defaults are optional parameters whose layer applies only when set; keyword union members (`default`) are backtick-escaped |
 | Body-evaluation smoke coverage | Every allowlisted component instantiates and evaluates its body through NSHostingController in the swift test lane — runtime crashes the compiler cannot see fail CI |
 | Selection semantics compose the controllable substrate | Yes — SelectionState holds single+multi ControllableValue projections behind the mode-gated apply() (replace vs toggleMembership); Select lowers through it with a contract-alias-derived option struct and Menu iteration |
 | Glyph pipeline renders the iconography catalog natively | Yes — hand-maintained SVGPath runtime (arc→cubic conversion, XCTest-pinned on real glyph bounds) + a generated GlyphCatalog substrate; Icon lowers through the iconGlyph class with size hints and catalog-driven decorative defaults; unknown names surface via accessibility, never silent |
-| Anchored tooltips emit with hover-driven open channel | Yes — Tooltip's trigger region hosts consumer content; onHover drives the controllable-state open channel into a popover with placement lowered through a grammar table (auto → platform default); anchored popovers still throw |
-| Centered-modal surfaces emit as sheets with the openness channel | Yes — Dialog presents a sheet whose native dismissal (Esc/overlay) drives setOpen(false) → onOpenChange; compound regions emit as closures (`body` renames to bodyContent for the View collision); anchored surfaces still throw |
+| Anchored surfaces emit through native popovers | Tooltip's trigger region hosts consumer content and `onHover` drives the open channel. Popover's contract-authored `openTriggers: ["click"]` lowers to a plain native Button that toggles the same controllable channel and is disabled by the declared prop. The PressProof harness independently observes an OS accessibility press → `onOpenChange(true)` → visible content. |
+| Centered-modal surfaces emit as sheets with the openness channel | Dialog presents a sheet and routes the platform presentation binding through `ControllableValue`; compound regions emit as closures (`body` renames to bodyContent for the View collision). Controlled/default presentation is host-proven; native-dismissal callback remains emitter-level because the harness cannot safely press into the modal sheet. |
 | Value-channel text controls emit with the controllable-state projection | Yes — Input is a SwiftUI TextField whose string channel projects through Binding + @State + onChange (controlled takes precedence), keyed on the IR channel rather than component identity; placeholder/disabled realized, HTML-form props omitted |
 | Named-slot composers emit as region closures | Yes — Field is one ViewBuilder region per dom slot (label/control/help/error/validatingIndicator), gated on every dom leaf being a slot (TextField's component-instance leaf and Dialog's surface block stay out); the web value-channel API is omitted, not accepted-and-ignored |
 
-## Known gaps ledgered from the deduper consumption pilot (2026-08-15)
+## Consumption-pilot findings and current disposition
 
 The first real-consumer pilot (deduper's settings window, branch
-`fsds/ds-swiftui-integration`) surfaced these beyond the resolver fix:
+`fsds/ds-swiftui-integration`) surfaced these beyond the resolver fix. One is
+closed and the remaining findings are still current:
 
-- **Dark mode**: color fallbacks are light-mode hex (`#ffffff`/`#141414`)
-  — components render light boxes on dark windows. Needs appearance-scoped
-  token resolution (CSS variables give the web this for free).
+- **Closed — dark mode**: generated color facts now carry
+  `.adaptive(light:dark:)`; `TokenPaintTests` samples Card under aqua and
+  darkAqua and matches both values to the committed resolved graph.
 - **Override seam is hex-only**: `FsdsTokenValue` cannot express system
   colors (`Color(nsColor: .windowBackgroundColor)`), so consumers cannot
   bridge dark-mode adaptation through the sanctioned channel.
@@ -79,8 +82,14 @@ naming any failed counter. Current proven surface (press → channel):
 - **Chip** (action, dismiss), **Walkthrough** (steps, skip, complete threshold)
 - **Switch** — onChange `[true, false]`, binding syncs both ways
 - **Select** — AXMenuButton trigger → menu option press → selection `"b"`
+- **Popover** — native Button AXPress → first `onOpenChange` value `true` →
+  content observable (phase unmount may append native-dismissal `false`)
 - **Calendar** — AXIncrementor step → onChange fires exactly once
-- **Dialog at mount** — `defaultOpen: true` presents its sheet
+- **Dialog** — controlled false→true→false presentation and
+  `defaultOpen: true` presentation at mount
+- **Tabs** — selecting tab `b` drives the active-tab channel
+- **Accordion** — expanding then collapsing item `k1` drives openness
+- **Shuttle** — moving `beta` forward then back drives selection
 
 Token painting is pixel-proven in `Tests/DsSwiftUITests/TokenPaintTests.swift`:
 sampled pixels equal values read from the committed resolved token graph —
@@ -90,48 +99,49 @@ action-primary hex.
 
 The harness found and fixed one real emitter defect (sheets anchored on
 `EmptyView()` never present; the anchor is now a zero-size `Color.clear`,
-regenerated for Dialog/Sheet/Command). Structural finding: Tabs, Accordion,
-and Shuttle emissions expose **zero** pressable/editable AX elements — their
-channels exist but no control wires them yet (window-scoped census
-`[AXGroup:1, AXStaticText:5]`); behavioral parity for those three awaits
-emitter deepening.
+regenerated for Dialog/Sheet/Command). It later falsified its own initial
+structural finding for Tabs, Accordion, and Shuttle: their generated controls
+now expose OS-pressable elements and the channel counters above move.
 
 Host limitations (probe-evidenced, not component defects — each printed as
 a `LIMITATION:` artifact by the harness):
 
-- **After-mount sheet flips never present on this swift-run host** — a
-  plain-SwiftUI `Color.clear.sheet(isPresented:)` control fails identically,
-  which blocks proving the controlled-Dialog open/close cycle here.
-- **No key window is ever granted** — keyboard event synthesis has no
-  routing target; CGEvent mouse delivery has the same blocker.
 - **SwiftUI TextFields accept AXValue writes without routing them to
-  bindings** — OTP text-entry cannot be driven through AX on this host.
+  bindings** — OTP text-entry remains unproven; the host exposes no usable
+  keyboard routing path for that field interaction.
+- **Native sheet dismissal cannot be pressed safely from this harness's main
+  thread** — AXPress into the presented modal blocks the AppKit run loop, so
+  Dialog's native-dismissal → `onOpenChange` path remains emitter-level rather
+  than OS-interaction proof.
 
 ## Parity
 
 `node scripts/swift-parity-diff.mjs` generates every corpus contract
 through both the react and swiftui emitters and exits nonzero if any
-component emits for react but not swiftui. Current run: react 49 /
-swift 49 / divergent 0. This is emission-level API-surface parity —
+component emits for react but not swiftui. Current run: react 51 /
+swift 51 / divergent 0. This is emission-level API-surface parity —
 not visual or behavioral parity. (Token-value parity at the paint
 level is sample-proven by `TokenPaintTests` — see runtime proof above.)
 
 ## Non-claims
 
-- Only components whose anatomy declares a collapse intent
-  (`native-toggle-affordance`: Switch, ToggleSwitch) can be generated. The
-  multi-part anatomy path throws an explicit not-implemented error — by design,
-  never a silent fallback.
+- SwiftUI is registered, generated, drift-gated, and compile/test covered, but
+  remains outside the six-target admission rail. None of those states implies
+  the others.
+- The press-proof harness is a reproducible local macOS/AppKit fact surface,
+  not a required CI step and not iOS simulator/device evidence. CI runs
+  `swift test`, which covers body evaluation, state/token helpers, and sampled
+  token painting; its AX interaction cases skip visibly when the runner exposes
+  no usable accessibility tree.
+- Full-corpus emission and body evaluation do not prove every channel is
+  behaviorally wired, visual parity, platform accessibility adequacy, or
+  product correctness.
+- Tooltip's declared focus trigger is not lowered on SwiftUI; its hover trigger
+  is live. The Popover click trigger is host-proven on macOS, not iOS.
 - Switch's track geometry comes from its authored size token facts
   (32/48/64 px). ToggleSwitch authors none, so it renders at the native
   Toggle's intrinsic size — its size prop has no visual effect on this target
   until its sidecar authors track tokens.
-- Anchored surfaces (Tooltip/Popover), compound parts, behavior files
-  (`ObservableObject`), and a shared `FsdsTheme` token module are not emitted
-  yet. Size values are inlined per component from token facts.
-- No XCTest target exists yet; generated tests are deferred until a test
-  target lands (test files must not live inside the library target).
-- The generated tree is committed but not yet covered by CI's generated-drift
-  diff or `governed:rail` — that protection arrives with default-rail
-  admission.
+- OTP text entry and native modal-dismissal callbacks remain unproven through
+  the host interaction harness for the limitations named above.
 - Not published anywhere; workspace-only, consumed via local package path.

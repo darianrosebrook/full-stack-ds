@@ -175,11 +175,12 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
-  if (isDualActionChip(ir)) {
+  const dualActionRefs = resolveDualActionRefs(ir);
+  if (dualActionRefs) {
     const sections: string[] = [];
     sections.push(emitImports());
     sections.push(emitTypes(ir));
-    sections.push(emitDualActionChip(ir));
+    sections.push(emitDualActionComposite(ir, dualActionRefs));
     return sections.join("\n\n") + "\n";
   }
   if (isPropTextLeaf(ir)) {
@@ -198,11 +199,12 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
     return sections.join("\n\n") + "\n";
   }
 
-  if (isSrcOrFallbackChild(ir)) {
+  const srcFallbackRef = resolveSrcFallbackRef(ir);
+  if (srcFallbackRef) {
     const sections: string[] = [];
     sections.push(emitImports());
     sections.push(emitTypes(ir));
-    sections.push(emitSrcOrFallback(ir));
+    sections.push(emitSrcOrFallback(ir, srcFallbackRef));
     return sections.join("\n\n") + "\n";
   }
 
@@ -1637,38 +1639,58 @@ function emitLabeledTextControl(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+interface DualActionRefs {
+  action: string;
+  dismiss: string;
+}
+
 /**
- * Dual-action chip: a passive root holding exactly two componentRef
- * Button parts — action (icon/text) and dismiss (gated by dismissible).
- * Both lower through the generated FsdsButton (same-module composition).
+ * A passive root holding exactly two referenced action parts: `action` and
+ * `dismiss`. The composition class is selected from anatomy and prop shape;
+ * the referenced component identities are output data, never dispatch keys.
  */
-function isDualActionChip(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.behavior.normalizedChannels.length > 0) return false;
-  const refs: { part?: string; ref?: string; ifProp?: string }[] = [];
+function resolveDualActionRefs(ir: ComponentIR): DualActionRefs | undefined {
+  if (!ir.dom || ir.surface != null) return undefined;
+  if (ir.behavior.normalizedChannels.length > 0) return undefined;
+  const refs: {
+    part?: string;
+    ref: string;
+    click: BindingExpression | undefined;
+  }[] = [];
   const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    const ref = (node as { componentRef?: string }).componentRef;
-    if (ref === "Button") {
+    if (node.componentRef) {
       refs.push({
         part: node.part,
-        ref,
-        ifProp: (node as { ifProp?: string }).ifProp,
+        ref: node.componentRef,
+        click: node.events.click,
       });
     }
     (node.children ?? []).forEach(walk);
   };
   walk(ir.dom);
-  const parts = refs.map((r) => r.part).sort();
-  return (
-    refs.length === 2 &&
-    parts[0] === "action" &&
-    parts[1] === "dismiss" &&
-    hasConventionalProp(ir, "onClick") &&
-    hasConventionalProp(ir, "onDismiss")
-  );
+  if (refs.length !== 2) return undefined;
+  if (
+    !hasConventionalProp(ir, "onClick") ||
+    !hasConventionalProp(ir, "onDismiss")
+  ) {
+    return undefined;
+  }
+  const action = refs.find(
+    (entry) =>
+      entry.part === "action" &&
+      entry.click?.kind === "prop" &&
+      entry.click.prop === "onClick",
+  )?.ref;
+  const dismiss = refs.find(
+    (entry) =>
+      entry.part === "dismiss" &&
+      entry.click?.kind === "prop" &&
+      entry.click.prop === "onDismiss",
+  )?.ref;
+  return action && dismiss ? { action, dismiss } : undefined;
 }
 
-function emitDualActionChip(ir: ComponentIR): string {
+function emitDualActionComposite(ir: ComponentIR, refs: DualActionRefs): string {
   const exportName = swiftExportName(ir.name);
   const hasVariant = Object.keys(ir.variants).includes("variant");
   const variantType = ir.definedTypes[`${ir.name}Variant`] ? `${ir.name}Variant` : null;
@@ -1684,8 +1706,8 @@ function emitDualActionChip(ir: ComponentIR): string {
   const lines: string[] = [];
   lines.push("// @generated:start component");
   lines.push(
-    `/// Emitted through the dual-action chip path: the owned Button ` +
-      `components compose the action/dismiss pair (same-module FsdsButton).`,
+    `/// Emitted through the dual-action composite path: the referenced ` +
+      `components compose the action/dismiss pair within DsSwiftUI.`,
   );
   const generics = ["Text: View"];
   if (hasIcon) generics.push("IconRegion: View");
@@ -1724,7 +1746,9 @@ function emitDualActionChip(ir: ComponentIR): string {
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}HStack(spacing: 4) {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}FsdsButton(`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}DsSwiftUI.${swiftExportName(refs.action)}(`,
+  );
   if (variantArgs) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}variant: variant,`);
   if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}disabled: disabled,`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}onTap: onClick`);
@@ -1736,7 +1760,9 @@ function emitDualActionChip(ir: ComponentIR): string {
     lines.push(`${INDENT}${INDENT}${INDENT}.fsdsAccessibilityLabel(accessibilityLabel)`);
   }
   lines.push(`${INDENT}${INDENT}${INDENT}if ${hasDismissible ? "dismissible" : "true"} {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}FsdsButton(`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}DsSwiftUI.${swiftExportName(refs.dismiss)}(`,
+  );
   if (hasDisabled) lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}disabled: disabled,`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}onTap: onDismiss`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}) {`);
@@ -2076,27 +2102,33 @@ function emitMediaLeaf(ir: ComponentIR): string {
 }
 
 /**
- * Src-or-fallback composition: a componentRef child gated by ifProp src,
- * with a sibling name prop for the fallback (Avatar → Image | Text).
+ * Src-or-fallback composition: one referenced child whose `src` prop binding
+ * is gated by the host's `src`, with host-authored text as the fallback. The
+ * reference identity is returned for emission; it never selects the class.
  */
-function isSrcOrFallbackChild(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.behavior.normalizedChannels.length > 0) return false;
-  let hasGatedImageRef = false;
+function resolveSrcFallbackRef(ir: ComponentIR): string | undefined {
+  if (!ir.dom || ir.surface != null) return undefined;
+  if (ir.behavior.normalizedChannels.length > 0) return undefined;
+  const refs: string[] = [];
   const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    const srcBinding = node.bindings.src;
     if (
-      (node as { componentRef?: string }).componentRef === "Image" &&
-      node.ifProp === "src"
+      node.componentRef &&
+      node.ifProp === "src" &&
+      srcBinding?.kind === "prop" &&
+      srcBinding.prop === "src"
     ) {
-      hasGatedImageRef = true;
+      refs.push(node.componentRef);
     }
     (node.children ?? []).forEach(walk);
   };
   walk(ir.dom);
-  return hasGatedImageRef && hasConventionalProp(ir, "src");
+  return refs.length === 1 && hasConventionalProp(ir, "src")
+    ? refs[0]
+    : undefined;
 }
 
-function emitSrcOrFallback(ir: ComponentIR): string {
+function emitSrcOrFallback(ir: ComponentIR, componentRef: string): string {
   const exportName = swiftExportName(ir.name);
   const chrome = resolveChrome(ir);
   const hasName = hasConventionalProp(ir, "name");
@@ -2105,7 +2137,7 @@ function emitSrcOrFallback(ir: ComponentIR): string {
   if (ir.tokenScopes.length > 0) lines.push(...emitTokenScopesSection(ir));
   lines.push("");
   lines.push(
-    `/// Emitted through the src-or-fallback path: the owned Image ` +
+    `/// Emitted through the src-or-fallback path: the referenced component ` +
       `renders when src is set; the name prop is the fallback content.`,
   );
   lines.push(`public struct ${exportName}: View {`);
@@ -2157,7 +2189,9 @@ function emitSrcOrFallback(ir: ComponentIR): string {
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}Group {`);
   lines.push(`${INDENT}${INDENT}${INDENT}if let src {`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}DsSwiftUI.Image(src: src${hasName ? ", alt: name" : ""})`);
+  lines.push(
+    `${INDENT}${INDENT}${INDENT}${INDENT}DsSwiftUI.${swiftExportName(componentRef)}(src: src${hasName ? ", alt: name" : ""})`,
+  );
   lines.push(`${INDENT}${INDENT}${INDENT}} else {`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}SwiftUI.Text(name ?? "")`);
   lines.push(`${INDENT}${INDENT}${INDENT}}`);
@@ -2414,12 +2448,17 @@ function isStaticContent(ir: ComponentIR): boolean {
   if (ir.behavior.normalizedChannels.length > 0) return false;
   if (ir.dom.tag === "button" || ir.dom.tag === "input") return false;
   // Passive root of any tag; wrapper elements (nav>ol, article>div…) may
-  // sit above the single projected children leaf. Component-instance
-  // children still disqualify.
+  // sit above the single projected children leaf. Essential component-instance
+  // children still disqualify. A contract-authored decoration may degrade on
+  // this target without changing the content/chrome realization; the native
+  // compile lane does not claim visual parity.
   let childrenLeaves = 0;
   let hasInstance = false;
   const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if ((node as { componentRef?: string }).componentRef) hasInstance = true;
+    if ((node as { componentRef?: string }).componentRef) {
+      const role = ir.parts.find((part) => part.name === node.part)?.details?.role;
+      if (role !== "decoration") hasInstance = true;
+    }
     const kids = node.children ?? [];
     if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
     kids.forEach(walk);

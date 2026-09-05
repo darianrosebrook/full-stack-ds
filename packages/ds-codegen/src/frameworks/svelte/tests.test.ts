@@ -12,7 +12,9 @@ describe("generateSvelteTest", () => {
     expect(source).toContain(`import { axe } from "vitest-axe";`);
     expect(source).toContain(`import Switch from "../Switch.svelte";`);
     expect(source).toContain(`container.firstElementChild?.className).toContain("switch");`);
-    expect(source).toContain(`unexpectedViolations`);
+    expect(source).toContain(`componentAxeOptions`);
+    expect(source).toContain(`region: { enabled: false }`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
   });
 
   it("emits channel interaction code for a stack-only boolean channel", () => {
@@ -81,11 +83,30 @@ describe("generateSvelteTest — real corpus contracts", () => {
     expect(source).toContain(`import Accordion from "../Accordion.svelte";`);
   });
 
+  it("includes required props in the axe fixture", () => {
+    const source = generateSvelteTest(corpusIR("Details"));
+
+    expect(source).toContain(`"summary": "placeholder"`);
+  });
+
+  it("does not leak component-local type aliases into the runtime fixture", () => {
+    const source = generateSvelteTest(corpusIR("Postcard"));
+
+    expect(source).toContain(`"author": {}`);
+    expect(source).not.toContain(`as PostcardAuthor`);
+  });
+
   it("renders Dialog with the openness channel and dismissal coverage", () => {
     const source = generateSvelteTest(corpusIR("Dialog"));
 
     expect(source).toContain(`import Dialog from "../Dialog.svelte";`);
     expect(source).toContain(`"open": true, "onOpenChange": onOpenChangeSpy`);
+    expect(source).toContain(
+      `"title": createRawSnippet(() => ({ render: () => "<span>Test Dialog title</span>" }))`,
+    );
+    expect(source).toContain(`expect(root).not.toBeNull();`);
+    expect(source).not.toContain(`knownScaffoldViolationIds`);
+    expect(source).toContain(`expect(results.violations.map((v) => v.id)).toEqual([]);`);
   });
 
   it("keeps the generic plan for the Toast surface and cleans up timers", () => {

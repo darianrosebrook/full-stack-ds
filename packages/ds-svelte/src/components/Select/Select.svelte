@@ -27,15 +27,16 @@ interface Props {
   onOpenChange?: (open: boolean) => void;
   multiple?: boolean;
   disabled?: boolean;
+  triggerLabel?: string;
   size?: SelectSize;
-  filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
   position?: string;
   class?: string;
 }
 
-let { options = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}], value, defaultValue = "beta", onChange, open, defaultOpen = true, onOpenChange, multiple, disabled, size = "md", filterFn, searchable, empty, position, class: className }: Props = $props();
+let { options = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}], value, defaultValue = "beta", onChange, open, defaultOpen = true, onOpenChange, multiple, disabled, triggerLabel = "Select an option", size = "md", filterFn, searchable, empty, position, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -71,8 +72,8 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={behavior.open} aria-disabled={disabled} data-fsds-component="select">
-  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled} aria-controls={`${instanceId}-options`}>
+<div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={behavior.open} aria-disabled={disabled} data-fsds-component="select">
+  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled} aria-label={triggerLabel} aria-expanded={behavior.open} aria-controls={`${instanceId}-options`}>
     <span class={'select__text'}></span>
   </button>
   {#if behavior.open}

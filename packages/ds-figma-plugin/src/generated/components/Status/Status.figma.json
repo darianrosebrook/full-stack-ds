@@ -19,7 +19,7 @@
     {
       "name": "icon",
       "semanticElement": "span",
-      "nativeTag": "span",
+      "nativeTag": null,
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null

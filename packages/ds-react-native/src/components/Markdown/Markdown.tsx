@@ -24,7 +24,6 @@ export interface MarkdownProps {
 // @generated:start component
 export function Markdown({
   content,
-  children,
   style,
   testID,
   accessibilityLabel,

@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
+import { IconComponent } from "../Icon/Icon.component.js";
 import { useDetails } from "./useDetails.js";
 // @generated:end
 
@@ -24,12 +25,12 @@ let nextInstanceId = 0;
 @Component({
   selector: "fsds-details",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, IconComponent],
   host: { "data-fsds-component": "details" },
   template: `<details [ngClass]="classes()" [open]="behavior.open()">
   <summary [ngClass]="'details__summary'" [attr.aria-controls]="summaryAriaControls">
     <span [ngClass]="'details__summaryContent'">
-      <span [ngClass]="'details__icon'"></span>
+      <fsds-icon [ngClass]="'details__icon'" name="chevron-down" size="sm"></fsds-icon>
       <span [ngClass]="'details__summaryText'">
         {{ summary }}
       </span>

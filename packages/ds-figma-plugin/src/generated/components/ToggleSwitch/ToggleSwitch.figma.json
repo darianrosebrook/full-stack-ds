@@ -191,6 +191,7 @@
     "element": "div",
     "explicitRole": "switch",
     "effectiveRole": "switch",
+    "rootRole": "switch",
     "labeling": [
       "aria-label",
       "aria-checked",
@@ -306,30 +307,7 @@
     "dismissalTriggers": [],
     "events": [],
     "form": {
-      "participates": true,
-      "inputType": "checkbox",
-      "name": {
-        "prop": "name"
-      },
-      "serialization": {
-        "valueType": "string",
-        "valueSource": "static:on",
-        "omitWhen": "unchecked"
-      },
-      "validity": {
-        "model": "native",
-        "ariaAttributes": [
-          "aria-disabled"
-        ]
-      },
-      "labeling": {
-        "strategy": "associated-label",
-        "required": true,
-        "via": [
-          "aria-labelledby",
-          "aria-label"
-        ]
-      }
+      "participates": false
     },
     "focus": {
       "strategy": "auto",

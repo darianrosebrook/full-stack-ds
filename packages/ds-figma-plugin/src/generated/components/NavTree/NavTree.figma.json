@@ -150,6 +150,7 @@
     "element": "div",
     "explicitRole": "listitem",
     "effectiveRole": "listitem",
+    "rootRole": "listitem",
     "labeling": [
       "aria-label",
       "aria-labelledby"

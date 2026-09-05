@@ -5,6 +5,14 @@ import "../Tabs";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Tabs — unit", () => {
   it("renders with default props", async () => {
     const container = document.createElement("div");
@@ -140,26 +148,8 @@ describe("Tabs — accessibility", () => {
     await tabA.updateComplete; await tabB.updateComplete;
     await panelA.updateComplete; await panelB.updateComplete;
     await new Promise((r) => setTimeout(r, 0));
-    const results = await axe(container);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const results = await axe(container, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
     container.remove();
   });
 });

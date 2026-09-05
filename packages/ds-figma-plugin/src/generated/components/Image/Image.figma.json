@@ -224,6 +224,7 @@
     "element": "div",
     "explicitRole": "img",
     "effectiveRole": "img",
+    "rootRole": "img",
     "labeling": [
       "aria-label",
       "alt"

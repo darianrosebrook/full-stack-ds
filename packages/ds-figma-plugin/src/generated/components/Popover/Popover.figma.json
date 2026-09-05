@@ -194,6 +194,7 @@
     "element": "div",
     "explicitRole": "group",
     "effectiveRole": "group",
+    "rootRole": "group",
     "labeling": [
       "aria-controls",
       "aria-expanded"
@@ -355,6 +356,7 @@
     "kind": "popover",
     "presence": "persistent",
     "modality": "non-blocking",
+    "attachment": "part",
     "anchor": {
       "part": {
         "name": "trigger",

@@ -25,12 +25,12 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "dialog" },
-  template: `<div [ngClass]="classes()" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-body'">
+  template: `<div [ngClass]="classes()">
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'dialog__backdrop'" aria-hidden="true" role="presentation" (click)="closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
+    <div [ngClass]="'dialog__modal'" role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="modalAriaLabelledby" [attr.aria-describedby]="modalAriaDescribedby">
       <div [ngClass]="'dialog__header'">
         <h2 [ngClass]="'dialog__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
@@ -40,7 +40,9 @@ let nextInstanceId = 0;
       <div [ngClass]="'dialog__body'" [attr.id]="instanceId + '-body'">
         <ng-content />
       </div>
-      <div [ngClass]="'dialog__footer'"></div>
+      <div [ngClass]="'dialog__footer'">
+        <ng-content select="[slot=footer]" />
+      </div>
     </div>
   </ng-container>
 </div>`,
@@ -57,6 +59,9 @@ export class DialogComponent implements OnInit, OnDestroy {
   @Input() closeOnBackdropClick?: boolean = true;
   @Input() initialFocus?: string;
   @Input() returnFocus?: string;
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
+  @Input() ariaDescribedby?: string;
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-dialog-${nextInstanceId++}`;
@@ -78,6 +83,14 @@ export class DialogComponent implements OnInit, OnDestroy {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  get modalAriaLabelledby(): string | undefined {
+    return [!this.ariaLabel ? `${this.instanceId}-title` : null, this.ariaLabelledby].filter(Boolean).join(" ") || undefined;
+  }
+
+  get modalAriaDescribedby(): string | undefined {
+    return [`${this.instanceId}-body`, this.ariaDescribedby].filter(Boolean).join(" ") || undefined;
+  }
 
   private _el = inject(ElementRef<HTMLElement>);
   private _portalOriginParent: Node | null = null;

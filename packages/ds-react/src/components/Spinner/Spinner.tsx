@@ -57,7 +57,7 @@ export function Spinner({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="status" data-testid={testId} data-fsds-component="spinner" {...rest}>
+  <Stack layout="native" className={`${classNames}`} aria-label={label} aria-hidden={ariaHidden} role="status" data-testid={testId} data-fsds-component="spinner" {...rest}>
     <span className="spinner__visual" aria-hidden="true" />
   </Stack>
   );

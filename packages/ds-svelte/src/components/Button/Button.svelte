@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import Spinner from "../Spinner/Spinner.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -55,7 +55,7 @@ const classes = $derived(
 
 <button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-fsds-component="button">
   {#if loading}
-  <span class={'button__spinner'} aria-hidden="true"></span>
+  <Spinner class={'button__spinner'} size="sm" inline={loading} ariaHidden={loading} />
   {/if}
   <span class={'button__loadingText'}>
     {@render children?.()}

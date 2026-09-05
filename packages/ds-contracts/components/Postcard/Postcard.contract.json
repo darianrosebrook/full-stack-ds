@@ -84,17 +84,23 @@
               "children": [
                 {
                   "tag": "span",
-                  "part": "displayName"
+                  "part": "displayName",
+                  "content": "prop:author.name"
                 },
                 {
                   "tag": "span",
-                  "part": "handle"
+                  "part": "handle",
+                  "content": "prop:author.handle"
                 }
               ]
             },
             {
               "tag": "time",
-              "part": "timestamp"
+              "part": "timestamp",
+              "bindings": {
+                "datetime": "prop:timestamp"
+              },
+              "content": "prop:timestamp"
             }
           ]
         },
@@ -117,7 +123,8 @@
               "children": [
                 {
                   "tag": "span",
-                  "part": "stat"
+                  "part": "stat",
+                  "content": "prop:stats.likes"
                 }
               ]
             }
@@ -138,7 +145,7 @@
         },
         {
           "name": "author",
-          "type": "PostcardAuthor",
+          "propType": { "kind": "ref", "to": "PostcardAuthor" },
           "description": "Author metadata: name, handle, and avatar URL.",
           "required": true
         },
@@ -150,13 +157,13 @@
         },
         {
           "name": "stats",
-          "type": "PostcardStats",
+          "propType": { "kind": "ref", "to": "PostcardStats" },
           "description": "Engagement statistics: likes, replies, reposts.",
           "required": true
         },
         {
           "name": "embed",
-          "type": "PostcardEmbed",
+          "propType": { "kind": "ref", "to": "PostcardEmbed" },
           "description": "Optional media embed with type, URL, and aspect ratio."
         }
       ]

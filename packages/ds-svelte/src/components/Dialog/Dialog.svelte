@@ -28,12 +28,16 @@ interface Props {
   closeOnBackdropClick?: boolean;
   initialFocus?: string;
   returnFocus?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   class?: string;
   children?: import('svelte').Snippet;
+  footer?: import('svelte').Snippet;
   title?: import('svelte').Snippet;
 }
 
-let { open, defaultOpen, onOpenChange, modal = true, size = "md", dismissible = true, closeOnEscape = true, closeOnBackdropClick = true, initialFocus, returnFocus, class: className, children, title }: Props = $props();
+let { open, defaultOpen, onOpenChange, modal = true, size = "md", dismissible = true, closeOnEscape = true, closeOnBackdropClick = true, initialFocus, returnFocus, ariaLabel, ariaLabelledby, ariaDescribedby, class: className, children, footer, title }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -65,12 +69,12 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} data-fsds-component="dialog" use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}>
+<div class={classes} data-fsds-component="dialog" use:portal={{ enabled: true }}>
   {#if behavior.openness}
-  <div class={'dialog__backdrop'} aria-hidden="true"></div>
+  <div class={'dialog__backdrop'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}></div>
   {/if}
   {#if behavior.openness}
-  <div class={'dialog__modal'} role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
+  <div class={'dialog__modal'} role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
     <div class={'dialog__header'}>
       <h2 class={'dialog__title'} id={`${instanceId}-title`}>
         {@render title?.()}
@@ -80,7 +84,9 @@ const instanceId = $props.id();
     <div class={'dialog__body'} id={`${instanceId}-body`}>
       {@render children?.()}
     </div>
-    <div class={'dialog__footer'}></div>
+    <div class={'dialog__footer'}>
+      {@render footer?.()}
+    </div>
   </div>
   {/if}
 </div>

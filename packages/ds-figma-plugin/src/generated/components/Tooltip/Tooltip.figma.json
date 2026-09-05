@@ -155,6 +155,7 @@
     "element": "div",
     "explicitRole": "tooltip",
     "effectiveRole": "tooltip",
+    "rootRole": "tooltip",
     "labeling": [
       "aria-describedby"
     ],
@@ -277,6 +278,7 @@
     "kind": "tooltip",
     "presence": "ephemeral",
     "modality": "non-blocking",
+    "attachment": "part",
     "anchor": {
       "part": {
         "name": "trigger",

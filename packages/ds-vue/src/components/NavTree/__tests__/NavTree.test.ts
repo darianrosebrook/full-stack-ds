@@ -7,69 +7,54 @@ import NavTree from "../NavTree.vue";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("NavTree — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(NavTree as Component, { props: {}, attrs: { "data-testid": "nav-tree" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder" }, attrs: { "data-testid": "nav-tree" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(NavTree as Component, { props: {}, attrs: { "data-testid": "nav-tree" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder" }, attrs: { "data-testid": "nav-tree" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("nav-tree");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(NavTree as Component, { props: {}, attrs: { "data-testid": "nav-tree", "class": "custom" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder" }, attrs: { "data-testid": "nav-tree", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("nav-tree");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(NavTree as Component, { props: {}, attrs: { "data-testid": "nav-tree" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder" }, attrs: { "data-testid": "nav-tree" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("listitem");
   });
 
   it("applies iconSize=sm variant class", () => {
-    const wrapper = mount(NavTree as Component, { props: { "iconSize": "sm" }, attrs: { "data-testid": "nav-tree" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder", "iconSize": "sm" }, attrs: { "data-testid": "nav-tree" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("nav-tree--sm");
   });
 
   it("applies iconSize=md variant class", () => {
-    const wrapper = mount(NavTree as Component, { props: { "iconSize": "md" }, attrs: { "data-testid": "nav-tree" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder", "iconSize": "md" }, attrs: { "data-testid": "nav-tree" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("nav-tree--md");
   });
 });
 
 describe("NavTree — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(NavTree as Component, { props: {}, attrs: { "data-testid": "nav-tree", "aria-label": "Test NavTree" }, slots: { default: "content" } });
+    const wrapper = mount(NavTree as Component, { props: { "label": "placeholder" }, attrs: { "data-testid": "nav-tree", "aria-label": "Test NavTree" }, slots: { "default": "<li>content</li>" } });
     const list = document.createElement("ul");
     list.append(wrapper.element);
-    const results = await axe(list);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const results = await axe(list, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

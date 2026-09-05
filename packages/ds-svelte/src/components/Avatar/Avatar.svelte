@@ -11,12 +11,13 @@ import Image from "../Image/Image.svelte";
 interface Props {
   src?: string;
   name: string;
+  initials?: string;
   priority?: boolean;
   size?: string;
   class?: string;
 }
 
-let { src, name, priority, size, class: className }: Props = $props();
+let { src, name, initials, priority, size, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -37,5 +38,8 @@ const classes = $derived(
 <div class={classes} aria-label={name} data-fsds-component="avatar" role="img">
   {#if src}
   <Image class={'avatar__image'} src={src} alt="" />
+  {/if}
+  {#if initials}
+  <span class={'avatar__initials'}>{initials}</span>
   {/if}
 </div>

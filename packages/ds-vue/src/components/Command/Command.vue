@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed, useId } from "vue";
 import { useCommand } from "./useCommand.js";
+import Icon from "../Icon/Icon.vue";
 // @generated:end
 
 // @custom:start imports
@@ -25,14 +26,13 @@ interface Props {
   defaultSearch?: string;
   onSearchChange?: (value: string) => void;
   placeholder?: string;
+  searchLabel?: string;
   emptyMessage?: string;
   label?: string;
   shouldFilter?: boolean;
   filter?: ((value: string, search: string) => number) | undefined;
   class?: string;
   "data-testid"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
 }
 // @generated:end
 
@@ -41,6 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   open: undefined,
   defaultOpen: undefined,
   placeholder: "Search...",
+  searchLabel: "Search commands",
   emptyMessage: "No results found.",
   label: "Command palette",
   shouldFilter: true,
@@ -76,27 +77,16 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" data-fsds-component="command" @click.self="behavior.setOpen(false)">
-      <div v-if="behavior.open.value" :class="'command__overlay'" aria-hidden="true"></div>
+    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="command">
+      <div v-if="behavior.open.value" :class="'command__overlay'" aria-hidden="true" @click.self="behavior.setOpen(false)"></div>
       <div v-if="behavior.open.value" :class="'command__dialog'" role="dialog" aria-modal="true" :aria-label="props.label">
         <div :class="'command__inputWrapper'">
-          <span :class="'command__searchIcon'" aria-hidden="true"></span>
-          <input :class="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" @input="(e) => behavior.setSearch((e.target as HTMLInputElement).value)" :aria-expanded="behavior.open.value" :placeholder="props.placeholder" :value="behavior.search.value" :id="`${instanceId}-input`" />
+          <Icon :class="'command__searchIcon'" name="search" size="sm" />
+          <input :class="'command__input'" type="search" role="combobox" aria-autocomplete="list" @input="(e) => behavior.setSearch((e.target as HTMLInputElement).value)" :aria-expanded="behavior.open.value" :aria-label="props.searchLabel" :placeholder="props.placeholder" :value="behavior.search.value" :id="`${instanceId}-input`" :aria-controls="`${instanceId}-list`" />
         </div>
-        <div :class="'command__list'" role="listbox" id="fsds-command-listbox" :aria-labelledby="`${instanceId}-input`">
+        <div :class="'command__list'" role="listbox" :id="`${instanceId}-list`" :aria-labelledby="`${instanceId}-input`">
           <div :class="'command__empty'"></div>
-          <div :class="'command__group'">
-            <div :class="'command__groupHeading'"></div>
-            <div :class="'command__groupItems'">
-              <div :class="'command__item'" role="option">
-                <span :class="'command__itemIcon'"></span>
-                <div :class="'command__itemContent'">
-                  <span :class="'command__itemLabel'"></span>
-                  <span :class="'command__itemDescription'"></span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <slot name="items" />
           <div :class="'command__separator'" role="separator" aria-hidden="true"></div>
         </div>
       </div>

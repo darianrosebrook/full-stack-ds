@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useAccordionContext } from "./useAccordion.svelte.js";
+import Icon from "../Icon/Icon.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -53,6 +54,6 @@ const classes = $derived(
   onclick={() => ctx.toggleItem(value)}
 >
   {@render children?.()}
-  <span class="accordion__chevron"></span>
+  <Icon class={'accordion__chevron'} name="chevron-down" size="sm" />
 </button>
 </h3>

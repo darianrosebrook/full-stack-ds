@@ -34,7 +34,9 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   canonicalTsType,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -755,9 +757,9 @@ export function generateSvelteDisclosureStateParts(
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
   const triggerTag = itemNode?.tag ?? "button";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = svelteFindDomNode(ir.dom, regionPart.name);
   const innerChild = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -813,6 +815,11 @@ export function generateSvelteDisclosureStateParts(
   triggerLines.push(`<script lang="ts">`);
   triggerLines.push(`// @generated:start imports`);
   triggerLines.push(`import { use${name}Context } from "./use${name}.svelte.js";`);
+  if (chevronNode?.componentRef) {
+    triggerLines.push(
+      `import ${chevronNode.componentRef} from "../${chevronNode.componentRef}/${chevronNode.componentRef}.svelte";`,
+    );
+  }
   triggerLines.push(`// @generated:end`);
   triggerLines.push(``);
   triggerLines.push(`// @custom:start imports`);
@@ -865,7 +872,20 @@ export function generateSvelteDisclosureStateParts(
   triggerLines.push(`  onclick={() => ctx.toggleItem(value)}`);
   triggerLines.push(`>`);
   triggerLines.push(`  {@render children?.()}`);
-  if (chevronPartName) triggerLines.push(`  <span class="${cssPrefix}__${chevronPartName}"></span>`);
+  if (chevronNode) {
+    triggerLines.push(
+      renderSvelteDomNode(
+        chevronNode,
+        {
+          classRecipe: cssPrefix,
+          channelByName: new Map(),
+          hookVar: "ctx",
+          isRoot: false,
+        },
+        2,
+      ),
+    );
+  }
   triggerLines.push(`</${triggerTag}>`);
   if (headerPartName) triggerLines.push(`</${headerTag}>`);
   triggerLines.push(``);
@@ -1224,7 +1244,13 @@ export function generateSvelteCompoundStateParts(
  */
 export function generateSvelteCompoundPartSource(
   cssPrefix: string,
-  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
+  part: {
+    name: string;
+    semanticElement?: string;
+    isExplicitSubcomponent?: true;
+    layoutVariant?: string;
+    nativeTag?: string;
+  },
 ): string {
   const cssClass = `${cssPrefix}__${part.name}`;
 
@@ -1274,9 +1300,12 @@ export function generateSvelteCompoundPartSource(
     ].join("\n");
   }
 
+  const renderedTag = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asAttr =
-    part.semanticElement && part.semanticElement !== "div"
-      ? ` as="${part.semanticElement}"`
+    renderedTag && renderedTag !== "div"
+      ? ` as="${renderedTag}"`
       : "";
   const variantAttr =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -1378,7 +1407,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 facts for this component.
   const needsInstanceId = componentNeedsInstanceId(ir);
   const assocProvides = ir.fieldAssociation?.provides;
-  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const assocConsumerPart = ir.fieldAssociation?.consumerPart;
 
   const importLines: string[] = [];
   if (hasHook) {
@@ -1389,7 +1418,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       `import { provideFieldAssociation } from "../../primitives/index.js";`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     importLines.push(
       `import { useFieldAssociation } from "../../primitives/index.js";`,
     );
@@ -1629,7 +1658,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       `provideFieldAssociation(() => fieldAssociationValue);`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     fieldAssocLines.push(`const fieldAssociation = useFieldAssociation();`);
   }
   const fieldAssocBody = fieldAssocLines.join("\n");
@@ -1644,17 +1673,18 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     hookVar,
     isRoot: true,
     cssPrefix: ir.cssPrefix,
-    fieldAssociationConsumer: assocConsumes,
+    fieldAssociationConsumerPart: assocConsumerPart,
     rootUsePortal,
     rootSelectorAnchored: selectorAnchor !== null,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
-    rootRole: ir.root.effectiveRole ?? undefined,
+    rootRole: ir.root.rootRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `${hookVar}.set${capitalizeSvelte(booleanChannel.name)}`,
           overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+          overlayClickTargetPart: overlayClickTrigger.targetPart,
         }
       : {}),
   };
@@ -1741,11 +1771,9 @@ interface SvelteRenderContext {
    */
   rootSelectorAnchored?: boolean;
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `id` /
-   * `aria-describedby` from the injected context getter.
+   * Anatomy part that consumes ambient field association.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
   /** When true, attach auto-dismiss pause listeners to the root element. */
   autoDismissPause?: boolean;
   // `a11y.role` from the contract — emitted on the root element when set.
@@ -1758,6 +1786,7 @@ interface SvelteRenderContext {
   };
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  overlayClickTargetPart?: string;
   /**
    * Local identifiers for nodes carrying `iconGlyph`
    * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity.
@@ -2023,6 +2052,37 @@ function renderSvelteDomNode(
     attrs.push(rendered);
   }
 
+  // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal click binds on the
+  // declared targetPart element (the full-cover overlay), never on the root —
+  // the root is pointer-events:none under the overlay and can never be the
+  // hit target. Only fire when the user clicked the overlay itself, not a
+  // descendant — avoids needing a stopPropagation handler on the inner panel
+  // (which would trip a11y_click_events_have_key_events on non-interactive
+  // panel elements).
+  if (
+    ctx.overlayClickSetter &&
+    node.part !== undefined &&
+    node.part === ctx.overlayClickTargetPart
+  ) {
+    const enabledVar = ctx.overlayClickEnabledProp
+      ? jsAccessorFor(ctx.overlayClickEnabledProp)
+      : null;
+    const guardExpr = enabledVar
+      ? `${enabledVar} !== false && ${ctx.overlayClickSetter}(false)`
+      : `${ctx.overlayClickSetter}(false)`;
+    attrs.push(
+      `onclick={(e) => { if (e.target === e.currentTarget) { ${guardExpr}; } }}`,
+    );
+  }
+
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
+    attrs.push(`id={fieldAssociation?.().controlId}`);
+    attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
     if (ctx.cssPrefix) {
@@ -2059,27 +2119,6 @@ function renderSvelteDomNode(
     // a11y.role and an explicit attrs.role on the root node).
     if (ctx.rootRole && !("role" in node.attrs) && !("role" in node.bindings)) {
       attrs.push(`role="${ctx.rootRole}"`);
-    }
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association (context getter) on its root element.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`id={fieldAssociation?.().controlId}`);
-      attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
-    }
-    if (ctx.overlayClickSetter) {
-      const enabledVar = ctx.overlayClickEnabledProp
-        ? jsAccessorFor(ctx.overlayClickEnabledProp)
-        : null;
-      const guardExpr = enabledVar
-        ? `${enabledVar} !== false && ${ctx.overlayClickSetter}(false)`
-        : `${ctx.overlayClickSetter}(false)`;
-      // Only fire dismissal when the user clicked the overlay itself, not
-      // a descendant. This avoids needing a stopPropagation handler on the
-      // inner panel (which would trip a11y_click_events_have_key_events on
-      // non-interactive panel elements).
-      attrs.push(
-        `onclick={(e) => { if (e.target === e.currentTarget) { ${guardExpr}; } }}`,
-      );
     }
   } else if (classParts.length > 0) {
     if (classParts.length === 1) {
@@ -2372,6 +2411,14 @@ function renderSvelteTextChildExpression(
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? `{${appendPath(name, expr.path)}}` : null;
     }
+    case "projection": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `{${lowered}}`;
+    }
+    case "valueMap": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `{${lowered}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2422,6 +2469,16 @@ function renderSvelteBindingValue(
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
+    }
+    case "projection": {
+      const source = renderSvelteBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
+    case "valueMap": {
+      const source = renderSvelteBindingValue(expr.source, ctx);
+      return source === null ? null : composeValueMapExpression(expr, source);
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -2495,6 +2552,14 @@ function renderSvelteBinding(
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? `${attr}={${appendPath(name, expr.path)}}` : null;
+    }
+    case "projection": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `${attr}={${lowered}}`;
+    }
+    case "valueMap": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `${attr}={${lowered}}`;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -2672,6 +2737,10 @@ function renderSvelteEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
+    case "valueMap":
+      return null;
     case "channel": {
       // Delegate to the channel-onChange path in renderSvelteBinding by
       // re-deriving the synthetic JSX-attr name. resolveEventValueStrategy

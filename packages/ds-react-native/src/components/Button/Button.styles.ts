@@ -39,6 +39,9 @@ export function createButtonStyles(theme?: FsdsTheme) {
     root_variant_small: definedStyle({ paddingTop: (tokens.variant_small?.["box-model.padding-block-start"] as number | undefined), paddingBottom: (tokens.variant_small?.["box-model.padding-block-end"] as number | undefined), paddingLeft: (tokens.variant_small?.["box-model.padding-inline-start"] as number | undefined), paddingRight: (tokens.variant_small?.["box-model.padding-inline-end"] as number | undefined), minHeight: (tokens.variant_small?.["box-model.min-height"] as number | undefined) }),
     root_variant_tertiary: definedStyle({ backgroundColor: (tokens.variant_tertiary?.["button.color.background.default"] as string | undefined), borderColor: (tokens.variant_tertiary?.["button.color.border.default"] as string | undefined) }),
     spinner: {},
+    spinner_variant_large: definedStyle({ width: (tokens.variant_large?.["button.size.fontSize.medium"] as number | undefined), height: (tokens.variant_large?.["button.size.fontSize.medium"] as number | undefined) }),
+    spinner_variant_medium: definedStyle({ width: (tokens.variant_medium?.["button.size.fontSize.medium"] as number | undefined), height: (tokens.variant_medium?.["button.size.fontSize.medium"] as number | undefined) }),
+    spinner_variant_small: definedStyle({ width: (tokens.variant_small?.["button.size.fontSize.medium"] as number | undefined), height: (tokens.variant_small?.["button.size.fontSize.medium"] as number | undefined) }),
   });
 }
 

@@ -5,41 +5,47 @@ import { AvatarComponent } from "../Avatar.component";
 // @generated:end
 
 // @generated:start tests
+function createFixture() {
+  const fixture = TestBed.createComponent(AvatarComponent);
+  fixture.componentInstance["name"] = "placeholder" as never;
+  return fixture;
+}
+
 describe("Avatar — unit", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [AvatarComponent] });
   });
 
   it("creates the component", () => {
-    const fixture = TestBed.createComponent(AvatarComponent);
+    const fixture = createFixture();
     expect(fixture.componentInstance).toBeInstanceOf(AvatarComponent);
   });
 
   it("applies the base CSS class", () => {
-    const fixture = TestBed.createComponent(AvatarComponent);
+    const fixture = createFixture();
     expect(classTokens(fixture.componentInstance)).toContain("avatar");
   });
 
   it("applies size=small variant class", () => {
-    const fixture = TestBed.createComponent(AvatarComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "small";
     expect(classTokens(fixture.componentInstance)).toContain("avatar--small");
   });
 
   it("applies size=medium variant class", () => {
-    const fixture = TestBed.createComponent(AvatarComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "medium";
     expect(classTokens(fixture.componentInstance)).toContain("avatar--medium");
   });
 
   it("applies size=large variant class", () => {
-    const fixture = TestBed.createComponent(AvatarComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "large";
     expect(classTokens(fixture.componentInstance)).toContain("avatar--large");
   });
 
   it("applies size=extra-large variant class", () => {
-    const fixture = TestBed.createComponent(AvatarComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "extra-large";
     expect(classTokens(fixture.componentInstance)).toContain("avatar--extra-large");
   });

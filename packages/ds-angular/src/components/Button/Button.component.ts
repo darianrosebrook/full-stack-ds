@@ -1,6 +1,7 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
+import { SpinnerComponent } from "../Spinner/Spinner.component.js";
 // @generated:end
 
 // @custom:start imports
@@ -21,11 +22,11 @@ export type ButtonType = "button" | "submit" | "reset";
 @Component({
   selector: "fsds-button",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, SpinnerComponent],
   host: { "data-fsds-component": "button" },
   template: `<button [ngClass]="classes()" (click)="onClick && onClick()" [type]="(type ?? 'button')" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
   <ng-container *ngIf="loading">
-    <span [ngClass]="'button__spinner'" aria-hidden="true"></span>
+    <fsds-spinner [ngClass]="'button__spinner'" size="sm" [inline]="loading" [ariaHidden]="loading"></fsds-spinner>
   </ng-container>
   <span [ngClass]="'button__loadingText'">
     <ng-content />

@@ -22,7 +22,8 @@
       "item": {
         "description": "Single list entry (<li>). Consumer renders an <a href> (and optional Badge) as children. Mark the active entry with aria-current=page on the anchor.",
         "role": "item",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       }
     },
     "dom": {

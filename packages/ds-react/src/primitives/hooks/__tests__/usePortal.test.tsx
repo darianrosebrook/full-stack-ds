@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import { usePortal } from "../usePortal";
+import { PortalTargetProvider, usePortal } from "../usePortal";
 
 function Demo({
   enabled = true,
@@ -48,6 +48,23 @@ describe("usePortal", () => {
     document.body.appendChild(target);
     const { getByTestId } = render(<Demo target="#portal-target" />);
     expect(target.contains(getByTestId("ported"))).toBe(true);
+    document.body.removeChild(target);
+  });
+
+  it("uses the nearest composed portal target before the document body", () => {
+    const target = document.createElement("section");
+    target.dataset.testid = "composed-target";
+    document.body.appendChild(target);
+
+    const { getByTestId } = render(
+      <PortalTargetProvider target={target}>
+        <Demo />
+      </PortalTargetProvider>,
+    );
+
+    const ported = getByTestId("ported");
+    expect(target.contains(ported)).toBe(true);
+    expect(ported.parentElement).toBe(target);
     document.body.removeChild(target);
   });
 });

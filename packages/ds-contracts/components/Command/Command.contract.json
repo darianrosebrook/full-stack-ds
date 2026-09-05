@@ -4,6 +4,12 @@
   "description": "Command palette modal for keyboard-driven search and action execution.",
   "layer": "composer",
   "category": "structure",
+  "formControl": {
+    "part": "input",
+    "channel": "search",
+    "valueModel": "text",
+    "commit": "input"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -53,7 +59,7 @@
         "role": "group"
       },
       "searchIcon": {
-        "tag": "span",
+        "componentRef": "fsds.Icon",
         "description": "Decorative search glyph preceding the command input.",
         "role": "decoration"
       },
@@ -68,7 +74,8 @@
           "attributes": [
             "aria-autocomplete",
             "aria-controls",
-            "aria-expanded"
+            "aria-expanded",
+            "aria-label"
           ]
         }
       },
@@ -90,13 +97,15 @@
         "tag": "div",
         "description": "Label for a command option group.",
         "role": "label",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "groupItems": {
         "tag": "div",
         "description": "Container for the command options inside a group.",
         "role": "group",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "item": {
         "tag": "div",
@@ -113,25 +122,29 @@
         "tag": "span",
         "description": "Optional glyph associated with a command option.",
         "role": "decoration",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "itemContent": {
         "tag": "div",
         "description": "Text content wrapper for a command option label and description.",
         "role": "content",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "itemLabel": {
         "tag": "span",
         "description": "Primary text label for a command option.",
         "role": "label",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "itemDescription": {
         "tag": "span",
         "description": "Secondary explanatory text for a command option.",
         "role": "content",
-        "multiple": true
+        "multiple": true,
+        "subcomponent": true
       },
       "separator": {
         "tag": "div",
@@ -176,10 +189,11 @@
               "part": "inputWrapper",
               "children": [
                 {
-                  "tag": "span",
+                  "componentRef": "fsds.Icon",
                   "part": "searchIcon",
                   "attrs": {
-                    "aria-hidden": "true"
+                    "name": "search",
+                    "size": "sm"
                   }
                 },
                 {
@@ -188,16 +202,13 @@
                   "attrs": {
                     "type": "search",
                     "role": "combobox",
-                    "aria-autocomplete": "list",
-                    "aria-controls": "fsds-command-listbox"
+                    "aria-autocomplete": "list"
                   },
                   "bindings": {
                     "aria-expanded": "channel:open.value",
+                    "aria-label": "prop:searchLabel",
                     "placeholder": "prop:placeholder",
                     "value": "channel:search.value"
-                  },
-                  "events": {
-                    "change": "channel:search.onChange"
                   }
                 }
               ]
@@ -206,8 +217,7 @@
               "tag": "div",
               "part": "list",
               "attrs": {
-                "role": "listbox",
-                "id": "fsds-command-listbox"
+                "role": "listbox"
               },
               "children": [
                 {
@@ -215,47 +225,8 @@
                   "part": "empty"
                 },
                 {
-                  "tag": "div",
-                  "part": "group",
-                  "children": [
-                    {
-                      "tag": "div",
-                      "part": "groupHeading"
-                    },
-                    {
-                      "tag": "div",
-                      "part": "groupItems",
-                      "children": [
-                        {
-                          "tag": "div",
-                          "part": "item",
-                          "attrs": {
-                            "role": "option"
-                          },
-                          "children": [
-                            {
-                              "tag": "span",
-                              "part": "itemIcon"
-                            },
-                            {
-                              "tag": "div",
-                              "part": "itemContent",
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "part": "itemLabel"
-                                },
-                                {
-                                  "tag": "span",
-                                  "part": "itemDescription"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "tag": "slot",
+                  "name": "items"
                 },
                 {
                   "tag": "div",
@@ -311,6 +282,12 @@
           "type": "string",
           "description": "Placeholder text for the search input.",
           "default": "Search..."
+        },
+        {
+          "name": "searchLabel",
+          "type": "string",
+          "description": "Accessible label for the command search input.",
+          "default": "Search commands"
         },
         {
           "name": "emptyMessage",
@@ -481,7 +458,8 @@
         "event": "escape"
       },
       {
-        "event": "overlayClick"
+        "event": "overlayClick",
+        "targetPart": "overlay"
       }
     ]
   },
@@ -529,8 +507,7 @@
     {
       "from": "input",
       "to": "list",
-      "attribute": "aria-controls",
-      "when": "openness=expanded"
+      "attribute": "aria-controls"
     },
     {
       "from": "input",

@@ -7,47 +7,55 @@ import Checkbox from "../Checkbox.vue";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Checkbox — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("checkbox");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox", "class": "custom" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("checkbox");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("applies size=sm variant class", () => {
-    const wrapper = mount(Checkbox as Component, { props: { "size": "sm" }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: { "size": "sm" }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("checkbox--sm");
   });
 
   it("applies size=md variant class", () => {
-    const wrapper = mount(Checkbox as Component, { props: { "size": "md" }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: { "size": "md" }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("checkbox--md");
   });
 
   it("applies size=lg variant class", () => {
-    const wrapper = mount(Checkbox as Component, { props: { "size": "lg" }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: { "size": "lg" }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("checkbox--lg");
   });
 
   it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {
-    const wrapper = mount(Checkbox as Component, { props: { "indeterminate": true }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: { "indeterminate": true }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     const el = wrapper.element.querySelector(".checkbox__input") as HTMLInputElement;
     expect(el.indeterminate).toBe(true);
     expect(el.getAttribute("aria-checked")).toBe("mixed");
   });
 
   it("re-applies .indeterminate when the prop changes from true to false, and aria-checked reflects checked state again", async () => {
-    const wrapper = mount(Checkbox as Component, { props: { "indeterminate": true }, attrs: { "data-testid": "checkbox" }, slots: { default: "content" } });
+    const wrapper = mount(Checkbox as Component, { props: { "indeterminate": true }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     const el = wrapper.element.querySelector(".checkbox__input") as HTMLInputElement;
     expect(el.indeterminate).toBe(true);
     await wrapper.setProps({ indeterminate: false });
@@ -58,32 +66,9 @@ describe("Checkbox — unit", () => {
 
 describe("Checkbox — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox", "aria-label": "Test Checkbox" }, slots: { default: "content" } });
-    const results = await axe(wrapper.element);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const wrapper = mount(Checkbox as Component, { props: { "ariaLabel": "Test Checkbox" }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
+    const results = await axe(wrapper.element, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

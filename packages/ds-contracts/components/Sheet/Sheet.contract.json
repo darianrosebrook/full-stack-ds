@@ -99,8 +99,9 @@
             "aria-modal": "true"
           },
           "bindings": {
-            "aria-labelledby": "literal:sheet-title-id",
-            "aria-describedby": "literal:sheet-description-id",
+            "aria-label": "prop:ariaLabel",
+            "aria-labelledby": "prop:ariaLabelledby",
+            "aria-describedby": "prop:ariaDescribedby",
             "data-side": "prop:side"
           },
           "children": [
@@ -152,7 +153,13 @@
             },
             {
               "tag": "div",
-              "part": "footer"
+              "part": "footer",
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "footer"
+                }
+              ]
             }
           ]
         }
@@ -189,6 +196,21 @@
           "type": "boolean",
           "description": "When true, renders a modal sheet with backdrop and focus trap.",
           "default": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Explicit accessible name used instead of the title relationship."
+        },
+        {
+          "name": "ariaLabelledby",
+          "type": "string",
+          "description": "Additional consumer-owned IDs that label the sheet."
+        },
+        {
+          "name": "ariaDescribedby",
+          "type": "string",
+          "description": "Additional consumer-owned IDs that describe the sheet."
         }
       ]
     }
@@ -401,7 +423,8 @@
         "event": "escape"
       },
       {
-        "event": "overlayClick"
+        "event": "overlayClick",
+        "targetPart": "overlay"
       }
     ]
   },
@@ -458,10 +481,17 @@
   },
   "relationships": [
     {
-      "from": "root",
+      "from": "content",
       "to": "title",
       "attribute": "aria-labelledby",
+      "when": "ariaLabel!=present",
       "description": "Sheet dialog takes its accessible name from its title element."
+    },
+    {
+      "from": "content",
+      "to": "description",
+      "attribute": "aria-describedby",
+      "description": "Sheet dialog takes its accessible description from the description element."
     }
   ],
   "a11y": {

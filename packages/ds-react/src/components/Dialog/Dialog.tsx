@@ -18,7 +18,7 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 // @custom:end
 
 // @generated:start props
-export interface DialogProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-label" | "aria-labelledby" | "children" | "className" | "closeOnBackdropClick" | "closeOnEscape" | "data-testid" | "defaultOpen" | "dismissible" | "initialFocus" | "modal" | "onOpenChange" | "open" | "returnFocus" | "size"> {
+export interface DialogProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDescribedby" | "ariaLabel" | "ariaLabelledby" | "children" | "className" | "closeOnBackdropClick" | "closeOnEscape" | "data-testid" | "defaultOpen" | "dismissible" | "initialFocus" | "modal" | "onOpenChange" | "open" | "returnFocus" | "size"> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -29,12 +29,14 @@ export interface DialogProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-
   closeOnBackdropClick?: boolean;
   initialFocus?: string;
   returnFocus?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   className?: string;
   "data-testid"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
   children?: ReactNode;
   slots?: {
+    footer?: ReactNode;
     title?: ReactNode;
   };
 }
@@ -126,8 +128,6 @@ export function Dialog({
   size = "md",
   className,
   "data-testid": testId,
-  "aria-label": ariaLabel,
-  "aria-labelledby": ariaLabelledBy,
   children,
   modal = true,
   dismissible = true,
@@ -135,6 +135,9 @@ export function Dialog({
   closeOnBackdropClick = true,
   initialFocus,
   returnFocus,
+  ariaLabel,
+  ariaLabelledby,
+  ariaDescribedby,
   slots,
   ...rest
 }: DialogProps) {
@@ -158,12 +161,12 @@ export function Dialog({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} role="dialog" data-testid={testId} data-fsds-component="dialog" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="dialog" {...rest}>
       {openness ? (
-        <div className="dialog__backdrop" aria-hidden="true" />
+        <div className="dialog__backdrop" aria-hidden="true" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} />
       ) : null}
       {openness ? (
-        <div className="dialog__modal" role="dialog" aria-modal="true" aria-labelledby={"dialog-title-id"} aria-describedby={"dialog-body-id"} aria-label={ariaLabel}>
+        <div className="dialog__modal" role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
           <div className="dialog__header">
             <h2 className="dialog__title" id={`${instanceId}-title`}>
               {slots?.title}
@@ -173,7 +176,9 @@ export function Dialog({
           <div className="dialog__body" id={`${instanceId}-body`}>
             {children}
           </div>
-          <div className="dialog__footer" />
+          <div className="dialog__footer">
+            {slots?.footer}
+          </div>
         </div>
       ) : null}
     </Stack>

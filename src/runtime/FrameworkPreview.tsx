@@ -32,9 +32,9 @@ interface FrameworkPreviewProps {
   interactive?: boolean;
   /**
    * When present, sends this payload as an `fsds:config` message on change and
-   * on the iframe's `fsds:ready` handshake. React/Vue/Svelte/Lit previews are
-   * config-capable by default; Angular ignores this because it is still on the
-   * legacy srcdoc compiler path.
+   * on the iframe's `fsds:ready` handshake. All five Web DOM previews accept
+   * this wire shape; Angular implements it in its synthesized AOT host while
+   * retaining the legacy srcdoc shell.
    */
   config?: PreviewConfig;
   /**
@@ -42,8 +42,9 @@ interface FrameworkPreviewProps {
    * `<style data-fsds="overrides">` element. Unlike `tokensCss` (baked into the
    * server-built shell at the `src` URL, keyed by component), this re-applies on
    * change without reloading — so editing a token in the Properties tab re-skins
-   * baked-props previews (e.g. the variant matrix) live. Works for same-origin
-   * new-pipeline iframes; a no-op for the legacy srcdoc (opaque-origin) path.
+   * baked-props previews live. Works for same-origin new-pipeline iframes; this
+   * direct DOM path is a no-op for Angular's opaque-origin srcdoc, whose
+   * synthesized host applies the equivalent `config.tokenCss` message instead.
    */
   overrideCss?: string;
 }
@@ -226,7 +227,7 @@ export function FrameworkPreview({
           intent="danger"
           level="inline"
           className="preview-status--error"
-          icon={<Icon name="TriangleAlert" size="sm" />}
+          icon={<Icon name="triangle-alert" size="sm" />}
         >
           {errMsg ?? "Preview failed"}
         </Alert>

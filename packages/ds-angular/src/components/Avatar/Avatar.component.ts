@@ -26,12 +26,18 @@ import { ImageComponent } from "../Image/Image.component.js";
   <ng-container *ngIf="src">
     <fsds-image [ngClass]="'avatar__image'" [src]="src" alt=""></fsds-image>
   </ng-container>
+  <ng-container *ngIf="initials">
+    <span [ngClass]="'avatar__initials'">
+      {{ initials }}
+    </span>
+  </ng-container>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
   @Input() src?: string;
   @Input() name!: string;
+  @Input() initials?: string;
   @Input() priority?: boolean;
   @Input() class?: string;
   @Input() size?: string;

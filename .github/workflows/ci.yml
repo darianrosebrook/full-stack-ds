@@ -30,6 +30,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The changed-path classifier is executable governance, not a helper:
+      # its contract test proves each input family still reaches its local
+      # pre-push gate. The coupling audit separately checks that admitted TS
+      # targets and non-pnpm native compiler lanes remain in their declared
+      # authorities. Both are cheap and unconditional here so neither can
+      # become a dormant script by misclassifying its own edit.
+      - name: Check pre-push scope and rail toolchain coupling
+        run: |
+          node --test scripts/prepush-scope.test.mjs
+          node scripts/rail-toolchain-coupling-audit.mjs --check
+
+      # Contract-oracle catalog integrity. This is the cheap, deterministic
+      # guard: every curated mutation must still resolve to its reviewed source
+      # value and change exactly one contract leaf. The expensive execution of
+      # those mutants lives in contract-oracle-mutations.yml, where reports and
+      # per-stage logs are retained instead of taxing every push.
+      - name: Check contract-oracle mutation catalog
+        run: pnpm run audit:contract-oracle-mutations:selfcheck
+
       # Design tokens — emit composed.tokens.json before contract
       # validation. `generate:check` (next step) loads the composed
       # token graph to verify every contract's `resolvesTo` path, but
@@ -163,8 +182,9 @@ jobs:
       #      match, no untracked generated files, framework checks
       #      pass). See packages/ds-codegen/src/validation/required-mode.ts.
       #
-      #   2. `git diff --exit-code` over the six generated framework src
-      #      trees proves THAT regenerated workspace was already
+      #   2. `git diff --exit-code` over the six rail-admitted framework src
+      #      trees plus the registered native generated roots proves THAT
+      #      regenerated workspace was already
       #      committed — i.e. the source-of-truth contracts didn't
       #      change without their emitted artifacts also being
       #      updated and committed.
@@ -199,15 +219,15 @@ jobs:
       - name: Compose-RN token parity
         run: node scripts/compose-parity-diff.mjs
 
-      # Iconography emission ledger: proves the committed content-addressed edge
-      # set (packages/ds-iconography/emission-ledger.json) matches a fresh
-      # regeneration. Same defect class as the generated-tree drift diff above
-      # (committed generated output diverged from source), but proved via edge
-      # set membership rather than byte equality. The ledger covers icon
-      # projections that don't flow through the ds-codegen rail. Wired in by
-      # ICONOGRAPHY-TOKEN-DISCIPLINE-02 (Phase 4); previously a never-built gap.
-      - name: Iconography emission ledger is up-to-date
-        run: pnpm run iconography:ledger:check
+      # Iconography has two independent committed-output obligations. The byte
+      # check proves package-root index.mjs/index.d.ts equal a fresh build; the
+      # ledger check proves the content-addressed attachment edge set matches
+      # that same build. The ledger rebuilds before attesting, so it cannot
+      # substitute for the git diff against committed export bytes.
+      - name: Iconography committed exports and emission ledger are up-to-date
+        run: |
+          pnpm run iconography:build:check
+          pnpm run iconography:ledger:check
 
       # Behavior-realization rail: derives interactivity obligations (event
       # wires, compound/disclosure wiring, portal consumption) from the LIVE
@@ -475,6 +495,12 @@ jobs:
       # absorbs both across runs.
       - name: Settings example compile (consumer lane over ds-jetpack-compose)
         run: ./examples/settings/compose/gradlew -p examples/settings/compose compileKotlin --no-daemon
+
+      # FIX-NATIVE-TOKEN-RESOLVER-CONFORMANCE-01. Executes the shared
+      # cross-native precedence fixture against the real Compose resolver;
+      # compile-only admission cannot detect a valid-but-wrong arm order.
+      - name: ds-jetpack-compose token runtime tests
+        run: ./packages/ds-jetpack-compose/gradlew -p packages/ds-jetpack-compose :library:test --no-daemon
 
   native-compile-rail-swift:
     name: Native compile rail (Swift compile-admission smoke)

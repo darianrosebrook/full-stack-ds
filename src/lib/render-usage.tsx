@@ -8,13 +8,14 @@
  * renderer can be optimistic. When something does fail (e.g. dev edit before
  * re-validate), we render a small fallback in place rather than crashing.
  *
- * Slot resolution (see usage-registry.ts):
- *   1. If `Root[CapitalizedSlot]` exists → render as a static-property
- *      compound child (`<Popover.Trigger>...</Popover.Trigger>`).
- *   2. Else if `<RootName><CapitalizedSlot>` exists as a sibling export →
- *      render that (`<CardHeader>...</CardHeader>`).
- *   3. Else fall back to passing the slot's rendered content as a JSX prop
- *      named after the slot (`<Card header={...} />`).
+ * Region resolution derives from the target contract's anatomy DOM:
+ *   1. Named DOM slots become entries in the generated `slots` object.
+ *   2. Compound anatomy parts become compound child components when the root
+ *      exposes ordinary children.
+ *   3. Other anatomy regions become ordinary children only when the contract
+ *      exposes a children placeholder.
+ *   4. Regions without a consumer path fail visibly; usage validation rejects
+ *      the same shape before it reaches a generated bundle.
  *
  * Children handling:
  *   - String → text node.
@@ -23,12 +24,18 @@
  */
 import type { ReactNode } from "react";
 import { createElement, Fragment } from "react";
-import { resolveRootComponent, resolveSlot } from "./usage-registry";
+import { resolveUsageComponent, resolveSlot } from "./usage-registry";
 import type {
+  UsageCompositionIR,
   UsageNodeBody,
   UsagePropValue,
   UsageTreeNode,
 } from "../types/data";
+
+export interface UsageRenderOptions {
+  /** Bundled contract/IR authority for authored composition paths. */
+  resolveComposition?: (rootRef: string) => UsageCompositionIR | undefined;
+}
 
 /**
  * Bundled-asset seam for usage examples. A usage.jsonl is JSON, so it cannot
@@ -64,87 +71,129 @@ function resolveAssetSrc(value: string): string {
   return url;
 }
 
-export function renderUsageTree(node: UsageTreeNode, key?: string | number): ReactNode {
+export function renderUsageTree(
+  node: UsageTreeNode,
+  options: UsageRenderOptions = {},
+  key?: string | number,
+): ReactNode {
   const entries = Object.entries(node);
   if (entries.length !== 1) {
     return <UsageFallback message={`tree node must have exactly one fsds.* ref, got ${entries.length}`} />;
   }
   const [ref, body] = entries[0];
-  const Component = resolveRootComponent(ref);
-  if (!Component) {
+  const resolved = resolveUsageComponent(ref);
+  if (!resolved) {
     return <UsageFallback message={`unknown component ref: ${ref}`} />;
   }
-  return renderResolved(ref, Component, body, key);
+  return renderResolved(
+    ref,
+    resolved.rootRef,
+    resolved.part,
+    resolved.Component,
+    body,
+    options,
+    key,
+  );
 }
 
 function renderResolved(
   ref: string,
+  rootRef: string,
+  part: string | null,
   Component: React.ComponentType<Record<string, unknown>>,
   body: UsageNodeBody,
+  options: UsageRenderOptions,
   key?: string | number,
 ): ReactNode {
   const props: Record<string, unknown> = {};
+  const surface = options.resolveComposition?.(rootRef);
 
   // Props pass through as-is, except `children` which may carry sub-trees.
   if (body.props) {
     for (const [propName, value] of Object.entries(body.props)) {
       props[propName] = propName === "children"
-        ? materializeChildren(value)
-        : materializeProp(value);
+        ? materializeChildren(value, options)
+        : materializeProp(
+            value,
+            options,
+            part === null ? surface?.propMaterializers[propName] : undefined,
+          );
     }
   }
 
-  // Slots: try to resolve the slot name to a real React surface in this order:
-  //   1. Root[CapitalizedSlot] — static-property compound (Popover.Trigger).
-  //   2. <RootName><CapitalizedSlot> — sibling-export compound (CardHeader).
-  //   3. Inline child — append the rendered tree to children directly.
-  //
-  // The inline-child fallback exists because not every anatomy part has a
-  // matching React surface: anatomy is the contract's semantic description,
-  // and the React implementation may collapse multiple semantic parts into
-  // one element or expose only a subset as compounds. Spreading unrecognized
-  // slots as JSX props (the old fallback) leaked their values onto the root
-  // element as DOM attributes — visible junk in the dev tools and broken
-  // behavior at runtime. Inlining the child is the safe default: the content
-  // still appears in the document; only the semantic-slot wrapper is lost.
+  // A sidecar's `slots` keys name semantic anatomy regions. The contract — not
+  // a component-name switch in this renderer — determines their React delivery:
+  //   1. Named contract DOM slot -> generated `slots={{ name: content }}` prop.
+  //   2. Generated compound surface -> compound child component.
+  //   3. Contract children placeholder -> ordinary children.
+  //   4. No admitted path -> visible fallback (the validator rejects this too).
+  const namedSlots: Record<string, ReactNode> = {};
   const slotChildren: ReactNode[] = [];
   if (body.slots) {
     for (const [slotName, child] of Object.entries(body.slots)) {
-      const SlotComponent = resolveSlot(ref, slotName);
       const childNode: ReactNode =
-        typeof child === "string" ? child : renderUsageTree(child, slotName);
-      if (SlotComponent) {
+        typeof child === "string"
+          ? child
+          : renderUsageTree(child, options, slotName);
+
+      if (surface?.namedSlots.includes(slotName)) {
+        namedSlots[slotName] = childNode;
+        continue;
+      }
+
+      const SlotComponent = surface?.subcomponents.some(
+        (candidate) => candidate.part === slotName,
+      )
+        ? resolveSlot(rootRef, slotName)
+        : null;
+      if (SlotComponent && surface?.acceptsChildren) {
         slotChildren.push(
           createElement(SlotComponent, { key: slotName }, childNode),
         );
       } else {
-        // Inline as-is. For strings we wrap in a Fragment so React can key it
-        // alongside its slot siblings without a host element.
         slotChildren.push(
-          typeof child === "string" ? (
-            <Fragment key={slotName}>{child}</Fragment>
-          ) : (
-            childNode
-          ),
+          <UsageFallback
+            key={slotName}
+            message={
+              surface
+                ? `${ref} region "${slotName}" has no consumer delivery path`
+                : `composition IR unavailable for ${ref} region "${slotName}"`
+            }
+          />,
         );
       }
     }
   }
 
-  // If slot children exist, they take precedence over `children`. Most
-  // usage examples either set props.children OR slots, not both.
-  if (slotChildren.length > 0) {
-    return createElement(
-      Component,
-      { ...props, key },
-      slotChildren,
-    );
+  if (Object.keys(namedSlots).length > 0) {
+    props.slots = namedSlots;
   }
 
+  // Authored props.children and region-derived children are both content.
+  // Preserve both; region content precedes the label/content authored as the
+  // ordinary children value (e.g. Chip icon before Chip text).
+  const authoredChildren = props.children as ReactNode;
+  if (slotChildren.length > 0 && authoredChildren !== undefined) {
+    props.children = [...slotChildren, authoredChildren];
+  } else if (slotChildren.length > 0) {
+    props.children = slotChildren;
+  }
   return createElement(Component, { ...props, key });
 }
 
-function materializeProp(value: UsagePropValue): unknown {
+function materializeProp(
+  value: UsagePropValue,
+  options: UsageRenderOptions,
+  materializer?: "date" | "date-array",
+): unknown {
+  if (materializer === "date") {
+    return typeof value === "string" ? new Date(value) : value;
+  }
+  if (materializer === "date-array") {
+    return Array.isArray(value)
+      ? value.map((item) => typeof item === "string" ? new Date(item) : item)
+      : value;
+  }
   if (typeof value === "string") {
     return resolveAssetSrc(value);
   }
@@ -156,15 +205,23 @@ function materializeProp(value: UsagePropValue): unknown {
     return value;
   }
   if (Array.isArray(value)) {
-    return value.map((item, i) =>
-      typeof item === "string" ? item : renderUsageTree(item, i),
-    );
+    return value.map((item) => materializeProp(item, options));
   }
-  // Tree node passed as a non-children prop — render it.
-  return renderUsageTree(value);
+  if (isUsageTreeNode(value)) {
+    return renderUsageTree(value, options);
+  }
+  return Object.fromEntries(
+    Object.entries(value).map(([key, child]) => [
+      key,
+      materializeProp(child, options),
+    ]),
+  );
 }
 
-function materializeChildren(value: UsagePropValue): ReactNode {
+function materializeChildren(
+  value: UsagePropValue,
+  options: UsageRenderOptions,
+): ReactNode {
   if (value === null || value === undefined) return null;
   if (
     typeof value === "string" ||
@@ -175,11 +232,27 @@ function materializeChildren(value: UsagePropValue): ReactNode {
   }
   if (Array.isArray(value)) {
     return value.map((item, i) => {
-      if (typeof item === "string") return <Fragment key={i}>{item}</Fragment>;
-      return renderUsageTree(item, i);
+      if (
+        typeof item === "string" ||
+        typeof item === "number" ||
+        typeof item === "boolean"
+      ) {
+        return <Fragment key={i}>{item}</Fragment>;
+      }
+      return isUsageTreeNode(item)
+        ? renderUsageTree(item, options, i)
+        : <UsageFallback key={i} message="children objects must be fsds.* tree nodes" />;
     });
   }
-  return renderUsageTree(value);
+  return isUsageTreeNode(value)
+    ? renderUsageTree(value, options)
+    : <UsageFallback message="children objects must be fsds.* tree nodes" />;
+}
+
+function isUsageTreeNode(value: unknown): value is UsageTreeNode {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const keys = Object.keys(value);
+  return keys.length === 1 && keys[0].startsWith("fsds.");
 }
 
 function UsageFallback({ message }: { message: string }) {

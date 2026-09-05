@@ -17,6 +17,7 @@ type CalendarMode = "single" | "range";
 
 // @generated:start props
 interface Props {
+  caption?: string;
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -30,7 +31,7 @@ interface Props {
   class?: string;
 }
 
-let { value, defaultValue, onChange, mode = "single", disabled, minDate, maxDate, locale = "en-US", shouldCloseOnSelect = true, days, class: className }: Props = $props();
+let { caption = "Calendar", value, defaultValue, onChange, mode = "single", disabled, minDate, maxDate, locale = "en-US", shouldCloseOnSelect = true, days, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -61,7 +62,7 @@ const classes = $derived(
 <div class={classes} role="application" data-fsds-component="calendar">
   <div class={'calendar__header'}>
     <button class={'calendar__nav'} aria-label="Previous month"></button>
-    <span class={'calendar__caption'}></span>
+    <span class={'calendar__caption'}>{caption}</span>
     <button class={'calendar__nav'} aria-label="Next month"></button>
   </div>
   <table class={'calendar__grid'} role="grid" aria-label="Calendar">
@@ -69,7 +70,7 @@ const classes = $derived(
       <tr>
         {#each (days ?? []) as item, index (index)}
         <td class={'calendar__cell'} role="gridcell" data-calendar-index={index}>
-          <button class={'calendar__day'} onclick={() => behavior.setValue(item)}></button>
+          <button class={'calendar__day'} onclick={() => behavior.setValue(item)}>{item.getDate()}</button>
         </td>
         {/each}
       </tr>

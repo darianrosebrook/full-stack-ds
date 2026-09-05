@@ -50,7 +50,7 @@ const classes = $derived(
 
 <span class={classes} data-fsds-component="badge">
   {#if icon}
-  <span class={'badge__icon'} aria-hidden="true"></span>
+  <span class={'badge__icon'} aria-hidden="true">{icon}</span>
   {/if}
   <span class={'badge__content'}>
     {@render children?.()}

@@ -220,6 +220,7 @@
     "element": "div",
     "explicitRole": "alert",
     "effectiveRole": "alert",
+    "rootRole": "alert",
     "labeling": [
       "aria-label",
       "aria-live",
@@ -430,6 +431,7 @@
     "kind": "toast",
     "presence": "ephemeral",
     "modality": "non-blocking",
+    "attachment": "viewport",
     "content": {
       "part": {
         "name": "item",

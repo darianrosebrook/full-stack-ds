@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type KeyboardEvent, type ReactNode, useCallback, useId, useRef } from "react";
+import { Icon } from "../Icon/Icon";
 import { useAccordion } from "./useAccordion";
 import { createCompoundContext } from "../../primitives/hooks";
 import "./Accordion.css";
@@ -100,7 +101,7 @@ export function AccordionTrigger({
         onClick={() => ctx.toggleItem(value)}
       >
         {children}
-        <span className="accordion__chevron" />
+        <Icon className="accordion__chevron" name="chevron-down" size="sm" />
       </button>
     </h3>
   );
@@ -250,6 +251,7 @@ export function Accordion({
         ref={rootRef}
         className={classNames}
         data-testid={testId}
+        data-fsds-component="accordion"
         onKeyDown={handleKeyDown}
         {...rest}
       >

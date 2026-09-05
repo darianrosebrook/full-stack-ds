@@ -42,7 +42,7 @@ enum PopoverTokens {
     ]
 }
 
-/// Emitted through the anchored-tooltip surface path: hover on the trigger region drives the open channel (the declared trigger modality on this target), presenting the content region in a popover. Native popover dismissal realizes escape/blur.
+/// Emitted through the anchored-surface path: press on the trigger region drives the open channel from the declared open triggers, presenting the content region in a popover. Native popover dismissal realizes platform dismissal.
 public struct Popover<Trigger: View, Content: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         PopoverTokens.scopes
@@ -118,10 +118,14 @@ public struct Popover<Trigger: View, Content: View>: View {
     }
 
     public var body: some View {
-        trigger
-            .popover(isPresented: presentationBinding, arrowEdge: placementEdge) {
-                panel
-            }
+        SwiftUI.Button(action: { open.toggle() }) {
+            trigger
+        }
+        .buttonStyle(.plain)
+        .disabled(disabled)
+        .popover(isPresented: presentationBinding, arrowEdge: placementEdge) {
+            panel
+        }
     }
 
     private var placementEdge: Edge {

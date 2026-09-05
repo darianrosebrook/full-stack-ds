@@ -27,7 +27,9 @@ import {
   hasChildrenPlaceholder,
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -594,10 +596,6 @@ function buildHostAttrsExtendsClause(
   }
   omit.add("className");
   omit.add("data-testid");
-  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
-    omit.add("aria-label");
-    omit.add("aria-labelledby");
-  }
   // `children` is always re-declared by the props interface when the
   // component renders children, with type `ReactNode`. React's
   // HTMLAttributes also declares `children?: ReactNode`, so the types
@@ -644,12 +642,6 @@ function generatePropsInterface(ir: ComponentIR): string {
   }
   if (!propNames.has("className")) lines.push(`  className?: string;`);
   if (!propNames.has("data-testid")) lines.push(`  "data-testid"?: string;`);
-  // When the dom tree has a dialog node, include aria-label/aria-labelledby so
-  // consumers can name the dialog and tests/axe can find it.
-  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
-    if (!propNames.has("aria-label")) lines.push(`  "aria-label"?: string;`);
-    if (!propNames.has("aria-labelledby")) lines.push(`  "aria-labelledby"?: string;`);
-  }
   // Only expose a `children` prop when the component actually renders
   // children. For dom-tree components, that means a `{ tag: "children" }`
   // placeholder in the contract. For legacy no-dom-tree components, the
@@ -772,7 +764,9 @@ function generateSubComponent(
     ].join("\n");
   }
 
-  const asElement = part.semanticElement;
+  const asElement = part.isExplicitSubcomponent
+    ? part.nativeTag ?? part.semanticElement
+    : part.semanticElement;
   const asProp = asElement && asElement !== "div" ? ` as="${asElement}"` : "";
   const layoutProp =
     part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
@@ -1078,9 +1072,9 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
     : undefined;
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = ir.dom
     ? findDisclosureNode(ir.dom, regionPart.name)
     : undefined;
@@ -1175,8 +1169,14 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
   lines.push(`${triggerIndent}  onClick={() => ctx.toggleItem(value)}`);
   lines.push(`${triggerIndent}>`);
   lines.push(`${triggerIndent}  {children}`);
-  if (chevronPartName) {
-    lines.push(`${triggerIndent}  <span className="${prefix}__${chevronPartName}" />`);
+  if (chevronNode) {
+    lines.push(
+      renderReactDomNode(
+        chevronNode,
+        { classRecipe: prefix, channelByName: new Map(), isRoot: false },
+        triggerIndent.length + 2,
+      ),
+    );
   }
   lines.push(`${triggerIndent}</${triggerTag}>`);
   if (headerPartName) {
@@ -1417,6 +1417,7 @@ function generateDisclosureStateRootComponent(ir: ComponentIR): string {
   lines.push(`        ref={rootRef}`);
   lines.push(`        className={classNames}`);
   lines.push(`        data-testid={testId}`);
+  lines.push(`        data-fsds-component="${ir.cssPrefix}"`);
   lines.push(`        onKeyDown={handleKeyDown}`);
   lines.push(`        {...rest}`);
   lines.push(`      >`);
@@ -1529,6 +1530,7 @@ function generateCompoundStateRootComponent(ir: ComponentIR): string {
   lines.push(`      <div`);
   lines.push(`        className={classNames}`);
   lines.push(`        data-testid={testId}`);
+  lines.push(`        data-fsds-component="${ir.cssPrefix}"`);
   lines.push(`        {...rest}`);
   lines.push(`      >`);
   lines.push(`        {children}`);
@@ -1675,12 +1677,6 @@ function wrapReactPortal(treeJsx: string, wrap: boolean): string {
 // ---------------------------------------------------------------------------
 
 /** Returns true if any node in the dom tree has the given role attribute. */
-function domTreeHasRole(node: DomNodeIR | null | undefined, role: string): boolean {
-  if (!node) return false;
-  if (node.attrs["role"] === role) return true;
-  return node.children.some((child) => domTreeHasRole(child, role));
-}
-
 /**
  * DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01. Walks the tree once
  * to find every node carrying `propertyBindings` (DOM-property-only facts,
@@ -1896,15 +1892,6 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   }
   destructured.push('"data-testid": testId');
   handled.add("data-testid");
-  // When the dom tree contains a dialog node, extract aria-label/aria-labelledby
-  // from props so they can be forwarded to the dialog element (not the root).
-  const hasDialogNode = domTreeHasRole(ir.dom, "dialog");
-  if (hasDialogNode) {
-    destructured.push('"aria-label": ariaLabel');
-    destructured.push('"aria-labelledby": ariaLabelledBy');
-    handled.add("aria-label");
-    handled.add("aria-labelledby");
-  }
   if (!handled.has("children") && hasChildrenPlaceholder(ir)) {
     destructured.push("children");
     handled.add("children");
@@ -2099,7 +2086,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(`  const instanceId = useId();`);
     lines.push(``);
   }
-  if (ir.fieldAssociation?.consumes) {
+  if (ir.fieldAssociation?.consumerPart) {
     lines.push(`  const fieldAssociation = useFieldAssociation();`);
     lines.push(``);
   }
@@ -2189,12 +2176,15 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     overlayClickSetter,
     overlayClickEnabledProp: overlayClickTrigger?.enabledByProp,
-    forwardAriaLabel: hasDialogNode,
-    rootRole: ir.root.effectiveRole,
+    overlayClickTargetPart: overlayClickTrigger?.targetPart,
+    rootRole: ir.root.rootRole,
     rootTagOverride,
     propertyBindingRefs,
     iconGlyphIdents,
-    fieldAssociationConsumer: ir.fieldAssociation?.consumes === true,
+    fieldAssociationConsumerPart: ir.fieldAssociation?.consumerPart,
+    formControlPart: ir.formControl?.part.name,
+    formControlEvent: ir.formControl?.event,
+    formControlCommit: ir.formControl?.commit,
     rootSelectorAnchored: selectorAnchor !== null,
   };
 
@@ -2278,12 +2268,17 @@ interface ReactRenderContext {
   useStackRoot?: boolean;
   /** When true, spread the auto-dismiss pause props onto the root element. */
   autoDismissPause?: boolean;
-  /** When set, emit onClick to dismiss the overlay on root click. */
+  /** When set, emit onClick to dismiss the overlay on the targetPart click. */
   overlayClickSetter?: string;
   /** Prop name that controls whether overlay click dismissal is enabled. */
   overlayClickEnabledProp?: string;
-  /** When true, forward aria-label/aria-labelledby props to this node's element. */
-  forwardAriaLabel?: boolean;
+  /**
+   * Anatomy part carrying the overlay-click dismissal handler. The root is
+   * pointer-events:none under a full-cover overlay and can never be the hit
+   * target, so the handler binds on the declared part instead
+   * (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01).
+   */
+  overlayClickTargetPart?: string;
   /**
    * Effective ARIA role to emit on the root node, when the contract's
    * `a11y.role` differs from the element's implicit role and the dom tree
@@ -2317,12 +2312,21 @@ interface ReactRenderContext {
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01, contract `fieldAssociation:
-   * "control"`) — the root element binds `id` / `aria-describedby` from the
-   * `fieldAssociation` body const.
+   * Anatomy part that consumes ambient field association. Targeting the
+   * declared control part keeps compound controls from binding idrefs to a
+   * non-labelable wrapper root.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
+  /**
+   * Form-control event identity. React's idiomatic text-entry notification is
+   * `onChange` even when the contract's semantic commit is per-input; keeping
+   * the originating part/event in context lets this target spell that one
+   * semantic fact idiomatically without rewriting unrelated authored input
+   * events.
+   */
+  formControlPart?: string;
+  formControlEvent?: "input" | "change" | "click";
+  formControlCommit?: "input" | "change" | "activation";
   /**
    * Selector-anchored root panel: the root element gets the anchored
    * position wiring (ref, fixed-position style, data-placement) emitted by
@@ -2579,7 +2583,14 @@ function renderReactDomNode(
   // for channel-routed events too. Legacy `bindings.onX` paths feed
   // through the attribute loop below until the retention drops.
   for (const [eventName, expr] of Object.entries(node.events)) {
-    const jsxEventProp = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    const reactEventName =
+      ctx.formControlPart === node.part &&
+      ctx.formControlEvent === eventName &&
+      ctx.formControlCommit === "input"
+        ? "change"
+        : eventName;
+    const jsxEventProp =
+      "on" + reactEventName.charAt(0).toUpperCase() + reactEventName.slice(1);
     const valueExpr = renderReactBinding(jsxEventProp, expr, ctx);
     if (valueExpr === null) continue;
     attrs.push(`${jsxEventProp}={${valueExpr}}`);
@@ -2697,6 +2708,36 @@ function renderReactDomNode(
     }
   }
 
+  // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal click binds on the
+  // declared targetPart element (the full-cover overlay), never on the root —
+  // the root is pointer-events:none under the overlay and can never be the
+  // hit target. `e.target === e.currentTarget` keeps clicks on overlay
+  // descendants inert without a stopPropagation handler on the inner
+  // non-interactive panel (a11y click-without-key lint).
+  if (
+    ctx.overlayClickSetter &&
+    node.part !== undefined &&
+    node.part === ctx.overlayClickTargetPart
+  ) {
+    const guard = ctx.overlayClickEnabledProp
+      ? `${ctx.overlayClickEnabledProp} ? `
+      : "";
+    const tail = ctx.overlayClickEnabledProp ? " : undefined" : "";
+    attrs.push(
+      `onClick={${guard}(e) => { if (e.target === e.currentTarget) ${ctx.overlayClickSetter}(false); }${tail}}`,
+    );
+  }
+
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: bind the ambient association to the
+  // actual control part, which may be nested below the component root.
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
+    attrs.push(`id={fieldAssociation?.controlId}`);
+    attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       attrs.unshift(`className={\`${classRootClassExpr(classParts)}\`}`);
@@ -2715,28 +2756,8 @@ function renderReactDomNode(
     if (ctx.cssPrefix) {
       attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
     }
-    // Overlay-click dismissal: close when the backdrop is clicked directly.
-    // `e.target === e.currentTarget` ensures clicks on descendants (the
-    // dialog panel and its children) do NOT trigger dismissal — removes the
-    // need for a stopPropagation handler on the inner non-interactive panel.
-    if (ctx.overlayClickSetter) {
-      const guard = ctx.overlayClickEnabledProp
-        ? `${ctx.overlayClickEnabledProp} ? `
-        : "";
-      const tail = ctx.overlayClickEnabledProp ? " : undefined" : "";
-      attrs.push(
-        `onClick={${guard}(e) => { if (e.target === e.currentTarget) ${ctx.overlayClickSetter}(false); }${tail}}`,
-      );
-    }
     if (ctx.autoDismissPause) {
       attrs.push(`{...autoDismissPauseProps}`);
-    }
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association before ...rest so an explicit consumer id
-    // passed through rest still wins.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`id={fieldAssociation?.controlId}`);
-      attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
     }
     // Selector-anchored root: fixed-position style computed against the
     // active step's page anchor, hidden until the first measurement so the
@@ -2755,22 +2776,6 @@ function renderReactDomNode(
     attrs.push(`{...rest}`);
   } else if (classParts.length > 0) {
     attrs.unshift(`className=${classPartsExpr(classParts)}`);
-  }
-
-  // Forward aria-label/aria-labelledby to the dialog element so axe can find
-  // the name. Only inject when the contract didn't already declare a literal
-  // attr OR a binding for that attribute — contract authorship wins.
-  if (!ctx.isRoot && node.attrs["role"] === "dialog") {
-    if (ctx.forwardAriaLabel) {
-      const hasLabelAttr =
-        node.attrs["aria-label"] !== undefined ||
-        node.bindings["aria-label"] !== undefined;
-      const hasLabelledByAttr =
-        node.attrs["aria-labelledby"] !== undefined ||
-        node.bindings["aria-labelledby"] !== undefined;
-      if (!hasLabelAttr) attrs.push(`aria-label={ariaLabel}`);
-      if (!hasLabelledByAttr) attrs.push(`aria-labelledby={ariaLabelledBy}`);
-    }
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: when this node is iterated, React needs
@@ -2995,6 +3000,7 @@ function jsxAttrName(name: string): string {
   if (name === "autocomplete") return "autoComplete";
   if (name === "autofocus") return "autoFocus";
   if (name === "contenteditable") return "contentEditable";
+  if (name === "datetime") return "dateTime";
   if (name === "spellcheck") return "spellCheck";
   if (name === "inputmode") return "inputMode";
   if (name === "enterkeyhint") return "enterKeyHint";
@@ -3042,6 +3048,7 @@ function inferBindingValueType(
     // shape against the iteration callback parameter's typed signature.
     return expr.local === "index" ? "number" : undefined;
   }
+  if (expr.kind === "projection") return "number";
   if (expr.kind === "predicate") {
     // BINDING-EXPRESSION-V2-PREDICATE-01: every predicate operator
     // (`eq`, `contains`, `memberOf`) evaluates to a boolean.
@@ -3050,6 +3057,7 @@ function inferBindingValueType(
   if (expr.kind === "conditional") {
     return inferBindingValueType(expr.whenTrue, ctx) ?? inferBindingValueType(expr.whenFalse, ctx);
   }
+  if (expr.kind === "valueMap") return "string";
   return undefined;
 }
 
@@ -3085,6 +3093,16 @@ function renderReactBinding(
       const base = expr.local === "index" ? it.indexVar : (it.itemVar ?? "item");
       return appendPath(base, expr.path);
     }
+    case "projection": {
+      const source = renderReactBinding("__projection_source__", expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
+    case "valueMap": {
+      const source = renderReactBinding(attr, expr.source, ctx);
+      return source === null ? null : composeValueMapExpression(expr, source);
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3099,17 +3117,18 @@ function renderReactBinding(
         return ch.changeHandlerProp;
       }
       const setter = `set${capitalize(ch.name)}`;
-      const isChangeEvent = attr === "onChange";
-      // onChange synthesis: read e.target.{checked,value} based on valueType.
-      if (isChangeEvent) {
+      const isValueEvent = attr === "onChange" || attr === "onInput";
+      // Value-bearing events read e.target.{checked,value} based on valueType.
+      // Which event commits is already normalized by FormControlIR.
+      if (isValueEvent) {
         if (ch.valueType === "boolean") {
-          return `(e) => ${setter}(e.target.checked)`;
+          return `(e) => ${setter}((e.currentTarget as HTMLInputElement).checked)`;
         }
         if (ch.valueType === "number") {
-          return `(e) => ${setter}(Number(e.target.value))`;
+          return `(e) => ${setter}(Number((e.currentTarget as HTMLInputElement).value))`;
         }
         if (ch.valueType === "string" || ch.valueType === undefined) {
-          return `(e) => ${setter}(e.target.value)`;
+          return `(e) => ${setter}((e.currentTarget as HTMLInputElement).value)`;
         }
         return `(e) => ${setter}(e as unknown as ${ch.valueType})`;
       }

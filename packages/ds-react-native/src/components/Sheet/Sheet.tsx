@@ -17,9 +17,13 @@ export interface SheetProps {
   onOpenChange?: (open: boolean) => void;
   side?: SheetSide;
   modal?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
   slots?: {
     title?: ReactNode;
     description?: ReactNode;
+    footer?: ReactNode;
   };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -32,6 +36,7 @@ export interface SheetProps {
 // @generated:start component
 export function Sheet({
   open: controlledOpenness,
+  ariaLabel,
   defaultOpen = false,
   onOpenChange,
   slots,
@@ -73,7 +78,7 @@ export function Sheet({
         {openness ? (
         <View
           style={styles.content}
-          accessibilityLabelledBy={"sheet-title-id"}
+          accessibilityLabel={ariaLabel}
         >
           <View
             style={styles.header}
@@ -102,7 +107,9 @@ export function Sheet({
           </View>
           <View
             style={styles.footer}
-          />
+          >
+            {slots?.footer}
+          </View>
         </View>
         ) : null}
       </View>

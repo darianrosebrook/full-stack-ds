@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -185,17 +186,17 @@ export class PostcardElement extends LitElement {
     return html`<article class="${this.computeClasses()}">
   <div class=${'postcard__header'}>
     <div class=${'postcard__userInfo'}>
-      <span class=${'postcard__displayName'}></span>
-      <span class=${'postcard__handle'}></span>
+      <span class=${'postcard__displayName'}>${this.author.name}</span>
+      <span class=${'postcard__handle'}>${this.author.handle}</span>
     </div>
-    <time class=${'postcard__timestamp'}></time>
+    <time class=${'postcard__timestamp'} datetime=${ifDefined(this.timestamp)}>${this.timestamp}</time>
   </div>
   <div class=${'postcard__content'}>
     <slot></slot>
   </div>
   <div class=${'postcard__footer'}>
     <div class=${'postcard__stats'}>
-      <span class=${'postcard__stat'}></span>
+      <span class=${'postcard__stat'}>${this.stats.likes}</span>
     </div>
   </div>
 </article>`;

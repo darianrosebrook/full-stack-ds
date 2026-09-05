@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { usePortalTarget } from "./usePortal";
 
 /**
  * Lock document body scroll while `active` is true. Restores the prior
@@ -8,29 +9,38 @@ import { useEffect } from "react";
  * so the body unlocks only when the last consumer releases.
  */
 
-let lockCount = 0;
-let savedOverflow: string | null = null;
-
-function acquire() {
-  if (lockCount === 0) {
-    savedOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-  }
-  lockCount += 1;
+interface LockState {
+  count: number;
+  savedOverflow: string;
 }
 
-function release() {
-  lockCount = Math.max(0, lockCount - 1);
-  if (lockCount === 0 && savedOverflow !== null) {
-    document.body.style.overflow = savedOverflow;
-    savedOverflow = null;
+const locks = new WeakMap<HTMLElement, LockState>();
+
+function acquire(target: HTMLElement) {
+  const current = locks.get(target);
+  if (!current) {
+    locks.set(target, { count: 1, savedOverflow: target.style.overflow });
+    target.style.overflow = "hidden";
+    return;
+  }
+  current.count += 1;
+}
+
+function release(target: HTMLElement) {
+  const current = locks.get(target);
+  if (!current) return;
+  current.count = Math.max(0, current.count - 1);
+  if (current.count === 0) {
+    target.style.overflow = current.savedOverflow;
+    locks.delete(target);
   }
 }
 
 export function useScrollLock(active: boolean): void {
+  const portalTarget = usePortalTarget();
   useEffect(() => {
-    if (!active) return;
-    acquire();
-    return () => release();
-  }, [active]);
+    if (!active || !(portalTarget instanceof HTMLElement)) return;
+    acquire(portalTarget);
+    return () => release(portalTarget);
+  }, [active, portalTarget]);
 }

@@ -214,7 +214,7 @@ export class ChipElement extends LitElement {
     return html`<span class="${this.computeClasses()}">
   <fsds-button class=${'chip__action'} variant="ghost" @click=${this.onClick} .type=${this.type} ?disabled=${this.disabled ?? false} .ariaLabel=${this.ariaLabel ?? undefined} ?ariaExpanded=${this.ariaExpanded ?? false} ?ariaPressed=${this.ariaPressed ?? false}>
     ${this.icon ? html`
-    <span class=${'chip__icon'} aria-hidden="true"></span>
+    <span class=${'chip__icon'} aria-hidden="true">${this.icon}</span>
     ` : nothing}
     <span class=${'chip__text'}>
       <slot></slot>

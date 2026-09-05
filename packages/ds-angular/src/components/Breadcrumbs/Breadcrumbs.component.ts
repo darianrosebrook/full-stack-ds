@@ -57,6 +57,22 @@ export class BreadcrumbsListComponent {
     return ["breadcrumbs__list", this.class].filter(Boolean).join(" ");
   }
 }
+
+@Component({
+  selector: "fsds-breadcrumbs-item",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="li" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class BreadcrumbsItemComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["breadcrumbs__item", this.class].filter(Boolean).join(" ");
+  }
+}
 // @generated:end
 
 // @custom:start trailing

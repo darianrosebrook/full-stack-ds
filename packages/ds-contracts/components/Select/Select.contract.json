@@ -26,7 +26,8 @@
             "aria-haspopup",
             "aria-controls",
             "aria-expanded",
-            "aria-disabled"
+            "aria-disabled",
+            "aria-label"
           ]
         }
       },
@@ -35,7 +36,13 @@
         "description": "Button control that opens or closes the select listbox.",
         "role": "trigger",
         "interactive": true,
-        "focusable": true
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label",
+            "aria-expanded"
+          ]
+        }
       },
       "text": {
         "tag": "span",
@@ -91,6 +98,7 @@
         "aria-controls": "fsds-select-listbox"
       },
       "bindings": {
+        "aria-label": "prop:triggerLabel",
         "aria-expanded": "channel:open.value",
         "aria-disabled": "prop:disabled"
       },
@@ -102,7 +110,9 @@
             "type": "button"
           },
           "bindings": {
-            "disabled": "prop:disabled"
+            "disabled": "prop:disabled",
+            "aria-label": "prop:triggerLabel",
+            "aria-expanded": "channel:open.value"
           },
           "events": {
             "click": "channel:open.onChange"
@@ -155,9 +165,6 @@
                     "aria-selected": "predicate:memberOf(iter:item.value, channel:selection.value)",
                     "data-value": "iter:item.value"
                   },
-                  "events": {
-                    "click": "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)"
-                  },
                   "children": [
                     { "tag": "span", "content": "iter:item.label" }
                   ]
@@ -173,6 +180,13 @@
         }
       ]
     }
+  },
+  "compositeControl": {
+    "part": "option",
+    "channel": "selection",
+    "interactionModel": "collection-selection",
+    "commit": "activation",
+    "update": "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)"
   },
   "props": {
     "designed": {
@@ -239,6 +253,12 @@
           "description": "Disabled state."
         },
         {
+          "name": "triggerLabel",
+          "propType": { "kind": "string" },
+          "description": "Accessible name for the button that opens the option list.",
+          "default": "Select an option"
+        },
+        {
           "name": "size",
           "propType": { "kind": "ref", "to": "SelectSize" },
           "description": "Size variant.",
@@ -246,7 +266,14 @@
         },
         {
           "name": "filterFn",
-          "type": "((option: SelectOption, searchTerm: string) => boolean)",
+          "propType": {
+            "kind": "callback",
+            "params": [
+              { "name": "option", "type": { "kind": "ref", "to": "SelectOption" } },
+              { "name": "searchTerm", "type": { "kind": "string" } }
+            ],
+            "returns": { "kind": "boolean" }
+          },
           "description": "Custom filter function for search."
         },
         {

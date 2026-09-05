@@ -230,6 +230,56 @@ describe("owned-pair relationship lowering", () => {
       },
     ]);
   });
+
+  it("keeps component role semantics but does not synthesize a duplicate root role", () => {
+    const contract = {
+      name: "FixtureDialog",
+      layer: "compound",
+      cssPrefix: "fixture-dialog",
+      anatomy: {
+        parts: ["root", "panel", "title"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "div",
+              part: "panel",
+              attrs: { role: "dialog", "aria-modal": "true" },
+              bindings: { "aria-labelledby": "prop:ariaLabelledby" },
+              children: [
+                {
+                  tag: "h2",
+                  part: "title",
+                  children: [{ tag: "slot", name: "title" }],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      props: {
+        designed: { members: [stringProp("ariaLabelledby")] },
+      },
+      relationships: [
+        { from: "panel", to: "title", attribute: "aria-labelledby" },
+      ],
+      a11y: { role: "dialog", labeling: ["aria-labelledby"] },
+    } as unknown as ComponentContract;
+
+    const ir = buildComponentIR(contract);
+    const panel = findPart(ir.dom!, "panel");
+    expect(ir.root.effectiveRole).toBe("dialog");
+    expect(ir.root).toHaveProperty("rootRole");
+    expect(ir.root.rootRole).toBeUndefined();
+    expect(panel.idRefAttrs).toEqual([
+      {
+        attribute: "aria-labelledby",
+        refs: [{ slug: "title", when: undefined, slotGate: "title" }],
+        passthroughProp: "ariaLabelledby",
+      },
+    ]);
+  });
 });
 
 describe("skip rules (unlowerable relationships stay rail-visible gaps)", () => {
@@ -379,17 +429,93 @@ describe("field-association routing (consumer-slotted targets)", () => {
       name: "FixtureInput",
       cssPrefix: "fx-input",
       fieldAssociation: "control",
+      formControl: {
+        part: "root",
+        channel: "value",
+        valueModel: "text",
+        commit: "input",
+      },
       anatomy: {
         parts: ["root"],
+        details: { root: { role: "trigger", interactive: true } },
         dom: { tag: "input", part: "root" },
       },
-      props: { designed: { members: [] } },
+      props: {
+        designed: {
+          members: [
+            { name: "value", type: "string" },
+            { name: "onChange", type: "(value: string) => void" },
+          ],
+        },
+      },
+      channels: {
+        value: {
+          value: "value",
+          onChange: "onChange",
+          valueType: "string",
+        },
+      },
     } as unknown as ComponentContract;
     const ir = buildComponentIR(contract);
     expect(ir.fieldAssociation).toEqual({
       provides: undefined,
-      consumes: true,
+      consumerPart: "root",
     });
+  });
+
+  it("keeps attributes on an owned wrapper that also contains a consumer slot", () => {
+    const contract = {
+      name: "FixtureCommand",
+      cssPrefix: "fixture-command",
+      anatomy: {
+        parts: ["root", "input", "list", "empty"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            { tag: "input", part: "input" },
+            {
+              tag: "div",
+              part: "list",
+              children: [
+                { tag: "div", part: "empty" },
+                { tag: "slot", name: "items" },
+              ],
+            },
+          ],
+        },
+      },
+      props: { designed: { members: [] } },
+      relationships: [
+        {
+          from: "input",
+          to: "list",
+          attribute: "aria-controls",
+        },
+        {
+          from: "list",
+          to: "input",
+          attribute: "aria-labelledby",
+        },
+      ],
+    } as unknown as ComponentContract;
+
+    const ir = buildComponentIR(contract);
+    expect(findPart(ir.dom!, "list").idRefAttrs).toEqual([
+      {
+        attribute: "aria-labelledby",
+        refs: [{ slug: "input", when: undefined }],
+      },
+    ]);
+    expect(findPart(ir.dom!, "input").generatedIdSlug).toBe("input");
+    expect(findPart(ir.dom!, "input").idRefAttrs).toEqual([
+      {
+        attribute: "aria-controls",
+        refs: [{ slug: "list", when: undefined }],
+      },
+    ]);
+    expect(findPart(ir.dom!, "list").generatedIdSlug).toBe("list");
+    expect(ir.fieldAssociation?.provides).toBeUndefined();
   });
 });
 

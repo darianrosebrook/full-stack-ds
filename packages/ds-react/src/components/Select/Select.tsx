@@ -20,7 +20,7 @@ export type SelectOption = { value: string; label: string; disabled?: boolean };
 // @custom:end
 
 // @generated:start props
-export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultValue" | "disabled" | "empty" | "filterFn" | "multiple" | "onChange" | "onOpenChange" | "open" | "options" | "position" | "searchable" | "size" | "value"> {
+export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultValue" | "disabled" | "empty" | "filterFn" | "multiple" | "onChange" | "onOpenChange" | "open" | "options" | "position" | "searchable" | "size" | "triggerLabel" | "value"> {
   options?: SelectOption[];
   value?: string | string[];
   defaultValue?: string | string[];
@@ -30,8 +30,9 @@ export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "child
   onOpenChange?: (open: boolean) => void;
   multiple?: boolean;
   disabled?: boolean;
+  triggerLabel?: string;
   size?: SelectSize;
-  filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
   position?: string;
@@ -114,6 +115,7 @@ export function Select({
   "data-testid": testId,
   options = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}],
   multiple,
+  triggerLabel = "Select an option",
   filterFn,
   searchable,
   empty,
@@ -142,8 +144,8 @@ export function Select({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} data-fsds-component="select" {...rest}>
-    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled} aria-controls={`${instanceId}-options`}>
+  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={open} aria-disabled={disabled} data-testid={testId} data-fsds-component="select" {...rest}>
+    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled} aria-label={triggerLabel} aria-expanded={open} aria-controls={`${instanceId}-options`}>
       <span className="select__text" />
     </button>
     {open ? (

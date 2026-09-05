@@ -126,6 +126,33 @@
       "description": "When true, renders a modal sheet with backdrop and focus trap.",
       "defaultExpr": "true",
       "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Explicit accessible name used instead of the title relationship.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabelledby",
+      "safeName": "ariaLabelledby",
+      "type": "string",
+      "required": false,
+      "description": "Additional consumer-owned IDs that label the sheet.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaDescribedby",
+      "safeName": "ariaDescribedby",
+      "type": "string",
+      "required": false,
+      "description": "Additional consumer-owned IDs that describe the sheet.",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {
@@ -459,7 +486,8 @@
       },
       {
         "event": "overlayClick",
-        "defaultEnabled": true
+        "defaultEnabled": true,
+        "targetPart": "overlay"
       }
     ],
     "events": [
@@ -519,6 +547,7 @@
     "kind": "sheet",
     "presence": "persistent",
     "modality": "blocking",
+    "attachment": "viewport",
     "content": {
       "part": {
         "name": "content",

@@ -1,11 +1,11 @@
 /**
  * Runtime visual proof rail.
  *
- * Spins up the Vite dev server and renders each of the 5 components
- * that gained new behavior in Commits 1-6 (Progress, Truncate,
- * ShowMore, OTP, Calendar) through every framework reachable by this
- * rail's navigable /preview/{framework}/<Name> route — now including
- * Angular (React, Vue, Svelte, Lit, Angular).
+ * Spins up the Vite dev server and renders the contract-fact suites declared
+ * below through every framework reachable by this rail's navigable
+ * /preview/{framework}/<Name> route (React, Vue, Svelte, Lit, Angular).
+ * `src/runtime/rail-coverage.ts` projects the named component/framework/prop
+ * surface into the showcase; its coherence test rejects projection drift.
  *
  * Angular DEFAULT-props facts are covered (RUNTIME-RAIL-ANGULAR-01).
  * Its preview is executable (live AOT compile + bootstrapApplication,
@@ -53,6 +53,8 @@
  *               golden typescript stream and the span text reassembles the
  *               source; with `highlight=false`, zero token spans render and
  *               the code element round-trips the source as a plain run.
+ *   Status    — the contract-composed Icon renders the mapped canonical glyph
+ *               (`info` by default, `check` for `status=success`).
  *
  * Non-default props ARE now asserted for all five frameworks on ShowMore (maxLines),
  * Progress (value), and Truncate (lines): the preview route loads the default
@@ -191,6 +193,24 @@ test.describe("Runtime rail — Progress (CSS-var fallback)", () => {
       // proving the codegen correctly drops undefined sources rather
       // than serializing the literal string "undefined".
       expect(style).not.toHaveProperty("--fsds-progress-fill-width", "undefined");
+    });
+  }
+});
+
+test.describe("Runtime rail — Status (composed Icon)", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: default info status renders the canonical info glyph`, async ({ page }) => {
+      await goto(page, framework, "Status", "status");
+      await expect(page.locator('svg[data-fsds-icon="info"]')).toHaveCount(1);
+    });
+  }
+});
+
+test.describe("Runtime rail — Status non-default status", () => {
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
+    test(`${framework}: status=success renders the canonical check glyph`, async ({ page }) => {
+      await goto(page, framework, "Status", "status", { status: "success" });
+      await expect(page.locator('svg[data-fsds-icon="check"]')).toHaveCount(1);
     });
   }
 });

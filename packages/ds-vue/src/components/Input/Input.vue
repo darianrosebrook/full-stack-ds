@@ -28,6 +28,8 @@ interface Props {
   invalid?: boolean;
   required?: boolean;
   name?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -68,5 +70,5 @@ const fieldAssociation = useFieldAssociation();
 </script>
 
 <template>
-  <input :class="classNames" @input="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" :placeholder="props.placeholder" :name="props.name" :required="props.required" role="textbox" :data-testid="props['data-testid']" data-fsds-component="input" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
+  <input :class="classNames" @input="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" :placeholder="props.placeholder" :name="props.name" :required="props.required" :aria-label="props.ariaLabel" :aria-labelledby="props.ariaLabelledby" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" role="textbox" :data-testid="props['data-testid']" data-fsds-component="input" />
 </template>

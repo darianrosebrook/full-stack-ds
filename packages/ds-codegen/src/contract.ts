@@ -184,6 +184,13 @@ export interface ContractPartDetails {
    * component's — enforced by the layer-ordering validator.
    */
   componentRef?: string;
+  /**
+   * True when this part is a separately consumable compound subcomponent
+   * rather than a node owned by the root anatomy.dom tree. This is the
+   * contract-authored replacement for adding more names to the legacy global
+   * COMPOUND_PARTS classifier.
+   */
+  subcomponent?: boolean;
   role?: string;
   multiple?: boolean;
   focusable?: boolean | 'roving';
@@ -264,7 +271,7 @@ export interface ContractDomNode {
    * them. Authoring them as separate fields gives each emitter the
    * information it needs to lower into the right idiom.
    */
-  bindings?: Record<string, string>;
+  bindings?: Record<string, string | ContractValueMapBinding>;
   /**
    * DOM-property-only bindings, keyed by property name (e.g.
    * `"indeterminate"`). For facts with no HTML attribute equivalent at
@@ -348,6 +355,19 @@ export interface ContractDomNode {
    * `IconGlyphIR` in `ir.ts` for the resolved form.
    */
   iconGlyph?: ContractDomNodeIconGlyph;
+}
+
+/**
+ * A closed, declarative value projection for component composition. The
+ * contract maps an enumerable source prop to literal target values; emitters
+ * lower the normalized IR generically and never learn the host component's
+ * name. `fallback` is required when the source domain cannot be enumerated.
+ */
+export interface ContractValueMapBinding {
+  kind: 'map';
+  source: string;
+  values: Record<string, string>;
+  fallback?: string;
 }
 
 /**
@@ -599,6 +619,13 @@ export interface ContractDismissalTrigger {
   /** Prop whose truthy value enables this trigger; absent means always-on. */
   enabledBy?: string;
   defaultEnabled?: boolean;
+  /**
+   * Anatomy part that owns this trigger's interaction. Required for
+   * `overlayClick`: the dismissal click binds on this element because the
+   * root is pointer-events:none under a full-cover overlay and can never be
+   * the hit target (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01).
+   */
+  targetPart?: string;
   description?: string;
 }
 
@@ -762,6 +789,32 @@ export interface ContractForm {
 }
 
 /**
+ * Interactive control capability, separate from native form serialization.
+ * `form` answers whether/how a value enters FormData; this block identifies
+ * the rendered control, its value channel, and its commit timing.
+ */
+export interface ContractFormControl {
+  part: string;
+  channel: string;
+  valueModel: 'text' | 'boolean';
+  commit: 'input' | 'change' | 'activation';
+}
+
+/**
+ * Repeated-item control capability. Unlike `formControl`, the rendered part
+ * is a template instantiated by an enclosing iteration and the update needs
+ * an item/index payload from that iteration.
+ */
+export interface ContractCompositeControl {
+  part: string;
+  channel: string;
+  interactionModel: 'collection-selection' | 'segmented-text';
+  commit: 'input' | 'activation';
+  /** Closed BindingExpression grammar; arbitrary executable code is rejected. */
+  update: string;
+}
+
+/**
  * Geometry / default-affordance axis (MORPHOLOGY-GEOMETRY-PROFILE-01). Closed
  * enum mirroring `component.contract.schema.json#/properties/morphology`. When
  * present, selects a StyleProfile (box-model.ts#STYLE_PROFILES) layered BETWEEN
@@ -831,6 +884,8 @@ export interface ComponentContract {
     }>;
   };
   form?: ContractForm;
+  formControl?: ContractFormControl;
+  compositeControl?: ContractCompositeControl;
   motion?: ContractMotion;
   focus?: ContractFocus;
   portal?: ContractPortal;

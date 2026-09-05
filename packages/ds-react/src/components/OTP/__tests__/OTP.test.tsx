@@ -12,6 +12,14 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("OTP — unit", () => {
   it("renders with default props", () => {
     render(<OTP data-testid="otp" />);
@@ -51,32 +59,11 @@ describe("OTP — unit", () => {
 
 describe("OTP — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><OTP aria-label="Test OTP" /></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><OTP label="Test OTP" /></>);
+    const component = baseElement.querySelector('[data-fsds-component="otp"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end
@@ -86,6 +73,20 @@ describe("OTP — accessibility", () => {
 // wired on the OTP field's `input` event. These pin the A2 behavioral claim
 // for React (a second framework, Vue, pins the same claim in its own suite).
 import { fireEvent } from "@testing-library/react";
+
+describe("OTP — field naming", () => {
+  it("names every repeated field and honors the consumer override", () => {
+    const { rerender } = render(<OTP length={4} />);
+    expect(
+      screen.getAllByRole("textbox", { name: "One-time password digit" }),
+    ).toHaveLength(4);
+
+    rerender(<OTP length={4} fieldLabel="Verification code digit" />);
+    expect(
+      screen.getAllByRole("textbox", { name: "Verification code digit" }),
+    ).toHaveLength(4);
+  });
+});
 
 describe("OTP — set-char-at-index (channelUpdate setCharAt)", () => {
   const fields = () =>

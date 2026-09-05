@@ -14,8 +14,38 @@ import { renderSections, type Section } from "../../preserve.js";
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
+  runtimeRequiredPropExpression,
 } from "../../test-plan.js";
 import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-source.js";
+
+type LitTestPropSource = string | boolean | number | { code: string };
+
+function objectLiteral(values: Record<string, LitTestPropSource>): string {
+  const entries = Object.entries(values);
+  if (entries.length === 0) return "{}";
+  return `{ ${entries
+    .map(([key, value]) => `${JSON.stringify(key)}: ${literal(value)}`)
+    .join(", ")} }`;
+}
+
+function literal(value: LitTestPropSource): string {
+  if (typeof value === "object") return value.code;
+  if (typeof value === "boolean" || typeof value === "number") {
+    return String(value);
+  }
+  return JSON.stringify(value);
+}
+
+function emitComponentAxeOptions(lines: string[]): void {
+  lines.push(`const componentAxeOptions = {`);
+  lines.push(`  rules: {`);
+  lines.push(`    // \`region\` asks whether all page content is landmark-contained.`);
+  lines.push(`    // These tests scan one component subtree, not a complete page.`);
+  lines.push(`    region: { enabled: false },`);
+  lines.push(`  },`);
+  lines.push(`};`);
+  lines.push(``);
+}
 
 /**
  * Scan a component IR's DOM tree for the rendered signals a channel
@@ -126,6 +156,8 @@ function generateCompoundStateContainerTest(ir: ComponentIR): string {
 
   const lines: string[] = [];
 
+  emitComponentAxeOptions(lines);
+
   lines.push(`describe("${plan.name} — unit", () => {`);
   lines.push(`  it("renders with default props", async () => {`);
   lines.push(`    const container = document.createElement("div");`);
@@ -197,33 +229,8 @@ function generateCompoundStateContainerTest(ir: ComponentIR): string {
   lines.push(`    await tabA.updateComplete; await tabB.updateComplete;`);
   lines.push(`    await panelA.updateComplete; await panelB.updateComplete;`);
   lines.push(`    await new Promise((r) => setTimeout(r, 0));`);
-  lines.push(`    const results = await axe(container);`);
-  lines.push(`    const knownScaffoldViolationIds = new Set([`);
-  lines.push(`      "aria-dialog-name",`);
-  lines.push(`      "aria-input-field-name",`);
-  lines.push(`      "aria-progressbar-name",`);
-  lines.push(`      "aria-toggle-field-name",`);
-  lines.push(`      "aria-tooltip-name",`);
-  lines.push(`      "button-name",`);
-  lines.push(`      "empty-heading",`);
-  // image-alt: <fsds-image> requires the consumer to provide `alt`
-  // (or `alt=""` for decorative images). The scaffold test renders
-  // with no props. This violation joins the same scaffold-violation
-  // family as button-name/link-name/label — surfaced by the
-  // ifDefined-based attribute binding which now correctly omits
-  // the `alt` attribute when undefined, instead of the prior
-  // property-binding accident that coerced `undefined` to `""`.
-  lines.push(`      "image-alt",`);
-  lines.push(`      "label",`);
-  lines.push(`      "link-name",`);
-  lines.push(`      "region",`);
-  lines.push(`      "role-img-alt",`);
-  lines.push(`      "summary-name",`);
-  lines.push(`    ]);`);
-  lines.push(`    const unexpectedViolations = results.violations.filter(`);
-  lines.push(`      (violation) => !knownScaffoldViolationIds.has(violation.id),`);
-  lines.push(`    );`);
-  lines.push(`    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`);
+  lines.push(`    const results = await axe(container, componentAxeOptions);`);
+  lines.push(`    expect(results.violations.map((v) => v.id)).toEqual([]);`);
   lines.push(`    container.remove();`);
   lines.push(`  });`);
   lines.push(`});`);
@@ -272,6 +279,19 @@ export function generateLitTest(ir: ComponentIR): string {
   ].join("\n");
 
   const lines: string[] = [];
+
+  emitComponentAxeOptions(lines);
+  const hasRequiredProps = plan.requiredProps.length > 0;
+  if (hasRequiredProps) {
+    const requiredProps: Record<string, LitTestPropSource> = Object.fromEntries(
+      plan.requiredProps.map((prop) => [
+        prop.name,
+        { code: runtimeRequiredPropExpression(prop.expression) },
+      ]),
+    );
+    lines.push(`const requiredProps = ${objectLiteral(requiredProps)};`);
+    lines.push(``);
+  }
   lines.push(`describe("${plan.name} — unit", () => {`);
   lines.push(`  it("renders with default props", async () => {`);
   lines.push(`    const { element } = await renderElement("${elementName}");`);
@@ -654,66 +674,49 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(`});`);
   lines.push(``);
 
-  // Accessibility suite — filtered violation allowlist matches Vue/React.
-  // Note: aria-label is intentionally NOT passed for Lit custom element hosts
-  // because the host element has no implicit ARIA role, making aria-label a
-  // prohibited attribute (aria-prohibited-attr). We omit it and allow that
-  // rule in the scaffold allowlist instead.
+  // Accessibility suite — the shared plan routes a label through the actual
+  // public prop when the authored role owner binds one. This matters for Lit:
+  // setting aria-label only on the role-less custom-element host would not
+  // name a dialog rendered inside its shadow root.
   lines.push(`describe("${plan.name} — accessibility", () => {`);
   lines.push(
     `  it("has no unexpected axe violations with default props", async () => {`,
   );
-  const axeProps: Record<string, string | boolean> = {};
+  const axeProps: Record<string, LitTestPropSource> = Object.fromEntries(
+    plan.requiredProps.map((prop) => [
+      prop.name,
+      { code: runtimeRequiredPropExpression(prop.expression) },
+    ]),
+  );
+  for (const prop of plan.accessibility.props) {
+    axeProps[prop.name] = prop.value;
+  }
+  if (plan.accessibility.labelInput) {
+    axeProps[plan.accessibility.labelInput.name] =
+      plan.accessibility.labelInput.value;
+  }
   if (plan.renderOpenProp) axeProps[plan.renderOpenProp] = true;
+  const axeContent = plan.accessibility.content.map((fixture) => ({
+    slotName: fixture.slotName,
+    html: fixture.html,
+  }));
+  const axeArgs = [
+    Object.keys(axeProps).length > 0 || axeContent.length > 0
+      ? objectLiteral(axeProps)
+      : undefined,
+    axeContent.length > 0 ? JSON.stringify(axeContent) : undefined,
+  ].filter((arg): arg is string => arg !== undefined);
   lines.push(
-    `    const { element } = await renderElement("${elementName}"${Object.keys(axeProps).length > 0 ? `, ${JSON.stringify(axeProps)}` : ""});`,
+    `    const { element } = await renderElement("${elementName}"${axeArgs.length > 0 ? `, ${axeArgs.join(", ")}` : ""});`,
   );
   if (plan.accessibility.needsListParent) {
     lines.push(`    const list = document.createElement("ul");`);
     lines.push(`    list.append(element);`);
-    lines.push(`    const results = await axe(list);`);
+    lines.push(`    const results = await axe(list, componentAxeOptions);`);
   } else {
-    lines.push(`    const results = await axe(element);`);
+    lines.push(`    const results = await axe(element, componentAxeOptions);`);
   }
-  lines.push(`    const knownScaffoldViolationIds = new Set([`);
-  // These rules fire because the test fixture renders the component with no
-  // slot content or missing required text props. Real consumers fill them in.
-  // Rules removed from this list as part of Phase 4 (intentionally surfaces
-  // implementation bugs rather than masking them):
-  //   - aria-required-attr / aria-required-children / aria-required-parent:
-  //     impl bugs (component should set required attrs / contain required
-  //     children / be inside a required parent).
-  //   - aria-prohibited-attr: impl bug (wrong ARIA attribute for the role).
-  //   - list: impl bug (a <ul> must contain <li> children — the codegen
-  //     should ensure this in the rendered structure, not paper over it).
-  lines.push(`      "aria-dialog-name",`);
-  lines.push(`      "aria-input-field-name",`);
-  lines.push(`      "aria-progressbar-name",`);
-  lines.push(`      "aria-toggle-field-name",`);
-  lines.push(`      "aria-tooltip-name",`);
-  lines.push(`      "button-name",`);
-  lines.push(`      "empty-heading",`);
-  // image-alt: <fsds-image> requires the consumer to provide `alt`
-  // (or `alt=""` for decorative images). The scaffold test renders
-  // with no props. This violation joins the same scaffold-violation
-  // family as button-name/link-name/label — surfaced by the
-  // ifDefined-based attribute binding which now correctly omits
-  // the `alt` attribute when undefined, instead of the prior
-  // property-binding accident that coerced `undefined` to `""`.
-  lines.push(`      "image-alt",`);
-  lines.push(`      "label",`);
-  lines.push(`      "link-name",`);
-  lines.push(`      "region",`);
-  lines.push(`      "role-img-alt",`);
-  lines.push(`      "summary-name",`);
-  lines.push(`    ]);`);
-  lines.push(`    const unexpectedViolations = results.violations.filter(`);
-  lines.push(
-    `      (violation) => !knownScaffoldViolationIds.has(violation.id),`,
-  );
-  lines.push(`    );`);
-  // Compare rule-id arrays so failures name the offending rules.
-  lines.push(`    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`);
+  lines.push(`    expect(results.violations.map((v) => v.id)).toEqual([]);`);
   lines.push(`  });`);
   lines.push(`});`);
   lines.push(``);
@@ -729,6 +732,11 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(`  requestUpdate?: () => void;`);
   lines.push(`}`);
   lines.push(``);
+  lines.push(`interface AccessibilityContent {`);
+  lines.push(`  slotName?: string;`);
+  lines.push(`  html: string;`);
+  lines.push(`}`);
+  lines.push(``);
   lines.push(
     `function classTokens(element: Element | null | undefined): string[] {`,
   );
@@ -738,28 +746,52 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(`}`);
   lines.push(``);
   lines.push(
-    `async function renderElement(tagName: string, props: Record<string, string | boolean | number> = {}): Promise<RenderedElement> {`,
+    `async function renderElement(tagName: string, props: Record<string, unknown> = {}, content: AccessibilityContent[] = []): Promise<RenderedElement> {`,
   );
+  if (hasRequiredProps) {
+    lines.push(`  await customElements.whenDefined(tagName);`);
+  }
   lines.push(
     `  const element = document.createElement(tagName) as LitTestElement;`,
   );
+  lines.push(`  for (const fixture of content) {`);
+  lines.push(`    const template = document.createElement("template");`);
+  lines.push(`    template.innerHTML = fixture.html;`);
+  lines.push(`    const child = template.content.firstElementChild as HTMLElement | null;`);
+  lines.push(`    if (child && fixture.slotName) child.slot = fixture.slotName;`);
+  lines.push(`    element.append(template.content.cloneNode(true));`);
+  lines.push(`  }`);
+  const emitPropAssignments = (entries: string): void => {
+    lines.push(`  for (const [key, value] of Object.entries(${entries})) {`);
+    lines.push(
+      `    (element as unknown as Record<string, unknown>)[key] = value;`,
+    );
+    lines.push(`    if (typeof value === "boolean") {`);
+    lines.push(`      if (value) element.setAttribute(key, "");`);
+    lines.push(`    } else {`);
+    lines.push(`      element.setAttribute(key, String(value));`);
+    lines.push(`    }`);
+    lines.push(`  }`);
+  };
+  // Lit schedules its first update from connectedCallback. Components with
+  // required inputs must receive them before connection so an object-path
+  // binding cannot render once through `undefined`.
+  if (hasRequiredProps) {
+    emitPropAssignments("{ ...requiredProps, ...props }");
+  }
   // Append to an isolated container so axe doesn't walk sibling elements
   // from prior test renders when scoping to this element's context.
   lines.push(`  const container = document.createElement("div");`);
   lines.push(`  container.append(element);`);
   lines.push(`  document.body.append(container);`);
-  lines.push(`  await customElements.whenDefined(tagName);`);
-  lines.push(`  for (const [key, value] of Object.entries(props)) {`);
-  lines.push(
-    `    (element as unknown as Record<string, string | boolean | number>)[key] = value;`,
-  );
-  lines.push(`    if (typeof value === "boolean") {`);
-  lines.push(`      if (value) element.setAttribute(key, "");`);
-  lines.push(`    } else {`);
-  lines.push(`      element.setAttribute(key, String(value));`);
-  lines.push(`    }`);
-  lines.push(`  }`);
+  if (!hasRequiredProps) {
+    lines.push(`  await customElements.whenDefined(tagName);`);
+    emitPropAssignments("props");
+  }
   lines.push(`  element.requestUpdate?.();`);
+  lines.push(`  await element.updateComplete;`);
+  lines.push(`  // Named slots can schedule one follow-up render via slotchange.`);
+  lines.push(`  await Promise.resolve();`);
   lines.push(`  await element.updateComplete;`);
   lines.push(
     `  return { element, stack: element.shadowRoot?.querySelector("fsds-stack") };`,

@@ -12,101 +12,88 @@ declare module "vitest" {
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
 describe("Progress — unit", () => {
   it("renders with default props", () => {
-    render(<Progress data-testid="progress">content</Progress>);
+    render(<Progress data-testid="progress"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Progress data-testid="progress">content</Progress>);
+    render(<Progress data-testid="progress"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress");
   });
 
   it("merges custom className", () => {
-    render(<Progress data-testid="progress" className="custom">content</Progress>);
+    render(<Progress data-testid="progress" className="custom"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress", "custom");
   });
 
   it("has the correct ARIA role", () => {
-    render(<Progress data-testid="progress">content</Progress>);
+    render(<Progress data-testid="progress"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveAttribute("role", "progressbar");
   });
 
   it("applies variant=linear variant class", () => {
-    render(<Progress data-testid="progress" variant="linear">content</Progress>);
+    render(<Progress data-testid="progress" variant="linear"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--linear");
   });
 
   it("applies variant=circular variant class", () => {
-    render(<Progress data-testid="progress" variant="circular">content</Progress>);
+    render(<Progress data-testid="progress" variant="circular"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--circular");
   });
 
   it("applies size=sm variant class", () => {
-    render(<Progress data-testid="progress" size="sm">content</Progress>);
+    render(<Progress data-testid="progress" size="sm"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<Progress data-testid="progress" size="md">content</Progress>);
+    render(<Progress data-testid="progress" size="md"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<Progress data-testid="progress" size="lg">content</Progress>);
+    render(<Progress data-testid="progress" size="lg"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--lg");
   });
 
   it("applies intent=info variant class", () => {
-    render(<Progress data-testid="progress" intent="info">content</Progress>);
+    render(<Progress data-testid="progress" intent="info"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--info");
   });
 
   it("applies intent=success variant class", () => {
-    render(<Progress data-testid="progress" intent="success">content</Progress>);
+    render(<Progress data-testid="progress" intent="success"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--success");
   });
 
   it("applies intent=warning variant class", () => {
-    render(<Progress data-testid="progress" intent="warning">content</Progress>);
+    render(<Progress data-testid="progress" intent="warning"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--warning");
   });
 
   it("applies intent=danger variant class", () => {
-    render(<Progress data-testid="progress" intent="danger">content</Progress>);
+    render(<Progress data-testid="progress" intent="danger"><span>content</span></Progress>);
     expect(screen.getByTestId("progress")).toHaveClass("progress--danger");
   });
 });
 
 describe("Progress — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Progress aria-label="Test Progress">content</Progress></>);
-    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { baseElement } = render(<><Progress label="Test Progress"><span>content</span></Progress></>);
+    const component = baseElement.querySelector('[data-fsds-component="progress"]');
+    expect(component).not.toBeNull();
+    const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

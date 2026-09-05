@@ -249,6 +249,7 @@ export class CardElement extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute("data-fsds-component", "card");
+    if (!this.hasAttribute("role")) this.setAttribute("role", "group");
   }
 
   @property({ type: Boolean })
@@ -265,7 +266,7 @@ export class CardElement extends LitElement {
       [`card--${(this.density ?? "default")}`]: !!(this.density ?? "default"),
       'card--interactive': !!this.interactive,
     };
-    return html`<fsds-stack role="group" class=${classMap(classes)}><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class=${classMap(classes)}><slot></slot></fsds-stack>`;
   }
 }
 
@@ -504,6 +505,240 @@ export class CardHeaderElement extends LitElement {
 }
 
 customElements.define('fsds-card-header', CardHeaderElement);
+
+export class CardMediaElement extends LitElement {
+  static override styles = css`
+    :host { display: contents; }
+    .card {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
+      --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
+      --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
+      --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+    }
+
+    .card--completed {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
+    }
+
+    .card--in-progress {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
+    }
+
+    .card--planned {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+    }
+
+    .card--deprecated {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
+    }
+
+    .card--category {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
+    }
+
+    .card--complexity {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
+    }
+
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
+    }
+
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transition-property: box-shadow, border-color, background-color, transform;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:focus-visible {
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
+        outline-style: solid;
+      }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset, 8px);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-line-height-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+    }
+
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__description {
+      margin: 0;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default, 4px);
+    }
+
+    .card__badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+
+    .card__link {
+      text-decoration: none;
+    }
+
+    .card__link:hover {
+      text-decoration: underline;
+    }
+
+    .card__note {
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+    }
+  `;
+
+  override render() {
+    return html`<fsds-stack class="card__media"><slot></slot></fsds-stack>`;
+  }
+}
+
+customElements.define('fsds-card-media', CardMediaElement);
 
 export class CardContentElement extends LitElement {
   static override styles = css`
@@ -973,6 +1208,474 @@ export class CardFooterElement extends LitElement {
 
 customElements.define('fsds-card-footer', CardFooterElement);
 
+export class CardActionsElement extends LitElement {
+  static override styles = css`
+    :host { display: contents; }
+    .card {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
+      --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
+      --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
+      --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+    }
+
+    .card--completed {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
+    }
+
+    .card--in-progress {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
+    }
+
+    .card--planned {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+    }
+
+    .card--deprecated {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
+    }
+
+    .card--category {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
+    }
+
+    .card--complexity {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
+    }
+
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
+    }
+
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transition-property: box-shadow, border-color, background-color, transform;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:focus-visible {
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
+        outline-style: solid;
+      }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset, 8px);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-line-height-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+    }
+
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__description {
+      margin: 0;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default, 4px);
+    }
+
+    .card__badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+
+    .card__link {
+      text-decoration: none;
+    }
+
+    .card__link:hover {
+      text-decoration: underline;
+    }
+
+    .card__note {
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+    }
+  `;
+
+  override render() {
+    return html`<fsds-stack class="card__actions"><slot></slot></fsds-stack>`;
+  }
+}
+
+customElements.define('fsds-card-actions', CardActionsElement);
+
+export class CardBadgeElement extends LitElement {
+  static override styles = css`
+    :host { display: contents; }
+    .card {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
+      --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
+      --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
+      --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+    }
+
+    .card--completed {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
+    }
+
+    .card--in-progress {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
+    }
+
+    .card--planned {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+    }
+
+    .card--deprecated {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
+    }
+
+    .card--category {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
+    }
+
+    .card--complexity {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
+    }
+
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
+    }
+
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transition-property: box-shadow, border-color, background-color, transform;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:focus-visible {
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
+        outline-style: solid;
+      }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset, 8px);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-line-height-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+    }
+
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__description {
+      margin: 0;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default, 4px);
+    }
+
+    .card__badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+
+    .card__link {
+      text-decoration: none;
+    }
+
+    .card__link:hover {
+      text-decoration: underline;
+    }
+
+    .card__note {
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+    }
+  `;
+
+  override render() {
+    return html`<fsds-stack class="card__badge"><slot></slot></fsds-stack>`;
+  }
+}
+
+customElements.define('fsds-card-badge', CardBadgeElement);
+
 export class CardDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
@@ -1206,6 +1909,474 @@ export class CardDescriptionElement extends LitElement {
 }
 
 customElements.define('fsds-card-description', CardDescriptionElement);
+
+export class CardLinkElement extends LitElement {
+  static override styles = css`
+    :host { display: contents; }
+    .card {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
+      --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
+      --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
+      --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+    }
+
+    .card--completed {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
+    }
+
+    .card--in-progress {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
+    }
+
+    .card--planned {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+    }
+
+    .card--deprecated {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
+    }
+
+    .card--category {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
+    }
+
+    .card--complexity {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
+    }
+
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
+    }
+
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transition-property: box-shadow, border-color, background-color, transform;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:focus-visible {
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
+        outline-style: solid;
+      }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset, 8px);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-line-height-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+    }
+
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__description {
+      margin: 0;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default, 4px);
+    }
+
+    .card__badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+
+    .card__link {
+      text-decoration: none;
+    }
+
+    .card__link:hover {
+      text-decoration: underline;
+    }
+
+    .card__note {
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+    }
+  `;
+
+  override render() {
+    return html`<fsds-stack class="card__link"><slot></slot></fsds-stack>`;
+  }
+}
+
+customElements.define('fsds-card-link', CardLinkElement);
+
+export class CardNoteElement extends LitElement {
+  static override styles = css`
+    :host { display: contents; }
+    .card {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
+      --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-hover, #f7f7f7);
+      --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
+      --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
+      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
+      --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+    }
+
+    .card--completed {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
+    }
+
+    .card--in-progress {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
+    }
+
+    .card--planned {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
+    }
+
+    .card--deprecated {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
+    }
+
+    .card--category {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
+    }
+
+    .card--complexity {
+      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
+    }
+
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d92d2e);
+    }
+
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #474647);
+    }
+
+    .card {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-card-size-gap-default, 4px);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
+      background-color: var(--fsds-card-color-background-default, #ffffff);
+      border-color: var(--fsds-card-color-border-default, #b8b8b8);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+      padding: var(--fsds-card-size-padding-default, 16px);
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transition-property: box-shadow, border-color, background-color, transform;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:focus-visible {
+        outline-width: var(--fsds-card-focus-ring-width, 2px);
+        outline-color: var(--fsds-card-color-focus-ring, #0566fe);
+        outline-offset: var(--fsds-card-focus-ring-offset, 2px);
+        outline-style: solid;
+      }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover, #f7f7f7);
+      box-shadow: var(--fsds-card-elevation-raised, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
+      transform: translateY(0);
+    }
+
+    .card--completed {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--in-progress {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--planned {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--deprecated {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--category {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--complexity {
+      border-inline-start-width: var(--fsds-card-size-status-accent-width, 2px);
+      border-inline-start-color: var(--fsds-card-color-status-accent-default, #b8b8b8);
+    }
+
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset, 8px);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      line-height: var(--fsds-card-typography-line-height-heading, 1);
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default, 8px);
+    }
+
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary, #141414);
+    }
+
+    .card__description {
+      margin: 0;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default, 4px);
+      padding-top: var(--fsds-card-size-padding-default, 16px);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default, #b8b8b8);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default, 4px);
+    }
+
+    .card__badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--fsds-card-color-badge-accent-background, #d92d2e);
+      color: var(--fsds-card-color-badge-accent-foreground, #ffffff);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+
+    .card__link {
+      text-decoration: none;
+    }
+
+    .card__link:hover {
+      text-decoration: underline;
+    }
+
+    .card__note {
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-line-height-normal, 1.5);
+    }
+  `;
+
+  override render() {
+    return html`<fsds-stack class="card__note"><slot></slot></fsds-stack>`;
+  }
+}
+
+customElements.define('fsds-card-note', CardNoteElement);
 // @generated:end
 
 // @custom:start trailing

@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Pressable, View } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCalendarStyles } from "./Calendar.styles";
@@ -12,6 +12,7 @@ export type CalendarMode = "single" | "range";
 
 // @generated:start props
 export interface CalendarProps {
+  caption?: string;
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -31,7 +32,17 @@ export interface CalendarProps {
 // @generated:end
 
 // @generated:start component
+const isEntrySelected = (candidate: unknown, current: unknown): boolean => {
+  if (current === null || current === undefined) return false;
+  const list = Array.isArray(current) ? current : [current];
+  return list.some((entry) =>
+    typeof entry === "object" && entry !== null && "getTime" in entry
+      ? (entry as Date).getTime() === (candidate as Date).getTime()
+      : entry === candidate);
+};
+
 export function Calendar({
+  caption = "Calendar",
   value: controlledValue,
   days,
   defaultValue = undefined,
@@ -66,7 +77,9 @@ export function Calendar({
         />
         <View
           style={styles.caption}
-        />
+        >
+          <RNText>{caption}</RNText>
+        </View>
         <Pressable
           style={styles.nav}
           accessibilityRole="button"
@@ -87,10 +100,13 @@ export function Calendar({
                   style={styles.cell}
                 >
                   <Pressable
-                    style={styles.day}
+                    style={[styles.day, isEntrySelected(item, value) ? styles.day_state_selected : undefined]}
                     onPress={() => setValueValue(item)}
                     accessibilityRole="button"
-                  />
+                    accessibilityState={{ selected: isEntrySelected(item, value) }}
+                  >
+                    <RNText>{item.getDate()}</RNText>
+                  </Pressable>
                 </View>
               ))}
           </View>

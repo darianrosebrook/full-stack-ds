@@ -18,6 +18,7 @@ export type CalendarMode = "single" | "range";
 
 // @generated:start props
 interface Props {
+  caption?: string;
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -35,6 +36,7 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  caption: "Calendar",
   mode: "single",
   disabled: undefined,
   locale: "en-US",
@@ -69,14 +71,18 @@ const classNames = computed(() => [
   <div :class="classNames" role="application" :data-testid="props['data-testid']" data-fsds-component="calendar">
     <div :class="'calendar__header'">
       <button :class="'calendar__nav'" aria-label="Previous month"></button>
-      <span :class="'calendar__caption'"></span>
+      <span :class="'calendar__caption'">
+        {{ props.caption }}
+      </span>
       <button :class="'calendar__nav'" aria-label="Next month"></button>
     </div>
     <table :class="'calendar__grid'" role="grid" aria-label="Calendar">
       <tbody>
         <tr>
           <td v-for="(item, index) in (props.days ?? [])" :key="index" :class="'calendar__cell'" role="gridcell" :data-calendar-index="index">
-            <button :class="'calendar__day'" @click="() => behavior.setValue(item)"></button>
+            <button :class="'calendar__day'" @click="() => behavior.setValue(item)">
+              {{ item.getDate() }}
+            </button>
           </td>
         </tr>
       </tbody>

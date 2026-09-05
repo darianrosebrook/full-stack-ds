@@ -27,6 +27,7 @@
         }
       },
       "spinner": {
+        "componentRef": "fsds.Spinner",
         "description": "Loading indicator shown while the button action is pending.",
         "role": "decoration"
       },
@@ -51,11 +52,15 @@
       },
       "children": [
         {
-          "tag": "span",
+          "componentRef": "fsds.Spinner",
           "part": "spinner",
           "if": "loading",
           "attrs": {
-            "aria-hidden": "true"
+            "size": "sm"
+          },
+          "bindings": {
+            "inline": "prop:loading",
+            "ariaHidden": "prop:loading"
           }
         },
         {

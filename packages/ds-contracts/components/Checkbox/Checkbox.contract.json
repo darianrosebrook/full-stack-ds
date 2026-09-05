@@ -4,6 +4,13 @@
   "description": "Binary or tri-state input for boolean selection. Supports indeterminate state for partial group selection.",
   "layer": "primitive",
   "category": "input",
+  "fieldAssociation": "control",
+  "formControl": {
+    "part": "input",
+    "channel": "checked",
+    "valueModel": "boolean",
+    "commit": "change"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -20,7 +27,14 @@
         "description": "Native checkbox input carrying checked state, disabled state, and form submission values.",
         "role": "trigger",
         "interactive": true,
-        "focusable": true
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label",
+            "aria-labelledby",
+            "aria-checked"
+          ]
+        }
       },
       "indicator": {
         "description": "Visual checked or indeterminate mark paired with the native input state.",
@@ -42,13 +56,12 @@
             "disabled": "prop:disabled",
             "name": "prop:name",
             "value": "prop:value",
+            "aria-label": "prop:ariaLabel",
+            "aria-labelledby": "prop:ariaLabelledby",
             "aria-checked": "conditional:prop:indeterminate|literal:mixed|channel:checked.value"
           },
           "properties": {
             "indeterminate": "prop:indeterminate"
-          },
-          "events": {
-            "change": "channel:checked.onChange"
           }
         },
         {
@@ -108,6 +121,16 @@
           "name": "value",
           "propType": { "kind": "string" },
           "description": "Form value submitted when checked."
+        },
+        {
+          "name": "ariaLabel",
+          "propType": { "kind": "string" },
+          "description": "Direct accessible name for the native checkbox input."
+        },
+        {
+          "name": "ariaLabelledby",
+          "propType": { "kind": "string" },
+          "description": "Space-separated ids of elements that name the native checkbox input."
         }
       ]
     }
@@ -266,7 +289,7 @@
     "usageHints": [
       "Use checked and onChange for controlled mode; defaultChecked for uncontrolled",
       "Set indeterminate for parent checkboxes in a group where some children are checked",
-      "Always pair with a label — either via prop:label or a visible sibling Label component",
+      "Always pair with a label — via ariaLabel, ariaLabelledby, or an associated visible Label component",
       "Use name and value for native form submission"
     ],
     "children": {

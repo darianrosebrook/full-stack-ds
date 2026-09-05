@@ -31,6 +31,8 @@ export interface UseAnchoredPositionOptions {
    * via "shift". Defaults to 8.
    */
   viewportPadding?: number;
+  /** Optional containing block whose local coordinates replace the viewport. */
+  boundary?: Element | null;
 }
 
 export interface AnchoredPositionState {
@@ -91,6 +93,7 @@ export function useAnchoredPosition(
     collision = "flip-shift",
     offset = 8,
     viewportPadding = 8,
+    boundary,
   } = options;
 
   const [state, setState] = useState<AnchoredPositionState>(HIDDEN_STATE);
@@ -104,6 +107,7 @@ export function useAnchoredPosition(
       collision,
       offset,
       viewportPadding,
+      boundary,
     });
     setState((prev) => {
       // Avoid spurious re-renders when the computed values match.
@@ -117,7 +121,7 @@ export function useAnchoredPosition(
       }
       return next;
     });
-  }, [anchor, content, open, placement, collision, offset, viewportPadding]);
+  }, [anchor, content, open, placement, collision, offset, viewportPadding, boundary]);
 
   useEffect(() => {
     if (!open || !anchor || !content) {
@@ -142,13 +146,14 @@ export function useAnchoredPosition(
     // container scrolls.
     const onScroll = () => compute();
     const onResize = () => compute();
-    window.addEventListener("scroll", onScroll, true);
-    window.addEventListener("resize", onResize);
+    const ownerWindow = anchor.ownerDocument.defaultView ?? window;
+    ownerWindow.addEventListener("scroll", onScroll, true);
+    ownerWindow.addEventListener("resize", onResize);
 
     return () => {
       ro?.disconnect();
-      window.removeEventListener("scroll", onScroll, true);
-      window.removeEventListener("resize", onResize);
+      ownerWindow.removeEventListener("scroll", onScroll, true);
+      ownerWindow.removeEventListener("resize", onResize);
     };
   }, [open, anchor, content, compute]);
 
@@ -162,14 +167,24 @@ interface ComputeArgs {
   collision: AnchoredCollisionStrategy;
   offset: number;
   viewportPadding: number;
+  boundary?: Element | null;
 }
 
 function computePosition(args: ComputeArgs): AnchoredPositionState {
-  const { anchor, content, collision, offset, viewportPadding } = args;
-  const anchorRect = anchor.getBoundingClientRect();
+  const { anchor, content, collision, offset, viewportPadding, boundary } = args;
+  const rawAnchorRect = anchor.getBoundingClientRect();
   const contentRect = content.getBoundingClientRect();
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
+  const ownerWindow = anchor.ownerDocument.defaultView ?? window;
+  const usesBoundary =
+    boundary !== null &&
+    boundary !== undefined &&
+    boundary !== anchor.ownerDocument.body;
+  const boundaryRect = usesBoundary ? boundary.getBoundingClientRect() : null;
+  const viewportWidth = boundaryRect?.width ?? ownerWindow.innerWidth;
+  const viewportHeight = boundaryRect?.height ?? ownerWindow.innerHeight;
+  const anchorRect = boundaryRect
+    ? offsetRect(rawAnchorRect, boundaryRect.left, boundaryRect.top)
+    : rawAnchorRect;
 
   // Normalize "auto" → "bottom" as the seed placement. The flip step
   // below handles the case where bottom doesn't fit.
@@ -235,6 +250,21 @@ function measureOverflow(
 interface PlacedRect {
   top: number;
   left: number;
+}
+
+function offsetRect(rect: DOMRect, left: number, top: number): DOMRect {
+  return {
+    ...rect,
+    x: rect.x - left,
+    y: rect.y - top,
+    top: rect.top - top,
+    right: rect.right - left,
+    bottom: rect.bottom - top,
+    left: rect.left - left,
+    width: rect.width,
+    height: rect.height,
+    toJSON: () => ({}),
+  } as DOMRect;
 }
 
 function placeAlong(

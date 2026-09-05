@@ -22,8 +22,9 @@ export interface SelectProps {
   onOpenChange?: (open: boolean) => void;
   multiple?: boolean;
   disabled?: boolean;
+  triggerLabel?: string;
   size?: SelectSize;
-  filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
   position?: "bottom" | "top" | "auto";
@@ -41,6 +42,7 @@ export function Select({
   value: controlledSelection,
   open: controlledOpen,
   disabled,
+  triggerLabel = "Select an option",
   searchable,
   empty,
   defaultValue = undefined,
@@ -67,16 +69,17 @@ export function Select({
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel ?? triggerLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityState={{ expanded: String(open) === "true" }}
     >
       <Pressable
         style={styles.trigger}
         disabled={disabled}
+        accessibilityLabel={triggerLabel}
         onPress={() => setOpenValue(!open)}
         accessibilityRole="button"
-        accessibilityState={{ disabled: disabled }}
+        accessibilityState={{ disabled: disabled, expanded: String(open) === "true" }}
       >
         <View
           style={styles.text}

@@ -99,7 +99,7 @@ const instanceId = useId();
   <Teleport to="body">
     <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props['data-testid']" data-fsds-component="walkthrough" :ref="setAnchoredRootEl" :data-placement="anchoredPosition.placement" :style="{ position: 'fixed', top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? 'visible' : 'hidden' }">
       <div :class="'walkthrough__content'" role="group" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
-        <h3 :class="'walkthrough__title'" :id="`${instanceId}-title`">
+        <h3 :class="'walkthrough__title'" :aria-label="props.label" :id="`${instanceId}-title`">
           <slot name="title" />
         </h3>
         <p :class="'walkthrough__description'" :id="`${instanceId}-description`">
@@ -107,13 +107,13 @@ const instanceId = useId();
         </p>
       </div>
       <div :class="'walkthrough__controls'">
-        <button :class="'walkthrough__skip'" type="button"></button>
-        <button :class="'walkthrough__prev'" type="button"></button>
+        <button :class="'walkthrough__skip'" type="button" aria-label="Skip tour"></button>
+        <button :class="'walkthrough__prev'" type="button" aria-label="Previous step"></button>
         <div :class="'walkthrough__dots'">
           <button v-for="(item, index) in (props.steps ?? [])" :key="index" :class="'walkthrough__dot'" type="button" :aria-label="item.title" :data-step-index="index"></button>
         </div>
         <span :class="'walkthrough__counter'"></span>
-        <button :class="'walkthrough__next'" type="button"></button>
+        <button :class="'walkthrough__next'" type="button" aria-label="Next step"></button>
       </div>
     </div>
   </Teleport>

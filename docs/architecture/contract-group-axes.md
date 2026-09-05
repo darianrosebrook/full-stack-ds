@@ -82,11 +82,28 @@ Surface components should not smuggle product semantics into framework emitters.
 
 ## Axis 7: Data participation
 
-`form` and `dataModel` are the external data axis.
+`form`, `formControl`, `compositeControl`, and `dataModel` are the external data axis.
 
-They answer: whether the component participates in form submission, validation, controlled state, selection, or externally modeled data.
+They answer separate questions. `form` says whether and how a value participates
+in native form submission and validity. `formControl` identifies the rendered
+interactive part, its value channel/model, and when interaction commits that
+channel. `compositeControl` owns the corresponding facts for a repeated item
+template: the item part, value channel, interaction model, commit timing, and
+closed iteration-aware update expression. `dataModel` describes externally
+modeled data and selection.
 
 This axis is separate from visual category. Some input-like components are not form controls. Some display components carry selected state. The contract should state the data participation explicitly rather than inferring it from category alone.
+
+The separation is intentional: a button-backed switch can be a boolean
+`formControl` without claiming native `FormData` participation, while a native
+checkbox can declare both capabilities. Field association targets
+`formControl.part`; it must not assume that a compound component's root is the
+labelable element.
+
+`compositeControl` is deliberately separate from `formControl`: Select options,
+Calendar days, and OTP fields are multiple runtime instances of one iterated
+DOM template. Their item/index payload belongs to the binding IR, and must not
+be reconstructed by component-name branches in framework emitters.
 
 ## Axis 8: Assistive-technology obligation
 

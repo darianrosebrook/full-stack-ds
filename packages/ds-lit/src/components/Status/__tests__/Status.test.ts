@@ -5,6 +5,16 @@ import "../Status";
 // @generated:end
 
 // @generated:start tests
+const componentAxeOptions = {
+  rules: {
+    // `region` asks whether all page content is landmark-contained.
+    // These tests scan one component subtree, not a complete page.
+    region: { enabled: false },
+  },
+};
+
+const requiredProps = { "status": "info" };
+
 describe("Status — unit", () => {
   it("renders with default props", async () => {
     const { element } = await renderElement("fsds-status");
@@ -50,27 +60,9 @@ describe("Status — unit", () => {
 
 describe("Status — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { element } = await renderElement("fsds-status");
-    const results = await axe(element);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "region",
-      "role-img-alt",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+    const { element } = await renderElement("fsds-status", { "status": "info", "aria-label": "Test Status" }, [{"html":"<span>content</span>"}]);
+    const results = await axe(element, componentAxeOptions);
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 
@@ -84,25 +76,40 @@ interface LitTestElement extends HTMLElement {
   requestUpdate?: () => void;
 }
 
+interface AccessibilityContent {
+  slotName?: string;
+  html: string;
+}
+
 function classTokens(element: Element | null | undefined): string[] {
   return (element?.className ?? "").split(/\s+/).filter(Boolean);
 }
 
-async function renderElement(tagName: string, props: Record<string, string | boolean | number> = {}): Promise<RenderedElement> {
-  const element = document.createElement(tagName) as LitTestElement;
-  const container = document.createElement("div");
-  container.append(element);
-  document.body.append(container);
+async function renderElement(tagName: string, props: Record<string, unknown> = {}, content: AccessibilityContent[] = []): Promise<RenderedElement> {
   await customElements.whenDefined(tagName);
-  for (const [key, value] of Object.entries(props)) {
-    (element as unknown as Record<string, string | boolean | number>)[key] = value;
+  const element = document.createElement(tagName) as LitTestElement;
+  for (const fixture of content) {
+    const template = document.createElement("template");
+    template.innerHTML = fixture.html;
+    const child = template.content.firstElementChild as HTMLElement | null;
+    if (child && fixture.slotName) child.slot = fixture.slotName;
+    element.append(template.content.cloneNode(true));
+  }
+  for (const [key, value] of Object.entries({ ...requiredProps, ...props })) {
+    (element as unknown as Record<string, unknown>)[key] = value;
     if (typeof value === "boolean") {
       if (value) element.setAttribute(key, "");
     } else {
       element.setAttribute(key, String(value));
     }
   }
+  const container = document.createElement("div");
+  container.append(element);
+  document.body.append(container);
   element.requestUpdate?.();
+  await element.updateComplete;
+  // Named slots can schedule one follow-up render via slotchange.
+  await Promise.resolve();
   await element.updateComplete;
   return { element, stack: element.shadowRoot?.querySelector("fsds-stack") };
 }

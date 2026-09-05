@@ -1,8 +1,8 @@
 /**
  * React emitter — Anchored Presence Surface path.
  *
- * Activated for any `ir.surface` whose kind is in the anchored-
- * presence family (per shared semantics policy). Emits the compound
+ * Activated for any `ir.surface` with part attachment and anchored
+ * positioning (per shared semantics policy). Emits the compound
  * API:
  *
  *   <Surface>
@@ -20,7 +20,7 @@
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
-  isAnchoredPresenceKind,
+  isPartAnchoredSurface,
   resolveAnchoredSurfacePolicy,
   type AnchoredSurfacePolicy,
   type PublicDismissalProp,
@@ -30,7 +30,7 @@ export function isSurfaceComponent(ir: ComponentIR): boolean {
   // Kind-aware like svelte/angular/lit: non-anchored kinds (dialog, sheet,
   // toast, …) may declare a surface taxonomy block for fact-tracking while
   // keeping the existing generic/hook emission path on web.
-  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface !== undefined && isPartAnchoredSurface(ir.surface);
 }
 
 export function generateReactSurfaceComponentSource(ir: ComponentIR): string {
@@ -40,10 +40,9 @@ export function generateReactSurfaceComponentSource(ir: ComponentIR): string {
       `generateReactSurfaceComponentSource called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
-      `React surface emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
-        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
+      `React surface emitter expected part attachment with anchored positioning (got "${surface.kind}").`,
     );
   }
   const policy = resolveAnchoredSurfacePolicy(surface);
@@ -102,8 +101,10 @@ function emitAnchoredSurfaceSource(
   ];
   const extraImportLines: string[] = [];
   if (portalEnabled) {
-    // createPortal lives in react-dom, not react itself.
     extraImportLines.push(`import { createPortal } from "react-dom";`);
+    extraImportLines.push(
+      `import { usePortalTarget } from "../../primitives/hooks";`,
+    );
   }
   if (positioningEnabled) {
     extraImportLines.push(
@@ -415,6 +416,9 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   // - Portal: when enabled, wrap the div in createPortal(node, document.body).
   //   Guard against SSR by checking typeof document; falls back to in-place
   //   render server-side, which positioning hooks will correct on hydration.
+  const portalTargetHookCall = portalEnabled
+    ? `\n  const portalTarget = usePortalTarget();`
+    : "";
   const positioningHookCall = positioningEnabled
     ? `\n  const position = useAnchoredPosition({
     anchor: ctx.anchorEl,
@@ -422,6 +426,7 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
     open: ctx.open,
     placement: ctx.placement ?? "auto",
     collision: "${collision}",
+    ${portalEnabled ? "boundary: portalTarget," : ""}
   });`
     : "";
   // Consumer style is spread first so our computed positioning wins.
@@ -454,10 +459,10 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
       {children}
     </div>`;
   const portalWrappedContent = portalEnabled
-    ? `typeof document !== "undefined"
+    ? `portalTarget !== null
     ? createPortal(
         ${contentDiv.split("\n").map((line) => `    ${line}`).join("\n").trim()},
-        document.body,
+        portalTarget,
       )
     : (
         ${contentDiv.split("\n").map((line) => `    ${line}`).join("\n").trim()}
@@ -468,7 +473,7 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   children,
   ...rest
 }: ${name}ContentProps) {
-  const ctx = use${name}Context();${positioningHookCall}${restDestructure}
+  const ctx = use${name}Context();${portalTargetHookCall}${positioningHookCall}${restDestructure}
   if (!ctx.open) return null;
   return ${portalWrappedContent};
 };`;

@@ -134,6 +134,9 @@ export class InputElement extends LitElement {
   @property({ type: Boolean }) invalid?: boolean;
   @property({ type: Boolean }) required?: boolean;
   @property({ type: String }) name?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
+  @property({ type: String }) ariaLabelledby?: string;
 
   private behavior = new InputBehavior(this, {
     value: () => this.value,
@@ -159,7 +162,7 @@ export class InputElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" role="textbox" @change=${(e: Event) => this.handleValueChange(e)} .value=${this.behavior.value} ?disabled=${this.disabled ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} type=${ifDefined(this.type)} placeholder=${ifDefined(this.placeholder)} name=${ifDefined(this.name)} ?required=${this.required ?? false} />`;
+    return html`<input class="${this.computeClasses()}" role="textbox" @input=${(e: Event) => this.handleValueChange(e)} .value=${this.behavior.value} ?disabled=${this.disabled ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} type=${ifDefined(this.type)} placeholder=${ifDefined(this.placeholder)} name=${ifDefined(this.name)} ?required=${this.required ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-labelledby=${ifDefined(this.ariaLabelledby)} />`;
   }
 }
 

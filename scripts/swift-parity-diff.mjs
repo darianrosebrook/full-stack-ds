@@ -12,7 +12,6 @@
 // render differently across frameworks. It proves the contract→emission
 // path admits both targets, nothing about runtime equivalence.
 import { readFileSync, existsSync, readdirSync } from "node:fs";
-import { createRequire } from "node:module";
 import path from "node:path";
 
 const root = process.cwd();

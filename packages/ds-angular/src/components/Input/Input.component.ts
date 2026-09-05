@@ -23,7 +23,7 @@ import { FieldAssociationService } from "../../primitives/index.js";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "input" },
-  template: `<input [ngClass]="classes()" (change)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" [placeholder]="placeholder" [name]="name" [required]="required" [attr.id]="fieldAssociation?.current?.controlId" [attr.aria-describedby]="fieldAssociation?.current?.describedBy" />`,
+  template: `<input [ngClass]="classes()" (input)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" [placeholder]="placeholder" [name]="name" [required]="required" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="ariaLabelledby" [attr.id]="fieldAssociation?.current?.controlId" [attr.aria-describedby]="fieldAssociation?.current?.describedBy" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent {
@@ -36,6 +36,8 @@ export class InputComponent {
   @Input() invalid?: boolean;
   @Input() required?: boolean;
   @Input() name?: string;
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
   @Input() class?: string;
   protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 

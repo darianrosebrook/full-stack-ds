@@ -4,15 +4,15 @@ export { AlertNoticeComponent, AlertNoticeBodyComponent, AlertNoticeTitleCompone
 export { AvatarComponent } from "./Avatar/Avatar.component.js";
 export { BadgeComponent, BadgeContentComponent } from "./Badge/Badge.component.js";
 export { BlockquoteComponent } from "./Blockquote/Blockquote.component.js";
-export { BreadcrumbsComponent, BreadcrumbsListComponent } from "./Breadcrumbs/Breadcrumbs.component.js";
+export { BreadcrumbsComponent, BreadcrumbsItemComponent, BreadcrumbsListComponent } from "./Breadcrumbs/Breadcrumbs.component.js";
 export { ButtonComponent } from "./Button/Button.component.js";
 export { CalendarComponent, CalendarHeaderComponent } from "./Calendar/Calendar.component.js";
-export { CardComponent, CardContentComponent, CardDescriptionComponent, CardFooterComponent, CardHeaderComponent } from "./Card/Card.component.js";
+export { CardComponent, CardActionsComponent, CardBadgeComponent, CardContentComponent, CardDescriptionComponent, CardFooterComponent, CardHeaderComponent, CardLinkComponent, CardMediaComponent, CardNoteComponent } from "./Card/Card.component.js";
 export { CheckboxComponent } from "./Checkbox/Checkbox.component.js";
 export { ChipComponent } from "./Chip/Chip.component.js";
 export { CodeBlockComponent } from "./CodeBlock/CodeBlock.component.js";
 export { CodeSnippetComponent } from "./CodeSnippet/CodeSnippet.component.js";
-export { CommandComponent, CommandGroupComponent, CommandItemComponent, CommandListComponent } from "./Command/Command.component.js";
+export { CommandComponent, CommandGroupComponent, CommandGroupHeadingComponent, CommandGroupItemsComponent, CommandItemComponent, CommandItemContentComponent, CommandItemDescriptionComponent, CommandItemIconComponent, CommandItemLabelComponent, CommandListComponent } from "./Command/Command.component.js";
 export { DetailsComponent, DetailsContentComponent } from "./Details/Details.component.js";
 export { DialogComponent, DialogBodyComponent, DialogFooterComponent, DialogHeaderComponent, DialogTitleComponent } from "./Dialog/Dialog.component.js";
 export { DividerComponent } from "./Divider/Divider.component.js";
