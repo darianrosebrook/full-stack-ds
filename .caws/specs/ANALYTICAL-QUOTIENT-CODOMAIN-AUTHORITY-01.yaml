@@ -78,11 +78,11 @@ contracts:
 evidence:
   - criterion_id: A1
     status: unchecked
-    evidence_ref: "0 illegal quotient images over 208 specimens by membership digest (footprints --check; erasure-audit.test.ts). OPEN: scope-object/population-field admission (null/false/0/'' scope removes its own comparison; recorded-side-only corruption accepted), quotientSchemaVersion compatibility. See evidence-map.json A1."
-    recorded_at: "2026-09-05T06:54:56.345Z"
-    test_nodeid: "packages/ds-codegen/src/analytical/erasure-audit.test.ts > a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path"
+    evidence_ref: "0 illegal quotient images over 208 specimens by membership digest (footprints --check; erasure-audit.test.ts). Admission on the report boundary now complete on tip e13eb47f: required keys+values, footprintBasisDigest, both scope objects and the specimen manifest admitted before comparison, count/digest relationships enforced, version compatibility against QUOTIENT_SCHEMA_VERSION, top-level copy checked; 6/6 mutants killed. REMAINING: no independent review of that pass yet; the combined A1-A2 bar's compile-time negative test is open under A2; no integration candidate exists. See evidence-map.json A1."
+    recorded_at: "2026-09-05T07:01:12.451Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/erasure-audit.test.ts > admits each population description before comparing it, on either side"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
-    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+    commit_sha: e13eb47f
   - criterion_id: A2
     status: unchecked
     evidence_ref: "Typed QuotientImage; sourceLanguageDeparture (62/112 authored) reported apart from quotientLanguageInvalid (0/208). OPEN: no compile-time negative test refuses a QuotientImage where a Fixture is required (no @ts-expect-error in analytical tests)."
