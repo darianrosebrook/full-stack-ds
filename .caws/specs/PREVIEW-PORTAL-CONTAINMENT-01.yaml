@@ -2,9 +2,11 @@ id: PREVIEW-PORTAL-CONTAINMENT-01
 title: 'Contain portaled usage previews in responsive canvases'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Contained contract-authorized portal previews in responsive local canvases while preserving body defaults for ordinary consumers.'
 created_at: '2026-09-05T01:14:57.540Z'
-updated_at: '2026-09-05T01:19:49.114Z'
+updated_at: '2026-09-05T01:36:19.890Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
