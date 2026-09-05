@@ -419,8 +419,19 @@ describe("evidence earned under one erasure definition is refused under another"
     });
     try {
       const m = await load(copy.dir);
-      const refusals = m.closure.checkClosures().problems.filter((p) => / is not confluent on stimulus /.test(p));
+      const gate = m.closure.checkClosures();
+      const refusals = gate.problems.filter((p) => / is not confluent on stimulus /.test(p));
       const withStimuli = m.closure.loadClosures().closures.filter((c) => c.a !== undefined && c.b !== undefined);
+      // Refused means NOT READ: obligations 4-6 are unevaluable with the refusal
+      // as their detail, never evaluated under the order the checker listed.
+      for (const c of withStimuli) {
+        const check = gate.checks.find((x) => x.carrier === c.carrier)!;
+        for (const id of ["4-carrier-insufficient-before-normalization", "5-complete-closure-sufficiency", "6-normalization-is-not-the-cited-cause"]) {
+          const o = check.obligations.find((x) => x.id === id)!;
+          expect(o.unevaluable, `${c.carrier} ${id}`).toBe(true);
+          expect(o.detail).toBe("the plan set is not confluent; refused as evidence");
+        }
+      }
       // Without the edge, EVERY closure that has stimuli is refused, so no
       // closure's collision evidence is admitted through an accidental order.
       expect(withStimuli.length).toBe(3);

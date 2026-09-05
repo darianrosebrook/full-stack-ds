@@ -683,6 +683,30 @@ describe("composition — derived ordering and confluence over the bound registr
     expect(canonical(executeAll(target, [forget, carrier]))).toBe(edgeOrder);
   });
 
+  it("the derived edge compares the WHOLE prefix -- property names and enclosing branch members -- so a nested union orders only its own discriminator", () => {
+    // Synthetic nested union: `a.[x].b` is itself discriminated. The plan that
+    // branches on the INNER discriminator must order the inner `kind` plan under
+    // the SAME outer member and nothing else: not the inner kind under another
+    // outer member, and not a same-shaped locator with a different property name.
+    const at = (id: string, steps: Parameters<typeof orderPlans>[0][number]["locator"]["steps"], operation: ForgetOperation) => ({
+      id,
+      locator: { path: id, steps },
+      operation,
+      representationEffects: [],
+    });
+    const inner = at("inner-field", [{ kind: "prop", name: "a" }, { kind: "branch", member: "x" }, { kind: "prop", name: "b" }, { kind: "branch", member: "y" }, { kind: "prop", name: "c" }], { kind: "delete-slot" });
+    const innerKind = at("inner-kind", [{ kind: "prop", name: "a" }, { kind: "branch", member: "x" }, { kind: "prop", name: "b" }, { kind: "prop", name: "kind" }], { kind: "forget-value" });
+    const otherMember = at("inner-kind-under-z", [{ kind: "prop", name: "a" }, { kind: "branch", member: "z" }, { kind: "prop", name: "b" }, { kind: "prop", name: "kind" }], { kind: "forget-value" });
+    const otherName = at("inner-kind-under-other", [{ kind: "prop", name: "a" }, { kind: "branch", member: "x" }, { kind: "prop", name: "other" }, { kind: "prop", name: "kind" }], { kind: "forget-value" });
+    const outerKind = at("outer-kind", [{ kind: "prop", name: "a" }, { kind: "prop", name: "kind" }], { kind: "forget-value" });
+    const present = [inner, innerKind, otherMember, otherName, outerKind];
+    expect(derivedRunAfter(innerKind, present)).toEqual([inner.id]);
+    expect(derivedRunAfter(otherMember, present)).toEqual([]);
+    expect(derivedRunAfter(otherName, present)).toEqual([]);
+    // The OUTER discriminator is branched on by every plan under `[x]` AND under `[z]`: all of them run first.
+    expect(derivedRunAfter(outerKind, present).sort()).toEqual([inner.id, innerKind.id, otherMember.id, otherName.id].sort());
+  });
+
   it("every closure set yields one image whatever its listing, on its own stimuli and on the fixtures that used to split it", () => {
     const oracle = loadOracle();
     const splitters = ["FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN", "FX_NESTED_SUBTOTAL_OFF_HIERARCHY", "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS"].map(fx);
