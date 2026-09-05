@@ -75,3 +75,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/dom-tree.test.ts (value-map component instance and exhaustive-domain assertions)
     recorded_at: "2026-09-05T01:08:18.416Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run governed:rail plus packages/ds-codegen/src/frameworks/value-map-binding.test.ts (six admitted emitters)"
+    recorded_at: "2026-09-05T01:08:19.541Z"
