@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "Red-before against prior implementations: RN 2 fixture failures (token-backed and literal slot-name override), Swift 1 layered semantic-ref failure, Compose 1 slot-name failure; same focused commands pass after f826d75a."
     recorded_at: "2026-09-05T00:09:46.802Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "CI command-removal mutation (:library:test to :library:compileTestKotlin) failed the wiring assertion; pnpm run lint; pnpm run typecheck:react-native; pnpm run test:coverage:react-native; swift test (41 tests, 4 existing host skips); Compose :library:test; pnpm run governed:rail; pnpm test (3377/3377); pnpm run test:frameworks."
+    recorded_at: "2026-09-05T00:09:59.936Z"
