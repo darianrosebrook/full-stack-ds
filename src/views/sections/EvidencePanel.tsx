@@ -76,7 +76,7 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
                 <TableCell>
                   {present ? (
                     <>
-                      <Icon name="Check" size="sm" /> present
+                      <Icon name="check" size="sm" /> present
                     </>
                   ) : (
                     "absent"

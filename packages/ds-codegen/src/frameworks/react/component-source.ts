@@ -28,6 +28,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -3025,6 +3026,7 @@ function inferBindingValueType(
   if (expr.kind === "conditional") {
     return inferBindingValueType(expr.whenTrue, ctx) ?? inferBindingValueType(expr.whenFalse, ctx);
   }
+  if (expr.kind === "valueMap") return "string";
   return undefined;
 }
 
@@ -3059,6 +3061,10 @@ function renderReactBinding(
       if (!it) return null; // validator catches this; defensive.
       const base = expr.local === "index" ? it.indexVar : (it.itemVar ?? "item");
       return appendPath(base, expr.path);
+    }
+    case "valueMap": {
+      const source = renderReactBinding(attr, expr.source, ctx);
+      return source === null ? null : composeValueMapExpression(expr, source);
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import Icon from "../Icon/Icon.vue";
 // @generated:end
 
 // @custom:start imports
@@ -42,7 +43,7 @@ const classNames = computed(() => [
 
 <template>
   <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="status">
-    <span :class="'status__icon'" aria-hidden="true"></span>
+    <Icon :class="'status__icon'" size="sm" :name="(props.status === 'info' ? 'info' : (props.status === 'success' ? 'check' : (props.status === 'warning' ? 'triangle-alert' : (props.status === 'danger' ? 'triangle-alert' : 'triangle-alert'))))" />
     <span :class="'status__label'">
       <slot />
     </span>

@@ -70,6 +70,11 @@ export interface RailCoverageEntry {
  * have NO rail coverage — that is a neutral fact, not a failure.
  */
 export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
+  { component: "Status", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
+    nonDefault: {
+      props: ["status"],
+      configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
+    } },
   { component: "Progress", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
     nonDefault: {
       props: ["value"],

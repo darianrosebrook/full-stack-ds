@@ -34,6 +34,7 @@ import {
   nativeTableAttrsFor,
   canonicalTsType,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -2596,6 +2597,10 @@ function renderVueTextContent(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? `{{ ${appendPath(name, expr.path)} }}` : null;
     }
+    case "valueMap": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `{{ ${lowered} }}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2668,6 +2673,10 @@ function renderVueBinding(
     case "iterationLocal": {
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? `:${attr}="${appendPath(name, expr.path)}"` : null;
+    }
+    case "valueMap": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `:${attr}="${lowered}"`;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -2819,6 +2828,12 @@ function renderVueBindingValue(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
     }
+    case "valueMap": {
+      const source = renderVueBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeValueMapExpression(expr, source, singleQuotedJsString);
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2892,6 +2907,8 @@ function renderVueEvent(
       void ctx;
       return null;
     }
+    case "valueMap":
+      return null;
     case "channel": {
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderVueBinding(jsxAttr, expr, ctx);

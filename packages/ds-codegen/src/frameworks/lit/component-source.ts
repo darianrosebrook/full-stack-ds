@@ -38,6 +38,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -2953,6 +2954,12 @@ function renderLitBinding(
 ): string | null {
   const attr = litDomAttrName(rawAttr);
   switch (expr.kind) {
+    case "valueMap": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      if (lowered === null) return null;
+      if (refBinding?.kind === "prop") return `.${attr}=\${${lowered}}`;
+      return `${attr}=\${${lowered}}`;
+    }
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
       // BINDING-EXPRESSION-V2-PATH-01: when a path is present, the
@@ -3219,6 +3226,10 @@ function renderLitContent(
       const name = litIterationLocalName(expr.local, ctx);
       return name ? `\${${appendPath(name, expr.path)}}` : null;
     }
+    case "valueMap": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      return lowered === null ? null : `\${${lowered}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3293,6 +3304,10 @@ function renderLitBindingValue(
     case "iterationLocal": {
       const name = litIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
+    }
+    case "valueMap": {
+      const source = renderLitBindingValue(expr.source, ctx);
+      return source === null ? null : composeValueMapExpression(expr, source);
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -3370,6 +3385,8 @@ function renderLitEvent(
       void ctx;
       return null;
     }
+    case "valueMap":
+      return null;
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

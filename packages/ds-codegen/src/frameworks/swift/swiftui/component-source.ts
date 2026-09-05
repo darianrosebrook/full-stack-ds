@@ -2448,12 +2448,17 @@ function isStaticContent(ir: ComponentIR): boolean {
   if (ir.behavior.normalizedChannels.length > 0) return false;
   if (ir.dom.tag === "button" || ir.dom.tag === "input") return false;
   // Passive root of any tag; wrapper elements (nav>ol, article>div…) may
-  // sit above the single projected children leaf. Component-instance
-  // children still disqualify.
+  // sit above the single projected children leaf. Essential component-instance
+  // children still disqualify. A contract-authored decoration may degrade on
+  // this target without changing the content/chrome realization; the native
+  // compile lane does not claim visual parity.
   let childrenLeaves = 0;
   let hasInstance = false;
   const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if ((node as { componentRef?: string }).componentRef) hasInstance = true;
+    if ((node as { componentRef?: string }).componentRef) {
+      const role = ir.parts.find((part) => part.name === node.part)?.details?.role;
+      if (role !== "decoration") hasInstance = true;
+    }
     const kids = node.children ?? [];
     if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
     kids.forEach(walk);

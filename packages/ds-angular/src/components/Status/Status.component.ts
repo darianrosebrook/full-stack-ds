@@ -1,6 +1,7 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
+import { IconComponent } from "../Icon/Icon.component.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,10 +20,10 @@ export type StatusIntent = "info" | "success" | "warning" | "danger" | "error";
 @Component({
   selector: "fsds-status",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, IconComponent],
   host: { "data-fsds-component": "status" },
   template: `<span [ngClass]="classes()">
-  <span [ngClass]="'status__icon'" aria-hidden="true"></span>
+  <fsds-icon [ngClass]="'status__icon'" size="sm" [name]="(status === 'info' ? 'info' : (status === 'success' ? 'check' : (status === 'warning' ? 'triangle-alert' : (status === 'danger' ? 'triangle-alert' : 'triangle-alert'))))"></fsds-icon>
   <span [ngClass]="'status__label'">
     <ng-content />
   </span>

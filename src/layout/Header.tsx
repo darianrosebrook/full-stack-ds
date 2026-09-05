@@ -120,7 +120,7 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
           ariaLabel="Open command palette (Ctrl+K or Cmd+K)"
           onClick={() => onOpenPalette?.()}
         >
-          <Icon name="Search" size="sm" />
+          <Icon name="search" size="sm" />
         </Button>
         <Button
           variant="ghost"
@@ -129,7 +129,7 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
           ariaLabel="Take a tour of the showcase"
           onClick={() => setTourStep(0)}
         >
-          <Icon name="Home" size="sm" />
+          <Icon name="home" size="sm" />
         </Button>
         <Button
           variant="ghost"
@@ -138,7 +138,7 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
           ariaLabel="About this project"
           onClick={() => setAboutOpen(true)}
         >
-          <Icon name="Info" size="sm" />
+          <Icon name="info" size="sm" />
         </Button>
         <a
           className="icon-btn"
@@ -147,7 +147,7 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
           rel="noreferrer"
           aria-label="Source repository"
         >
-          <Icon name="ExternalLink" size="sm" />
+          <Icon name="external-link" size="sm" />
         </a>
 
         <Popover placement="bottom" closeOnBlur={false} className="header-popover-anchor">

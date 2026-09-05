@@ -35,6 +35,7 @@ import {
   nativeTableAttrsFor,
   canonicalTsType,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -2391,6 +2392,10 @@ function renderSvelteTextChildExpression(
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? `{${appendPath(name, expr.path)}}` : null;
     }
+    case "valueMap": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `{${lowered}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -2441,6 +2446,10 @@ function renderSvelteBindingValue(
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
+    }
+    case "valueMap": {
+      const source = renderSvelteBindingValue(expr.source, ctx);
+      return source === null ? null : composeValueMapExpression(expr, source);
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -2514,6 +2523,10 @@ function renderSvelteBinding(
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? `${attr}={${appendPath(name, expr.path)}}` : null;
+    }
+    case "valueMap": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `${attr}={${lowered}}`;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -2691,6 +2704,8 @@ function renderSvelteEvent(
       void ctx;
       return null;
     }
+    case "valueMap":
+      return null;
     case "channel": {
       // Delegate to the channel-onChange path in renderSvelteBinding by
       // re-deriving the synthetic JSX-attr name. resolveEventValueStrategy
