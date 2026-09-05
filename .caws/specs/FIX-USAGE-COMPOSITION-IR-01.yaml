@@ -82,3 +82,7 @@ evidence:
     status: pass
     evidence_ref: "render-usage glyph tests plus browser runtime inspection: Status check/triangle-alert, Command search, Accordion chevron, Button Spinner visible"
     recorded_at: "2026-09-05T03:23:58.671Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: native Table hierarchy test proves TABLE direct regions and zero Stack descendants; existing Stack modes retained
+    recorded_at: "2026-09-05T03:23:59.378Z"
