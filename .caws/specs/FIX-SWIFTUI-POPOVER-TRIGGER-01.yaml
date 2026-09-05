@@ -2,9 +2,11 @@ id: FIX-SWIFTUI-POPOVER-TRIGGER-01
 title: 'Wire SwiftUI Popover trigger from surface openTriggers'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'SwiftUI Popover now lowers contract-authored click triggers to a native pressable path, with emitter tests and an OS accessibility interaction witness.'
 created_at: '2026-09-05T01:56:39.697Z'
-updated_at: '2026-09-05T02:04:54.302Z'
+updated_at: '2026-09-05T02:12:10.813Z'
 created_by_session: '01a06d90-6485-7c73-b6c8-0b0ec424c0f8'
 blast_radius:
   modules:
