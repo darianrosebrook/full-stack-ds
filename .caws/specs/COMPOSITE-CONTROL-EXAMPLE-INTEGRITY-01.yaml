@@ -2,9 +2,11 @@ id: COMPOSITE-CONTROL-EXAMPLE-INTEGRITY-01
 title: 'Composite controls and usage-example integrity'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Composite control semantics and usage-example integrity are implemented and verified.'
 created_at: '2026-09-05T05:48:37.965Z'
-updated_at: '2026-09-05T06:05:52.687Z'
+updated_at: '2026-09-05T06:10:35.576Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
