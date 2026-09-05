@@ -78,7 +78,8 @@ describe("Dialog — unit", () => {
   it("closes on overlay click", () => {
     const onOpenChangeSpy = vi.fn();
     render(<Dialog data-testid="dialog" open={true} onOpenChange={onOpenChangeSpy}><span>content</span></Dialog>);
-    fireEvent.click(screen.getByTestId("dialog"));
+    const overlay = screen.getByTestId("dialog").querySelector(".dialog__backdrop");
+    fireEvent.click(overlay!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });

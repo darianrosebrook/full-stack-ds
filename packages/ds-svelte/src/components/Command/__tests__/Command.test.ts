@@ -53,7 +53,7 @@ describe("Command — unit", () => {
     render(Command as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
     const root = document.body.querySelector<HTMLElement>(".command");
     expect(root).not.toBeNull();
-    await fireEvent.click(root!);
+    await fireEvent.click(root!.querySelector(".command__overlay")!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });

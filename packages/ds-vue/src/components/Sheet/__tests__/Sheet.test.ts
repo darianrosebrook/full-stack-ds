@@ -80,7 +80,7 @@ describe("Sheet — unit", () => {
     mount(Sheet as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "sheet" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".sheet");
     expect(root).not.toBeNull();
-    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    root?.querySelector<HTMLElement>(".sheet__overlay")?.click();
     await Promise.resolve();
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });

@@ -73,7 +73,8 @@ describe("Sheet — unit", () => {
   it("closes on overlay click", () => {
     const onOpenChangeSpy = vi.fn();
     render(<Sheet data-testid="sheet" open={true} onOpenChange={onOpenChangeSpy}><span>content</span></Sheet>);
-    fireEvent.click(screen.getByTestId("sheet"));
+    const overlay = screen.getByTestId("sheet").querySelector(".sheet__overlay");
+    fireEvent.click(overlay!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });

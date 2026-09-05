@@ -87,7 +87,7 @@ describe("Dialog — unit", () => {
     mount(Dialog as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
-    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    root?.querySelector<HTMLElement>(".dialog__backdrop")?.click();
     await Promise.resolve();
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
