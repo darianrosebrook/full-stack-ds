@@ -110,12 +110,9 @@ evidence:
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
   - criterion_id: A6
-    status: unchecked
-    evidence_ref: "Rerun under the codomain: 3 witnesses held open in codomain-adjudications.json with historical standing and live-remeasured currentFailure, nothing applied, 4th re-held. OPEN: the two bounded migration reevaluations (invariant amended e6d744e7 to permit them; a non-promoting result is legitimate)."
-    recorded_at: "2026-09-05T06:54:58.611Z"
-    test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > every suspension points from a recorded historical standing to a measured current failure"
-    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
-    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+    status: pass
+    evidence_ref: "Identity rerun on tip 0d0fe106 (tmp/a6-reevaluate.mts, read-only; fixture digests unchanged before/after): all 3 witnesses listed in codomain-adjudications.json rerun under the quotient codomain still fail with exactly the recorded NO_COLLISION, every isolation obligation discharged (no ERASURE_ISOLATION_UNEVALUATED, so the first-refutation proof ceiling is not reached here). Standing per declared coordinate, independently: evidence suspended x3, assertion.aggregate.op holding via primitive; recorded disposition unchanged; reinterpretHistorically drift none. Bounded reevaluation 1 (temporality, both holders declared): whole-leaf witness over the interval/instant pair HOLDS with both isolations discharged -- observation, not applied. Bounded reevaluation 2 (assertion closure): NO assertion carrier is ledgered (repair text corrected c353e3a6); one is derivable (residue aggregate:[op], minRawEdit 2, footprint 7); carrier+normalization collides while either alone does not; obligation 8 FAILS (all 7 footprint coordinates primitive); obligation 7 no control; obligation 3 unevaluable BY THE CHECKER (no 'assertion' locator, forgetPath throws) -- checker limit, not a verdict; nothing promoted. Decisive: necessity.test.ts 'every suspension points from a recorded historical standing to a measured current failure'; full record evidence-map.json criteria.A6. Acceptance text ('four required-leaf witnesses') is governed by invariant e093391b; no CLI amends then: text."
+    recorded_at: "2026-09-05T20:38:59.949Z"
   - criterion_id: A7
     status: unchecked
     evidence_ref: "witnessAuthorityDigest move refuses freeze certification; adjudication bound to exact transition (A->B ok; A->C, D->B, class-only refused); fresh support beats stale suspension; freshness owned at 4 inline call sites. OPEN: ERASURE-authority freshness (compiler/executor/serializer/ordering/locator change -> consumer refusal) not exercised."
