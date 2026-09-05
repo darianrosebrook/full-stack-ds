@@ -808,13 +808,18 @@ describe("the ledger carries the authority its claims were verified under", () =
     expect(Object.keys(liveAuthority()).sort()).toEqual(["coordinateBasisDigest", "erasureAuthorityDigest", "quotientSchemaVersion", "ruleDigest", "witnessAuthorityDigest"]);
   });
 
-  it("a ledger authored under a different erasure authority is refused, not re-read -- though every derivation still agrees", () => {
+  it("a ledger authored under a different authority is refused, not re-read -- for EACH identity, though every derivation still agrees", () => {
     // Before this, such a ledger passed: every claim was re-derived and agreed,
     // and nothing recorded that the agreement was under a different executor.
-    const r = checkClosures(copyWith(drifted));
-    expect(r.ok).toBe(false);
-    // The ONLY problem. Its derivations DO agree; what it lacks is the stamp.
-    expect(r.problems).toEqual([expect.stringMatching(/^closure ledger authored under a different erasureAuthorityDigest: 0{64} -> [0-9a-f]{64}; /)]);
+    // Every identity, not only the erasure one: a compared set missing a key is
+    // a key under which a ledger can move unrefused.
+    for (const k of ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"]) {
+      const moved = k === "quotientSchemaVersion" ? 999 : "0".repeat(64);
+      const r = checkClosures(copyWith((l) => { (l.authority as Record<string, unknown>)[k] = moved; }));
+      expect(r.ok, k).toBe(false);
+      // The ONLY problem. Its derivations DO agree; what it lacks is the stamp.
+      expect(r.problems, k).toEqual([expect.stringMatching(new RegExp(`^closure ledger authored under a different ${k}: ${moved} -> [0-9a-f]{64}|^closure ledger authored under a different ${k}: ${moved} -> 1;`))]);
+    }
   });
 
   it("a ledger with no authority block is refused: its claims were verified under an authority nobody can name", () => {
