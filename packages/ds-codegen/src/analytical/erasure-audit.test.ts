@@ -13,7 +13,7 @@ import { describe, expect, it } from "vitest";
 import { loadDerivation, loadLocators, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { claimedFootprints, computeReport, loadReport, measure, specimens } from "./erasure-audit.js";
-import { executePlan, planAt } from "./erasure-plan.js";
+import { executePlan, planAt, wouldChange } from "./erasure-plan.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
 
@@ -353,6 +353,37 @@ describe("the terminal invariant is measured over the population the report name
     // being silently equal.
     expect(live.scopes.sourceLanguageDeparture.specimens).toBe(live.specimens.corpus + live.specimens.stimuli);
     expect(live.scopes.sourceLanguageDeparture.populationDigest).not.toBe(live.scopes.quotientLanguageInvalid.populationDigest);
+  });
+
+  it("the skipped pairs are covered too: a no-op leaves a legal image", () => {
+    // The measurement skips execution where `wouldChange(f, p)` is false, while
+    // the scope digest names every specimen. That is only sound for A1 if a
+    // skipped pair really is a no-op AND the unvalidated "output" -- the input
+    // itself -- is a legal quotient image. Neither was linked to the coverage
+    // claim, so the two halves are established here over the SAME population
+    // the scope names, not over the corpus alone.
+    const s = specimens();
+    const quotient = loadQuotientValidator(CONTRACTS_DIR);
+    const plans = loadPlans();
+
+    // Half one: every specimen is itself a legal image, so a no-op's result is
+    // legal without being executed.
+    const illegalInputs = s.fixtures.filter((f) => quotient(f).length > 0).map((f) => f.id);
+    expect(illegalInputs.slice(0, 5), `${illegalInputs.length} specimen(s) are not legal quotient images`).toEqual([]);
+
+    // Half two: the skip predicate agrees with the operation over this
+    // population, so "predicted unchanged" and "validated output" coincide.
+    let skipped = 0;
+    const disagree: string[] = [];
+    for (const f of s.fixtures) {
+      for (const [id, p] of plans) {
+        if (wouldChange(f, p)) continue;
+        skipped++;
+        if (JSON.stringify(executePlan(f, p)) !== JSON.stringify(f)) disagree.push(`${f.id}/${id}`);
+      }
+    }
+    expect(disagree.slice(0, 5), `${disagree.length} skipped pair(s) were not no-ops`).toEqual([]);
+    expect(skipped, "no pair was skipped, so this test is checking nothing").toBeGreaterThan(0);
   });
 
   it("a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path", () => {

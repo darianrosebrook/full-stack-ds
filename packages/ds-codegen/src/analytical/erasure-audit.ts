@@ -640,9 +640,31 @@ if (invokedDirectly) {
     fs.writeFileSync(FOOTPRINTS_FILE, `${JSON.stringify(computeReport(), null, 2)}\n`);
     console.log(`footprints: recorded ${FOOTPRINTS_FILE}`);
   } else if (process.argv.includes("--check")) {
+    // TWO OBLIGATIONS, kept apart and both enforced by the gate.
+    //
+    // `checkReport` is a CONSISTENCY checker: it asks whether the record still
+    // faithfully describes the tree, and a report can faithfully describe a
+    // defect. It never consults `quotientLanguageInvalid`, so on its own it
+    // returns ok for a record that accurately reports an illegal image.
+    //
+    // The terminal invariant is a different obligation and belongs to the
+    // acceptance path. The gate must satisfy both, or `footprints --check: OK`
+    // gets read as evidence that no illegal image exists when it only says the
+    // report has not drifted.
     const r = checkReport();
-    console.log(r.ok ? "footprints --check: OK" : `footprints --check: ${r.problems.length} problem(s):\n  ${r.problems.join("\n  ")}`);
-    if (!r.ok) process.exit(1);
+    const live = computeReport();
+    const illegal = live.quotientLanguageInvalid;
+    const problems = [
+      ...r.problems.map((p) => `consistency: ${p}`),
+      ...illegal.map((i) => `terminal invariant: ${i.coordinate} produces an illegal quotient image on ${i.specimens} specimen(s), first ${i.specimen}: ${i.error}`),
+    ];
+    const ok = problems.length === 0;
+    console.log(
+      ok
+        ? `footprints --check: OK — report consistent, and 0 illegal quotient images over ${live.scopes.quotientLanguageInvalid.specimens} specimen(s)`
+        : `footprints --check: ${problems.length} problem(s):\n  ${problems.join("\n  ")}`,
+    );
+    if (!ok) process.exit(1);
   } else {
     const report = computeReport();
     const wide = Object.entries(report.footprints).filter(([, f]) => f.length > 1);
