@@ -42,7 +42,7 @@
       },
       "reason": "branch-residue",
       "detail": "The pair is FX_TEMP_RATIO_COMPARISON against FX_N_TEMP_MEAN. `assertion.aggregate.op` is branch-qualified — the slot exists only where kind is `aggregate` — so after both erasures the aggregate side carries `op: <hole>` and the ratio-comparison side carries no `op` slot at all. The PRESENCE of the hole betrays the branch that the `kind` erasure was supposed to forget. Deletion hid this by removing the slot; it did not forget it.",
-      "repair": "This is exactly the residue the closure form exists to normalize, and a `forget-branch-field` carrier over the aggregate branch's `op` is the named mechanism. The carrier is one of the 22 already ledgered as provisional; promoting it is a closure adjudication, not a witness repair."
+      "repair": "This is exactly the residue the closure form exists to normalize: a `forget-branch-field` carrier over the aggregate branch's `op`, carrier `assertion.kind:aggregate~ratio-comparison`, is the named mechanism. No such carrier is ledgered in closures-stage2.json -- its 22 carriers are relation.derivedBy.kind and field.additivity.kind pairs. One is mechanically derivable (residue aggregate:[op], unilateral, minRawEdit 2, footprint of 7 coordinates), and measured directly on this pair the carrier plus that normalization collides the stimuli while the carrier alone leaves `assertions.0.op` and the normalization alone leaves `assertions.0.kind`. Promoting it is a closure adjudication, not a witness repair, and two facts stand in the way: all 7 footprint coordinates hold primitive standing, so obligation 8 fails and the carrier cannot be proven primitive through this closure (composite constructor vs derived discriminator must be re-decided); and the checker cannot evaluate obligation 3 for an assertion holder -- forgetPath(\"assertion\") throws because no locator is keyed by that holder path. The throw is a checker limit, not a verdict on the closure."
     },
     {
       "witness": "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
@@ -65,7 +65,7 @@
       },
       "reason": "branch-residue",
       "detail": "The same pair and the same residue as above, reached through the member-class spelling instead of the whole-leaf one: both sides carry `kind` as the class {aggregate, ratio-comparison}, and the aggregate side still carries `op: <hole>` that the other side has no slot for. That the two spellings fail identically is the point — the residue is a property of the branch structure, not of which erasure names it.",
-      "repair": "The same closure carrier settles both entries. If it is promoted, this entry and the one above close together; if it is refused, both coordinates lose their present evidence together."
+      "repair": "The same derivable carrier settles both entries; the entry above records the ledger fact (no assertion carrier is ledgered), the direct collision measurement and the two blocks on promotion. If it is promoted, this entry and the one above close together; if it is refused, both coordinates lose their present evidence together."
     }
   ]
 }
