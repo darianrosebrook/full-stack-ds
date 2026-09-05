@@ -1,13 +1,13 @@
 {
   "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. No result here is claimed for an integration candidate: none exists yet.",
   "spec": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
-  "writtenAt": "2026-09-05T07:00:52+00:00",
+  "writtenAt": "2026-09-05T10:57:00+00:00",
   "pins": {
-    "testedWorktreeTip": "e13eb47f95bc1b549e1e5af75af7c07944b65436",
-    "selectedMainCommitAtWrite": "e57e365c2fe286ac8df5b9dfe9f88cbabc8e7cc6",
+    "testedWorktreeTip": "d8e41bb1877926befd0c854fd78b0f10f9e7a86d",
+    "selectedMainCommitAtWrite": "76b7310cc7e7fa95ee6474df7e0250d6a9744ff2",
     "mergeBase": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
-    "branchCommits": 28,
-    "mainAheadAtWrite": 309,
+    "branchCommits": 30,
+    "mainAheadAtWrite": 310,
     "mainChangesUnderAnalyticalClosure": 0,
     "mainChangesToSharedFiles": [
       "package.json"
@@ -51,8 +51,8 @@
   "observedOnPinnedTip": {
     "analyticalSuite": {
       "command": "npx vitest run packages/ds-codegen/src/analytical",
-      "result": "682 passed (682)",
-      "consecutiveRuns": 6,
+      "result": "686 passed (686)",
+      "consecutiveRuns": 3,
       "note": "Six separately printed summaries. An earlier claim of three green runs (67b1008f) was false and corrected in 6ef5e993."
     },
     "freezeCheck": {
@@ -219,6 +219,36 @@
           ],
           "reproducedOn": "c8f2c19281392b1a1920f1cc9c7274467211d859",
           "note": "Supported version taken from QUOTIENT_SCHEMA_VERSION in quotient-image.ts, the validator's own; not a second registry."
+        },
+        {
+          "claim": "ONE-SIDED scope-digest admission: a PRESENT recorded scope whose populationDigest is malformed (null / 0 / absent), current report valid and unchanged, was reported by admission and then dereferenced by the cross-record comparison -- gateProblems THREW a TypeError instead of returning a refusal (three variants). The symmetric rows never reached that line: equal malformed digests compare equal.",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "admits each population description before comparing it, on either side"
+            }
+          ],
+          "repair": "the comparison consumes what admission RETURNED (coherent() yields {problems, scopes}); a scope that failed admission is absent from the comparison by construction, not by a second predicate. The mirror direction (recorded valid, current digest malformed) is pinned too, and each row asserts the other side is not blamed.",
+          "mutants": {
+            "assertionKills": [
+              "drop the cross-record comparison",
+              "recorded side reported as CURRENT"
+            ],
+            "exceptionKills": [
+              "compare the carried scopes (revert)",
+              "admitted recorded vs carried current",
+              "admission verdict discarded"
+            ],
+            "exceptionKillNote": "die by TypeError out of the gate -- the pinned defect itself; booked apart from assertion kills as the weaker kill class"
+          },
+          "counterexamples": [
+            "recorded quotient scope digest = null; current valid -> THREW",
+            "recorded source scope digest = 0; current valid -> THREW",
+            "recorded quotient scope = {}; current valid -> THREW"
+          ],
+          "reproducedOn": "85f1236c815cb59f2fb7272693ad0d2f1483c2a2",
+          "foundBy": "/code-review Step 1b read of the cross-record loop, then tmp/probe-onesided-throw.mts -- not by the suite",
+          "note": "Repaired on this tip (d8e41bb1)."
         }
       ]
     },
@@ -369,6 +399,38 @@
               "test": "a previously supported coordinate stops being reported as supported when acceptance tightens"
             }
           ]
+        },
+        {
+          "claim": "supersession under a NEW erasure authority: authority:erasureAuthorityDigest is the supersession's SUBJECT (recorded as the block's erasureAuthorityDigest, not counted as a class); a moved witness/coordinate/rule authority is refused by name rather than folded in; superseding with an unmoved erasure authority is refused; a record with no authority block transitions from '(absent)', not 'undefined'",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/freeze.test.ts",
+              "test": "a moved erasure authority is the supersession's SUBJECT, not an unexplained class"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/freeze.test.ts",
+              "test": "refuses to supersede when the erasure authority has not moved"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/freeze.test.ts",
+              "test": "refuses to fold a moved WITNESS authority into an erasure supersession"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/freeze.test.ts",
+              "test": "names a record with no authority block as coming from nowhere, not from 'undefined'"
+            }
+          ],
+          "mutantsKilled": [
+            "subject counted as a class",
+            "drop the not-moved precondition",
+            "fold other authorities in silently",
+            "revert (absent) to String(undefined)",
+            "other authority keys fall to plan lookup"
+          ],
+          "defect": "since a moved authority became a divergence, supersessionOf classified the subject by plan lookup and refused it as '(no plan)': `freeze --record --supersede` was unreachable in its own use case. The committed supersedes block predates that repair and is unaffected.",
+          "reproducedOn": "85f1236c815cb59f2fb7272693ad0d2f1483c2a2",
+          "foundBy": "/code-review Step 1b, then tmp/probe-supersede-authority.mts",
+          "nonClaim": "Exercises the consumer against an EDITED recorded erasureAuthorityDigest. It does not change an executor input and observe the LIVE digest move; the A7 open item stands."
         }
       ],
       "open": [
@@ -494,6 +556,15 @@
         "assertionKills": 6,
         "survivors": 0,
         "executionFailures": 0
+      },
+      {
+        "subject": "one-sided scope admission (erasure-audit.ts) + supersession subject (freeze.ts)",
+        "distinct": 10,
+        "assertionKills": 7,
+        "exceptionKills": 3,
+        "survivors": 0,
+        "executionFailures": 0,
+        "note": "Kill classes verified by re-running M1-M4 with the error class captured (tmp/kill-class.sh): M1 revert, M3 asymmetric, M4 verdict-discarded die by TypeError out of the gate (the pinned defect itself); M2 by the movement assertion; M5 by five side-attribution assertions. M6-M10 kill through toThrow/not.toThrow/toEqual assertions, whose failure is an AssertionError."
       }
     ]
   },
