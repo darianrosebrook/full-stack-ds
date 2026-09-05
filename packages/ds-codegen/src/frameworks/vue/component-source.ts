@@ -33,6 +33,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   canonicalTsType,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
   composeValueMapExpression,
   collectContentTransforms,
@@ -2604,6 +2605,10 @@ function renderVueTextContent(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? `{{ ${appendPath(name, expr.path)} }}` : null;
     }
+    case "projection": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `{{ ${lowered} }}`;
+    }
     case "valueMap": {
       const lowered = renderVueBindingValue(expr, ctx);
       return lowered === null ? null : `{{ ${lowered} }}`;
@@ -2680,6 +2685,10 @@ function renderVueBinding(
     case "iterationLocal": {
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? `:${attr}="${appendPath(name, expr.path)}"` : null;
+    }
+    case "projection": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `:${attr}="${lowered}"`;
     }
     case "valueMap": {
       const lowered = renderVueBindingValue(expr, ctx);
@@ -2829,6 +2838,12 @@ function renderVueBindingValue(
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
     }
+    case "projection": {
+      const source = renderVueBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
     case "valueMap": {
       const source = renderVueBindingValue(expr.source, ctx);
       return source === null
@@ -2908,6 +2923,8 @@ function renderVueEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
     case "valueMap":
       return null;
     case "channel": {

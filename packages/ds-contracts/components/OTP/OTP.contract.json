@@ -75,16 +75,20 @@
                 "disabled": "prop:disabled",
                 "aria-label": "prop:fieldLabel",
                 "aria-readonly": "prop:readOnly",
-                "data-otp-index": "prop:index"
-              },
-              "events": {
-                "input": "channel:value.onChange:setCharAt(iter:index)"
+                "data-otp-index": "iter:index"
               }
             }
           ]
         }
       ]
     }
+  },
+  "compositeControl": {
+    "part": "field",
+    "channel": "value",
+    "interactionModel": "segmented-text",
+    "commit": "input",
+    "update": "channel:value.onChange:setCharAt(iter:index)"
   },
   "props": {
     "designed": {

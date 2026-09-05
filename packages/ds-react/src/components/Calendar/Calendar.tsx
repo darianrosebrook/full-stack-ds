@@ -18,7 +18,8 @@ export type CalendarMode = "single" | "range";
 // @custom:end
 
 // @generated:start props
-export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "days" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "shouldCloseOnSelect" | "value"> {
+export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "caption" | "children" | "className" | "data-testid" | "days" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "shouldCloseOnSelect" | "value"> {
+  caption?: string;
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -64,6 +65,7 @@ export function Calendar({
   disabled,
   className,
   "data-testid": testId,
+  caption = "Calendar",
   minDate,
   maxDate,
   locale = "en-US",
@@ -91,7 +93,9 @@ export function Calendar({
   <div className={`${classNames}`} role="application" data-testid={testId} data-fsds-component="calendar" {...rest}>
     <div className="calendar__header">
       <button className="calendar__nav" aria-label="Previous month" />
-      <span className="calendar__caption" />
+      <span className="calendar__caption">
+        {caption}
+      </span>
       <button className="calendar__nav" aria-label="Next month" />
     </div>
     <table className="calendar__grid" role="grid" aria-label="Calendar">
@@ -99,7 +103,9 @@ export function Calendar({
         <tr>
           {(days ?? []).map((item, index) => (
             <td className="calendar__cell" role="gridcell" data-calendar-index={index} key={index}>
-              <button className="calendar__day" onClick={() => setValue(item)} />
+              <button className="calendar__day" onClick={() => setValue(item)}>
+                {item.getDate()}
+              </button>
             </td>
           ))}
         </tr>

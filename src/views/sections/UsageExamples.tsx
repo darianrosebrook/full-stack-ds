@@ -180,7 +180,11 @@ function ExampleFrame({
   );
 
   return (
-    <div className="panel">
+    <div
+      className="panel"
+      data-usage-component={componentName}
+      data-usage-example={example.name}
+    >
       <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
         <span>
           {componentName} · <strong>{example.name}</strong>
@@ -192,6 +196,7 @@ function ExampleFrame({
         )}
       </Stack>
       <Stack
+        data-usage-preview={`${componentName}:${example.name}`}
         className={[
           "preview-frame stack-gap-00",
           portalKind && "preview-frame--portal",

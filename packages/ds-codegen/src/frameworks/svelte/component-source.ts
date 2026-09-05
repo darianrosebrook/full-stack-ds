@@ -34,6 +34,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   canonicalTsType,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
   composeValueMapExpression,
   collectContentTransforms,
@@ -2410,6 +2411,10 @@ function renderSvelteTextChildExpression(
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? `{${appendPath(name, expr.path)}}` : null;
     }
+    case "projection": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `{${lowered}}`;
+    }
     case "valueMap": {
       const lowered = renderSvelteBindingValue(expr, ctx);
       return lowered === null ? null : `{${lowered}}`;
@@ -2464,6 +2469,12 @@ function renderSvelteBindingValue(
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
+    }
+    case "projection": {
+      const source = renderSvelteBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderSvelteBindingValue(expr.source, ctx);
@@ -2541,6 +2552,10 @@ function renderSvelteBinding(
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
       return name ? `${attr}={${appendPath(name, expr.path)}}` : null;
+    }
+    case "projection": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `${attr}={${lowered}}`;
     }
     case "valueMap": {
       const lowered = renderSvelteBindingValue(expr, ctx);
@@ -2722,6 +2737,8 @@ function renderSvelteEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
     case "valueMap":
       return null;
     case "channel": {

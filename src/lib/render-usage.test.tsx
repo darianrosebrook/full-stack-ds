@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { bundle } from "../types/bundle";
 import { UsageExamples } from "../views/sections/UsageExamples";
@@ -29,10 +29,20 @@ describe("usage sidecar render projection", () => {
   });
 
   it("renders explicit Status labels from the Status sidecar", () => {
-    render(<UsageExamples component={component("Status")} />);
+    const { container } = render(<UsageExamples component={component("Status")} />);
 
     expect(screen.getByText("Success")).toBeTruthy();
     expect(screen.getByText("Warning")).toBeTruthy();
+    expect(container.querySelector('[data-fsds-icon="check"] path')).toBeTruthy();
+    expect(container.querySelector('[data-fsds-icon="triangle-alert"] path')).toBeTruthy();
+  });
+
+  it("materializes JSON dates and renders Calendar captions and day labels", () => {
+    render(<UsageExamples component={component("Calendar")} />);
+
+    expect(screen.getByText("September 2026")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "1" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "14" })).toBeTruthy();
   });
 
   it("renders Command item content inside its isolated portal canvas", async () => {
@@ -78,10 +88,36 @@ describe("usage sidecar render projection", () => {
   });
 
   it.each(bundle.components.map((entry) => entry.name))(
-    "renders every curated %s example without a delivery fallback",
-    (name) => {
-      render(<UsageExamples component={component(name)} />);
+    "renders every curated %s example with content and portal confinement",
+    async (name) => {
+      const entry = component(name);
+      const { container } = render(<UsageExamples component={entry} />);
       expect(document.body.textContent).not.toContain("[usage fallback]");
+
+      const frames = container.querySelectorAll<HTMLElement>("[data-usage-preview]");
+      expect(frames).toHaveLength(entry.usage.length);
+      for (const frame of frames) {
+        const hasText = Boolean(frame.textContent?.trim());
+        const hasStructuralWitness = Boolean(frame.querySelector(
+          "svg path, img[src], input, textarea, select, button, progress, [role='separator'], [role='progressbar'], [role='status'], [aria-busy='true'], [aria-hidden='true']",
+        ));
+        expect(
+          hasText || hasStructuralWitness,
+          `${frame.dataset.usagePreview} rendered no content witness`,
+        ).toBe(true);
+      }
+
+      const slug = name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+      await waitFor(() => {
+        const roots = document.body.querySelectorAll(`.${slug}`);
+        expect(roots.length).toBeGreaterThanOrEqual(entry.usage.length);
+        for (const root of roots) {
+          expect(
+            root.closest("[data-usage-preview]"),
+            `${name} escaped its example preview boundary`,
+          ).toBeTruthy();
+        }
+      });
     },
   );
 

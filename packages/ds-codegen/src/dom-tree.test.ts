@@ -3,6 +3,18 @@ import type { ComponentContract, ContractDomNode } from "./contract.js";
 import { buildComponentIR, parseBindingExpression } from "./ir.js";
 
 describe("parseBindingExpression", () => {
+  it("parses the closed Date day-of-month projection", () => {
+    expect(parseBindingExpression("project:dateDayOfMonth(iter:item)")).toEqual({
+      kind: "projection",
+      op: "dateDayOfMonth",
+      source: { kind: "iterationLocal", local: "item" },
+    });
+    expect(parseBindingExpression("project:eval(iter:item)")).toEqual({
+      kind: "literal",
+      value: "project:eval(iter:item)",
+    });
+  });
+
   it("parses prop: bindings", () => {
     expect(parseBindingExpression("prop:disabled")).toEqual({
       kind: "prop",

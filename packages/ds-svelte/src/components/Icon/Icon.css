@@ -18,7 +18,7 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-icon-color-foreground-default, #141414);
+  color: currentColor;
 }
 
 .icon--sm {

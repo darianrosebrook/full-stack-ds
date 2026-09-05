@@ -801,6 +801,20 @@ export interface ContractFormControl {
 }
 
 /**
+ * Repeated-item control capability. Unlike `formControl`, the rendered part
+ * is a template instantiated by an enclosing iteration and the update needs
+ * an item/index payload from that iteration.
+ */
+export interface ContractCompositeControl {
+  part: string;
+  channel: string;
+  interactionModel: 'collection-selection' | 'segmented-text';
+  commit: 'input' | 'activation';
+  /** Closed BindingExpression grammar; arbitrary executable code is rejected. */
+  update: string;
+}
+
+/**
  * Geometry / default-affordance axis (MORPHOLOGY-GEOMETRY-PROFILE-01). Closed
  * enum mirroring `component.contract.schema.json#/properties/morphology`. When
  * present, selects a StyleProfile (box-model.ts#STYLE_PROFILES) layered BETWEEN
@@ -871,6 +885,7 @@ export interface ComponentContract {
   };
   form?: ContractForm;
   formControl?: ContractFormControl;
+  compositeControl?: ContractCompositeControl;
   motion?: ContractMotion;
   focus?: ContractFocus;
   portal?: ContractPortal;

@@ -329,6 +329,12 @@ export type BindingExpression =
   | { kind: "literal"; value: string }
   | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] }
   | {
+      /** Closed, value-shaped projection over a binding source. */
+      kind: "projection";
+      op: "dateDayOfMonth";
+      source: BindingExpression;
+    }
+  | {
       /** Contract-authored literal projection, generic across components. */
       kind: "valueMap";
       source: BindingExpression;
@@ -409,6 +415,17 @@ export function composeValueMapExpression(
       `${renderLiteral(targetValue)} : ${otherwise})`,
     terminal,
   );
+}
+
+/** Lower the closed projection vocabulary after a backend renders its source. */
+export function composeBindingProjectionExpression(
+  op: Extract<BindingExpression, { kind: "projection" }>['op'],
+  sourceExpression: string,
+): string {
+  switch (op) {
+    case "dateDayOfMonth":
+      return `${sourceExpression}.getDate()`;
+  }
 }
 
 /**
@@ -787,6 +804,16 @@ export interface FormControlIR {
   commit: "input" | "change" | "activation";
   /** Web DOM event derived from commit semantics and injected on `part`. */
   event: "input" | "change" | "click";
+}
+
+export interface CompositeControlIR {
+  /** Repeated anatomy part instantiated by an enclosing iteration. */
+  part: PartIR;
+  channel: NormalizedChannelIR;
+  interactionModel: "collection-selection" | "segmented-text";
+  commit: "input" | "activation";
+  event: "input" | "click";
+  update: Extract<BindingExpression, { kind: "channelCall" | "channelUpdate" }>;
 }
 
 /**
@@ -1643,6 +1670,9 @@ export interface ComponentIR {
   /** Interactive control capability, independent of native form submission. */
   formControl: FormControlIR | undefined;
 
+  /** Repeated-item interaction capability with iteration-aware updates. */
+  compositeControl: CompositeControlIR | undefined;
+
   /**
    * Target-neutral text-overflow intent — present only when
    * `contract.textOverflow` is set. Additive: existing DOM cssVariableBindings
@@ -1854,6 +1884,12 @@ export function buildComponentIR(
     behavior.normalizedChannels,
     dom,
   );
+  const compositeControl = buildCompositeControlIR(
+    contract,
+    parts,
+    behavior.normalizedChannels,
+    dom,
+  );
   validateDismissalTargetParts(contract, dom);
   const rootRole =
     effectiveRole && !domTreeOwnsRole(dom, effectiveRole)
@@ -1978,6 +2014,7 @@ export function buildComponentIR(
     behavior,
     surface,
     formControl,
+    compositeControl,
     textOverflow,
     dom,
     fieldAssociation,
@@ -2721,6 +2758,29 @@ function validateBindingAgainstScope(
    */
   channelValueTypes: Map<string, string> = new Map(),
 ): void {
+  if (binding.kind === "projection") {
+    validateBindingAgainstScope(
+      binding.source,
+      `${siteLabel} projection source`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+      false,
+    );
+    if (
+      binding.op === "dateDayOfMonth" &&
+      binding.source.kind === "iterationLocal" &&
+      binding.source.local === "item" &&
+      enclosingIteration?.itemType !== "Date"
+    ) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses project:dateDayOfMonth(iter:item), but the enclosing iteration itemType is '${enclosingIteration?.itemType ?? "(unspecified)"}', not 'Date'.`,
+      );
+    }
+    return;
+  }
   if (binding.kind === "valueMap") {
     validateBindingAgainstScope(
       binding.source,
@@ -3817,6 +3877,24 @@ export function parseBindingExpression(expr: string): BindingExpression {
     if (parsed) return parsed;
   }
 
+  const projectionMatch = expr.match(
+    /^project:(dateDayOfMonth)\((.*)\)$/,
+  );
+  if (projectionMatch) {
+    const source = parseBindingExpression(projectionMatch[2]);
+    if (
+      source.kind === "prop" ||
+      source.kind === "channel" ||
+      source.kind === "iterationLocal"
+    ) {
+      return {
+        kind: "projection",
+        op: projectionMatch[1] as "dateDayOfMonth",
+        source,
+      };
+    }
+  }
+
   // Path: zero or more `.segment` tails. Anchored to consume the rest of
   // the string after the root so an unexpected suffix (operators, brackets,
   // optional chaining) falls through to `literal` instead of being
@@ -4224,6 +4302,11 @@ export function promoteIterationLocals(
   binding: BindingExpression,
   iteration: { indexVar: string; itemVar?: string },
 ): BindingExpression {
+  if (binding.kind === "projection") {
+    const source = promoteIterationLocals(binding.source, iteration);
+    if (source === binding.source) return binding;
+    return { ...binding, source };
+  }
   if (binding.kind === "valueMap") {
     const source = promoteIterationLocals(binding.source, iteration);
     if (source === binding.source) return binding;
@@ -4555,6 +4638,116 @@ export function buildFormControlIR(
     valueModel: control.valueModel,
     commit: control.commit,
     event,
+  };
+}
+
+/**
+ * Lower a repeated-item control and inject its iteration-aware update onto
+ * the declared DOM part. The update stays inside the closed binding grammar;
+ * contracts select semantic operations, never executable emitter snippets.
+ */
+export function buildCompositeControlIR(
+  contract: ComponentContract,
+  parts: PartIR[],
+  channels: NormalizedChannelIR[],
+  dom: DomNodeIR | undefined,
+): CompositeControlIR | undefined {
+  const control = contract.compositeControl;
+  if (!control) return undefined;
+
+  const part = parts.find((candidate) => candidate.name === control.part);
+  if (!part) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" is not declared in anatomy.parts.`,
+    );
+  }
+  if (part.details?.interactive !== true || part.details?.multiple !== true) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" must declare details.interactive === true and details.multiple === true.`,
+    );
+  }
+
+  const channel = channels.find((candidate) => candidate.name === control.channel);
+  if (!channel) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.channel "${control.channel}" is not a declared channel.`,
+    );
+  }
+  if (control.interactionModel === "segmented-text" && channel.valueType !== "string") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl interactionModel "segmented-text" requires a string channel (got "${channel.valueType ?? "undefined"}").`,
+    );
+  }
+  if (control.interactionModel === "segmented-text" && control.commit !== "input") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl interactionModel "segmented-text" requires commit "input".`,
+    );
+  }
+  if (control.interactionModel === "collection-selection" && control.commit !== "activation") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl interactionModel "collection-selection" requires commit "activation".`,
+    );
+  }
+  if (!dom) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl requires anatomy.dom so part "${control.part}" has a rendered target.`,
+    );
+  }
+
+  const targets: Array<{ node: DomNodeIR; repeated: boolean }> = [];
+  const visit = (node: DomNodeIR, insideIteration: boolean): void => {
+    const repeated = insideIteration || node.iteration !== undefined;
+    if (node.part === control.part) targets.push({ node, repeated });
+    for (const child of node.children) visit(child, repeated);
+  };
+  visit(dom, false);
+  if (targets.length !== 1) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" must occur exactly once as a repeated DOM template (got ${targets.length}).`,
+    );
+  }
+  const target = targets[0];
+  if (!target.repeated) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.part "${control.part}" must be inside an anatomy.dom iteration.`,
+    );
+  }
+
+  const update = parseBindingExpression(control.update);
+  if (update.kind !== "channelCall" && update.kind !== "channelUpdate") {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.update must be a closed channelCall or channelUpdate expression.`,
+    );
+  }
+  if (update.channel !== control.channel) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl.update targets channel "${update.channel}" instead of declared channel "${control.channel}".`,
+    );
+  }
+  if (
+    control.interactionModel === "segmented-text" &&
+    (update.kind !== "channelUpdate" || update.op !== "setCharAt")
+  ) {
+    throw new Error(
+      `Contract "${contract.name}": segmented-text compositeControl.update must use the setCharAt operation.`,
+    );
+  }
+
+  const event = control.commit === "input" ? "input" : "click";
+  if (Object.keys(target.node.events).length > 0) {
+    throw new Error(
+      `Contract "${contract.name}": compositeControl owns the ${control.channel} commit; remove authored anatomy.dom events from part "${control.part}".`,
+    );
+  }
+  target.node.events[event] = update;
+
+  return {
+    part,
+    channel,
+    interactionModel: control.interactionModel,
+    commit: control.commit,
+    event,
+    update,
   };
 }
 

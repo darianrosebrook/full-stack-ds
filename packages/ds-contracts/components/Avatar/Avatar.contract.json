@@ -53,6 +53,12 @@
             "src": "prop:src",
             "alt": "literal:"
           }
+        },
+        {
+          "tag": "span",
+          "part": "initials",
+          "if": "initials",
+          "content": "prop:initials"
         }
       ]
     }
@@ -70,6 +76,11 @@
           "propType": { "kind": "string" },
           "description": "User/entity name. Used for initials fallback and as the accessible label.",
           "required": true
+        },
+        {
+          "name": "initials",
+          "propType": { "kind": "string" },
+          "description": "Visible initials fallback rendered when supplied by the consumer."
         },
         {
           "name": "priority",
@@ -138,7 +149,7 @@
   "a2ui": {
     "category": "display",
     "usageHints": [
-      "Provide src and alt for image avatars; omit src to render initials from the name prop",
+      "Provide src for image avatars; omit src and provide initials for the visible fallback",
       "Use size to scale the avatar to fit its context (xs through xl)",
       "Always set alt text or a name prop so screen readers have a meaningful label"
     ],

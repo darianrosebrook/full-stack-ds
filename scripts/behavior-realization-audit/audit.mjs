@@ -17,7 +17,8 @@
  *
  * -- Obligation classes (each derived from a contract FACT, falsifiable) ------
  *
- *   EVENT WIRE   — every anatomy.dom node carrying an `events` entry
+ *   EVENT WIRE   — every normalized IR DOM node carrying an `events` entry,
+ *                  including events injected by formControl/compositeControl
  *                  (click/change/input bound to `prop:X` or `channel:X.onChange`,
  *                  including the channelCall form `channel:X.onChange(iter:…)`
  *                  and the named update-operation form
@@ -186,6 +187,23 @@ export function parseEventTarget(expr) {
   return null;
 }
 
+/** Read the same target identity from normalized binding IR. */
+function eventTargetFromBinding(binding) {
+  if (typeof binding === "string") return parseEventTarget(binding);
+  if (!binding || typeof binding !== "object") return null;
+  if (binding.kind === "prop") return { kind: "prop", ref: binding.prop };
+  if (binding.kind === "channel") {
+    return { kind: "channel", ref: binding.channel, channelCall: false };
+  }
+  if (binding.kind === "channelCall") {
+    return { kind: "channel", ref: binding.channel, channelCall: true };
+  }
+  if (binding.kind === "channelUpdate") {
+    return { kind: "channel", ref: binding.channel, channelUpdate: binding.op };
+  }
+  return null;
+}
+
 /**
  * Walk anatomy.dom collecting every node that carries an `events` entry.
  * `isTop` marks the outermost anatomy node — a component whose top node itself
@@ -200,7 +218,7 @@ function collectEventNodes(node, out, isTop = true) {
   if (!node || typeof node !== "object") return;
   if (node.events && typeof node.events === "object") {
     for (const [event, expr] of Object.entries(node.events)) {
-      const target = parseEventTarget(expr);
+      const target = eventTargetFromBinding(expr);
       out.push({
         part: node.part ?? null,
         tag: node.tag ?? null,
@@ -221,15 +239,16 @@ function collectEventNodes(node, out, isTop = true) {
  */
 export function deriveEventObligations(component, corpus) {
   const contract = corpus.get(component) ?? {};
+  const componentIR = ir.buildComponentIR(contract, { allContracts: corpus });
   const nodes = [];
-  collectEventNodes(contract.anatomy?.dom, nodes);
-  const cssPrefix = ir.buildComponentIR(contract, { allContracts: corpus }).cssPrefix;
+  collectEventNodes(componentIR.dom, nodes);
+  const cssPrefix = componentIR.cssPrefix;
 
   return nodes.map((n) => {
     let skip = null;
     if (!n.part) skip = "no-part-name"; // cannot anchor a class token
     else if (!EVENT_KEYS.includes(n.event)) skip = `unmodeled-event:${n.event}`;
-    else if (!n.target) skip = `unparsed-target:${n.expr}`;
+    else if (!n.target) skip = `unparsed-target:${JSON.stringify(n.expr)}`;
     // A part is root-rendered (no `prefix__part` literal, uses the root class
     // binding) when it is named "root" OR it is the outermost anatomy node.
     const rootRendered = n.part === "root" || n.isTop;
@@ -300,10 +319,16 @@ export function isEventRealized(fw, ob) {
   let handlerRe = fw.handler[ob.event];
   if (!handlerRe) return { realized: false, reason: "no-handler-vocab" };
 
-  // FIX-SETTINGS-FIELD-VUE-FINDINGS-01 #6: a value channel's `change` wire is
-  // legitimately realized keystroke-timed as the native `input` event — that
-  // is what React's `onChange` already means, and what the Vue/Svelte/Lit/
-  // Angular emitters now lower a string/number value channel's onChange to.
+  // React's `onChange` is its idiomatic keystroke-timed text-input event, so
+  // it realizes a semantic `input` commit even though the JSX prop spelling
+  // differs from the other web targets.
+  if (ob.event === "input" && fw.id === "react" && fw.handler.change) {
+    handlerRe = new RegExp(`(?:${handlerRe.source})|(?:${fw.handler.change.source})`);
+  }
+
+  // FIX-SETTINGS-FIELD-VUE-FINDINGS-01 #6: a legacy value-channel `change`
+  // wire may be realized keystroke-timed as the native `input` event. Accept
+  // either spelling for that legacy obligation.
   // Accept EITHER token for a `change` obligation so a faithful `@input`
   // realization is not a false negative. Falsification is preserved: both
   // handlers must be absent for the wire to read unrealized.

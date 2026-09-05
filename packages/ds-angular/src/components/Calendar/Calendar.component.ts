@@ -26,7 +26,9 @@ export type CalendarMode = "single" | "range";
   template: `<div [ngClass]="classes()" role="application">
   <div [ngClass]="'calendar__header'">
     <button [ngClass]="'calendar__nav'" aria-label="Previous month"></button>
-    <span [ngClass]="'calendar__caption'"></span>
+    <span [ngClass]="'calendar__caption'">
+      {{ (caption ?? 'Calendar') }}
+    </span>
     <button [ngClass]="'calendar__nav'" aria-label="Next month"></button>
   </div>
   <table [ngClass]="'calendar__grid'" role="grid" aria-label="Calendar">
@@ -34,7 +36,9 @@ export type CalendarMode = "single" | "range";
       <tr>
         <ng-container *ngFor="let item of (days ?? []); let index = index">
           <td [ngClass]="'calendar__cell'" role="gridcell" [attr.data-calendar-index]="index">
-            <button [ngClass]="'calendar__day'" (click)="behavior.setValue(item)"></button>
+            <button [ngClass]="'calendar__day'" (click)="behavior.setValue(item)">
+              {{ item.getDate() }}
+            </button>
           </td>
         </ng-container>
       </tr>
@@ -44,6 +48,7 @@ export type CalendarMode = "single" | "range";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
+  @Input() caption?: string = "Calendar";
   @Input() value?: Date | Date[] | null;
   @Input() defaultValue?: Date | Date[] | null;
   @Input() onChange?: (value: Date | Date[] | null) => void;
