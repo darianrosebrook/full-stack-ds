@@ -62,3 +62,11 @@ contracts:
   - name: 'preview-portal-boundary'
     type: behavior
     path: 'src/views/sections/UsageExamples.tsx'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: e2e/showcase-portal-containment.spec.ts derives open overlay examples and asserts each root mounts inside its local portal canvas
+    recorded_at: "2026-09-05T01:35:51.556Z"
+    command: "FSDS_E2E_BASE=http://127.0.0.1:5182 pnpm exec playwright test e2e/showcase-portal-containment.spec.ts"
+    exit_code: 0
+    commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
