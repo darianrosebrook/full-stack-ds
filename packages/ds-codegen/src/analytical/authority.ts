@@ -145,6 +145,7 @@ export const WITNESS_AUTHORITY: AuthorityIdentity = {
     "derivation.ts": "a RULE_SOURCES module; covered by the holdout's rule digest",
     "judgment.ts": "a RULE_SOURCES module; covered by the holdout's rule digest",
     "structure.ts": "a RULE_SOURCES module; covered by the holdout's rule digest",
+    "authority.ts": "defines the identities; a module inside an identity's closure cannot also be the module that defines it, and a change here moves every digest it computes",
   },
   artifacts: [],
 };

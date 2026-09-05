@@ -369,21 +369,17 @@ describe("evidence earned under one erasure definition is refused under another"
   }
 
   /**
-   * CLOSURE EVIDENCE IS RE-EARNED, NOT BOUND. The closure ledger carries no
-   * authority block. What it records -- each closure's normalization, footprints,
-   * minimum raw edit, promotion and dependencies -- are CLAIMS that
-   * `checkClosures` derives again from the live census, executor and witnesses
-   * and compares. So a moved erasure input does not reject the ledger by
-   * digest; it re-derives and refuses wherever the derivation moved. That is
-   * the "or reevaluation" arm of the obligation, and it is what is shown here:
-   * change how a footprint is computed (locator containment), in the copy, and the
-   * copy's own closure gate refuses the recorded normalizations (and the
-   * dependencies declared from them). What is NOT
-   * shown, and is not implemented: a ledger entry whose derivation happens to
-   * agree under the new authority is accepted without saying which authority
-   * it was authored under.
+   * CLOSURE EVIDENCE IS BOUND AND RE-EARNED. What the ledger records -- each
+   * closure's normalization, footprints, minimum raw edit, promotion and
+   * dependencies -- are CLAIMS that `checkClosures` derives again from the live
+   * census, executor and witnesses and compares; and the ledger carries the
+   * authority those claims were verified under, so a moved identity refuses it
+   * by its stamp even where every derivation still agrees. Both arms are shown
+   * here: change how a footprint is computed (locator containment) in the copy,
+   * and the copy's own closure gate refuses the ledger for its stamp AND for the
+   * recorded normalizations (and the dependencies declared from them).
    */
-  it("closure evidence is re-derived under the live executor: a moved footprint rule refuses the recorded normalizations", async () => {
+  it("closure evidence is bound AND re-derived: a moved erasure authority refuses the ledger by its stamp, and a moved footprint rule refuses the recorded normalizations", async () => {
     // Containment is what a footprint is computed by: with it false, every
     // derived footprint collapses to the plan itself and the recorded ones no
     // longer equal the derived set.
@@ -395,6 +391,7 @@ describe("evidence earned under one erasure definition is refused under another"
     try {
       const m = await load(copy.dir);
       const r = m.closure.checkClosures();
+      expect(r.problems.filter((p) => /^closure ledger authored under a different erasureAuthorityDigest: /.test(p))).toHaveLength(1);
       expect(r.problems.filter((p) => /authored normalization does not equal the derived set/.test(p)).length).toBeGreaterThan(0);
       // And the identity moved with it, so a RECORD bound to it (the footprint report) is refused as well.
       const there = m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION);

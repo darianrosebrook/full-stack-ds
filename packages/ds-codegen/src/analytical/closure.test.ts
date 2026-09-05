@@ -16,6 +16,7 @@
  * expected to reject them for exactly that reason.
  */
 import * as fs from "node:fs";
+import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -23,9 +24,13 @@ import { loadBranchSignatures, loadCensus } from "./census.js";
 import type { Oracle, Witness } from "./necessity.js";
 import type { Fixture } from "./structure.js";
 import {
+  authorityDrift,
   checkClosure,
   checkClosures,
+  CLOSURES_FILE,
   closureCycles,
+  liveAuthority,
+  restampClosures,
   closureGate,
   compatibleControls,
   deriveNormalization,
@@ -784,3 +789,60 @@ describe("support freshness is owned by the call site, and stays owned there", (
     expect(perCall.length, "the guard is scanning for a pattern that no longer appears anywhere").toBeGreaterThan(1);
   });
 });
+
+describe("the ledger carries the authority its claims were verified under", () => {
+  const copyWith = (mutate: (ledger: Record<string, unknown>) => void): string => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "closures-"));
+    const ledger = JSON.parse(fs.readFileSync(CLOSURES_FILE, "utf-8")) as Record<string, unknown>;
+    mutate(ledger);
+    const file = path.join(dir, "closures.json");
+    fs.writeFileSync(file, `${JSON.stringify(ledger, null, 2)}\n`);
+    return file;
+  };
+  const drifted = (ledger: Record<string, unknown>) => {
+    (ledger.authority as Record<string, unknown>).erasureAuthorityDigest = "0".repeat(64);
+  };
+
+  it("the committed ledger is stamped with the live authority, over every identity the report format names", () => {
+    expect(loadClosures().authority).toEqual(liveAuthority());
+    expect(Object.keys(liveAuthority()).sort()).toEqual(["coordinateBasisDigest", "erasureAuthorityDigest", "quotientSchemaVersion", "ruleDigest", "witnessAuthorityDigest"]);
+  });
+
+  it("a ledger authored under a different erasure authority is refused, not re-read -- though every derivation still agrees", () => {
+    // Before this, such a ledger passed: every claim was re-derived and agreed,
+    // and nothing recorded that the agreement was under a different executor.
+    const r = checkClosures(copyWith(drifted));
+    expect(r.ok).toBe(false);
+    // The ONLY problem. Its derivations DO agree; what it lacks is the stamp.
+    expect(r.problems).toEqual([expect.stringMatching(/^closure ledger authored under a different erasureAuthorityDigest: 0{64} -> [0-9a-f]{64}; /)]);
+  });
+
+  it("a ledger with no authority block is refused: its claims were verified under an authority nobody can name", () => {
+    const r = checkClosures(copyWith((l) => { delete l.authority; }));
+    expect(r.ok).toBe(false);
+    expect(r.problems).toEqual([expect.stringMatching(/^closure ledger carries no authority block/)]);
+    expect(authorityDrift(undefined, liveAuthority())).toHaveLength(1);
+  });
+
+  it("restamp re-verifies and writes the live authority; it refuses to stamp over a claim that is wrong", () => {
+    const agreeing = copyWith(drifted);
+    const stamped = restampClosures(agreeing);
+    expect(stamped.ok, stamped.message).toBe(true);
+    expect(checkClosures(agreeing).problems).toEqual([]);
+    expect(loadClosures(agreeing).authority).toEqual(liveAuthority());
+    // Unknown top-level keys survive the rewrite.
+    expect(Object.keys(JSON.parse(fs.readFileSync(agreeing, "utf-8")) as object)).toContain("$control");
+
+    const wrong = copyWith((l) => {
+      drifted(l);
+      ((l.closures as Record<string, unknown>[])[0] as Record<string, unknown>).promotion = "holding";
+    });
+    const before = fs.readFileSync(wrong, "utf-8");
+    const refused = restampClosures(wrong);
+    expect(refused.ok).toBe(false);
+    expect(refused.message).toMatch(/refused -- 1 problem\(s\) are not authority drift/);
+    expect(refused.message).toMatch(/recorded promotion "holding"/);
+    expect(fs.readFileSync(wrong, "utf-8"), "a refused restamp must not touch the file").toBe(before);
+  });
+});
+

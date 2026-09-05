@@ -45,7 +45,9 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { authorityIdentities, type AuthorityIdentities } from "./authority.js";
 import { loadBranchSignatures, loadCensus, loadLocators, loadPlans, type BranchSignatures, type Coordinate } from "./census.js";
+import { ruleSurfaceDigest } from "./corpus-integrity.js";
 import { deletionFootprint, planAt, type ErasurePlan, type StructuralLocator } from "./erasure-plan.js";
 import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
 import {
@@ -56,10 +58,12 @@ import {
   loadWitnesses,
   primitiveRatified,
   resolveSide,
+  RULE_SOURCES,
   sameOutcome,
   type Oracle,
   type Side,
 } from "./necessity.js";
+import { QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
 import { canonical, planFor } from "./quotient.js";
 import { executeAll } from "./erasure-plan.js";
 
@@ -117,14 +121,55 @@ export interface SemanticErasureClosure {
   note?: string;
 }
 
+/** The authority a ledger's claims were verified under: the report format's five identities. */
+export type LedgerAuthority = AuthorityIdentities & { ruleDigest: string };
+
 export interface ClosureFile {
   $comment?: string;
   spec?: string;
   policyRef?: string;
+  /**
+   * The authority the recorded claims were verified under.
+   *
+   * Every field a closure records -- its normalization, footprints, minimum raw
+   * edit, promotion and dependencies -- is a CLAIM that `checkClosures` derives
+   * again and compares. That re-derivation is what keeps a stale claim from
+   * being read as current. It does not say which authority verified the claim:
+   * a ledger authored under one executor whose derivations happen to agree
+   * under another was accepted with no record of the move. So the ledger
+   * carries the identities it was verified under, is refused when any of them
+   * has moved, and is restamped only by a passing re-verification.
+   */
+  authority?: LedgerAuthority;
   closures: SemanticErasureClosure[];
 }
 
 export const CLOSURES_FILE = path.join(FIXTURES_DIR, "closures-stage2.json");
+
+const LEDGER_AUTHORITIES = ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"] as const satisfies readonly (keyof LedgerAuthority)[];
+
+/** The identities as they stand in THIS tree, digested now. */
+export function liveAuthority(): LedgerAuthority {
+  return { ...authorityIdentities(QUOTIENT_SCHEMA_VERSION), ruleDigest: ruleSurfaceDigest(RULE_SOURCES) };
+}
+
+/**
+ * Why a recorded authority block does not admit the ledger's claims, per cause.
+ *
+ * An absent block is its own finding: the claims were verified under an
+ * authority nobody can name. A moved identity is reported with both endpoints,
+ * so the restamp that follows is a review of a named transition.
+ */
+export function authorityDrift(recorded: LedgerAuthority | undefined, live: LedgerAuthority): string[] {
+  if (recorded === undefined) {
+    return ["closure ledger carries no authority block: its claims were verified under an authority nobody can name; run closures --restamp after a passing check"];
+  }
+  const r = recorded as unknown as Record<string, unknown>;
+  const l = live as unknown as Record<string, unknown>;
+  return LEDGER_AUTHORITIES.filter((k) => r[k] !== l[k]).map(
+    (k) => `closure ledger authored under a different ${k}: ${String(r[k])} -> ${String(l[k])}; its claims are not re-read as verified -- re-verify the derivations and restamp`,
+  );
+}
 
 export function loadClosures(file = CLOSURES_FILE): ClosureFile {
   return JSON.parse(fs.readFileSync(file, "utf-8")) as ClosureFile;
@@ -732,6 +777,9 @@ export function checkClosures(file = CLOSURES_FILE): ClosureGateResult {
   const signatures = loadBranchSignatures();
   const standingIndex = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census);
   const problems: string[] = [];
+  // AUTHORITY FIRST. The derivation checks below re-earn every claim under the
+  // live tree; this says whether the ledger was stamped under that tree at all.
+  problems.push(...authorityDrift(ledger.authority, liveAuthority()));
 
   const dupes = [...new Set(ledger.closures.map((c) => c.carrier).filter((id, i, all) => all.indexOf(id) !== i))].sort();
   if (dupes.length > 0) problems.push(`duplicate closure carrier(s): ${dupes.join(", ")}`);
@@ -759,6 +807,26 @@ export function checkClosures(file = CLOSURES_FILE): ClosureGateResult {
     .map((coordinate) => ({ coordinate, standing: standingIndex.of(coordinate), blocks: blocks.get(coordinate)! }));
 
   return { ok: problems.length === 0, problems, checks, cycles: closureCycles(ledger.closures), dependencies };
+}
+
+/**
+ * Re-verify the ledger and write the live authority into it.
+ *
+ * Refused when any problem is not authority drift: a restamp certifies that the
+ * recorded claims were re-derived and agreed under the identities it writes,
+ * and a ledger with a wrong claim in it must be repaired, not restamped over.
+ * Unknown top-level keys survive: the file is rewritten from its own parse.
+ */
+export function restampClosures(file = CLOSURES_FILE): { ok: boolean; message: string } {
+  const r = checkClosures(file);
+  const drift = new Set(authorityDrift(loadClosures(file).authority, liveAuthority()));
+  const other = r.problems.filter((p) => !drift.has(p));
+  if (other.length > 0) {
+    return { ok: false, message: `closures --restamp: refused -- ${other.length} problem(s) are not authority drift:\n  ${other.join("\n  ")}` };
+  }
+  const raw = JSON.parse(fs.readFileSync(file, "utf-8")) as Record<string, unknown>;
+  fs.writeFileSync(file, `${JSON.stringify({ ...raw, authority: liveAuthority() }, null, 2)}\n`);
+  return { ok: true, message: `closures --restamp: stamped ${path.basename(file)} with the live authority (${drift.size} identity movement(s) re-verified)` };
 }
 
 /**
@@ -795,7 +863,11 @@ export function closureGate(r: ClosureGateResult): { ok: boolean; message: strin
 }
 
 const invokedDirectly = process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]));
-if (invokedDirectly) {
+if (invokedDirectly && process.argv.includes("--restamp")) {
+  const s = restampClosures();
+  console.log(s.message);
+  if (!s.ok) process.exit(1);
+} else if (invokedDirectly) {
   const r = checkClosures();
   if (process.argv.includes("--check")) {
     console.log(r.ok ? `closures --check: OK — ${r.checks.length} closure(s) consistent with their obligations` : r.problems.join("\n"));

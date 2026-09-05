@@ -22,6 +22,7 @@
     "analytical:closures": "tsx packages/ds-codegen/src/analytical/closure.ts",
     "analytical:closures:check": "tsx packages/ds-codegen/src/analytical/closure.ts --check",
     "analytical:closures:gate": "tsx packages/ds-codegen/src/analytical/closure.ts --gate",
+    "analytical:closures:restamp": "tsx packages/ds-codegen/src/analytical/closure.ts --restamp",
     "analytical:footprints": "tsx packages/ds-codegen/src/analytical/erasure-audit.ts",
     "analytical:footprints:record": "tsx packages/ds-codegen/src/analytical/erasure-audit.ts --record",
     "analytical:footprints:check": "tsx packages/ds-codegen/src/analytical/erasure-audit.ts --check",

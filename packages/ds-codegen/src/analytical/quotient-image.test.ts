@@ -12,8 +12,10 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
+import { loadPlans } from "./census.js";
 import { CONTRACTS_DIR, emitSchemas } from "./emit-schemas.js";
-import { Name } from "./relation-model.js";
+import { executePlan } from "./erasure-plan.js";
+import { Name, type Fixture, type RelationalStructure } from "./relation-model.js";
 import {
   absorb,
   classify,
@@ -26,8 +28,32 @@ import {
   memberClass,
   Q,
   QUOTIENT_SCHEMA_FILE,
+  type QuotientImage,
   relaxToQuotientLanguage,
 } from "./quotient-image.js";
+
+describe("the codomain is not the domain, and the compiler is what says so", () => {
+  it("a QuotientImage cannot enter an API that requires a source Fixture, while every Fixture is trivially an image", () => {
+    // The two directives below are the negative. `pnpm run typecheck` fails if
+    // either assignment stops being an error (an unused @ts-expect-error is
+    // itself a compile error), so "the executor never hands an image back as a
+    // fixture" is a fact the compiler checks rather than a convention a
+    // reviewer checks. Nothing here is executed for its value.
+    const fixture: Fixture = { id: "FX_CODOMAIN", structure: { relations: { r: { grain: "unknown", fields: { f: { transformation: "ratio" } } } } }, assertions: [] };
+    const image = executePlan(fixture, loadPlans().get("field.transformation")!);
+    // @ts-expect-error a quotient image is not a source declaration
+    const asFixture: Fixture = image;
+    // @ts-expect-error the engine judges the source language; an image's structure is not in it
+    const asStructure: RelationalStructure = image.structure;
+    void asFixture;
+    void asStructure;
+    // The positive control: a fixture IS an image of itself (zero erasures).
+    const trivially: QuotientImage = fixture;
+    void trivially;
+    // And the value really left the source language: the required leaf is a hole.
+    expect(markersIn(image).map((m) => m.path)).toEqual(["structure.relations.r.fields.f.transformation"]);
+  });
+});
 
 describe("the marker cannot collide with source content", () => {
   it("is not a legal Name, so no record key can spell it", () => {
