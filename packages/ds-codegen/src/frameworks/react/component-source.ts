@@ -27,6 +27,7 @@ import {
   hasChildrenPlaceholder,
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
   composeValueMapExpression,
   collectContentTransforms,
@@ -3047,6 +3048,7 @@ function inferBindingValueType(
     // shape against the iteration callback parameter's typed signature.
     return expr.local === "index" ? "number" : undefined;
   }
+  if (expr.kind === "projection") return "number";
   if (expr.kind === "predicate") {
     // BINDING-EXPRESSION-V2-PREDICATE-01: every predicate operator
     // (`eq`, `contains`, `memberOf`) evaluates to a boolean.
@@ -3090,6 +3092,12 @@ function renderReactBinding(
       if (!it) return null; // validator catches this; defensive.
       const base = expr.local === "index" ? it.indexVar : (it.itemVar ?? "item");
       return appendPath(base, expr.path);
+    }
+    case "projection": {
+      const source = renderReactBinding("__projection_source__", expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderReactBinding(attr, expr.source, ctx);

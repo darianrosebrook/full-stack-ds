@@ -309,6 +309,9 @@
     "formControl": {
       "$ref": "#/$defs/formControlContract"
     },
+    "compositeControl": {
+      "$ref": "#/$defs/compositeControlContract"
+    },
     "motion": {
       "$ref": "#/$defs/motionContract"
     },
@@ -1678,6 +1681,49 @@
             "activation"
           ],
           "description": "When a user interaction commits the channel: per-edit input, platform change, or an activation toggle. Codegen maps this fact to each target's event idiom."
+        }
+      }
+    },
+    "compositeControlContract": {
+      "type": "object",
+      "description": "Declares a repeated-item control whose channel update consumes an enclosing iteration item or index. The capability owns the event; anatomy.dom owns only structure.",
+      "required": [
+        "part",
+        "channel",
+        "interactionModel",
+        "commit",
+        "update"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "part": {
+          "type": "string",
+          "description": "Repeated rendered anatomy part that owns the item interaction."
+        },
+        "channel": {
+          "type": "string",
+          "description": "Controlled/uncontrolled channel updated by item interaction."
+        },
+        "interactionModel": {
+          "type": "string",
+          "enum": [
+            "collection-selection",
+            "segmented-text"
+          ],
+          "description": "Whether repeated instances select collection values or edit positions in one text value."
+        },
+        "commit": {
+          "type": "string",
+          "enum": [
+            "input",
+            "activation"
+          ],
+          "description": "When the repeated item commits its channel update."
+        },
+        "update": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Closed channelCall or channelUpdate BindingExpression carrying the iteration payload."
         }
       }
     },

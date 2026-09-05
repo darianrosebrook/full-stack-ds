@@ -165,9 +165,6 @@
                     "aria-selected": "predicate:memberOf(iter:item.value, channel:selection.value)",
                     "data-value": "iter:item.value"
                   },
-                  "events": {
-                    "click": "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)"
-                  },
                   "children": [
                     { "tag": "span", "content": "iter:item.label" }
                   ]
@@ -183,6 +180,13 @@
         }
       ]
     }
+  },
+  "compositeControl": {
+    "part": "option",
+    "channel": "selection",
+    "interactionModel": "collection-selection",
+    "commit": "activation",
+    "update": "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)"
   },
   "props": {
     "designed": {

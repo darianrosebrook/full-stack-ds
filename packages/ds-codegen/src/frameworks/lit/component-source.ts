@@ -37,6 +37,7 @@ import type {
 import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
   composeValueMapExpression,
   collectContentTransforms,
@@ -3110,6 +3111,14 @@ function renderLitBinding(
       }
       return `.${attr}=\${${acc}}`;
     }
+    case "projection": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      if (lowered === null) return null;
+      if (isAttributeOnlyBinding(attr) || attr.startsWith("aria-")) {
+        return `${attr}=\${${lowered}}`;
+      }
+      return `.${attr}=\${${lowered}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3238,6 +3247,10 @@ function renderLitContent(
       const name = litIterationLocalName(expr.local, ctx);
       return name ? `\${${appendPath(name, expr.path)}}` : null;
     }
+    case "projection": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      return lowered === null ? null : `\${${lowered}}`;
+    }
     case "valueMap": {
       const lowered = renderLitBindingValue(expr, ctx);
       return lowered === null ? null : `\${${lowered}}`;
@@ -3316,6 +3329,12 @@ function renderLitBindingValue(
     case "iterationLocal": {
       const name = litIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
+    }
+    case "projection": {
+      const source = renderLitBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderLitBindingValue(expr.source, ctx);
@@ -3397,6 +3416,8 @@ function renderLitEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
     case "valueMap":
       return null;
     case "channel": {

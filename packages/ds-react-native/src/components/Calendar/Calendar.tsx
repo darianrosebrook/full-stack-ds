@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Pressable, View } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCalendarStyles } from "./Calendar.styles";
@@ -12,6 +12,7 @@ export type CalendarMode = "single" | "range";
 
 // @generated:start props
 export interface CalendarProps {
+  caption?: string;
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -41,6 +42,7 @@ const isEntrySelected = (candidate: unknown, current: unknown): boolean => {
 };
 
 export function Calendar({
+  caption = "Calendar",
   value: controlledValue,
   days,
   defaultValue = undefined,
@@ -75,7 +77,9 @@ export function Calendar({
         />
         <View
           style={styles.caption}
-        />
+        >
+          <RNText>{caption}</RNText>
+        </View>
         <Pressable
           style={styles.nav}
           accessibilityRole="button"
@@ -100,7 +104,9 @@ export function Calendar({
                     onPress={() => setValueValue(item)}
                     accessibilityRole="button"
                     accessibilityState={{ selected: isEntrySelected(item, value) }}
-                  />
+                  >
+                    <RNText>{item.getDate()}</RNText>
+                  </Pressable>
                 </View>
               ))}
           </View>

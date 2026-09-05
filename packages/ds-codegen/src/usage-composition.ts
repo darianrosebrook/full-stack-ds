@@ -32,6 +32,8 @@ export interface UsageCompositionIR {
   childrenRegion: string | null;
   namedSlots: string[];
   subcomponents: UsageSubcomponentIR[];
+  /** JSON sidecar values that require typed runtime materialization. */
+  propMaterializers: Record<string, "date" | "date-array">;
 }
 
 export interface ParsedUsageRef {
@@ -72,6 +74,18 @@ export function deriveUsageCompositionFromIR(
     };
     visit(ir.dom);
   }
+  const propMaterializers: Record<string, "date" | "date-array"> = {};
+  for (const prop of ir.styledProps) {
+    if (prop.propType.kind === "ref" && prop.propType.to === "Date") {
+      propMaterializers[prop.name] = "date";
+    } else if (
+      prop.propType.kind === "array" &&
+      prop.propType.items.kind === "ref" &&
+      prop.propType.items.to === "Date"
+    ) {
+      propMaterializers[prop.name] = "date-array";
+    }
+  }
 
   return {
     rootRef: `fsds.${ir.name}`,
@@ -80,6 +94,7 @@ export function deriveUsageCompositionFromIR(
       ? contract.a2ui?.children?.slot ?? "children"
       : null,
     namedSlots: [...namedSlots].sort(),
+    propMaterializers,
     // Public compound parts come from explicit contract ownership or from a
     // semantic IR family that necessarily emits consumer-composed parts.
     // Legacy name classification alone is never enough.

@@ -106,13 +106,18 @@ function renderResolved(
   key?: string | number,
 ): ReactNode {
   const props: Record<string, unknown> = {};
+  const surface = options.resolveComposition?.(rootRef);
 
   // Props pass through as-is, except `children` which may carry sub-trees.
   if (body.props) {
     for (const [propName, value] of Object.entries(body.props)) {
       props[propName] = propName === "children"
         ? materializeChildren(value, options)
-        : materializeProp(value, options);
+        : materializeProp(
+            value,
+            options,
+            part === null ? surface?.propMaterializers[propName] : undefined,
+          );
     }
   }
 
@@ -122,7 +127,6 @@ function renderResolved(
   //   2. Generated compound surface -> compound child component.
   //   3. Contract children placeholder -> ordinary children.
   //   4. No admitted path -> visible fallback (the validator rejects this too).
-  const surface = options.resolveComposition?.(rootRef);
   const namedSlots: Record<string, ReactNode> = {};
   const slotChildren: ReactNode[] = [];
   if (body.slots) {
@@ -180,7 +184,16 @@ function renderResolved(
 function materializeProp(
   value: UsagePropValue,
   options: UsageRenderOptions,
+  materializer?: "date" | "date-array",
 ): unknown {
+  if (materializer === "date") {
+    return typeof value === "string" ? new Date(value) : value;
+  }
+  if (materializer === "date-array") {
+    return Array.isArray(value)
+      ? value.map((item) => typeof item === "string" ? new Date(item) : item)
+      : value;
+  }
   if (typeof value === "string") {
     return resolveAssetSrc(value);
   }

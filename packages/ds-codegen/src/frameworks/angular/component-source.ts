@@ -43,6 +43,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
   channelUpdateMethodName,
+  composeBindingProjectionExpression,
   composeChannelUpdateExpression,
   composeValueMapExpression,
   collectContentTransforms,
@@ -3201,6 +3202,12 @@ function renderAngularBinding(
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? `${angularAttrBinding(attr, tag, refBinding)}="${appendPath(name, expr.path)}"` : null;
     }
+    case "projection": {
+      const lowered = renderAngularBindingValue(expr, ctx);
+      return lowered === null
+        ? null
+        : `${angularAttrBinding(attr, tag, refBinding)}="${lowered}"`;
+    }
     case "valueMap": {
       const lowered = renderAngularBindingValue(expr, ctx);
       return lowered === null
@@ -3320,6 +3327,12 @@ function renderAngularBindingValue(
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
     }
+    case "projection": {
+      const source = renderAngularBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeBindingProjectionExpression(expr.op, source);
+    }
     case "valueMap": {
       const source = renderAngularBindingValue(expr.source, ctx);
       return source === null
@@ -3421,6 +3434,8 @@ function renderAngularEvent(
       void ctx;
       return null;
     }
+    case "projection":
+      return null;
     case "valueMap":
       return null;
     case "channel": {
