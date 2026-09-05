@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: usage-sidecar-render
 created_at: '2026-09-05T00:10:22.224Z'
-updated_at: '2026-09-05T00:13:38.963Z'
+updated_at: '2026-09-05T00:14:37.050Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
@@ -28,6 +28,7 @@ scope:
     - packages/ds-contracts/components/Select/Select.usage.jsonl
     - packages/ds-contracts/components/ToggleSwitch/ToggleSwitch.usage.jsonl
     - packages/ds-contracts/components/Walkthrough/Walkthrough.usage.jsonl
+    - packages/ds-contracts/components/Shuttle/Shuttle.usage.jsonl
   out: []
 invariants:
   - 'Usage sidecars remain framework-neutral; delivery semantics derive from contract anatomy DOM and compound-part declarations, never component-name switches.'
