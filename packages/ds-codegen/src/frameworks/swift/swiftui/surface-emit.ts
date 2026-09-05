@@ -49,13 +49,8 @@ export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFile
   if (!ir.surface) {
     throw new Error("generateSwiftUISurfaceFiles: component declares no surface block.");
   }
-  if (ir.surface.kind === "tooltip") {
-    return { componentFile: withTypes(emitAnchoredTooltip(ir)), behaviorFile: null };
-  }
-  if (ir.surface.kind === "popover") {
-    // Anchored like the tooltip but manual-open: the open channel rides
-    // the substrate with NO hover affordance (the web trigger wires it).
-    return { componentFile: withTypes(emitAnchoredPopover(ir)), behaviorFile: null };
+  if (ir.surface.kind === "tooltip" || ir.surface.kind === "popover") {
+    return { componentFile: withTypes(emitAnchoredSurface(ir)), behaviorFile: null };
   }
   if (ir.surface.kind === "coachmark") {
     return { componentFile: withTypes(emitCoachmarkSurface(ir)), behaviorFile: null };
@@ -284,18 +279,18 @@ const PLACEMENT_EDGE: Record<string, string> = {
 };
 
 /**
- * The anchored-tooltip branch: the trigger region is consumer content;
- * hover (the declared trigger modality on macOS) drives the open channel
- * through the controllable-state projection, presenting the content region
- * in a popover with presence-driven chrome.
+ * The anchored-surface branch: the trigger region is consumer content and
+ * SurfaceIR.openTriggers selects the native interaction wrapper. Click becomes
+ * a plain Button; hover becomes onHover. Both drive the same controllable-state
+ * projection and present the content region in a native popover.
  */
-function emitAnchoredTooltip(ir: ComponentIR): string {
+function emitAnchoredSurface(ir: ComponentIR): string {
   const openChannel = ir.behavior.normalizedChannels.find(
     (c) => c.valueType === "boolean",
   );
   if (!openChannel) {
     throw new Error(
-      `emitAnchoredTooltip: anchored surface on "${ir.name}" declares no ` +
+      `emitAnchoredSurface: anchored surface on "${ir.name}" declares no ` +
         `boolean open channel.`,
     );
   }
@@ -303,7 +298,7 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   const contentPart = ir.compoundParts.find((p) => p.name === "content");
   if (!triggerPart || !contentPart) {
     throw new Error(
-      `emitAnchoredTooltip: anchored surface on "${ir.name}" lacks ` +
+      `emitAnchoredSurface: anchored surface on "${ir.name}" lacks ` +
         `trigger/content compound parts (found: ` +
         `${ir.compoundParts.map((p) => p.name).join("/") || "none"}).`,
     );
@@ -322,12 +317,24 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   for (const value of placementValues) {
     if (!PLACEMENT_EDGE[value]) {
       throw new Error(
-        `emitAnchoredTooltip: placement value "${value}" has no SwiftUI ` +
+        `emitAnchoredSurface: placement value "${value}" has no SwiftUI ` +
           `popover edge mapping.`,
       );
     }
   }
   const hasDisabled = ir.styledProps.some((p) => p.safeName === "disabled");
+  const opensOnClick = ir.surface?.openTriggers.includes("click") ?? false;
+  const opensOnHover = ir.surface?.openTriggers.includes("hover") ?? false;
+  if (!opensOnClick && !opensOnHover) {
+    throw new Error(
+      `emitAnchoredSurface: anchored surface on "${ir.name}" declares no ` +
+        `SwiftUI-realizable open trigger (expected "click" or "hover").`,
+    );
+  }
+  const activationSummary = [
+    opensOnClick ? "press" : undefined,
+    opensOnHover ? "hover" : undefined,
+  ].filter(Boolean).join(" and ");
 
   const lines: string[] = [];
   lines.push("// @generated:start imports");
@@ -338,10 +345,10 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   lines.push(...emitTokenScopesSection(ir));
   lines.push("");
   lines.push(
-    `/// Emitted through the anchored-tooltip surface path: hover on the ` +
-      `trigger region drives the open channel (the declared trigger ` +
-      `modality on this target), presenting the content region in a ` +
-      `popover. Native popover dismissal realizes escape/blur.`,
+    `/// Emitted through the anchored-surface path: ${activationSummary} on ` +
+      `the trigger region drives the open channel from the declared open triggers, ` +
+      `presenting the content region in a popover. Native popover dismissal ` +
+      `realizes platform dismissal.`,
   );
   if (exportName !== ir.name) {
     lines.push(
@@ -458,17 +465,36 @@ function emitAnchoredTooltip(ir: ComponentIR): string {
   lines.push(`${INDENT}}`);
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
-  lines.push(`${INDENT}${INDENT}trigger`);
-  if (placementValues.length > 0) {
-    lines.push(`${INDENT}${INDENT}${INDENT}.popover(isPresented: presentationBinding, arrowEdge: placementEdge) {`);
+  if (opensOnClick) {
+    lines.push(`${INDENT}${INDENT}SwiftUI.Button(action: { open.toggle() }) {`);
+    lines.push(`${INDENT}${INDENT}${INDENT}trigger`);
+    lines.push(`${INDENT}${INDENT}}`);
+    lines.push(`${INDENT}${INDENT}.buttonStyle(.plain)`);
+    if (hasDisabled) {
+      lines.push(`${INDENT}${INDENT}.disabled(disabled)`);
+    }
   } else {
-    lines.push(`${INDENT}${INDENT}${INDENT}.popover(isPresented: presentationBinding) {`);
+    lines.push(`${INDENT}${INDENT}trigger`);
   }
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}panel`);
-  lines.push(`${INDENT}${INDENT}${INDENT}}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}.onHover { hovering in`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}if !disabled { open.set(hovering) }`);
-  lines.push(`${INDENT}${INDENT}${INDENT}}`);
+  const modifierIndent = opensOnClick
+    ? `${INDENT}${INDENT}`
+    : `${INDENT}${INDENT}${INDENT}`;
+  if (placementValues.length > 0) {
+    lines.push(`${modifierIndent}.popover(isPresented: presentationBinding, arrowEdge: placementEdge) {`);
+  } else {
+    lines.push(`${modifierIndent}.popover(isPresented: presentationBinding) {`);
+  }
+  lines.push(`${modifierIndent}${INDENT}panel`);
+  lines.push(`${modifierIndent}}`);
+  if (opensOnHover) {
+    lines.push(`${modifierIndent}.onHover { hovering in`);
+    lines.push(
+      hasDisabled
+        ? `${modifierIndent}${INDENT}if !disabled { open.set(hovering) }`
+        : `${modifierIndent}${INDENT}open.set(hovering)`,
+    );
+    lines.push(`${modifierIndent}}`);
+  }
   lines.push(`${INDENT}}`);
   if (placementValues.length > 0) {
     lines.push("");
@@ -605,21 +631,6 @@ function emitToastSurface(ir: ComponentIR): string {
   lines.push(`${INDENT}}`);
   lines.push(`}`);
   lines.push("// @generated:end");
-  return lines.join("\n");
-}
-
-
-function emitAnchoredPopover(ir: ComponentIR): string {
-  // The popover shares the anchored tooltip's shape; strip the hover
-  // driver (manual open only) from a tooltip-shaped emission. The hover
-  // block is three emitted lines (.onHover …, guard body, closing }) —
-  // remove all three by index so no orphan braces remain.
-  const tooltipShaped = emitAnchoredTooltip(ir);
-  const lines = tooltipShaped.split("\n");
-  const hoverIndex = lines.findIndex((line) => line.includes(".onHover"));
-  if (hoverIndex !== -1) {
-    lines.splice(hoverIndex, 3);
-  }
   return lines.join("\n");
 }
 
