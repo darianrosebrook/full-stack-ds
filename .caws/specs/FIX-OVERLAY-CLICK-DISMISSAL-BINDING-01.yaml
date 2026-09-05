@@ -81,3 +81,10 @@ evidence:
     command: "pnpm run test:frameworks"
     exit_code: 0
     commit_sha: "125bd6f0"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: git diff of packages/ds-angular/src after regenerating Dialog/Sheet/Command is empty — the IR targetPart fact reproduces the part-name lore byte-for-byte
+    recorded_at: "2026-09-05T00:36:13.394Z"
+    command: git show 125bd6f0 --stat -- packages/ds-angular/src
+    exit_code: 0
+    commit_sha: "125bd6f0"
