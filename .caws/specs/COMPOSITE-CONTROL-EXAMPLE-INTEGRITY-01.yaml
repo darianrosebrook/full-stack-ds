@@ -84,3 +84,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx — 65 tests passed across 51 component sidecars; live Command root count 1, populated, outside-preview count 0"
     recorded_at: "2026-09-05T06:10:15.259Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "pnpm run governed:rail && pnpm test && pnpm run test:frameworks — passed; root 260 files/3481 tests; Vue 698, Lit 568, Svelte 654, Angular 479, React Native 171; lint and typecheck:all passed"
+    recorded_at: "2026-09-05T06:10:17.483Z"
