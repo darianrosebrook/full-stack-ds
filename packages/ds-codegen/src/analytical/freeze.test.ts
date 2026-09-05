@@ -218,41 +218,52 @@ describe("stage-2 erasure freeze", () => {
     expect(leftover.stale).toEqual([excuse]);
   });
 
-  it("an adjudication cannot authorize a transition it did not review", () => {
-    // The exception path. Refusing an UNREVIEWED authority change is only half
-    // the boundary: a review written for one transition must not certify a
-    // later one. `adjudicated` was matched on the divergence CLASS alone, so
-    // `authority:witnessAuthorityDigest` accepted any movement of that identity
-    // once any movement of it had been excused.
-    //
-    // Sequence the class-only matcher permitted: record under A, review a
-    // comment-only change to B, then change acceptance behaviour again to C
-    // without re-recording and without touching the adjudication. The key still
-    // named a live divergence, so the old reason accepted the new state.
-    const A = frozen.authority.witnessAuthorityDigest;
-    const [B, C, D] = ["b".repeat(64), "c".repeat(64), "d".repeat(64)];
-    const at = (recorded: string, current: string, adjudicated: Record<string, string> = {}) =>
-      checkFreeze(
-        { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: recorded }, adjudicated },
-        { ...live, authority: { ...live.authority, witnessAuthorityDigest: current } },
-      );
-    // Full values, not a truncated display digest: the point is to identify the
-    // transition exactly, and a prefix is a different claim.
-    const reviewed = `authority:witnessAuthorityDigest@${A}->${B}`;
-    const excuse = { [reviewed]: "reviewed: the witness surface gained a comment only" };
+  /**
+   * THE EXCEPTION PATH, in four independently executed tests.
+   *
+   * They were one test, and that was a methodology defect: the positive
+   * control ran first, so any mutant that broke the KEY FORMAT failed there
+   * and the negative assertions were never reached. Four such mutants were
+   * reported as kills of this boundary; none of them demonstrated that the
+   * boundary detects over-authorisation. A permissive mutant -- one that keeps
+   * the reviewed transition working and also accepts a different one -- is the
+   * regression this must catch, and it can only be caught by a test that runs.
+   */
+  const A = frozen.authority.witnessAuthorityDigest;
+  const [B, C, D] = ["b".repeat(64), "c".repeat(64), "d".repeat(64)];
+  const at = (recorded: string, current: string, adjudicated: Record<string, string> = {}) =>
+    checkFreeze(
+      { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: recorded }, adjudicated },
+      { ...live, authority: { ...live.authority, witnessAuthorityDigest: current } },
+    );
+  // Full values, not a truncated display digest: a prefix is a different claim.
+  const reviewed = `authority:witnessAuthorityDigest@${A}->${B}`;
+  const excuse = { [reviewed]: "reviewed: the witness surface gained a comment only" };
 
-    // The transition that was actually reviewed is accepted.
+  it("accepts the authority transition that was actually reviewed", () => {
     const good = at(A, B, excuse);
     expect(good.ok).toBe(true);
     expect(good.accepted.map((x) => x.reason)).toEqual(["reviewed: the witness surface gained a comment only"]);
+  });
 
-    // A later, unreviewed movement of the SAME identity is not.
-    expect(at(A, C, excuse).ok, "a review of A->B authorised A->C").toBe(false);
-    // Nor is a different starting point: an A->B review is not a D->B review.
-    expect(at(D, B, excuse).ok, "a review of A->B authorised D->B").toBe(false);
-    // And in both, the unmatched excuse is reported rather than silently unused.
-    expect(at(A, C, excuse).stale).toEqual([reviewed]);
-    expect(at(D, B, excuse).stale).toEqual([reviewed]);
+  it("refuses a LATER movement of the same identity under that same review", () => {
+    // Record under A, review a comment-only change to B, then move acceptance
+    // behaviour to C without re-recording. The class-only matcher accepted it.
+    const r = at(A, C, excuse);
+    expect(r.ok, "a review of A->B authorised A->C").toBe(false);
+    expect(r.stale, "the unmatched review must be reported, not silently unused").toEqual([reviewed]);
+  });
+
+  it("refuses a different starting point under that same review", () => {
+    const r = at(D, B, excuse);
+    expect(r.ok, "a review of A->B authorised D->B").toBe(false);
+    expect(r.stale).toEqual([reviewed]);
+  });
+
+  it("refuses a reason written for the CLASS rather than a transition", () => {
+    const r = at(A, B, { "authority:witnessAuthorityDigest": "a standing permission for this identity" });
+    expect(r.ok).toBe(false);
+    expect(r.stale).toEqual(["authority:witnessAuthorityDigest"]);
   });
 
   it("binds erasure divergences to their transition too, since one matcher serves them all", () => {

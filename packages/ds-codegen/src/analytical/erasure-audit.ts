@@ -334,6 +334,18 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
     .sort((x, y) => x.witness.localeCompare(y.witness));
 }
 
+/** The population one language report was actually computed over. */
+export interface LanguageScope {
+  specimens: number;
+  /** sha over the canonical form of every specimen validated, in order. */
+  populationDigest: string;
+}
+
+export interface LanguageScopes {
+  sourceLanguageDeparture: LanguageScope;
+  quotientLanguageInvalid: LanguageScope;
+}
+
 export interface FootprintReport {
   $comment: string;
   digests: Record<string, string>;
@@ -379,6 +391,14 @@ export interface FootprintReport {
    * payload. Each of those has actually happened here.
    */
   quotientLanguageInvalid: LanguageReport[];
+  /**
+   * Which specimens each report above was computed over.
+   *
+   * Recorded so the artifact cannot name a population in `specimens` while a
+   * report describes a subset of it -- the defect this field exists to make
+   * impossible to reintroduce silently.
+   */
+  scopes: LanguageScopes;
   /** Coordinate id -> measured footprint. Every plan appears, singleton or not. */
   footprints: Record<string, string[]>;
   /** Erasures no specimen distinguishes. A corpus fact; never read as a verdict. */
@@ -407,14 +427,35 @@ export interface LanguageReport {
  * whole point is that these are different questions and were previously one.
  * `source` rejecting an image is information; `quotient` rejecting it is a bug.
  *
- * Measured over the AUTHORED specimens only. A synthesized pair is discarded
- * unless both sides validate, so including them would make this look better by
- * construction — the population would be filtered by the property being tested.
+ * THE TWO QUESTIONS HAVE DIFFERENT POPULATIONS, and this used to give them one.
+ *
+ * `sourceLanguageDeparture` is measured over the AUTHORED specimens only, for
+ * the reason it always carried: a synthesized pair is discarded unless both
+ * sides validate as source, so the synthesized inputs are pre-filtered by
+ * source-validity and including them would dilute a source-validity measure
+ * with specimens selected for it.
+ *
+ * That argument does NOT transfer to `quotientLanguageInvalid`, and applying it
+ * there was a coverage defect. Nothing filters the IMAGES — only the inputs —
+ * so a synthesized specimen can produce an illegal quotient image as readily as
+ * an authored one, and it is exactly the population written to reach shapes the
+ * corpus does not. The check reported a `specimens` block naming 208 while
+ * validating 112 of them, so 96 (46%) of the population the acceptance
+ * criterion names never reached the invariant that criterion is about.
+ *
+ * The terminal invariant is now measured over EVERYTHING, in one walk, and both
+ * scopes are reported by membership rather than by count — a report that names
+ * a population it did not check is the defect, not a wrong number.
  */
 export function languageReports(
   fixtures: Fixture[],
+  /**
+   * How many leading fixtures are authored. Source departure is tallied over
+   * that prefix; quotient legality over all of them.
+   */
+  authored: number = fixtures.length,
   plans: Map<string, ErasurePlan> = loadPlans(),
-): { sourceLanguageDeparture: LanguageReport[]; quotientLanguageInvalid: LanguageReport[] } {
+): { sourceLanguageDeparture: LanguageReport[]; quotientLanguageInvalid: LanguageReport[]; scopes: LanguageScopes } {
   const source = loadOracle().validate;
   const quotient = loadQuotientValidator(CONTRACTS_DIR);
   const tally = (into: Map<string, LanguageReport>, id: string, errors: string[]) => {
@@ -426,16 +467,24 @@ export function languageReports(
   const departed = new Map<string, LanguageReport>();
   const illegal = new Map<string, LanguageReport>();
   for (const p of plans.values()) {
-    for (const f of fixtures) {
-      if (!wouldChange(f, p)) continue;
+    fixtures.forEach((f, i) => {
+      if (!wouldChange(f, p)) return;
       const image = executePlan(f, p);
-      tally(departed, p.id, source(image));
+      if (i < authored) tally(departed, p.id, source(image));
       tally(illegal, p.id, quotient(image));
-    }
+    });
   }
   const order = (m: Map<string, LanguageReport>) =>
     [...m.values()].sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
-  return { sourceLanguageDeparture: order(departed), quotientLanguageInvalid: order(illegal) };
+  const scope = (fs: Fixture[]): LanguageScope => ({ specimens: fs.length, populationDigest: sha(Buffer.from(fs.map(canonical).join("\u0000"))) });
+  return {
+    sourceLanguageDeparture: order(departed),
+    quotientLanguageInvalid: order(illegal),
+    // MEMBERSHIP, not just a count: two populations of the same size are not
+    // the same population, and the whole failure here was a report naming one
+    // population while checking another.
+    scopes: { sourceLanguageDeparture: scope(fixtures.slice(0, authored)), quotientLanguageInvalid: scope(fixtures) },
+  };
 }
 
 export function computeReport(): FootprintReport {
@@ -459,7 +508,7 @@ export function computeReport(): FootprintReport {
     quotientSchemaVersion: QUOTIENT_SCHEMA_VERSION,
     specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length },
     unbuilt: s.unbuilt,
-    ...languageReports(s.fixtures.slice(0, s.corpus + s.stimuli)),
+    ...languageReports(s.fixtures, s.corpus + s.stimuli),
     footprints: Object.fromEntries([...m.footprints].sort(([a], [b]) => a.localeCompare(b))),
     dead: m.dead,
     unseparated: m.unseparated,
@@ -500,6 +549,24 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
     const b = live.footprints[id];
     if (JSON.stringify(a) !== JSON.stringify(b)) problems.push(`footprint of ${id}: ${JSON.stringify(a)} -> ${JSON.stringify(b)}`);
   }
+  // THE COVERAGE CHECK. `quotientLanguageInvalid` is the spec's terminal
+  // invariant, and it must be measured over every specimen the report names --
+  // not over a prefix of them. Checked by MEMBERSHIP: a population of the same
+  // size is not the same population.
+  const q = live.scopes?.quotientLanguageInvalid;
+  if (q === undefined) {
+    problems.push("the recorded report names no validation scope; it cannot be shown to cover the population it reports");
+  } else if (q.specimens !== live.specimens.total) {
+    problems.push(`the terminal invariant was measured over ${q.specimens} of ${live.specimens.total} specimens; a report must not name a population it did not check`);
+  }
+  for (const k of ["sourceLanguageDeparture", "quotientLanguageInvalid"] as const) {
+    const was = recorded.scopes?.[k];
+    const now = live.scopes?.[k];
+    if (was && now && was.populationDigest !== now.populationDigest) {
+      problems.push(`the ${k} population moved: ${was.specimens} -> ${now.specimens} specimens, digest ${was.populationDigest.slice(0, 12)} -> ${now.populationDigest.slice(0, 12)}`);
+    }
+  }
+
   const key = (w: WitnessAudit) => `${w.witness}: ${w.verdict}`;
   const was = recorded.witnesses.map(key).sort();
   const is = live.witnesses.map(key).sort();
@@ -531,8 +598,10 @@ if (invokedDirectly) {
     // Two counts, deliberately printed with different framing. The first is a
     // reading; the second is the terminal invariant, and it is the only one a
     // reader should be alarmed by.
-    console.log(`  ${report.sourceLanguageDeparture.length} erasure(s) leave the SOURCE language (expected: a quotient image need not parse as a declaration)`);
-    console.log(`  ${report.quotientLanguageInvalid.length} erasure(s) produce an ILLEGAL quotient image (must be 0):`);
+    console.log(
+      `  ${report.sourceLanguageDeparture.length} erasure(s) leave the SOURCE language over ${report.scopes.sourceLanguageDeparture.specimens} authored specimen(s) (expected: a quotient image need not parse as a declaration)`,
+    );
+    console.log(`  ${report.quotientLanguageInvalid.length} erasure(s) produce an ILLEGAL quotient image over ${report.scopes.quotientLanguageInvalid.specimens} specimen(s) (must be 0):`);
     for (const i of report.quotientLanguageInvalid) console.log(`    ${String(i.specimens).padStart(3)}  ${i.coordinate.padEnd(50)} ${i.error}`);
     console.log(`  ${report.unbuilt.length} coordinate(s) with no separating pair:`);
     for (const [reason, ids] of [...byReason].sort((a, b) => b[1].length - a[1].length)) {

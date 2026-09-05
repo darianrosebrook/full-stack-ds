@@ -12,7 +12,7 @@
 import { describe, expect, it } from "vitest";
 import { loadDerivation, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
-import { claimedFootprints, computeReport, loadReport, measure, specimens } from "./erasure-audit.js";
+import { claimedFootprints, computeReport, languageReports, loadReport, measure, specimens } from "./erasure-audit.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
 
@@ -327,5 +327,64 @@ describe("the witness audit", () => {
     const notHolding = live.witnesses.filter((w) => !w.holds).map((w) => w.witness);
     const ledgered = loadCodomainAdjudications().awaiting.map((a) => a.witness);
     expect([...new Set(notHolding)].sort()).toEqual([...new Set(ledgered)].sort());
+  });
+});
+
+
+/**
+ * THE POPULATION THE TERMINAL INVARIANT IS MEASURED OVER.
+ *
+ * `computeReport` reported a `specimens` block naming 208 while validating
+ * `fixtures.slice(0, corpus + stimuli)` -- 112 of them. The 96 synthesized
+ * specimens, which exist precisely to reach shapes the corpus does not, never
+ * reached the invariant the whole codomain slice is about.
+ *
+ * The justification in the old doc comment held for ONE of the two reports and
+ * was applied to both. A synthesized pair is discarded unless both sides
+ * validate as source, so its INPUTS are pre-filtered by source-validity and
+ * including them would dilute a source-validity measure. Nothing filters the
+ * IMAGES, so that argument never transferred to quotient legality.
+ */
+describe("the terminal invariant is measured over the population the report names", () => {
+  it("covers every specimen, by membership and not by count", () => {
+    expect(live.scopes.quotientLanguageInvalid.specimens).toBe(live.specimens.total);
+    // Source departure keeps its narrower population, and says so rather than
+    // being silently equal.
+    expect(live.scopes.sourceLanguageDeparture.specimens).toBe(live.specimens.corpus + live.specimens.stimuli);
+    expect(live.scopes.sourceLanguageDeparture.populationDigest).not.toBe(live.scopes.quotientLanguageInvalid.populationDigest);
+  });
+
+  it("an illegal image reachable ONLY in the synthesized suffix is reported", () => {
+    // The decisive case. A specimen from the excluded suffix whose erasure
+    // yields an image the quotient language rejects: under the old slicing the
+    // report said `quotientLanguageInvalid: 0` while this existed.
+    const s = specimens();
+    const authored = s.fixtures.slice(0, s.corpus + s.stimuli);
+    const clean = s.fixtures[s.corpus + s.stimuli];
+    expect(clean, "there must be a synthesized specimen to work from").toBeDefined();
+
+    // Source-valid where it counts, but carrying a marker whose kind the
+    // quotient schema does not admit. Any erasure that changes this specimen
+    // produces an image containing it.
+    const bad = JSON.parse(JSON.stringify(clean)) as typeof clean;
+    const rel = Object.values((bad.structure as { relations: Record<string, { fields: Record<string, Record<string, unknown>> }> }).relations)[0];
+    const field = Object.values(rel.fields)[0];
+    field.transformation = { "@q": "not-a-kind-the-schema-admits" } as never;
+
+    const plans = loadPlans();
+    const withBad = languageReports([...authored, bad], authored.length, plans);
+    const authoredOnly = languageReports(authored, authored.length, plans);
+
+    // The old population does not see it...
+    expect(authoredOnly.quotientLanguageInvalid, "the control population must be clean, or this proves nothing").toEqual([]);
+    // ...and the population the criterion names does, naming the plan.
+    expect(withBad.quotientLanguageInvalid.length, "an illegal image in the synthesized suffix went unreported").toBeGreaterThan(0);
+    expect(withBad.quotientLanguageInvalid[0].coordinate).toMatch(/\S/);
+    expect(withBad.scopes.quotientLanguageInvalid.specimens).toBe(authored.length + 1);
+
+    // POSITIVE CONTROL: the same specimen, unmodified, is not flagged -- so the
+    // finding is about the illegal image and not about being synthesized.
+    const withClean = languageReports([...authored, clean], authored.length, plans);
+    expect(withClean.quotientLanguageInvalid, "a valid synthesized specimen was flagged").toEqual([]);
   });
 });

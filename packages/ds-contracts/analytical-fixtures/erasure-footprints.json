@@ -459,6 +459,16 @@
     }
   ],
   "quotientLanguageInvalid": [],
+  "scopes": {
+    "sourceLanguageDeparture": {
+      "specimens": 112,
+      "populationDigest": "1b73800e6741ba7fc5731c631506e23855e1946d3d277c08d6de44b6da7d6805"
+    },
+    "quotientLanguageInvalid": {
+      "specimens": 208,
+      "populationDigest": "76b17b16a8b4f9f14ae92bd62338c801801b8973ad47d9f92d591c44e647c8f2"
+    }
+  },
   "footprints": {
     "assertion.aggregate.along#arity": [
       "assertion.aggregate.along#arity"
