@@ -18,7 +18,8 @@
     "corpus": 90,
     "stimuli": 22,
     "synthesized": 96,
-    "total": 208
+    "total": 208,
+    "populationDigest": "76b17b16a8b4f9f14ae92bd62338c801801b8973ad47d9f92d591c44e647c8f2"
   },
   "unbuilt": [
     {

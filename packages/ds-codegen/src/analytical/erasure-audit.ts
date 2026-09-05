@@ -334,6 +334,18 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
     .sort((x, y) => x.witness.localeCompare(y.witness));
 }
 
+/**
+ * The digest of a specimen population, by MEMBERSHIP.
+ *
+ * One recipe, used both for the population a report NAMES and for the
+ * population a check was COMPUTED OVER, so the two are directly comparable.
+ * Equal counts are not equal populations: a same-cardinality substitution
+ * leaves every count intact and changes this.
+ */
+export function populationDigest(fixtures: Fixture[]): string {
+  return sha(Buffer.from(fixtures.map(canonical).join("\u0000")));
+}
+
 /** The population one language report was actually computed over. */
 export interface LanguageScope {
   specimens: number;
@@ -370,7 +382,7 @@ export interface FootprintReport {
   footprintBasisDigest: string;
   /** Which quotient language these images were measured in. */
   quotientSchemaVersion: number;
-  specimens: { corpus: number; stimuli: number; synthesized: number; total: number };
+  specimens: { corpus: number; stimuli: number; synthesized: number; total: number; populationDigest: string };
   /** Coordinates for which no separating pair could be written, and why. */
   unbuilt: PairFailure[];
   /**
@@ -418,6 +430,14 @@ export interface LanguageReport {
   specimens: number;
   /** The first validator error, verbatim — enough to name the defect class. */
   error: string;
+  /**
+   * The first specimen the offending image came from.
+   *
+   * A finding that names only a plan cannot be chased: the same plan is legal
+   * on most of the population, and the question is always WHICH specimen it is
+   * illegal on.
+   */
+  specimen: string;
 }
 
 /**
@@ -429,11 +449,17 @@ export interface LanguageReport {
  *
  * THE TWO QUESTIONS HAVE DIFFERENT POPULATIONS, and this used to give them one.
  *
- * `sourceLanguageDeparture` is measured over the AUTHORED specimens only, for
- * the reason it always carried: a synthesized pair is discarded unless both
- * sides validate as source, so the synthesized inputs are pre-filtered by
- * source-validity and including them would dilute a source-validity measure
- * with specimens selected for it.
+ * `sourceLanguageDeparture` is measured over the AUTHORED specimens only. That
+ * is a REPORTING POLICY, not a logical necessity, and the old comment overstated
+ * it: the synthesizer filters on "the INPUT validates as source", while this
+ * statistic asks "does the IMAGE fail to validate as source". Those are
+ * different propositions, and a source-valid input does not force a source-valid
+ * image — the whole codomain exists because erasure leaves the source language.
+ * Measured over everything, the synthesized population in fact exposes one
+ * departure coordinate the authored population does not (63 against 62). The
+ * scope is kept because the statistic is about authored intent, and it is now
+ * recorded by membership so the narrower population is stated rather than
+ * assumed.
  *
  * That argument does NOT transfer to `quotientLanguageInvalid`, and applying it
  * there was a coverage defect. Nothing filters the IMAGES — only the inputs —
@@ -458,11 +484,11 @@ export function languageReports(
 ): { sourceLanguageDeparture: LanguageReport[]; quotientLanguageInvalid: LanguageReport[]; scopes: LanguageScopes } {
   const source = loadOracle().validate;
   const quotient = loadQuotientValidator(CONTRACTS_DIR);
-  const tally = (into: Map<string, LanguageReport>, id: string, errors: string[]) => {
+  const tally = (into: Map<string, LanguageReport>, id: string, errors: string[], specimen: string) => {
     if (errors.length === 0) return;
     const prev = into.get(id);
     if (prev) prev.specimens++;
-    else into.set(id, { coordinate: id, specimens: 1, error: errors[0] });
+    else into.set(id, { coordinate: id, specimens: 1, error: errors[0], specimen });
   };
   const departed = new Map<string, LanguageReport>();
   const illegal = new Map<string, LanguageReport>();
@@ -470,13 +496,13 @@ export function languageReports(
     fixtures.forEach((f, i) => {
       if (!wouldChange(f, p)) return;
       const image = executePlan(f, p);
-      if (i < authored) tally(departed, p.id, source(image));
-      tally(illegal, p.id, quotient(image));
+      if (i < authored) tally(departed, p.id, source(image), f.id);
+      tally(illegal, p.id, quotient(image), f.id);
     });
   }
   const order = (m: Map<string, LanguageReport>) =>
     [...m.values()].sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
-  const scope = (fs: Fixture[]): LanguageScope => ({ specimens: fs.length, populationDigest: sha(Buffer.from(fs.map(canonical).join("\u0000"))) });
+  const scope = (fs: Fixture[]): LanguageScope => ({ specimens: fs.length, populationDigest: populationDigest(fs) });
   return {
     sourceLanguageDeparture: order(departed),
     quotientLanguageInvalid: order(illegal),
@@ -487,7 +513,13 @@ export function languageReports(
   };
 }
 
-export function computeReport(): FootprintReport {
+/**
+ * `plans` is injectable so the ACCEPTANCE PATH can be falsified, not only the
+ * helper beneath it. The defect this report was repaired for lived in the
+ * caller's choice of population, so a falsifier that assembles its own array
+ * and calls `languageReports` directly cannot reach it.
+ */
+export function computeReport(plans: Map<string, ErasurePlan> = loadPlans()): FootprintReport {
   const s = specimens();
   const m = measure(s.fixtures);
   return {
@@ -506,9 +538,11 @@ export function computeReport(): FootprintReport {
     authority: { ...authorityIdentities(QUOTIENT_SCHEMA_VERSION), ruleDigest: ruleSurfaceDigest(RULE_SOURCES) },
     footprintBasisDigest: footprintBasisDigest(s.fixtures.map(canonical)),
     quotientSchemaVersion: QUOTIENT_SCHEMA_VERSION,
-    specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length },
+    // The population the report NAMES, by membership. A scope that does not
+    // reproduce this digest did not cover it, whatever its count says.
+    specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length, populationDigest: populationDigest(s.fixtures) },
     unbuilt: s.unbuilt,
-    ...languageReports(s.fixtures, s.corpus + s.stimuli),
+    ...languageReports(s.fixtures, s.corpus + s.stimuli, plans),
     footprints: Object.fromEntries([...m.footprints].sort(([a], [b]) => a.localeCompare(b))),
     dead: m.dead,
     unseparated: m.unseparated,
@@ -553,19 +587,44 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   // invariant, and it must be measured over every specimen the report names --
   // not over a prefix of them. Checked by MEMBERSHIP: a population of the same
   // size is not the same population.
-  const q = live.scopes?.quotientLanguageInvalid;
-  if (q === undefined) {
-    problems.push("the recorded report names no validation scope; it cannot be shown to cover the population it reports");
-  } else if (q.specimens !== live.specimens.total) {
-    problems.push(`the terminal invariant was measured over ${q.specimens} of ${live.specimens.total} specimens; a report must not name a population it did not check`);
-  }
+  // MISSING EVIDENCE IS INSUFFICIENT EVIDENCE, not a skipped comparison.
+  //
+  // The first version read `live.scopes` while its message said "recorded",
+  // and compared with `if (was && now && ...)` -- so deleting a recorded scope
+  // disabled the check instead of failing it, and a missing current
+  // source-departure scope was skipped silently. Absence is now reported, and
+  // reported separately on each side: a pre-scope record stays readable as
+  // historical data, it just cannot receive the same certification.
   for (const k of ["sourceLanguageDeparture", "quotientLanguageInvalid"] as const) {
     const was = recorded.scopes?.[k];
     const now = live.scopes?.[k];
+    if (was === undefined) problems.push(`the RECORDED report carries no ${k} scope; it cannot be shown to cover the population it names`);
+    if (now === undefined) problems.push(`the CURRENT report carries no ${k} scope; the check cannot state what it validated`);
     if (was && now && was.populationDigest !== now.populationDigest) {
       problems.push(`the ${k} population moved: ${was.specimens} -> ${now.specimens} specimens, digest ${was.populationDigest.slice(0, 12)} -> ${now.populationDigest.slice(0, 12)}`);
     }
   }
+
+  // COVERAGE, which is a different claim from stability. Two reports agreeing
+  // with each other proves neither validated the population it names. The
+  // terminal invariant must have been computed over exactly the manifest the
+  // report declares -- compared by digest under one recipe, so a
+  // same-cardinality substitution cannot pass on a matching count.
+  const q = live.scopes?.quotientLanguageInvalid;
+  const named = live.specimens.populationDigest;
+  // BOTH, because they catch different lies. The count catches a scope that
+  // admits it saw fewer; the digest catches one that saw as many but not the
+  // same ones. Replacing the count with the digest let a scope claiming 112 of
+  // 208 pass while carrying the 208-population digest.
+  if (q !== undefined && q.specimens !== live.specimens.total) {
+    problems.push(`the terminal invariant was measured over ${q.specimens} of ${live.specimens.total} specimens; a report must not name a population it did not check`);
+  }
+  if (q !== undefined && named !== undefined && q.populationDigest !== named) {
+    problems.push(
+      `the terminal invariant was measured over ${q.specimens} specimen(s) whose membership is not the population the report names (${live.specimens.total}): digest ${q.populationDigest.slice(0, 12)} vs ${named.slice(0, 12)}`,
+    );
+  }
+  if (named === undefined) problems.push("the report names no population digest; coverage can only be compared by count, which two different populations can share");
 
   const key = (w: WitnessAudit) => `${w.witness}: ${w.verdict}`;
   const was = recorded.witnesses.map(key).sort();

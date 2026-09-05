@@ -10,9 +10,10 @@
  * distinction it names.
  */
 import { describe, expect, it } from "vitest";
-import { loadDerivation, loadPlans } from "./census.js";
+import { loadDerivation, loadLocators, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
-import { claimedFootprints, computeReport, languageReports, loadReport, measure, specimens } from "./erasure-audit.js";
+import { claimedFootprints, computeReport, loadReport, measure, specimens } from "./erasure-audit.js";
+import { executePlan, planAt } from "./erasure-plan.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
 
@@ -354,37 +355,61 @@ describe("the terminal invariant is measured over the population the report name
     expect(live.scopes.sourceLanguageDeparture.populationDigest).not.toBe(live.scopes.quotientLanguageInvalid.populationDigest);
   });
 
-  it("an illegal image reachable ONLY in the synthesized suffix is reported", () => {
-    // The decisive case. A specimen from the excluded suffix whose erasure
-    // yields an image the quotient language rejects: under the old slicing the
-    // report said `quotientLanguageInvalid: 0` while this existed.
+  it("a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path", () => {
+    // The decisive case, and the previous version of this test did not state
+    // it. That one corrupted the INPUT -- it wrote an inadmissible marker into
+    // the specimen and then observed it survive erasure. What that shows is
+    // propagation and population reach; it does not distinguish validating the
+    // IMAGE from validating the FIXTURE, because a corrupt input fails both.
+    //
+    // Here the specimen is untouched and source-valid, and the DEFECT IS IN
+    // THE PLAN: `delete-slot` applied to a required leaf, which is exactly the
+    // required/optional misclassification the second spec invariant forbids.
+    // The image is then missing a property the quotient language still
+    // requires -- legality is relaxed at value positions, never on `required`.
     const s = specimens();
-    const authored = s.fixtures.slice(0, s.corpus + s.stimuli);
-    const clean = s.fixtures[s.corpus + s.stimuli];
-    expect(clean, "there must be a synthesized specimen to work from").toBeDefined();
+    const synthesized = s.fixtures.slice(s.corpus + s.stimuli);
+    const oracle = loadOracle();
 
-    // Source-valid where it counts, but carrying a marker whose kind the
-    // quotient schema does not admit. Any erasure that changes this specimen
-    // produces an image containing it.
-    const bad = JSON.parse(JSON.stringify(clean)) as typeof clean;
-    const rel = Object.values((bad.structure as { relations: Record<string, { fields: Record<string, Record<string, unknown>> }> }).relations)[0];
-    const field = Object.values(rel.fields)[0];
-    field.transformation = { "@q": "not-a-kind-the-schema-admits" } as never;
+    // (1) The specimen is source-valid BEFORE anything runs.
+    const valid = synthesized.find((f) => oracle.validate(f).length === 0);
+    expect(valid, "A1's premise is a source-valid specimen; without one this proves nothing").toBeDefined();
 
-    const plans = loadPlans();
-    const withBad = languageReports([...authored, bad], authored.length, plans);
-    const authoredOnly = languageReports(authored, authored.length, plans);
+    // (2) The real plan set produces no illegal image from it.
+    expect(computeReport().quotientLanguageInvalid, "the control population must be clean").toEqual([]);
 
-    // The old population does not see it...
-    expect(authoredOnly.quotientLanguageInvalid, "the control population must be clean, or this proves nothing").toEqual([]);
-    // ...and the population the criterion names does, naming the plan.
-    expect(withBad.quotientLanguageInvalid.length, "an illegal image in the synthesized suffix went unreported").toBeGreaterThan(0);
-    expect(withBad.quotientLanguageInvalid[0].coordinate).toMatch(/\S/);
-    expect(withBad.scopes.quotientLanguageInvalid.specimens).toBe(authored.length + 1);
+    // (3) An isolated plan defect, on the same untouched specimen.
+    const faulty = new Map(loadPlans());
+    faulty.set("probe:delete-required-leaf", planAt("probe:delete-required-leaf", "field.transformation", loadLocators(), { kind: "delete-slot" }));
 
-    // POSITIVE CONTROL: the same specimen, unmodified, is not flagged -- so the
-    // finding is about the illegal image and not about being synthesized.
-    const withClean = languageReports([...authored, clean], authored.length, plans);
-    expect(withClean.quotientLanguageInvalid, "a valid synthesized specimen was flagged").toEqual([]);
+    // (4) The full report path reports it, naming the plan AND the specimen.
+    const report = computeReport(faulty);
+    const found = report.quotientLanguageInvalid.find((r) => r.coordinate === "probe:delete-required-leaf");
+    expect(found, "a faulty plan produced an illegal image and the acceptance path did not report it").toBeDefined();
+    expect(found!.specimen, "the finding must name which specimen it came from").toMatch(/\S/);
+    expect(found!.error).toMatch(/required/i);
+
+    // (5) And the A1 assertion itself fails on that finding, while the report
+    // still covers the whole population it names.
+    expect(report.quotientLanguageInvalid).not.toEqual([]);
+    expect(report.scopes.quotientLanguageInvalid.populationDigest).toBe(report.specimens.populationDigest);
+  });
+
+  it("validating the INPUT instead of the image would pass that falsifier, and does not", () => {
+    // The mutant the previous test could not discriminate:
+    //   tally(illegal, p.id, quotient(image))  ->  tally(illegal, p.id, quotient(f))
+    // A corrupt input fails both readings, so the old test never separated
+    // them. Here the input is valid and only the image is illegal, so the
+    // wrong validation target reports nothing at all.
+    const s = specimens();
+    const oracle = loadOracle();
+    const quotient = loadQuotientValidator(CONTRACTS_DIR);
+    const valid = s.fixtures.slice(s.corpus + s.stimuli).find((f) => oracle.validate(f).length === 0)!;
+    const plan = planAt("probe:delete-required-leaf", "field.transformation", loadLocators(), { kind: "delete-slot" });
+
+    // The input is legal in BOTH languages...
+    expect(quotient(valid), "the specimen itself must be a legal quotient image").toEqual([]);
+    // ...and only the image is not.
+    expect(quotient(executePlan(valid, plan)).length, "the faulty plan must actually damage this specimen").toBeGreaterThan(0);
   });
 });
