@@ -8,9 +8,9 @@ Durable reference for a reader trying to understand the project — design ratio
 
 In-flight thinking, roadmaps, and working notes do NOT go here. They live in `docs/internal/` (gitignored, per-contributor). See [`document_governance.md`](./document_governance.md) — "Location" section — for the authority→directory partition rule and the rationale (stale ephemeral content in a consumer-facing tree becomes a trust hazard).
 
-## Frontmatter is enforced
+## Frontmatter contract and checks
 
-Every `.md` file in this directory (except this `README.md` and anything under `archive/`) must start with a YAML frontmatter block. The contract is defined in [`document_governance.md`](./document_governance.md), and the rule is enforced advisory-only by `.claude/hooks/doc-frontmatter-check.sh` on `Write`/`Edit`.
+Every `.md` file in this directory (except this `README.md` and anything under `archive/`) must start with a YAML frontmatter block. The contract is defined in [`document_governance.md`](./document_governance.md), and the rule is checked advisory-only by the active CAWS hook at `.caws/hooks/doc-frontmatter-check.sh` on `Write`/`Edit`. The blocking freshness and derived-value gate is `pnpm run docs:check-claims`; the hook alone is not CI evidence.
 
 Minimum required fields:
 
@@ -57,8 +57,9 @@ docs/
     design/
       box-model-primitive.md             # The 14-slot geometry pool
       target-pack-registry.md            # Target-pack manifest + extension seam
-  dead-slot-audit/  pseudo-state-audit/  # Machine-generated ledgers — written by
-  state-suppression-audit/               #   `pnpm run audit:*`, never by hand
+  carrier-reachability-audit/             # Machine-generated/ratcheted audit records
+  dead-slot-audit/  pseudo-state-audit/   #   written by `pnpm run audit:*`,
+  state-suppression-audit/                #   never corrected by hand
   token-resolvability-audit/
   archive/                               # Reserved: frozen historical docs, exempt from
                                          #   frontmatter rules. Does not exist yet.
@@ -67,7 +68,8 @@ docs/internal/                           # gitignored — per-contributor epheme
   <roadmaps, working notes, in-flight thinking>
 ```
 
-The four `*-audit/` matrices are regenerated output. Fix a wrong statement in one by editing its
-generator under `scripts/<name>-audit/`, not the markdown — a hand edit is overwritten on the next run.
+Generated matrices and reports inside the tracked `*-audit/` directories are rewritten by their
+`scripts/<name>-audit/` producers; correct those producers rather than hand-editing generated output.
+Adjacent adjudication or policy records may be hand-authored and identify their own authority.
 
 New top-level docs should pick the right subfolder by authority — e.g., `specifications/` for `authority: spec` reference material, `adrs/` for `authority: adr`. Create the folder if it does not exist. Do NOT create `roadmaps/` or `working/` under `docs/`; those authorities partition into `docs/internal/`.
