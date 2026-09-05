@@ -14,6 +14,7 @@ import {
   CONTRACT_MUTANTS,
   applyContractMutation,
   changedLeaves,
+  compareMutationDisposition,
   summarizeMutationResults,
 } from "./catalog.mjs";
 
@@ -172,6 +173,11 @@ function parseArgs(argv) {
 
   if (!(options.profile in PROFILES)) {
     throw new Error("Unknown profile: " + options.profile);
+  }
+  if (options.verifyDispositions && options.profile !== "full") {
+    throw new Error(
+      "--verify-dispositions requires --profile=full because catalog dispositions and first-detector provenance are reviewed against the full stage sequence",
+    );
   }
   if (
     options.maxSurvivors !== null &&
@@ -338,6 +344,8 @@ function renderMarkdown(report, reportDir) {
     "- Detected: " + report.summary.detected + "/" + report.summary.total,
     "- Survived: " + report.summary.survived + "/" + report.summary.total,
     "- Disposition mismatches: " + report.summary.dispositionMismatches,
+    "- Detector provenance mismatches: " +
+      report.summary.provenanceMismatches,
     "",
     "Detection means a selected gate went red. It does not by itself prove an",
     "independent correctness oracle: structural and contract-derived detectors",
@@ -345,17 +353,22 @@ function renderMarkdown(report, reportDir) {
     "axe, and hand-authored custom regions. A survivor means no selected stage",
     "contradicted the mutation; it does not prove the original fact is correct.",
     "A disposition is a reviewed measurement expectation, not an assertion that",
-    "the original contract value is correct. Unexpected detections fail too:",
-    "they mean a known blind spot gained an oracle and its ledger entry is stale.",
+    "the original contract value is correct. For detected mutants, the reviewed",
+    "first stage and evidence class are part of that disposition: replacing an",
+    "independent detector with a derived one is drift even if both kill the mutant.",
+    "Unexpected detections fail too: they mean a known blind spot gained an oracle",
+    "and its ledger entry is stale.",
     "",
     "## Results",
     "",
-    "| Mutant | Field class | Expected | Actual | Disposition | First detector | Evidence class |",
+    "| Mutant | Field class | Expected outcome | Actual outcome | Expected first detector | Actual first detector | Disposition |",
     "|---|---|---|---|---|---|---|",
   ];
 
   for (const result of report.results) {
     const detection = result.firstDetection;
+    const expectedDetection = result.expectedDetection;
+    const disposition = compareMutationDisposition(result);
     lines.push(
       "| " +
         result.id +
@@ -366,11 +379,15 @@ function renderMarkdown(report, reportDir) {
         " | " +
         result.outcome +
         " | " +
-        (result.outcome === result.expectedOutcome ? "match" : "MISMATCH") +
+        (expectedDetection
+          ? expectedDetection.stage + " / " + expectedDetection.evidenceClass
+          : "none") +
         " | " +
-        (detection?.stage ?? "none") +
+        (detection
+          ? detection.stage + " / " + detection.evidenceClass
+          : "none") +
         " | " +
-        (detection?.evidenceClass ?? "none") +
+        (disposition.matches ? "match" : "MISMATCH") +
         " |",
     );
   }
@@ -509,7 +526,7 @@ async function main() {
     FSDS_E2E_PORT: String(e2ePort),
   };
   const report = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     commit,
     profile: options.profile,
     verifyDispositions: options.verifyDispositions,
@@ -633,6 +650,7 @@ async function main() {
         to: mutant.to,
         hypothesis: mutant.hypothesis,
         expectedOutcome: mutant.expectedOutcome,
+        expectedDetection: mutant.expectedDetection ?? null,
         gap: mutant.gap ?? null,
         outcome: failed ? "detected" : "survived",
         firstDetection: failed
@@ -697,7 +715,7 @@ async function main() {
       console.error(
         "[mutation] disposition mismatch: " +
           report.summary.dispositionMismatches +
-          " mutant outcome(s) differ from the reviewed catalog",
+          " mutant outcome(s) or first-detector provenance records differ from the reviewed catalog",
       );
       process.exitCode = 1;
     }

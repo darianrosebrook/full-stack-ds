@@ -17,6 +17,10 @@ export const CONTRACT_MUTANTS = Object.freeze([
     hypothesis:
       "A naming relationship to a decorative part should be rejected before emission.",
     expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "generate-check",
+      evidenceClass: "structural",
+    },
   },
   {
     id: "dialog-name-to-body",
@@ -29,6 +33,10 @@ export const CONTRACT_MUTANTS = Object.freeze([
     hypothesis:
       "A real but wrong naming target requires a test or runtime oracle to contradict it.",
     expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+    },
   },
   {
     id: "icon-decorative-default-false",
@@ -41,6 +49,10 @@ export const CONTRACT_MUTANTS = Object.freeze([
     hypothesis:
       "Changing an accessibility default should be contradicted independently of regenerated tests.",
     expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+    },
   },
   {
     id: "dialog-size-default-lg",
@@ -53,6 +65,10 @@ export const CONTRACT_MUTANTS = Object.freeze([
     hypothesis:
       "Changing a valid visual default should require authored behavioral or visual evidence.",
     expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+    },
   },
   {
     id: "dialog-size-variant-full-to-wide",
@@ -65,6 +81,10 @@ export const CONTRACT_MUTANTS = Object.freeze([
     hypothesis:
       "Renaming a variant while leaving its style selector behind should be detected by realization checks.",
     expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "generate-check",
+      evidenceClass: "structural",
+    },
   },
   {
     id: "badge-rtl-flip-icon-false",
@@ -96,6 +116,70 @@ export const CONTRACT_MUTANTS = Object.freeze([
     gap: {
       spec: "RAIL-CONTRACT-ORACLE-DISPOSITIONS-01",
       note: "The all-seven full profile at 8bb6e521 realized both values without contradiction across structural, audit, test, and browser stages; this sentinel keeps that unprotected fact explicit.",
+    },
+  },
+  {
+    id: "dialog-state-machine-open-event-reveal",
+    fieldClass: "state-machine-event",
+    contractPath:
+      "packages/ds-contracts/components/Dialog/Dialog.contract.json",
+    pointer: ["stateMachine", "transitions", 0, "event"],
+    from: "open",
+    to: "reveal",
+    hypothesis:
+      "Renaming a valid state-machine event should affect a consumer or remain an explicit non-emitting fact.",
+    expectedOutcome: "survived",
+    gap: {
+      spec: "RAIL-CONTRACT-INFLUENCE-PROVENANCE-01",
+      note: "This sentinel measures whether state-machine event vocabulary reaches anything beyond schema and transition self-consistency checks.",
+    },
+  },
+  {
+    id: "card-actions-slot-required",
+    fieldClass: "slot-requiredness",
+    contractPath:
+      "packages/ds-contracts/components/Card/Card.contract.json",
+    pointer: ["slots", "actions", "required"],
+    from: false,
+    to: true,
+    hypothesis:
+      "Making a named slot required should change a generated API, validator, authored fact, or remain an explicit documentation-only declaration.",
+    expectedOutcome: "survived",
+    gap: {
+      spec: "RAIL-CONTRACT-INFLUENCE-PROVENANCE-01",
+      note: "This sentinel measures the required flag specifically; named-slot rendering is separately driven by anatomy.dom slot nodes.",
+    },
+  },
+  {
+    id: "show-more-text-overflow-to-default-expanded",
+    fieldClass: "text-overflow-binding",
+    contractPath:
+      "packages/ds-contracts/components/ShowMore/ShowMore.contract.json",
+    pointer: ["textOverflow", "line"],
+    from: "prop:maxLines",
+    to: "prop:defaultExpanded",
+    hypothesis:
+      "Repointing line-clamp intent to a real but wrong prop should be contradicted by authored IR-authority evidence.",
+    expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+    },
+  },
+  {
+    id: "accordion-motion-height-to-width",
+    fieldClass: "motion-property",
+    contractPath:
+      "packages/ds-contracts/components/Accordion/Accordion.contract.json",
+    pointer: ["motion", "transitions", 0, "properties", 0],
+    from: "height",
+    to: "width",
+    hypothesis:
+      "Changing a declared transition property should alter the motion-realization obligation set.",
+    expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "audit-motion",
+      evidenceClass: "contract-derived",
     },
   },
 ]);
@@ -168,6 +252,26 @@ export function changedLeaves(before, after, pointer = [], changes = []) {
   return changes;
 }
 
+export function compareMutationDisposition(result) {
+  const outcomeMatches = result.outcome === result.expectedOutcome;
+  const provenanceCompared =
+    outcomeMatches &&
+    result.outcome === "detected" &&
+    result.expectedDetection !== undefined;
+  const provenanceMatches =
+    !provenanceCompared ||
+    (result.firstDetection?.stage === result.expectedDetection.stage &&
+      result.firstDetection?.evidenceClass ===
+        result.expectedDetection.evidenceClass);
+
+  return {
+    matches: outcomeMatches && provenanceMatches,
+    outcomeMatches,
+    provenanceCompared,
+    provenanceMatches,
+  };
+}
+
 export function summarizeMutationResults(results) {
   const totals = {
     total: results.length,
@@ -176,6 +280,7 @@ export function summarizeMutationResults(results) {
     byEvidenceClass: {},
     byFieldClass: {},
     dispositionMismatches: 0,
+    provenanceMismatches: 0,
     unexpectedSurvivors: 0,
     unexpectedDetections: 0,
   };
@@ -190,10 +295,20 @@ export function summarizeMutationResults(results) {
         (totals.byEvidenceClass[evidenceClass] ?? 0) + 1;
     }
 
-    if (result.outcome !== result.expectedOutcome) {
+    const disposition = compareMutationDisposition(result);
+    const outcomeMismatch = !disposition.outcomeMatches;
+    const provenanceMismatch =
+      disposition.provenanceCompared && !disposition.provenanceMatches;
+
+    if (!disposition.matches) {
       totals.dispositionMismatches += 1;
-      if (result.outcome === "survived") totals.unexpectedSurvivors += 1;
-      if (result.outcome === "detected") totals.unexpectedDetections += 1;
+      if (provenanceMismatch) totals.provenanceMismatches += 1;
+      if (outcomeMismatch && result.outcome === "survived") {
+        totals.unexpectedSurvivors += 1;
+      }
+      if (outcomeMismatch && result.outcome === "detected") {
+        totals.unexpectedDetections += 1;
+      }
     }
 
     const field = (totals.byFieldClass[result.fieldClass] ??= {
