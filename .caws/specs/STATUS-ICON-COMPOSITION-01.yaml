@@ -2,9 +2,11 @@ id: STATUS-ICON-COMPOSITION-01
 title: 'Compose Status glyphs through contract-governed Icon value mapping'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Status now composes contract-mapped Icon glyphs through generic IR across admitted targets, with runtime and catalog-validation witnesses.'
 created_at: '2026-09-05T00:47:07.199Z'
-updated_at: '2026-09-05T00:47:29.410Z'
+updated_at: '2026-09-05T01:08:38.388Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
