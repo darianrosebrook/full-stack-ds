@@ -23,8 +23,14 @@ import {
   WITNESS_AUTHORITY,
   authorityIdentities,
 } from "./authority.js";
+import { loadPlans } from "./census.js";
+import { gateProblems, loadReport } from "./erasure-audit.js";
+import { executePlan } from "./erasure-plan.js";
+import { adjudicationKey, checkFreeze, loadFreeze } from "./freeze.js";
 import { CONTRACTS_DIR, RULE_SOURCES } from "./necessity.js";
 import { QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
+import { canonical } from "./quotient.js";
+import type { Fixture } from "./structure.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ruleModules = new Set(RULE_SOURCES.map((p) => path.basename(p)));
@@ -193,4 +199,108 @@ describe("the witness identity covers ADMISSION, not only image production", () 
     fs.rmSync(dir, { recursive: true, force: true });
     fs.rmSync(contracts, { recursive: true, force: true });
   });
+});
+
+/**
+ * EVIDENCE EARNED UNDER ONE DEFINITION OF LAWFUL ERASURE IS REFUSED UNDER
+ * ANOTHER, and the wrong operation fails the behavioural law -- not merely a
+ * digest comparison.
+ *
+ * The analytical modules are relocated to a scratch tree that resolves its
+ * contracts, docs and package dependencies exactly as the real one does, and
+ * ONE operation is changed in the copy: arity truncates to one whatever the
+ * declaration's floor -- a legal-looking, in-slot, idempotent change. The
+ * copy's OWN live report and freeze are then handed to THIS tree's consumers.
+ * Nothing is stubbed: the identities are digested over the copy's bytes by the
+ * copy's own authority module, and the reports are computed by the copy's own
+ * audit and freeze modules over the same specimens. The unmutated relocation
+ * runs first, so a refusal cannot be an artefact of relocating.
+ */
+describe("evidence earned under one erasure definition is refused under another", () => {
+  const ROOT = path.resolve(HERE, "../../../..");
+  const relocate = (mutate?: { file: string; from: string; to: string }): { dir: string; remove: () => void } => {
+    fs.mkdirSync(path.join(ROOT, "tmp"), { recursive: true });
+    const scratch = fs.mkdtempSync(path.join(ROOT, "tmp", "authority-"));
+    const dir = path.join(scratch, "packages/ds-codegen/src/analytical");
+    fs.mkdirSync(dir, { recursive: true });
+    for (const f of fs.readdirSync(HERE)) if (f.endsWith(".ts") && !f.endsWith(".test.ts")) fs.copyFileSync(path.join(HERE, f), path.join(dir, f));
+    fs.symlinkSync(path.join(ROOT, "packages/ds-contracts"), path.join(scratch, "packages/ds-contracts"));
+    fs.symlinkSync(path.join(ROOT, "docs"), path.join(scratch, "docs"));
+    // The package's own dependencies (ajv, zod) live beside the package, not at the root.
+    fs.symlinkSync(path.join(ROOT, "packages/ds-codegen/node_modules"), path.join(scratch, "packages/ds-codegen/node_modules"));
+    if (mutate) {
+      const p = path.join(dir, mutate.file);
+      const src = fs.readFileSync(p, "utf-8");
+      expect(src.split(mutate.from), `${mutate.file}: the anchor must match exactly once`).toHaveLength(2);
+      fs.writeFileSync(p, src.replace(mutate.from, mutate.to));
+    }
+    return { dir, remove: () => fs.rmSync(scratch, { recursive: true, force: true }) };
+  };
+  const load = async (dir: string) => ({
+    authority: (await import(/* @vite-ignore */ path.join(dir, "authority.ts"))) as typeof import("./authority.js"),
+    audit: (await import(/* @vite-ignore */ path.join(dir, "erasure-audit.ts"))) as typeof import("./erasure-audit.js"),
+    freeze: (await import(/* @vite-ignore */ path.join(dir, "freeze.ts"))) as typeof import("./freeze.js"),
+    plan: (await import(/* @vite-ignore */ path.join(dir, "erasure-plan.ts"))) as typeof import("./erasure-plan.js"),
+    quotient: (await import(/* @vite-ignore */ path.join(dir, "quotient.ts"))) as typeof import("./quotient.js"),
+  });
+  /** Arity truncates to ONE whatever the floor. In-slot, idempotent, schema-shaped; wrong. */
+  const TRUNCATE_TO_ONE = {
+    file: "erasure-plan.ts",
+    from: "if (Array.isArray(v)) write(s, v.slice(0, floor));",
+    to: "if (Array.isArray(v)) write(s, v.slice(0, 1));",
+  };
+  const nest = (levels: string[]): Fixture =>
+    ({ id: "FX_LAW", structure: { relations: { r: { fields: {}, derivedBy: { kind: "nest", from: "s", levels } } } }, assertions: [] }) as unknown as Fixture;
+
+  it("the relocation itself is faithful: unmutated, every identity agrees and both consumers accept", async () => {
+    const copy = relocate();
+    try {
+      const m = await load(copy.dir);
+      expect(m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION)).toEqual(authorityIdentities(QUOTIENT_SCHEMA_VERSION));
+      expect(gateProblems(loadReport(), m.audit.computeReport())).toEqual([]);
+      expect(checkFreeze(loadFreeze(), m.freeze.computeFreeze({}, loadFreeze().fixtures)).ok).toBe(true);
+    } finally {
+      copy.remove();
+    }
+  }, 60_000);
+
+  it("a wrong-but-local operation fails the law, moves exactly the erasure identity, and both consumers refuse the evidence earned under the old one", async () => {
+    const copy = relocate(TRUNCATE_TO_ONE);
+    try {
+      const m = await load(copy.dir);
+
+      // THE BEHAVIOURAL FAILURE FIRST -- the proof; the digest below is only
+      // attribution. Two lists above the floor that differ in a position the
+      // floor KEEPS: lawful forgetting separates them ([a,b] vs [a,c]); the
+      // wrong operation identifies them ([a] vs [a]).
+      const plan = loadPlans().get("relation.derivedBy.nest.levels#arity")!;
+      expect(plan.locator.arityFloor).toBe(2);
+      const [abc, acb] = [nest(["a", "b", "c"]), nest(["a", "c", "b"])];
+      expect(canonical(executePlan(abc, plan))).not.toBe(canonical(executePlan(acb, plan)));
+      expect(m.quotient.canonical(m.plan.executePlan(abc, plan))).toBe(m.quotient.canonical(m.plan.executePlan(acb, plan)));
+
+      // THE IDENTITY, BY CAUSE: what an erasure does moved, and nothing else.
+      const here = authorityIdentities(QUOTIENT_SCHEMA_VERSION);
+      const there = m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION);
+      expect((Object.keys(here) as (keyof typeof here)[]).filter((k) => here[k] !== there[k])).toEqual(["erasureAuthorityDigest"]);
+
+      // THE CONSUMERS, over the copy's OWN report and freeze. The footprint
+      // gate names the cause with both endpoints...
+      const problems = gateProblems(loadReport(), m.audit.computeReport());
+      expect(problems).toContain(
+        `consistency: authority erasureAuthorityDigest moved since the report was recorded: ${here.erasureAuthorityDigest} -> ${there.erasureAuthorityDigest}`,
+      );
+      // ...and, for THIS mutant, the population moved too: the synthesized
+      // arity pairs stop separating under an operation that truncates both
+      // sides to one, so they are discarded and every footprint classification
+      // bound to the population is rejected with them.
+      expect(problems).toContain("consistency: the specimen population moved: every footprint classification bound to footprintBasisDigest is rejected");
+      // ...and the freeze diverges on exactly that transition, adjudicable only by its endpoints.
+      const fr = checkFreeze(loadFreeze(), m.freeze.computeFreeze({}, loadFreeze().fixtures));
+      expect(fr.ok).toBe(false);
+      expect(fr.divergences.map(adjudicationKey)).toContain(`authority:erasureAuthorityDigest@${here.erasureAuthorityDigest}->${there.erasureAuthorityDigest}`);
+    } finally {
+      copy.remove();
+    }
+  }, 60_000);
 });
