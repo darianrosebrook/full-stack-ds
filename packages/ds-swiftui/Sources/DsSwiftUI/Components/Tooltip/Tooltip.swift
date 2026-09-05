@@ -44,7 +44,7 @@ enum TooltipTokens {
     ]
 }
 
-/// Emitted through the anchored-tooltip surface path: hover on the trigger region drives the open channel (the declared trigger modality on this target), presenting the content region in a popover. Native popover dismissal realizes escape/blur.
+/// Emitted through the anchored-surface path: hover on the trigger region drives the open channel from the declared open triggers, presenting the content region in a popover. Native popover dismissal realizes platform dismissal.
 public struct Tooltip<Trigger: View, Content: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         TooltipTokens.scopes
