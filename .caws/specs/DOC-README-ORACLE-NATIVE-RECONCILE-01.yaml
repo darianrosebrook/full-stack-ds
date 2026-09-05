@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/swift-parity-diff.mjs: corpus 51, react-emitting 51, swift-emitting 51, divergent 0; swift test --package-path packages/ds-swiftui: 41 tests, 4 visible AX-host skips, 0 failures; PressProofHarness: all counters match, with OTP text-entry and modal-dismissal limitations printed"
     recorded_at: "2026-09-05T01:53:37.993Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "docs/normal-form.md Falsification condition 1 now defines fixed-workload outcomes (seeded semantic-defect escape, regeneration divergence, next-target engineering cost, consumer breakage) and explicitly permits systems lacking properties 2, 5, or 7 to falsify their necessity"
+    recorded_at: "2026-09-05T01:53:44.786Z"
