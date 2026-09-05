@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useScrollLock } from "../useScrollLock";
+import { PortalTargetProvider } from "../usePortal";
 
 describe("useScrollLock", () => {
   beforeEach(() => {
@@ -38,5 +39,22 @@ describe("useScrollLock", () => {
     expect(document.body.style.overflow).toBe("hidden");
     unmount();
     expect(document.body.style.overflow).toBe("scroll");
+  });
+
+  it("locks a composed portal boundary without blocking the document body", () => {
+    const target = document.createElement("section");
+    target.style.overflow = "auto";
+    document.body.appendChild(target);
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <PortalTargetProvider target={target}>{children}</PortalTargetProvider>
+    );
+
+    const { unmount } = renderHook(() => useScrollLock(true), { wrapper });
+
+    expect(target.style.overflow).toBe("hidden");
+    expect(document.body.style.overflow).toBe("");
+    unmount();
+    expect(target.style.overflow).toBe("auto");
+    document.body.removeChild(target);
   });
 });

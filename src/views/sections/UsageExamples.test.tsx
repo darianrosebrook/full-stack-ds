@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { applyRootUsagePropOverrides } from "./UsageExamples";
+import {
+  applyRootUsagePropOverrides,
+  portalPreviewKind,
+} from "./UsageExamples";
 import type { UsageTreeNode } from "../../types/data";
+import { bundle } from "../../types/bundle";
 
 describe("applyRootUsagePropOverrides", () => {
   it("merges live primitive prop overrides into the root component only", () => {
@@ -69,5 +73,24 @@ describe("applyRootUsagePropOverrides", () => {
         ariaLabel: { text: "Save" },
       }),
     ).toBe(tree);
+  });
+});
+
+describe("portalPreviewKind", () => {
+  it("derives the complete preview-containment inventory from contract facts", () => {
+    const portaled = bundle.components
+      .filter((component) => portalPreviewKind(component.contract) !== null)
+      .map((component) => component.name)
+      .sort();
+
+    expect(portaled).toEqual([
+      "Command",
+      "Dialog",
+      "Popover",
+      "Sheet",
+      "Toast",
+      "Tooltip",
+      "Walkthrough",
+    ]);
   });
 });

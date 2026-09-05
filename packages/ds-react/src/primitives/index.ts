@@ -6,10 +6,13 @@ export {
   useControllableState,
   useDismissal,
   useFocusTrap,
+  PortalTargetProvider,
   usePortal,
+  usePortalTarget,
   useScrollLock,
 } from "./hooks";
 export type {
+  PortalTargetProviderProps,
   UseAnchorToggleOptions,
   UseAnchorToggleResult,
   UseDismissalOptions,

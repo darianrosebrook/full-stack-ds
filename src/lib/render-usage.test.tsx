@@ -35,10 +35,12 @@ describe("usage sidecar render projection", () => {
     expect(screen.getByText("Warning")).toBeTruthy();
   });
 
-  it("renders Command item content through the contract's items slot", () => {
+  it("renders Command item content inside its isolated portal canvas", async () => {
     render(<UsageExamples component={component("Command")} />);
 
-    expect(screen.getByText("Go to Dashboard")).toBeTruthy();
+    const item = await screen.findByText("Go to Dashboard");
+    expect(item.closest("[data-fsds-preview-portal]")).toBeTruthy();
     expect(screen.getByText("View your project overview")).toBeTruthy();
   });
+
 });

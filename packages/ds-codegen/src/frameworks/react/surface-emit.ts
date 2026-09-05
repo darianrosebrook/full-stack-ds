@@ -102,8 +102,10 @@ function emitAnchoredSurfaceSource(
   ];
   const extraImportLines: string[] = [];
   if (portalEnabled) {
-    // createPortal lives in react-dom, not react itself.
     extraImportLines.push(`import { createPortal } from "react-dom";`);
+    extraImportLines.push(
+      `import { usePortalTarget } from "../../primitives/hooks";`,
+    );
   }
   if (positioningEnabled) {
     extraImportLines.push(
@@ -415,6 +417,9 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   // - Portal: when enabled, wrap the div in createPortal(node, document.body).
   //   Guard against SSR by checking typeof document; falls back to in-place
   //   render server-side, which positioning hooks will correct on hydration.
+  const portalTargetHookCall = portalEnabled
+    ? `\n  const portalTarget = usePortalTarget();`
+    : "";
   const positioningHookCall = positioningEnabled
     ? `\n  const position = useAnchoredPosition({
     anchor: ctx.anchorEl,
@@ -422,6 +427,7 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
     open: ctx.open,
     placement: ctx.placement ?? "auto",
     collision: "${collision}",
+    ${portalEnabled ? "boundary: portalTarget," : ""}
   });`
     : "";
   // Consumer style is spread first so our computed positioning wins.
@@ -454,10 +460,10 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
       {children}
     </div>`;
   const portalWrappedContent = portalEnabled
-    ? `typeof document !== "undefined"
+    ? `portalTarget !== null
     ? createPortal(
         ${contentDiv.split("\n").map((line) => `    ${line}`).join("\n").trim()},
-        document.body,
+        portalTarget,
       )
     : (
         ${contentDiv.split("\n").map((line) => `    ${line}`).join("\n").trim()}
@@ -468,7 +474,7 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   children,
   ...rest
 }: ${name}ContentProps) {
-  const ctx = use${name}Context();${positioningHookCall}${restDestructure}
+  const ctx = use${name}Context();${portalTargetHookCall}${positioningHookCall}${restDestructure}
   if (!ctx.open) return null;
   return ${portalWrappedContent};
 };`;

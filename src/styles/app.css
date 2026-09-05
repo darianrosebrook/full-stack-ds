@@ -753,6 +753,38 @@ button {
   background-repeat: repeat, repeat;
 }
 
+/*
+ * A component explorer is itself a portal consumer. Its portal-enabled
+ * examples receive a local containing block so modal backdrops, sheets, and
+ * anchored surfaces exercise realistic geometry without taking over the app.
+ */
+.preview-frame--portal {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.preview-frame--portal-overlay {
+  min-height: clamp(420px, 55vh, 640px);
+}
+
+.preview-frame--portal-anchored {
+  min-height: clamp(280px, 35vh, 420px);
+}
+
+.preview-frame__portal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.preview-frame__portal > * {
+  pointer-events: auto;
+}
+
 .preview-iframe {
   width: 100%;
   height: 320px;

@@ -9,8 +9,15 @@ export type { UseDismissalOptions } from "./useDismissal";
 export { useScrollLock } from "./useScrollLock";
 export { useFocusTrap } from "./useFocusTrap";
 export type { UseFocusTrapOptions } from "./useFocusTrap";
-export { usePortal } from "./usePortal";
-export type { UsePortalOptions } from "./usePortal";
+export {
+  PortalTargetProvider,
+  usePortal,
+  usePortalTarget,
+} from "./usePortal";
+export type {
+  PortalTargetProviderProps,
+  UsePortalOptions,
+} from "./usePortal";
 export { createCompoundContext } from "./createCompoundContext";
 export {
   FieldAssociationContext,
