@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "precedence": ["themeByName", "themeByRef", "literal", "fallback"],
+  "cases": [
+    {
+      "id": "token-backed-slot-name-wins",
+      "name": "fixture.component.color.background",
+      "ref": "fixture.semantic.color.background",
+      "fallback": "fallback-value",
+      "themeByName": "slot-name-value",
+      "themeByRef": "semantic-ref-value",
+      "expected": "slot-name-value"
+    },
+    {
+      "id": "token-backed-ref-wins",
+      "name": "fixture.component.color.foreground",
+      "ref": "fixture.semantic.color.foreground",
+      "fallback": "fallback-value",
+      "themeByRef": "semantic-ref-value",
+      "expected": "semantic-ref-value"
+    },
+    {
+      "id": "token-backed-fallback",
+      "name": "fixture.component.color.border",
+      "ref": "fixture.semantic.color.border",
+      "fallback": "fallback-value",
+      "expected": "fallback-value"
+    },
+    {
+      "id": "literal-slot-name-wins",
+      "name": "fixture.component.opacity",
+      "literal": "literal-value",
+      "themeByName": "slot-name-value",
+      "expected": "slot-name-value"
+    },
+    {
+      "id": "literal-default",
+      "name": "fixture.component.font-style",
+      "literal": "literal-value",
+      "expected": "literal-value"
+    },
+    {
+      "id": "unrelated-theme-key-does-not-leak",
+      "name": "fixture.component.color.focus",
+      "ref": "fixture.semantic.color.focus",
+      "fallback": "fallback-value",
+      "unrelatedTheme": "unrelated-value",
+      "expected": "fallback-value"
+    }
+  ]
+}
