@@ -79,3 +79,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run governed:rail plus packages/ds-codegen/src/frameworks/value-map-binding.test.ts (six admitted emitters)"
     recorded_at: "2026-09-05T01:08:19.541Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: pnpm exec playwright test e2e/runtime-rail.spec.ts --grep Status (10/10); live Status usage examples resolved check and triangle-alert
+    recorded_at: "2026-09-05T01:08:20.886Z"
