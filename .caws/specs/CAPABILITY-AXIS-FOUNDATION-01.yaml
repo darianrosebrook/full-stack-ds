@@ -81,3 +81,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/form-control-ir.test.ts packages/ds-codegen/src/frameworks/vue-change-event-timing.test.ts src/views/AnalyticalFixturesScratchView.smoke.test.tsx && pnpm run test:frameworks"
     recorded_at: "2026-09-05T05:33:58.463Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "pnpm run governed:rail && pnpm test && pnpm run test:frameworks (51/51 contracts; 6 admitted targets; 3473/3473 root tests; all framework suites pass)"
+    recorded_at: "2026-09-05T05:33:58.906Z"
