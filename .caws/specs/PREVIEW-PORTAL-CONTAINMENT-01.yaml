@@ -77,3 +77,10 @@ evidence:
     command: "FSDS_E2E_BASE=http://127.0.0.1:5182 pnpm exec playwright test e2e/showcase-portal-containment.spec.ts"
     exit_code: 0
     commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: usePortal and useScrollLock unit tests prove body defaults outside a provider and scoped locking inside one
+    recorded_at: "2026-09-05T01:35:57.078Z"
+    command: pnpm exec vitest run packages/ds-react/src/primitives/hooks/__tests__/usePortal.test.tsx packages/ds-react/src/primitives/hooks/__tests__/useScrollLock.test.tsx
+    exit_code: 0
+    commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
