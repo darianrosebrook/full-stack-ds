@@ -75,3 +75,11 @@ contracts:
   - name: 'quotient-image'
     type: schema
     path: 'packages/ds-contracts/quotient-image.schema.json'
+evidence:
+  - criterion_id: A1
+    status: unchecked
+    evidence_ref: "0 illegal quotient images over 208 specimens by membership digest (footprints --check; erasure-audit.test.ts). OPEN: scope-object/population-field admission (null/false/0/'' scope removes its own comparison; recorded-side-only corruption accepted), quotientSchemaVersion compatibility. See evidence-map.json A1."
+    recorded_at: "2026-09-05T06:54:56.345Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/erasure-audit.test.ts > a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
