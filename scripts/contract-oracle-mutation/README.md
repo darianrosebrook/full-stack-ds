@@ -25,7 +25,10 @@ Reports and per-stage logs are written under
 `tmp/contract-oracle-mutation/`. The source worktree must be clean. The
 runner clones its exact HEAD into a throwaway directory, installs from the
 lockfile, proves the unmutated baseline first, and restores a byte-clean
-generated tree between mutants. It never mutates the developer worktree.
+generated tree between mutants. It never mutates the developer worktree. Each
+run allocates a dedicated loopback port for the Playwright rails, so an active
+showcase or another agent's run cannot invalidate the baseline by occupying
+the default development port.
 
 The full profile expands the governed rail, runs every contract-derived
 realization audit, typechecks all admitted packages, runs the root and

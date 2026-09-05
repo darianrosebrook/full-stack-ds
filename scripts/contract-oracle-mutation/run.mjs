@@ -8,6 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
+import { createServer } from "node:net";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import {
   CONTRACT_MUTANTS,
@@ -306,6 +307,25 @@ function trackedDiff(repo) {
   return { clean: result.status === 0, output: result.stdout + result.stderr };
 }
 
+async function availableLoopbackPort() {
+  return await new Promise((resolvePromise, rejectPromise) => {
+    const server = createServer();
+    server.once("error", rejectPromise);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      if (address === null || typeof address === "string") {
+        server.close();
+        rejectPromise(new Error("Failed to allocate a loopback TCP port"));
+        return;
+      }
+      server.close((error) => {
+        if (error) rejectPromise(error);
+        else resolvePromise(address.port);
+      });
+    });
+  });
+}
+
 function renderMarkdown(report, reportDir) {
   const lines = [
     "# Contract oracle mutation report",
@@ -481,16 +501,19 @@ async function main() {
 
   const sandboxRoot = mkdtempSync(join(tmpdir(), "fsds-contract-oracle-"));
   const sandboxRepo = join(sandboxRoot, "repo");
+  const e2ePort = await availableLoopbackPort();
   const env = {
     ...process.env,
     CI: "true",
     FORCE_COLOR: "0",
+    FSDS_E2E_PORT: String(e2ePort),
   };
   const report = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     commit,
     profile: options.profile,
     verifyDispositions: options.verifyDispositions,
+    e2ePort,
     startedAt: new Date().toISOString(),
     finishedAt: null,
     stageIds: PROFILES[options.profile],
@@ -502,6 +525,7 @@ async function main() {
 
   console.log("[mutation] report: " + join(reportDir, "report.md"));
   console.log("[mutation] sandbox: " + sandboxRepo);
+  console.log("[mutation] isolated e2e port: " + e2ePort);
 
   try {
     const installArgs = ["install", "--frozen-lockfile", "--prefer-offline"];
