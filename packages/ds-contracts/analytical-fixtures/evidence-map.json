@@ -1,19 +1,32 @@
 {
-  "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. No result here is claimed for an integration candidate: none exists yet.",
+  "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. Results marked OBSERVED were measured on the named integration candidate (see pins.integrationCandidate); the tip they were taken at is named per block.",
   "spec": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
-  "writtenAt": "2026-09-05T19:31:59+00:00",
+  "writtenAt": "2026-09-05T20:42:15+00:00",
   "pins": {
-    "testedWorktreeTip": "0868edb317bfbf2fceba4b29b274a16b510ae01d",
-    "selectedMainCommitAtWrite": "6b9e50bc9542f4abacd4c5ecb849d672ccdcd01b",
-    "mergeBase": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
-    "branchCommits": 40,
-    "mainAheadAtWrite": 313,
+    "testedWorktreeTip": "0d0fe106c304079b19070119624038f9edf95f96",
+    "selectedMainCommitAtWrite": "91ff7ae281bc0283f1a64beb78db4f17db7537ee",
+    "mergeBase": "6b9e50bc9542f4abacd4c5ecb849d672ccdcd01b",
+    "branchCommits": 47,
+    "mainAheadAtWrite": 4,
     "mainChangesUnderAnalyticalClosure": 0,
-    "mainChangesToSharedFiles": [
-      "package.json"
-    ],
-    "integrationCandidate": null,
-    "integrationCandidateNote": "Not yet created. 'mainChangesUnderAnalyticalClosure: 0' and an unmoved lockfile establish POSSIBLE reuse of analytical measurements, not a reuse decision: they do not name runtime-loaded data, generated schemas, runner configuration or the resolved environment. The earlier wider-suite failure from a missing built token artifact, with no source overlap, is this session's own counterexample to treating source locality as execution-context identity.",
+    "mainChangesToSharedFiles": [],
+    "integrationCandidate": {
+      "mergeCommit": "276c10b19de5f238283b80f00c361f338c0a0287",
+      "mergeParents": [
+        "d0fe24f4431c3bac52bb61f3047ebcd98eeded58",
+        "6b9e50bc9542f4abacd4c5ecb849d672ccdcd01b"
+      ],
+      "tipAtWrite": "0d0fe106c304079b19070119624038f9edf95f96",
+      "commitsAfterMerge": [
+        "0d0fe106 test(analytical): pin the derived edge's whole-prefix comparison and that refused closures are not read",
+        "aa6d1bec feat(analytical): refuse a non-confluent plan set as evidence, at witness and closure admission",
+        "903fe3f5 feat(analytical): derive branch-before-discriminator ordering; certify listing confluence exhaustively",
+        "1317fb20 feat(analytical): legacy-vs-quotient erasure comparison over the bound population, every divergence recorded",
+        "c353e3a6 fix(analytical): correct the adjudication ledger's false repair claim about an assertion closure carrier"
+      ],
+      "lockfileMovedByMerge": false,
+      "note": "Every measurement below names the tip it was taken at. The repo gate chain ran on the merge commit and again on the final tip; the analytical measurements (A6, A8, A9, A10) were taken on the final tip after the ordering/confluence commits, which moved the erasure and witness authorities and were re-recorded (freeze lineage carried)."
+    },
     "environment": {
       "node": "v22.19.0",
       "pnpm": "10.14.0",
@@ -24,19 +37,19 @@
       "note": "ajv/zod resolved from packages/ds-codegen/node_modules, where the analytical code resolves them."
     },
     "artifacts": {
-      "stage2-freeze.json": "cf56c4c98aed6831686bca52d05161b707bb3e946ce05c845da5c6135d15d0ce",
-      "erasure-footprints.json": "d859ed38c39c3545db9d4f3e2f3266b6f4f5d5b877c8b4dccebed086e9c8628c",
-      "codomain-adjudications.json": "9c697f27192de4d163ba23fd004c73d8dfef22857da9b34646efb71002e8c801",
+      "stage2-freeze.json": "4403f9744268e828be55d9f9c04acac987e8036ddfd5042eae6f564a8c1aa2ce",
+      "erasure-footprints.json": "c42d0f9d99a409d9800f1218381538f52cdc75759e44ed2e0b6bae555232f9ce",
+      "codomain-adjudications.json": "73384274621f8800bbd7ba1c9705b799fae7955d769a5b70dbe167fdab17911c",
       "stage1-historical-accounting.json": "6ff8faf0616c41bf126c061f949b4fa2ad7a1830305236b09794b3699c4bdca5",
       "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
       "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-      "closures-stage2.json": "beadd7acb9a992e65b972227d0f8c29fd0b62180bec85516592f7ffce8a58928",
+      "closures-stage2.json": "51d608c58740178d8fe5982e12b04ad86285e13b4067b12c3afb1844f3c0ea3a",
       "quotient-image.schema.json": "1ebd02c8eeb5694898443a511de0cf94f756b0b96ae974319d9d76ca712f2df8"
     },
     "authorityIdentities": {
       "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
-      "erasureAuthorityDigest": "e2952b14e4f5554b2c8c56327d05871c41c8542fa6e766aa09813a384696c554",
-      "witnessAuthorityDigest": "69d31c82b496310fa792723e90fb6e75d1404c7b7b8526e36eb65125d0265efe",
+      "erasureAuthorityDigest": "664d679217720bf59bc3a2914af6b4417f7d19e675657ab0db8a76e0517c796c",
+      "witnessAuthorityDigest": "edb845a1c0db832db2aa3b97223116ac2425e0b8aecd98cb29ed3b7771e47b57",
       "quotientSchemaVersion": 1,
       "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
     },
@@ -51,9 +64,21 @@
   "observedOnPinnedTip": {
     "analyticalSuite": {
       "command": "npx vitest run packages/ds-codegen/src/analytical",
-      "result": "701 passed (701)",
+      "runs": [
+        "Tests  732 passed (732)",
+        "Tests  732 passed (732)",
+        "Tests  732 passed (732)"
+      ],
       "consecutiveRuns": 3,
-      "note": "Six separately printed summaries. An earlier claim of three green runs (67b1008f) was false and corrected in 6ef5e993."
+      "note": "Each line is one separately printed runner summary on the final tip (tmp/suite-runs.txt). Pass-counts are the entry fee; the per-criterion blocks name the decisive assertions."
+    },
+    "closuresCheck": {
+      "command": "npx tsx packages/ds-codegen/src/analytical/closure.ts --check",
+      "result": "OK — 22 closure(s) consistent with their obligations"
+    },
+    "legacyComparisonCheck": {
+      "command": "npx tsx packages/ds-codegen/src/analytical/legacy-comparison.ts --check",
+      "result": "OK -- 34320 pairs over 208 specimens and 165 coordinates: 25507 agree, 8813 divergences in 6 classes; the recorded ledger matches"
     },
     "freezeCheck": {
       "command": "npx tsx packages/ds-codegen/src/analytical/freeze.ts --check",
@@ -381,30 +406,356 @@
       "qualification": "The reason is the kind discriminant, not a dedicated reason field."
     },
     "A6": {
-      "cliStatus": "unchecked",
+      "cliStatus": "pass",
+      "acceptanceTextNote": "The criterion says 'the four required-leaf witnesses'. Invariant e093391b governs the identity-based reading (rerun every witness listed in codomain-adjudications.json; report each result and each declared coordinate's standing independently; no reevaluation confers or removes subtraction standing). The then: text itself has no CLI amendment path and was not hand-edited.",
       "demonstrated": [
         {
-          "claim": "the required-leaf witnesses were rerun under the codomain; three stopped holding and are HELD OPEN in codomain-adjudications.json with historical standing and live-remeasured current failure; nothing was applied; the fourth re-held",
-          "evidence": [
+          "claim": "identity rerun on the final tip: every witness listed in codomain-adjudications.json was rerun under the quotient codomain; each still fails with exactly the recorded codes; every isolation obligation discharged (no ERASURE_ISOLATION_UNEVALUATED among these three, so the first-refutation proof ceiling was not reached here)",
+          "observed": [
             {
-              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
-              "test": "holds open exactly three witnesses, all of them one defect: a hole is observable where an absence was not"
+              "witness": "field.temporality.kind",
+              "reason": "holder-presence",
+              "codes": [
+                "NO_COLLISION"
+              ],
+              "recorded": [
+                "NO_COLLISION"
+              ],
+              "changedVsRecorded": false,
+              "isolation": [
+                "a/field.temporality.kind: discharged",
+                "b/field.temporality.kind: discharged"
+              ],
+              "proofCeiling": null
             },
+            {
+              "witness": "assertion.kind + assertion.aggregate.op",
+              "reason": "branch-residue",
+              "codes": [
+                "NO_COLLISION"
+              ],
+              "recorded": [
+                "NO_COLLISION"
+              ],
+              "changedVsRecorded": false,
+              "isolation": [
+                "a/assertion.kind: discharged",
+                "a/assertion.aggregate.op: discharged",
+                "a/assertion.kind + assertion.aggregate.op (composed): discharged",
+                "b/assertion.kind: discharged",
+                "b/assertion.aggregate.op: discharged",
+                "b/assertion.kind + assertion.aggregate.op (composed): discharged"
+              ],
+              "proofCeiling": null
+            },
+            {
+              "witness": "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
+              "reason": "branch-residue",
+              "codes": [
+                "NO_COLLISION"
+              ],
+              "recorded": [
+                "NO_COLLISION"
+              ],
+              "changedVsRecorded": false,
+              "isolation": [
+                "a/assertion.kind:aggregate~ratio-comparison: discharged",
+                "a/assertion.aggregate.op: discharged",
+                "a/assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op (composed): discharged",
+                "b/assertion.kind:aggregate~ratio-comparison: discharged",
+                "b/assertion.aggregate.op: discharged",
+                "b/assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op (composed): discharged"
+              ],
+              "proofCeiling": null
+            }
+          ],
+          "evidence": [
+            "tmp/a6-reevaluate.mts (read-only; fixture digests verified unchanged before/after)",
             {
               "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
               "test": "every suspension points from a recorded historical standing to a measured current failure"
+            }
+          ]
+        },
+        {
+          "claim": "affected standing, per declared coordinate and independently: evidence standing (suspended / holding via primitive), the RECORDED subtraction disposition (unchanged: the historical accounting file is unchanged), the design's own mapping-drift instrument (reinterpretHistorically: no drift), and -- labelled as NOT a production output -- what the dispositioner would say under today's support",
+          "observed": [
+            {
+              "coordinate": "field.temporality.kind",
+              "historicalStanding": "primitive",
+              "evidenceStanding": {
+                "state": "suspended",
+                "experiment": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
+                "reason": "holder-presence",
+                "invalidatedEvidence": [
+                  "field.temporality.kind"
+                ]
+              },
+              "recordedDisposition": {
+                "state": "ratified",
+                "via": [
+                  "field.temporality.kind"
+                ]
+              },
+              "mappingDrift": null,
+              "underTodaysSupport_notAProductionOutput": "not-yet-admitted",
+              "subtractionStandingChanged": false
             },
+            {
+              "coordinate": "assertion.kind",
+              "historicalStanding": "interaction-only",
+              "evidenceStanding": {
+                "state": "suspended",
+                "experiment": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
+                "reason": "branch-residue",
+                "invalidatedEvidence": [
+                  "assertion.kind + assertion.aggregate.op"
+                ]
+              },
+              "recordedDisposition": {
+                "state": "ratified",
+                "via": [
+                  "assertion.kind"
+                ]
+              },
+              "mappingDrift": null,
+              "underTodaysSupport_notAProductionOutput": "not-yet-admitted",
+              "subtractionStandingChanged": false
+            },
+            {
+              "coordinate": "assertion.aggregate.op",
+              "historicalStanding": "primitive",
+              "evidenceStanding": {
+                "state": "holding",
+                "via": "primitive",
+                "evidence": [
+                  "assertion.aggregate.op"
+                ]
+              },
+              "recordedDisposition": {
+                "state": "ratified",
+                "via": [
+                  "assertion.aggregate.op"
+                ]
+              },
+              "mappingDrift": null,
+              "underTodaysSupport_notAProductionOutput": "ratified",
+              "subtractionStandingChanged": false
+            },
+            {
+              "coordinate": "assertion.kind:aggregate~ratio-comparison",
+              "historicalStanding": "interaction-only",
+              "evidenceStanding": {
+                "state": "suspended",
+                "experiment": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
+                "reason": "branch-residue",
+                "invalidatedEvidence": [
+                  "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op"
+                ]
+              },
+              "recordedDisposition": {
+                "state": "ratified",
+                "via": [
+                  "assertion.kind:aggregate~ratio-comparison"
+                ]
+              },
+              "mappingDrift": null,
+              "underTodaysSupport_notAProductionOutput": "not-yet-admitted",
+              "subtractionStandingChanged": false
+            },
+            {
+              "coordinate": "assertion.aggregate.op",
+              "historicalStanding": "primitive",
+              "evidenceStanding": {
+                "state": "holding",
+                "via": "primitive",
+                "evidence": [
+                  "assertion.aggregate.op"
+                ]
+              },
+              "recordedDisposition": {
+                "state": "ratified",
+                "via": [
+                  "assertion.aggregate.op"
+                ]
+              },
+              "mappingDrift": null,
+              "underTodaysSupport_notAProductionOutput": "ratified",
+              "subtractionStandingChanged": false
+            }
+          ],
+          "evidence": [
             {
               "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
               "test": "suspension is not a semantic outcome: every suspended coordinate still dispositions as stage 1 concluded"
             },
-            "packages/ds-contracts/analytical-fixtures/codomain-adjudications.json"
+            {
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "reconciles clean today: every loss is ledgered and nothing appeared from nowhere"
+            }
           ]
+        },
+        {
+          "claim": "bounded reevaluation 1 (temporality, both holders declared): the whole-leaf witness re-stated over the member-class witness's own pair (FX_N_DURATION_SUM interval/admissible vs its instant patch/illegal REL_TEMPORAL_INSTANT_SUM) HOLDS with both isolations discharged. OBSERVATION ONLY: not added to witnesses.json; re-ratification is a corpus/standing question for adjudication",
+          "observed": {
+            "result": {
+              "ok": true,
+              "codes": [],
+              "isolation": [
+                "a: discharged",
+                "b: discharged"
+              ]
+            },
+            "sides": [
+              {
+                "fixture": "FX_N_DURATION_SUM",
+                "outcome": {
+                  "status": "admissible",
+                  "codes": [],
+                  "terms": []
+                },
+                "field": "length",
+                "temporality": {
+                  "kind": "interval"
+                }
+              },
+              {
+                "fixture": "FX_N_DURATION_SUM_PATCHED",
+                "outcome": {
+                  "status": "illegal",
+                  "codes": [
+                    "REL_TEMPORAL_INSTANT_SUM"
+                  ],
+                  "terms": []
+                },
+                "field": "length",
+                "temporality": {
+                  "kind": "instant"
+                }
+              }
+            ],
+            "kindsInCensus": [
+              "field.temporality.kind",
+              "field.temporality.kind:instant~interval"
+            ]
+          }
+        },
+        {
+          "claim": "bounded reevaluation 2 (assertion closure): the ledger carries NO assertion carrier (its 22 are relation.derivedBy.kind and field.additivity.kind pairs) -- the adjudication's repair text claimed otherwise and was corrected (c353e3a6). A carrier is mechanically derivable (residue aggregate:[op], unilateral, minRawEdit 2, footprint of 7); measured directly, carrier + normalization collides the pair while the carrier alone leaves assertions.0.op and the normalization alone leaves assertions.0.kind. Obligation 8 FAILS: all 7 footprint coordinates are primitive, so the closure cannot prove the carrier primitive (composite constructor vs derived discriminator must be re-decided). Obligation 7: no control can exist. Obligation 3 is UNEVALUABLE BY THE CHECKER for an assertion holder (forgetPath('assertion') throws: no locator is keyed by that holder path) -- a checker limit, recorded as such, not a verdict. assertion.aggregate.op's independent primitive support is intact. OBSERVATION ONLY: nothing ledgered",
+          "observed": {
+            "ledgerFact": {
+              "carriersOverAssertionInLedger": [],
+              "adjudicationRepairClaim": "the carrier is one of the 22 already ledgered as provisional",
+              "claimHolds": false
+            },
+            "derivation": {
+              "residue": {
+                "aggregate": [
+                  "op"
+                ],
+                "ratio-comparison": []
+              },
+              "minRawEdit": 2,
+              "bilateral": false,
+              "footprint": [
+                "assertion.aggregate.op",
+                "assertion.aggregate.op:count~min",
+                "assertion.aggregate.op:mean~count",
+                "assertion.aggregate.op:mean~min",
+                "assertion.aggregate.op:sum~count",
+                "assertion.aggregate.op:sum~mean",
+                "assertion.aggregate.op:sum~min"
+              ]
+            },
+            "residueUnderTheLapsedTwoSet": [
+              ".assertions.0.op.@q: (absent) vs \"forgotten\""
+            ],
+            "independentPrimitiveSupportOfOp": {
+              "state": "holding",
+              "via": "primitive",
+              "evidence": [
+                "assertion.aggregate.op"
+              ]
+            },
+            "closureProbe": {
+              "withStimuli": {
+                "threw": "erasure-plan: no locator for assertion; forget(assertion) would erase nothing"
+              },
+              "structuralObligationsWithoutStimuli": [
+                {
+                  "id": "1-single-semantic-carrier",
+                  "held": true,
+                  "unevaluable": false,
+                  "detail": "assertion.kind:aggregate~ratio-comparison is the only discriminator substitution"
+                },
+                {
+                  "id": "2-mechanically-derived-normalization",
+                  "held": true,
+                  "unevaluable": false,
+                  "detail": "1 branch-field operation(s) from the symmetric difference of the branch signatures; minRawEdit 2; footprint of 7 coordinate(s)"
+                },
+                {
+                  "id": "3-controlled-stimuli",
+                  "held": false,
+                  "unevaluable": true,
+                  "detail": "no stimuli constructed"
+                },
+                {
+                  "id": "4-carrier-insufficient-before-normalization",
+                  "held": false,
+                  "unevaluable": true,
+                  "detail": "no stimuli constructed"
+                },
+                {
+                  "id": "5-complete-closure-sufficiency",
+                  "held": false,
+                  "unevaluable": true,
+                  "detail": "no stimuli constructed"
+                },
+                {
+                  "id": "6-normalization-is-not-the-cited-cause",
+                  "held": false,
+                  "unevaluable": true,
+                  "detail": "branch-conditionality holds; the collision half needs stimuli"
+                },
+                {
+                  "id": "7-same-enum-control",
+                  "held": false,
+                  "unevaluable": true,
+                  "detail": "UNAVAILABLE: no sibling pair on assertion.kind has a compatible branch payload signature, so no control can exist"
+                },
+                {
+                  "id": "8-dependency-and-fixed-point-discharge",
+                  "held": false,
+                  "unevaluable": false,
+                  "detail": "7 PRIMITIVE, so this closure cannot prove the carrier primitive — constructor and payload are composite under this encoding: assertion.aggregate.op, assertion.aggregate.op:count~min, assertion.aggregate.op:mean~count, assertion.aggregate.op:mean~min, assertion"
+                }
+              ],
+              "promotionYieldedWithoutStimuli": "provisional",
+              "compatibleControls": [],
+              "residueAfterCarrierAlone": [
+                ".assertions.0.op: (absent) vs \"mean\""
+              ],
+              "residueAfterNormalizationAndCarrier": [],
+              "residueAfterNormalizationAlone": [
+                ".assertions.0.kind: \"ratio-comparison\" vs \"aggregate\""
+              ],
+              "footprintStanding": [
+                "assertion.aggregate.op: primitive",
+                "assertion.aggregate.op:count~min: primitive",
+                "assertion.aggregate.op:mean~count: primitive",
+                "assertion.aggregate.op:mean~min: primitive",
+                "assertion.aggregate.op:sum~count: primitive",
+                "assertion.aggregate.op:sum~mean: primitive",
+                "assertion.aggregate.op:sum~min: primitive"
+              ]
+            }
+          }
         }
       ],
       "open": [
         {
-          "claim": "the two bounded migration reevaluations (temporality with both holders declared; assertion closure with assertion.aggregate.op's independent primitive support intact). A negative or non-promoting result is legitimate; restoring the old tally is not a success condition. Invariant amended e6d744e7 to separate this from subtraction adjudication."
+          "claim": "the checker's obligation 3 cannot evaluate a carrier whose holder is an array element (assertion); making it evaluable is closure-form work, recorded as a remaining obligation for REL-VIEW-ALGEBRA-01, not decided here"
         }
       ]
     },
@@ -531,25 +882,207 @@
       ]
     },
     "A8": {
-      "cliStatus": "unchecked",
+      "cliStatus": "pass",
       "demonstrated": [
         {
-          "claim": "footprintBasisDigest is compared and, since c8f2c192, admitted as evidence",
+          "claim": "control: an unmutated relocation is indistinguishable (identities equal, population digest equal, no gate problems, freeze ok)",
+          "observed": {
+            "identitiesEqual": true,
+            "populationDigestEqual": true,
+            "gateProblems": [],
+            "freeze": true
+          }
+        },
+        {
+          "claim": "experiment 1 -- POPULATION-ONLY change (the copy's specimen builder drops one synthesized specimen; no identity-owned module moves): this tree's gate rejects every footprintBasisDigest-bound classification and reports the moved quotientLanguageInvalid population; all three identities unmoved; every witness verdict unchanged (44 holding on both sides); no witness audit entry moved; the copy's freeze check (bound to the authorities, not the population) passes",
+          "observed": {
+            "population": {
+              "here": {
+                "corpus": 90,
+                "stimuli": 22,
+                "synthesized": 96,
+                "total": 208,
+                "populationDigest": "76b17b16a8b4f9f14ae92bd62338c801801b8973ad47d9f92d591c44e647c8f2"
+              },
+              "copy": {
+                "total": 207,
+                "corpus": 90,
+                "stimuli": 22,
+                "synthesized": 95
+              }
+            },
+            "populationDigest": {
+              "here": "eb2cc4e072cfb141eea11055a23a29dbf88ed78e53349cd7abb83bd8a52a4bb8",
+              "copy": "256df689548d9c4fb2a8d0ce222f1155ff708a25a396092e4ef6b618cfa7a638",
+              "moved": true
+            },
+            "identities": {
+              "coordinateBasisMoved": false,
+              "erasureAuthorityMoved": false,
+              "witnessAuthorityMoved": false
+            },
+            "gateProblems": [
+              "the specimen population moved: every footprint classification bound to footprintBasisDigest is rejected",
+              "the quotientLanguageInvalid population moved: 208 -> 207 specimens, digest 76b17b16a8b4 -> 59669b96a6f7"
+            ],
+            "rejectsFootprintClassifications": true,
+            "witnessVerdictsMoved": [],
+            "witnessesHolding": {
+              "here": 44,
+              "copy": 44
+            },
+            "witnessAuditMoved": [],
+            "copyFreezeOk": true
+          }
+        },
+        {
+          "claim": "experiment 2 -- WITNESS-INPUT change (a real contracts copy; one stimulus patch of assertion.aggregate.op:count~min altered min->mean): exactly that witness is reevaluated (ok -> NO_COLLISION) and its audit entry moves (holds true->false, standing primitive->none); the other 46 verdicts unchanged; identities unmoved; the population also moves because the stimulus is a specimen (stated, expected); the gate names the moved input and the moved populations",
+          "observed": {
+            "mutation": {
+              "witness": "assertion.aggregate.op:count~min",
+              "side": "b",
+              "patchBefore": "[{\"set\":\"assertions.0.op\",\"value\":\"min\"}]",
+              "patchAfter": "[{\"set\":\"assertions.0.op\",\"value\":\"mean\"}]"
+            },
+            "witnessVerdictsMoved": [
+              "33:assertion.aggregate.op:count~min: ok -> NO_COLLISION"
+            ],
+            "onlyTheTargetMoved": true,
+            "witnessAuditMoved": [
+              {
+                "witness": "assertion.aggregate.op:count~min",
+                "fields": [
+                  "holds: true -> false",
+                  "standing: \"primitive\" -> \"none\""
+                ]
+              }
+            ],
+            "identities": {
+              "coordinateBasisMoved": false,
+              "erasureAuthorityMoved": false,
+              "witnessAuthorityMoved": false
+            },
+            "gateProblems": [
+              "input witnesses.json moved since the report was recorded",
+              "the specimen population moved: every footprint classification bound to footprintBasisDigest is rejected",
+              "the sourceLanguageDeparture population moved: 112 -> 112 specimens, digest 1b73800e6741 -> 764404c408dc",
+              "the quotientLanguageInvalid population moved: 208 -> 208 specimens, digest 76b17b16a8b4 -> c82e052027da"
+            ],
+            "populationAlsoMoved": true,
+            "copyFreezeOk": true
+          }
+        },
+        {
+          "claim": "footprintBasisDigest is compared and admitted as evidence on the report boundary",
           "evidence": [
-            "checkReport"
+            "checkReport",
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "admits each population description before comparing it, on either side"
+            }
           ]
         }
       ],
-      "unexecuted": [
-        "population-only change: add a specimen, stored footprint classification rejected/reevaluated, unchanged witness still holds",
-        "witness-input change: alter a constituent the witness depends on, witness reevaluated rather than protected"
-      ]
+      "instrument": "tmp/a8-experiments.mts over the relocation harness of authority.test.ts; scratch trees removed after each experiment",
+      "nonClaim": "the freeze does not take witnesses.json as an input, so a witness reevaluation is reported by checkWitness and the footprint report's witness section, not by the freeze; both are shown."
     },
     "A9": {
-      "cliStatus": "unchecked",
-      "unexecuted": [
-        "legacy-vs-new comparison over the complete population produced by the bound specimen authority at measurement time (membership digest and observed counts recorded), with the legacy path pinned below; every plan/specimen has an outcome (legacy exceptions and unsupported shapes are outcomes, not skips); every divergence individually adjudicated with plan, specimen, old/new image or failure, applicable law and disposition"
+      "cliStatus": "pass",
+      "acceptanceTextNote": "The criterion's 205/93 describes the population at authoring time; invariant e093391b makes the bound specimen authority's population the acceptance object. The number is not replaced with 208; the ledger records the membership digest and observed counts.",
+      "demonstrated": [
+        {
+          "claim": "legacy-vs-new comparison over the COMPLETE population produced by the bound specimen authority, with the legacy walker pinned (materialized from git history, quotient.ts blob verified), every (coordinate, specimen) pair given an outcome, images compared through a neutral key-sorted serializer with no renaming, and every divergence recorded individually with its law and disposition",
+          "observed": {
+            "legacyPin": {
+              "commit": "38e37a418d99f1181dca54d01f68af3c64ecaf51",
+              "quotientBlob": "c90260974682589a0b66a69468eaa70eb16477ad",
+              "analyticalDir": "packages/ds-codegen/src/analytical"
+            },
+            "population": {
+              "corpus": 90,
+              "stimuli": 22,
+              "synthesized": 96,
+              "total": 208,
+              "membershipDigest": "eb2cc4e072cfb141eea11055a23a29dbf88ed78e53349cd7abb83bd8a52a4bb8"
+            },
+            "coordinates": {
+              "legacy": 165,
+              "new": 165,
+              "both": 165,
+              "onlyLegacy": [],
+              "onlyNew": []
+            },
+            "pairs": 34320,
+            "agree": {
+              "count": 25507,
+              "digest": "e3eb60f452b15cb7d0b14b64764794ef532b812434eab8770f2fe82150c79fe8"
+            },
+            "divergences": 8813,
+            "classes": {
+              "new-no-plan": {
+                "count": 5200,
+                "plans": 25,
+                "disposition": "the new census carries this coordinate as a reference with no plan (A5: references are the only no-plan kind) while the legacy walker erased it; there is no new image to compare -- reported, not scored as agreement"
+              },
+              "merge-enum-members:scalar>class:legacy-valid": {
+                "count": 2352,
+                "plans": 55,
+                "disposition": "legacy rewrote one member as the other, asserting a member definitively where the law asks for the class; the legacy image is source-valid but says something different; the member class is the lawful image"
+              },
+              "forget-value:absent>hole:legacy-invalid": {
+                "count": 921,
+                "plans": 8,
+                "disposition": "legacy deleted a required leaf and left a source-invalid image; the typed hole is the lawful forgetting and the legacy image is the departure"
+              },
+              "merge-enum-members:scalar>class:legacy-invalid": {
+                "count": 262,
+                "plans": 24,
+                "disposition": "legacy rewrote a discriminator member under a payload that belongs to the other branch, leaving a source-invalid image; the member class keeps the payload and is lawful -- the branch residue the closure form exists to normalize"
+              },
+              "forget-value:absent>hole:legacy-valid": {
+                "count": 48,
+                "plans": 2,
+                "disposition": "legacy deleted the leaf and its emptied optional holder collapsed, leaving a source-valid image that forgets MORE than the coordinate (the holder's presence); the hole keeps the declaration and forgets only the value -- the holder-presence defect held open in codomain-adjudications.json, quantified"
+              },
+              "forget-reference-arity:absent>scalar:legacy-invalid": {
+                "count": 30,
+                "plans": 2,
+                "disposition": "legacy truncated a reference list below its declared floor, leaving a source-invalid image; the new plan truncates to the floor and never below it"
+              }
+            }
+          },
+          "evidence": [
+            "packages/ds-codegen/src/analytical/legacy-comparison.ts (--record / --check)",
+            "packages/ds-contracts/analytical-fixtures/legacy-erasure-comparison.json",
+            {
+              "file": "packages/ds-codegen/src/analytical/legacy-comparison.test.ts",
+              "test": "files every divergence under a class that carries a law-based disposition, and the class counts add up"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/legacy-comparison.test.ts",
+              "test": "holds no record where the new path has to answer"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/legacy-comparison.test.ts",
+              "test": "describes the same specimen population as the footprint report"
+            }
+          ]
+        },
+        {
+          "claim": "not resolved in favour of the incumbent: the classes in which the new path would have to answer (new-fails, new-image-not-quotient-legal) and any UNCLASSIFIED shape are named and asserted absent; the 5200 reference-coordinate pairs the new census leaves unplanned are reported, not scored as agreement",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/legacy-comparison.test.ts",
+              "test": "an unforeseen shape is labelled UNCLASSIFIED rather than given a disposition"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/legacy-comparison.test.ts",
+              "test": "does not resolve the reference coordinates in favour of either path"
+            }
+          ]
+        }
       ],
+      "checkOnFinalTip": "legacy-comparison --check: OK -- 34320 pairs over 208 specimens and 165 coordinates: 25507 agree, 8813 divergences in 6 classes; the recorded ledger matches",
       "legacyPin": {
         "commit": "38e37a418d99f1181dca54d01f68af3c64ecaf51",
         "commitSubject": "test(analytical): freeze what the quotient DOES, before replacing the walker",
@@ -604,41 +1137,1211 @@
           "zod": "4.5.4"
         },
         "executionPlan": "check out the legacy modules from the pinned commit into a scratch tree (same relocation harness as authority.test.ts), run the legacy erase over the bound current specimen manifest, compare canonical images plan-by-plan and specimen-by-specimen against the new path; the new canonicalizer must not be the one that erases the differences under comparison",
-        "pinnedAt": "0868edb317bfbf2fceba4b29b274a16b510ae01d"
+        "pinnedAt": "0d0fe106c304079b19070119624038f9edf95f96"
       },
-      "note": "The criterion's 205/93 describes the population at authoring time; invariant e093391b makes the bound specimen authority's population the acceptance object. The number is not replaced with 208."
+      "pinNote": "Recorded before the measurement; the measurement above was taken with exactly this pin."
     },
     "A10": {
-      "cliStatus": "unchecked",
+      "cliStatus": "pass",
+      "acceptanceTextNote": "The criterion's 9730 is C(140,2) over the census plans at authoring time; invariant e093391b makes the bound executable-plan registry the acceptance object, which includes the 10 closure normalization plans: 150 plans, 11175 unordered pairs.",
       "demonstrated": [
         {
-          "claim": "idempotence, holder subsumption, discriminator ordering, commutation over 15 representative plans, and skip-predicate agreement over 208 x 140",
+          "claim": "ALL unordered pairs of the bound registry across the complete specimen population: raw two-step compositions in both orders on every specimen; pairs with an edge (declared or derived) checked for listing-order independence of executeAll and agreement with the edge-order composition",
+          "observed": {
+            "registry": {
+              "censusPlans": 140,
+              "closureNormalizationPlans": 10,
+              "closurePlansOutsideCensus": 10,
+              "total": 150,
+              "unorderedPairs": 11175
+            },
+            "population": {
+              "total": 208,
+              "corpus": 90,
+              "stimuli": 22,
+              "synthesized": 96
+            },
+            "independent": 10133,
+            "independentCommuting": 9953,
+            "independentNonCommuting": 180,
+            "edges": {
+              "edges": 1042,
+              "loadBearing": 370,
+              "listingIndependent": 1042,
+              "agreesWithEdgeOrderRaw": 1042,
+              "agreesWithEdgeOrderSaturated": 1042,
+              "violations": [],
+              "derivedOnly": 205
+            },
+            "timingSeconds": {
+              "pairs": 119,
+              "saturation": 4,
+              "listing": 5
+            }
+          },
+          "instrument": "tmp/a10-measure.mts (edge = declared runAfter OR derivedRunAfter)"
+        },
+        {
+          "claim": "the non-commuting unordered pairs are exactly two kinds, and each is handled by its own law rather than by an implementation order: (i) merges on ONE leaf sharing a member, which do not raw-commute and which saturation reconciles -- proven against an INDEPENDENT union-find partition (all and only the connected members, nothing else moved) over every pair, every triple of groups of <=6, and every full group; (ii) a merge against an absence-spelling on one leaf, and arity against order on one list, which are GENUINELY non-confluent and are refused as evidence at admission",
+          "observed": {
+            "saturation": {
+              "groups": 11,
+              "subsetsChecked": 365,
+              "imagesChecked": 75920,
+              "slotsChanged": 44657,
+              "violations": 0
+            },
+            "nonCommutingPairs": [
+              {
+                "p": "field.transformation:nominal~ordinal",
+                "q": "field.transformation:nominal~interval",
+                "differingSpecimens": 71,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~ordinal",
+                "q": "field.transformation:nominal~ratio",
+                "differingSpecimens": 190,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~ordinal",
+                "q": "field.transformation:ordinal~interval",
+                "differingSpecimens": 205,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~ordinal",
+                "q": "field.transformation:ordinal~ratio",
+                "differingSpecimens": 206,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~interval",
+                "q": "field.transformation:nominal~ratio",
+                "differingSpecimens": 171,
+                "sample": "FX_TEMP_RATIO_COMPARISON"
+              },
+              {
+                "p": "field.transformation:nominal~interval",
+                "q": "field.transformation:ordinal~interval",
+                "differingSpecimens": 205,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~interval",
+                "q": "field.transformation:interval~ratio",
+                "differingSpecimens": 206,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~ratio",
+                "q": "field.transformation:ordinal~ratio",
+                "differingSpecimens": 205,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:nominal~ratio",
+                "q": "field.transformation:interval~ratio",
+                "differingSpecimens": 205,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:ordinal~interval",
+                "q": "field.transformation:ordinal~ratio",
+                "differingSpecimens": 171,
+                "sample": "FX_TEMP_RATIO_COMPARISON"
+              },
+              {
+                "p": "field.transformation:ordinal~interval",
+                "q": "field.transformation:interval~ratio",
+                "differingSpecimens": 190,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.transformation:ordinal~ratio",
+                "q": "field.transformation:interval~ratio",
+                "differingSpecimens": 71,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "field.temporality.grain:day~month",
+                "q": "field.temporality.grain:day~<absent>",
+                "differingSpecimens": 6,
+                "sample": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
+              },
+              {
+                "p": "field.temporality.grain:day~month",
+                "q": "field.temporality.grain:month~<absent>",
+                "differingSpecimens": 5,
+                "sample": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
+              },
+              {
+                "p": "field.additivity.kind:additive~semi-additive",
+                "q": "field.additivity.kind:additive~non-additive",
+                "differingSpecimens": 15,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "field.additivity.kind:additive~semi-additive",
+                "q": "field.additivity.kind:additive~ratio-measure",
+                "differingSpecimens": 12,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "field.additivity.kind:additive~semi-additive",
+                "q": "field.additivity.kind:semi-additive~non-additive",
+                "differingSpecimens": 9,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "field.additivity.kind:additive~semi-additive",
+                "q": "field.additivity.kind:semi-additive~ratio-measure",
+                "differingSpecimens": 6,
+                "sample": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+              },
+              {
+                "p": "field.additivity.kind:additive~non-additive",
+                "q": "field.additivity.kind:additive~ratio-measure",
+                "differingSpecimens": 9,
+                "sample": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+              },
+              {
+                "p": "field.additivity.kind:additive~non-additive",
+                "q": "field.additivity.kind:semi-additive~non-additive",
+                "differingSpecimens": 12,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "field.additivity.kind:additive~non-additive",
+                "q": "field.additivity.kind:non-additive~ratio-measure",
+                "differingSpecimens": 6,
+                "sample": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+              },
+              {
+                "p": "field.additivity.kind:additive~ratio-measure",
+                "q": "field.additivity.kind:semi-additive~ratio-measure",
+                "differingSpecimens": 12,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "field.additivity.kind:additive~ratio-measure",
+                "q": "field.additivity.kind:non-additive~ratio-measure",
+                "differingSpecimens": 9,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "field.additivity.kind:semi-additive~non-additive",
+                "q": "field.additivity.kind:semi-additive~ratio-measure",
+                "differingSpecimens": 9,
+                "sample": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+              },
+              {
+                "p": "field.additivity.kind:semi-additive~non-additive",
+                "q": "field.additivity.kind:non-additive~ratio-measure",
+                "differingSpecimens": 12,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "field.additivity.kind:semi-additive~ratio-measure",
+                "q": "field.additivity.kind:non-additive~ratio-measure",
+                "differingSpecimens": 15,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "field.additivity.semi-additive.nonAdditiveAlong#arity",
+                "q": "field.additivity.semi-additive.nonAdditiveAlong#order",
+                "differingSpecimens": 1,
+                "sample": "FX_STOCK_SUM_ALONG_DATE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "differingSpecimens": 32,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "differingSpecimens": 19,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "differingSpecimens": 20,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:join~nest",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:join~bin",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:join~normalize",
+                "differingSpecimens": 24,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:join~project",
+                "differingSpecimens": 26,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~join",
+                "q": "relation.derivedBy.kind:join~graph",
+                "differingSpecimens": 30,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "differingSpecimens": 31,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "differingSpecimens": 30,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "differingSpecimens": 24,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "differingSpecimens": 36,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:join~nest",
+                "differingSpecimens": 26,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:nest~bin",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:nest~normalize",
+                "differingSpecimens": 24,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:nest~project",
+                "differingSpecimens": 26,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~nest",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 30,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "differingSpecimens": 17,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "differingSpecimens": 19,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "differingSpecimens": 23,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:join~bin",
+                "differingSpecimens": 26,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:nest~bin",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:bin~normalize",
+                "differingSpecimens": 24,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 26,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~bin",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 30,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "differingSpecimens": 22,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:join~normalize",
+                "differingSpecimens": 26,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:nest~normalize",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:bin~normalize",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 26,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~normalize",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 30,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "q": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "q": "relation.derivedBy.kind:join~project",
+                "differingSpecimens": 26,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "q": "relation.derivedBy.kind:nest~project",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 24,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~project",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 30,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "q": "relation.derivedBy.kind:join~graph",
+                "differingSpecimens": 26,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 25,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:aggregate-to-grain~graph",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 26,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:join~bin",
+                "differingSpecimens": 31,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:join~normalize",
+                "differingSpecimens": 30,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:join~project",
+                "differingSpecimens": 24,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:join~graph",
+                "differingSpecimens": 36,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:nest~bin",
+                "differingSpecimens": 19,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:nest~normalize",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:nest~project",
+                "differingSpecimens": 20,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~nest",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:join~normalize",
+                "differingSpecimens": 17,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:join~project",
+                "differingSpecimens": 19,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:join~graph",
+                "differingSpecimens": 23,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:nest~bin",
+                "differingSpecimens": 32,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:bin~normalize",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 20,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~bin",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~normalize",
+                "q": "relation.derivedBy.kind:join~project",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~normalize",
+                "q": "relation.derivedBy.kind:join~graph",
+                "differingSpecimens": 22,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~normalize",
+                "q": "relation.derivedBy.kind:nest~normalize",
+                "differingSpecimens": 32,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~normalize",
+                "q": "relation.derivedBy.kind:bin~normalize",
+                "differingSpecimens": 19,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~normalize",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 20,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~normalize",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~project",
+                "q": "relation.derivedBy.kind:join~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~project",
+                "q": "relation.derivedBy.kind:nest~project",
+                "differingSpecimens": 32,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~project",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 19,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~project",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~project",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~graph",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 32,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~graph",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 19,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~graph",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:join~graph",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 20,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~bin",
+                "q": "relation.derivedBy.kind:nest~normalize",
+                "differingSpecimens": 17,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~bin",
+                "q": "relation.derivedBy.kind:nest~project",
+                "differingSpecimens": 19,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~bin",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 23,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~bin",
+                "q": "relation.derivedBy.kind:bin~normalize",
+                "differingSpecimens": 30,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~bin",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 24,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~bin",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 36,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~normalize",
+                "q": "relation.derivedBy.kind:nest~project",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~normalize",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 22,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~normalize",
+                "q": "relation.derivedBy.kind:bin~normalize",
+                "differingSpecimens": 31,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~normalize",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 24,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~normalize",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 36,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~project",
+                "q": "relation.derivedBy.kind:nest~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~project",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 31,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~project",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 30,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~project",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 36,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~graph",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 31,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~graph",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 30,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:nest~graph",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~normalize",
+                "q": "relation.derivedBy.kind:bin~project",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~normalize",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 22,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~normalize",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 19,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~normalize",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 23,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~project",
+                "q": "relation.derivedBy.kind:bin~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~project",
+                "q": "relation.derivedBy.kind:normalize~project",
+                "differingSpecimens": 17,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~project",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 23,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~graph",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 17,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:bin~graph",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 19,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.kind:normalize~project",
+                "q": "relation.derivedBy.kind:normalize~graph",
+                "differingSpecimens": 24,
+                "sample": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE"
+              },
+              {
+                "p": "relation.derivedBy.kind:normalize~project",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 22,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.kind:normalize~graph",
+                "q": "relation.derivedBy.kind:project~graph",
+                "differingSpecimens": 18,
+                "sample": "FX_SHARE_OF_AVERAGE_SCORE"
+              },
+              {
+                "p": "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+                "q": "relation.derivedBy.aggregate-to-grain.toGrain#order",
+                "differingSpecimens": 1,
+                "sample": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+                "q": "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+                "differingSpecimens": 8,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+                "q": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+                "differingSpecimens": 7,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+                "q": "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+                "differingSpecimens": 3,
+                "sample": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
+                "q": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+                "differingSpecimens": 2,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+                "q": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+                "differingSpecimens": 3,
+                "sample": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+                "q": "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+                "differingSpecimens": 7,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+                "q": "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+                "differingSpecimens": 2,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+                "q": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+                "differingSpecimens": 7,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+                "q": "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+                "differingSpecimens": 3,
+                "sample": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+                "q": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+                "differingSpecimens": 3,
+                "sample": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
+                "q": "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+                "differingSpecimens": 7,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+                "q": "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+                "differingSpecimens": 8,
+                "sample": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+              },
+              {
+                "p": "relation.derivedBy.bin.closure:left-closed~right-closed",
+                "q": "relation.derivedBy.bin.closure:left-closed~<absent>",
+                "differingSpecimens": 3,
+                "sample": "FX_N_READINGS_BINNED_LEFT_CLOSED"
+              },
+              {
+                "p": "relation.derivedBy.bin.closure:left-closed~right-closed",
+                "q": "relation.derivedBy.bin.closure:right-closed~<absent>",
+                "differingSpecimens": 1,
+                "sample": "FX_READINGS_BINNED_NO_CLOSURE"
+              },
+              {
+                "p": "relation.derivedBy.project.keep#arity",
+                "q": "relation.derivedBy.project.keep#order",
+                "differingSpecimens": 7,
+                "sample": "FX_PROJECT_DROPS_NEST_LEVEL"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~mean",
+                "q": "assertion.aggregate.op:sum~count",
+                "differingSpecimens": 66,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~mean",
+                "q": "assertion.aggregate.op:sum~min",
+                "differingSpecimens": 130,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~mean",
+                "q": "assertion.aggregate.op:mean~count",
+                "differingSpecimens": 79,
+                "sample": "FX_TEMP_SUM"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~mean",
+                "q": "assertion.aggregate.op:mean~min",
+                "differingSpecimens": 143,
+                "sample": "FX_TEMP_SUM"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~count",
+                "q": "assertion.aggregate.op:sum~min",
+                "differingSpecimens": 80,
+                "sample": "FX_REGION_MAX"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~count",
+                "q": "assertion.aggregate.op:mean~count",
+                "differingSpecimens": 128,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~count",
+                "q": "assertion.aggregate.op:count~min",
+                "differingSpecimens": 143,
+                "sample": "FX_TEMP_SUM"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~min",
+                "q": "assertion.aggregate.op:mean~min",
+                "differingSpecimens": 128,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.op:sum~min",
+                "q": "assertion.aggregate.op:count~min",
+                "differingSpecimens": 79,
+                "sample": "FX_TEMP_SUM"
+              },
+              {
+                "p": "assertion.aggregate.op:mean~count",
+                "q": "assertion.aggregate.op:mean~min",
+                "differingSpecimens": 80,
+                "sample": "FX_REGION_MAX"
+              },
+              {
+                "p": "assertion.aggregate.op:mean~count",
+                "q": "assertion.aggregate.op:count~min",
+                "differingSpecimens": 130,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.op:mean~min",
+                "q": "assertion.aggregate.op:count~min",
+                "differingSpecimens": 66,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.along#arity",
+                "q": "assertion.aggregate.along#order",
+                "differingSpecimens": 1,
+                "sample": "FX_SURVEY_MEAN_SATISFACTION"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-zero",
+                "q": "assertion.aggregate.nulls:exclude~as-observed",
+                "differingSpecimens": 8,
+                "sample": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-zero",
+                "q": "assertion.aggregate.nulls:as-zero~as-observed",
+                "differingSpecimens": 10,
+                "sample": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-zero",
+                "q": "assertion.aggregate.nulls:exclude~<absent>",
+                "differingSpecimens": 6,
+                "sample": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-zero",
+                "q": "assertion.aggregate.nulls:as-zero~<absent>",
+                "differingSpecimens": 4,
+                "sample": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-observed",
+                "q": "assertion.aggregate.nulls:as-zero~as-observed",
+                "differingSpecimens": 10,
+                "sample": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-observed",
+                "q": "assertion.aggregate.nulls:exclude~<absent>",
+                "differingSpecimens": 6,
+                "sample": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+              },
+              {
+                "p": "assertion.aggregate.nulls:exclude~as-observed",
+                "q": "assertion.aggregate.nulls:as-observed~<absent>",
+                "differingSpecimens": 4,
+                "sample": "FX_H_CLINICAL_TRIAL"
+              },
+              {
+                "p": "assertion.aggregate.nulls:as-zero~as-observed",
+                "q": "assertion.aggregate.nulls:as-zero~<absent>",
+                "differingSpecimens": 4,
+                "sample": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+              },
+              {
+                "p": "assertion.aggregate.nulls:as-zero~as-observed",
+                "q": "assertion.aggregate.nulls:as-observed~<absent>",
+                "differingSpecimens": 4,
+                "sample": "FX_H_CLINICAL_TRIAL"
+              },
+              {
+                "p": "observation.null:absent~censored",
+                "q": "observation.null:absent~suppressed",
+                "differingSpecimens": 15,
+                "sample": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+              },
+              {
+                "p": "observation.null:absent~censored",
+                "q": "observation.null:censored~suppressed",
+                "differingSpecimens": 11,
+                "sample": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+              },
+              {
+                "p": "observation.null:absent~censored",
+                "q": "observation.null:absent~<absent>",
+                "differingSpecimens": 7,
+                "sample": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+              },
+              {
+                "p": "observation.null:absent~censored",
+                "q": "observation.null:censored~<absent>",
+                "differingSpecimens": 11,
+                "sample": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+              },
+              {
+                "p": "observation.null:absent~suppressed",
+                "q": "observation.null:censored~suppressed",
+                "differingSpecimens": 18,
+                "sample": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+              },
+              {
+                "p": "observation.null:absent~suppressed",
+                "q": "observation.null:absent~<absent>",
+                "differingSpecimens": 7,
+                "sample": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+              },
+              {
+                "p": "observation.null:absent~suppressed",
+                "q": "observation.null:suppressed~<absent>",
+                "differingSpecimens": 4,
+                "sample": "FX_CELLS_SUM_SUPPRESSED_AS_ZERO"
+              },
+              {
+                "p": "observation.null:censored~suppressed",
+                "q": "observation.null:censored~<absent>",
+                "differingSpecimens": 11,
+                "sample": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+              },
+              {
+                "p": "observation.null:censored~suppressed",
+                "q": "observation.null:suppressed~<absent>",
+                "differingSpecimens": 4,
+                "sample": "FX_CELLS_SUM_SUPPRESSED_AS_ZERO"
+              },
+              {
+                "p": "evidence.grainWitness#arity",
+                "q": "evidence.grainWitness#order",
+                "differingSpecimens": 1,
+                "sample": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
+              }
+            ]
+          },
           "evidence": [
             {
               "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
-              "test": "is idempotent: erasing the same plan twice equals erasing it once"
+              "test": "merges on one leaf do not commute as raw two-step compositions, and saturation reconciles them to the connected class"
             },
             {
               "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
-              "test": "commutes where no ordering edge exists, over a spread of representative plans"
+              "test": "a merge against an absence-spelling on one leaf, and arity against order on one list, are genuinely non-confluent"
             },
             {
-              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
-              "test": "the skipped pairs are covered too: a no-op leaves a legal image"
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "a merge and an absence-spelling on one leaf: refused on each stimulus where the listings disagree, with no collision, minimality or isolation claim"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "no live witness is a non-confluent set: every failure the committed file carries is a collision or isolation result"
             }
+          ]
+        },
+        {
+          "claim": "every live witness set and every closure set (carrier + normalization) yields ONE canonical image under every listing. This was FALSE on the merge candidate: the closure normalization plans carried no ordering edge to their carrier and 514 set/specimen combinations yielded distinct images (the closure checker read obligations 4-6 under the order it happened to write). Fixed by deriving the census's branch-before-discriminator edge from locator structure (903fe3f5); measured 0 violations after",
+          "observed": {
+            "listing": {
+              "witnessSets": 2,
+              "closureSets": 22,
+              "closurePermutations": 418,
+              "largestClosureSet": 5,
+              "witnessViolations": 0,
+              "closureViolations": 0
+            },
+            "beforeFix": {
+              "closureViolations": 514,
+              "measuredAt": "276c10b1"
+            }
+          },
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "orders a synthesized branch-field plan before the discriminator it branches on, with no declared edge"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "every closure set yields one image whatever its listing, on its own stimuli and on the fixtures that used to split it"
+            }
+          ]
+        },
+        {
+          "claim": "a genuinely non-confluent plan set is REFUSED as evidence rather than normalized through one implementation order: checkWitness certifies confluence exhaustively (distinctListingImages, bound 7, refusing beyond rather than sampling) before reading a collision and fails with ERASURE_NOT_CONFLUENT; checkClosure records the refusal and marks obligations 4-6 unevaluable. Falsified in the relocation harness: a copy whose executor lacks the derived edge refuses every closure that has stimuli, by name, while this tree admits them",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "a copy without the derived ordering edge refuses its closure sets as non-confluent instead of normalizing them through one listing"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "refuses to certify beyond the exhaustive bound rather than sampling"
+            },
+            "commits 903fe3f5, aa6d1bec"
           ]
         }
       ],
-      "unexecuted": [
-        "all 9730 unordered plan pairs",
-        "saturated merge-order independence with an independently stated expected partition (all and only connected classes)",
-        "listing-order independence of every live witness and closure set, INCLUDING closure normalization plans",
-        "refusal of a genuinely non-confluent set at evidence admission"
-      ],
-      "note": "executeAll([p,q]) vs executeAll([q,p]) after both impose the same order tests scheduler determinism, not commutation; independent pairs need the two raw compositions compared."
+      "nonClaim": "the derived edge and the exhaustive certificate prove listing-order independence for the plan sets evidence is admitted over; they do not prove a global confluence theorem for arbitrary plan sets, and the 21 genuinely non-confluent census pairs remain non-confluent -- they are refused, not ordered."
     }
   },
   "governance": {
+    "adjudicationLedgerCorrection": "c353e3a6: the two branch-residue entries' repair text claimed the aggregate-branch carrier was one of the 22 ledgered closures; it is not (measured). Only `repair` changed; no standing moved; necessity.test.ts 179/179 over the corrected ledger.",
+    "freezeCarryForward": "An erasure-authority move that changes no recorded image (an ordering rule, a certificate helper) is IMAGE-PRESERVING: supersessionOf refuses it (an empty block would delete the statement of the last behavioural change) and a plain --record carries the prior supersession forward (carriedSupersession; freeze.test.ts pins three cases). Lineage 2/8/52 carried through both re-records.",
+    "reRecordOrder": "closures --restamp, then footprints --record (it digests the closure ledger as an input), then freeze --record. Recording footprints before the restamp left a stale input digest, caught by the suite.",
     "invariantsAdded": {
       "commit": "e093391b",
       "via": "caws specs amend --add-invariant (x4)",
@@ -800,14 +2503,204 @@
         "confound": "closure.ts is witness-owned, so EVERY mutant of it also moves witnessAuthorityDigest and drifts the committed ledger's stamp; every test over the committed ledger then fails for that reason (fail-closed, not discrimination). The first run's kill lists were dominated by those tests and are not booked.",
         "booked": "each mutant re-run against its own discriminating test only (tmp/mutate-t.sh), with the assertion that fired: CM1 no-block-accepted -> 'expected true to be false' (ok was true; an absent block cannot be reached by the confound); CM2 comparison disabled and CM3 drift never pushed -> the coordinateBasisDigest row's toContainEqual (no refusal line at all, confound included); CM4 restamp over a wrong claim -> refused.ok was true; CM5 restamp writes no authority -> the restamped copy still refuses (2 problems, not []); CM6 ruleDigest dropped from the compared set -> the ruleDigest row's toContainEqual. The per-identity test asserts each key's own line BEFORE the 'only problem' count, so a dropped key fails on its row and not on the confounded count.",
         "a2Directives": "dropping either @ts-expect-error makes tsc fail: TS2739 (QuotientImage lacks Fixture's properties) and TS2322 (QJson not assignable to RelationalStructure). Both directives are load-bearing."
+      },
+      {
+        "subject": "derived ordering + listing confluence + admission refusal + freeze carry-forward (round 14)",
+        "receipt": {
+          "distinct": 13,
+          "killedFirstRun": 10,
+          "survivedFirstRun": 3,
+          "killedAfterTightening": 3,
+          "survivedAfterTightening": 0,
+          "executionFailures": 0,
+          "mutants": [
+            "MC1 derivedRunAfter never fires",
+            "MC10 closure refusal never raised",
+            "MC11 obligation 5 evaluated despite non-confluence",
+            "MC12 image-preserving move drops the lineage",
+            "MC13 empty supersession accepted",
+            "MC2 orderPlans ignores derived deps",
+            "MC3 sameSteps ignores the branch member",
+            "MC4 sameSteps ignores the prop name",
+            "MC5 only the given listing is executed",
+            "MC6 bound dropped (sampling never refused)",
+            "MC7 refusal recorded but collision still read (no early return)",
+            "MC8 confluence never certified",
+            "MC9 two images tolerated"
+          ],
+          "note": "the three first-run survivors were real test gaps (no nested union in the schema exercised the prefix comparison; the relocation test asserted problems only) and were killed by tests added in 0d0fe106, not classified equivalent"
+        },
+        "booked": "each mutant against its own named test (tmp/mutate-t.sh); kill class read from the assertion that fired; see tmp/mutants-confluence.log"
       }
     ]
   },
-  "unexecutedGatesOnAnyCandidate": [
-    "pnpm run lint (now --max-warnings=0 on main)",
-    "pnpm run typecheck:all",
-    "pnpm run governed:rail",
-    "pnpm test (root)",
-    "pnpm run test:frameworks"
-  ]
+  "remainingSemanticObligations": {
+    "recordedFor": "REL-VIEW-ALGEBRA-01",
+    "note": "Measured in this slice, not decided by it. Each is a standing or closure-form question; none is closed by the successor's completion.",
+    "items": [
+      "closure form: obligation 3 cannot be evaluated for a carrier whose holder is an array element (assertion): forgetPath('assertion') has no locator and throws; an assertion-branch carrier (assertion.kind:aggregate~ratio-comparison) is derivable and its collision half holds by direct measurement, but obligation 8 fails on 7 primitive footprint coordinates -- composite constructor vs derived discriminator must be re-decided, not assumed",
+      "witness re-statement: the whole-leaf field.temporality.kind witness HOLDS over the interval/instant pair with both isolations discharged; whether to add it to witnesses.json (re-ratification) is a corpus/standing decision",
+      "genuinely non-confluent census pairs (21): a merge against an absence-spelling on one leaf (16) and arity against order on one list (5) compose to two different quotients and are refused as evidence; declaring a lawful order for either kind, if one exists, is a census decision",
+      "reference coordinates (25): unplanned by the new census (A5, by design); the legacy walker erased them, and the 5200 legacy images exist in the ledger but are not scored",
+      "acceptance text: A6 ('four required-leaf witnesses'), A7 (erasureAuthorityDigest vs the actual partition; locator machinery is coordinateBasis), A9 (205/93) and A10 (9730) are governed by invariants e093391b; no CLI path amends then: text and it was not hand-edited -- the amendment decision is the user's",
+      "A1: CLI status stays unchecked until an independent review receipt exists"
+    ]
+  },
+  "repoGates": {
+    "onMergeCommit": {
+      "candidate": "candidate 276c10b1 (Merge branch 'main' into quotient-codomain); dirty before: 0",
+      "gates": [
+        {
+          "gate": "worktree:check",
+          "exit": 0,
+          "seconds": 1
+        },
+        {
+          "gate": "lint",
+          "exit": 0,
+          "seconds": 6
+        },
+        {
+          "gate": "typecheck",
+          "exit": 0,
+          "seconds": 8
+        },
+        {
+          "gate": "typecheck:vue",
+          "exit": 0,
+          "seconds": 3
+        },
+        {
+          "gate": "tokens:build:check",
+          "exit": 0,
+          "seconds": 2
+        },
+        {
+          "gate": "tokens:validate",
+          "exit": 0,
+          "seconds": 0
+        },
+        {
+          "gate": "tokens:check-contrast",
+          "exit": 0,
+          "seconds": 1
+        },
+        {
+          "gate": "tokens:check-brand-refs",
+          "exit": 0,
+          "seconds": 1
+        },
+        {
+          "gate": "generate:check",
+          "exit": 0,
+          "seconds": 6
+        },
+        {
+          "gate": "docs:check-claims",
+          "exit": 0,
+          "seconds": 4
+        },
+        {
+          "gate": "test (root)",
+          "exit": 0,
+          "seconds": 46
+        },
+        {
+          "gate": "test:vue",
+          "exit": 0,
+          "seconds": 10
+        },
+        {
+          "gate": "governed:rail",
+          "exit": 0,
+          "seconds": 26
+        },
+        {
+          "gate": "test:frameworks",
+          "exit": 0,
+          "seconds": 44
+        }
+      ],
+      "allExitZero": true,
+      "trackedFilesChangedByRun": 0
+    },
+    "onFinalTip": {
+      "candidate": "candidate 0d0fe106 (test(analytical): pin the derived edge's whole-prefix compar); dirty b",
+      "gates": [
+        {
+          "gate": "worktree:check",
+          "exit": 0,
+          "seconds": 0
+        },
+        {
+          "gate": "lint",
+          "exit": 0,
+          "seconds": 6
+        },
+        {
+          "gate": "typecheck",
+          "exit": 0,
+          "seconds": 6
+        },
+        {
+          "gate": "typecheck:vue",
+          "exit": 0,
+          "seconds": 4
+        },
+        {
+          "gate": "tokens:build:check",
+          "exit": 0,
+          "seconds": 1
+        },
+        {
+          "gate": "tokens:validate",
+          "exit": 0,
+          "seconds": 0
+        },
+        {
+          "gate": "tokens:check-contrast",
+          "exit": 0,
+          "seconds": 1
+        },
+        {
+          "gate": "tokens:check-brand-refs",
+          "exit": 0,
+          "seconds": 1
+        },
+        {
+          "gate": "generate:check",
+          "exit": 0,
+          "seconds": 7
+        },
+        {
+          "gate": "docs:check-claims",
+          "exit": 0,
+          "seconds": 4
+        },
+        {
+          "gate": "test (root)",
+          "exit": 0,
+          "seconds": 49
+        },
+        {
+          "gate": "test:vue",
+          "exit": 0,
+          "seconds": 12
+        },
+        {
+          "gate": "governed:rail",
+          "exit": 0,
+          "seconds": 25
+        },
+        {
+          "gate": "test:frameworks",
+          "exit": 0,
+          "seconds": 46
+        }
+      ],
+      "allExitZero": true,
+      "trackedFilesChangedByRun": 0
+    },
+    "note": "tmp/candidate-gates.sh runs the pre-push/CI gate families in order; every gate runs even after a failure; the summary records exit codes and tracked-file drift after the rail."
+  }
 }
