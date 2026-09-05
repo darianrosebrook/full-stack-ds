@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.test.ts passed 9/9; test asserts Tooltip IR openTriggers are hover+focus, generated source retains onHover, and no SwiftUI.Button click wrapper is emitted"
     recorded_at: "2026-09-05T02:11:51.246Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "swift run --package-path packages/ds-swiftui PressProofHarness exited 0 through the OS accessibility path: popover.onOpenChange began [true] (native phase teardown later appended false), popover.content after press was true, and PRESS-PROOF reported all counters match expectations"
+    recorded_at: "2026-09-05T02:11:56.531Z"
