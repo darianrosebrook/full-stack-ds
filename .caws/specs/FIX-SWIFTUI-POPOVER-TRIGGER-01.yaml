@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "swift run --package-path packages/ds-swiftui PressProofHarness exited 0 through the OS accessibility path: popover.onOpenChange began [true] (native phase teardown later appended false), popover.content after press was true, and PRESS-PROOF reported all counters match expectations"
     recorded_at: "2026-09-05T02:11:56.531Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Final bound-worktree gates all exited 0: pnpm run governed:rail (51 contracts, 9 targets generated, 6 admitted targets verified); pnpm test (258 files, 3398 tests); pnpm run test:frameworks (all five packages); swift test --package-path packages/ds-swiftui (41 tests, 4 visible AX-host skips, 0 failures); pnpm run lint; docs claim/link checks; git diff --check; worktree:check"
+    recorded_at: "2026-09-05T02:12:01.276Z"
