@@ -41,7 +41,9 @@ scope:
     - 'e2e/runtime-rail.spec.ts'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Status glyph semantics live in the contract and binding IR; emitters contain no component-name-specific icon mapping.'
+  - 'Status composes the existing Icon component by reference and preserves Stack-root layout authority.'
+  - 'Every mapped glyph name resolves against the canonical icon corpus before generation succeeds.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
