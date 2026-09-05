@@ -3,7 +3,6 @@ title: 'Project usage sidecar content through contract render semantics'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: usage-sidecar-render
 created_at: '2026-09-05T00:10:22.224Z'
 updated_at: '2026-09-05T00:14:37.050Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
