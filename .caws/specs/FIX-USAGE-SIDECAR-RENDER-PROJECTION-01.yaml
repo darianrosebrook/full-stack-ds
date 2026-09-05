@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run src/lib/render-usage.test.tsx -t named regions
     recorded_at: "2026-09-05T00:26:36.387Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: pnpm exec vitest run src/lib/render-usage.test.tsx -t preserves ordinary children
+    recorded_at: "2026-09-05T00:26:44.789Z"
