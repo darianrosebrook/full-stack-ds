@@ -1,2 +1,2 @@
-{"name":"default","description":"Success status indicator shown after a task completes, using the success intent for icon and color.","tree":{"fsds.Status":{"props":{"status":"success"}}}}
-{"name":"warning","description":"Warning status badge signaling a degraded service condition.","tree":{"fsds.Status":{"props":{"status":"warning"}}}}
+{"name":"default","description":"Success status indicator shown after a task completes, using the success intent for icon and color.","tree":{"fsds.Status":{"props":{"status":"success","children":"Success"}}}}
+{"name":"warning","description":"Warning status badge signaling a degraded service condition.","tree":{"fsds.Status":{"props":{"status":"warning","children":"Warning"}}}}

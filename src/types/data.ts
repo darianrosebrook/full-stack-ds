@@ -54,6 +54,8 @@ export interface DomBinding {
 
 export interface DomNode {
   tag?: string;
+  /** Name of a consumer-provided region when tag is the `slot` sentinel. */
+  name?: string;
   part?: string;
   bindings?: DomBinding;
   on?: DomBinding;
