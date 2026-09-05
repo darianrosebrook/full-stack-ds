@@ -78,3 +78,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/validation/usage.test.ts — recursive typed object/collection prop validation passed
     recorded_at: "2026-09-05T03:23:57.882Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "render-usage glyph tests plus browser runtime inspection: Status check/triangle-alert, Command search, Accordion chevron, Button Spinner visible"
+    recorded_at: "2026-09-05T03:23:58.671Z"
