@@ -15,13 +15,20 @@ Run only the fast catalog-integrity check used by push and ordinary CI:
 Select a smaller sample or the shorter development profile:
 
     pnpm run audit:contract-oracle-mutations -- --only=dialog-name-to-body
-    pnpm run audit:contract-oracle-mutations -- --profile=core
+    pnpm run audit:contract-oracle-mutations -- --profile=core --only=badge-rtl-flip-icon-false
+
+Verify the catalog's reviewed outcome dispositions:
+
+    pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions
 
 Reports and per-stage logs are written under
 `tmp/contract-oracle-mutation/`. The source worktree must be clean. The
 runner clones its exact HEAD into a throwaway directory, installs from the
 lockfile, proves the unmutated baseline first, and restores a byte-clean
-generated tree between mutants. It never mutates the developer worktree.
+generated tree between mutants. It never mutates the developer worktree. Each
+run allocates a dedicated loopback port for the Playwright rails, so an active
+showcase or another agent's run cannot invalidate the baseline by occupying
+the default development port.
 
 The full profile expands the governed rail, runs every contract-derived
 realization audit, typechecks all admitted packages, runs the root and
@@ -45,12 +52,24 @@ Interpret outcomes by evidence class:
 
 A detection is not automatically proof that the contract was independently
 checked. A survivor is a measured blind spot, not proof that the original fact
-was right. The default command reports survivors without failing so the first
-measurement can establish a baseline. Add `--max-survivors=N` only when a
-reviewed threshold is ready to become a gate.
+was right. The catalog therefore distinguishes two reviewed dispositions:
+
+- `detected` mutants protect an existing detector. If one starts surviving,
+  the oracle regressed.
+- `survived` mutants are blind-spot sentinels. Each names an owning spec and a
+  reason. If one becomes detected, its disposition is stale and must be
+  re-adjudicated rather than left on the books as permanent debt.
+
+`--verify-dispositions` fails on either mismatch. This is stricter than an
+aggregate survivor threshold: swapping one newly surviving protected mutant
+for one newly detected sentinel leaves the count unchanged but still fails.
+The default command remains measurement-only. `--max-survivors=N` remains
+available for deliberately count-based experiments, but it is not the
+scheduled authority.
 
 Ordinary CI and the change-scoped pre-push hook run only the self-check. The
 `Contract oracle mutations` workflow runs the full profile every Monday and on
-manual dispatch, fails when any curated mutant survives, and uploads the report
-plus per-stage logs for 30 days. That lane measures the catalog; it does not turn
-the contract into its own correctness oracle.
+manual dispatch, fails when any mutant differs from its reviewed disposition,
+and uploads the report plus per-stage logs for 30 days. That lane measures the
+catalog; it does not turn the contract into its own correctness oracle or claim
+that a recorded survivor's original value is right.

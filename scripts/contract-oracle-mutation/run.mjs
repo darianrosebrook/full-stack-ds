@@ -8,6 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
+import { createServer } from "node:net";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import {
   CONTRACT_MUTANTS,
@@ -114,6 +115,7 @@ function usage() {
     "  --profile=full|core          Gate profile (default: full)",
     "  --only=id[,id...]            Run only selected catalog mutants",
     "  --max-survivors=N            Exit 1 when survivors exceed N",
+    "  --verify-dispositions         Exit 1 when any actual outcome differs from its reviewed catalog disposition",
     "  --stage-timeout-minutes=N    Per-stage timeout (default: 20)",
     "  --offline                    Install the sandbox from the pnpm store only",
     "  --keep-sandbox               Retain the throwaway clone",
@@ -127,6 +129,7 @@ function parseArgs(argv) {
     profile: "full",
     only: null,
     maxSurvivors: null,
+    verifyDispositions: false,
     stageTimeoutMinutes: 20,
     offline: false,
     keepSandbox: false,
@@ -145,6 +148,8 @@ function parseArgs(argv) {
       options.offline = true;
     } else if (arg === "--keep-sandbox") {
       options.keepSandbox = true;
+    } else if (arg === "--verify-dispositions") {
+      options.verifyDispositions = true;
     } else if (arg.startsWith("--profile=")) {
       options.profile = arg.slice("--profile=".length);
     } else if (arg.startsWith("--only=")) {
@@ -302,6 +307,25 @@ function trackedDiff(repo) {
   return { clean: result.status === 0, output: result.stdout + result.stderr };
 }
 
+async function availableLoopbackPort() {
+  return await new Promise((resolvePromise, rejectPromise) => {
+    const server = createServer();
+    server.once("error", rejectPromise);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      if (address === null || typeof address === "string") {
+        server.close();
+        rejectPromise(new Error("Failed to allocate a loopback TCP port"));
+        return;
+      }
+      server.close((error) => {
+        if (error) rejectPromise(error);
+        else resolvePromise(address.port);
+      });
+    });
+  });
+}
+
 function renderMarkdown(report, reportDir) {
   const lines = [
     "# Contract oracle mutation report",
@@ -313,17 +337,21 @@ function renderMarkdown(report, reportDir) {
     "- Baseline: " + (report.baseline.passed ? "passed" : "failed"),
     "- Detected: " + report.summary.detected + "/" + report.summary.total,
     "- Survived: " + report.summary.survived + "/" + report.summary.total,
+    "- Disposition mismatches: " + report.summary.dispositionMismatches,
     "",
     "Detection means a selected gate went red. It does not by itself prove an",
     "independent correctness oracle: structural and contract-derived detectors",
     "are reported separately, and mixed-test stages contain generated tests,",
     "axe, and hand-authored custom regions. A survivor means no selected stage",
     "contradicted the mutation; it does not prove the original fact is correct.",
+    "A disposition is a reviewed measurement expectation, not an assertion that",
+    "the original contract value is correct. Unexpected detections fail too:",
+    "they mean a known blind spot gained an oracle and its ledger entry is stale.",
     "",
     "## Results",
     "",
-    "| Mutant | Field class | Outcome | First detector | Evidence class |",
-    "|---|---|---|---|---|",
+    "| Mutant | Field class | Expected | Actual | Disposition | First detector | Evidence class |",
+    "|---|---|---|---|---|---|---|",
   ];
 
   for (const result of report.results) {
@@ -334,7 +362,11 @@ function renderMarkdown(report, reportDir) {
         " | " +
         result.fieldClass +
         " | " +
+        result.expectedOutcome +
+        " | " +
         result.outcome +
+        " | " +
+        (result.outcome === result.expectedOutcome ? "match" : "MISMATCH") +
         " | " +
         (detection?.stage ?? "none") +
         " | " +
@@ -365,7 +397,8 @@ function renderMarkdown(report, reportDir) {
   lines.push("", "## Reproduction", "");
   lines.push(
     "Run: pnpm run audit:contract-oracle-mutations -- --profile=" +
-      report.profile,
+      report.profile +
+      (report.verifyDispositions ? " --verify-dispositions" : ""),
   );
   lines.push(
     "Machine-readable details and per-stage logs are adjacent to this file in " +
@@ -420,7 +453,13 @@ async function main() {
   if (options.list) {
     for (const mutant of CONTRACT_MUTANTS) {
       console.log(
-        mutant.id + "\t" + mutant.fieldClass + "\t" + mutant.hypothesis,
+        mutant.id +
+          "\t" +
+          mutant.fieldClass +
+          "\t" +
+          mutant.expectedOutcome +
+          "\t" +
+          mutant.hypothesis,
       );
     }
     return;
@@ -462,15 +501,19 @@ async function main() {
 
   const sandboxRoot = mkdtempSync(join(tmpdir(), "fsds-contract-oracle-"));
   const sandboxRepo = join(sandboxRoot, "repo");
+  const e2ePort = await availableLoopbackPort();
   const env = {
     ...process.env,
     CI: "true",
     FORCE_COLOR: "0",
+    FSDS_E2E_PORT: String(e2ePort),
   };
   const report = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     commit,
     profile: options.profile,
+    verifyDispositions: options.verifyDispositions,
+    e2ePort,
     startedAt: new Date().toISOString(),
     finishedAt: null,
     stageIds: PROFILES[options.profile],
@@ -482,6 +525,7 @@ async function main() {
 
   console.log("[mutation] report: " + join(reportDir, "report.md"));
   console.log("[mutation] sandbox: " + sandboxRepo);
+  console.log("[mutation] isolated e2e port: " + e2ePort);
 
   try {
     const installArgs = ["install", "--frozen-lockfile", "--prefer-offline"];
@@ -588,6 +632,8 @@ async function main() {
         from: mutant.from,
         to: mutant.to,
         hypothesis: mutant.hypothesis,
+        expectedOutcome: mutant.expectedOutcome,
+        gap: mutant.gap ?? null,
         outcome: failed ? "detected" : "survived",
         firstDetection: failed
           ? {
@@ -643,6 +689,18 @@ async function main() {
         report.summary.total,
     );
     console.log("[mutation] report: " + join(reportDir, "report.md"));
+
+    if (
+      options.verifyDispositions &&
+      report.summary.dispositionMismatches > 0
+    ) {
+      console.error(
+        "[mutation] disposition mismatch: " +
+          report.summary.dispositionMismatches +
+          " mutant outcome(s) differ from the reviewed catalog",
+      );
+      process.exitCode = 1;
+    }
 
     if (
       options.maxSurvivors !== null &&
