@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-04
-verified_at_commit: 34a298b3
+verified_at_commit: 1e6a11f7
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -153,7 +153,7 @@ These are not hypothetical. They are the symptoms that show up across the broade
 
 **`validateDomBindings`** is property 5 made concrete. It walks the IR's `DomNodeIR` tree, looks up every `channel:X` reference against the normalized-channel set and every `prop:Y` reference against the styled-prop set, and throws on the first violation. The comment in the source makes the intent explicit: "Throws a descriptive error so contract authors see exactly what went wrong... rather than silently emitting a literal string in the generated output." The function could have been a no-op. It could have logged a warning. It could have emitted the literal string and let the framework reject it at runtime. It throws. That is the discipline.
 
-**`buildFormControlIR`** separates semantic intent from framework event idiom. A control contract names its rendered interactive part, value channel/model, and commit semantic (`input`, `change`, or `activation`). The builder validates that the part exists, is interactive, renders exactly once, and that the channel type agrees with the value model. It then injects one normalized event binding on that part. React, Vue, Svelte, Angular, and Lit spell the listener differently, but none decides whether a text field is per-keystroke or blur-timed. The same target part also receives ambient Field association, so a compound checkbox labels its native input rather than its wrapper. Native form serialization remains a separate `form` fact: ToggleSwitch is a boolean control without falsely claiming that its button realization contributes to `FormData`.
+**`buildFormControlIR`** separates semantic intent from framework event idiom. A control contract names its rendered interactive part, value channel/model, and commit semantic (`input`, `change`, or `activation`). The builder validates that the part exists, is interactive, renders exactly once, and that the channel type agrees with the value model. It then injects one normalized event binding on that part. React, Vue, Svelte, Angular, and Lit spell the listener differently—including React's idiomatic `onChange` for the same per-input text commit that the other Web targets spell as `input`—but none decides whether a text field is per-keystroke or blur-timed. The same target part also receives ambient Field association, so a compound checkbox labels its native input rather than its wrapper. Native form serialization remains a separate `form` fact: ToggleSwitch is a boolean control without falsely claiming that its button realization contributes to `FormData`.
 
 Both functions are short. Read together, they are where the architectural choices in this codebase are most concentrated.
 
