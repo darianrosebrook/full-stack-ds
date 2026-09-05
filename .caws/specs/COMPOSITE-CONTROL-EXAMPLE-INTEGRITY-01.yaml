@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/composite-control-ir.test.ts packages/ds-codegen/src/dom-tree.test.ts packages/ds-codegen/src/frameworks/iteration-bindings.test.ts — 258 tests passed; audit:behavior-realization — 20 event wires x 5 web frameworks realized"
     recorded_at: "2026-09-05T06:10:07.694Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx — Calendar caption/day assertion passed; live browser at 127.0.0.1:5175 rendered September 2026 and day buttons 1-14"
+    recorded_at: "2026-09-05T06:10:10.731Z"
