@@ -1,12 +1,12 @@
 {
   "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. No result here is claimed for an integration candidate: none exists yet.",
   "spec": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
-  "writtenAt": "2026-09-05T10:57:00+00:00",
+  "writtenAt": "2026-09-05T11:17:39+00:00",
   "pins": {
-    "testedWorktreeTip": "d8e41bb1877926befd0c854fd78b0f10f9e7a86d",
+    "testedWorktreeTip": "e290eededa24267e2dbf6e92d75cfd048676f376",
     "selectedMainCommitAtWrite": "76b7310cc7e7fa95ee6474df7e0250d6a9744ff2",
     "mergeBase": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
-    "branchCommits": 30,
+    "branchCommits": 33,
     "mainAheadAtWrite": 310,
     "mainChangesUnderAnalyticalClosure": 0,
     "mainChangesToSharedFiles": [
@@ -24,8 +24,8 @@
       "note": "ajv/zod resolved from packages/ds-codegen/node_modules, where the analytical code resolves them."
     },
     "artifacts": {
-      "stage2-freeze.json": "e901fbc7a019b510574a0b4c62fcb781ae36093bc7c14fb70ca06cdd2c2338e5",
-      "erasure-footprints.json": "8d49f45f28a3797005e8b9a24fc51775018095fa8d9021a3921776e3eb66be0c",
+      "stage2-freeze.json": "785ccc76afc47f74d74205842bfef3f541738de46c1b76602fdaaf768658a86f",
+      "erasure-footprints.json": "e383b7408a1754e8011f1abb44cbbc00c898cc73ed8a600407ab72ed801ce3d3",
       "codomain-adjudications.json": "9c697f27192de4d163ba23fd004c73d8dfef22857da9b34646efb71002e8c801",
       "stage1-historical-accounting.json": "6ff8faf0616c41bf126c061f949b4fa2ad7a1830305236b09794b3699c4bdca5",
       "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
@@ -36,7 +36,7 @@
     "authorityIdentities": {
       "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
       "erasureAuthorityDigest": "e2952b14e4f5554b2c8c56327d05871c41c8542fa6e766aa09813a384696c554",
-      "witnessAuthorityDigest": "71ad20de0da1983e51679c8f476458f6c39385ca4130331f2240a8b5042f94ad",
+      "witnessAuthorityDigest": "2c21e7bfcc824f7d19093072571714a025ddac1c08b49b22c98798a7048ec3a7",
       "quotientSchemaVersion": 1,
       "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
     },
@@ -51,7 +51,7 @@
   "observedOnPinnedTip": {
     "analyticalSuite": {
       "command": "npx vitest run packages/ds-codegen/src/analytical",
-      "result": "686 passed (686)",
+      "result": "689 passed (689)",
       "consecutiveRuns": 3,
       "note": "Six separately printed summaries. An earlier claim of three green runs (67b1008f) was false and corrected in 6ef5e993."
     },
@@ -491,6 +491,52 @@
       "note": "executeAll([p,q]) vs executeAll([q,p]) after both impose the same order tests scheduler determinism, not commutation; independent pairs need the two raw compositions compared."
     }
   },
+  "reviewerBar": {
+    "$comment": "Obligations from the reviewer's ten-criterion bar that are not spec acceptance criteria. Only the items with a demonstrated result are filed; the bar itself is quoted in the review letters.",
+    "4. differential checks cannot hide new findings": {
+      "status": "demonstrated on the real fixture; the distinguishing capability is NOT claimed",
+      "fixture": "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT",
+      "coordinate": "relation.derivedBy.project.keep#incidence",
+      "masking": {
+        "findingBeforeAndAfter": "diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat via project(keep=2) [derivation-typing/schema]",
+        "causeBefore": "projection retains amount by name but redeclares it: amount ratio -> interval",
+        "causeAfter": "a projection keeping [zz_erased_reference_0, zz_erased_reference_1] cannot yield fields [order_id, amount]",
+        "sameErasureOnCleanSide": "violated: introduced derivation defect(s) REL_DERIVATION_RESULT_NOT_DERIVABLE@flat"
+      },
+      "before": "discharged by [quotient-legal, slot-local] with a `limitation` string nothing at admission read; a witness over the hostile side was admitted with the introduced defect hidden (probe tmp/probe-masking-coords.mts, tmp/probe-masking-witness2.mts at c3df983b: W0 ok=true)",
+      "after": "unevaluated where the after-structure still carries a finding (ERASURE_ISOLATION_UNEVALUATED at the witness); structural refuters still run first and a definite refutation outranks it; where the after-structure carries nothing the engine has answered and discharges; the combined route now names quotient-legal; the limitation field is gone",
+      "evidence": [
+        {
+          "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+          "test": "a keep-set defect introduced behind the reinterpretation's key does not admit the witness"
+        },
+        {
+          "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+          "test": "the control with the same pre-existing defect and nothing introduced is unevaluated too, and says so, rather than admitted"
+        },
+        {
+          "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+          "test": "a definite structural refutation outranks an unsettled engine comparison"
+        },
+        {
+          "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+          "test": "does not credit the engine where a finding still present could mask a new cause, and does not discharge around it either"
+        }
+      ],
+      "witnesses": {
+        "W": "coordinates [keep#incidence, field.transformation:interval~ratio]; a = the fixture (holdout: illegal); b = keep reordered + reinterpretation repaired (admissible). Reaches the isolation loop on its own merits (no SCHEMA_INVALID / IDENTICAL_STIMULI / SAME_OUTCOME / NO_COLLISION / NOT_MINIMAL). Refused: a/keep#incidence unevaluated, b/keep#incidence violated.",
+        "W0 (control)": "coordinates [keep#order, interval~ratio], same b. Nothing introduced (finding and detail byte-identical). Was ADMITTED; now refused with exactly one failure, ERASURE_ISOLATION_UNEVALUATED."
+      },
+      "cost": "The consumer cannot tell W0 from W on the hostile side: the engine returns at its first refutation either way. It says so instead of admitting. Telling them apart would need the rule surface to report every refutation, which is frozen under the holdout digest and out of this successor's scope.",
+      "liveStanding": "44 of 47 witnesses hold before and after; none rested on a limitation-discharge (tmp/probe-limitation-blast.mts at c3df983b and at ca06f7c2).",
+      "authority": "witnessAuthorityDigest 71ad20de -> 2c21e7bf; both committed records refused it (erasure-audit: 'authority witnessAuthorityDigest moved'; freeze: 'authority:witnessAuthorityDigest moved as well') and were re-recorded, one line each; the freeze carried its supersession forward.",
+      "nonClaim": "A same-key new cause is classified unevaluable, not detected. 'A clean control remains accepted' holds (engine discharge on a clean structure; live witnesses unchanged); 'a control with the same pre-existing defect and no introduced defect' is preserved and is refused too, by design.",
+      "commits": [
+        "ca06f7c2",
+        "e290eede"
+      ]
+    }
+  },
   "mutationReceipts": {
     "policy": "Source mutants are booked apart from replay tables (input-tampering probes establish consumer behaviour; source mutants establish that a test can fail). Kills are attributed to the assertion that fired, not the enclosing test. Every mutant is applied from `git show HEAD:` and restored from it.",
     "rounds": [
@@ -565,6 +611,17 @@
         "survivors": 0,
         "executionFailures": 0,
         "note": "Kill classes verified by re-running M1-M4 with the error class captured (tmp/kill-class.sh): M1 revert, M3 asymmetric, M4 verdict-discarded die by TypeError out of the gate (the pinned defect itself); M2 by the movement assertion; M5 by five side-attribution assertions. M6-M10 kill through toThrow/not.toThrow/toEqual assertions, whose failure is an AssertionError."
+      },
+      {
+        "subject": "masking reclassification (necessity.ts)",
+        "distinct": 7,
+        "executions": 8,
+        "assertionKills": 6,
+        "survivedBeforeRepair": 1,
+        "assertionKillsAfterRepair": 1,
+        "survivors": 0,
+        "executionFailures": 0,
+        "note": "MM7 (combined route keyed on BEFORE findings) survived at ca06f7c2: no test pinned the combined route's discharge over a composed image that carries nothing. Not equivalent -- [derivedBy#present + field.key] on the masking fixture distinguishes it. Pinned in e290eede and re-run there."
       }
     ]
   },
