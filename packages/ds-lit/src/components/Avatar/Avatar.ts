@@ -110,6 +110,7 @@ export class AvatarElement extends LitElement {
 
   @property({ type: String }) src?: string;
   @property({ type: String }) name!: string;
+  @property({ type: String }) initials?: string;
   @property({ type: Boolean }) priority?: boolean;
   @property() size?: string;
 
@@ -129,6 +130,9 @@ export class AvatarElement extends LitElement {
     return html`<div class="${this.computeClasses()}" role="img" aria-label=${ifDefined(this.name)}>
   ${this.src ? html`
   <fsds-image class=${'avatar__image'} .src=${this.src} alt=""></fsds-image>
+  ` : nothing}
+  ${this.initials ? html`
+  <span class=${'avatar__initials'}>${this.initials}</span>
   ` : nothing}
 </div>`;
   }

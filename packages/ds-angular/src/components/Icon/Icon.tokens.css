@@ -19,7 +19,6 @@
   --fsds-icon-size-md: var(--fsds-core-icon-size-md, 20px);
   --fsds-icon-size-lg: var(--fsds-core-icon-size-lg, 24px);
   --fsds-icon-size-xl: var(--fsds-core-icon-size-xl, 32px);
-  --fsds-icon-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
 }
 /* @generated:end */
 

@@ -101,12 +101,6 @@ export const iconTokenScopes = {
       ref: "core.icon.size.xl",
       fallback: 32,
     },
-    "icon.color.foreground.default": {
-      name: "icon.color.foreground.default",
-      cssVar: "--fsds-icon-color-foreground-default",
-      ref: "semantic.color.foreground.primary",
-      fallback: "#141414",
-    },
   },
 } satisfies ComponentTokenScopes;
 

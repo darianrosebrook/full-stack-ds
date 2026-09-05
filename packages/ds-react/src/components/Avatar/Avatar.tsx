@@ -18,9 +18,10 @@ import "./Avatar.css";
 // @custom:end
 
 // @generated:start props
-export interface AvatarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "name" | "priority" | "size" | "src"> {
+export interface AvatarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "initials" | "name" | "priority" | "size" | "src"> {
   src?: string;
   name: string;
+  initials?: string;
   priority?: boolean;
   size?: string;
   className?: string;
@@ -39,6 +40,7 @@ export function Avatar({
   "data-testid": testId,
   src,
   name,
+  initials,
   priority,
   ...rest
 }: AvatarProps) {
@@ -54,6 +56,11 @@ export function Avatar({
   <Stack layout="native" className={`${classNames}`} aria-label={name} role="img" data-testid={testId} data-fsds-component="avatar" {...rest}>
     {src ? (
       <Image className="avatar__image" src={src} alt={""} />
+    ) : null}
+    {initials ? (
+      <span className="avatar__initials">
+        {initials}
+      </span>
     ) : null}
   </Stack>
   );

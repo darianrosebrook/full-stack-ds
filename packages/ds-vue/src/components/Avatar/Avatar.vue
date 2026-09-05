@@ -20,6 +20,7 @@ import Image from "../Image/Image.vue";
 interface Props {
   src?: string;
   name: string;
+  initials?: string;
   priority?: boolean;
   size?: string;
   class?: string;
@@ -49,5 +50,8 @@ const classNames = computed(() => [
 <template>
   <div :class="classNames" :aria-label="props.name" role="img" :data-testid="props['data-testid']" data-fsds-component="avatar">
     <Image v-if="props.src" :class="'avatar__image'" :src="props.src" alt="" />
+    <span v-if="props.initials" :class="'avatar__initials'">
+      {{ props.initials }}
+    </span>
   </div>
 </template>

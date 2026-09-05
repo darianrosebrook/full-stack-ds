@@ -42,7 +42,6 @@ export class IconElement extends LitElement {
       --fsds-icon-size-md: var(--fsds-core-icon-size-md, 20px);
       --fsds-icon-size-lg: var(--fsds-core-icon-size-lg, 24px);
       --fsds-icon-size-xl: var(--fsds-core-icon-size-xl, 32px);
-      --fsds-icon-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
     }
 
     .icon {
@@ -62,7 +61,7 @@ export class IconElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      color: var(--fsds-icon-color-foreground-default, #141414);
+      color: currentColor;
     }
 
     .icon--sm {
