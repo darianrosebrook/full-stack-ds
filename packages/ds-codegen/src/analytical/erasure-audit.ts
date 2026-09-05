@@ -652,32 +652,106 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   // Presence was required on both sides; agreement was required on neither.
   const coherent = (r: FootprintReport, side: "RECORDED" | "CURRENT"): string[] => {
     const out: string[] = [];
-    const q = r.scopes?.quotientLanguageInvalid;
-    const named = r.specimens?.populationDigest;
     // COMPLETENESS FIRST. Admission establishes that the required bindings are
-    // present; only then does comparison decide whether their values agree.
+    // present AND are evidence; only then does comparison decide whether their
+    // values agree.
     for (const k of Object.keys(REPORT_INPUTS)) {
       const bad = inadmissible(`binding for input ${k}`, r.digests?.[k], side);
       if (bad) out.push(bad);
     }
+    const auth = r.authority as unknown as Record<string, unknown> | undefined;
     for (const k of REPORT_AUTHORITIES) {
-      const bad = inadmissible(k, (r.authority as unknown as Record<string, unknown>)?.[k], side);
+      const bad = inadmissible(k, auth?.[k], side);
       if (bad) out.push(bad);
     }
     // The population identity is carried separately from the authority block
     // and had only an equality comparison, so two reports missing it agreed.
-    const bad = inadmissible("footprintBasisDigest", r.footprintBasisDigest, side);
-    if (bad) out.push(bad);
-    if (r.scopes?.sourceLanguageDeparture === undefined) out.push(`the ${side} report carries no sourceLanguageDeparture scope; it cannot state what it validated`);
-    if (q === undefined) out.push(`the ${side} report carries no quotientLanguageInvalid scope; it cannot be shown to cover the population it names`);
-    if (named === undefined) out.push(`the ${side} report names no population digest; coverage could only be compared by count, which two different populations can share`);
-    // The count catches a scope that admits it saw fewer...
-    if (q !== undefined && q.specimens !== r.specimens.total) {
-      out.push(`the ${side} report's terminal invariant was measured over ${q.specimens} of ${r.specimens.total} specimens; a report must not name a population it did not check`);
+    const badFootprint = inadmissible("footprintBasisDigest", r.footprintBasisDigest, side);
+    if (badFootprint) out.push(badFootprint);
+
+    // VERSION COMPATIBILITY, not merely version shape. `inadmissible` above
+    // establishes that the value is version-shaped; a single-version consumer
+    // must also establish that it is THE version its validator implements --
+    // taken from the quotient-image authority, not declared a second time
+    // here. The producer also emits a top-level copy; it is a checked
+    // projection of the authoritative value, never an independent claim.
+    const av = auth?.quotientSchemaVersion;
+    if (typeof av === "number" && av !== QUOTIENT_SCHEMA_VERSION) {
+      out.push(`the ${side} report's quotientSchemaVersion ${av} is not the version this checker validates (${QUOTIENT_SCHEMA_VERSION})`);
     }
-    // ...the digest catches one that saw as many, but not the same ones.
-    if (q !== undefined && named !== undefined && q.populationDigest !== named) {
-      out.push(`the ${side} report's terminal invariant covers a membership that is not the population it names: ${q.populationDigest.slice(0, 12)} vs ${named.slice(0, 12)}`);
+    const tv = (r as unknown as Record<string, unknown>).quotientSchemaVersion;
+    if (tv !== av) out.push(`the ${side} report's top-level quotientSchemaVersion ${JSON.stringify(tv)} disagrees with authority.quotientSchemaVersion ${JSON.stringify(av)}`);
+
+    // THE POPULATION DESCRIPTIONS ARE ADMITTED BEFORE THEY ARE COMPARED.
+    //
+    // The scope comparisons assumed each scope and the specimen manifest had
+    // already been admitted as a meaningful description. They had not:
+    // `=== undefined` let a scope stand as null, false, 0 or "" and thereby
+    // drop out of its own comparison (a recorded-side-only corruption, needing
+    // no defective producer); null and absent population digests agreed; a
+    // recorded scope count of 999, or a total of 0 beside unchanged component
+    // counts, passed. One admission pass over the fields the consumer reads,
+    // then the relationships the producer guarantees between them.
+    const count = (v: unknown): v is number => typeof v === "number" && Number.isInteger(v) && v >= 0;
+    const digest = (v: unknown): v is string => typeof v === "string" && SHA256.test(v);
+    const obj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
+
+    const m = r.specimens as unknown;
+    let manifestOk = false;
+    if (!obj(m)) out.push(`the ${side} report carries no specimen manifest`);
+    else {
+      manifestOk = true;
+      for (const k of ["corpus", "stimuli", "synthesized", "total"]) {
+        if (!count(m[k])) {
+          out.push(`the ${side} report's specimens.${k} is not a count: ${JSON.stringify(m[k])}`);
+          manifestOk = false;
+        }
+      }
+      if (!digest(m.populationDigest)) {
+        out.push(m.populationDigest === undefined
+          ? `the ${side} report names no population digest; coverage could only be compared by count, which two different populations can share`
+          : `the ${side} report's specimens.populationDigest is not a sha256 digest: ${JSON.stringify(m.populationDigest)}`);
+        manifestOk = false;
+      }
+      if (manifestOk && (m.total as number) !== (m.corpus as number) + (m.stimuli as number) + (m.synthesized as number)) {
+        out.push(`the ${side} report's specimens.total ${m.total} is not corpus + stimuli + synthesized (${m.corpus} + ${m.stimuli} + ${m.synthesized})`);
+        manifestOk = false;
+      }
+    }
+
+    const scopeOf = (k: "sourceLanguageDeparture" | "quotientLanguageInvalid"): { specimens: number; populationDigest: string } | undefined => {
+      const sc = (r.scopes as unknown as Record<string, unknown> | undefined)?.[k];
+      if (!obj(sc)) {
+        out.push(sc === undefined
+          ? `the ${side} report carries no ${k} scope; it cannot state what it validated`
+          : `the ${side} report's ${k} scope is not a scope: ${JSON.stringify(sc)}`);
+        return undefined;
+      }
+      let ok = true;
+      if (!count(sc.specimens)) { out.push(`the ${side} report's ${k} scope count is not a count: ${JSON.stringify(sc.specimens)}`); ok = false; }
+      if (!digest(sc.populationDigest)) { out.push(`the ${side} report's ${k} scope populationDigest is not a sha256 digest: ${JSON.stringify(sc.populationDigest)}`); ok = false; }
+      return ok ? (sc as { specimens: number; populationDigest: string }) : undefined;
+    };
+    const src = scopeOf("sourceLanguageDeparture");
+    const q = scopeOf("quotientLanguageInvalid");
+
+    if (manifestOk && obj(m)) {
+      const total = m.total as number;
+      const authored = (m.corpus as number) + (m.stimuli as number);
+      // The count catches a scope that admits it saw fewer...
+      if (q && q.specimens !== total) {
+        out.push(`the ${side} report's terminal invariant was measured over ${q.specimens} of ${total} specimens; a report must not name a population it did not check`);
+      }
+      // ...the digest catches one that saw as many, but not the same ones.
+      if (q && q.populationDigest !== m.populationDigest) {
+        out.push(`the ${side} report's terminal invariant covers a membership that is not the population it names: ${q.populationDigest.slice(0, 12)} vs ${(m.populationDigest as string).slice(0, 12)}`);
+      }
+      // Source departure is measured over the authored prefix by policy, and
+      // the producer states that scope; a count that is not the prefix is a
+      // description of some other measurement.
+      if (src && src.specimens !== authored) {
+        out.push(`the ${side} report's sourceLanguageDeparture scope covers ${src.specimens} specimens, not the ${authored} authored (corpus + stimuli) it is measured over`);
+      }
     }
     return out;
   };

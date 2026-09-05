@@ -426,11 +426,15 @@ describe("the terminal invariant is measured over the population the report name
     for (const k of REPORT_AUTHORITIES) {
       const r = clone(recorded);
       const l = clone(live);
+      // Filtered to the missing-binding problem rather than an exact array:
+      // removing quotientSchemaVersion ALSO (correctly) makes the top-level copy
+      // disagree with the authority block, and that second finding is not noise.
+      const missing = (ps: string[], side: string) => ps.filter((p) => p.includes(`the ${side} report carries no ${k}`));
       delete (r.authority as unknown as Record<string, unknown>)[k];
-      expect(verdict(r, live), `RECORDED missing ${k}`).toEqual([expect.stringContaining(`the RECORDED report carries no ${k}`)]);
+      expect(missing(verdict(r, live), "RECORDED"), `RECORDED missing ${k}`).toHaveLength(1);
       delete (l.authority as unknown as Record<string, unknown>)[k];
-      expect(verdict(recorded, l), `CURRENT missing ${k}`).toEqual([expect.stringContaining(`the CURRENT report carries no ${k}`)]);
-      expect(verdict(r, l).length, `${k} missing from BOTH sides`).toBe(2);
+      expect(missing(verdict(recorded, l), "CURRENT"), `CURRENT missing ${k}`).toHaveLength(1);
+      expect(missing(verdict(r, l), "RECORDED").length + missing(verdict(r, l), "CURRENT").length, `${k} missing from BOTH sides`).toBe(2);
     }
   });
 
@@ -468,10 +472,11 @@ describe("the terminal invariant is measured over the population the report name
       ]);
     }
     // A version is not a digest and needs its own rule.
-    expect(both((x) => { (x.authority as unknown as Record<string, unknown>).quotientSchemaVersion = "banana"; })).toEqual([
-      expect.stringContaining("the RECORDED report's quotientSchemaVersion is not a schema version"),
-      expect.stringContaining("the CURRENT report's quotientSchemaVersion is not a schema version"),
-    ]);
+    // Filtered: "banana" in the authority block also (correctly) disagrees
+    // with the top-level copy, and that is a separate, legitimate finding.
+    const banana = both((x) => { (x.authority as unknown as Record<string, unknown>).quotientSchemaVersion = "banana"; });
+    expect(banana.filter((p) => p.includes("the RECORDED report's quotientSchemaVersion is not a schema version"))).toHaveLength(1);
+    expect(banana.filter((p) => p.includes("the CURRENT report's quotientSchemaVersion is not a schema version"))).toHaveLength(1);
     // And the separately carried population identity, absent on both sides,
     // which had only an equality comparison and so agreed.
     expect(both((x) => { delete (x as unknown as Record<string, unknown>).footprintBasisDigest; })).toEqual([
@@ -504,6 +509,76 @@ describe("the terminal invariant is measured over the population the report name
     (r.authority as unknown as Record<string, unknown>).extensionDigest = "a".repeat(64);
     (l.authority as unknown as Record<string, unknown>).extensionDigest = "b".repeat(64);
     expect(gateProblems(r, l), "a field outside the contract changed the verdict").toEqual([]);
+  });
+
+  it("admits each population description before comparing it, on either side", () => {
+    // ONE ADMISSION PASS, not another key. The scope comparisons assumed each
+    // scope object and the specimen manifest had been admitted as a meaningful
+    // population description. `=== undefined` let a required scope stand as
+    // null, false, 0 or "" and drop out of its own comparison; null and absent
+    // population digests agreed; a recorded count of 999, or a total of 0
+    // beside unchanged components, passed. Several of these need corruption of
+    // the RECORDED side only -- no defective producer required -- so the rows
+    // below are not all symmetric, and each names its side.
+    type R = Record<string, any>;
+    const clone = (o: FootprintReport) => JSON.parse(JSON.stringify(o)) as FootprintReport;
+    const run = (f: (r: R, l: R) => void) => {
+      const r = clone(recorded) as unknown as R;
+      const l = clone(live) as unknown as R;
+      f(r, l);
+      // A thrown `.slice()` is not a refusal. The gate must return problems.
+      return gateProblems(r as unknown as FootprintReport, l as unknown as FootprintReport);
+    };
+    const expectProblem = (problems: string[], side: string, fragment: string, label: string) => {
+      expect(problems.filter((p) => p.includes(side) && p.includes(fragment)), `${label}: expected a ${side} problem containing "${fragment}" in ${JSON.stringify(problems)}`).not.toEqual([]);
+    };
+    expect(gateProblems(recorded, live), "positive control").toEqual([]);
+
+    // RECORDED-ONLY corruptions -- the highest-leverage rows.
+    for (const v of [null, false, 0, ""]) {
+      expectProblem(run((r) => { r.scopes.sourceLanguageDeparture = v; }), "RECORDED", "sourceLanguageDeparture scope is not a scope", `scope = ${JSON.stringify(v)}`);
+    }
+    // A null recorded scope must not suppress detection of a changed current one.
+    const suppressed = run((r, l) => { r.scopes.sourceLanguageDeparture = null; l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
+    expectProblem(suppressed, "RECORDED", "sourceLanguageDeparture scope is not a scope", "null scope beside a changed current digest");
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 112 authored", "source count 999");
+    expectProblem(run((r) => { r.specimens.total = 0; r.scopes.quotientLanguageInvalid.specimens = 0; }), "RECORDED", "specimens.total 0 is not corpus + stimuli + synthesized", "total 0 beside unchanged components");
+
+    // BOTH-SIDES corruptions of the fields that only had equality comparisons.
+    for (const v of [null, ""]) {
+      const p = run((r, l) => { for (const x of [r, l]) { x.specimens.populationDigest = v; x.scopes.quotientLanguageInvalid.populationDigest = v; } });
+      expectProblem(p, "RECORDED", "populationDigest is not a sha256 digest", `digests ${JSON.stringify(v)} both`);
+      expectProblem(p, "CURRENT", "populationDigest is not a sha256 digest", `digests ${JSON.stringify(v)} both`);
+    }
+    const absent = run((r, l) => { for (const x of [r, l]) delete x.scopes.sourceLanguageDeparture.populationDigest; });
+    expectProblem(absent, "RECORDED", "sourceLanguageDeparture scope populationDigest is not a sha256 digest", "source digest absent both");
+    expectProblem(absent, "CURRENT", "sourceLanguageDeparture scope populationDigest is not a sha256 digest", "source digest absent both");
+    expectProblem(run((r, l) => { for (const x of [r, l]) x.scopes.quotientLanguageInvalid.specimens = "208"; }), "RECORDED", "quotientLanguageInvalid scope count is not a count", "string count");
+    expectProblem(run((r, l) => { for (const x of [r, l]) x.specimens = null; }), "CURRENT", "carries no specimen manifest", "manifest null");
+  });
+
+  it("admits only the quotient-language version this checker validates, and checks the top-level copy against it", () => {
+    // Shape is not compatibility. `inadmissible` distinguishes a version-shaped
+    // value from "banana"; it cannot tell that 999 is not the language the
+    // validator implements. The supported value comes from the quotient-image
+    // authority, not from a second registry here. The producer also emits a
+    // top-level copy: it is a checked projection, never an independent claim.
+    type R = Record<string, any>;
+    const clone = (o: FootprintReport) => JSON.parse(JSON.stringify(o)) as unknown as R;
+    const run = (f: (r: R, l: R) => void) => { const r = clone(recorded); const l = clone(live); f(r, l); return gateProblems(r as never, l as never); };
+
+    // Supported-version positive control.
+    expect(gateProblems(recorded, live)).toEqual([]);
+    // Well-formed but UNSUPPORTED, matching on both sides -- the case shape
+    // admission cannot see.
+    const unsupported = run((r, l) => { for (const x of [r, l]) { x.authority.quotientSchemaVersion = 999; x.quotientSchemaVersion = 999; } });
+    expect(unsupported.filter((p) => p.includes("RECORDED") && p.includes("quotientSchemaVersion 999 is not the version this checker validates (1)"))).toHaveLength(1);
+    expect(unsupported.filter((p) => p.includes("CURRENT") && p.includes("quotientSchemaVersion 999 is not the version this checker validates (1)"))).toHaveLength(1);
+    // The two carried declarations disagreeing is itself a finding.
+    const split = run((r) => { r.quotientSchemaVersion = "banana"; });
+    expect(split.filter((p) => p.includes("RECORDED") && p.includes('top-level quotientSchemaVersion "banana" disagrees with authority.quotientSchemaVersion 1'))).toHaveLength(1);
+    const dropped = run((r) => { delete r.quotientSchemaVersion; });
+    expect(dropped.filter((p) => p.includes("RECORDED") && p.includes("top-level quotientSchemaVersion undefined disagrees"))).toHaveLength(1);
   });
 
   it("the gate certifies ONE report, and names the cause it refused for", () => {
