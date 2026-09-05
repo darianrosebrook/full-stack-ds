@@ -88,11 +88,9 @@ evidence:
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: e13eb47f
   - criterion_id: A2
-    status: unchecked
-    evidence_ref: "Typed QuotientImage; sourceLanguageDeparture (62/112 authored) reported apart from quotientLanguageInvalid (0/208). OPEN: no compile-time negative test refuses a QuotientImage where a Fixture is required (no @ts-expect-error in analytical tests)."
-    recorded_at: "2026-09-05T06:54:56.787Z"
-    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
-    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+    status: pass
+    evidence_ref: "quotient-image.ts types the codomain (QuotientImage; executePlan/executeAll/erase/canonical accept Fixture | QuotientImage and return QuotientImage); quotient-image.test.ts 'a QuotientImage cannot enter an API that requires a source Fixture, while every Fixture is trivially an image' -- two @ts-expect-error assignments gated by pnpm run typecheck (tsc fails if either stops being an error), Fixture positive control, runtime hole asserted; erasure-audit.ts reports sourceLanguageDeparture (62/112 authored) apart from quotientLanguageInvalid (0/208)"
+    recorded_at: "2026-09-05T19:25:42.377Z"
   - criterion_id: A3
     status: pass
     evidence_ref: "erasure-plan.test.ts: lawful forgetting table, forget-value rows (IDENTIFIES/SEPARATES, required leaf becomes a typed hole, siblings survive) + operationFor chooses forget-value from requiredLeaves; authority.test.ts: 'a wrong-but-local operation fails the law, moves exactly the erasure identity, and both consumers refuse the evidence earned under the old one' (binding to erasureAuthorityDigest, with unmutated-relocation control); law-table receipts L1/L2 killed"
