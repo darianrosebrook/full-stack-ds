@@ -744,10 +744,26 @@ describe("support freshness is owned by the call site, and stays owned there", (
     expect(again.of(single.coordinates[0]).state).toBe("primitive");
   });
 
-  it("no production path retains a support set or a witness result across evaluations", () => {
-    // The structural half. The test above shows the current call sites rebuild;
-    // this one fails if a future one starts caching, which is the only way the
-    // retained-positive-result problem becomes reachable at all.
+  it("no support set is built at MODULE SCOPE or written to disk", () => {
+    // NAMED FOR WHAT IT CHECKS. It was called "no production path retains a
+    // support set or a witness result across evaluations", which is a claim a
+    // line-pattern scan cannot establish, and the mutation run that seemed to
+    // support it was confounded: both freshness mutants were derived from a
+    // scratch copy into which a module-scope constant had already been planted,
+    // so this guard fired on the plant rather than on the mutation.
+    //
+    // Re-run isolated from a pristine baseline:
+    //
+    //   MEMO ONLY  (loadStanding caches its holding set)  -> killed by the
+    //              behavioural test above ONLY. This guard does not see it.
+    //   HOIST ONLY (support built once at module scope)   -> killed by both.
+    //
+    // So the division of labour is: this test excludes the two retention forms
+    // a scan can actually decide -- construction at module scope, and
+    // persistence to disk. Memoisation inside a function, an aliased
+    // construction, or a cache in a helper are NOT covered here; the
+    // behavioural test above is what catches those, and it caught the one
+    // mutant that exercised them.
     const dir = path.dirname(fileURLToPath(import.meta.url));
     const sources = fs.readdirSync(dir).filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
     const offenders: string[] = [];
