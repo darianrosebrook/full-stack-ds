@@ -88,7 +88,7 @@ describe("Dialog — unit", () => {
     render(Dialog as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
     const root = document.body.querySelector<HTMLElement>(".dialog");
     expect(root).not.toBeNull();
-    await fireEvent.click(root!);
+    await fireEvent.click(root!.querySelector(".dialog__backdrop")!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });

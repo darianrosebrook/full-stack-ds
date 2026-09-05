@@ -52,7 +52,7 @@ describe("Command — unit", () => {
     mount(Command as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "command" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".command");
     expect(root).not.toBeNull();
-    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    root?.querySelector<HTMLElement>(".command__overlay")?.click();
     await Promise.resolve();
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });

@@ -2168,6 +2168,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     overlayClickSetter,
     overlayClickEnabledProp: overlayClickTrigger?.enabledByProp,
+    overlayClickTargetPart: overlayClickTrigger?.targetPart,
     rootRole: ir.root.rootRole,
     rootTagOverride,
     propertyBindingRefs,
@@ -2256,10 +2257,17 @@ interface ReactRenderContext {
   useStackRoot?: boolean;
   /** When true, spread the auto-dismiss pause props onto the root element. */
   autoDismissPause?: boolean;
-  /** When set, emit onClick to dismiss the overlay on root click. */
+  /** When set, emit onClick to dismiss the overlay on the targetPart click. */
   overlayClickSetter?: string;
   /** Prop name that controls whether overlay click dismissal is enabled. */
   overlayClickEnabledProp?: string;
+  /**
+   * Anatomy part carrying the overlay-click dismissal handler. The root is
+   * pointer-events:none under a full-cover overlay and can never be the hit
+   * target, so the handler binds on the declared part instead
+   * (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01).
+   */
+  overlayClickTargetPart?: string;
   /**
    * Effective ARIA role to emit on the root node, when the contract's
    * `a11y.role` differs from the element's implicit role and the dom tree
@@ -2673,6 +2681,26 @@ function renderReactDomNode(
     }
   }
 
+  // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal click binds on the
+  // declared targetPart element (the full-cover overlay), never on the root —
+  // the root is pointer-events:none under the overlay and can never be the
+  // hit target. `e.target === e.currentTarget` keeps clicks on overlay
+  // descendants inert without a stopPropagation handler on the inner
+  // non-interactive panel (a11y click-without-key lint).
+  if (
+    ctx.overlayClickSetter &&
+    node.part !== undefined &&
+    node.part === ctx.overlayClickTargetPart
+  ) {
+    const guard = ctx.overlayClickEnabledProp
+      ? `${ctx.overlayClickEnabledProp} ? `
+      : "";
+    const tail = ctx.overlayClickEnabledProp ? " : undefined" : "";
+    attrs.push(
+      `onClick={${guard}(e) => { if (e.target === e.currentTarget) ${ctx.overlayClickSetter}(false); }${tail}}`,
+    );
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       attrs.unshift(`className={\`${classRootClassExpr(classParts)}\`}`);
@@ -2690,19 +2718,6 @@ function renderReactDomNode(
     // Phase 5). NOT a CSS selector hook — does not change cascade behavior.
     if (ctx.cssPrefix) {
       attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
-    }
-    // Overlay-click dismissal: close when the backdrop is clicked directly.
-    // `e.target === e.currentTarget` ensures clicks on descendants (the
-    // dialog panel and its children) do NOT trigger dismissal — removes the
-    // need for a stopPropagation handler on the inner non-interactive panel.
-    if (ctx.overlayClickSetter) {
-      const guard = ctx.overlayClickEnabledProp
-        ? `${ctx.overlayClickEnabledProp} ? `
-        : "";
-      const tail = ctx.overlayClickEnabledProp ? " : undefined" : "";
-      attrs.push(
-        `onClick={${guard}(e) => { if (e.target === e.currentTarget) ${ctx.overlayClickSetter}(false); }${tail}}`,
-      );
     }
     if (ctx.autoDismissPause) {
       attrs.push(`{...autoDismissPauseProps}`);

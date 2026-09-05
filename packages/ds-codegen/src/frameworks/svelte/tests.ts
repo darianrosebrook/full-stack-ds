@@ -269,6 +269,13 @@ export function generateSvelteTest(ir: ComponentIR): string {
       lines.push(``);
       lines.push(`  it("closes on overlay click", async () => {`);
       lines.push(`    const ${testCase.spyName} = vi.fn();`);
+      // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: dispatch the click on the
+      // overlay element itself — jsdom does no hit-testing, so clicking the
+      // root proved nothing while the overlay child swallows every scrim
+      // click at hit-test time in a real browser.
+      const overlayQuery = testCase.trigger.targetPart
+        ? `".${plan.cssPrefix}__${testCase.trigger.targetPart}"`
+        : null;
       if (portalRoot) {
         lines.push(
           `    ${renderExpression(plan.name, plan, {
@@ -277,7 +284,11 @@ export function generateSvelteTest(ir: ComponentIR): string {
           })};`,
         );
         lines.push(rootDecl);
-        lines.push(`    await fireEvent.click(root!);`);
+        lines.push(
+          overlayQuery
+            ? `    await fireEvent.click(root!.querySelector(${overlayQuery})!);`
+            : `    await fireEvent.click(root!);`,
+        );
       } else {
         lines.push(
           `    const { container } = ${renderExpression(plan.name, plan, {
@@ -285,7 +296,11 @@ export function generateSvelteTest(ir: ComponentIR): string {
             [testCase.channel.changeHandlerProp]: { code: testCase.spyName },
           })};`,
         );
-        lines.push(`    await fireEvent.click(container.firstElementChild!);`);
+        lines.push(
+          overlayQuery
+            ? `    await fireEvent.click(container.querySelector(${overlayQuery})!);`
+            : `    await fireEvent.click(container.firstElementChild!);`,
+        );
       }
       lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
       lines.push(`  });`);

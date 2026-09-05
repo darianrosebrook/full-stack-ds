@@ -81,7 +81,7 @@ describe("Sheet — unit", () => {
     render(Sheet as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
     const root = document.body.querySelector<HTMLElement>(".sheet");
     expect(root).not.toBeNull();
-    await fireEvent.click(root!);
+    await fireEvent.click(root!.querySelector(".sheet__overlay")!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });

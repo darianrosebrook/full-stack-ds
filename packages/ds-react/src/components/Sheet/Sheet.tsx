@@ -188,9 +188,9 @@ export function Sheet({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="sheet" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="sheet" {...rest}>
       {openness ? (
-        <div className="sheet__overlay" aria-hidden="true" />
+        <div className="sheet__overlay" aria-hidden="true" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} />
       ) : null}
       {openness ? (
         <div className="sheet__content" role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined}>

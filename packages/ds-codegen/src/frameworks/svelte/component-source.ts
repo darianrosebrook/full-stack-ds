@@ -1664,6 +1664,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       ? {
           overlayClickSetter: `${hookVar}.set${capitalizeSvelte(booleanChannel.name)}`,
           overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+          overlayClickTargetPart: overlayClickTrigger.targetPart,
         }
       : {}),
   };
@@ -1767,6 +1768,7 @@ interface SvelteRenderContext {
   };
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  overlayClickTargetPart?: string;
   /**
    * Local identifiers for nodes carrying `iconGlyph`
    * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity.
@@ -2032,6 +2034,29 @@ function renderSvelteDomNode(
     attrs.push(rendered);
   }
 
+  // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal click binds on the
+  // declared targetPart element (the full-cover overlay), never on the root —
+  // the root is pointer-events:none under the overlay and can never be the
+  // hit target. Only fire when the user clicked the overlay itself, not a
+  // descendant — avoids needing a stopPropagation handler on the inner panel
+  // (which would trip a11y_click_events_have_key_events on non-interactive
+  // panel elements).
+  if (
+    ctx.overlayClickSetter &&
+    node.part !== undefined &&
+    node.part === ctx.overlayClickTargetPart
+  ) {
+    const enabledVar = ctx.overlayClickEnabledProp
+      ? jsAccessorFor(ctx.overlayClickEnabledProp)
+      : null;
+    const guardExpr = enabledVar
+      ? `${enabledVar} !== false && ${ctx.overlayClickSetter}(false)`
+      : `${ctx.overlayClickSetter}(false)`;
+    attrs.push(
+      `onclick={(e) => { if (e.target === e.currentTarget) { ${guardExpr}; } }}`,
+    );
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
     if (ctx.cssPrefix) {
@@ -2074,21 +2099,6 @@ function renderSvelteDomNode(
     if (ctx.fieldAssociationConsumer) {
       attrs.push(`id={fieldAssociation?.().controlId}`);
       attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
-    }
-    if (ctx.overlayClickSetter) {
-      const enabledVar = ctx.overlayClickEnabledProp
-        ? jsAccessorFor(ctx.overlayClickEnabledProp)
-        : null;
-      const guardExpr = enabledVar
-        ? `${enabledVar} !== false && ${ctx.overlayClickSetter}(false)`
-        : `${ctx.overlayClickSetter}(false)`;
-      // Only fire dismissal when the user clicked the overlay itself, not
-      // a descendant. This avoids needing a stopPropagation handler on the
-      // inner panel (which would trip a11y_click_events_have_key_events on
-      // non-interactive panel elements).
-      attrs.push(
-        `onclick={(e) => { if (e.target === e.currentTarget) { ${guardExpr}; } }}`,
-      );
     }
   } else if (classParts.length > 0) {
     if (classParts.length === 1) {

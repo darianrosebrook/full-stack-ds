@@ -58,7 +58,8 @@ describe("Command — unit", () => {
   it("closes on overlay click", () => {
     const onOpenChangeSpy = vi.fn();
     render(<Command data-testid="command" open={true} onOpenChange={onOpenChangeSpy} />);
-    fireEvent.click(screen.getByTestId("command"));
+    const overlay = screen.getByTestId("command").querySelector(".command__overlay");
+    fireEvent.click(overlay!);
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
 });

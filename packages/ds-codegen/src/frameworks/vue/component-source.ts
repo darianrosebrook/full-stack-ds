@@ -1834,6 +1834,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
           overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+          overlayClickTargetPart: overlayClickTrigger.targetPart,
         }
       : {}),
   };
@@ -1947,6 +1948,7 @@ interface VueRenderContext {
   autoDismissPause?: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  overlayClickTargetPart?: string;
   /**
    * Effective ARIA role to emit on the root unless the dom tree already
    * declares one. Parity with React's `ReactRenderContext.rootRole`.
@@ -2276,6 +2278,23 @@ function renderVueDomNode(
     );
   }
 
+  // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal click binds on the
+  // declared targetPart element (the full-cover overlay), never on the root —
+  // the root is pointer-events:none under the overlay and can never be the
+  // hit target. `.self` fires only when the click target is the overlay
+  // itself, not a descendant — avoids a click handler on the inner
+  // non-interactive panel (a11y lint).
+  if (
+    ctx.overlayClickSetter &&
+    node.part !== undefined &&
+    node.part === ctx.overlayClickTargetPart
+  ) {
+    const guardExpr = ctx.overlayClickEnabledProp
+      ? `props.${propAccess(ctx.overlayClickEnabledProp)} !== false && ${ctx.overlayClickSetter}(false)`
+      : `${ctx.overlayClickSetter}(false)`;
+    attrs.push(`@click.self="${guardExpr}"`);
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       // The root node's BEM class is included in `classNames` (computed).
@@ -2317,15 +2336,6 @@ function renderVueDomNode(
     }
     if (ctx.autoDismissPause) {
       attrs.push(`v-on="autoDismiss.pauseListeners"`);
-    }
-    if (ctx.overlayClickSetter) {
-      const guardExpr = ctx.overlayClickEnabledProp
-        ? `props.${propAccess(ctx.overlayClickEnabledProp)} !== false && ${ctx.overlayClickSetter}(false)`
-        : `${ctx.overlayClickSetter}(false)`;
-      // `.self` fires the handler only when the click target is the overlay
-      // itself, not a descendant. This avoids needing a click handler on the
-      // inner non-interactive panel (which would trip a11y lint rules).
-      attrs.push(`@click.self="${guardExpr}"`);
     }
     if (ctx.rootPolymorphicTag && !node.componentRef) {
       attrs.unshift(

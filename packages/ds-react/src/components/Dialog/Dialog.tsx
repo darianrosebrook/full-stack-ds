@@ -160,9 +160,9 @@ export function Dialog({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="dialog" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="dialog" {...rest}>
       {openness ? (
-        <div className="dialog__backdrop" aria-hidden="true" />
+        <div className="dialog__backdrop" aria-hidden="true" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} />
       ) : null}
       {openness ? (
         <div className="dialog__modal" role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(" ") || undefined}>

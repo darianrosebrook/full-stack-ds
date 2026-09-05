@@ -486,7 +486,8 @@
       },
       {
         "event": "overlayClick",
-        "defaultEnabled": true
+        "defaultEnabled": true,
+        "targetPart": "overlay"
       }
     ],
     "events": [

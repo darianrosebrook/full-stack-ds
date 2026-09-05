@@ -63,9 +63,9 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="sheet" use:portal={{ enabled: true }} onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}>
+<div class={classes} data-fsds-component="sheet" use:portal={{ enabled: true }}>
   {#if behavior.openness}
-  <div class={'sheet__overlay'} aria-hidden="true"></div>
+  <div class={'sheet__overlay'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}></div>
   {/if}
   {#if behavior.openness}
   <div class={'sheet__content'} role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(' ') || undefined}>

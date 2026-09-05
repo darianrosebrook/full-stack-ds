@@ -1702,6 +1702,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
           overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+          overlayClickTargetPart: overlayClickTrigger.targetPart,
         }
       : {}),
   };
@@ -2387,6 +2388,7 @@ interface AngularRenderContext {
   autoDismissPause?: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  overlayClickTargetPart?: string;
   /**
    * Identifier names introduced by enclosing `*ngFor` iterations. After
    * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` lowering no
@@ -2609,13 +2611,17 @@ function renderAngularDomNode(
     }
   } else if (
     ctx.overlayClickSetter &&
-    (node.part === "overlay" || node.part === "backdrop")
+    ctx.overlayClickTargetPart !== undefined &&
+    node.part === ctx.overlayClickTargetPart
   ) {
     // The overlay child node owns the dismissal click and the
     // `role="presentation"` hook the generated test queries by. Putting the
     // handler here (instead of on the root) means inner content clicks
     // don't bubble through a target===currentTarget guard, which never
     // matches when the test clicks the overlay child directly.
+    // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the part is the contract's
+    // declared dismissal `targetPart` (an IR fact), not a hardcoded
+    // overlay/backdrop name guess.
     const guardExpr = ctx.overlayClickEnabledProp
       ? `${ctx.overlayClickEnabledProp} !== false && behavior.${ctx.overlayClickSetter}(false)`
       : `behavior.${ctx.overlayClickSetter}(false)`;
