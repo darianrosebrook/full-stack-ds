@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "docs/normal-form.md Falsification condition 1 now defines fixed-workload outcomes (seeded semantic-defect escape, regeneration divergence, next-target engineering cost, consumer breakage) and explicitly permits systems lacking properties 2, 5, or 7 to falsify their necessity"
     recorded_at: "2026-09-05T01:53:44.786Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "docs/README.md and docs/document_governance.md at ad279dc8 point to .caws/hooks/doc-frontmatter-check.sh, separate advisory edit-time warnings from docs:check-claims, and list tracked docs/*-audit records without a hand-authored count"
+    recorded_at: "2026-09-05T01:53:51.705Z"
