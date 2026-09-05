@@ -124,3 +124,9 @@ evidence:
     test_nodeid: "packages/ds-codegen/src/analytical/freeze.test.ts > refuses a LATER movement of the same identity under that same review"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A8
+    status: unchecked
+    evidence_ref: "UNEXECUTED. footprintBasisDigest compared and admitted as evidence (checkReport), but neither experiment run: population-only change (classification rejected, witness holds) nor witness-input change (witness reevaluated)."
+    recorded_at: "2026-09-05T06:54:59.599Z"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
