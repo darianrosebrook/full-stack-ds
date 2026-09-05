@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-04
-verified_at_commit: 71dbe2766356e790d15647aea80b92facbef75bc
+verified_at_commit: b7d85ac0
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -77,7 +77,7 @@ The word "semantic" is doing work. The contract owns what the component *means*:
 
 ### 2. A framework-neutral intermediate representation derived from the contract by deterministic projection
 
-Between contract and target sits an IR — `packages/ds-codegen/src/ir.ts` — that is built once per contract by `buildComponentIR` and consumed by all emitters. The IR is the single place where contract field interpretation happens. "Which props become BEM value modifiers", "which role is implicit on the chosen root element", "is this change handler value-shaped or event-shaped" — these decisions are made once, in the IR, never in target-specific code.
+Between contract and target sits an IR — `packages/ds-codegen/src/ir.ts` — that is built once per contract by `buildComponentIR` and consumed by all emitters. The IR is the single place where contract field interpretation happens. "Which props become BEM value modifiers", "which role is implicit on the chosen root element", "which surface attachment selects a controller", and "when does this form control commit its value" — these decisions are made once, in the IR, never in target-specific code.
 
 The IR matters because it is what makes adding a new framework target *cheap*. Without it, each framework's emitter would re-interpret raw contract fields, and the cost of adding the sixth framework would be a multiple of the cost of adding the fifth. With it, a new emitter consumes the IR and produces idiomatic source — no contract semantics to relearn.
 
@@ -149,11 +149,11 @@ These are not hypothetical. They are the symptoms that show up across the broade
 
 ## Two functions worth reading carefully
 
-`validateDomBindings` and `inferCallbackKind` in `ir.ts` are the two clearest instances of the discipline in this codebase. Most of the IR is mechanical translation; these two encode architectural choices.
+`validateDomBindings` and `buildFormControlIR` in `ir.ts` are two clear instances of the discipline in this codebase. Most of the IR is mechanical translation; these functions encode architectural choices.
 
 **`validateDomBindings`** is property 5 made concrete. It walks the IR's `DomNodeIR` tree, looks up every `channel:X` reference against the normalized-channel set and every `prop:Y` reference against the styled-prop set, and throws on the first violation. The comment in the source makes the intent explicit: "Throws a descriptive error so contract authors see exactly what went wrong... rather than silently emitting a literal string in the generated output." The function could have been a no-op. It could have logged a warning. It could have emitted the literal string and let the framework reject it at runtime. It throws. That is the discipline.
 
-**`inferCallbackKind`** is the IR mediating between semantic intent and framework idiom without letting either side dictate. The contract says a change handler is `(checked: boolean) => void`. Some frameworks (React) expose change events natively and require the emitter to unwrap them into the value the handler expects. Other frameworks (Vue, Svelte) expose values directly. The contract should not declare "this is a value handler" — that is redundant, because the type signature already says so. The IR inspects the TypeScript type string, defaults to value-shaped, and flips to event-shaped only when the parameter type matches a DOM-event identifier (`MouseEvent`, `ChangeEvent`, etc.). The contract carries semantic intent; the framework idiom carries realization detail; the IR mediates with a deterministic rule. Neither side dictates the other.
+**`buildFormControlIR`** separates semantic intent from framework event idiom. A control contract names its rendered interactive part, value channel/model, and commit semantic (`input`, `change`, or `activation`). The builder validates that the part exists, is interactive, renders exactly once, and that the channel type agrees with the value model. It then injects one normalized event binding on that part. React, Vue, Svelte, Angular, and Lit spell the listener differently, but none decides whether a text field is per-keystroke or blur-timed. The same target part also receives ambient Field association, so a compound checkbox labels its native input rather than its wrapper. Native form serialization remains a separate `form` fact: ToggleSwitch is a boolean control without falsely claiming that its button realization contributes to `FormData`.
 
 Both functions are short. Read together, they are where the architectural choices in this codebase are most concentrated.
 

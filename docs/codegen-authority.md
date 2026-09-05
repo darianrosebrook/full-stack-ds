@@ -96,7 +96,8 @@ Rules are allowed to branch on:
 - Channel kind (controlled state, anchor toggle, dismissal trigger)
 - Channel value type (`boolean`, `string`, `number`, `Date`, union, array)
 - Host capability (form-control with `.checked`/`.value` vs non-form-control)
-- Surface kind (`tooltip`, `popover`, `dialog`, `menu`)
+- Form-control capability (`part`, value model/channel, commit semantic)
+- Surface capability axes (attachment, positioning, presence, modality)
 - Binding kind (`prop`, `literal`, `channel`, `text_child`)
 - Framework grammar / type system / a11y validator constraints
 
@@ -150,8 +151,9 @@ This inventory was produced as part of CODEGEN-SEMANTIC-AUTHORITY-01. It documen
 | `composeRefs` / `composeEventHandlers` | React substrate | React grammar (ref + synthetic event composition) | React language |
 | `isInsideSurface(anchor ∪ content)` boundary predicate | React + Vue + Svelte + Lit + Angular substrates | DOM focus semantics | Surface anatomy |
 | `SurfaceDataMarker` template-literal type | Vue + Svelte substrates | Contract `cssPrefix` | Surface emit |
-| `AnchoredSurfacePolicy` + `resolveAnchoredSurfacePolicy` | Shared `semantics.ts` | Contract `surface.{kind, dismissal, content}` | Surface kind |
-| `isAnchoredPresenceKind` | Shared `semantics.ts` | Contract `surface.kind` | Surface kind |
+| `AnchoredSurfacePolicy` + `resolveAnchoredSurfacePolicy` | Shared `semantics.ts` | Contract `surface.{anchor, positioning, dismissal, content}` | Part-attached anchored capability |
+| `resolveSurfaceAttachment` + `isPartAnchoredSurface` | Shared `semantics.ts` | Contract `surface.{anchor, positioning}` | Attachment and positioning axes |
+| `FormControlIR` + `buildFormControlIR` | Shared `ir.ts` | Contract `formControl` + anatomy + channel | Control part, value model, commit timing |
 | `EventValueStrategy` + `resolveEventValueStrategy` | Shared `semantics.ts` | Host capability + channel valueType + callback kind | Event extraction site |
 | `channelValuePlaceholder(valueType)` | React test emitter | Channel `valueType` | Channel valueType |
 | `requiredProps` + `placeholderForPropType` | Test plan | Contract `prop.required` + `prop.type` + `definedTypes` | Prop type shape |
@@ -175,9 +177,10 @@ These rules are not component-specific, but their authority lives in the wrong p
 | `textContent` binding rendered as child text | Svelte emitter local | DOM semantics: text-node assignment | IR `binding.kind = "text_child"` | CODEGEN-IR-TEXT-CHILD-01 |
 | `ARIA_BOOLEANISH_ATTRS` coercion | Svelte emitter local | DOM/ARIA semantics | Shared DOM/ARIA semantics table OR contract projection (`{ "from": "channel:x.value", "projection": "truthy" }`) | CODEGEN-ARIA-PROJECTION-01 |
 
-All five web surface emitters gate on `isAnchoredPresenceKind` and consume
-`AnchoredSurfacePolicy` from shared `semantics.ts` — no per-framework kind
-allowlists, no hardcoded content roles, no hardcoded `closeOn*` prop maps.
+All five web surface emitters gate on `isPartAnchoredSurface` and consume
+`AnchoredSurfacePolicy` from shared `semantics.ts` — attachment and
+positioning select the substrate, with no kind allowlists, hardcoded content
+roles, or hardcoded `closeOn*` prop maps.
 Event-value strategy (button-host toggle vs input-host element-state read)
 is likewise shared (`resolveEventValueStrategy` on web; the React Native
 emitter applies the same host-aware rule).

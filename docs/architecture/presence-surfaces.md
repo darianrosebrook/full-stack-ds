@@ -128,7 +128,12 @@ The `surface` block is the **semantic classifier and controller-selection descri
 | `dismissal` (existing) | Per-trigger `enabledBy` prop wiring (e.g. `closeOnEscape`). |
 | `focus` (existing) | Trap, return focus, initial focus, scroll lock, wrap. |
 
-The codegen consults `surface.kind` to select the controller. It consults the existing `portal`/`dismissal`/`focus` blocks for the controller's configuration knobs. There is no `surface.focus`, no `surface.portal` — those would create contradiction surfaces.
+Codegen retains `surface.kind` as semantic vocabulary, but controller selection
+is axis-derived. `buildSurfaceIR` normalizes attachment to `part`, `selector`,
+`viewport`, or `flow`; the compound anchored controller is selected by
+`attachment: part` plus `positioning.strategy: anchored`. The existing
+`portal`/`dismissal`/`focus` blocks provide configuration knobs. There is no
+`surface.focus` or `surface.portal` — those would create contradiction surfaces.
 
 ### Sketch
 
@@ -294,7 +299,12 @@ export type SurfaceDismissalMode =
   | "timeout";
 ```
 
-The IR builder copies `contract.surface` into `SurfaceIR`, resolving the `anchor.part` and `content.part` strings to the actual `PartIR` references (so emitters don't re-resolve). Emitters key on `surface.kind` to select the controller; they read `surface.modality` to decide whether to consult `focus.trap`, etc.
+The IR builder copies `contract.surface` into `SurfaceIR`, resolves
+`anchor.part` and `content.part` strings to `PartIR`, and derives the attachment
+axis. Emitters select the controller from attachment plus positioning; they
+read `surface.modality` to decide whether blocking machinery is required.
+Changing only a named kind does not opt a component into or out of a shared
+controller.
 
 ## What this rejects
 
@@ -306,10 +316,10 @@ The IR builder copies `contract.surface` into `SurfaceIR`, resolving the `anchor
 
 ## What this enables
 
-- **One controller per surface family**, configured by contract policy. The same `AnchoredSurfaceController` underlies Tooltip, Popover, Menu, and Select; only `surface.kind` and the policy knobs differ.
+- **One controller per capability family**, configured by contract policy. The same `AnchoredSurfaceController` underlies any part-attached, anchored surface; kind remains descriptive vocabulary.
 - **Consistent codegen seams** across React, Vue, Svelte, Angular, and Lit. The `surface` block is framework-neutral.
 - **A taxonomy consumers can reason about.** "Is this surface ephemeral or persistent? Blocking or non-blocking?" answers most behavior questions without reading source.
-- **Forward compatibility.** New surface kinds (e.g. a `command-palette` surface, an `inline-edit` surface) are added by extending the `kind` enum and the controller hierarchy — not by reshaping the family.
+- **Forward compatibility.** New surface kinds can reuse an existing controller by declaring matching axes; adding a kind does not require editing a controller allowlist.
 
 ## Platform realization
 
@@ -321,13 +331,13 @@ its documentation, never in the contract.
 **Contract adoption.** Tooltip, Popover, Dialog, Sheet, and Toast declare
 `surface` blocks. A contract without a `surface` block emits through the
 generic component path on every target — the block is required only for
-surface-substrate lowering, and adding one to a non-anchored kind does not
-change web emission (the web surface gates are kind-aware via
-`isAnchoredPresenceKind`). Close-affordance trigger parts bind their click
+surface-substrate lowering, and adding one without part attachment plus
+anchored positioning does not change web emission (the web surface gates use
+`isPartAnchoredSurface`). Close-affordance trigger parts bind their click
 to the open channel in the dom tree, so dismissal-by-close-button lowers
 through each framework's ordinary channel machinery.
 
-**Web.** Anchored kinds (tooltip, popover) route through the anchored
+**Web.** Part-attached anchored surfaces (currently tooltip and popover) route through the anchored
 surface emitters in all five frameworks: compound trigger/content API,
 `AnchoredSurfacePolicy`-driven, positioned by
 `useAnchoredSurface`/`useAnchoredPosition`. Non-anchored kinds (dialog,
