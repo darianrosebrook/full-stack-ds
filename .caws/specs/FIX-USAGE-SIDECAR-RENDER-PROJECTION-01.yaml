@@ -67,3 +67,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/validation/usage.test.ts
     recorded_at: "2026-09-05T00:26:54.480Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx; live browser: localhost:5176 Status shows Success/Warning and Command shows Go to Dashboard/View your project overview"
+    recorded_at: "2026-09-05T00:27:04.890Z"
