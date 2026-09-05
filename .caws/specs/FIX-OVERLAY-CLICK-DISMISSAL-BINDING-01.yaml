@@ -66,3 +66,11 @@ contracts:
   - name: 'overlay-click-part-binding'
     type: behavior
     path: 'packages/ds-react/src/components/Command/Command.tsx'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "generated Dialog/Sheet/Command for react/svelte/vue: dismissal handler on targetPart element (e.g. ds-react Command.tsx command__overlay onClick), root carries no handler; enabledBy guard preserved on Dialog backdrop"
+    recorded_at: "2026-09-05T00:36:12.049Z"
+    command: git show 125bd6f0 -- packages/ds-react/src/components/Command/Command.tsx
+    exit_code: 0
+    commit_sha: "125bd6f0"
