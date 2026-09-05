@@ -79,7 +79,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedOutcome: "survived",
     gap: {
       spec: "RAIL-CONTRACT-ORACLE-DISPOSITIONS-01",
-      note: "The core profile realized both values without contradiction; the scheduled full profile ratchets this as an explicit unprotected contract fact.",
+      note: "The full profile at 025b5804 realized both values without contradiction across structural, audit, test, and browser stages; this sentinel keeps that unprotected fact explicit.",
     },
   },
   {
@@ -95,7 +95,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedOutcome: "survived",
     gap: {
       spec: "RAIL-CONTRACT-ORACLE-DISPOSITIONS-01",
-      note: "The core profile realized both values without contradiction; the scheduled full profile ratchets this as an explicit unprotected contract fact.",
+      note: "The full profile at 025b5804 realized both values without contradiction across structural, audit, test, and browser stages; this sentinel keeps that unprotected fact explicit.",
     },
   },
 ]);
