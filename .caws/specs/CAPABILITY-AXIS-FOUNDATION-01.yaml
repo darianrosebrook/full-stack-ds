@@ -64,3 +64,8 @@ contracts:
   - name: 'generated-control-binding'
     type: behavior
     path: 'packages/ds-codegen/src/ir.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/surface-ir.test.ts packages/ds-codegen/src/frameworks/no-component-name-lore.test.ts
+    recorded_at: "2026-09-05T05:33:57.003Z"
