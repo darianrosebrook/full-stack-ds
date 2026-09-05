@@ -14,6 +14,8 @@ import {
   CONTRACT_MUTANTS,
   applyContractMutation,
   changedLeaves,
+  classifyMutationOutcome,
+  compareMutationDisposition,
   summarizeMutationResults,
 } from "./catalog.mjs";
 
@@ -172,6 +174,11 @@ function parseArgs(argv) {
 
   if (!(options.profile in PROFILES)) {
     throw new Error("Unknown profile: " + options.profile);
+  }
+  if (options.verifyDispositions && options.profile !== "full") {
+    throw new Error(
+      "--verify-dispositions requires --profile=full because catalog dispositions and first-detector provenance are reviewed against the full stage sequence",
+    );
   }
   if (
     options.maxSurvivors !== null &&
@@ -337,7 +344,15 @@ function renderMarkdown(report, reportDir) {
     "- Baseline: " + (report.baseline.passed ? "passed" : "failed"),
     "- Detected: " + report.summary.detected + "/" + report.summary.total,
     "- Survived: " + report.summary.survived + "/" + report.summary.total,
+    "- Inconclusive reds: " +
+      report.summary.inconclusive +
+      "/" +
+      report.summary.total,
     "- Disposition mismatches: " + report.summary.dispositionMismatches,
+    "- Detector provenance mismatches: " +
+      report.summary.provenanceMismatches,
+    "- Evidence-marker mismatches: " +
+      report.summary.evidenceMarkerMismatches,
     "",
     "Detection means a selected gate went red. It does not by itself prove an",
     "independent correctness oracle: structural and contract-derived detectors",
@@ -345,17 +360,25 @@ function renderMarkdown(report, reportDir) {
     "axe, and hand-authored custom regions. A survivor means no selected stage",
     "contradicted the mutation; it does not prove the original fact is correct.",
     "A disposition is a reviewed measurement expectation, not an assertion that",
-    "the original contract value is correct. Unexpected detections fail too:",
-    "they mean a known blind spot gained an oracle and its ledger entry is stale.",
+    "the original contract value is correct. For detected mutants, the reviewed",
+    "first stage and evidence class are part of that disposition: replacing an",
+    "independent detector with a derived one is drift even if both kill the mutant.",
+    "Every detected disposition pins a stable failure marker. Mixed-test markers",
+    "name the authored assertion specifically, so a generated failure cannot",
+    "silently replace the intended independent assertion. A red at an unreviewed",
+    "stage, class, or marker is inconclusive and fails closed; it is not credited",
+    "as a mutation kill until its log is adjudicated and the catalog is updated.",
     "",
     "## Results",
     "",
-    "| Mutant | Field class | Expected | Actual | Disposition | First detector | Evidence class |",
-    "|---|---|---|---|---|---|---|",
+    "| Mutant | Field class | Expected outcome | Actual outcome | Expected first detector | Actual first detector | Evidence marker | Disposition |",
+    "|---|---|---|---|---|---|---|---|",
   ];
 
   for (const result of report.results) {
     const detection = result.firstDetection;
+    const expectedDetection = result.expectedDetection;
+    const disposition = compareMutationDisposition(result);
     lines.push(
       "| " +
         result.id +
@@ -366,18 +389,33 @@ function renderMarkdown(report, reportDir) {
         " | " +
         result.outcome +
         " | " +
-        (result.outcome === result.expectedOutcome ? "match" : "MISMATCH") +
+        (expectedDetection
+          ? expectedDetection.stage + " / " + expectedDetection.evidenceClass
+          : "none") +
         " | " +
-        (detection?.stage ?? "none") +
+        (detection
+          ? detection.stage +
+            " / " +
+            detection.evidenceClass +
+            (detection.attributed ? "" : " (unattributed red)")
+          : "none") +
         " | " +
-        (detection?.evidenceClass ?? "none") +
+        (expectedDetection?.evidenceMarker
+          ? detection?.evidenceMarkerPresent
+            ? "found"
+            : "MISSING"
+          : detection
+            ? "not reviewed"
+            : "n/a") +
+        " | " +
+        (disposition.matches ? "match" : "MISMATCH") +
         " |",
     );
   }
 
   lines.push("", "## Field classes", "");
-  lines.push("| Field class | Total | Detected | Survived |");
-  lines.push("|---|---:|---:|---:|");
+  lines.push("| Field class | Total | Detected | Survived | Inconclusive |");
+  lines.push("|---|---:|---:|---:|---:|");
   for (const [fieldClass, counts] of Object.entries(
     report.summary.byFieldClass,
   )) {
@@ -390,6 +428,8 @@ function renderMarkdown(report, reportDir) {
         counts.detected +
         " | " +
         counts.survived +
+        " | " +
+        counts.inconclusive +
         " |",
     );
   }
@@ -509,7 +549,7 @@ async function main() {
     FSDS_E2E_PORT: String(e2ePort),
   };
   const report = {
-    schemaVersion: 2,
+    schemaVersion: 4,
     commit,
     profile: options.profile,
     verifyDispositions: options.verifyDispositions,
@@ -624,6 +664,19 @@ async function main() {
         env,
       });
       const failed = stages.find((stage) => stage.code !== 0);
+      const expectedDetection = mutant.expectedDetection ?? null;
+      const evidenceMarkerPresent =
+        failed && expectedDetection?.evidenceMarker
+          ? readFileSync(join(reportDir, failed.logPath), "utf8").includes(
+              expectedDetection.evidenceMarker,
+            )
+          : null;
+      const outcome = classifyMutationOutcome({
+        failure: failed,
+        expectedDetection,
+        evidenceMarkerPresent,
+      });
+      const detectionAttributed = outcome === "detected";
       const result = {
         id: mutant.id,
         fieldClass: mutant.fieldClass,
@@ -633,8 +686,9 @@ async function main() {
         to: mutant.to,
         hypothesis: mutant.hypothesis,
         expectedOutcome: mutant.expectedOutcome,
+        expectedDetection,
         gap: mutant.gap ?? null,
-        outcome: failed ? "detected" : "survived",
+        outcome,
         firstDetection: failed
           ? {
               stage: failed.stage,
@@ -643,6 +697,8 @@ async function main() {
               signal: failed.signal,
               timedOut: failed.timedOut,
               logPath: failed.logPath,
+              evidenceMarkerPresent,
+              attributed: detectionAttributed,
             }
           : null,
         stages,
@@ -685,19 +741,31 @@ async function main() {
         report.summary.total +
         "; survived " +
         report.summary.survived +
+        "; inconclusive " +
+        report.summary.inconclusive +
         "/" +
         report.summary.total,
     );
     console.log("[mutation] report: " + join(reportDir, "report.md"));
 
+    if (report.summary.inconclusive > 0) {
+      console.error(
+        "[mutation] inconclusive red: " +
+          report.summary.inconclusive +
+          " failure(s) did not match a reviewed detector stage, evidence class, and marker",
+      );
+      process.exitCode = 2;
+    }
+
     if (
       options.verifyDispositions &&
-      report.summary.dispositionMismatches > 0
+      report.summary.dispositionMismatches > 0 &&
+      process.exitCode !== 2
     ) {
       console.error(
         "[mutation] disposition mismatch: " +
           report.summary.dispositionMismatches +
-          " mutant outcome(s) differ from the reviewed catalog",
+          " mutant outcome(s) or first-detector provenance records differ from the reviewed catalog",
       );
       process.exitCode = 1;
     }

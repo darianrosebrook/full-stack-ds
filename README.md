@@ -285,7 +285,9 @@ The independent and human-authored checks are therefore explicit:
 - `@custom` test regions contain human-authored behavioral assertions. `pnpm run audit:custom-regions` inventories occupied regions and requires every occupied region to remain ledgered.
 - `pnpm run audit:contract-oracle-mutations` perturbs curated contract facts, runs the verification profile, and records which independent or derived check kills each mutant. Its scheduled full profile is in `.github/workflows/contract-oracle-mutations.yml`; ordinary CI validates the catalog cheaply with `audit:contract-oracle-mutations:selfcheck`.
 
-The current catalog contains seven one-leaf mutants. A clean full-profile run at `8bb6e521` re-killed all five protected mutants — two structurally, two through mixed authored-test evidence, and one through a contract-derived audit — while two named Badge sentinels survived: `rtl.flipIcon` true→false and `ssr.hydrateOn` none→interaction. Their reviewed survivor dispositions acknowledge measured gaps; they are not accepted as correctness, and a change in either direction fails until reviewed. This is evidence about those seven mutations, not a general mutation score or proof that every contract field has an oracle. The decisive-evidence class and surviving field classes identify where new authored or external oracles pay.
+The expanded catalog contains eleven one-leaf mutants across relationships, accessibility defaults, variants, RTL, SSR, state-machine events, slot requiredness, text-overflow sources, and motion properties. The reviewed measurement killed seven and left four named survivors: Badge `rtl.flipIcon` true→false, Badge `ssr.hydrateOn` none→interaction, Dialog's `open` state-machine event renamed to `reveal`, and Card's optional `actions` slot made required. The runner ratchets each outcome plus the first detector stage, evidence class, and failure marker; mixed-test markers name the authored assertion specifically so a generated assertion cannot silently take over the credit. An unreviewed red is inconclusive rather than a kill, and fails closed until adjudicated. A change in any reviewed disposition or provenance fails `--verify-dispositions`.
+
+This is evidence about those eleven curated mutations, not a general mutation score or proof that every contract field has an oracle. In particular, the surviving fields are measured blind spots, not accepted as correct or harmless. The decisive-evidence classes and surviving field classes identify where new authored or external oracles pay.
 
 ### Runtime proof rail
 
@@ -491,7 +493,7 @@ pnpm run audit:token-resolvability   # blocking inverse: every consumed ref reso
 # Oracle measurement
 pnpm run audit:custom-regions
 pnpm run audit:contract-oracle-mutations:selfcheck
-pnpm run audit:contract-oracle-mutations -- --profile=full
+pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions
 
 # Testing
 pnpm test

@@ -21,6 +21,11 @@ Verify the catalog's reviewed outcome dispositions:
 
     pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions
 
+Disposition verification is intentionally defined only for the `full`
+profile. The first failing stage depends on the ordered stage set, so comparing
+a shorter profile with full-profile dispositions would turn omitted evidence
+into a false regression.
+
 Reports and per-stage logs are written under
 `tmp/contract-oracle-mutation/`. The source worktree must be clean. The
 runner clones its exact HEAD into a throwaway directory, installs from the
@@ -49,6 +54,9 @@ Interpret outcomes by evidence class:
   before calling the detection independent.
 - `hand-authored-runtime`: a committed Playwright fact rail contradicted it.
 - `survived`: no selected stage contradicted the fact.
+- `inconclusive`: a stage went red without matching a reviewed detector stage,
+  evidence class, and failure marker. The red is retained for adjudication but
+  is not credited as a mutation kill.
 
 A detection is not automatically proof that the contract was independently
 checked. A survivor is a measured blind spot, not proof that the original fact
@@ -60,9 +68,21 @@ was right. The catalog therefore distinguishes two reviewed dispositions:
   reason. If one becomes detected, its disposition is stale and must be
   re-adjudicated rather than left on the books as permanent debt.
 
-`--verify-dispositions` fails on either mismatch. This is stricter than an
-aggregate survivor threshold: swapping one newly surviving protected mutant
-for one newly detected sentinel leaves the count unchanged but still fails.
+For a detected mutant, the disposition pins its first failing stage, evidence
+class, and a stable failure marker. A red earns `detected` only when all three
+match; otherwise it is `inconclusive` and the run fails closed. This prevents an
+unrelated timeout or infrastructure failure from being credited as a new
+oracle, and prevents an independent runtime or authored-test oracle from
+disappearing behind a newly earlier structural or contract-derived echo check
+while the aggregate kill count stays green. For `mixed-test` stages, the marker
+names the authored assertion specifically because generated and hand-authored
+assertions execute in one process.
+
+Disposition verification fails on outcome or first-detector mismatch, and any
+inconclusive red fails even in measurement-only mode. This is
+stricter than an aggregate survivor threshold: swapping one newly surviving
+protected mutant for one newly detected sentinel leaves the count unchanged
+but still fails.
 The default command remains measurement-only. `--max-survivors=N` remains
 available for deliberately count-based experiments, but it is not the
 scheduled authority.
@@ -73,3 +93,11 @@ manual dispatch, fails when any mutant differs from its reviewed disposition,
 and uploads the report plus per-stage logs for 30 days. That lane measures the
 catalog; it does not turn the contract into its own correctness oracle or claim
 that a recorded survivor's original value is right.
+
+The catalog includes influence probes for state-machine event vocabulary,
+named-slot requiredness, text-overflow prop binding, and motion transition
+properties. These are behavioral probes, not name searches: each changes one
+schema-valid leaf and observes which selected consumer, audit, authored test,
+or runtime witness can distinguish the two contracts. A surviving leaf is
+evidence about that exact fact only; it is not permission to call the entire
+field dead without product-intent review.
