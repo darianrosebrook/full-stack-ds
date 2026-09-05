@@ -51,3 +51,8 @@ contracts:
   - name: 'documentation-claim-boundary'
     type: behavior
     path: 'docs/normal-form.md'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "README.md and docs/current-implementation-snapshot.md mutation row at merge ad279dc8, corroborated by pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions at 8bb6e521: 5/7 detected, 2/7 reviewed Badge survivors, 0 disposition mismatches; both docs state the non-general-score ceiling"
+    recorded_at: "2026-09-05T01:53:04.889Z"
