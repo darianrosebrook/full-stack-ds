@@ -136,3 +136,9 @@ evidence:
     recorded_at: "2026-09-05T06:55:00.057Z"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A10
+    status: unchecked
+    evidence_ref: "UNEXECUTED beyond: idempotence, holder subsumption, discriminator ordering, commutation over 15 representative plans, skip-predicate agreement over 208x140. Not run: all 9730 pairs; saturated merge-order independence vs a stated expected partition; listing-order independence of every witness AND closure set incl. normalization plans; refusal of a non-confluent set."
+    recorded_at: "2026-09-05T06:55:00.507Z"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
