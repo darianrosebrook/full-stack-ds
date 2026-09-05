@@ -6,12 +6,10 @@
 // whatever theme the composition carries — so a consumer can override any
 // semantic slot by name without regenerating code.
 //
-// Resolution semantics mirror the RN module exactly (source of truth,
-// resolveTokenValue in tokens/index.tsx):
-//   literal  →  theme.tokens[ref]  →  fallback
-// A baked literal always wins; theme overrides arrive through the SEMANTIC
-// ref name (e.g. "semantic.color.foreground.accent"); the fallback is the
-// contract's last-resort literal.
+// Resolution semantics are shared with the RN and SwiftUI runtimes:
+//   theme.tokens[name]  →  theme.tokens[ref]  →  literal  →  fallback
+// A consumer can override one component slot without repointing its semantic
+// ref, while a brand/semantic table still reaches every token-backed slot.
 //
 // This file is NOT generated. Do not edit generated component files; edit
 // this file only to widen the runtime (new accessors, bridge roles).
@@ -49,17 +47,19 @@ class ComponentTokenDefinition(
 typealias ComponentTokenScope = Map<String, ComponentTokenDefinition>
 typealias ComponentTokenScopes = Map<String, ComponentTokenScope>
 
-/** Theme = override map keyed by semantic token name. The empty theme
- *  resolves everything from per-slot fallbacks. */
+/** Theme = override map keyed by component slot name or semantic token ref.
+ *  The empty theme resolves authored literals/fallbacks. */
 class FsdsTheme(val tokens: Map<String, String> = emptyMap()) {
     fun resolve(definition: ComponentTokenDefinition?): String? {
         if (definition == null) return null
-        if (definition.literal != null) return definition.literal
+        val slotOverride = tokens[definition.name]
+        if (slotOverride != null) return slotOverride
         val ref = definition.ref
         if (ref != null) {
             val overridden = tokens[ref]
             if (overridden != null) return overridden
         }
+        if (definition.literal != null) return definition.literal
         return definition.fallback
     }
 }

@@ -496,6 +496,12 @@ jobs:
       - name: Settings example compile (consumer lane over ds-jetpack-compose)
         run: ./examples/settings/compose/gradlew -p examples/settings/compose compileKotlin --no-daemon
 
+      # FIX-NATIVE-TOKEN-RESOLVER-CONFORMANCE-01. Executes the shared
+      # cross-native precedence fixture against the real Compose resolver;
+      # compile-only admission cannot detect a valid-but-wrong arm order.
+      - name: ds-jetpack-compose token runtime tests
+        run: ./packages/ds-jetpack-compose/gradlew -p packages/ds-jetpack-compose :library:test --no-daemon
+
   native-compile-rail-swift:
     name: Native compile rail (Swift compile-admission smoke)
     runs-on: macos-latest

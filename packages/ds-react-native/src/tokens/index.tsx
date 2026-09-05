@@ -77,10 +77,12 @@ export function resolveTokenValue(
   definition: ComponentTokenDefinition,
   theme?: FsdsTheme,
 ): NativeTokenValue | undefined {
-  if (definition.literal !== undefined) return normalizeNativeToken(definition.literal);
+  const slotOverride = theme?.tokens?.[definition.name];
+  if (slotOverride !== undefined) return normalizeNativeToken(slotOverride);
   if (definition.ref && theme?.tokens?.[definition.ref] !== undefined) {
     return normalizeNativeToken(theme.tokens[definition.ref]);
   }
+  if (definition.literal !== undefined) return normalizeNativeToken(definition.literal);
   return normalizeNativeToken(definition.fallback);
 }
 

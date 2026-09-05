@@ -3,12 +3,105 @@
 // chains were assigned directly into optional-Value dictionary subscripts
 // (FIX-SWIFTUI-TOKEN-RESOLVER-01). These tests fail against the unfixed
 // resolver and pin the staged-assignment behavior.
+import Foundation
 import XCTest
 @testable import DsSwiftUI
 
 /// Flatten the double-optional produced by optional-Value dictionary reads.
 private func flat(_ value: FsdsTokenValue??) -> FsdsTokenValue? {
     value ?? nil
+}
+
+private struct NativeTokenResolverFixture: Decodable {
+    let version: Int
+    let precedence: [String]
+    let cases: [NativeTokenResolverCase]
+}
+
+private struct NativeTokenResolverCase: Decodable {
+    let id: String
+    let name: String
+    let ref: String?
+    let literal: String?
+    let fallback: String?
+    let themeByName: String?
+    let themeByRef: String?
+    let unrelatedTheme: String?
+    let expected: String
+}
+
+private func loadNativeTokenResolverFixture() throws -> NativeTokenResolverFixture {
+    let testsDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+    let packagesDir = testsDir
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+    let url = packagesDir
+        .appendingPathComponent("ds-contracts/fixtures/native-token-resolver.conformance.json")
+    return try JSONDecoder().decode(
+        NativeTokenResolverFixture.self,
+        from: Data(contentsOf: url)
+    )
+}
+
+final class NativeTokenResolverConformanceTests: XCTestCase {
+    func testSharedFixtureAgainstOrdinaryAndLayeredResolvers() throws {
+        let fixture = try loadNativeTokenResolverFixture()
+        XCTAssertEqual(fixture.version, 1)
+        XCTAssertEqual(
+            fixture.precedence,
+            ["themeByName", "themeByRef", "literal", "fallback"]
+        )
+
+        for testCase in fixture.cases {
+            let literalBacked = testCase.literal != nil
+                && testCase.ref == nil
+                && testCase.fallback == nil
+            let tokenBacked = testCase.literal == nil
+                && testCase.ref != nil
+                && testCase.fallback != nil
+            XCTAssertTrue(
+                literalBacked || tokenBacked,
+                "fixture case is not a legal token sidecar shape: \(testCase.id)"
+            )
+
+            let definition = FsdsComponentTokenDefinition(
+                cssVar: "--fixture",
+                name: testCase.name,
+                ref: testCase.ref,
+                literal: testCase.literal.map(FsdsTokenValue.string),
+                fallback: testCase.fallback.map(FsdsTokenValue.string)
+            )
+            let scopes: FsdsComponentTokenScopes = [
+                "root": [testCase.name: definition],
+            ]
+            var tokens: [String: FsdsTokenValue] = [:]
+            if let value = testCase.themeByName {
+                tokens[testCase.name] = .string(value)
+            }
+            if let ref = testCase.ref, let value = testCase.themeByRef {
+                tokens[ref] = .string(value)
+            }
+            if let value = testCase.unrelatedTheme {
+                tokens["fixture.unrelated"] = .string(value)
+            }
+            let theme = FsdsTheme(tokens: tokens)
+            let expected = FsdsTokenValue.string(testCase.expected)
+
+            let ordinary = resolveFsdsComponentTokens(scopes, theme)
+            XCTAssertEqual(
+                flat(ordinary["root"]?[testCase.name]),
+                expected,
+                "ordinary resolver: \(testCase.id)"
+            )
+            let layered = resolveFsdsLayeredTokens(scopes, theme, layers: ["root"])
+            XCTAssertEqual(
+                flat(layered[testCase.name]),
+                expected,
+                "layered resolver: \(testCase.id)"
+            )
+        }
+    }
 }
 
 final class FsdsThemeTests: XCTestCase {

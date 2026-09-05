@@ -5,8 +5,8 @@
 // theme the environment carries — so a consumer can override any slot by
 // name without regenerating code.
 //
-// Resolution semantics mirror the RN module exactly:
-//   theme.tokens[name]  →  literal  →  fallback
+// Resolution semantics are shared with the RN and Compose runtimes:
+//   theme.tokens[name]  →  theme.tokens[ref]  →  literal  →  fallback
 //
 // This file is NOT generated. Do not edit generated component files; edit
 // this file only to widen the runtime (new accessors, theme surfaces).
@@ -201,6 +201,7 @@ public func resolveFsdsLayeredTokens(
             // Same staged-assignment rule as resolveFsdsComponentTokens.
             let value: FsdsTokenValue? =
                 theme.tokens[definition.name]
+                ?? definition.ref.flatMap { theme.tokens[$0] }
                 ?? definition.literal
                 ?? definition.fallback
             merged[slotName] = value
