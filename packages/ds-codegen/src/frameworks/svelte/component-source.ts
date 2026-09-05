@@ -1406,7 +1406,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 facts for this component.
   const needsInstanceId = componentNeedsInstanceId(ir);
   const assocProvides = ir.fieldAssociation?.provides;
-  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const assocConsumerPart = ir.fieldAssociation?.consumerPart;
 
   const importLines: string[] = [];
   if (hasHook) {
@@ -1417,7 +1417,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       `import { provideFieldAssociation } from "../../primitives/index.js";`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     importLines.push(
       `import { useFieldAssociation } from "../../primitives/index.js";`,
     );
@@ -1657,7 +1657,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       `provideFieldAssociation(() => fieldAssociationValue);`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     fieldAssocLines.push(`const fieldAssociation = useFieldAssociation();`);
   }
   const fieldAssocBody = fieldAssocLines.join("\n");
@@ -1672,7 +1672,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     hookVar,
     isRoot: true,
     cssPrefix: ir.cssPrefix,
-    fieldAssociationConsumer: assocConsumes,
+    fieldAssociationConsumerPart: assocConsumerPart,
     rootUsePortal,
     rootSelectorAnchored: selectorAnchor !== null,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
@@ -1770,11 +1770,9 @@ interface SvelteRenderContext {
    */
   rootSelectorAnchored?: boolean;
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `id` /
-   * `aria-describedby` from the injected context getter.
+   * Anatomy part that consumes ambient field association.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
   /** When true, attach auto-dismiss pause listeners to the root element. */
   autoDismissPause?: boolean;
   // `a11y.role` from the contract — emitted on the root element when set.
@@ -2076,6 +2074,11 @@ function renderSvelteDomNode(
     );
   }
 
+  if (ctx.fieldAssociationConsumerPart === node.part) {
+    attrs.push(`id={fieldAssociation?.().controlId}`);
+    attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
     if (ctx.cssPrefix) {
@@ -2112,12 +2115,6 @@ function renderSvelteDomNode(
     // a11y.role and an explicit attrs.role on the root node).
     if (ctx.rootRole && !("role" in node.attrs) && !("role" in node.bindings)) {
       attrs.push(`role="${ctx.rootRole}"`);
-    }
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association (context getter) on its root element.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`id={fieldAssociation?.().controlId}`);
-      attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
     }
   } else if (classParts.length > 0) {
     if (classParts.length === 1) {

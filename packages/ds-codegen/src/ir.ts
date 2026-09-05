@@ -774,8 +774,19 @@ export interface FieldAssociationProviderIR {
 
 export interface FieldAssociationIR {
   provides?: FieldAssociationProviderIR;
-  /** True when this component consumes ambient field association (a control). */
-  consumes: boolean;
+  /** Target part when this control consumes ambient field association. */
+  consumerPart: string | undefined;
+}
+
+export interface FormControlIR {
+  /** Rendered anatomy part that owns interaction and field association. */
+  part: PartIR;
+  /** Normalized controlled/uncontrolled value channel. */
+  channel: NormalizedChannelIR;
+  valueModel: "text" | "boolean" | "selection";
+  commit: "input" | "change" | "activation";
+  /** Web DOM event derived from commit semantics and injected on `part`. */
+  event: "input" | "change" | "click";
 }
 
 /**
@@ -1629,6 +1640,9 @@ export interface ComponentIR {
    */
   surface: SurfaceIR | undefined;
 
+  /** Interactive control capability, independent of native form submission. */
+  formControl: FormControlIR | undefined;
+
   /**
    * Target-neutral text-overflow intent — present only when
    * `contract.textOverflow` is set. Additive: existing DOM cssVariableBindings
@@ -1834,6 +1848,12 @@ export function buildComponentIR(
   const surface = buildSurfaceIR(contract, parts);
   const textOverflow = buildTextOverflowIR(contract);
   const dom = buildDomTree(contract);
+  const formControl = buildFormControlIR(
+    contract,
+    parts,
+    behavior.normalizedChannels,
+    dom,
+  );
   validateDismissalTargetParts(contract, dom);
   const rootRole =
     effectiveRole && !domTreeOwnsRole(dom, effectiveRole)
@@ -1888,9 +1908,17 @@ export function buildComponentIR(
     const provides = dom
       ? resolveIdRelationships(dom, contract, propNames)
       : undefined;
-    const consumes = contract.fieldAssociation === "control";
-    if (provides || consumes) {
-      fieldAssociation = { provides, consumes };
+    const consumerPart =
+      contract.fieldAssociation === "control"
+        ? formControl?.part.name
+        : undefined;
+    if (contract.fieldAssociation === "control" && !consumerPart) {
+      throw new Error(
+        `Contract "${contract.name}": fieldAssociation "control" requires formControl so association can target the rendered control part.`,
+      );
+    }
+    if (provides || consumerPart) {
+      fieldAssociation = { provides, consumerPart };
     }
   }
 
@@ -1949,6 +1977,7 @@ export function buildComponentIR(
     tokenScopes,
     behavior,
     surface,
+    formControl,
     textOverflow,
     dom,
     fieldAssociation,
@@ -4423,6 +4452,114 @@ export function buildSurfaceIR(
     dismissal: surface.dismissal ?? [],
     openTriggers,
     timing,
+  };
+}
+
+/**
+ * Lower the form-control capability and inject its one authoritative channel
+ * commit onto the declared DOM part. The contract's DOM tree remains
+ * structural; framework event spelling and timing are selected from this
+ * semantic fact instead of being repeated in every emitter or DOM node.
+ */
+export function buildFormControlIR(
+  contract: ComponentContract,
+  parts: PartIR[],
+  channels: NormalizedChannelIR[],
+  dom: DomNodeIR | undefined,
+): FormControlIR | undefined {
+  const control = contract.formControl;
+  if (!control) return undefined;
+
+  const part = parts.find((candidate) => candidate.name === control.part);
+  if (!part) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.part "${control.part}" is not declared in anatomy.parts.`,
+    );
+  }
+  if (part.details?.interactive !== true) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.part "${control.part}" must declare details.interactive === true.`,
+    );
+  }
+
+  const channel = channels.find((candidate) => candidate.name === control.channel);
+  if (!channel) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.channel "${control.channel}" is not a declared channel.`,
+    );
+  }
+  const expectedValueType =
+    control.valueModel === "text"
+      ? "string"
+      : control.valueModel === "boolean"
+        ? "boolean"
+        : undefined;
+  if (expectedValueType && channel.valueType !== expectedValueType) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.valueModel "${control.valueModel}" requires channel "${control.channel}" to have valueType "${expectedValueType}" (got "${channel.valueType ?? "undefined"}").`,
+    );
+  }
+  if (control.commit === "input" && control.valueModel !== "text") {
+    throw new Error(
+      `Contract "${contract.name}": formControl.commit "input" requires valueModel "text".`,
+    );
+  }
+  if (control.commit === "activation" && control.valueModel !== "boolean") {
+    throw new Error(
+      `Contract "${contract.name}": formControl.commit "activation" requires valueModel "boolean".`,
+    );
+  }
+  if (!dom) {
+    throw new Error(
+      `Contract "${contract.name}": formControl requires anatomy.dom so part "${control.part}" has a rendered target.`,
+    );
+  }
+
+  const targets: DomNodeIR[] = [];
+  const visit = (node: DomNodeIR): void => {
+    if (node.part === control.part) targets.push(node);
+    for (const child of node.children) visit(child);
+  };
+  visit(dom);
+  if (targets.length !== 1) {
+    throw new Error(
+      `Contract "${contract.name}": formControl.part "${control.part}" must render exactly once in anatomy.dom (got ${targets.length}).`,
+    );
+  }
+
+  const event =
+    control.commit === "input"
+      ? "input"
+      : control.commit === "change"
+        ? "change"
+        : "click";
+  const target = targets[0];
+  for (const [authoredEvent, binding] of Object.entries(target.events)) {
+    if (
+      binding.kind === "channel" &&
+      binding.channel === control.channel &&
+      binding.field === "onChange"
+    ) {
+      throw new Error(
+        `Contract "${contract.name}": formControl owns the ${control.channel} commit; remove anatomy.dom event "${authoredEvent}" from part "${control.part}".`,
+      );
+    }
+  }
+  if (target.events[event]) {
+    throw new Error(
+      `Contract "${contract.name}": formControl-derived event "${event}" collides with an authored event on part "${control.part}".`,
+    );
+  }
+  target.events[event] = parseBindingExpression(
+    `channel:${control.channel}.onChange`,
+  );
+
+  return {
+    part,
+    channel,
+    valueModel: control.valueModel,
+    commit: control.commit,
+    event,
   };
 }
 

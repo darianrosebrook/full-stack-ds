@@ -429,16 +429,37 @@ describe("field-association routing (consumer-slotted targets)", () => {
       name: "FixtureInput",
       cssPrefix: "fx-input",
       fieldAssociation: "control",
+      formControl: {
+        part: "root",
+        channel: "value",
+        valueModel: "text",
+        commit: "input",
+      },
       anatomy: {
         parts: ["root"],
+        details: { root: { role: "trigger", interactive: true } },
         dom: { tag: "input", part: "root" },
       },
-      props: { designed: { members: [] } },
+      props: {
+        designed: {
+          members: [
+            { name: "value", type: "string" },
+            { name: "onChange", type: "(value: string) => void" },
+          ],
+        },
+      },
+      channels: {
+        value: {
+          value: "value",
+          onChange: "onChange",
+          valueType: "string",
+        },
+      },
     } as unknown as ComponentContract;
     const ir = buildComponentIR(contract);
     expect(ir.fieldAssociation).toEqual({
       provides: undefined,
-      consumes: true,
+      consumerPart: "root",
     });
   });
 

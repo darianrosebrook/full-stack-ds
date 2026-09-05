@@ -4,6 +4,12 @@
   "description": "Full-featured form field composing a label, input, optional description, and error message with ARIA wiring.",
   "layer": "composer",
   "category": "input",
+  "formControl": {
+    "part": "field",
+    "channel": "value",
+    "valueModel": "text",
+    "commit": "input"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -75,9 +81,6 @@
             "required": "prop:required",
             "aria-invalid": "prop:invalid",
             "aria-describedby": "prop:ariaDescribedby"
-          },
-          "events": {
-            "change": "channel:value.onChange"
           }
         },
         {

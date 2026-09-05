@@ -2085,7 +2085,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(`  const instanceId = useId();`);
     lines.push(``);
   }
-  if (ir.fieldAssociation?.consumes) {
+  if (ir.fieldAssociation?.consumerPart) {
     lines.push(`  const fieldAssociation = useFieldAssociation();`);
     lines.push(``);
   }
@@ -2180,7 +2180,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     rootTagOverride,
     propertyBindingRefs,
     iconGlyphIdents,
-    fieldAssociationConsumer: ir.fieldAssociation?.consumes === true,
+    fieldAssociationConsumerPart: ir.fieldAssociation?.consumerPart,
     rootSelectorAnchored: selectorAnchor !== null,
   };
 
@@ -2308,12 +2308,11 @@ interface ReactRenderContext {
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01, contract `fieldAssociation:
-   * "control"`) — the root element binds `id` / `aria-describedby` from the
-   * `fieldAssociation` body const.
+   * Anatomy part that consumes ambient field association. Targeting the
+   * declared control part keeps compound controls from binding idrefs to a
+   * non-labelable wrapper root.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
   /**
    * Selector-anchored root panel: the root element gets the anchored
    * position wiring (ref, fixed-position style, data-placement) emitted by
@@ -2708,6 +2707,13 @@ function renderReactDomNode(
     );
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: bind the ambient association to the
+  // actual control part, which may be nested below the component root.
+  if (ctx.fieldAssociationConsumerPart === node.part) {
+    attrs.push(`id={fieldAssociation?.controlId}`);
+    attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       attrs.unshift(`className={\`${classRootClassExpr(classParts)}\`}`);
@@ -2728,13 +2734,6 @@ function renderReactDomNode(
     }
     if (ctx.autoDismissPause) {
       attrs.push(`{...autoDismissPauseProps}`);
-    }
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association before ...rest so an explicit consumer id
-    // passed through rest still wins.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`id={fieldAssociation?.controlId}`);
-      attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
     }
     // Selector-anchored root: fixed-position style computed against the
     // active step's page anchor, hidden until the first measurement so the
@@ -3087,9 +3086,10 @@ function renderReactBinding(
         return ch.changeHandlerProp;
       }
       const setter = `set${capitalize(ch.name)}`;
-      const isChangeEvent = attr === "onChange";
-      // onChange synthesis: read e.target.{checked,value} based on valueType.
-      if (isChangeEvent) {
+      const isValueEvent = attr === "onChange" || attr === "onInput";
+      // Value-bearing events read e.target.{checked,value} based on valueType.
+      // Which event commits is already normalized by FormControlIR.
+      if (isValueEvent) {
         if (ch.valueType === "boolean") {
           return `(e) => ${setter}(e.target.checked)`;
         }

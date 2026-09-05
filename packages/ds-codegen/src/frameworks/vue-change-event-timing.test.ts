@@ -3,31 +3,28 @@ import type { ComponentContract } from "../contract.js";
 import { buildComponentIR } from "../ir.js";
 import { generateVueComponentSource } from "./vue/component-source.js";
 
-/**
- * FIX-SETTINGS-FIELD-VUE-FINDINGS-01 (#6): the Vue emitter must lower a
- * text-value change channel to the keystroke-firing `@input` event, not the
- * blur-timed native `@change`. Boolean controls (checkbox/switch) keep
- * `@change` — they have no keystroke concept.
- *
- * Rationale: React's `onChange` already means "the input event" (fires per
- * keystroke), so Vue's faithful realization of the same value-change semantic
- * is `@input`. A `@change` binding defers keystroke-time validation until the
- * field loses focus, which the settings example exposed as a real defect.
- */
-
-function inputLikeContract(valueType: "string" | "boolean"): ComponentContract {
+function inputLikeContract(
+  valueType: "string" | "boolean",
+  commit: "input" | "change",
+): ComponentContract {
   return {
     name: "FixtureValueInput",
     layer: "primitive",
     cssPrefix: "fixture-value-input",
     anatomy: {
       parts: ["root"],
+      details: { root: { role: "trigger", interactive: true } },
       dom: {
         tag: "input",
         part: "root",
         bindings: { value: "channel:value.value" },
-        events: { change: "channel:value.onChange" },
       },
+    },
+    formControl: {
+      part: "root",
+      channel: "value",
+      valueModel: valueType === "boolean" ? "boolean" : "text",
+      commit,
     },
     props: {
       designed: {
@@ -60,21 +57,28 @@ function inputLikeContract(valueType: "string" | "boolean"): ComponentContract {
   } as unknown as ComponentContract;
 }
 
-describe("Vue change-event timing (FIX-SETTINGS-FIELD-VUE-FINDINGS-01 #6)", () => {
-  it("lowers a string value channel's change event to @input (keystroke)", () => {
-    const ir = buildComponentIR(inputLikeContract("string"), { allContracts: new Map() });
+describe("Vue form-control commit timing", () => {
+  it("lowers a text control's input commit to @input (keystroke)", () => {
+    const ir = buildComponentIR(inputLikeContract("string", "input"), { allContracts: new Map() });
     const src = generateVueComponentSource(ir);
     // The value channel setter fires on @input, not the blur-timed @change.
     expect(src).toMatch(/@input="\(e\) => behavior\.setValue\(/);
     expect(src).not.toMatch(/@change="\(e\) => behavior\.setValue\(/);
   });
 
-  it("keeps a boolean value channel's change event on @change (toggle)", () => {
-    const ir = buildComponentIR(inputLikeContract("boolean"), { allContracts: new Map() });
+  it("lowers a boolean control's change commit to @change", () => {
+    const ir = buildComponentIR(inputLikeContract("boolean", "change"), { allContracts: new Map() });
     const src = generateVueComponentSource(ir);
     // Boolean (checkbox/switch) fires the native change event on toggle;
     // there is no keystroke to react to, so @input would be wrong.
     expect(src).toMatch(/@change="\(e\) => behavior\.setValue\(.*\.checked\)"/);
+    expect(src).not.toMatch(/@input=/);
+  });
+
+  it("does not override an explicit text change commit from value-type lore", () => {
+    const ir = buildComponentIR(inputLikeContract("string", "change"), { allContracts: new Map() });
+    const src = generateVueComponentSource(ir);
+    expect(src).toMatch(/@change="\(e\) => behavior\.setValue\(/);
     expect(src).not.toMatch(/@input=/);
   });
 });

@@ -5,6 +5,12 @@
   "layer": "primitive",
   "category": "input",
   "fieldAssociation": "control",
+  "formControl": {
+    "part": "root",
+    "channel": "value",
+    "valueModel": "text",
+    "commit": "input"
+  },
   "anatomy": {
     "parts": [
       "root"
@@ -38,9 +44,6 @@
         "required": "prop:required",
         "aria-label": "prop:ariaLabel",
         "aria-labelledby": "prop:ariaLabelledby"
-      },
-      "events": {
-        "change": "channel:value.onChange"
       }
     }
   },
