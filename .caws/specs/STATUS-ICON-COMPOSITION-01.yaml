@@ -70,3 +70,8 @@ contracts:
   - name: 'status-icon-composition'
     type: behavior
     path: 'packages/ds-contracts/components/Status/Status.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/dom-tree.test.ts (value-map component instance and exhaustive-domain assertions)
+    recorded_at: "2026-09-05T01:08:18.416Z"
