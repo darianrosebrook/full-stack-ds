@@ -98,7 +98,13 @@ describe("generateReactTest — real corpus contracts", () => {
 
     expect(source).toContain(`import { render, screen, act, fireEvent }`);
     expect(source).toContain(`closes on Escape key`);
-    expect(source).toContain(`fireEvent.click(screen.getByTestId("dialog"));`);
+    // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: the dismissal test dispatches
+    // on the declared targetPart element (Dialog's backdrop), not the root —
+    // jsdom does no hit-testing, so the root click proved nothing.
+    expect(source).toContain(
+      `const overlay = screen.getByTestId("dialog").querySelector(".dialog__backdrop");`,
+    );
+    expect(source).toContain(`fireEvent.click(overlay!);`);
   });
 
   it("scans the realized component subtree and does not suppress dialog naming failures", () => {
