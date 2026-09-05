@@ -47,3 +47,8 @@ contracts:
   - name: 'swiftui-popover-trigger'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "surface-emit.test.ts red before implementation on missing SwiftUI.Button; pnpm exec vitest run packages/ds-codegen/src/frameworks/swift/swiftui/surface-emit.test.ts then passed 9/9 and asserts click openTriggers emit Button(action: open.toggle), plain style, disabled propagation, and no onHover"
+    recorded_at: "2026-09-05T02:11:44.799Z"
