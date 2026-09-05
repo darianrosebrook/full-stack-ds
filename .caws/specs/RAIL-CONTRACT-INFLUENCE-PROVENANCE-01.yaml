@@ -49,3 +49,8 @@ contracts:
   - name: 'contract-influence'
     type: contract-test
     path: 'scripts/contract-oracle-mutation/catalog.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "full profile at 71dbe276: 11 one-leaf mutants, 7 detected/4 survived; state-machine and slot-requiredness survived, text-overflow hit its authored marker, motion hit its ledger marker"
+    recorded_at: "2026-09-05T03:48:11.089Z"
