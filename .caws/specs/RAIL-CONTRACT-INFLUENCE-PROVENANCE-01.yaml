@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "full profile at 71dbe276: 11 one-leaf mutants, 7 detected/4 survived; state-machine and slot-requiredness survived, text-overflow hit its authored marker, motion hit its ledger marker"
     recorded_at: "2026-09-05T03:48:11.089Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node scripts/contract-oracle-mutation/selfcheck.mjs at 74512dac: PASS, 11 mutants; exact stage/class/marker earns detection while survivor-red, wrong-stage, and missing-marker cases are inconclusive"
+    recorded_at: "2026-09-05T03:48:23.403Z"
