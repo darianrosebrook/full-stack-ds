@@ -47,7 +47,7 @@ swift build --package-path packages/ds-swiftui
 | Body-evaluation smoke coverage | Every allowlisted component instantiates and evaluates its body through NSHostingController in the swift test lane — runtime crashes the compiler cannot see fail CI |
 | Selection semantics compose the controllable substrate | Yes — SelectionState holds single+multi ControllableValue projections behind the mode-gated apply() (replace vs toggleMembership); Select lowers through it with a contract-alias-derived option struct and Menu iteration |
 | Glyph pipeline renders the iconography catalog natively | Yes — hand-maintained SVGPath runtime (arc→cubic conversion, XCTest-pinned on real glyph bounds) + a generated GlyphCatalog substrate; Icon lowers through the iconGlyph class with size hints and catalog-driven decorative defaults; unknown names surface via accessibility, never silent |
-| Anchored surfaces emit through native popovers | Tooltip's trigger region hosts consumer content and `onHover` drives the open channel. Popover emits controlled/default presentation and native dismissal, but its generated trigger does not yet toggle itself on press; emission is not full behavior proof. |
+| Anchored surfaces emit through native popovers | Tooltip's trigger region hosts consumer content and `onHover` drives the open channel. Popover's contract-authored `openTriggers: ["click"]` lowers to a plain native Button that toggles the same controllable channel and is disabled by the declared prop. The PressProof harness independently observes an OS accessibility press → `onOpenChange(true)` → visible content. |
 | Centered-modal surfaces emit as sheets with the openness channel | Dialog presents a sheet and routes the platform presentation binding through `ControllableValue`; compound regions emit as closures (`body` renames to bodyContent for the View collision). Controlled/default presentation is host-proven; native-dismissal callback remains emitter-level because the harness cannot safely press into the modal sheet. |
 | Value-channel text controls emit with the controllable-state projection | Yes — Input is a SwiftUI TextField whose string channel projects through Binding + @State + onChange (controlled takes precedence), keyed on the IR channel rather than component identity; placeholder/disabled realized, HTML-form props omitted |
 | Named-slot composers emit as region closures | Yes — Field is one ViewBuilder region per dom slot (label/control/help/error/validatingIndicator), gated on every dom leaf being a slot (TextField's component-instance leaf and Dialog's surface block stay out); the web value-channel API is omitted, not accepted-and-ignored |
@@ -82,6 +82,8 @@ naming any failed counter. Current proven surface (press → channel):
 - **Chip** (action, dismiss), **Walkthrough** (steps, skip, complete threshold)
 - **Switch** — onChange `[true, false]`, binding syncs both ways
 - **Select** — AXMenuButton trigger → menu option press → selection `"b"`
+- **Popover** — native Button AXPress → first `onOpenChange` value `true` →
+  content observable (phase unmount may append native-dismissal `false`)
 - **Calendar** — AXIncrementor step → onChange fires exactly once
 - **Dialog** — controlled false→true→false presentation and
   `defaultOpen: true` presentation at mount
@@ -134,8 +136,8 @@ level is sample-proven by `TokenPaintTests` — see runtime proof above.)
 - Full-corpus emission and body evaluation do not prove every channel is
   behaviorally wired, visual parity, platform accessibility adequacy, or
   product correctness.
-- Popover can be controlled or default-open, but its generated trigger does
-  not yet toggle the open channel on press.
+- Tooltip's declared focus trigger is not lowered on SwiftUI; its hover trigger
+  is live. The Popover click trigger is host-proven on macOS, not iOS.
 - Switch's track geometry comes from its authored size token facts
   (32/48/64 px). ToggleSwitch authors none, so it renders at the native
   Toggle's intrinsic size — its size prop has no visual effect on this target

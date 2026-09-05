@@ -1,5 +1,5 @@
 // Press-proof harness (FIX-SWIFTUI-PRESS-PROOF-01,
-// TEST-SWIFTUI-RUNTIME-BREADTH-01).
+// TEST-SWIFTUI-RUNTIME-BREADTH-01, FIX-SWIFTUI-POPOVER-TRIGGER-01).
 //
 // A REAL SwiftUI App that drives itself: hosts each scenario in the
 // window, waits for the a11y tree to materialize (a genuine run loop
@@ -36,6 +36,8 @@ final class Counters {
     var switchBindingFinal = false
     var selectChanges: [String] = []
     var selectBindingFinal = ""
+    var popoverOpens: [Bool] = []
+    var popoverVisibleAfterPress = false
     var otpChanges: [String] = []
     var otpCompletes: [String] = []
     var otpBindingFinal = ""
@@ -70,6 +72,7 @@ final class HarnessModel: ObservableObject {
         case walkthroughThreshold
         case switchToggle
         case selectOption
+        case popoverClick
         case otpEntry
         case dialogChannel
         case dialogPlainProbe
@@ -341,7 +344,7 @@ final class HarnessModel: ObservableObject {
                 let triggers = Self.axElements(withRoles: ["AXButton", "AXMenuButton"])
                 guard triggers.count == 1 else {
                     self.failures.append("select: expected 1 trigger (AXButton/AXMenuButton), found \(triggers.count); census \(Self.axCensus())")
-                    self.phase = .otpEntry
+                    self.phase = .popoverClick
                     self.schedule(1.0) { self.advance() }
                     return
                 }
@@ -360,7 +363,7 @@ final class HarnessModel: ObservableObject {
                         self.counters.limitations.append(
                             "select: menu opened via trigger but option \"B\" not reachable (candidates \(items.count), census \(Self.axCensus())) — option-press proof unavailable on this host"
                         )
-                        self.phase = .otpEntry
+                        self.phase = .popoverClick
                         self.schedule(0.5) { self.advance() }
                         return
                     }
@@ -373,9 +376,40 @@ final class HarnessModel: ObservableObject {
                         if self.counters.selectBindingFinal != "b" {
                             self.failures.append("select: binding final \"\(self.counters.selectBindingFinal)\", expected \"b\"")
                         }
-                        self.phase = .otpEntry
+                        self.phase = .popoverClick
                         self.schedule(0.5) { self.advance() }
                     }
+                }
+            }
+
+        case .popoverClick:
+            counters.popoverOpens = []
+            schedule(1.0) {
+                let triggers = Self.axButtons(labeled: "open-popover")
+                let visibleBefore = Self.axStaticTexts().contains {
+                    Self.title(of: $0) == "popover-content"
+                }
+                guard triggers.count == 1, !visibleBefore else {
+                    self.failures.append(
+                        "popover: expected one native open-popover button and hidden content before press; found \(triggers.count) triggers, visibleBefore=\(visibleBefore)"
+                    )
+                    self.phase = .otpEntry
+                    self.schedule(0.5) { self.advance() }
+                    return
+                }
+                Self.click(at: triggers[0])
+                self.schedule(0.8) {
+                    self.counters.popoverVisibleAfterPress = Self.waitForStaticText("popover-content")
+                    if self.counters.popoverOpens != [true] {
+                        self.failures.append(
+                            "popover: onOpenChange values \(self.counters.popoverOpens), expected [true] after one OS accessibility press"
+                        )
+                    }
+                    if !self.counters.popoverVisibleAfterPress {
+                        self.failures.append("popover: content was not observable after trigger press")
+                    }
+                    self.phase = .otpEntry
+                    self.schedule(1.0) { self.advance() }
                 }
             }
 
@@ -611,6 +645,8 @@ final class HarnessModel: ObservableObject {
             print("switch.bindingFinal        : \(counters.switchBindingFinal) [expect false]")
             print("select.onSelectionChange   : \(counters.selectChanges) [expect [\"b\"]]")
             print("select.bindingFinal        : \"\(counters.selectBindingFinal)\" [expect \"b\"]")
+            print("popover.onOpenChange       : \(counters.popoverOpens) [expect first value true; phase unmount may append native-dismissal false]")
+            print("popover.content after press: \(counters.popoverVisibleAfterPress) [expect true]")
             print("otp.onChange(last)         : \(counters.otpChanges.last ?? "<none>")")
             print("otp.onComplete             : \(counters.otpCompletes)")
             print("otp.bindingFinal           : \"\(counters.otpBindingFinal)\"")
@@ -955,6 +991,12 @@ struct PressProofHarnessApp: App {
                         onSelectionChange: { model.counters.selectChanges.append("\($0)") }
                     )
                     .frame(width: 200)
+                case .popoverClick:
+                    Popover(
+                        onOpenChange: { model.counters.popoverOpens.append($0) },
+                        trigger: { SwiftUI.Text("open-popover") },
+                        content: { SwiftUI.Text("popover-content") }
+                    )
                 case .otpEntry:
                     OTP(
                         value: $model.otp,
