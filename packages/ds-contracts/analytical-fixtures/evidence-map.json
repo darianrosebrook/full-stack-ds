@@ -1,13 +1,13 @@
 {
   "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. No result here is claimed for an integration candidate: none exists yet.",
   "spec": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
-  "writtenAt": "2026-09-05T11:17:39+00:00",
+  "writtenAt": "2026-09-05T11:33:20+00:00",
   "pins": {
-    "testedWorktreeTip": "e290eededa24267e2dbf6e92d75cfd048676f376",
-    "selectedMainCommitAtWrite": "76b7310cc7e7fa95ee6474df7e0250d6a9744ff2",
+    "testedWorktreeTip": "ac11e0bbb8ba72d512f6609ed3aa5c2329583898",
+    "selectedMainCommitAtWrite": "7692357fd6943f6fdc6b912063574f672444d066",
     "mergeBase": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
-    "branchCommits": 33,
-    "mainAheadAtWrite": 310,
+    "branchCommits": 36,
+    "mainAheadAtWrite": 311,
     "mainChangesUnderAnalyticalClosure": 0,
     "mainChangesToSharedFiles": [
       "package.json"
@@ -51,7 +51,7 @@
   "observedOnPinnedTip": {
     "analyticalSuite": {
       "command": "npx vitest run packages/ds-codegen/src/analytical",
-      "result": "689 passed (689)",
+      "result": "696 passed (696)",
       "consecutiveRuns": 3,
       "note": "Six separately printed summaries. An earlier claim of three green runs (67b1008f) was false and corrected in 6ef5e993."
     },
@@ -272,7 +272,7 @@
       ]
     },
     "A3": {
-      "cliStatus": "unchecked",
+      "cliStatus": "pass",
       "demonstrated": [
         {
           "claim": "forget-value on a required leaf yields a marker (not a source value) and every sibling survives: IDENTIFIES/SEPARATES rows plus source-language departure",
@@ -291,9 +291,30 @@
           ]
         }
       ],
-      "open": [
+      "open": [],
+      "closedThisTip": [
         {
-          "claim": "operation-law evidence bound to erasureAuthorityDigest (owed; a change to what an operation does must invalidate the evidence earned under it)"
+          "claim": "operation-law evidence bound to erasureAuthorityDigest: a change to what an operation does (arity truncates to one whatever the floor -- in-slot, idempotent, schema-shaped) FAILS THE BEHAVIOURAL LAW first ([a,b,c] vs [a,c,b] identified where the floor keeps them apart), moves exactly erasureAuthorityDigest, and both recorded-evidence consumers refuse the evidence earned under the old definition, naming the transition by its endpoints",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "a wrong-but-local operation fails the law, moves exactly the erasure identity, and both consumers refuse the evidence earned under the old one"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "the relocation itself is faithful: unmutated, every identity agrees and both consumers accept"
+            }
+          ],
+          "method": "the analytical modules are relocated to a gitignored scratch tree resolving contracts, docs and package dependencies as the real one does; one line is changed in the copy; the copy's OWN live report and freeze are handed to THIS tree's consumers; nothing is stubbed; the unmutated relocation is the control",
+          "lawTableReceipts": {
+            "truncate-to-one (write only)": "KILLED by the IDENTIFIES row (one side sits at the floor and is left alone)",
+            "floor ignored entirely (affects and write)": "KILLED by IDENTIFIES' firing profile and the skip-predicate agreement test",
+            "note": "I predicted the SEPARATES pair ([a,b,c] vs [b,a,c], differing at a position every truncation keeps) left a gap; the receipts refute that for both variants. The pair the experiment uses ([a,b,c] vs [a,c,b]) is the one the wrong operation identifies."
+          },
+          "reproducedOn": "db95bdfc89565b27e8c6b7be8bf750b0d423f040",
+          "commits": [
+            "db95bdfc"
+          ]
         }
       ]
     },
@@ -435,7 +456,37 @@
       ],
       "open": [
         {
-          "claim": "ERASURE-authority freshness: retain accepted evidence, change a compiler/executor/serializer/ordering/locator input, invoke the actual consumer, observe refusal or reevaluation. Only the witness-authority transition has been exercised."
+          "claim": "closure evidence is RE-DERIVED, not bound: closures-stage2.json carries no authority block; every recorded field (normalization, footprints, minRawEdit, promotion, dependencies) is a claim checkClosures derives again and compares, so a moved erasure input refuses wherever the derivation moved (shown), but an entry whose derivation happens to agree under a new authority is accepted without saying which authority it was authored under (not implemented). The criterion's binding arm is unmet for closures; its purpose -- no silent re-read -- holds by recomputation."
+        }
+      ],
+      "closedThisTip": [
+        {
+          "claim": "ERASURE-authority freshness, through the actual consumers: for EACH input the criterion names -- the executor (arity floor), the canonical serializer (attribution kept), the ordering graph (ties/edges reversed), the quotient schema version (1 -> 2), and the schema-derived locator machinery (arity floor no longer on the locator) -- a one-line change in a relocated copy moves exactly the identity the partition assigns it, the footprint gate names 'authority <k> moved: <from> -> <to>', and the freeze diverges on 'authority:<k>@<from>-><to>'. The locator machinery moves coordinateBasisDigest, not erasureAuthorityDigest: a locator decides WHERE a coordinate lives, and the evidence is bound to that identity too, so the criterion's 'covering' is met through the union of identities the evidence is bound to.",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "moving the canonical quotient-image serializer (attribution kept, so two images differing only by which erasure opened a hole stop colliding) is refused by both consumers, by cause"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "moving the ordering graph (ties and edges reversed) is refused by both consumers, by cause"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "moving the quotient schema version is refused by both consumers, by cause"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "moving the schema-derived locator machinery (the declaration's arity floor no longer rides on the locator) is refused by both consumers, by cause"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/authority.test.ts",
+              "test": "closure evidence is re-derived under the live executor: a moved footprint rule refuses the recorded normalizations"
+            }
+          ],
+          "plansRegistry": "not a separate row: plans are derived by the census walk (coordinateBasis) and operationFor (erasureAuthority); both identities are exercised above",
+          "closureRow": "locator containment forced false in the copy -> the copy's own checkClosures refuses 44 problems ('authored normalization does not equal the derived set', declared dependencies mismatch); removing forget-branch-field from TOTAL_SUPPRESSIONS is a no-op because footprintOf computes a closure footprint as a delete-holder footprint by design",
+          "reproducedOn": "db95bdfc89565b27e8c6b7be8bf750b0d423f040"
         }
       ]
     },
@@ -622,6 +673,14 @@
         "survivors": 0,
         "executionFailures": 0,
         "note": "MM7 (combined route keyed on BEFORE findings) survived at ca06f7c2: no test pinned the combined route's discharge over a composed image that carries nothing. Not equivalent -- [derivedBy#present + field.key] on the masking fixture distinguishes it. Pinned in e290eede and re-run there."
+      },
+      {
+        "subject": "operation law table vs the experiment's wrong operation (erasure-plan.ts)",
+        "distinct": 2,
+        "assertionKills": 2,
+        "survivors": 0,
+        "executionFailures": 0,
+        "note": "L1 truncate-to-one (write only) killed by IDENTIFIES; L2 floor ignored entirely killed by IDENTIFIES' firing profile + skip-predicate agreement. Run to test my hypothesis that the SEPARATES pair left a gap; it did not. No test was changed."
       }
     ]
   },
