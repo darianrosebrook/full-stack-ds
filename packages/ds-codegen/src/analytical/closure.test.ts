@@ -813,13 +813,21 @@ describe("the ledger carries the authority its claims were verified under", () =
     // and nothing recorded that the agreement was under a different executor.
     // Every identity, not only the erasure one: a compared set missing a key is
     // a key under which a ledger can move unrefused.
-    for (const k of ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"]) {
+    const identities = ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"];
+    const results = identities.map((k) => {
       const moved = k === "quotientSchemaVersion" ? 999 : "0".repeat(64);
-      const r = checkClosures(copyWith((l) => { (l.authority as Record<string, unknown>)[k] = moved; }));
+      return [k, checkClosures(copyWith((l) => { (l.authority as Record<string, unknown>)[k] = moved; })), moved] as const;
+    });
+    // THE DISCRIMINATOR FIRST, for every identity: the moved key is named with
+    // both endpoints. (Any mutant of closure.ts also moves witnessAuthorityDigest,
+    // since this module is witness-owned; a mutant that dropped a key from the
+    // compared set must fail HERE, on that key's row, not on the count below.)
+    for (const [k, r, moved] of results) {
       expect(r.ok, k).toBe(false);
-      // The ONLY problem. Its derivations DO agree; what it lacks is the stamp.
-      expect(r.problems, k).toEqual([expect.stringMatching(new RegExp(`^closure ledger authored under a different ${k}: ${moved} -> [0-9a-f]{64}|^closure ledger authored under a different ${k}: ${moved} -> 1;`))]);
+      expect(r.problems, k).toContainEqual(expect.stringMatching(new RegExp(`^closure ledger authored under a different ${k}: ${moved} -> ([0-9a-f]{64}|1);`)));
     }
+    // THEN the "only problem" claim: the derivations DO agree; what each lacks is the stamp.
+    for (const [k, r] of results) expect(r.problems, `${k}: more than the stamp was refused`).toHaveLength(1);
   });
 
   it("a ledger with no authority block is refused: its claims were verified under an authority nobody can name", () => {
