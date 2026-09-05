@@ -4,14 +4,14 @@ authority: spec
 status: active
 title: Document Governance
 owner: "@darianrosebrook"
-updated: 2026-06-11
+updated: 2026-09-04
 governs:
   - docs/**/*.md
 ---
 
 # Document Governance
 
-This spec defines the frontmatter contract that documents under `docs/` must follow. It is enforced advisory-only by `.claude/hooks/doc-frontmatter-check.sh`, which warns on `Write`/`Edit` of any non-exempt `docs/**/*.md` file that is missing or misuses these fields.
+This spec defines the frontmatter contract that documents under `docs/` must follow. It is checked advisory-only by the active CAWS hook at `.caws/hooks/doc-frontmatter-check.sh`, which warns on `Write`/`Edit` of any non-exempt `docs/**/*.md` file that is missing or misuses these fields. This is an edit-time warning, not a repository-wide compliance certificate: generator-written reports do not pass through the `Write`/`Edit` hook, and `pnpm run docs:check-claims` gates marked values and verified-stamp freshness rather than the full frontmatter schema.
 
 ## Scope
 
@@ -71,7 +71,7 @@ The `authority` value determines where the doc lives on disk. The tree is partit
 
 **Collaboration.** `docs/internal/` is contributor-local. Teams that need to share roadmaps or working notes do so through an out-of-band surface (a team doc folder, an issue tracker, a wiki) — not through this repository.
 
-**Enforcement.** Currently advisory: the hook (`.claude/hooks/doc-frontmatter-check.sh`) does not yet check authority-vs-location consistency. Contributors are expected to honor the partition on Write. A future hook extension could enforce it mechanically by warning when a `docs/*.md` file declares `authority: roadmap | working | ephemeral`, or when a `docs/internal/*.md` file declares a durable authority.
+**Enforcement.** Currently advisory: the hook (`.caws/hooks/doc-frontmatter-check.sh`) does not yet check authority-vs-location consistency. Contributors are expected to honor the partition on Write. A future hook extension could enforce it mechanically by warning when a `docs/*.md` file declares `authority: roadmap | working | ephemeral`, or when a `docs/internal/*.md` file declares a durable authority.
 
 ## Tree layout
 
@@ -85,7 +85,8 @@ tracked tree is exactly:
 | `docs/architecture/` | Cross-cutting `authority: architecture` docs (system shape, taxonomies, doctrines). |
 | `docs/architecture/design/` | Subsystem-scoped architecture docs (one primitive, one pipeline, one registry). |
 | `docs/architecture/adr/` | `authority: adr` decision records. |
-| `docs/internal/` | Machine-local, untracked (see Location above): roadmaps, working notes, recon, agent-maintained measurements, audit output. |
+| `docs/*-audit/` | Tracked ratcheted matrices/reports and their adjudication records. Generated files are owned by the corresponding `scripts/*-audit/` producer; adjacent authority-bearing records may be hand-authored. |
+| `docs/internal/` | Machine-local, untracked (see Location above): roadmaps, working notes, recon, agent-maintained measurements, and non-ratcheted audit output. |
 
 A doc whose authority and location disagree with this table is misfiled —
 fix the location or the label, whichever is lying. The cautionary tale is
@@ -163,7 +164,7 @@ superseded_by: ADR-012
 
 ## How the hook reports
 
-The hook (`/.claude/hooks/doc-frontmatter-check.sh`) is registered in `post_tool_use.sh` and runs after `Write` or `Edit`. It is advisory: it emits a single `hookSpecificOutput` JSON block with `additionalContext` describing the missing/invalid field. It does **not** block the tool, but the warning is surfaced to the agent on the next turn.
+The hook (`.caws/hooks/doc-frontmatter-check.sh`) is registered by the active CAWS `post_tool_use.sh` dispatcher and runs after `Write` or `Edit`. It is advisory: it emits a single `hookSpecificOutput` JSON block with `additionalContext` describing the missing/invalid field. It does **not** block the tool, and generator subprocesses do not traverse this tool-event path.
 
 Validation passes are versioned in the script (V1 → V6) so newer rules can be added without breaking older docs that pre-date them.
 
