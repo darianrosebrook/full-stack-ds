@@ -136,11 +136,19 @@ function walkTreeNode(
       ? anatomy
       : (anatomy?.parts ?? []);
     const anatomyParts = new Set(partNames);
+    const delivery = collectUsageDelivery(target);
     for (const [slotName, child] of Object.entries(body.slots)) {
-      if (!anatomyParts.has(slotName)) {
+      if (!anatomyParts.has(slotName) && !delivery.namedSlots.has(slotName)) {
         issues.push({
           pointer: `${pointer}/slots/${slotName}`,
           message: `${sourcePrefix}: slot "${slotName}" is not an anatomy part on ${compName}`,
+        });
+      } else if (
+        !delivery.namedSlots.has(slotName) && !delivery.acceptsChildren
+      ) {
+        issues.push({
+          pointer: `${pointer}/slots/${slotName}`,
+          message: `${sourcePrefix}: slot "${slotName}" on ${compName} has no consumer delivery path (not a named DOM slot, compound part, or children placeholder)`,
         });
       }
       // Strings need no cross-contract resolution; only tree nodes recurse.
@@ -149,6 +157,35 @@ function walkTreeNode(
       }
     }
   }
+}
+
+interface UsageDelivery {
+  namedSlots: Set<string>;
+  acceptsChildren: boolean;
+}
+
+/** Derive the same framework-neutral delivery facts consumed by emitters. */
+function collectUsageDelivery(
+  contract: ComponentContract,
+): UsageDelivery {
+  const anatomy = contract.anatomy;
+  const namedSlots = new Set<string>();
+  let acceptsChildren = !anatomy || Array.isArray(anatomy) || !anatomy.dom;
+
+  const walk = (node: { tag?: string; name?: string; children?: unknown[] }): void => {
+    if (node.tag === "children" || (node.tag === "slot" && !node.name)) {
+      acceptsChildren = true;
+    }
+    if (node.tag === "slot" && node.name) namedSlots.add(node.name);
+    for (const child of node.children ?? []) {
+      if (child && typeof child === "object") {
+        walk(child as { tag?: string; name?: string; children?: unknown[] });
+      }
+    }
+  };
+  if (anatomy && !Array.isArray(anatomy) && anatomy.dom) walk(anatomy.dom);
+
+  return { namedSlots, acceptsChildren };
 }
 
 /**

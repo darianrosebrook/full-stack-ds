@@ -5,6 +5,7 @@ import type {
   UsageTreeNode,
 } from "../../types/data";
 import { renderUsageTree } from "../../lib/render-usage";
+import { bundle } from "../../types/bundle";
 import { Stack } from "@full-stack-ds/react";
 import {
   materialTokenRows,
@@ -26,6 +27,10 @@ interface UsageExamplesProps {
    */
   tokenOverrides?: Record<string, string>;
 }
+
+const contractsByRef = new Map(
+  bundle.components.map((entry) => [`fsds.${entry.name}`, entry.contract]),
+);
 
 function coerceUsagePropOverride(value: unknown): UsagePropValue | undefined {
   if (
@@ -169,7 +174,9 @@ function ExampleFrame({
           ...tokenStyle,
         }}
       >
-        {renderUsageTree(renderedTree)}
+        {renderUsageTree(renderedTree, {
+          resolveContract: (ref) => contractsByRef.get(ref),
+        })}
       </Stack>
     </div>
   );
