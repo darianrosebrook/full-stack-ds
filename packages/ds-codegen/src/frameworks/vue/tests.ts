@@ -255,16 +255,32 @@ export function generateVueTest(ir: ComponentIR): string {
       },
       attachTo: "document.body",
     });
+    // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: dispatch the click on the
+    // overlay element itself — jsdom does no hit-testing, so triggering on
+    // the root proved nothing while the overlay child swallows every scrim
+    // click at hit-test time in a real browser.
+    const overlaySelector = testCase.trigger.targetPart
+      ? `.${plan.cssPrefix}__${testCase.trigger.targetPart}`
+      : null;
     if (portalRoot) {
       // The teleported root lives in document.body, so trigger the click on
       // the resolved DOM node (wrapper no longer wraps the root element).
       lines.push(`    ${wrapper};`);
       lines.push(rootDecl);
-      lines.push(`    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));`);
+      if (overlaySelector) {
+        lines.push(`    root?.querySelector<HTMLElement>("${overlaySelector}")?.click();`);
+      } else {
+        lines.push(`    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));`);
+      }
       lines.push(`    await Promise.resolve();`);
     } else {
       lines.push(`    const wrapper = ${wrapper};`);
-      lines.push(`    await wrapper.trigger("click");`);
+      if (overlaySelector) {
+        lines.push(`    wrapper.element.querySelector<HTMLElement>("${overlaySelector}")?.click();`);
+      } else {
+        lines.push(`    await wrapper.trigger("click");`);
+      }
+      lines.push(`    await Promise.resolve();`);
     }
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
     lines.push(`  });`);

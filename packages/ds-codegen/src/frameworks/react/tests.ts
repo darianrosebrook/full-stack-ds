@@ -278,9 +278,21 @@ export function generateReactTest(ir: ComponentIR): string {
     lines.push(
       `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${testCase.channel.valueProp}={true} ${testCase.channel.changeHandlerProp}={${testCase.spyName}}${closer});`,
     );
-    lines.push(
-      `    fireEvent.click(screen.getByTestId("${plan.testId}"));`,
-    );
+    // FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01: jsdom's fireEvent dispatches
+    // on whatever element it is handed — there is no hit-testing — so the
+    // test must target the overlay element exactly like a browser hit-test
+    // would. Clicking the root (as before) proved nothing: the overlay child
+    // swallows every scrim click at hit-test time.
+    if (testCase.trigger.targetPart) {
+      lines.push(
+        `    const overlay = screen.getByTestId("${plan.testId}").querySelector(".${plan.cssPrefix}__${testCase.trigger.targetPart}");`,
+      );
+      lines.push(`    fireEvent.click(overlay!);`);
+    } else {
+      lines.push(
+        `    fireEvent.click(screen.getByTestId("${plan.testId}"));`,
+      );
+    }
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
     lines.push(`  });`);
   }
