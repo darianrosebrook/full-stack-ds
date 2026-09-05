@@ -463,9 +463,40 @@
         "bindings": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "source",
+                  "values"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "map"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "type": "object",
+                    "minProperties": 1,
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "fallback": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
           },
-          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\". Event handlers belong under `events`; inner content under `content`; JS-only DOM properties (no HTML attribute equivalent, e.g. `indeterminate`) belong under `properties`. Legacy authoring with `bindings.onX` or `bindings.children`/`bindings.textContent` hard-fails at IR-build with a redirect message (IR-DOM-BINDING-CAPABILITY-01/4C removed the auto-translate path); `bindings.indeterminate` hard-fails the same way, redirecting to `properties.indeterminate`."
+          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). A value is either a binding-expression string or a closed `{kind: \"map\", source, values, fallback?}` projection. Maps lower generically through IR and must exhaust an enumerable source-prop domain unless a fallback is declared. Event handlers belong under `events`; inner content under `content`; JS-only DOM properties belong under `properties`."
         },
         "properties": {
           "type": "object",

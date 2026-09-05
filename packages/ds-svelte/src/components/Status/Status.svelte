@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import Icon from "../Icon/Icon.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -41,7 +41,7 @@ const classes = $derived(
 </script>
 
 <span class={classes} data-fsds-component="status">
-  <span class={'status__icon'} aria-hidden="true"></span>
+  <Icon class={'status__icon'} size="sm" name={(status === "info" ? "info" : (status === "success" ? "check" : (status === "warning" ? "triangle-alert" : (status === "danger" ? "triangle-alert" : "triangle-alert"))))} />
   <span class={'status__label'}>
     {@render children?.()}
   </span>

@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { Icon } from "../Icon/Icon";
 import "./Status.css";
 // @generated:end
 
@@ -47,7 +48,7 @@ export function Status({
 
   return (
   <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="status" {...rest}>
-    <span className="status__icon" aria-hidden="true" />
+    <Icon className="status__icon" size="sm" name={(status === "info" ? "info" : (status === "success" ? "check" : (status === "warning" ? "triangle-alert" : (status === "danger" ? "triangle-alert" : "triangle-alert"))))} />
     <span className="status__label">
       {children}
     </span>

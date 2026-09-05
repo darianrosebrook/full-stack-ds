@@ -21,6 +21,7 @@ import type {
   ContractDismissal,
   ContractDismissalTrigger,
   ContractDomNode,
+  ContractValueMapBinding,
   ContractEventPayloadField,
   ContractContentTransform,
   ContractEventSignature,
@@ -327,6 +328,13 @@ export type BindingExpression =
   | { kind: "literal"; value: string }
   | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] }
   | {
+      /** Contract-authored literal projection, generic across components. */
+      kind: "valueMap";
+      source: BindingExpression;
+      values: Record<string, string>;
+      fallback?: string;
+    }
+  | {
       kind: "conditional";
       condition: BindingExpression;
       whenTrue: BindingExpression;
@@ -375,6 +383,32 @@ export type BindingExpression =
  * narrowing — the parser already guarantees the kind at construction time.
  */
 export type PropBindingExpression = Extract<BindingExpression, { kind: "prop" }>;
+
+/** Lower a normalized value map once a backend has rendered its source. */
+export function composeValueMapExpression(
+  binding: Extract<BindingExpression, { kind: "valueMap" }>,
+  sourceExpression: string,
+  renderLiteral: (value: string) => string = JSON.stringify,
+): string {
+  const entries = Object.entries(binding.values);
+  if (entries.length === 0) {
+    return binding.fallback === undefined
+      ? '""'
+      : renderLiteral(binding.fallback);
+  }
+  const fallback = binding.fallback;
+  const hasFallback = fallback !== undefined;
+  const terminal = fallback !== undefined
+    ? renderLiteral(fallback)
+    : renderLiteral(entries[entries.length - 1][1]);
+  const cases = hasFallback ? entries : entries.slice(0, -1);
+  return cases.reduceRight(
+    (otherwise, [sourceValue, targetValue]) =>
+      `(${sourceExpression} === ${renderLiteral(sourceValue)} ? ` +
+      `${renderLiteral(targetValue)} : ${otherwise})`,
+    terminal,
+  );
+}
 
 /**
  * Closed set of named channel-update operations
@@ -2049,6 +2083,7 @@ function validateDomBindings(
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
   const knownProps = new Set(styledProps.map((p) => p.name));
   const propTypes = new Map(styledProps.map((p) => [p.name, p.type]));
+  const propTypeIR = new Map(styledProps.map((p) => [p.name, p.propType]));
   const channelValuePropByName = new Map(channels.map((c) => [c.name, c.valueProp]));
   // FEAT-CHANNEL-UPDATE-OPERATIONS-01: channel name → declared valueType, so
   // `channelUpdate` validation can check operation/valueType compatibility
@@ -2069,6 +2104,7 @@ function validateDomBindings(
     channelValueProps,
     knownProps,
     propTypes,
+    propTypeIR,
     componentName,
     cssPrefix,
     channelValueTypes,
@@ -2129,6 +2165,7 @@ function validateDomNode(
   channelValueProps: Set<string>,
   knownProps: Set<string>,
   propTypes: Map<string, string>,
+  propTypeIR: Map<string, PropTypeIR>,
   componentName: string,
   cssPrefix: string,
   channelValueTypes: Map<string, string>,
@@ -2347,6 +2384,15 @@ function validateDomNode(
   }
 
   for (const [attr, binding] of Object.entries(node.bindings)) {
+    if (binding.kind === "valueMap") {
+      validateValueMapBinding(
+        binding,
+        attr,
+        propTypeIR,
+        componentTypes,
+        componentName,
+      );
+    }
     validateBindingAgainstScope(
       binding,
       `binding "${attr}"`,
@@ -2505,12 +2551,87 @@ function validateDomNode(
       channelValueProps,
       knownProps,
       propTypes,
+      propTypeIR,
       componentName,
       cssPrefix,
       channelValueTypes,
       activeIterations,
       anatomyDetails,
       componentTypes,
+    );
+  }
+}
+
+function literalDomainForProp(
+  propType: PropTypeIR | undefined,
+  componentTypes: Record<string, ContractTypeDef>,
+): string[] | undefined {
+  if (!propType) return undefined;
+  if (propType.kind === "enum") return propType.values;
+  if (propType.kind === "literal" && typeof propType.value === "string") {
+    return [propType.value];
+  }
+  if (propType.kind === "union") {
+    const domains = propType.of.map((member) =>
+      literalDomainForProp(member, componentTypes),
+    );
+    return domains.some((domain) => domain === undefined)
+      ? undefined
+      : domains.flatMap((domain) => domain!);
+  }
+  if (propType.kind === "ref") {
+    const def = componentTypes[propType.to];
+    return def?.kind === "union" && Array.isArray(def.values)
+      ? def.values
+      : undefined;
+  }
+  return undefined;
+}
+
+function validateValueMapBinding(
+  binding: Extract<BindingExpression, { kind: "valueMap" }>,
+  attr: string,
+  propTypes: Map<string, PropTypeIR>,
+  componentTypes: Record<string, ContractTypeDef>,
+  componentName: string,
+): void {
+  if (
+    binding.source.kind !== "prop" ||
+    (binding.source.path?.length ?? 0) > 0
+  ) {
+    throw new Error(
+      `[${componentName}] DOM binding "${attr}" value map source must be a ` +
+        `bare prop:<name> reference so its finite domain can be verified.`,
+    );
+  }
+  const domain = literalDomainForProp(
+    propTypes.get(binding.source.prop),
+    componentTypes,
+  );
+  if (!domain) {
+    if (binding.fallback === undefined) {
+      throw new Error(
+        `[${componentName}] DOM binding "${attr}" value map source prop ` +
+          `'${binding.source.prop}' has no enumerable literal domain; declare ` +
+          `a fallback or use an enum/string-union prop.`,
+      );
+    }
+    return;
+  }
+  const authored = Object.keys(binding.values);
+  const unknown = authored.filter((key) => !domain.includes(key));
+  if (unknown.length > 0) {
+    throw new Error(
+      `[${componentName}] DOM binding "${attr}" value map has unknown key(s) ` +
+        `[${unknown.join(", ")}] outside source prop '${binding.source.prop}' ` +
+        `domain [${domain.join(", ")}].`,
+    );
+  }
+  const missing = domain.filter((key) => !(key in binding.values));
+  if (missing.length > 0 && binding.fallback === undefined) {
+    throw new Error(
+      `[${componentName}] DOM binding "${attr}" value map must be exhaustive ` +
+        `for source prop '${binding.source.prop}'; missing [${missing.join(", ")}].`,
     );
   }
 }
@@ -2568,6 +2689,19 @@ function validateBindingAgainstScope(
    */
   channelValueTypes: Map<string, string> = new Map(),
 ): void {
+  if (binding.kind === "valueMap") {
+    validateBindingAgainstScope(
+      binding.source,
+      `${siteLabel} value map source`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+      false,
+    );
+    return;
+  }
   if (binding.kind === "channelUpdate") {
     // channelUpdate reuses the events-only gate: like channelCall it lowers
     // to a `() => …` handler, not a value.
@@ -3184,7 +3318,7 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
             `(DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)`,
         );
       }
-      bindings[attr] = parseBindingExpression(expr);
+      bindings[attr] = parseDomBindingExpression(expr);
     }
   }
   const propertyBindings: Record<string, BindingExpression> = {};
@@ -3747,6 +3881,18 @@ export function parseBindingExpression(expr: string): BindingExpression {
   return { kind: "literal", value: expr };
 }
 
+function parseDomBindingExpression(
+  expr: string | ContractValueMapBinding,
+): BindingExpression {
+  if (typeof expr === "string") return parseBindingExpression(expr);
+  return {
+    kind: "valueMap",
+    source: parseBindingExpression(expr.source),
+    values: { ...expr.values },
+    ...(expr.fallback === undefined ? {} : { fallback: expr.fallback }),
+  };
+}
+
 /**
  * BINDING-EXPRESSION-V2-PREDICATE-01.
  *
@@ -4046,6 +4192,11 @@ export function promoteIterationLocals(
   binding: BindingExpression,
   iteration: { indexVar: string; itemVar?: string },
 ): BindingExpression {
+  if (binding.kind === "valueMap") {
+    const source = promoteIterationLocals(binding.source, iteration);
+    if (source === binding.source) return binding;
+    return { ...binding, source };
+  }
   // BINDING-EXPRESSION-V2-PREDICATE-01: predicate operands are themselves
   // BindingExpressions. Walk into both sides so any V1-style
   // `prop:<indexVar>` / `prop:<itemVar>` reference inside an operand gets

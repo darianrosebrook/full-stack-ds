@@ -393,7 +393,13 @@ function isStaticContent(ir: ComponentIR): boolean {
   let childrenLeaves = 0;
   let hasInstance = false;
   const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if ((node as { componentRef?: string }).componentRef) hasInstance = true;
+    if ((node as { componentRef?: string }).componentRef) {
+      const role = ir.parts.find((part) => part.name === node.part)?.details?.role;
+      // Compose has no emitted iconography target yet. A contract-authored
+      // decoration may degrade while essential component refs remain a hard
+      // stop; the native lane proves compilation, not visual parity.
+      if (role !== "decoration") hasInstance = true;
+    }
     const kids = node.children ?? [];
     if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
     kids.forEach(walk);

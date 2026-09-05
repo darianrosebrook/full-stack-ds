@@ -46,7 +46,7 @@ export function TracePanel({
   if (!component) {
     return (
       <div className="trace-empty">
-        <AlertNotice status="info" level="inline" icon={<Icon name="Info" size="sm" />}>
+        <AlertNotice status="info" level="inline" icon={<Icon name="info" size="sm" />}>
           Select a component to inspect its contract.
         </AlertNotice>
       </div>

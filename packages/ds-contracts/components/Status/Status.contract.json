@@ -17,7 +17,7 @@
         "role": "root"
       },
       "icon": {
-        "tag": "span",
+        "componentRef": "fsds.Icon",
         "description": "Visual status glyph derived from the status prop; hidden from assistive technology.",
         "role": "decoration"
       },
@@ -32,10 +32,23 @@
       "part": "root",
       "children": [
         {
-          "tag": "span",
+          "componentRef": "fsds.Icon",
           "part": "icon",
           "attrs": {
-            "aria-hidden": "true"
+            "size": "sm"
+          },
+          "bindings": {
+            "name": {
+              "kind": "map",
+              "source": "prop:status",
+              "values": {
+                "info": "info",
+                "success": "check",
+                "warning": "triangle-alert",
+                "danger": "triangle-alert",
+                "error": "triangle-alert"
+              }
+            }
           }
         },
         {
@@ -129,7 +142,7 @@
       "Use size to match surrounding text"
     ],
     "children": {
-      "allowed": false
+      "allowed": true
     }
   }
 }

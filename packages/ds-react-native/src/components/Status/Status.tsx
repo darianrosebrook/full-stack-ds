@@ -4,6 +4,7 @@ import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createStatusStyles } from "./Status.styles";
+import { Icon } from "../Icon/Icon";
 // @generated:end
 
 // @generated:start types
@@ -40,9 +41,9 @@ export function Status({
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      <View
-        style={styles.icon}
-        accessible={false}
+      <Icon
+        name={(status === "info" ? "info" : (status === "success" ? "check" : (status === "warning" ? "triangle-alert" : (status === "danger" ? "triangle-alert" : "triangle-alert"))))}
+        size="sm"
       />
       <View
         style={styles.label}

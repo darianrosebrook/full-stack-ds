@@ -271,7 +271,7 @@ export interface ContractDomNode {
    * them. Authoring them as separate fields gives each emitter the
    * information it needs to lower into the right idiom.
    */
-  bindings?: Record<string, string>;
+  bindings?: Record<string, string | ContractValueMapBinding>;
   /**
    * DOM-property-only bindings, keyed by property name (e.g.
    * `"indeterminate"`). For facts with no HTML attribute equivalent at
@@ -355,6 +355,19 @@ export interface ContractDomNode {
    * `IconGlyphIR` in `ir.ts` for the resolved form.
    */
   iconGlyph?: ContractDomNodeIconGlyph;
+}
+
+/**
+ * A closed, declarative value projection for component composition. The
+ * contract maps an enumerable source prop to literal target values; emitters
+ * lower the normalized IR generically and never learn the host component's
+ * name. `fallback` is required when the source domain cannot be enumerated.
+ */
+export interface ContractValueMapBinding {
+  kind: 'map';
+  source: string;
+  values: Record<string, string>;
+  fallback?: string;
 }
 
 /**

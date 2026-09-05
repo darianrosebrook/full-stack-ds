@@ -44,6 +44,7 @@ import {
   canonicalTsType,
   channelUpdateMethodName,
   composeChannelUpdateExpression,
+  composeValueMapExpression,
   collectContentTransforms,
   isHighlightTransform,
   isMarkdownTransform,
@@ -3185,6 +3186,12 @@ function renderAngularBinding(
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? `${angularAttrBinding(attr, tag, refBinding)}="${appendPath(name, expr.path)}"` : null;
     }
+    case "valueMap": {
+      const lowered = renderAngularBindingValue(expr, ctx);
+      return lowered === null
+        ? null
+        : `${angularAttrBinding(attr, tag, refBinding)}="${lowered}"`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3298,6 +3305,16 @@ function renderAngularBindingValue(
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
     }
+    case "valueMap": {
+      const source = renderAngularBindingValue(expr.source, ctx);
+      return source === null
+        ? null
+        : composeValueMapExpression(
+            expr,
+            source,
+            (value) => `'${value.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+          );
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -3389,6 +3406,8 @@ function renderAngularEvent(
       void ctx;
       return null;
     }
+    case "valueMap":
+      return null;
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

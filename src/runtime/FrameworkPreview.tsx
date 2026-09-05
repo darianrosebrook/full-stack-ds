@@ -227,7 +227,7 @@ export function FrameworkPreview({
           intent="danger"
           level="inline"
           className="preview-status--error"
-          icon={<Icon name="TriangleAlert" size="sm" />}
+          icon={<Icon name="triangle-alert" size="sm" />}
         >
           {errMsg ?? "Preview failed"}
         </Alert>

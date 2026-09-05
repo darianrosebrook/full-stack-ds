@@ -75,4 +75,18 @@ describe("Status — accessibility", () => {
 
 // @custom:start tests
 
+describe("Status — composed icon", () => {
+  it("renders the contract-mapped success glyph", () => {
+    const { container } = render(<Status status="success">Success</Status>);
+    expect(container.querySelector('svg[data-fsds-icon="check"]')).not.toBeNull();
+  });
+
+  it("renders the contract-mapped warning glyph", () => {
+    const { container } = render(<Status status="warning">Warning</Status>);
+    expect(
+      container.querySelector('svg[data-fsds-icon="triangle-alert"]'),
+    ).not.toBeNull();
+  });
+});
+
 // @custom:end

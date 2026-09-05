@@ -3074,4 +3074,144 @@ describe("componentInstance resolution (cross-contract fact)", () => {
       { name: "click", expr: { kind: "prop", prop: "onDismiss" } },
     ]);
   });
+
+  it("normalizes a contract-authored value map on a composed component prop", () => {
+    const IconContract = {
+      name: "Icon",
+      layer: "primitive",
+      anatomy: { parts: ["root"] },
+      props: {
+        designed: {
+          members: [{ name: "name", propType: { kind: "string" } }],
+        },
+      },
+    } as unknown as ComponentContract;
+    const host = {
+      name: "Status",
+      layer: "primitive",
+      types: {
+        StatusIntent: {
+          kind: "union",
+          values: ["info", "success", "warning", "danger", "error"],
+        },
+      },
+      props: {
+        designed: {
+          members: [
+            { name: "status", propType: { kind: "ref", to: "StatusIntent" } },
+          ],
+        },
+      },
+      anatomy: {
+        parts: ["root", "icon"],
+        dom: {
+          tag: "span",
+          part: "root",
+          children: [
+            {
+              componentRef: "fsds.Icon",
+              part: "icon",
+              bindings: {
+                name: {
+                  kind: "map",
+                  source: "prop:status",
+                  values: {
+                    info: "info",
+                    success: "check",
+                    warning: "triangle-alert",
+                    danger: "triangle-alert",
+                    error: "triangle-alert",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    } as unknown as ComponentContract;
+
+    const ir = buildComponentIR(host, {
+      allContracts: corpus(host, IconContract),
+    });
+
+    expect(ir.dom?.children[0].componentInstance?.bindings[0]).toMatchObject({
+      kind: "prop",
+      targetProp: "name",
+      expr: {
+        kind: "valueMap",
+        source: { kind: "prop", prop: "status" },
+        values: {
+          info: "info",
+          success: "check",
+          warning: "triangle-alert",
+          danger: "triangle-alert",
+          error: "triangle-alert",
+        },
+      },
+    });
+  });
+
+  it("rejects a value map that omits a member of its source prop domain", () => {
+    const host = {
+      name: "Status",
+      types: {
+        StatusIntent: { kind: "union", values: ["info", "success"] },
+      },
+      props: {
+        designed: {
+          members: [
+            { name: "status", propType: { kind: "ref", to: "StatusIntent" } },
+          ],
+        },
+      },
+      anatomy: {
+        parts: ["root"],
+        dom: {
+          tag: "span",
+          part: "root",
+          bindings: {
+            title: {
+              kind: "map",
+              source: "prop:status",
+              values: { info: "Informational" },
+            },
+          },
+        },
+      },
+    } as unknown as ComponentContract;
+
+    expect(() => buildComponentIR(host)).toThrow(/value map.*exhaustive.*success/i);
+  });
+
+  it("rejects value-map keys outside the source prop domain", () => {
+    const host = {
+      name: "Status",
+      types: {
+        StatusIntent: { kind: "union", values: ["info", "success"] },
+      },
+      props: {
+        designed: {
+          members: [
+            { name: "status", propType: { kind: "ref", to: "StatusIntent" } },
+          ],
+        },
+      },
+      anatomy: {
+        parts: ["root"],
+        dom: {
+          tag: "span",
+          part: "root",
+          bindings: {
+            title: {
+              kind: "map",
+              source: "prop:status",
+              values: { info: "Informational", success: "Done", typo: "Nope" },
+            },
+          },
+        },
+      },
+    } as unknown as ComponentContract;
+
+    expect(() => buildComponentIR(host)).toThrow(/value map.*unknown.*typo/i);
+  });
 });

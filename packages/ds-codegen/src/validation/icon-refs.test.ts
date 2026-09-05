@@ -110,6 +110,28 @@ describe("validateContractIconRefs", () => {
     expect(issues[0].message).toContain('"missing-glyph"');
   });
 
+  it("checks every literal output of a contract-authored value map", () => {
+    _resetKnownIconNamesCacheForTests(new Set(["check", "info"]));
+    const contract = consumerContract("check");
+    const refNode = (contract.anatomy as unknown as { dom: { children: Array<Record<string, unknown>> } })
+      .dom.children[0];
+    delete refNode.attrs;
+    refNode.bindings = {
+      name: {
+        kind: "map",
+        source: "prop:status",
+        values: { info: "info", success: "check", warning: "missing-glyph" },
+      },
+    };
+    const allContracts = new Map([["Icon", iconContract()]]);
+
+    const issues = validateContractIconRefs(contract, { allContracts });
+
+    expect(issues).toHaveLength(1);
+    expect(issues[0].pointer).toContain("/bindings/name/values/warning");
+    expect(issues[0].message).toContain('"missing-glyph"');
+  });
+
   it("reports the corpus-missing state loudly instead of passing", () => {
     _resetKnownIconNamesCacheForTests("missing");
     const allContracts = new Map([["Icon", iconContract()]]);

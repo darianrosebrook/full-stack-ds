@@ -50,7 +50,7 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
   if (!result.ok) {
     return (
       <div style={{ padding: "var(--fsds-core-spacing-size-06)" }}>
-        <AlertNotice status="info" level="inline" icon={<Icon name="Info" size="sm" />}>
+        <AlertNotice status="info" level="inline" icon={<Icon name="info" size="sm" />}>
           No A2UI descriptor authored for {contract.name}. This contract declares
           no <code>a2ui.category</code>, so the agent-facing projection is
           unavailable.

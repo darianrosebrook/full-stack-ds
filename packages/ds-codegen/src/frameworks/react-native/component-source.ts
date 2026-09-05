@@ -7,7 +7,7 @@ import type {
   NormalizedDismissalTriggerIR,
   ResolvedPropIR,
 } from "../../ir.js";
-import { collectCollapseIntents, composeChannelUpdateExpression, isContentTransform } from "../../ir.js";
+import { collectCollapseIntents, composeChannelUpdateExpression, composeValueMapExpression, isContentTransform } from "../../ir.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   rnAnchoredSurface,
@@ -852,6 +852,10 @@ function collectBindingRuntimeUsage(
     return;
   }
   if (binding.kind === "iterationLocal" || binding.kind === "literal") return;
+  if (binding.kind === "valueMap") {
+    collectBindingRuntimeUsage(binding.source, ir, usage, channelPurpose);
+    return;
+  }
   if (binding.kind === "conditional") {
     collectBindingRuntimeUsage(binding.condition, ir, usage, channelPurpose);
     collectBindingRuntimeUsage(binding.whenTrue, ir, usage, channelPurpose);
@@ -2121,6 +2125,7 @@ function eventHandlerExpr(
       return `(next: ${tsTypeForChannel(ir, channel)}) => ${setter}(next)`;
     }
   }
+  if (binding.kind === "valueMap") return "() => undefined";
   return "() => undefined";
 }
 
@@ -2137,6 +2142,9 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   if (binding.kind === "literal") return JSON.stringify(binding.value);
   if (binding.kind === "iterationLocal") {
     return pathExpr(binding.local, binding.path);
+  }
+  if (binding.kind === "valueMap") {
+    return composeValueMapExpression(binding, bindingExpr(binding.source, ir));
   }
   if (binding.kind === "conditional") {
     return `(${bindingExpr(binding.condition, ir)} ? ${bindingExpr(binding.whenTrue, ir)} : ${bindingExpr(binding.whenFalse, ir)})`;
@@ -2838,6 +2846,8 @@ function bindingReferencesLocal(
         bindingReferencesLocal(binding.whenTrue, local) ||
         bindingReferencesLocal(binding.whenFalse, local)
       );
+    case "valueMap":
+      return bindingReferencesLocal(binding.source, local);
     case "channelCall":
       return bindingReferencesLocal(binding.arg, local);
     case "channelUpdate":
