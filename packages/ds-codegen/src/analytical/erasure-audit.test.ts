@@ -384,7 +384,9 @@ describe("the terminal invariant is measured over the population the report name
     }
     expect(disagree.slice(0, 5), `${disagree.length} skipped pair(s) were not no-ops`).toEqual([]);
     expect(skipped, "no pair was skipped, so this test is checking nothing").toBeGreaterThan(0);
-  });
+    // 208 specimens x 140 plans. Timed out under the 5s default on 2 of 5
+    // sampled runs, which is a test whose verdict depends on machine load.
+  }, 120_000);
 
   it("a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path", () => {
     // The decisive case, and the previous version of this test did not state
@@ -406,8 +408,10 @@ describe("the terminal invariant is measured over the population the report name
     const valid = synthesized.find((f) => oracle.validate(f).length === 0);
     expect(valid, "A1's premise is a source-valid specimen; without one this proves nothing").toBeDefined();
 
-    // (2) The real plan set produces no illegal image from it.
-    expect(computeReport().quotientLanguageInvalid, "the control population must be clean").toEqual([]);
+    // (2) The real plan set produces no illegal image from it. `live` is the
+    // same call, computed once for the file -- recomputing it here doubled the
+    // cost of the most expensive test in the suite for no extra evidence.
+    expect(live.quotientLanguageInvalid, "the control population must be clean").toEqual([]);
 
     // (3) An isolated plan defect, on the same untouched specimen.
     const faulty = new Map(loadPlans());
@@ -424,7 +428,8 @@ describe("the terminal invariant is measured over the population the report name
     // still covers the whole population it names.
     expect(report.quotientLanguageInvalid).not.toEqual([]);
     expect(report.scopes.quotientLanguageInvalid.populationDigest).toBe(report.specimens.populationDigest);
-  });
+    // A full `computeReport` over the whole population; see the note above.
+  }, 120_000);
 
   it("validating the INPUT instead of the image would pass that falsifier, and does not", () => {
     // The mutant the previous test could not discriminate:
