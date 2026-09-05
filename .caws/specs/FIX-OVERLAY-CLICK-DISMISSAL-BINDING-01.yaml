@@ -74,3 +74,10 @@ evidence:
     command: git show 125bd6f0 -- packages/ds-react/src/components/Command/Command.tsx
     exit_code: 0
     commit_sha: "125bd6f0"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: regenerated closes-on-overlay-click tests query the targetPart element and dispatch there; all five web suites pass (698+514+654+163 tests across vue/lit/svelte/angular-rn)
+    recorded_at: "2026-09-05T00:36:12.824Z"
+    command: "pnpm run test:frameworks"
+    exit_code: 0
+    commit_sha: "125bd6f0"
