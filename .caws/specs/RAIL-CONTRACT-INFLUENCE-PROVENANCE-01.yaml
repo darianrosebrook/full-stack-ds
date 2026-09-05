@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "node scripts/contract-oracle-mutation/selfcheck.mjs at 74512dac: PASS, 11 mutants; exact stage/class/marker earns detection while survivor-red, wrong-stage, and missing-marker cases are inconclusive"
     recorded_at: "2026-09-05T03:48:23.403Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "targeted full SSR profile at 74512dac: baseline passed, mutation survived 18 stages, restore-generation passed, inconclusive=0, disposition/provenance/marker mismatches=0; source worktree stayed clean"
+    recorded_at: "2026-09-05T03:48:33.166Z"
