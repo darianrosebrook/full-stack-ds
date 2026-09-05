@@ -1380,6 +1380,13 @@ export interface NormalizedDismissalTriggerIR {
   /** Prop name controlling whether the trigger is active. */
   enabledByProp?: string;
   defaultEnabled: boolean;
+  /**
+   * Anatomy part that owns this trigger's interaction. Required for
+   * `overlayClick` (validated against the dom tree): the dismissal click
+   * binds on this element because the root is pointer-events:none under a
+   * full-cover overlay and can never be the hit target.
+   */
+  targetPart?: string;
   description?: string;
 }
 
@@ -1790,6 +1797,7 @@ export function buildComponentIR(
   const surface = buildSurfaceIR(contract, parts);
   const textOverflow = buildTextOverflowIR(contract);
   const dom = buildDomTree(contract);
+  validateDismissalTargetParts(contract, dom);
   const rootRole =
     effectiveRole && !domTreeOwnsRole(dom, effectiveRole)
       ? effectiveRole
@@ -4368,8 +4376,50 @@ function buildDismissalTriggersIR(
     event: t.event,
     enabledByProp: t.enabledBy,
     defaultEnabled: t.defaultEnabled !== false,
+    targetPart: t.targetPart,
     description: t.description,
   }));
+}
+
+/**
+ * Fail loud when an `overlayClick` trigger cannot receive its dismissal
+ * click: the trigger must name a `targetPart`, and that part must exist in
+ * the dom tree. The root is not a fallback binding site — under a
+ * full-cover pointer-events:auto overlay the root (pointer-events:none) can
+ * never be the hit target, so a root-bound self-target handler is dead code
+ * (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01).
+ */
+function validateDismissalTargetParts(
+  contract: ComponentContract,
+  dom: DomNodeIR | undefined,
+): void {
+  const overlayClickTriggers = (contract.dismissal?.triggers ?? []).filter(
+    (t) => t.event === "overlayClick",
+  );
+  if (overlayClickTriggers.length === 0) return;
+
+  const partNames = new Set<string>();
+  if (dom) {
+    const stack: DomNodeIR[] = [dom];
+    while (stack.length > 0) {
+      const node = stack.pop()!;
+      if (node.part) partNames.add(node.part);
+      for (const child of node.children) stack.push(child);
+    }
+  }
+
+  for (const trigger of overlayClickTriggers) {
+    if (!trigger.targetPart) {
+      throw new Error(
+        `Contract "${contract.name}": dismissal trigger 'overlayClick' must declare 'targetPart' — the anatomy part that receives the dismissal click (the root is pointer-events:none under a full-cover overlay and can never be the hit target).`,
+      );
+    }
+    if (!partNames.has(trigger.targetPart)) {
+      throw new Error(
+        `Contract "${contract.name}": dismissal trigger 'overlayClick' targets part '${trigger.targetPart}', which does not exist in the anatomy (known parts: [${[...partNames].sort().join(", ")}]).`,
+      );
+    }
+  }
 }
 
 function buildEventsIR(
