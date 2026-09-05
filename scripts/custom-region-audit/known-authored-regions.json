@@ -163,6 +163,13 @@
       "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
     },
     {
+      "file": "packages/ds-react/src/components/Status/__tests__/Status.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "STATUS-ICON-COMPOSITION-01",
+      "note": "Hand-authored oracle coverage pins the product judgment that success maps to the check glyph and warning maps to triangle-alert. Those expected glyphs do not derive from the contract, so the region can contradict an incorrect value map."
+    },
+    {
       "file": "packages/ds-react/src/components/Table/__tests__/Table.test.tsx",
       "label": "tests",
       "kind": "test",
