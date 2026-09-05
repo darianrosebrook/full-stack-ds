@@ -695,6 +695,11 @@ describe("C3 — the harness is falsified", () => {
       // the after-structure carries nothing, so there is nothing to hide behind,
       // and the engine HAS answered. Not a blanket withdrawal.
       expect(at("relation.derivedBy#present")).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
+      // The combined route answers the same way: a combination that deletes the
+      // defective derivation leaves nothing behind to hide a cause, and the
+      // engine has answered for the composed image too.
+      const byId = (id: string) => kernel.find((c) => c.id === id)!;
+      expect(checkCombinedIsolation(masking, [byId("relation.derivedBy#present"), byId("field.key")])).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
       // No discharge on this fixture carries a hidden caveat any more: the field is gone.
       for (const c of kernel) expect(Object.keys(checkIsolation(masking, c)), c.id).not.toContain("limitation");
 
