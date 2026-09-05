@@ -20,7 +20,7 @@ export function generateVueSurfaceTest(ir: ComponentIR): string {
   if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `Vue surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
-        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
+        `Declare part attachment with anchored positioning when its substrate is ready.`,
     );
   }
   // Content is teleported to document.body when the contract portals

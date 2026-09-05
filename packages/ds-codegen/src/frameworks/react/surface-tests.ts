@@ -25,7 +25,7 @@ export function generateReactSurfaceTest(ir: ComponentIR): string {
   if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `React surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
-        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
+        `Declare part attachment with anchored positioning when its substrate is ready.`,
     );
   }
   // Test-body shape is kind-specific (Tooltip's hover/focus contract

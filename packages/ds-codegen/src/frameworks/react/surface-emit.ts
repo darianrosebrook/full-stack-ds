@@ -1,8 +1,8 @@
 /**
  * React emitter — Anchored Presence Surface path.
  *
- * Activated for any `ir.surface` whose kind is in the anchored-
- * presence family (per shared semantics policy). Emits the compound
+ * Activated for any `ir.surface` with part attachment and anchored
+ * positioning (per shared semantics policy). Emits the compound
  * API:
  *
  *   <Surface>
