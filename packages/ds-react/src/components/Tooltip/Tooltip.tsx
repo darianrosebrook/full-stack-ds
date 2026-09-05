@@ -14,6 +14,7 @@ import {
 import { useAnchoredSurface, type SurfaceTriggerHandlers } from "../../primitives/surfaces/useAnchoredSurface";
 import { composeRefs, composeEventHandlers } from "../../primitives/surfaces/compose";
 import { createPortal } from "react-dom";
+import { usePortalTarget } from "../../primitives/hooks";
 import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";
 import "./Tooltip.css";
 // @generated:end
@@ -258,16 +259,18 @@ Tooltip.Content = function TooltipContent({
   ...rest
 }: TooltipContentProps) {
   const ctx = useTooltipContext();
+  const portalTarget = usePortalTarget();
   const position = useAnchoredPosition({
     anchor: ctx.anchorEl,
     content: ctx.contentEl,
     open: ctx.open,
     placement: ctx.placement ?? "auto",
     collision: "flip-shift",
+    boundary: portalTarget,
   });
   const { style: consumerStyle, ...restWithoutStyle } = rest;
   if (!ctx.open) return null;
-  return typeof document !== "undefined"
+  return portalTarget !== null
     ? createPortal(
         <div
           ref={(node) => ctx.registerContent(node)}
@@ -286,7 +289,7 @@ Tooltip.Content = function TooltipContent({
         >
           {children}
         </div>,
-        document.body,
+        portalTarget,
       )
     : (
         <div

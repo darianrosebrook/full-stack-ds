@@ -206,6 +206,15 @@ export interface ComponentContract {
   events?: Record<string, unknown>;
   /** Form participation; carried through to the A2UI descriptor unchanged. */
   form?: unknown;
+  portal?: {
+    enabled?: boolean;
+    defaultTarget?: string;
+  };
+  surface?: {
+    positioning?: {
+      strategy?: "anchored" | "centered" | "viewport-edge" | string;
+    };
+  };
 }
 
 /**

@@ -4,13 +4,32 @@ import type {
   UsagePropValue,
   UsageTreeNode,
 } from "../../types/data";
+import { type ReactNode, useState } from "react";
 import { renderUsageTree } from "../../lib/render-usage";
 import { bundle } from "../../types/bundle";
-import { Stack } from "@full-stack-ds/react";
+import { PortalTargetProvider, Stack } from "@full-stack-ds/react";
 import {
   materialTokenRows,
   tokenOverridesToStyle,
 } from "../../components/properties-panel/control-derivation";
+import type { ComponentContract } from "../../types/data";
+
+export type PortalPreviewKind = "overlay" | "anchored";
+
+const PORTAL_PREVIEW_CLASS: Record<PortalPreviewKind, string> = {
+  overlay: "preview-frame--portal-overlay",
+  anchored: "preview-frame--portal-anchored",
+};
+
+export function portalPreviewKind(
+  contract: ComponentContract,
+): PortalPreviewKind | null {
+  if (contract.portal?.enabled !== true) return null;
+  const strategy = contract.surface?.positioning?.strategy;
+  if (strategy === "centered" || strategy === "viewport-edge") return "overlay";
+  if (strategy === "anchored") return "anchored";
+  return null;
+}
 
 interface UsageExamplesProps {
   component: ComponentBundle;
@@ -113,6 +132,7 @@ export function UsageExamples({
         componentName={component.name}
         propOverrides={propOverrides}
         tokenStyle={tokenStyle}
+        portalKind={portalPreviewKind(component.contract)}
       />
       {rest.length > 0 && (
         <div style={{ display: "grid", gap: "var(--fsds-core-spacing-size-06)", marginTop: "var(--fsds-core-spacing-size-07)" }}>
@@ -123,6 +143,7 @@ export function UsageExamples({
               componentName={component.name}
               propOverrides={propOverrides}
               tokenStyle={tokenStyle}
+              portalKind={portalPreviewKind(component.contract)}
             />
           ))}
         </div>
@@ -138,6 +159,7 @@ interface ExampleFrameProps {
   propOverrides?: Record<string, unknown>;
   /** Scoped custom-property overrides spread onto the preview frame. */
   tokenStyle?: Record<string, string>;
+  portalKind: PortalPreviewKind | null;
 }
 
 function ExampleFrame({
@@ -146,6 +168,7 @@ function ExampleFrame({
   componentName,
   propOverrides,
   tokenStyle,
+  portalKind,
 }: ExampleFrameProps) {
   const renderedTree = applyRootUsagePropOverrides(
     example.tree,
@@ -166,7 +189,11 @@ function ExampleFrame({
         )}
       </Stack>
       <Stack
-        className="preview-frame stack-gap-00"
+        className={[
+          "preview-frame stack-gap-00",
+          portalKind && "preview-frame--portal",
+          portalKind && PORTAL_PREVIEW_CLASS[portalKind],
+        ].filter(Boolean).join(" ")}
         style={{
           padding: emphasize ? "var(--fsds-core-spacing-size-08)" : "var(--fsds-core-spacing-size-06)",
           alignItems: "center",
@@ -174,10 +201,38 @@ function ExampleFrame({
           ...tokenStyle,
         }}
       >
-        {renderUsageTree(renderedTree, {
-          resolveContract: (ref) => contractsByRef.get(ref),
-        })}
+        <PreviewContent portalKind={portalKind}>
+          {renderUsageTree(renderedTree, {
+            resolveContract: (ref) => contractsByRef.get(ref),
+          })}
+        </PreviewContent>
       </Stack>
     </div>
+  );
+}
+
+function PreviewContent({
+  portalKind,
+  children,
+}: {
+  portalKind: PortalPreviewKind | null;
+  children: ReactNode;
+}) {
+  const [portalTarget, setPortalTarget] = useState<HTMLDivElement | null>(null);
+  if (portalKind === null) return children;
+
+  return (
+    <>
+      <div
+        ref={setPortalTarget}
+        className="preview-frame__portal"
+        data-fsds-preview-portal={portalKind}
+      />
+      {portalTarget && (
+        <PortalTargetProvider target={portalTarget}>
+          {children}
+        </PortalTargetProvider>
+      )}
+    </>
   );
 }

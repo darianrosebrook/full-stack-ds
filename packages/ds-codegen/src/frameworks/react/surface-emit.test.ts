@@ -44,6 +44,15 @@ describe("react surface-emit — anchored presence", () => {
     expect(source).toContain("tooltip");
   });
 
+  it("routes portaled content through the composed portal target", () => {
+    const source = generateReactSurfaceComponentSource(irFor("Popover"));
+    expect(source).toContain("usePortalTarget");
+    expect(source).toContain("const portalTarget = usePortalTarget();");
+    expect(source).toContain("portalTarget !== null");
+    expect(source).toMatch(/createPortal\([\s\S]*portalTarget,\n\s*\)/);
+    expect(source).not.toMatch(/createPortal\([\s\S]*document\.body,\n\s*\)/);
+  });
+
   it("throws for a non-anchored surface", () => {
     expect(() => generateReactSurfaceComponentSource(irFor("Dialog"))).toThrow();
   });

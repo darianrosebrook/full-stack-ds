@@ -14,6 +14,7 @@ import {
 import { useAnchoredSurface, type SurfaceTriggerHandlers } from "../../primitives/surfaces/useAnchoredSurface";
 import { composeRefs, composeEventHandlers } from "../../primitives/surfaces/compose";
 import { createPortal } from "react-dom";
+import { usePortalTarget } from "../../primitives/hooks";
 import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";
 import "./Popover.css";
 // @generated:end
@@ -261,16 +262,18 @@ Popover.Content = function PopoverContent({
   ...rest
 }: PopoverContentProps) {
   const ctx = usePopoverContext();
+  const portalTarget = usePortalTarget();
   const position = useAnchoredPosition({
     anchor: ctx.anchorEl,
     content: ctx.contentEl,
     open: ctx.open,
     placement: ctx.placement ?? "auto",
     collision: "flip-shift",
+    boundary: portalTarget,
   });
   const { style: consumerStyle, ...restWithoutStyle } = rest;
   if (!ctx.open) return null;
-  return typeof document !== "undefined"
+  return portalTarget !== null
     ? createPortal(
         <div
           ref={(node) => ctx.registerContent(node)}
@@ -288,7 +291,7 @@ Popover.Content = function PopoverContent({
         >
           {children}
         </div>,
-        document.body,
+        portalTarget,
       )
     : (
         <div
