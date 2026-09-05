@@ -84,3 +84,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-react/src/primitives/hooks/__tests__/usePortal.test.tsx packages/ds-react/src/primitives/hooks/__tests__/useScrollLock.test.tsx
     exit_code: 0
     commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: anchored-position and emitter tests prove provider target lowering plus boundary-local coordinates
+    recorded_at: "2026-09-05T01:35:59.759Z"
+    command: pnpm exec vitest run packages/ds-react/src/primitives/surfaces/useAnchoredPosition.test.tsx packages/ds-codegen/src/frameworks/react/surface-emit.test.ts
+    exit_code: 0
+    commit_sha: "2750efc8241d9a9556cc0bf22953c465f19ada48"
