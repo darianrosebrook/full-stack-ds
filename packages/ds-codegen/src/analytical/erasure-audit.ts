@@ -335,6 +335,28 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
 }
 
 /**
+ * THE BINDINGS EVERY CERTIFIABLE REPORT CARRIES.
+ *
+ * A property of the report CONTRACT, shared by producer and consumer -- not of
+ * either instance. The comparisons used to enumerate one instance's own keys:
+ * inputs from `recorded.digests`, identities from `live.authority`. So removing
+ * a key deleted its own obligation, and the gate stayed green. Enumerating the
+ * union of both objects would not fix it either, since an identity missing from
+ * both sides still leaves the obligation set.
+ *
+ * `computeReport` builds from these, so producer and consumer cannot disagree
+ * about what a complete report is.
+ */
+export const REPORT_INPUTS: Record<string, () => Buffer> = {
+  "fixtures.jsonl": () => fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl")),
+  "witnesses.json": () => fs.readFileSync(WITNESSES_FILE),
+  "closures-stage2.json": () => fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json")),
+};
+
+/** The identities every certifiable report carries, by cause. */
+export const REPORT_AUTHORITIES = ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"] as const;
+
+/**
  * The digest of a specimen population, by MEMBERSHIP.
  *
  * One recipe, used both for the population a report NAMES and for the
@@ -530,11 +552,7 @@ export function computeReport(plans: Map<string, ErasurePlan> = loadPlans()): Fo
     // per-file list under-claims by construction, and `erasure-specimens.ts`
     // synthesizes every pair the measurement depends on while never appearing
     // in it.
-    digests: {
-      "fixtures.jsonl": sha(fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl"))),
-      "witnesses.json": sha(fs.readFileSync(WITNESSES_FILE)),
-      "closures-stage2.json": sha(fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json"))),
-    },
+    digests: Object.fromEntries(Object.entries(REPORT_INPUTS).map(([name, read]) => [name, sha(read())])),
     authority: { ...authorityIdentities(QUOTIENT_SCHEMA_VERSION), ruleDigest: ruleSurfaceDigest(RULE_SOURCES) },
     footprintBasisDigest: footprintBasisDigest(s.fixtures.map(canonical)),
     quotientSchemaVersion: QUOTIENT_SCHEMA_VERSION,
@@ -559,16 +577,22 @@ export function loadReport(file = FOOTPRINTS_FILE): FootprintReport {
 /** Which recorded facts the live tree no longer produces. */
 export function checkReport(recorded = loadReport(), live = computeReport()): { ok: boolean; problems: string[] } {
   const problems: string[] = [];
-  for (const [k, v] of Object.entries(recorded.digests)) {
-    if (live.digests[k] !== v) problems.push(`input ${k} moved since the report was recorded`);
+  // Over the REQUIRED set, so a comparison cannot be removed by removing the
+  // key it compares. Presence is established below, per side; this decides
+  // only whether the bound values agree.
+  for (const k of Object.keys(REPORT_INPUTS)) {
+    const was = recorded.digests?.[k];
+    const now = live.digests?.[k];
+    if (was !== undefined && now !== undefined && was !== now) problems.push(`input ${k} moved since the report was recorded`);
   }
   // Named separately from the data inputs, and by cause. "An input moved" is
   // one finding; "the coordinates moved" and "what an erasure does moved" are
   // two, and they call for different re-verification before re-recording.
   const recordedAuthority = recorded.authority as unknown as Record<string, string | number>;
   const liveAuthority = live.authority as unknown as Record<string, string | number>;
-  for (const k of Object.keys(liveAuthority).sort()) {
-    if (recordedAuthority?.[k] !== liveAuthority[k]) {
+  for (const k of REPORT_AUTHORITIES) {
+    if (recordedAuthority?.[k] === undefined || liveAuthority?.[k] === undefined) continue;
+    if (recordedAuthority[k] !== liveAuthority[k]) {
       problems.push(`authority ${k} moved since the report was recorded: ${String(recordedAuthority?.[k])} -> ${String(liveAuthority[k])}`);
     }
   }
@@ -598,6 +622,14 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
     const out: string[] = [];
     const q = r.scopes?.quotientLanguageInvalid;
     const named = r.specimens?.populationDigest;
+    // COMPLETENESS FIRST. Admission establishes that the required bindings are
+    // present; only then does comparison decide whether their values agree.
+    for (const k of Object.keys(REPORT_INPUTS)) {
+      if (r.digests?.[k] === undefined) out.push(`the ${side} report carries no binding for input ${k}; it cannot be shown which data produced it`);
+    }
+    for (const k of REPORT_AUTHORITIES) {
+      if ((r.authority as unknown as Record<string, unknown>)?.[k] === undefined) out.push(`the ${side} report carries no ${k} identity; it cannot be shown which authority produced it`);
+    }
     if (r.scopes?.sourceLanguageDeparture === undefined) out.push(`the ${side} report carries no sourceLanguageDeparture scope; it cannot state what it validated`);
     if (q === undefined) out.push(`the ${side} report carries no quotientLanguageInvalid scope; it cannot be shown to cover the population it names`);
     if (named === undefined) out.push(`the ${side} report names no population digest; coverage could only be compared by count, which two different populations can share`);

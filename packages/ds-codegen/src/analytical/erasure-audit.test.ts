@@ -12,7 +12,7 @@
 import { describe, expect, it } from "vitest";
 import { loadDerivation, loadLocators, loadPlans } from "./census.js";
 import { CONTRACTS_DIR } from "./emit-schemas.js";
-import { checkReport, claimedFootprints, computeReport, gateProblems, languageReports, loadReport, measure, specimens, type FootprintReport } from "./erasure-audit.js";
+import { checkReport, claimedFootprints, computeReport, gateProblems, languageReports, loadReport, measure, REPORT_AUTHORITIES, REPORT_INPUTS, specimens, type FootprintReport } from "./erasure-audit.js";
 import { executePlan, planAt, wouldChange } from "./erasure-plan.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
@@ -391,6 +391,49 @@ describe("the terminal invariant is measured over the population the report name
     }
   });
 
+  it("refuses a report that is missing a required binding, on either side or both", () => {
+    // The comparisons enumerated one instance's own keys -- inputs from
+    // `recorded.digests`, identities from `live.authority` -- so removing a key
+    // deleted its own obligation and the gate stayed green. Enumerating the
+    // union of both objects would not have fixed it: a binding missing from
+    // BOTH sides still leaves the obligation set. The required set is now a
+    // property of the report contract, which `computeReport` also builds from.
+    const clone = (o: FootprintReport) => JSON.parse(JSON.stringify(o)) as FootprintReport;
+    const verdict = (r: FootprintReport, l: FootprintReport) => gateProblems(r, l);
+
+    expect(verdict(recorded, live), "the positive control must be a complete, accepted report").toEqual([]);
+
+    // A bound input that MOVED is refused while its binding is present...
+    const moved = clone(live);
+    moved.digests["witnesses.json"] = "0".repeat(64);
+    expect(verdict(recorded, moved)).toEqual([expect.stringContaining("input witnesses.json moved")]);
+
+    // ...and removing the binding must not turn that refusal into acceptance.
+    const unbound = clone(recorded);
+    delete unbound.digests["witnesses.json"];
+    expect(verdict(unbound, moved).filter((p) => p.includes("no binding for input witnesses.json")).length, "removing the recorded binding suppressed its comparison").toBe(1);
+
+    // Each required binding, removed from each side and from both.
+    for (const k of Object.keys(REPORT_INPUTS)) {
+      const r = clone(recorded);
+      const l = clone(live);
+      delete r.digests[k];
+      expect(verdict(r, live), `RECORDED missing input ${k}`).toEqual([expect.stringContaining(`the RECORDED report carries no binding for input ${k}`)]);
+      delete l.digests[k];
+      expect(verdict(recorded, l), `CURRENT missing input ${k}`).toEqual([expect.stringContaining(`the CURRENT report carries no binding for input ${k}`)]);
+      expect(verdict(r, l).length, `${k} missing from BOTH sides`).toBe(2);
+    }
+    for (const k of REPORT_AUTHORITIES) {
+      const r = clone(recorded);
+      const l = clone(live);
+      delete (r.authority as unknown as Record<string, unknown>)[k];
+      expect(verdict(r, live), `RECORDED missing ${k}`).toEqual([expect.stringContaining(`the RECORDED report carries no ${k} identity`)]);
+      delete (l.authority as unknown as Record<string, unknown>)[k];
+      expect(verdict(recorded, l), `CURRENT missing ${k}`).toEqual([expect.stringContaining(`the CURRENT report carries no ${k} identity`)]);
+      expect(verdict(r, l).length, `${k} missing from BOTH sides`).toBe(2);
+    }
+  });
+
   it("the gate certifies ONE report, and names the cause it refused for", () => {
     // The `--check` decision, exercised directly rather than through argv.
     //
@@ -494,13 +537,14 @@ describe("the terminal invariant is measured over the population the report name
     // (5) THE FINDING IS ATTRIBUTED TO THE SUFFIX, not merely present.
     //
     // Asserting only that SOME finding exists does not establish that the
-    // suffix was validated: measured, every locator path this plan can target
-    // damages the authored prefix too (`field.transformation` 112/112,
-    // `relation.grain` 112/112, the narrowest being `field.temporality.kind`
-    // at 2 authored and 5 synthesized). No shape is exclusive to the suffix in
-    // the current locator vocabulary, so exclusivity cannot be the discriminator
-    // and a CONTRIBUTION count is used instead: the full population must report
-    // strictly more damaged specimens than the authored prefix alone.
+    // suffix was validated: of the six locator paths measured, every one damages
+    // the authored prefix too (`field.transformation` 112/96, `relation.grain`
+    // 112/96, `assertion.kind` 112/96, `assertion.aggregate.op` 110/93, and the
+    // narrowest, `field.temporality.kind`, 2/5). That is a statement about the
+    // six paths tried, not a proof that no expressible locator could be
+    // suffix-exclusive -- and the stronger claim is not needed, because a
+    // CONTRIBUTION count discriminates without it: the full population must
+    // report strictly more damaged specimens than the authored prefix alone.
     //
     // This is what separates detection from metadata. A mutant that skips
     // suffix validation INSIDE the loop, leaving the scope untouched, changes
