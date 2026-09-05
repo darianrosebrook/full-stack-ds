@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions at 8bb6e521: baseline PASS; 5/7 detected; Badge rtl.flipIcon and ssr.hydrateOn sentinels survived; 0 disposition mismatches; completed in 33m38s"
     recorded_at: "2026-09-05T01:34:31.156Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run audit:contract-oracle-mutations:selfcheck: count-preserving detected-to-survived swap yields dispositionMismatches=2 and unexpectedSurvivors=1; PASS (7 one-leaf mutants)"
+    recorded_at: "2026-09-05T01:34:43.393Z"
