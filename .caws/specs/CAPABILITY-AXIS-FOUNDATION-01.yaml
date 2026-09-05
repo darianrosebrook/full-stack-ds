@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/surface-ir.test.ts packages/ds-codegen/src/frameworks/no-component-name-lore.test.ts
     recorded_at: "2026-09-05T05:33:57.003Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run generate:check && pnpm exec vitest run packages/ds-codegen/src/form-control-ir.test.ts"
+    recorded_at: "2026-09-05T05:33:57.429Z"
