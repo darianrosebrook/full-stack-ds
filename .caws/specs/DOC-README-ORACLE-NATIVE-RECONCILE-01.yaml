@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "docs/README.md and docs/document_governance.md at ad279dc8 point to .caws/hooks/doc-frontmatter-check.sh, separate advisory edit-time warnings from docs:check-claims, and list tracked docs/*-audit records without a hand-authored count"
     recorded_at: "2026-09-05T01:53:51.705Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims (60 markers; freshness selftest 9/9), pnpm run docs:check-links (66 links), pnpm run lint (0 warnings), pnpm run governed:rail, pnpm test (258 files/3397 tests), pnpm run test:frameworks, pnpm run worktree:check, and git diff --exit-code all passed"
+    recorded_at: "2026-09-05T01:53:56.999Z"
