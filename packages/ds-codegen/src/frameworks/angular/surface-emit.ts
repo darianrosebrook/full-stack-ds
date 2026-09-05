@@ -34,7 +34,7 @@
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
   anchoredPortalsContentToBody,
-  isAnchoredPresenceKind,
+  isPartAnchoredSurface,
   resolveAnchoredSurfacePolicy,
   type AnchoredSurfacePolicy,
   type PublicDismissalProp,
@@ -49,7 +49,7 @@ export interface AngularSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface !== undefined && isPartAnchoredSurface(ir.surface);
 }
 
 export function generateAngularSurfaceFiles(ir: ComponentIR): AngularSurfaceFiles {

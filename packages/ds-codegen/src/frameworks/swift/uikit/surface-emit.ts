@@ -15,10 +15,10 @@
  * factory can dispatch without knowing surface internals.
  */
 import type { ComponentIR } from "../../../ir.js";
-import { isAnchoredPresenceKind } from "../../../semantics.js";
+import { isPartAnchoredSurface } from "../../../semantics.js";
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface != null && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface != null && isPartAnchoredSurface(ir.surface);
 }
 
 export interface UIKitSurfaceFiles {

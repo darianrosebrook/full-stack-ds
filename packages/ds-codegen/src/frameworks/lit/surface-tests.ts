@@ -9,7 +9,7 @@
  * cleanup.
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind, anchoredPortalsContentToBody } from "../../semantics.js";
+import { isPartAnchoredSurface, anchoredPortalsContentToBody } from "../../semantics.js";
 
 export function generateLitSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -18,7 +18,7 @@ export function generateLitSurfaceTest(ir: ComponentIR): string {
       `generateLitSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `Lit surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
         `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,

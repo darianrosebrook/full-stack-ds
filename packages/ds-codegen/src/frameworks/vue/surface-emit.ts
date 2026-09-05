@@ -30,7 +30,7 @@
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
   anchoredPortalsContentToBody,
-  isAnchoredPresenceKind,
+  isPartAnchoredSurface,
   resolveAnchoredSurfacePolicy,
   type AnchoredSurfacePolicy,
   type PublicDismissalProp,
@@ -47,7 +47,7 @@ export function isSurfaceComponent(ir: ComponentIR): boolean {
   // Kind-aware like svelte/angular/lit: non-anchored kinds (dialog, sheet,
   // toast, …) may declare a surface taxonomy block for fact-tracking while
   // keeping the existing generic/hook emission path on web.
-  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface !== undefined && isPartAnchoredSurface(ir.surface);
 }
 
 export function generateVueSurfaceFiles(ir: ComponentIR): VueSurfaceFiles {
@@ -57,7 +57,7 @@ export function generateVueSurfaceFiles(ir: ComponentIR): VueSurfaceFiles {
       `generateVueSurfaceFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `Vue surface emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
         `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,

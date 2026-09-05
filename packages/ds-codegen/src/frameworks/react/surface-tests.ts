@@ -13,7 +13,7 @@
  *   - onOpenChange fires on uncontrolled open
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind } from "../../semantics.js";
+import { isPartAnchoredSurface } from "../../semantics.js";
 
 export function generateReactSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -22,7 +22,7 @@ export function generateReactSurfaceTest(ir: ComponentIR): string {
       `generateReactSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `React surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
         `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,

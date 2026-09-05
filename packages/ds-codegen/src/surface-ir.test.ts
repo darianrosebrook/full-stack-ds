@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "./contract.js";
 import { buildComponentIR } from "./ir.js";
-import { selectorAnchoredRootPortal } from "./semantics.js";
+import {
+  isPartAnchoredSurface,
+  selectorAnchoredRootPortal,
+} from "./semantics.js";
 
 /**
  * Phase F-1 boundary tests. These exist to prove that the SurfaceIR builder
@@ -77,6 +80,7 @@ describe("buildSurfaceIR — anchored tooltip-like surface", () => {
     expect(ir.surface?.kind).toBe("tooltip");
     expect(ir.surface?.presence).toBe("ephemeral");
     expect(ir.surface?.modality).toBe("non-blocking");
+    expect(ir.surface?.attachment).toBe("part");
     // anchor and content are RESOLVED PartIRs — emitters get the part
     // metadata for free without re-resolving.
     expect(ir.surface?.anchor?.part.name).toBe("trigger");
@@ -90,6 +94,33 @@ describe("buildSurfaceIR — anchored tooltip-like surface", () => {
     expect(ir.surface?.dismissal).toEqual(["escape", "blur", "pointer-leave"]);
     expect(ir.surface?.openTriggers).toEqual(["hover", "focus"]);
     expect(ir.surface?.timing).toBeUndefined();
+  });
+
+  it("selects the anchored controller from axes rather than a kind allowlist", () => {
+    const ir = buildComponentIR(
+      makeContract({
+        name: "FutureMenu",
+        anatomy: {
+          parts: ["root", "trigger", "content"],
+          details: {
+            trigger: { role: "trigger", interactive: true },
+            content: { role: "content", aria: { role: "menu" } },
+          },
+        },
+        surface: {
+          kind: "menu",
+          presence: "persistent",
+          modality: "non-blocking",
+          anchor: { part: "trigger", relation: "controls-expanded" },
+          content: { part: "content", interactive: true },
+          positioning: { strategy: "anchored", collision: "flip-shift" },
+          openTriggers: ["click"],
+        },
+      }),
+    );
+
+    expect(ir.surface?.attachment).toBe("part");
+    expect(isPartAnchoredSurface(ir.surface!)).toBe(true);
   });
 });
 
@@ -544,6 +575,7 @@ describe("buildSurfaceIR — selector-sourced anchor (coachmark tour)", () => {
       path: "anchor",
       indexChannel: "step",
     });
+    expect(ir.surface?.attachment).toBe("selector");
     expect(ir.surface?.anchor).toBeUndefined();
   });
 

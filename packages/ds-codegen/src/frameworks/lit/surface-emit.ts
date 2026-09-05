@@ -42,7 +42,7 @@
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
-  isAnchoredPresenceKind,
+  isPartAnchoredSurface,
   resolveAnchoredSurfacePolicy,
   anchoredPortalsContentToBody,
   type AnchoredSurfacePolicy,
@@ -79,7 +79,7 @@ export interface LitSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
+  return ir.surface !== undefined && isPartAnchoredSurface(ir.surface);
 }
 
 export function generateLitSurfaceFiles(ir: ComponentIR): LitSurfaceFiles {

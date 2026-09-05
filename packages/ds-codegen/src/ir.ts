@@ -57,7 +57,8 @@ import {
   ROOT_ONLY_PARTS,
   SEMANTIC_ELEMENTS,
   getRootElement,
-  isAnchoredPresenceKind,
+  resolveSurfaceAttachment,
+  type SurfaceAttachment,
   isCompoundPart,
 } from "./semantics.js";
 import { resolveStyleProfile } from "./box-model.js";
@@ -1525,6 +1526,8 @@ export interface SurfaceIR {
   kind: ContractSurfaceKind;
   presence: ContractSurfacePresence;
   modality: ContractSurfaceModality;
+  /** Axis-derived attachment target used to select shared surface machinery. */
+  attachment: SurfaceAttachment;
   anchor: SurfaceAnchorIR | undefined;
   /** Selector-sourced anchor — mutually exclusive with `anchor` (validated
    * fail-loud in buildSurfaceIR). */
@@ -4412,6 +4415,7 @@ export function buildSurfaceIR(
     kind: surface.kind,
     presence: surface.presence,
     modality: surface.modality,
+    attachment: resolveSurfaceAttachment(surface),
     anchor,
     selectorAnchor,
     content,
@@ -5290,7 +5294,8 @@ export function expandOptionsForContract(
 
   const isAnchoredSurface =
     contract.surface !== undefined &&
-    isAnchoredPresenceKind(contract.surface.kind);
+    resolveSurfaceAttachment(contract.surface) === "part" &&
+    contract.surface.positioning?.strategy === "anchored";
 
   const surfacePartSelectors: Record<string, string> | undefined =
     isAnchoredSurface

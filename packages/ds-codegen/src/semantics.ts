@@ -192,7 +192,7 @@ export function resolveEventValueStrategy(args: {
 }
 
 // ---------------------------------------------------------------------------
-// Anchored-surface kind policy (CODEGEN-SURFACE-KIND-POLICY-01)
+// Presence-surface capability policy (CAPABILITY-AXIS-FOUNDATION-01)
 // ---------------------------------------------------------------------------
 
 /**
@@ -299,19 +299,42 @@ const DISMISSAL_PROP_TABLE: Record<
 };
 
 /**
- * Anchored-presence kinds that the substrate currently
- * understands. As more kinds (menu, select) get contracts on the
- * same substrate, they're added here. This set declares
- * "contract-level admissibility into the anchored family" — it is
- * NOT a per-framework progress allowlist.
+ * What a surface is attached to. This is derived from the contract's anchor
+ * and positioning axes; it is deliberately independent of the named surface
+ * kind so a future menu, select, or coachmark can reuse machinery without
+ * joining a kind allowlist.
  */
-const ANCHORED_PRESENCE_KINDS = new Set<ContractSurfaceKind>([
-  "tooltip",
-  "popover",
-]);
+export type SurfaceAttachment = "part" | "selector" | "viewport" | "flow";
 
-export function isAnchoredPresenceKind(kind: ContractSurfaceKind): boolean {
-  return ANCHORED_PRESENCE_KINDS.has(kind);
+export interface SurfaceAttachmentInput {
+  anchor?:
+    | { part: unknown }
+    | { selector: unknown }
+    | undefined;
+  positioning?: { strategy: ContractSurfacePositioningStrategy } | undefined;
+}
+
+export function resolveSurfaceAttachment(
+  surface: SurfaceAttachmentInput,
+): SurfaceAttachment {
+  if (surface.anchor && "selector" in surface.anchor) return "selector";
+  if (surface.anchor && "part" in surface.anchor) return "part";
+  return surface.positioning?.strategy === "inline" ? "flow" : "viewport";
+}
+
+export interface PartAnchoredSurfaceInput {
+  attachment: SurfaceAttachment;
+  positioning?: { strategy: ContractSurfacePositioningStrategy } | undefined;
+}
+
+/** True when the compound trigger/content anchored controller is required. */
+export function isPartAnchoredSurface(
+  surface: PartAnchoredSurfaceInput,
+): boolean {
+  return (
+    surface.attachment === "part" &&
+    surface.positioning?.strategy === "anchored"
+  );
 }
 
 /**
@@ -321,14 +344,15 @@ export function isAnchoredPresenceKind(kind: ContractSurfaceKind): boolean {
  */
 export interface SurfacePolicyInput {
   kind: ContractSurfaceKind;
+  attachment: SurfaceAttachment;
+  positioning?: { strategy: ContractSurfacePositioningStrategy } | undefined;
   dismissal: readonly ContractSurfaceDismissalMode[];
   content?: { part: { details?: { aria?: { role?: string } } } };
 }
 
 /**
- * Resolve the anchored-surface policy for an IR surface. Throws
- * when the kind is not in the anchored family — emitters should
- * gate on `isAnchoredPresenceKind` before calling.
+ * Resolve the part-anchored surface policy for an IR surface. Throws when the
+ * attachment and positioning axes do not select that substrate.
  */
 /**
  * Auto-dismiss policy for ephemeral surfaces (FEAT-SURFACE-DWELL-ANCHOR-001).
@@ -500,15 +524,13 @@ export function selectorAnchoredRootPortal(
 export function resolveAnchoredSurfacePolicy(
   surface: SurfacePolicyInput,
 ): AnchoredSurfacePolicy {
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
-      `resolveAnchoredSurfacePolicy: kind "${surface.kind}" is not in the anchored-presence family. ` +
-        `Allowed: ${[...ANCHORED_PRESENCE_KINDS].join(", ")}.`,
+      `resolveAnchoredSurfacePolicy: surface kind "${surface.kind}" does not declare part attachment with anchored positioning.`,
     );
   }
   const contractRole = surface.content?.part.details?.aria?.role;
-  const defaultContentRole =
-    contractRole ?? (surface.kind === "tooltip" ? "tooltip" : null);
+  const defaultContentRole = contractRole ?? null;
 
   const publicDismissalProps = surface.dismissal.map(
     (mode) => DISMISSAL_PROP_TABLE[mode],
