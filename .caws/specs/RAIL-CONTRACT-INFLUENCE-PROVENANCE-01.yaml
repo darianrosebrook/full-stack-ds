@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "targeted full SSR profile at 74512dac: baseline passed, mutation survived 18 stages, restore-generation passed, inconclusive=0, disposition/provenance/marker mismatches=0; source worktree stayed clean"
     recorded_at: "2026-09-05T03:48:33.166Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "full 11-mutant measurement at 71dbe276 plus post-hardening selfcheck and targeted full SSR verification at 74512dac; pnpm run lint, docs:check-claims, docs:check-links, and worktree:check all exit 0"
+    recorded_at: "2026-09-05T03:48:41.888Z"
