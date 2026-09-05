@@ -83,3 +83,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec playwright test e2e/runtime-rail.spec.ts --grep Status (10/10); live Status usage examples resolved check and triangle-alert
     recorded_at: "2026-09-05T01:08:20.886Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/validation/icon-refs.test.ts (mapped missing-glyph rejection)
+    recorded_at: "2026-09-05T01:08:22.630Z"
