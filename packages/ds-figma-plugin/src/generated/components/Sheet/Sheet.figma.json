@@ -547,6 +547,7 @@
     "kind": "sheet",
     "presence": "persistent",
     "modality": "blocking",
+    "attachment": "viewport",
     "content": {
       "part": {
         "name": "content",

@@ -1483,7 +1483,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
     lines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
   }
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: field-association provider/consumer.
-  if (ir.fieldAssociation?.provides || ir.fieldAssociation?.consumes) {
+  if (ir.fieldAssociation?.provides || ir.fieldAssociation?.consumerPart) {
     lines.push(
       `import { FieldAssociationService } from "../../primitives/index.js";`,
     );
@@ -1630,7 +1630,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // and class getters for idref attributes that need conditions/joining.
   const needsInstanceId = componentNeedsInstanceId(ir);
   const assocProvides = ir.fieldAssociation?.provides;
-  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const assocConsumerPart = ir.fieldAssociation?.consumerPart;
   const idRefGetters = new Map<DomNodeIR, Map<string, string>>();
   const idRefGetterLines: string[] = [];
   {
@@ -1710,7 +1710,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     contentTransformGetters,
-    fieldAssociationConsumer: assocConsumes,
+    fieldAssociationConsumerPart: assocConsumerPart,
     idRefGetters,
     rootSelectorAnchored: selectorAnchor !== null,
     ...(overlayClickTrigger && booleanChannel
@@ -1842,7 +1842,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       `  }));`,
     );
   }
-  if (assocConsumes) {
+  if (assocConsumerPart) {
     lines.push(
       `  protected fieldAssociation = inject(FieldAssociationService, { optional: true });`,
     );
@@ -2452,11 +2452,9 @@ interface AngularRenderContext {
    */
   rootSelectorAnchored?: boolean;
   /**
-   * True when the component consumes ambient field association
-   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `[attr.id]` /
-   * `[attr.aria-describedby]` from the optionally injected service.
+   * Anatomy part that consumes ambient field association.
    */
-  fieldAssociationConsumer?: boolean;
+  fieldAssociationConsumerPart?: string;
   /**
    * Class-getter names for idref attributes that need conditions or
    * joining (FEAT-A11Y-LABEL-ID-ASSOCIATION-01), keyed by node identity
@@ -2594,16 +2592,18 @@ function renderAngularDomNode(
     }
   }
 
+  if (
+    ctx.fieldAssociationConsumerPart &&
+    ctx.fieldAssociationConsumerPart === node.part
+  ) {
+    attrs.push(`[attr.id]="fieldAssociation?.current?.controlId"`);
+    attrs.push(
+      `[attr.aria-describedby]="fieldAssociation?.current?.describedBy"`,
+    );
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
-    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
-    // ambient field association (optional DI) on its root element.
-    if (ctx.fieldAssociationConsumer) {
-      attrs.push(`[attr.id]="fieldAssociation?.current?.controlId"`);
-      attrs.push(
-        `[attr.aria-describedby]="fieldAssociation?.current?.describedBy"`,
-      );
-    }
     if (ctx.autoDismissPause) {
       attrs.push(
         `(pointerenter)="autoDismiss.pauseListeners.pointerenter()"`,

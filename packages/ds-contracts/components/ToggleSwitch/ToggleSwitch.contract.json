@@ -4,6 +4,12 @@
   "description": "Binary switch control rendered as a button[role=switch] with an adjacent label.",
   "layer": "primitive",
   "category": "action",
+  "formControl": {
+    "part": "root",
+    "channel": "checked",
+    "valueModel": "boolean",
+    "commit": "activation"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -47,9 +53,6 @@
         "aria-label": "prop:ariaLabel",
         "aria-describedby": "prop:ariaDescribedby",
         "disabled": "prop:disabled"
-      },
-      "events": {
-        "click": "channel:checked.onChange"
       }
     }
   },
@@ -181,30 +184,7 @@
     }
   },
   "form": {
-    "participates": true,
-    "inputType": "checkbox",
-    "name": {
-      "prop": "name"
-    },
-    "serialization": {
-      "valueType": "string",
-      "valueSource": "static:on",
-      "omitWhen": "unchecked"
-    },
-    "validity": {
-      "model": "native",
-      "ariaAttributes": [
-        "aria-disabled"
-      ]
-    },
-    "labeling": {
-      "strategy": "associated-label",
-      "required": true,
-      "via": [
-        "aria-labelledby",
-        "aria-label"
-      ]
-    }
+    "participates": false
   },
   "focus": {
     "strategy": "auto",

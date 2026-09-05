@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useSwitch } from "./useSwitch.svelte.js";
+import { useFieldAssociation } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -51,13 +52,17 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const fieldAssociation = useFieldAssociation();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <label class={classes} data-fsds-component="switch">
-  <input class={'switch__input'} type="checkbox" role="switch" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} />
+  <input class={'switch__input'} type="checkbox" role="switch" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />
   <span class={'switch__track'} aria-hidden="true">
     <span class={'switch__thumb'}></span>
   </span>

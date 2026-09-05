@@ -10,7 +10,7 @@
  * Stack: Jest + jest-preset-angular + TestBed. Native event dispatch.
  */
 import type { ComponentIR } from "../../ir.js";
-import { anchoredPortalsContentToBody, isAnchoredPresenceKind } from "../../semantics.js";
+import { anchoredPortalsContentToBody, isPartAnchoredSurface } from "../../semantics.js";
 
 export function generateAngularSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -19,10 +19,10 @@ export function generateAngularSurfaceTest(ir: ComponentIR): string {
       `generateAngularSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `Angular surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
-        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
+        `Declare part attachment with anchored positioning when its substrate is ready.`,
     );
   }
   // Test-body shape is kind-specific (Tooltip's hover/focus contract

@@ -4,6 +4,13 @@
   "description": "Boolean toggle for enabling or disabling a setting. Semantically equivalent to a checkbox but with a sliding thumb affordance.",
   "layer": "primitive",
   "category": "action",
+  "fieldAssociation": "control",
+  "formControl": {
+    "part": "input",
+    "channel": "checked",
+    "valueModel": "boolean",
+    "commit": "change"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -56,9 +63,6 @@
             "disabled": "prop:disabled",
             "name": "prop:name",
             "value": "prop:value"
-          },
-          "events": {
-            "change": "channel:checked.onChange"
           }
         },
         {

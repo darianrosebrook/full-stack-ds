@@ -8,7 +8,7 @@
  * consumer-handler preservation including the preventDefault opt-out.
  */
 import type { ComponentIR } from "../../ir.js";
-import { anchoredPortalsContentToBody, isAnchoredPresenceKind } from "../../semantics.js";
+import { anchoredPortalsContentToBody, isPartAnchoredSurface } from "../../semantics.js";
 
 export function generateVueSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -17,10 +17,10 @@ export function generateVueSurfaceTest(ir: ComponentIR): string {
       `generateVueSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (!isAnchoredPresenceKind(surface.kind)) {
+  if (!isPartAnchoredSurface(surface)) {
     throw new Error(
       `Vue surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
-        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
+        `Declare part attachment with anchored positioning when its substrate is ready.`,
     );
   }
   // Content is teleported to document.body when the contract portals

@@ -34,7 +34,7 @@ let nextInstanceId = 0;
     <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="(label ?? 'Command palette')">
       <div [ngClass]="'command__inputWrapper'">
         <fsds-icon [ngClass]="'command__searchIcon'" name="search" size="sm"></fsds-icon>
-        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [attr.aria-label]="(searchLabel ?? 'Search commands')" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" [attr.aria-controls]="instanceId + '-list'" />
+        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" (input)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [attr.aria-label]="(searchLabel ?? 'Search commands')" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" [attr.aria-controls]="instanceId + '-list'" />
       </div>
       <div [ngClass]="'command__list'" role="listbox" [attr.id]="instanceId + '-list'" [attr.aria-labelledby]="instanceId + '-input'">
         <div [ngClass]="'command__empty'"></div>

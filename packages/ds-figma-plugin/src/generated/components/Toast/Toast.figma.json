@@ -431,6 +431,7 @@
     "kind": "toast",
     "presence": "ephemeral",
     "modality": "non-blocking",
+    "attachment": "viewport",
     "content": {
       "part": {
         "name": "item",

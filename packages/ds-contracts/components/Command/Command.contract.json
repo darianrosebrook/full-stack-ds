@@ -4,6 +4,12 @@
   "description": "Command palette modal for keyboard-driven search and action execution.",
   "layer": "composer",
   "category": "structure",
+  "formControl": {
+    "part": "input",
+    "channel": "search",
+    "valueModel": "text",
+    "commit": "input"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -203,9 +209,6 @@
                     "aria-label": "prop:searchLabel",
                     "placeholder": "prop:placeholder",
                     "value": "channel:search.value"
-                  },
-                  "events": {
-                    "change": "channel:search.onChange"
                   }
                 }
               ]

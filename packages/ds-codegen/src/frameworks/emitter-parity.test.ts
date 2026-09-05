@@ -307,13 +307,15 @@ describe("React component scan identity", () => {
 });
 
 describe("renderBinding: host attribute drives event-handler shape", () => {
-  it("boolean channel onChange → e.target.checked unwrap", () => {
+  it("boolean channel onChange → currentTarget.checked unwrap", () => {
     const contract = makeChannelContract("onChange", "boolean");
     const react = generateReactComponentSource(
       buildComponentIR(contract),
       "../../primitives",
     );
-    expect(react).toContain("(e) => setExpanded(e.target.checked)");
+    expect(react).toContain(
+      "(e) => setExpanded((e.currentTarget as HTMLInputElement).checked)",
+    );
     expect(react).not.toMatch(/onClick=\{.*e\.target\.checked/);
   });
 
@@ -330,13 +332,15 @@ describe("renderBinding: host attribute drives event-handler shape", () => {
     expect(react).toContain("setExpanded(!expanded)");
   });
 
-  it("string channel onChange → e.target.value unwrap", () => {
+  it("string channel onChange → currentTarget.value unwrap", () => {
     const contract = makeChannelContract("onChange", "string");
     const react = generateReactComponentSource(
       buildComponentIR(contract),
       "../../primitives",
     );
-    expect(react).toContain("(e) => setExpanded(e.target.value)");
+    expect(react).toContain(
+      "(e) => setExpanded((e.currentTarget as HTMLInputElement).value)",
+    );
   });
 
   it("Vue: boolean channel onClick → toggle callback", () => {

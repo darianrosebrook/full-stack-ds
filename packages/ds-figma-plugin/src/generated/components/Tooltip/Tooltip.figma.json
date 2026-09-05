@@ -278,6 +278,7 @@
     "kind": "tooltip",
     "presence": "ephemeral",
     "modality": "non-blocking",
+    "attachment": "part",
     "anchor": {
       "part": {
         "name": "trigger",

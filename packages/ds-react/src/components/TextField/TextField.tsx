@@ -97,7 +97,7 @@ export function TextField({
     <label className="text-field__label" id={`${instanceId}-label`}>
       {slots?.label}
     </label>
-    <input className="text-field__field" onChange={(e) => setValue(e.target.value)} type={type} value={value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-labelledby={slots?.label ? `${instanceId}-label` : undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, slots?.error && invalid ? `${instanceId}-error` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined} />
+    <input className="text-field__field" onChange={(e) => setValue((e.currentTarget as HTMLInputElement).value)} type={type} value={value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-labelledby={slots?.label ? `${instanceId}-label` : undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, slots?.error && invalid ? `${instanceId}-error` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined} />
     <span className="text-field__description" id={`${instanceId}-description`}>
       {slots?.description}
     </span>

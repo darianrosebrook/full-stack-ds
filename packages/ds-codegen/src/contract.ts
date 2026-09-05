@@ -789,6 +789,18 @@ export interface ContractForm {
 }
 
 /**
+ * Interactive control capability, separate from native form serialization.
+ * `form` answers whether/how a value enters FormData; this block identifies
+ * the rendered control, its value channel, and its commit timing.
+ */
+export interface ContractFormControl {
+  part: string;
+  channel: string;
+  valueModel: 'text' | 'boolean';
+  commit: 'input' | 'change' | 'activation';
+}
+
+/**
  * Geometry / default-affordance axis (MORPHOLOGY-GEOMETRY-PROFILE-01). Closed
  * enum mirroring `component.contract.schema.json#/properties/morphology`. When
  * present, selects a StyleProfile (box-model.ts#STYLE_PROFILES) layered BETWEEN
@@ -858,6 +870,7 @@ export interface ComponentContract {
     }>;
   };
   form?: ContractForm;
+  formControl?: ContractFormControl;
   motion?: ContractMotion;
   focus?: ContractFocus;
   portal?: ContractPortal;

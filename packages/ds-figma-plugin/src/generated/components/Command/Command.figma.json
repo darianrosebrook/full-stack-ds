@@ -661,6 +661,7 @@
     "kind": "dialog",
     "presence": "persistent",
     "modality": "blocking",
+    "attachment": "viewport",
     "content": {
       "part": {
         "name": "dialog",

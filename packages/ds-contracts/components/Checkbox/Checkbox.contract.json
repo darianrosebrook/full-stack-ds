@@ -4,6 +4,13 @@
   "description": "Binary or tri-state input for boolean selection. Supports indeterminate state for partial group selection.",
   "layer": "primitive",
   "category": "input",
+  "fieldAssociation": "control",
+  "formControl": {
+    "part": "input",
+    "channel": "checked",
+    "valueModel": "boolean",
+    "commit": "change"
+  },
   "anatomy": {
     "parts": [
       "root",
@@ -55,9 +62,6 @@
           },
           "properties": {
             "indeterminate": "prop:indeterminate"
-          },
-          "events": {
-            "change": "channel:checked.onChange"
           }
         },
         {

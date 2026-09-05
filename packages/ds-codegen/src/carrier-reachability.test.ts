@@ -239,6 +239,7 @@ describe("validateStylesCarrierReachability", () => {
         modality: "non-blocking",
         anchor: { part: "trigger", relation: "describedby" },
         content: { part: "content", interactive: false },
+        positioning: { strategy: "anchored" },
         openTriggers: ["hover", "focus"],
         dismissal: ["escape", "blur"],
       },

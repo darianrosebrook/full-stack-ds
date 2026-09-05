@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useSwitch } from "./useSwitch.js";
+import { FieldAssociationService } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +24,7 @@ export type SwitchSize = "sm" | "md" | "lg";
   imports: [NgClass],
   host: { "data-fsds-component": "switch" },
   template: `<label [ngClass]="classes()">
-  <input [ngClass]="'switch__input'" type="checkbox" role="switch" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" />
+  <input [ngClass]="'switch__input'" type="checkbox" role="switch" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" [attr.id]="fieldAssociation?.current?.controlId" [attr.aria-describedby]="fieldAssociation?.current?.describedBy" />
   <span [ngClass]="'switch__track'" aria-hidden="true">
     <span [ngClass]="'switch__thumb'"></span>
   </span>
@@ -40,6 +41,7 @@ export class SwitchComponent {
   @Input() name?: string;
   @Input() value?: string;
   @Input() class?: string;
+  protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useSwitch({

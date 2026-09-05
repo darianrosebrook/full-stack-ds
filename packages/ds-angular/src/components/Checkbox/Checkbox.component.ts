@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useCheckbox } from "./useCheckbox.js";
+import { FieldAssociationService } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +24,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
   imports: [NgClass],
   host: { "data-fsds-component": "checkbox" },
   template: `<label [ngClass]="classes()">
-  <input [ngClass]="'checkbox__input'" type="checkbox" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="ariaLabelledby" [attr.aria-checked]="(indeterminate ? 'mixed' : behavior.checked())" [indeterminate]="indeterminate" />
+  <input [ngClass]="'checkbox__input'" type="checkbox" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="ariaLabelledby" [attr.aria-checked]="(indeterminate ? 'mixed' : behavior.checked())" [indeterminate]="indeterminate" [attr.id]="fieldAssociation?.current?.controlId" [attr.aria-describedby]="fieldAssociation?.current?.describedBy" />
   <span [ngClass]="'checkbox__indicator'" aria-hidden="true"></span>
 </label>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,7 @@ export class CheckboxComponent {
   @Input() ariaLabel?: string;
   @Input() ariaLabelledby?: string;
   @Input() class?: string;
+  protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useCheckbox({

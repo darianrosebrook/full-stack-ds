@@ -306,6 +306,9 @@
     "form": {
       "$ref": "#/$defs/formContract"
     },
+    "formControl": {
+      "$ref": "#/$defs/formControlContract"
+    },
     "motion": {
       "$ref": "#/$defs/motionContract"
     },
@@ -1637,6 +1640,44 @@
               "channel"
             ]
           }
+        }
+      }
+    },
+    "formControlContract": {
+      "type": "object",
+      "description": "Declares the interactive control capability independently from native form serialization. The target part, value channel, value model, and commit semantic are lowered once into IR and shared by framework emitters.",
+      "required": [
+        "part",
+        "channel",
+        "valueModel",
+        "commit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "part": {
+          "type": "string",
+          "description": "Rendered anatomy part that owns focus, the value interaction, and any ambient Field association."
+        },
+        "channel": {
+          "type": "string",
+          "description": "Controlled/uncontrolled channel updated by this control."
+        },
+        "valueModel": {
+          "type": "string",
+          "enum": [
+            "text",
+            "boolean"
+          ],
+          "description": "Semantic shape of the value admitted by this capability. Composite selection controls require a separate capability."
+        },
+        "commit": {
+          "type": "string",
+          "enum": [
+            "input",
+            "change",
+            "activation"
+          ],
+          "description": "When a user interaction commits the channel: per-edit input, platform change, or an activation toggle. Codegen maps this fact to each target's event idiom."
         }
       }
     },
