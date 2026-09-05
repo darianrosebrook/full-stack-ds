@@ -242,6 +242,8 @@ describe("evidence earned under one erasure definition is refused under another"
     freeze: (await import(/* @vite-ignore */ path.join(dir, "freeze.ts"))) as typeof import("./freeze.js"),
     plan: (await import(/* @vite-ignore */ path.join(dir, "erasure-plan.ts"))) as typeof import("./erasure-plan.js"),
     quotient: (await import(/* @vite-ignore */ path.join(dir, "quotient.ts"))) as typeof import("./quotient.js"),
+    quotientImage: (await import(/* @vite-ignore */ path.join(dir, "quotient-image.ts"))) as typeof import("./quotient-image.js"),
+    closure: (await import(/* @vite-ignore */ path.join(dir, "closure.ts"))) as typeof import("./closure.js"),
   });
   /** Arity truncates to ONE whatever the floor. In-slot, idempotent, schema-shaped; wrong. */
   const TRUNCATE_TO_ONE = {
@@ -259,6 +261,7 @@ describe("evidence earned under one erasure definition is refused under another"
       expect(m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION)).toEqual(authorityIdentities(QUOTIENT_SCHEMA_VERSION));
       expect(gateProblems(loadReport(), m.audit.computeReport())).toEqual([]);
       expect(checkFreeze(loadFreeze(), m.freeze.computeFreeze({}, loadFreeze().fixtures)).ok).toBe(true);
+      expect(m.closure.checkClosures().problems).toEqual([]);
     } finally {
       copy.remove();
     }
@@ -299,6 +302,103 @@ describe("evidence earned under one erasure definition is refused under another"
       const fr = checkFreeze(loadFreeze(), m.freeze.computeFreeze({}, loadFreeze().fixtures));
       expect(fr.ok).toBe(false);
       expect(fr.divergences.map(adjudicationKey)).toContain(`authority:erasureAuthorityDigest@${here.erasureAuthorityDigest}->${there.erasureAuthorityDigest}`);
+    } finally {
+      copy.remove();
+    }
+  }, 60_000);
+
+  /**
+   * "WHEN ANY OF THOSE INPUTS MOVES." The criterion names six; each is one row
+   * here, changed in the copy by one line, and the consumers refuse by the cause
+   * the partition assigns it. The locator machinery is the coordinate basis, not
+   * the erasure authority -- a locator decides WHERE a coordinate lives, and the
+   * evidence is bound to that identity too -- so its row is expected to move
+   * coordinateBasisDigest and nothing else. The schema version moves two: the
+   * module that declares it is owned by the erasure authority, and the version
+   * itself is an identity.
+   */
+  const INPUTS: { input: string; mutate: { file: string; from: string; to: string }; moves: string[] }[] = [
+    {
+      input: "the canonical quotient-image serializer (attribution kept, so two images differing only by which erasure opened a hole stop colliding)",
+      mutate: { file: "quotient.ts", from: 'if (isForgotten(v)) return { [Q]: "forgotten" };', to: "if (isForgotten(v)) return v;" },
+      moves: ["erasureAuthorityDigest"],
+    },
+    {
+      input: "the ordering graph (ties and edges reversed)",
+      mutate: {
+        file: "erasure-plan.ts",
+        from: "return [...plans].sort((a, b) => rank(a.id, new Set()) - rank(b.id, new Set()));",
+        to: "return [...plans].sort((a, b) => rank(b.id, new Set()) - rank(a.id, new Set()));",
+      },
+      moves: ["erasureAuthorityDigest"],
+    },
+    {
+      input: "the quotient schema version",
+      mutate: { file: "quotient-image.ts", from: "export const QUOTIENT_SCHEMA_VERSION = 1;", to: "export const QUOTIENT_SCHEMA_VERSION = 2;" },
+      moves: ["erasureAuthorityDigest", "quotientSchemaVersion"],
+    },
+    {
+      input: "the schema-derived locator machinery (the declaration's arity floor no longer rides on the locator)",
+      mutate: {
+        file: "census.ts",
+        from: "const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}) };",
+        to: "const locator: StructuralLocator = { path: rawPath, steps };",
+      },
+      moves: ["coordinateBasisDigest"],
+    },
+  ];
+  for (const row of INPUTS) {
+    it(`moving ${row.input} is refused by both consumers, by cause`, async () => {
+      const copy = relocate(row.mutate);
+      try {
+        const m = await load(copy.dir);
+        const here = authorityIdentities(QUOTIENT_SCHEMA_VERSION) as unknown as Record<string, string | number>;
+        const there = m.authority.authorityIdentities(m.quotientImage.QUOTIENT_SCHEMA_VERSION) as unknown as Record<string, string | number>;
+        expect(Object.keys(here).filter((k) => here[k] !== there[k]).sort()).toEqual([...row.moves].sort());
+        const problems = gateProblems(loadReport(), m.audit.computeReport());
+        const fr = checkFreeze(loadFreeze(), m.freeze.computeFreeze({}, loadFreeze().fixtures));
+        expect(fr.ok).toBe(false);
+        for (const k of row.moves) {
+          expect(problems).toContain(`consistency: authority ${k} moved since the report was recorded: ${here[k]} -> ${there[k]}`);
+          expect(fr.divergences.map(adjudicationKey)).toContain(`authority:${k}@${here[k]}->${there[k]}`);
+        }
+      } finally {
+        copy.remove();
+      }
+    }, 60_000);
+  }
+
+  /**
+   * CLOSURE EVIDENCE IS RE-EARNED, NOT BOUND. The closure ledger carries no
+   * authority block. What it records -- each closure's normalization, footprints,
+   * minimum raw edit, promotion and dependencies -- are CLAIMS that
+   * `checkClosures` derives again from the live census, executor and witnesses
+   * and compares. So a moved erasure input does not reject the ledger by
+   * digest; it re-derives and refuses wherever the derivation moved. That is
+   * the "or reevaluation" arm of the obligation, and it is what is shown here:
+   * change how a footprint is computed (locator containment), in the copy, and the
+   * copy's own closure gate refuses the recorded normalizations (and the
+   * dependencies declared from them). What is NOT
+   * shown, and is not implemented: a ledger entry whose derivation happens to
+   * agree under the new authority is accepted without saying which authority
+   * it was authored under.
+   */
+  it("closure evidence is re-derived under the live executor: a moved footprint rule refuses the recorded normalizations", async () => {
+    // Containment is what a footprint is computed by: with it false, every
+    // derived footprint collapses to the plan itself and the recorded ones no
+    // longer equal the derived set.
+    const copy = relocate({
+      file: "erasure-plan.ts",
+      from: "return a.length <= b.length && a.every((s, i) => JSON.stringify(s) === JSON.stringify(b[i]));",
+      to: "return false;",
+    });
+    try {
+      const m = await load(copy.dir);
+      const r = m.closure.checkClosures();
+      expect(r.problems.filter((p) => /authored normalization does not equal the derived set/.test(p)).length).toBeGreaterThan(0);
+      // And the identity moved with it, so a RECORD bound to it (the footprint report) is refused as well.
+      const there = m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION);
+      expect(there.erasureAuthorityDigest).not.toBe(authorityIdentities(QUOTIENT_SCHEMA_VERSION).erasureAuthorityDigest);
     } finally {
       copy.remove();
     }
