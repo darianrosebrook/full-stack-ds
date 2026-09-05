@@ -1,13 +1,13 @@
 {
   "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. No result here is claimed for an integration candidate: none exists yet.",
   "spec": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
-  "writtenAt": "2026-09-05T06:54:24+00:00",
+  "writtenAt": "2026-09-05T07:00:52+00:00",
   "pins": {
-    "testedWorktreeTip": "c8f2c19281392b1a1920f1cc9c7274467211d859",
-    "selectedMainCommitAtWrite": "4255ba71f92dd62e822084cdbcc0199669777668",
+    "testedWorktreeTip": "e13eb47f95bc1b549e1e5af75af7c07944b65436",
+    "selectedMainCommitAtWrite": "e57e365c2fe286ac8df5b9dfe9f88cbabc8e7cc6",
     "mergeBase": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
-    "branchCommits": 25,
-    "mainAheadAtWrite": 299,
+    "branchCommits": 28,
+    "mainAheadAtWrite": 309,
     "mainChangesUnderAnalyticalClosure": 0,
     "mainChangesToSharedFiles": [
       "package.json"
@@ -51,7 +51,7 @@
   "observedOnPinnedTip": {
     "analyticalSuite": {
       "command": "npx vitest run packages/ds-codegen/src/analytical",
-      "result": "680 passed (680)",
+      "result": "682 passed (682)",
       "consecutiveRuns": 6,
       "note": "Six separately printed summaries. An earlier claim of three green runs (67b1008f) was false and corrected in 6ef5e993."
     },
@@ -172,7 +172,24 @@
       ],
       "open": [
         {
+          "claim": "no independent review yet of the completed admission pass; the reviewer's combined A1-A2 bar also names A2's compile-time negative test, which is open under A2"
+        }
+      ],
+      "closedThisTip": [
+        {
           "claim": "scope-object and population-field ADMISSION: a required scope present as null/false/0/'' removes its own comparison; null or absent population digests agree; recorded scope count 999 and recorded total=0 pass",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "admits each population description before comparing it, on either side"
+            }
+          ],
+          "mutantsKilled": [
+            "scope admitted on === undefined only",
+            "drop total coherence",
+            "drop source-scope count relation",
+            "admit any scope digest"
+          ],
           "counterexamples": [
             "recorded sourceLanguageDeparture scope = null; current unchanged -> ACCEPTED",
             "recorded scope = null AND current source digest changed -> ACCEPTED",
@@ -182,15 +199,26 @@
             "recorded total=0 and quotient count=0, components unchanged -> ACCEPTED"
           ],
           "reproducedOn": "c8f2c19281392b1a1920f1cc9c7274467211d859",
-          "note": "Requires corruption of the RECORDED side only; does not depend on a defective current producer."
+          "note": "Required corruption of the RECORDED side only; did not depend on a defective current producer. Repaired on this tip."
         },
         {
-          "claim": "quotientSchemaVersion COMPATIBILITY: shape is admitted, support is not checked; the duplicate top-level declaration is not compared to authority.quotientSchemaVersion",
+          "claim": "quotientSchemaVersion COMPATIBILITY: shape was admitted, support was not checked; the top-level declaration was not compared to authority.quotientSchemaVersion",
           "counterexamples": [
             "quotientSchemaVersion = 999 on both (authority and top-level) -> ACCEPTED",
             "recorded top-level = 'banana', authority = 1 -> ACCEPTED"
           ],
-          "reproducedOn": "c8f2c19281392b1a1920f1cc9c7274467211d859"
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "admits only the quotient-language version this checker validates, and checks the top-level copy against it"
+            }
+          ],
+          "mutantsKilled": [
+            "drop version compatibility",
+            "drop top-level/authority agreement"
+          ],
+          "reproducedOn": "c8f2c19281392b1a1920f1cc9c7274467211d859",
+          "note": "Supported version taken from QUOTIENT_SCHEMA_VERSION in quotient-image.ts, the validator's own; not a second registry."
         }
       ]
     },
@@ -455,6 +483,13 @@
       },
       {
         "subject": "value admission",
+        "distinct": 6,
+        "assertionKills": 6,
+        "survivors": 0,
+        "executionFailures": 0
+      },
+      {
+        "subject": "population-description admission + version compatibility",
         "distinct": 6,
         "assertionKills": 6,
         "survivors": 0,
