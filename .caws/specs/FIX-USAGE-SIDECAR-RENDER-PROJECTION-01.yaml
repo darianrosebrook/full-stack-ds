@@ -54,3 +54,8 @@ contracts:
   - name: 'usage-sidecar-render-projection'
     type: behavior
     path: 'packages/ds-codegen/src/validation/usage.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm exec vitest run src/lib/render-usage.test.tsx -t named regions
+    recorded_at: "2026-09-05T00:26:36.387Z"
