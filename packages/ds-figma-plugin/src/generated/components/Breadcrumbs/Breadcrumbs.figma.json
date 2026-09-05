@@ -25,6 +25,14 @@
       "layoutVariant": "horizontal"
     },
     {
+      "name": "item",
+      "semanticElement": "li",
+      "nativeTag": "li",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
       "name": "link",
       "semanticElement": null,
       "nativeTag": null,

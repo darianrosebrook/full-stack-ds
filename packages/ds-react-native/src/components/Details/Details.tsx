@@ -4,6 +4,7 @@ import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createDetailsStyles } from "./Details.styles";
+import { Icon } from "../Icon/Icon";
 // @generated:end
 
 // @generated:start types
@@ -59,8 +60,9 @@ export function Details({
         <View
           style={styles.summaryContent}
         >
-          <View
-            style={styles.icon}
+          <Icon
+            name="chevron-down"
+            size="sm"
           />
           <View
             style={styles.summaryText}

@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type DetailsHTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
+import { Icon } from "../Icon/Icon";
 import { useDetails } from "./useDetails";
 import "./Details.css";
 // @generated:end
@@ -92,7 +93,7 @@ export function Details({
   <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} data-fsds-component="details" {...rest}>
     <summary className="details__summary" aria-controls={open ? `${instanceId}-content` : undefined}>
       <span className="details__summaryContent">
-        <span className="details__icon" />
+        <Icon className="details__icon" name="chevron-down" size="sm" />
         <span className="details__summaryText">
           {summary}
         </span>

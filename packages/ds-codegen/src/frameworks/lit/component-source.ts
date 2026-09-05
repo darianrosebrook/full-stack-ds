@@ -1321,13 +1321,22 @@ function generateDisclosureItemClass(ir: ComponentIR, multipleName: string): str
   ].join("\n");
 }
 
-function generateDisclosureTriggerClass(ir: ComponentIR, itemName: string, chevronPartName: string | undefined): string {
+function generateDisclosureTriggerClass(ir: ComponentIR, itemName: string, chevronNode: DomNodeIR | undefined): string {
   const subName = `${ir.name}${itemName[0].toUpperCase()}${itemName.slice(1)}`;
   const className = `${subName}Element`;
   const elementName = `fsds-${toKebabCase(subName)}`;
   const cssClass = `${ir.classRecipe.base}__${itemName}`;
-  const chevronMarkup = chevronPartName
-    ? `<span class="${ir.classRecipe.base}__${chevronPartName}"></span>`
+  const chevronMarkup = chevronNode
+    ? renderLitDomNode(
+        chevronNode,
+        {
+          classRecipe: ir.classRecipe.base,
+          channelByName: new Map(),
+          styledByName: new Map(),
+          isRoot: false,
+        },
+        0,
+      )
     : "";
   const lines: string[] = [];
   // Host IS the interactive control (role=button on host, ARIA in light DOM so
@@ -1447,13 +1456,16 @@ function generateDisclosureStateSource(ir: ComponentIR): string {
   const itemPart = getInteractiveItemPart(ir);
   const regionPart = getRegionPart(ir);
   const multiplePart = getMultipleItemPart(ir);
-  const importsBody = generateCompoundStateImports(ir);
+  let importsBody = generateCompoundStateImports(ir);
   const typesBody = generateDisclosureContextTypesLit(ir);
 
   const itemNode = ir.dom && itemPart ? litFindDomNode(ir.dom, itemPart.name) : undefined;
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
+  if (chevronNode?.componentRef) {
+    importsBody += `\nimport '../${chevronNode.componentRef}/${chevronNode.componentRef}.js';`;
+  }
   const innerNode = ir.dom && regionPart ? litFindDomNode(ir.dom, regionPart.name) : undefined;
   const innerPartName = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -1464,7 +1476,7 @@ function generateDisclosureStateSource(ir: ComponentIR): string {
     "",
     generateDisclosureItemClass(ir, multiplePart!.name),
     "",
-    generateDisclosureTriggerClass(ir, itemPart!.name, chevronPartName),
+    generateDisclosureTriggerClass(ir, itemPart!.name, chevronNode),
     "",
     generateDisclosureContentClass(ir, regionPart!.name, innerPartName),
   ].join("\n");

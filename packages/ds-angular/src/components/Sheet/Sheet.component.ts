@@ -43,7 +43,9 @@ let nextInstanceId = 0;
       <div [ngClass]="'sheet__body'">
         <ng-content />
       </div>
-      <div [ngClass]="'sheet__footer'"></div>
+      <div [ngClass]="'sheet__footer'">
+        <ng-content select="[slot=footer]" />
+      </div>
     </div>
   </ng-container>
 </div>`,

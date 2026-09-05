@@ -1,0 +1,2 @@
+{"name":"default","description":"Dashboard metric rendered at the default size with an upward trend intent.","tree":{"fsds.Stat":{"props":{"trend":"up","children":"+12%"}}}}
+{"name":"hero","description":"Large metric value intended to be paired with an external visible caption.","tree":{"fsds.Stat":{"props":{"size":"lg","children":"51"}}}}

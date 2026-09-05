@@ -8,6 +8,7 @@ import {
   provideContext,
   ContextConsumerController,
 } from '../../primitives/index.js';
+import '../Icon/Icon.js';
 // @generated:end
 
 // @custom:start imports
@@ -602,7 +603,7 @@ export class AccordionTriggerElement extends LitElement {
     } catch { /* no context yet */ }
     this._updateHostAttrs(isOpen, idBase, disabled);
     this.className = ["accordion__trigger", isOpen ? "accordion__trigger--open" : ""].filter(Boolean).join(" ");
-    return html`<slot></slot><span class="accordion__chevron"></span>`;
+    return html`<slot></slot><fsds-icon class=${'accordion__chevron'} name="chevron-down" size="sm"></fsds-icon>`;
   }
 }
 

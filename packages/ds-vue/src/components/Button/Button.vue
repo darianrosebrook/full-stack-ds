@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import Spinner from "../Spinner/Spinner.vue";
 // @generated:end
 
 // @custom:start imports
@@ -63,7 +64,7 @@ const classNames = computed(() => [
 
 <template>
   <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']" data-fsds-component="button">
-    <span v-if="props.loading" :class="'button__spinner'" aria-hidden="true"></span>
+    <Spinner v-if="props.loading" :class="'button__spinner'" size="sm" :inline="props.loading" :ariaHidden="props.loading" />
     <span :class="'button__loadingText'">
       <slot />
     </span>

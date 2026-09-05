@@ -49,6 +49,7 @@
       },
       "item": {
         "tag": "li",
+        "subcomponent": true,
         "description": "Single subpage row. Consumer renders an <a> as the item's child and marks the active row's anchor with aria-current=page.",
         "role": "item",
         "multiple": true

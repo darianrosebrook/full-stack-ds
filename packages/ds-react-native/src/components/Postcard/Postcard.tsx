@@ -30,6 +30,9 @@ export interface PostcardProps {
 
 // @generated:start component
 export function Postcard({
+  author,
+  timestamp,
+  stats,
   children,
   style,
   testID,
@@ -53,14 +56,20 @@ export function Postcard({
         >
           <View
             style={styles.displayName}
-          />
+          >
+            <RNText>{author.name}</RNText>
+          </View>
           <View
             style={styles.handle}
-          />
+          >
+            <RNText>{author.handle}</RNText>
+          </View>
         </View>
         <View
           style={styles.timestamp}
-        />
+        >
+          <RNText>{timestamp}</RNText>
+        </View>
       </View>
       <View
         style={styles.content}
@@ -75,7 +84,9 @@ export function Postcard({
         >
           <View
             style={styles.stat}
-          />
+          >
+            <RNText>{stats.likes}</RNText>
+          </View>
         </View>
       </View>
     </View>

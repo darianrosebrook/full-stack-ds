@@ -29,7 +29,7 @@
       "minProperties": 1,
       "maxProperties": 1,
       "patternProperties": {
-        "^fsds\\.[A-Z][A-Za-z0-9]*$": {
+        "^fsds\\.[A-Z][A-Za-z0-9]*(?:\\.[a-z][A-Za-z0-9]*)?$": {
           "$ref": "#/$defs/nodeBody"
         }
       },
@@ -60,20 +60,30 @@
     },
     "propValue": {
       "description": "A literal prop value (string, number, boolean, or null) — OR, for the `children` prop only, a treeNode or array of treeNodes/strings. Schema cannot enforce the children-specific shape per prop name, so we accept the union and let the usage validator narrow.",
-      "oneOf": [
+      "anyOf": [
         { "type": "string" },
         { "type": "number" },
         { "type": "boolean" },
         { "type": "null" },
         { "$ref": "#/$defs/treeNode" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
         {
-          "type": "array",
-          "items": {
-            "oneOf": [
-              { "type": "string" },
-              { "$ref": "#/$defs/treeNode" }
-            ]
-          }
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+        }
+      ]
+    },
+    "jsonValue": {
+      "description": "A JSON-serializable prop value. Component refs inside children retain the treeNode convention and are checked by the cross-contract validator.",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "boolean" },
+        { "type": "null" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" }
         }
       ]
     }

@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useDetails } from "./useDetails.svelte.js";
+import Icon from "../Icon/Icon.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -65,7 +66,7 @@ const instanceId = $props.id();
 <details class={classes} open={behavior.open} data-fsds-component="details" role="group">
   <summary class={'details__summary'} aria-controls={open ? `${instanceId}-content` : undefined}>
     <span class={'details__summaryContent'}>
-      <span class={'details__icon'}></span>
+      <Icon class={'details__icon'} name="chevron-down" size="sm" />
       <span class={'details__summaryText'}>{summary}</span>
     </span>
   </summary>

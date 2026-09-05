@@ -18,6 +18,7 @@ import type {
   UsageLine,
 } from "./src/types/data";
 import { buildBoxModelSurface } from "./material-surface";
+import { deriveUsageComposition } from "./packages/ds-codegen/src/usage-composition";
 
 /**
  * Parse a `<Name>.usage.jsonl` file. One example per line; blank lines are
@@ -522,6 +523,7 @@ export async function buildBundle(rootDir: string) {
       contractPath: path.relative(rootDir, full),
       sources,
       usage,
+      usageComposition: deriveUsageComposition(contract as never),
       boxModelSurface,
     });
   }

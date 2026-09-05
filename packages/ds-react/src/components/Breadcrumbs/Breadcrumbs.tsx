@@ -45,6 +45,25 @@ export function BreadcrumbsList({
     </Stack>
   );
 }
+
+export interface BreadcrumbsItemProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function BreadcrumbsItem({
+  children,
+  className,
+  "data-testid": testId,
+}: BreadcrumbsItemProps) {
+  const classNames = ["breadcrumbs__item", className].filter(Boolean).join(" ");
+  return (
+    <Stack as="li" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
 // @generated:end
 
 // @generated:start component

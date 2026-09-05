@@ -24,18 +24,17 @@
  */
 import type { ReactNode } from "react";
 import { createElement, Fragment } from "react";
-import { resolveRootComponent, resolveSlot } from "./usage-registry";
+import { resolveUsageComponent, resolveSlot } from "./usage-registry";
 import type {
-  ComponentContract,
-  DomNode,
+  UsageCompositionIR,
   UsageNodeBody,
   UsagePropValue,
   UsageTreeNode,
 } from "../types/data";
 
 export interface UsageRenderOptions {
-  /** Contract authority used to decide how authored regions reach a component. */
-  resolveContract?: (ref: string) => ComponentContract | undefined;
+  /** Bundled contract/IR authority for authored composition paths. */
+  resolveComposition?: (rootRef: string) => UsageCompositionIR | undefined;
 }
 
 /**
@@ -82,15 +81,25 @@ export function renderUsageTree(
     return <UsageFallback message={`tree node must have exactly one fsds.* ref, got ${entries.length}`} />;
   }
   const [ref, body] = entries[0];
-  const Component = resolveRootComponent(ref);
-  if (!Component) {
+  const resolved = resolveUsageComponent(ref);
+  if (!resolved) {
     return <UsageFallback message={`unknown component ref: ${ref}`} />;
   }
-  return renderResolved(ref, Component, body, options, key);
+  return renderResolved(
+    ref,
+    resolved.rootRef,
+    resolved.part,
+    resolved.Component,
+    body,
+    options,
+    key,
+  );
 }
 
 function renderResolved(
   ref: string,
+  rootRef: string,
+  part: string | null,
   Component: React.ComponentType<Record<string, unknown>>,
   body: UsageNodeBody,
   options: UsageRenderOptions,
@@ -113,8 +122,7 @@ function renderResolved(
   //   2. Generated compound surface -> compound child component.
   //   3. Contract children placeholder -> ordinary children.
   //   4. No admitted path -> visible fallback (the validator rejects this too).
-  const contract = options.resolveContract?.(ref);
-  const surface = contract ? usageDeliverySurface(contract) : undefined;
+  const surface = options.resolveComposition?.(rootRef);
   const namedSlots: Record<string, ReactNode> = {};
   const slotChildren: ReactNode[] = [];
   if (body.slots) {
@@ -124,34 +132,28 @@ function renderResolved(
           ? child
           : renderUsageTree(child, options, slotName);
 
-      if (surface?.namedSlots.has(slotName)) {
+      if (surface?.namedSlots.includes(slotName)) {
         namedSlots[slotName] = childNode;
         continue;
       }
 
-      const SlotComponent = surface?.anatomyParts.has(slotName)
-        ? resolveSlot(ref, slotName)
+      const SlotComponent = surface?.subcomponents.some(
+        (candidate) => candidate.part === slotName,
+      )
+        ? resolveSlot(rootRef, slotName)
         : null;
       if (SlotComponent && surface?.acceptsChildren) {
         slotChildren.push(
           createElement(SlotComponent, { key: slotName }, childNode),
-        );
-      } else if (surface?.acceptsChildren) {
-        slotChildren.push(
-          typeof child === "string" ? (
-            <Fragment key={slotName}>{child}</Fragment>
-          ) : (
-            childNode
-          ),
         );
       } else {
         slotChildren.push(
           <UsageFallback
             key={slotName}
             message={
-              contract
+              surface
                 ? `${ref} region "${slotName}" has no consumer delivery path`
-                : `contract unavailable for ${ref} region "${slotName}"`
+                : `composition IR unavailable for ${ref} region "${slotName}"`
             }
           />,
         );
@@ -190,12 +192,17 @@ function materializeProp(
     return value;
   }
   if (Array.isArray(value)) {
-    return value.map((item, i) =>
-      typeof item === "string" ? item : renderUsageTree(item, options, i),
-    );
+    return value.map((item) => materializeProp(item, options));
   }
-  // Tree node passed as a non-children prop — render it.
-  return renderUsageTree(value, options);
+  if (isUsageTreeNode(value)) {
+    return renderUsageTree(value, options);
+  }
+  return Object.fromEntries(
+    Object.entries(value).map(([key, child]) => [
+      key,
+      materializeProp(child, options),
+    ]),
+  );
 }
 
 function materializeChildren(
@@ -212,53 +219,27 @@ function materializeChildren(
   }
   if (Array.isArray(value)) {
     return value.map((item, i) => {
-      if (typeof item === "string") return <Fragment key={i}>{item}</Fragment>;
-      return renderUsageTree(item, options, i);
+      if (
+        typeof item === "string" ||
+        typeof item === "number" ||
+        typeof item === "boolean"
+      ) {
+        return <Fragment key={i}>{item}</Fragment>;
+      }
+      return isUsageTreeNode(item)
+        ? renderUsageTree(item, options, i)
+        : <UsageFallback key={i} message="children objects must be fsds.* tree nodes" />;
     });
   }
-  return renderUsageTree(value, options);
+  return isUsageTreeNode(value)
+    ? renderUsageTree(value, options)
+    : <UsageFallback message="children objects must be fsds.* tree nodes" />;
 }
 
-interface UsageDeliverySurface {
-  anatomyParts: Set<string>;
-  namedSlots: Set<string>;
-  acceptsChildren: boolean;
-}
-
-function usageDeliverySurface(contract: ComponentContract): UsageDeliverySurface {
-  const anatomy = contract.anatomy;
-  if (!anatomy || Array.isArray(anatomy)) {
-    return {
-      anatomyParts: new Set(anatomy ?? []),
-      namedSlots: new Set(),
-      // Contracts without an explicit DOM use the codegen's legacy child host.
-      acceptsChildren: true,
-    };
-  }
-
-  const namedSlots = new Set<string>();
-  let acceptsChildren = false;
-  walkDom(anatomy.dom, (node) => {
-    if (node.tag === "children" || (node.tag === "slot" && !node.name)) {
-      acceptsChildren = true;
-    }
-    if (node.tag === "slot" && node.name) namedSlots.add(node.name);
-  });
-
-  return {
-    anatomyParts: new Set(anatomy.parts),
-    namedSlots,
-    acceptsChildren,
-  };
-}
-
-function walkDom(
-  node: DomNode | undefined,
-  visit: (node: DomNode) => void,
-): void {
-  if (!node) return;
-  visit(node);
-  for (const child of node.children ?? []) walkDom(child, visit);
+function isUsageTreeNode(value: unknown): value is UsageTreeNode {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const keys = Object.keys(value);
+  return keys.length === 1 && keys[0].startsWith("fsds.");
 }
 
 function UsageFallback({ message }: { message: string }) {

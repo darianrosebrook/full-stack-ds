@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import '../Icon/Icon.js';
 import { CommandBehavior } from './CommandBehavior.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
@@ -312,7 +313,7 @@ export class CommandElement extends LitElement {
   ${this.behavior.open ? html`
   <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${ifDefined((this.label ?? "Command palette"))} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'command__inputWrapper'}>
-      <span class=${'command__searchIcon'} aria-hidden="true"></span>
+      <fsds-icon class=${'command__searchIcon'} name="search" size="sm"></fsds-icon>
       <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" @change=${(e: Event) => this.handleSearchChange(e)} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-label=${ifDefined((this.searchLabel ?? "Search commands"))} placeholder=${ifDefined((this.placeholder ?? "Search..."))} .value=${this.behavior.search} id="command-input" aria-controls="command-list" />
     </div>
     <div class=${'command__list'} role="listbox" id="command-list" aria-labelledby="command-input">

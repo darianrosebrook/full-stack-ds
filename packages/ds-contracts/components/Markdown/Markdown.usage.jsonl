@@ -1,0 +1,2 @@
+{"name":"default","description":"Structured markdown with a heading, emphasized text, and a list rendered as literal contract-owned content.","tree":{"fsds.Markdown":{"props":{"content":"## Release notes\n\nThe **composition path** now preserves authored content.\n\n- Contract-derived\n- Framework-neutral"}}}}
+{"name":"code","description":"Fenced source and inline code remain literal text rather than interpreted HTML.","tree":{"fsds.Markdown":{"props":{"content":"Use `Stack` for layout wrappers.\n\n```tsx\n<Stack direction=\"horizontal\">Content</Stack>\n```"}}}}

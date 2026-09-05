@@ -4,6 +4,7 @@ import { Modal, Pressable, TextInput, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCommandStyles } from "./Command.styles";
+import { Icon } from "../Icon/Icon";
 // @generated:end
 
 // @generated:start types
@@ -96,9 +97,9 @@ export function Command({
           <View
             style={styles.inputWrapper}
           >
-            <View
-              style={styles.searchIcon}
-              accessible={false}
+            <Icon
+              name="search"
+              size="sm"
             />
             <TextInput
               style={styles.input}

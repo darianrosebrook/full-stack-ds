@@ -27,7 +27,9 @@ export type ChipSize = "small" | "medium" | "large";
   template: `<span [ngClass]="classes()">
   <fsds-button [ngClass]="'chip__action'" variant="ghost" (click)="onClick && onClick()" [type]="type" [disabled]="disabled" [ariaLabel]="ariaLabel" [ariaExpanded]="ariaExpanded" [ariaPressed]="ariaPressed">
     <ng-container *ngIf="icon">
-      <span [ngClass]="'chip__icon'" aria-hidden="true"></span>
+      <span [ngClass]="'chip__icon'" aria-hidden="true">
+        {{ icon }}
+      </span>
     </ng-container>
     <span [ngClass]="'chip__text'">
       <ng-content />

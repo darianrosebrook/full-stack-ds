@@ -33,7 +33,7 @@
         "role": "group"
       },
       "icon": {
-        "tag": "span",
+        "componentRef": "fsds.Icon",
         "description": "Optional decorative disclosure indicator.",
         "role": "decoration"
       },
@@ -64,8 +64,12 @@
               "part": "summaryContent",
               "children": [
                 {
-                  "tag": "span",
-                  "part": "icon"
+                  "componentRef": "fsds.Icon",
+                  "part": "icon",
+                  "attrs": {
+                    "name": "chevron-down",
+                    "size": "sm"
+                  }
                 },
                 {
                   "tag": "span",

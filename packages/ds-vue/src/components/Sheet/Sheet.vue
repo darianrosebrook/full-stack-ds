@@ -83,7 +83,9 @@ const instanceId = useId();
         <div :class="'sheet__body'">
           <slot />
         </div>
-        <div :class="'sheet__footer'"></div>
+        <div :class="'sheet__footer'">
+          <slot name="footer" />
+        </div>
       </div>
     </div>
   </Teleport>

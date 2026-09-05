@@ -43,4 +43,63 @@ describe("usage sidecar render projection", () => {
     expect(screen.getByText("View your project overview")).toBeTruthy();
   });
 
+  it.each(["Accordion", "Card", "Popover", "Table", "Tabs", "Tooltip"])(
+    "renders %s through declared compound parts without a usage fallback",
+    (name) => {
+      const { container } = render(<UsageExamples component={component(name)} />);
+      expect(container.textContent).not.toContain("[usage fallback]");
+    },
+  );
+
+  it("preserves the native table content model in the curated example", () => {
+    const { container } = render(<UsageExamples component={component("Table")} />);
+    const table = container.querySelector("table");
+
+    expect(table?.querySelectorAll(":scope > caption")).toHaveLength(1);
+    expect(table?.querySelectorAll(":scope > thead > tr > th")).toHaveLength(3);
+    expect(table?.querySelectorAll(":scope > tbody > tr")).toHaveLength(2);
+    expect(table?.querySelectorAll(":scope > tfoot > tr > td")).toHaveLength(1);
+    expect(table?.querySelector("tfoot td")?.getAttribute("colspan")).toBe("3");
+  });
+
+  it("renders stateful compound examples with their public trigger and panel APIs", () => {
+    const accordion = render(<UsageExamples component={component("Accordion")} />);
+    expect(screen.getAllByRole("button", { name: "What is a design system?" })).toHaveLength(1);
+    expect(
+      screen.getAllByRole("region").some((region) =>
+        region.textContent?.includes("A design system is a collection"),
+      ),
+    ).toBe(true);
+    accordion.unmount();
+
+    render(<UsageExamples component={component("Tabs")} />);
+    expect(screen.getAllByRole("tab")).toHaveLength(5);
+    expect(screen.getAllByRole("tabpanel").length).toBeGreaterThan(0);
+  });
+
+  it.each(bundle.components.map((entry) => entry.name))(
+    "renders every curated %s example without a delivery fallback",
+    (name) => {
+      render(<UsageExamples component={component(name)} />);
+      expect(document.body.textContent).not.toContain("[usage fallback]");
+    },
+  );
+
+  it("realizes contract-declared glyph and indicator components", async () => {
+    const accordion = render(<UsageExamples component={component("Accordion")} />);
+    expect(accordion.container.querySelector('[data-fsds-icon="chevron-down"]')).toBeTruthy();
+    accordion.unmount();
+
+    const details = render(<UsageExamples component={component("Details")} />);
+    expect(details.container.querySelector('[data-fsds-icon="chevron-down"]')).toBeTruthy();
+    details.unmount();
+
+    render(<UsageExamples component={component("Command")} />);
+    expect(await screen.findByText("Go to Dashboard")).toBeTruthy();
+    expect(document.body.querySelector('[data-fsds-icon="search"]')).toBeTruthy();
+
+    render(<UsageExamples component={component("Button")} />);
+    expect(document.body.querySelector('[data-fsds-component="spinner"]')).toBeTruthy();
+  });
+
 });

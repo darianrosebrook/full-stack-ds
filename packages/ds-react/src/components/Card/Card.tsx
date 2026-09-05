@@ -49,6 +49,25 @@ export function CardHeader({
   );
 }
 
+export interface CardMediaProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CardMedia({
+  children,
+  className,
+  "data-testid": testId,
+}: CardMediaProps) {
+  const classNames = ["card__media", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
 export interface CardContentProps {
   children?: ReactNode;
   className?: string;
@@ -87,6 +106,44 @@ export function CardFooter({
   );
 }
 
+export interface CardActionsProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CardActions({
+  children,
+  className,
+  "data-testid": testId,
+}: CardActionsProps) {
+  const classNames = ["card__actions", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CardBadgeProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CardBadge({
+  children,
+  className,
+  "data-testid": testId,
+}: CardBadgeProps) {
+  const classNames = ["card__badge", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
 export interface CardDescriptionProps {
   children?: ReactNode;
   className?: string;
@@ -101,6 +158,44 @@ export function CardDescription({
   const classNames = ["card__description", className].filter(Boolean).join(" ");
   return (
     <Stack as="p" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CardLinkProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CardLink({
+  children,
+  className,
+  "data-testid": testId,
+}: CardLinkProps) {
+  const classNames = ["card__link", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface CardNoteProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function CardNote({
+  children,
+  className,
+  "data-testid": testId,
+}: CardNoteProps) {
+  const classNames = ["card__note", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );

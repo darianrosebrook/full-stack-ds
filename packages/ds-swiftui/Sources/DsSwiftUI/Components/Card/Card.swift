@@ -87,32 +87,47 @@ enum CardTokens {
 }
 
 /// Emitted through a composer path: passive container root, one content region per named region (compound part or named slot).
-public struct Card<Header: View, Content: View, Footer: View, Description: View>: View {
+public struct Card<Header: View, Media: View, Content: View, Footer: View, Actions: View, Badge: View, Description: View, Link: View, Note: View>: View {
     private var fsdsScopes: FsdsComponentTokenScopes {
         CardTokens.scopes
     }
     private let status: CardStatus?
     private let density: CardDensity
     private let header: Header
+    private let media: Media
     private let content: Content
     private let footer: Footer
+    private let actions: Actions
+    private let badge: Badge
     private let description: Description
+    private let link: Link
+    private let note: Note
     @Environment(\.fsdsTheme) private var fsdsTheme
 
     public init(
         status: CardStatus? = nil,
         density: CardDensity = .`default`,
         @ViewBuilder header: () -> Header = { EmptyView() },
+        @ViewBuilder media: () -> Media = { EmptyView() },
         @ViewBuilder content: () -> Content = { EmptyView() },
         @ViewBuilder footer: () -> Footer = { EmptyView() },
-        @ViewBuilder description: () -> Description = { EmptyView() }
+        @ViewBuilder actions: () -> Actions = { EmptyView() },
+        @ViewBuilder badge: () -> Badge = { EmptyView() },
+        @ViewBuilder description: () -> Description = { EmptyView() },
+        @ViewBuilder link: () -> Link = { EmptyView() },
+        @ViewBuilder note: () -> Note = { EmptyView() }
     ) {
         self.status = status
         self.density = density
         self.header = header()
+        self.media = media()
         self.content = content()
         self.footer = footer()
+        self.actions = actions()
+        self.badge = badge()
         self.description = description()
+        self.link = link()
+        self.note = note()
     }
 
     private var layered: [String: FsdsTokenValue?] {
@@ -145,9 +160,14 @@ public struct Card<Header: View, Content: View, Footer: View, Description: View>
     private var regions: some View {
         VStack(spacing: gap) {
             header
+            media
             content
             footer
+            actions
+            badge
             description
+            link
+            note
         }
     }
 

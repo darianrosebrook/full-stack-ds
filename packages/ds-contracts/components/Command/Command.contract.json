@@ -53,7 +53,7 @@
         "role": "group"
       },
       "searchIcon": {
-        "tag": "span",
+        "componentRef": "fsds.Icon",
         "description": "Decorative search glyph preceding the command input.",
         "role": "decoration"
       },
@@ -183,10 +183,11 @@
               "part": "inputWrapper",
               "children": [
                 {
-                  "tag": "span",
+                  "componentRef": "fsds.Icon",
                   "part": "searchIcon",
                   "attrs": {
-                    "aria-hidden": "true"
+                    "name": "search",
+                    "size": "sm"
                   }
                 },
                 {

@@ -57,6 +57,22 @@ export class CardHeaderComponent {
 }
 
 @Component({
+  selector: "fsds-card-media",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CardMediaComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["card__media", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
   selector: "fsds-card-content",
   standalone: true,
   imports: [NgClass, StackComponent],
@@ -89,6 +105,38 @@ export class CardFooterComponent {
 }
 
 @Component({
+  selector: "fsds-card-actions",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CardActionsComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["card__actions", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-card-badge",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CardBadgeComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["card__badge", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
   selector: "fsds-card-description",
   standalone: true,
   imports: [NgClass, StackComponent],
@@ -101,6 +149,38 @@ export class CardDescriptionComponent {
 
   classes(): string {
     return ["card__description", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-card-link",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CardLinkComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["card__link", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-card-note",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CardNoteComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["card__note", this.class].filter(Boolean).join(" ");
   }
 }
 // @generated:end

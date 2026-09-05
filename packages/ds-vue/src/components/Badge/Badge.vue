@@ -52,7 +52,9 @@ const classNames = computed(() => [
 
 <template>
   <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="badge">
-    <span v-if="props.icon" :class="'badge__icon'" aria-hidden="true"></span>
+    <span v-if="props.icon" :class="'badge__icon'" aria-hidden="true">
+      {{ props.icon }}
+    </span>
     <span :class="'badge__content'">
       <slot />
     </span>

@@ -29,10 +29,11 @@ interface Props {
   class?: string;
   children?: import('svelte').Snippet;
   description?: import('svelte').Snippet;
+  footer?: import('svelte').Snippet;
   title?: import('svelte').Snippet;
 }
 
-let { open, defaultOpen, onOpenChange, side = "right", modal = true, ariaLabel, ariaLabelledby, ariaDescribedby, class: className, children, description, title }: Props = $props();
+let { open, defaultOpen, onOpenChange, side = "right", modal = true, ariaLabel, ariaLabelledby, ariaDescribedby, class: className, children, description, footer, title }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -81,7 +82,9 @@ const instanceId = $props.id();
     <div class={'sheet__body'}>
       {@render children?.()}
     </div>
-    <div class={'sheet__footer'}></div>
+    <div class={'sheet__footer'}>
+      {@render footer?.()}
+    </div>
   </div>
   {/if}
 </div>

@@ -281,7 +281,9 @@ export class SheetElement extends LitElement {
     <div class=${'sheet__body'}>
       <slot></slot>
     </div>
-    <div class=${'sheet__footer'}></div>
+    <div class=${'sheet__footer'}>
+      <slot name="footer"></slot>
+    </div>
   </div>
   ` : nothing}
 </div>`;

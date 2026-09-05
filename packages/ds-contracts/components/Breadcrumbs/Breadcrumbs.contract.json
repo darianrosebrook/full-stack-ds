@@ -8,6 +8,7 @@
     "parts": [
       "root",
       "list",
+      "item",
       "link",
       "current",
       "separator",
@@ -29,6 +30,13 @@
         "tag": "ol",
         "description": "Ordered list that preserves hierarchy order from the root page to the current page.",
         "role": "group"
+      },
+      "item": {
+        "tag": "li",
+        "subcomponent": true,
+        "description": "Native ordered-list item that contains one breadcrumb link or the current-page label.",
+        "role": "item",
+        "multiple": true
       },
       "link": {
         "description": "Navigable breadcrumb item for an ancestor page.",
@@ -126,6 +134,10 @@
     "list": {
       "required": true,
       "selector": "[data-slot=\"breadcrumbs-list\"]"
+    },
+    "item": {
+      "required": true,
+      "selector": "[data-slot=\"breadcrumbs-item\"]"
     },
     "separator": {
       "required": false,
