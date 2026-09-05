@@ -63,3 +63,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run src/lib/render-usage.test.tsx -t preserves ordinary children
     recorded_at: "2026-09-05T00:26:44.789Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: pnpm exec vitest run packages/ds-codegen/src/validation/usage.test.ts
+    recorded_at: "2026-09-05T00:26:54.480Z"
