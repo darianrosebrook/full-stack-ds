@@ -1,0 +1,472 @@
+{
+  "$comment": "EVIDENCE MAP for ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01, written at actual status. It is a RECORD, not a certification: it names, per acceptance criterion, which sub-claims a specific test, artifact or commit establishes on the pinned worktree tip, which are open with a named counterexample, and which are unexecuted with nothing to reuse. The CLI evidence block on the spec carries pass/unchecked per criterion and is the close authority; this file carries the finer grain the CLI status cannot express. Every expensive result is one of: OBSERVED on the pinned tip, REUSED from a named execution with the inputs it depended on shown unchanged, or UNEXECUTED. No result here is claimed for an integration candidate: none exists yet.",
+  "spec": "ANALYTICAL-QUOTIENT-CODOMAIN-AUTHORITY-01",
+  "writtenAt": "2026-09-05T06:54:24+00:00",
+  "pins": {
+    "testedWorktreeTip": "c8f2c19281392b1a1920f1cc9c7274467211d859",
+    "selectedMainCommitAtWrite": "4255ba71f92dd62e822084cdbcc0199669777668",
+    "mergeBase": "4ac587a48fe1f4147a12c02d0df1dfab985a15ca",
+    "branchCommits": 25,
+    "mainAheadAtWrite": 299,
+    "mainChangesUnderAnalyticalClosure": 0,
+    "mainChangesToSharedFiles": [
+      "package.json"
+    ],
+    "integrationCandidate": null,
+    "integrationCandidateNote": "Not yet created. 'mainChangesUnderAnalyticalClosure: 0' and an unmoved lockfile establish POSSIBLE reuse of analytical measurements, not a reuse decision: they do not name runtime-loaded data, generated schemas, runner configuration or the resolved environment. The earlier wider-suite failure from a missing built token artifact, with no source overlap, is this session's own counterexample to treating source locality as execution-context identity.",
+    "environment": {
+      "node": "v22.19.0",
+      "pnpm": "10.14.0",
+      "ajv": "8.20.0",
+      "zod": "4.5.4",
+      "vitest": "3.2.4",
+      "pnpmLockDigest": "cbec3f7242edbd19adeecdd2bf56d41c23da29116e20a844ce65a7df65d0c47f",
+      "note": "ajv/zod resolved from packages/ds-codegen/node_modules, where the analytical code resolves them."
+    },
+    "artifacts": {
+      "stage2-freeze.json": "e901fbc7a019b510574a0b4c62fcb781ae36093bc7c14fb70ca06cdd2c2338e5",
+      "erasure-footprints.json": "8d49f45f28a3797005e8b9a24fc51775018095fa8d9021a3921776e3eb66be0c",
+      "codomain-adjudications.json": "9c697f27192de4d163ba23fd004c73d8dfef22857da9b34646efb71002e8c801",
+      "stage1-historical-accounting.json": "6ff8faf0616c41bf126c061f949b4fa2ad7a1830305236b09794b3699c4bdca5",
+      "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
+      "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
+      "closures-stage2.json": "a26ac911924f230e803871691e0ee60ecf60cf6ee2ab03771add0099aa0a7780",
+      "quotient-image.schema.json": "1ebd02c8eeb5694898443a511de0cf94f756b0b96ae974319d9d76ca712f2df8"
+    },
+    "authorityIdentities": {
+      "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
+      "erasureAuthorityDigest": "e2952b14e4f5554b2c8c56327d05871c41c8542fa6e766aa09813a384696c554",
+      "witnessAuthorityDigest": "71ad20de0da1983e51679c8f476458f6c39385ca4130331f2240a8b5042f94ad",
+      "quotientSchemaVersion": 1,
+      "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
+    },
+    "oracleCustody": {
+      "note": "scope.out; must be unchanged at close.",
+      "corpus.jsonl": "86f2b03a9fe7affe",
+      "corpus-case.schema.json": "e961af232d3ede45",
+      "vocabulary.json": "5bd9dfddab19dc33",
+      "form-names.json": "0564902cf8d7d4ff"
+    }
+  },
+  "observedOnPinnedTip": {
+    "analyticalSuite": {
+      "command": "npx vitest run packages/ds-codegen/src/analytical",
+      "result": "680 passed (680)",
+      "consecutiveRuns": 6,
+      "note": "Six separately printed summaries. An earlier claim of three green runs (67b1008f) was false and corrected in 6ef5e993."
+    },
+    "freezeCheck": {
+      "command": "npx tsx packages/ds-codegen/src/analytical/freeze.ts --check",
+      "result": "OK — 165 coordinate erasures and 126 verdicts match the freeze"
+    },
+    "footprintsCheck": {
+      "command": "npx tsx packages/ds-codegen/src/analytical/erasure-audit.ts --check",
+      "result": "OK — report consistent, and 0 illegal quotient images over 208 specimen(s)",
+      "establishes": "consistency of the record with the tree AND zero illegal images over the population the report names. It does NOT establish admission-complete certification: see A1.open."
+    },
+    "typecheck": {
+      "command": "npx tsc --noEmit -p packages/ds-codegen/tsconfig.json",
+      "result": "clean"
+    }
+  },
+  "reused": [],
+  "criteria": {
+    "A1": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "quotientLanguageInvalid == 0 over the full 208-specimen population (90 corpus + 22 stimuli + 96 synthesized), measured by membership digest not count",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "covers every specimen, by membership and not by count"
+            },
+            "footprints --check output above"
+          ],
+          "population": {
+            "specimens": 208,
+            "populationDigest": "76b17b16a8b4f9f14ae92bd62338c801801b8973ad47d9f92d591c44e647c8f2",
+            "quotientScope": {
+              "specimens": 208,
+              "populationDigest": "76b17b16a8b4f9f14ae92bd62338c801801b8973ad47d9f92d591c44e647c8f2"
+            },
+            "sourceScope": {
+              "specimens": 112,
+              "populationDigest": "1b73800e6741ba7fc5731c631506e23855e1946d3d277c08d6de44b6da7d6805"
+            }
+          },
+          "note": "Before 67b1008f the check saw 112 of 208; the gap was coverage, not a live defect (0 invalid on the full population then too)."
+        },
+        {
+          "claim": "a source-VALID synthesized specimen damaged by a faulty plan is reported through computeReport, naming plan and specimen, with the suffix's contribution asserted (full count = authored count + 96)",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path"
+            }
+          ],
+          "mutantsKilled": [
+            "quotient(image) -> quotient(f)",
+            "languageReports over the authored prefix only",
+            "quotient tally skips the synthesized suffix (scope metadata untouched)"
+          ],
+          "limit": "Exclusivity of a suffix-only shape was NOT established; six locator paths were measured and all damage the authored prefix too. The contribution count discriminates without it."
+        },
+        {
+          "claim": "skipped (wouldChange=false) pairs are covered: every specimen is itself a legal quotient image, and every skipped pair is a no-op, over the same 208-specimen population",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "the skipped pairs are covered too: a no-op leaves a legal image"
+            }
+          ]
+        },
+        {
+          "claim": "the gate certifies ONE report with both obligations, and names the cause it refused for",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "the gate certifies ONE report, and names the cause it refused for"
+            }
+          ],
+          "mutantsKilled": [
+            "consistency of one report, legality of another"
+          ]
+        },
+        {
+          "claim": "required input bindings, authority identities and footprintBasisDigest cannot disappear (either side or both) and must be well-formed evidence with identical corruption on both sides refused",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "refuses a report that is missing a required binding, on either side or both"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "refuses a binding that is present but is not evidence, with the SAME value on both sides"
+            }
+          ],
+          "limit": "Digest-FORMAT admission is not evidence authenticity or correct derivation; those come from the existing recomputation/binding path."
+        },
+        {
+          "claim": "fields outside the contract carry no authority (minimum-required contract, stated)",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "fields outside the contract carry no authority over the verdict"
+            }
+          ],
+          "mutantsKilled": [
+            "enumerate inputs from recorded",
+            "enumerate authorities from current"
+          ]
+        },
+        {
+          "claim": "scope coherence (count and membership vs named population) asserted of each report separately",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "refuses scope evidence that is present but self-contradictory, on EITHER side"
+            }
+          ]
+        }
+      ],
+      "open": [
+        {
+          "claim": "scope-object and population-field ADMISSION: a required scope present as null/false/0/'' removes its own comparison; null or absent population digests agree; recorded scope count 999 and recorded total=0 pass",
+          "counterexamples": [
+            "recorded sourceLanguageDeparture scope = null; current unchanged -> ACCEPTED",
+            "recorded scope = null AND current source digest changed -> ACCEPTED",
+            "specimens.populationDigest and quotient scope digest = null on both -> ACCEPTED",
+            "source-scope populationDigest absent on both -> ACCEPTED",
+            "recorded source-scope count = 999 -> ACCEPTED",
+            "recorded total=0 and quotient count=0, components unchanged -> ACCEPTED"
+          ],
+          "reproducedOn": "c8f2c19281392b1a1920f1cc9c7274467211d859",
+          "note": "Requires corruption of the RECORDED side only; does not depend on a defective current producer."
+        },
+        {
+          "claim": "quotientSchemaVersion COMPATIBILITY: shape is admitted, support is not checked; the duplicate top-level declaration is not compared to authority.quotientSchemaVersion",
+          "counterexamples": [
+            "quotientSchemaVersion = 999 on both (authority and top-level) -> ACCEPTED",
+            "recorded top-level = 'banana', authority = 1 -> ACCEPTED"
+          ],
+          "reproducedOn": "c8f2c19281392b1a1920f1cc9c7274467211d859"
+        }
+      ]
+    },
+    "A2": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "erased images are typed QuotientImage; executor and canonicalizer accept Fixture | QuotientImage; source-language departure is reported as sourceLanguageDeparture (62 coordinates over 112 authored) separately from quotientLanguageInvalid (0 over 208)",
+          "evidence": [
+            "packages/ds-codegen/src/analytical/quotient-image.ts",
+            "commit 5ba5c8ab",
+            "erasure-footprints.json scopes block"
+          ]
+        }
+      ],
+      "open": [
+        {
+          "claim": "compile-time negative test rejecting a QuotientImage where a source Fixture is required",
+          "evidence": "grep '@ts-expect-error' over packages/ds-codegen/src/analytical/*.test.ts: none"
+        }
+      ]
+    },
+    "A3": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "forget-value on a required leaf yields a marker (not a source value) and every sibling survives: IDENTIFIES/SEPARATES rows plus source-language departure",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "forget-value forgets which scale a field is measured on"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "forget-value departs the source language: a hole is never confusable with a declared value"
+            }
+          ],
+          "mutantsKilled": [
+            "forget-value writes a KNOWN VALUE instead of a hole"
+          ]
+        }
+      ],
+      "open": [
+        {
+          "claim": "operation-law evidence bound to erasureAuthorityDigest (owed; a change to what an operation does must invalidate the evidence earned under it)"
+        }
+      ]
+    },
+    "A4": {
+      "cliStatus": "pass",
+      "demonstrated": [
+        {
+          "claim": "declaration deletion is reachable only through delete-holder / delete-tagged-holder, never as the primitive erasure of a leaf value; required leaves are holed",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "chooses a leaf's operation from the SCHEMA: required leaves are holed, optional ones deleted"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "distinguishes forgetting a holder from forgetting a value, because their footprints differ"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "spells absence of a REQUIRED leaf as absence of its whole declaration, not of the tag"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "delete-holder forgets whether the holder was declared at all"
+            }
+          ]
+        }
+      ],
+      "qualification": "delete-tagged-holder and forget-branch-field are reachable only via synthesizePlan and have no law-table row; the coverage test asserts against PLANNED kinds."
+    },
+    "A5": {
+      "cliStatus": "pass",
+      "demonstrated": [
+        {
+          "claim": "every coordinate has a locator; the only coordinates without a plan are kind 'reference'; plans.size == census.size - references (exact in both directions)",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "gives every coordinate a locator and every non-reference coordinate exactly one plan"
+            }
+          ]
+        },
+        {
+          "claim": "the typed reason for a deliberate no-plan coordinate is its kind, 'reference', whose erasure is a no-op by the alpha-renaming invariant",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "still treats a reference coordinate's erasure as a no-op, which is the alpha-renaming invariant"
+            }
+          ]
+        }
+      ],
+      "qualification": "The reason is the kind discriminant, not a dedicated reason field."
+    },
+    "A6": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "the required-leaf witnesses were rerun under the codomain; three stopped holding and are HELD OPEN in codomain-adjudications.json with historical standing and live-remeasured current failure; nothing was applied; the fourth re-held",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "holds open exactly three witnesses, all of them one defect: a hole is observable where an absence was not"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "every suspension points from a recorded historical standing to a measured current failure"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "suspension is not a semantic outcome: every suspended coordinate still dispositions as stage 1 concluded"
+            },
+            "packages/ds-contracts/analytical-fixtures/codomain-adjudications.json"
+          ]
+        }
+      ],
+      "open": [
+        {
+          "claim": "the two bounded migration reevaluations (temporality with both holders declared; assertion closure with assertion.aggregate.op's independent primitive support intact). A negative or non-promoting result is legitimate; restoring the old tally is not a success condition. Invariant amended e6d744e7 to separate this from subtraction adjudication."
+        }
+      ]
+    },
+    "A7": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "a moved witnessAuthorityDigest refuses freeze certification; an adjudication is bound to the exact transition it reviewed (A->B accepted; A->C, D->B, class-only refused); fresh support takes precedence over an obsolete suspension; support freshness is owned at four inline call sites and pinned",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/freeze.test.ts",
+              "test": "REFUSES to certify a record taken under a different acceptance authority"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/freeze.test.ts",
+              "test": "refuses a LATER movement of the same identity under that same review"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/necessity.test.ts",
+              "test": "re-evaluates rather than handing back a stored suspension when acceptance moves"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/closure.test.ts",
+              "test": "a previously supported coordinate stops being reported as supported when acceptance tightens"
+            }
+          ]
+        }
+      ],
+      "open": [
+        {
+          "claim": "ERASURE-authority freshness: retain accepted evidence, change a compiler/executor/serializer/ordering/locator input, invoke the actual consumer, observe refusal or reevaluation. Only the witness-authority transition has been exercised."
+        }
+      ]
+    },
+    "A8": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "footprintBasisDigest is compared and, since c8f2c192, admitted as evidence",
+          "evidence": [
+            "checkReport"
+          ]
+        }
+      ],
+      "unexecuted": [
+        "population-only change: add a specimen, stored footprint classification rejected/reevaluated, unchanged witness still holds",
+        "witness-input change: alter a constituent the witness depends on, witness reevaluated rather than protected"
+      ]
+    },
+    "A9": {
+      "cliStatus": "unchecked",
+      "unexecuted": [
+        "legacy-vs-new comparison over the full population with the legacy path pinned; every divergence individually adjudicated"
+      ],
+      "note": "The criterion names 205 specimens (93 synthesized); the population is now 208 (96 synthesized). The number is a description, not a target."
+    },
+    "A10": {
+      "cliStatus": "unchecked",
+      "demonstrated": [
+        {
+          "claim": "idempotence, holder subsumption, discriminator ordering, commutation over 15 representative plans, and skip-predicate agreement over 208 x 140",
+          "evidence": [
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "is idempotent: erasing the same plan twice equals erasing it once"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-plan.test.ts",
+              "test": "commutes where no ordering edge exists, over a spread of representative plans"
+            },
+            {
+              "file": "packages/ds-codegen/src/analytical/erasure-audit.test.ts",
+              "test": "the skipped pairs are covered too: a no-op leaves a legal image"
+            }
+          ]
+        }
+      ],
+      "unexecuted": [
+        "all 9730 unordered plan pairs",
+        "saturated merge-order independence with an independently stated expected partition (all and only connected classes)",
+        "listing-order independence of every live witness and closure set, INCLUDING closure normalization plans",
+        "refusal of a genuinely non-confluent set at evidence admission"
+      ],
+      "note": "executeAll([p,q]) vs executeAll([q,p]) after both impose the same order tests scheduler determinism, not commutation; independent pairs need the two raw compositions compared."
+    }
+  },
+  "mutationReceipts": {
+    "policy": "Source mutants are booked apart from replay tables (input-tampering probes establish consumer behaviour; source mutants establish that a test can fail). Kills are attributed to the assertion that fired, not the enclosing test. Every mutant is applied from `git show HEAD:` and restored from it.",
+    "rounds": [
+      {
+        "subject": "operation laws (erasure-plan.ts)",
+        "distinct": 10,
+        "assertionKills": 9,
+        "equivalent": 1,
+        "survivors": 0,
+        "executionFailures": 0,
+        "equivalentArgument": "incidence sorting before a positional map: neither expression reads an element, so both compute a function of length; 12 hand-built inputs and 286 corpus arrays agree"
+      },
+      {
+        "subject": "stale/transition binding (freeze.ts), first campaign",
+        "distinct": 4,
+        "assertionKills": 4,
+        "note": "RECLASSIFIED: all four broke the reviewed A->B positive control first (key-format change), so they were fail-closed protocol mismatches, not demonstrations that over-authorisation is detected."
+      },
+      {
+        "subject": "transition binding, permissive mutants",
+        "distinct": 2,
+        "survivedBeforeRepair": 2,
+        "assertionKillsAfterRepair": 2,
+        "cause": "assertions read ok===false, which the stale branch satisfies even when the reason was wrongly accepted; now assert accepted directly"
+      },
+      {
+        "subject": "support freshness (closure.ts)",
+        "distinct": 2,
+        "assertionKills": 2,
+        "note": "First run was CONFOUNDED (a module-scope constant was planted in the shared baseline before both mutants). Re-run isolated: memo-only killed by the behavioural test ONLY; hoist-only by both. The structural guard does not detect memoisation and is now named for what it checks."
+      },
+      {
+        "subject": "A1 population, round 1",
+        "distinct": 2,
+        "assertionKills": 2,
+        "note": "An earlier receipt said 4; two of those were replay-table probes, not source mutants."
+      },
+      {
+        "subject": "A1 population, round 2",
+        "distinct": 5,
+        "executions": 6,
+        "assertionKills": 5,
+        "survivedBeforeRepair": 1,
+        "note": "An earlier receipt said 6/6; it was five distinct mutants over six executions (recorded-side coherence ran twice)."
+      },
+      {
+        "subject": "required-binding admission",
+        "distinct": 5,
+        "assertionKills": 3,
+        "survivedBeforeRepair": 2,
+        "note": "The two survivors (enumerate from recorded / from current) were WRONGLY classified equivalent: presence establishes R ⊆ K, not K = R. Killed after the extra-key policy test was added."
+      },
+      {
+        "subject": "value admission",
+        "distinct": 6,
+        "assertionKills": 6,
+        "survivors": 0,
+        "executionFailures": 0
+      }
+    ]
+  },
+  "unexecutedGatesOnAnyCandidate": [
+    "pnpm run lint (now --max-warnings=0 on main)",
+    "pnpm run typecheck:all",
+    "pnpm run governed:rail",
+    "pnpm test (root)",
+    "pnpm run test:frameworks"
+  ]
+}
