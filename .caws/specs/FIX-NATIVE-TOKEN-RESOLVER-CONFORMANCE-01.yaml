@@ -47,3 +47,8 @@ contracts:
   - name: 'native-token-resolution'
     type: contract-test
     path: 'packages/ds-contracts/fixtures/native-token-resolver.conformance.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm --filter @full-stack-ds/react-native exec vitest run src/tokens/index.test.ts (8/8); swift test --package-path packages/ds-swiftui --filter NativeTokenResolverConformanceTests (1/1); ./packages/ds-jetpack-compose/gradlew -p packages/ds-jetpack-compose :library:test --no-daemon (1/1)"
+    recorded_at: "2026-09-05T00:09:36.168Z"
