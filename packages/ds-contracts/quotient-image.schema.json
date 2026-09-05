@@ -1,0 +1,1364 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "quotient-image.schema.json",
+  "$comment": "Derived from fixture.schema.json by admitting a quotient marker at every value position. Quotient schema version 1. Do not edit by hand.",
+  "$ref": "#/definitions/fixture",
+  "definitions": {
+    "fixture": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^FX_[A-Z0-9_]+$"
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "structure": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/relationalStructure"
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "assertions": {
+          "anyOf": [
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/assertion"
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/evidence"
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "structure",
+        "assertions"
+      ],
+      "additionalProperties": false,
+      "title": "Analytical fixture (one JSONL line of fixtures.jsonl)",
+      "description": "A stimulus for the stage-1 engine: a relational structure, one or more assertions, and optional evidence. Answer-free by construction: no place for a case id, verdict, diagnostic, obligation, or form name. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "relationalStructure": {
+      "type": "object",
+      "properties": {
+        "relations": {
+          "anyOf": [
+            {
+              "type": "object",
+              "propertyNames": {
+                "$ref": "#/definitions/name"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/relation"
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "peers": {
+          "anyOf": [
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "minItems": 2,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/name"
+                        },
+                        {
+                          "$ref": "#/definitions/quotientMarker"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "required": [
+        "relations"
+      ],
+      "additionalProperties": false,
+      "title": "Relational structure (L0-L2 kernel)",
+      "description": "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001 at stage 1.5: one or more named relations, each with a declared grain and typed fields. Every coordinate carries a necessity witness. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "grain": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "unknown"
+                },
+                {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/name"
+                      },
+                      {
+                        "$ref": "#/definitions/quotientMarker"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "fields": {
+          "anyOf": [
+            {
+              "type": "object",
+              "propertyNames": {
+                "$ref": "#/definitions/name"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/field"
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "derivedBy": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/derivation"
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "required": [
+        "grain",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "field": {
+      "type": "object",
+      "properties": {
+        "transformation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "nominal",
+                "ordinal",
+                "interval",
+                "ratio"
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "cyclic": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": true
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "proportion": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": true
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "index": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": true
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "key": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/unit"
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "temporality": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/temporality"
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "whole": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "fixed"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "perRow": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/name"
+                        },
+                        {
+                          "$ref": "#/definitions/quotientMarker"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "perRow"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "base": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": true
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "additivity": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/additivity"
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "permits": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/permits"
+                }
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "required": [
+        "transformation"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "anyOf": [
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "perRow": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "conversions": {
+          "anyOf": [
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporality": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "instant",
+                "interval"
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "grain": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "day",
+                "month"
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "additivity": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "additive"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "semi-additive"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "nonAdditiveAlong": {
+              "anyOf": [
+                {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/name"
+                      },
+                      {
+                        "$ref": "#/definitions/quotientMarker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "nonAdditiveAlong"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "non-additive"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "ratio-measure"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "permits": {
+      "type": "object",
+      "properties": {
+        "null": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": true
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": true
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "derivation": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "aggregate-to-grain"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "toGrain": {
+              "anyOf": [
+                {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/name"
+                      },
+                      {
+                        "$ref": "#/definitions/quotientMarker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "toGrain"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "join"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "with": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "cardinality": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "one-to-one",
+                    "one-to-many",
+                    "many-to-one",
+                    "many-to-many"
+                  ]
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "with",
+            "cardinality"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "nest"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "levels": {
+              "anyOf": [
+                {
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/name"
+                      },
+                      {
+                        "$ref": "#/definitions/quotientMarker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "levels"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "bin"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "field": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "closure": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "left-closed",
+                    "right-closed"
+                  ]
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "normalize"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "field": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "project"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "keep": {
+              "anyOf": [
+                {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/name"
+                      },
+                      {
+                        "$ref": "#/definitions/quotientMarker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "keep"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "graph"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "edgeFrom": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "edgeTo": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/name"
+                    }
+                  ]
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "requiresConservation": {
+              "anyOf": [
+                {
+                  "type": "boolean",
+                  "const": true
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "edgeFrom",
+            "edgeTo"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "assertion": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "aggregate"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "relation": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "field": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "op": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "sum",
+                    "mean",
+                    "count",
+                    "min"
+                  ]
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "along": {
+              "anyOf": [
+                {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/name"
+                      },
+                      {
+                        "$ref": "#/definitions/quotientMarker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "nulls": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "exclude",
+                    "as-zero",
+                    "as-observed"
+                  ]
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "uncertainty": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "propagate"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field",
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "ratio-comparison"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "relation": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            },
+            "field": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/name"
+                },
+                {
+                  "$ref": "#/definitions/quotientMarker"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "relation",
+            "field"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "title": "Stage-1 analytical assertion (L0-L2 grammar)",
+      "description": "The closed set of operations a stage-1 engine can be asked to judge over a relational structure. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "rows": {
+          "anyOf": [
+            {
+              "type": "object",
+              "propertyNames": {
+                "$ref": "#/definitions/name"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "propertyNames": {
+                            "$ref": "#/definitions/name"
+                          },
+                          "additionalProperties": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/definitions/observation"
+                              },
+                              {
+                                "$ref": "#/definitions/quotientMarker"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "$ref": "#/definitions/quotientMarker"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "grainWitness": {
+          "anyOf": [
+            {
+              "type": "object",
+              "propertyNames": {
+                "$ref": "#/definitions/name"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/name"
+                        },
+                        {
+                          "$ref": "#/definitions/quotientMarker"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "$ref": "#/definitions/quotientMarker"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "observation": {
+      "anyOf": [
+        {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        {
+          "$ref": "#/definitions/observationRecord"
+        }
+      ]
+    },
+    "observationRecord": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": [
+                "number",
+                "string",
+                "boolean"
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
+        "null": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "absent",
+                "censored",
+                "suppressed"
+              ]
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "quotientMarker": {
+      "type": "object",
+      "anyOf": [
+        {
+          "properties": {
+            "@q": {
+              "const": "forgotten"
+            },
+            "by": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "@q",
+            "by"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "@q": {
+              "const": "member-class"
+            },
+            "members": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "@q",
+            "members"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "title": "A suppressed value in a quotient image"
+    }
+  }
+}

@@ -36,6 +36,7 @@
  * four coordinates went un-erasable.
  */
 import type { Coordinate, ReferenceFacet } from "./census.js";
+import { absorb, forgotten, isMarker, isMemberClass, memberClass, type QuotientImage, type QuotientMarker } from "./quotient-image.js";
 import type { Fixture } from "./structure.js";
 
 export type CoordinateId = string;
@@ -59,15 +60,42 @@ export interface StructuralLocator {
   /** The schema path the steps arrive at. Descriptive; the steps are what executes. */
   path: StructuralFactId;
   steps: LocatorStep[];
+  /**
+   * The shortest list the DECLARATION admits here (`minItems`), for list slots.
+   *
+   * A property of the slot, so it rides on the locator rather than on the
+   * operation: the walk is the single reader of the schema, and "how short this
+   * list may be" is something only it knows. Arity erasure truncating past it
+   * produced `peers: [x]` where two are required — an image the representation
+   * cannot express.
+   */
+  arityFloor?: number;
 }
 
 /**
  * The closed, code-owned vocabulary of ways to forget something.
  *
- * `delete-slot` and `delete-holder` execute identically and are still distinct:
- * deleting a holder destroys every proposition beneath it, deleting a value slot
- * destroys the propositions of that value. A vocabulary that spelled both
- * "delete" would make the footprint of the first unstatable.
+ * A LEAF'S PROPOSITION IS "WHAT THIS SLOT SAYS", and saying nothing is one of
+ * the things it can say. So its erasure has to identify every state the slot can
+ * be in — each value, and absence where the slot is optional. Two operations do
+ * that, and which one applies is decided by the SCHEMA, never by which
+ * coordinates happen to be retained:
+ *
+ *   delete-slot   the leaf is OPTIONAL. Deleting identifies every value with
+ *                 each other AND with absence, which is exactly the partition
+ *                 wanted, and it adds no path to a representation that lacked
+ *                 one.
+ *   forget-value  the leaf is REQUIRED. There is no absent state to identify,
+ *                 and deleting would leave an image the representation cannot
+ *                 express — a declaration missing something it must have. The
+ *                 slot stays, holding a hole.
+ *   delete-holder the proposition IS existence (`#present`). Present and absent
+ *                 must reach the same image, and a hole would keep them apart.
+ *
+ * A member-pair and a member-absence coordinate are both REFINEMENTS of their
+ * leaf — "says a versus says b" and "says m versus says nothing" are each
+ * sub-distinctions of "what this slot says" — so a leaf erasure subsuming them
+ * is correct, not collateral. The witness audit already classified it that way.
  *
  * `spell-member-as-absent` is not in the four-operation sketch this vocabulary
  * was specified from; it is required because `member-absence` is a coordinate
@@ -75,6 +103,7 @@ export interface StructuralLocator {
  * carries this member), which no unconditional delete expresses.
  */
 export type ForgetOperation =
+  | { kind: "forget-value" }
   | { kind: "delete-slot" }
   | { kind: "delete-holder" }
   | { kind: "merge-enum-members"; from: string; into: string }
@@ -123,6 +152,11 @@ const write = (s: Slot, v: unknown): void => {
 
 function step(s: Slot, st: LocatorStep): Slot[] {
   const v = read(s);
+  // A hole is OPAQUE: nothing is reachable through it. Descending into one
+  // would let a later erasure act on the inside of something already
+  // forgotten, and — via the sugar rule, where a non-object slot IS the value
+  // property — would treat a marker as the record form it replaced.
+  if (isMarker(v)) return [];
   switch (st.kind) {
     case "prop":
       if (obj(v)) return [{ parent: v, key: st.name }];
@@ -143,7 +177,7 @@ function step(s: Slot, st: LocatorStep): Slot[] {
 }
 
 /** Every occurrence the locator arrives at, as (container, key) pairs. */
-export function resolveSlots(fixture: Fixture, locator: StructuralLocator): Slot[] {
+export function resolveSlots(fixture: Fixture | QuotientImage, locator: StructuralLocator): Slot[] {
   const wrapper: Json = { root: fixture };
   let slots: Slot[] = [{ parent: wrapper, key: "root" }];
   for (const st of locator.steps) slots = slots.flatMap((s) => step(s, st));
@@ -160,29 +194,59 @@ export function resolveSlots(fixture: Fixture, locator: StructuralLocator): Slot
  * that had never declared it, turning a reach of 6 into 82. Forgetting must
  * never be able to add a declaration.
  */
-function affects(s: Slot, op: ForgetOperation): boolean {
+function affects(s: Slot, op: ForgetOperation, floor = 1): boolean {
   const present = Array.isArray(s.parent) ? (s.key as number) < s.parent.length : (s.key as string) in (s.parent as Json);
   if (!present) return false;
   const v = read(s);
   switch (op.kind) {
+    case "forget-value":
     case "delete-slot":
     case "delete-holder":
     case "forget-branch-field":
       return present;
     case "merge-enum-members":
-      return v === op.from || (Array.isArray(v) && v.includes(op.from));
+      // Symmetric in `from` and `into`, unlike the string rewrite it replaces.
+      // The proposition is "these two are the same", so a slot carrying EITHER
+      // must reach the same class — otherwise composing two merges over one
+      // leaf leaves the untouched member outside the class the others reached,
+      // and the result depends on listing order.
+      return mergesHere(v, op);
     case "spell-member-as-absent":
       return v === op.member;
     case "delete-tagged-holder":
       return obj(v) && v.kind === op.member;
     case "forget-reference-arity":
-      return Array.isArray(v) && v.length > 1;
+      return Array.isArray(v) && v.length > floor;
     case "forget-reference-order":
       return Array.isArray(v) && JSON.stringify(v) !== JSON.stringify([...v].sort());
     case "forget-reference-incidence":
       if (Array.isArray(v)) return v.some((x, i) => x !== `${INCIDENCE_TOKEN}_${i}`);
       return !obj(v) && v !== `${INCIDENCE_TOKEN}_0`;
   }
+}
+
+/**
+ * Drop duplicates by VALUE, not by reference.
+ *
+ * `new Set` was enough while a merge wrote a string; a merged class is an
+ * object, so two slots that reached the same class would survive as two
+ * distinct list members and the merge would fail to identify them.
+ */
+function dedupe(xs: unknown[]): unknown[] {
+  const seen = new Set<string>();
+  return xs.filter((x) => {
+    const k = JSON.stringify(x);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/** Does this value, or any member of this list, fall in the merged class? */
+function mergesHere(v: unknown, op: { from: string; into: string }): boolean {
+  const one = (x: unknown): boolean =>
+    x === op.from || x === op.into || (isMemberClass(x) && x.members.some((m) => m === op.from || m === op.into));
+  return Array.isArray(v) ? v.some(one) : one(v);
 }
 
 /**
@@ -194,16 +258,28 @@ function affects(s: Slot, op: ForgetOperation): boolean {
  * equal, because canonicalization is name-blind. Callers that need the exact
  * answer must compare canonical forms; this is for pruning.
  */
-export function wouldChange(fixture: Fixture, plan: ErasurePlan): boolean {
-  return resolveSlots(fixture, plan.locator).some((s) => affects(s, plan.operation));
+export function wouldChange(fixture: Fixture | QuotientImage, plan: ErasurePlan): boolean {
+  return resolveSlots(fixture, plan.locator).some((s) => affects(s, plan.operation, plan.locator.arityFloor));
 }
 
-/** Deep-clone the fixture and execute one plan over every occurrence its locator finds. */
-export function executePlan(fixture: Fixture, plan: ErasurePlan): Fixture {
-  const copy = JSON.parse(JSON.stringify(fixture)) as Fixture;
+/**
+ * Deep-clone and execute one plan over every occurrence its locator finds.
+ *
+ * Takes a fixture OR an image and returns an IMAGE. The input widening is what
+ * makes composition typecheck; the output is what stops the result being handed
+ * back as a `Fixture` it is not. `QuotientImage` is an index-signature object,
+ * so a `Fixture` is assignable to it and it is not assignable to a `Fixture` —
+ * which is the direction that matters, and it is the compiler that enforces it
+ * rather than a reviewer.
+ */
+export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan): QuotientImage {
+  const copy = JSON.parse(JSON.stringify(fixture)) as QuotientImage;
   const slots = resolveSlots(copy, plan.locator);
   const emptied: Json[] = [];
   const op = plan.operation;
+  const floor = plan.locator.arityFloor ?? 1;
+  /** Fold a suppression into whatever already stands at the slot. */
+  const suppress = (s: Slot, m: QuotientMarker) => write(s, absorb(read(s), m));
 
   // Deletions are collected and applied afterwards, highest array index first:
   // splicing while iterating would renumber the slots still to be visited, and
@@ -213,18 +289,35 @@ export function executePlan(fixture: Fixture, plan: ErasurePlan): Fixture {
   const remove = (s: Slot) => deletions.push(s);
 
   for (const s of slots) {
-    if (!affects(s, op)) continue;
+    if (!affects(s, op, floor)) continue;
     const v = read(s);
     switch (op.kind) {
+      case "forget-value":
+        // A REQUIRED leaf: the slot survives as a hole. Deleting it would leave
+        // a declaration missing something it must have — an image the
+        // representation cannot express, and the whole reason this codomain
+        // exists. There is no absent state here to identify it with.
+        suppress(s, forgotten([plan.id]));
+        break;
       case "delete-slot":
       case "delete-holder":
       case "forget-branch-field":
-        if (affects(s, op)) remove(s);
+        remove(s);
         break;
-      case "merge-enum-members":
-        if (v === op.from) write(s, op.into);
-        else if (Array.isArray(v)) write(s, [...new Set(v.map((x) => (x === op.from ? op.into : x)))]);
+      case "merge-enum-members": {
+        // A CLASS, not a rewrite. Writing `into` over `from` asserts the value
+        // is `into`, which for a discriminator means writing one branch's tag
+        // over another branch's payload — `{kind:"aggregate-to-grain",
+        // levels:[…]}` claims to be an aggregation while carrying a nesting.
+        // A class identifies the two without claiming either.
+        const cls = memberClass([op.from, op.into]);
+        if (Array.isArray(v)) {
+          write(s, dedupe(v.map((x) => (mergesHere(x, op) ? absorb(x, cls) : x))));
+        } else {
+          suppress(s, cls);
+        }
         break;
+      }
       case "spell-member-as-absent":
         // A representation that cannot say `m` explicitly must express it by
         // leaving the slot off. If nothing downstream tells the two apart, `m`
@@ -238,7 +331,16 @@ export function executePlan(fixture: Fixture, plan: ErasurePlan): Fixture {
         if (obj(v) && v.kind === op.member) remove(s);
         break;
       case "forget-reference-arity":
-        if (Array.isArray(v)) write(s, v.slice(0, 1));
+        // To the DECLARATION's floor, not to one. Truncating past the floor
+        // produced `peers: [x]` where the schema requires two — an image the
+        // representation cannot express — and it also erased more than arity:
+        // cutting a 2-list to 1 identifies [a,b] with [a,c], which differ in
+        // incidence and not in arity at all.
+        //
+        // Truncation still conflates the two ABOVE the floor: [a,b,c] and
+        // [a,b,d] both become [a,b]. That is a limit of expressing three
+        // independent facets by cutting one list, not something the floor fixes.
+        if (Array.isArray(v)) write(s, v.slice(0, floor));
         break;
       case "forget-reference-order":
         if (Array.isArray(v)) write(s, [...v].sort());
@@ -307,11 +409,79 @@ function dropEmpty(root: unknown, target: Json, viaKey: string | null): void {
  * edges the census emits, and `erasure-audit.ts` proves the remaining pairs
  * commute, so the sort is the only ordering claim the system makes.
  */
-export function executeAll(fixture: Fixture, plans: readonly ErasurePlan[]): Fixture {
-  return orderPlans(plans).reduce((f, p) => executePlan(f, p), fixture);
+export function executeAll(fixture: Fixture | QuotientImage, plans: readonly ErasurePlan[]): QuotientImage {
+  const ordered = orderPlans(plans);
+  let image: QuotientImage = ordered.reduce<QuotientImage>((f, p) => executePlan(f, p), fixture);
+
+  // THE FIXPOINT IS THE CONFLUENCE LAW, not an optimisation guard.
+  //
+  // A set of merges over one leaf is not the composition of the individual
+  // merges: {sum,mean} then {mean,count} leaves `count` outside the class the
+  // other two reached, because the first pass never looked at it. Iterating
+  // until nothing moves computes the transitive closure — the union-find every
+  // set of merge plans actually denotes — and that result cannot depend on the
+  // order the plans were listed in.
+  //
+  // It terminates because every pass either changes nothing or strictly grows a
+  // member class, and the classes are bounded by the leaf's enum. The bound is
+  // asserted rather than assumed: exceeding it is a defect in the operations,
+  // and silently returning a half-closed image would be worse than failing.
+  if (!ordered.some((p) => p.operation.kind === "merge-enum-members")) return image;
+  for (let pass = 0; ; pass++) {
+    if (pass > MAX_CLOSURE_PASSES) throw new Error(`erasure-plan: merge closure did not settle in ${MAX_CLOSURE_PASSES} passes`);
+    const next = ordered.reduce<QuotientImage>((f, p) => executePlan(f, p), image);
+    if (JSON.stringify(next) === JSON.stringify(image)) return image;
+    image = next;
+  }
 }
 
+/** Larger than any enum in the kernel schema, so only a defect can reach it. */
+const MAX_CLOSURE_PASSES = 32;
+
 /** Topological order of `runAfter` edges; ties keep the callers order (stable). */
+/**
+ * Ordering edges DERIVED from locator structure, beside the declared `runAfter`.
+ *
+ * A branch-qualified locator (`… derivedBy [branch join] cardinality`) reaches
+ * its slot only while the discriminator still reads `join`. Any plan whose
+ * locator IS that discriminator — a member merge, a value forget, a member
+ * spelled as absent — relabels the branch out from under it, so the
+ * branch-qualified plan must run first. The census declares exactly these edges
+ * for the plans it emits. A plan synthesized outside the census — a closure's
+ * `forget(<holder>.<branch>.<field>)` — carries no `runAfter`, and until this
+ * rule existed its order against the carrier was decided by listing position:
+ * measured over the 22 closure sets and 208 specimens, 514 stimulus/set
+ * combinations yielded distinct images under different listings.
+ *
+ * The discriminator is the holder's `kind`, which is also what a `branch` step
+ * tests (`resolveSlots`); the two must not drift apart.
+ */
+export function derivedRunAfter(plan: ErasurePlan, present: readonly ErasurePlan[]): ErasurePlanId[] {
+  const target = plan.locator.steps;
+  const out: ErasurePlanId[] = [];
+  for (const other of present) {
+    if (other.id === plan.id) continue;
+    const steps = other.locator.steps;
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].kind !== "branch") continue;
+      if (sameSteps(target, [...steps.slice(0, i), { kind: "prop", name: "kind" }])) {
+        out.push(other.id);
+        break;
+      }
+    }
+  }
+  return out;
+}
+const sameSteps = (a: readonly LocatorStep[], b: readonly LocatorStep[]): boolean =>
+  a.length === b.length &&
+  a.every((s, i) => {
+    const t = b[i];
+    if (s.kind !== t.kind) return false;
+    if (s.kind === "prop" && t.kind === "prop") return s.name === t.name;
+    if (s.kind === "branch" && t.kind === "branch") return s.member === t.member;
+    return true;
+  });
+
 export function orderPlans(plans: readonly ErasurePlan[]): ErasurePlan[] {
   const present = new Set(plans.map((p) => p.id));
   const depth = new Map<ErasurePlanId, number>();
@@ -322,7 +492,7 @@ export function orderPlans(plans: readonly ErasurePlan[]): ErasurePlan[] {
     if (seen.has(id)) return 0; // a cycle is reported by the audit, not silently reordered here
     seen.add(id);
     const p = byId.get(id);
-    const deps = (p?.runAfter ?? []).filter((d) => present.has(d));
+    const deps = [...new Set([...(p?.runAfter ?? []), ...(p ? derivedRunAfter(p, plans) : [])])].filter((d) => present.has(d));
     const r = deps.length === 0 ? 0 : 1 + Math.max(...deps.map((d) => rank(d, seen)));
     depth.set(id, r);
     return r;
@@ -344,15 +514,34 @@ export function containsSteps(outer: StructuralLocator, inner: StructuralLocator
   return a.length <= b.length && a.every((s, i) => JSON.stringify(s) === JSON.stringify(b[i]));
 }
 
-/** Operations that delete their slot unconditionally, so everything inside goes. */
-export const UNCONDITIONAL_DELETIONS: ReadonlySet<ForgetOperation["kind"]> = new Set([
+/**
+ * Operations that make their whole slot unobservable, so everything inside goes.
+ *
+ * `forget-value` belongs here even though it deletes nothing: a hole is OPAQUE,
+ * nothing is reachable through it, and a distinction beneath the slot is as
+ * destroyed by a hole as by a deletion. Renamed from `UNCONDITIONAL_DELETIONS`
+ * because "deletion" stopped being the shared property once a value erasure
+ * left the slot standing.
+ */
+export const TOTAL_SUPPRESSIONS: ReadonlySet<ForgetOperation["kind"]> = new Set([
+  "forget-value",
   "delete-slot",
   "delete-holder",
   "forget-branch-field",
 ]);
 
 /**
- * Every coordinate an UNCONDITIONAL DELETION makes unobservable.
+ * The subset that actually REMOVES the slot from its parent.
+ *
+ * Narrower than `TOTAL_SUPPRESSIONS` on purpose: the "deleting every element
+ * empties the array" rule only holds for operations that remove elements. A
+ * `forget-value` over elements writes one hole per element and leaves the array
+ * exactly as long as it was.
+ */
+const REMOVALS: ReadonlySet<ForgetOperation["kind"]> = new Set(["delete-slot", "delete-holder", "forget-branch-field"]);
+
+/**
+ * Every coordinate a TOTAL SUPPRESSION makes unobservable.
  *
  * Exported here rather than in the audit so that a plan which is not a
  * coordinate — a closure's `forget-branch-field` — computes its footprint the
@@ -360,21 +549,26 @@ export const UNCONDITIONAL_DELETIONS: ReadonlySet<ForgetOperation["kind"]> = new
  * audit then falsifies the result against specimens; this function only claims.
  */
 export function deletionFootprint(plan: ErasurePlan, plans: Iterable<ErasurePlan>): string[] {
-  if (!UNCONDITIONAL_DELETIONS.has(plan.operation.kind)) return [];
+  if (!TOTAL_SUPPRESSIONS.has(plan.operation.kind)) return [];
   const steps = plan.locator.steps;
-  // Deleting every ELEMENT of an array empties it, and an emptied declaration
-  // is dropped from its holder — so an element deletion is at least as coarse
-  // as deleting the array itself. The containment test alone cannot see this:
+  // REMOVING every ELEMENT of an array empties it, and an emptied declaration
+  // is dropped from its holder — so an element removal is at least as coarse
+  // as removing the array itself. The containment test alone cannot see this:
   // the array's locator is SHORTER, so it contains the element plan rather than
   // the other way round. Found by the falsification pass, which reported
   // `structure.peers[]#present -> structure.peers#present` as supported and
   // unclaimed; claimed here rather than left as an under-report.
-  const parent = steps.length > 0 && steps[steps.length - 1].kind === "elements" ? { path: plan.locator.path, steps: steps.slice(0, -1) } : undefined;
+  //
+  // Keyed on REMOVALS, not on every total suppression: holing each element
+  // leaves the array exactly as long as it was, so it empties nothing.
+  const removes = REMOVALS.has(plan.operation.kind);
+  const parent =
+    removes && steps.length > 0 && steps[steps.length - 1].kind === "elements" ? { path: plan.locator.path, steps: steps.slice(0, -1) } : undefined;
   return [...plans]
     .filter(
       (q) =>
         containsSteps(plan.locator, q.locator) ||
-        (parent !== undefined && UNCONDITIONAL_DELETIONS.has(q.operation.kind) && stepsEqual(parent.steps, q.locator.steps)),
+        (parent !== undefined && REMOVALS.has(q.operation.kind) && stepsEqual(parent.steps, q.locator.steps)),
     )
     .map((q) => q.id)
     .sort();
@@ -432,12 +626,20 @@ export function synthesizePlan(
     return locator ? { id: c.id, locator, operation: { kind: "delete-tagged-holder", member: c.members![0] }, representationEffects: [] } : undefined;
   }
   const locator = locators.get(c.leaf);
-  const operation = operationFor(c);
+  const operation = operationFor(c, requiredLeaves);
   return locator && operation ? { id: c.id, locator, operation, representationEffects: [] } : undefined;
 }
 
-/** The coordinate kinds that carry an erasure, and the operation each one names. */
-export function operationFor(c: Coordinate): ForgetOperation | undefined {
+/**
+ * The coordinate kinds that carry an erasure, and the operation each one names.
+ *
+ * `requiredLeaves` is a SCHEMA fact the census walk collects, not a reading of
+ * which coordinates survived subtraction. That matters: an operation chosen from
+ * the retained population would make the erasure algebra shift under its own
+ * results, so "is this leaf required by its holder" has to come from the
+ * declaration and nowhere else.
+ */
+export function operationFor(c: Coordinate, requiredLeaves: ReadonlySet<string> = new Set()): ForgetOperation | undefined {
   switch (c.kind) {
     case "reference":
       // Spelling confers no standing — the alpha-renaming invariant — so there
@@ -450,7 +652,12 @@ export function operationFor(c: Coordinate): ForgetOperation | undefined {
     case "reference-topology":
       return referenceOperation(c.facet!);
     case "leaf":
-      return c.id.endsWith("#present") ? { kind: "delete-holder" } : { kind: "delete-slot" };
+      if (c.id.endsWith("#present")) return { kind: "delete-holder" };
+      // An OPTIONAL leaf can say nothing, and "says nothing" is one of the
+      // states its erasure must identify — deletion does that and adds no path.
+      // A REQUIRED one has no such state, and deleting it would leave a
+      // declaration missing something it must have.
+      return requiredLeaves.has(c.leaf) ? { kind: "forget-value" } : { kind: "delete-slot" };
   }
 }
 

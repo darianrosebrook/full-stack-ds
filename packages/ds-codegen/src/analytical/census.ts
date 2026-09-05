@@ -267,7 +267,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * point: a coordinate whose location is reconstructed elsewhere is a
    * coordinate two modules can disagree about, and they did.
    */
-  const emit = (c: Coordinate, rawPath: string, steps: LocatorStep[]) => {
+  const emit = (c: Coordinate, rawPath: string, steps: LocatorStep[], arityFloor?: number) => {
     out.push(c);
     // Recorded here as well as in `walk`, because the discriminator leaf is
     // emitted directly rather than walked into: without it,
@@ -275,10 +275,14 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     // representation effects, so a holder deletion under-reported the tag it
     // removes.
     visited.add(rawPath);
-    const locator: StructuralLocator = { path: rawPath, steps };
+    // The floor rides on the LOCATOR, not on the operation: "how short this
+    // list is allowed to be" is a fact about the slot's declaration, which the
+    // walk is the single reader of. An arity erasure that truncated past it
+    // produced images the representation cannot express.
+    const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}) };
     locators.set(c.id, locator);
     if (!locators.has(c.leaf)) locators.set(c.leaf, locator);
-    const operation = operationFor(c);
+    const operation = operationFor(c, requiredLeaves);
     if (!operation) return;
     plans.set(c.id, { id: c.id, locator, operation, representationEffects: [] });
     for (const u of unionStack) {
@@ -320,12 +324,12 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * `list` decides which facets apply: a single slot has no arity or order to
    * vary, only which sibling slot binds it.
    */
-  const addReference = (rawPath: string, list: boolean, optional: Opt, steps: LocatorStep[]) => {
+  const addReference = (rawPath: string, list: boolean, optional: Opt, steps: LocatorStep[], arityFloor?: number) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
     const r = role(rawPath);
-    emit({ id, kind: "reference", leaf: id, role: r }, rawPath, steps);
+    emit({ id, kind: "reference", leaf: id, role: r }, rawPath, steps, arityFloor);
     // Presence is a degree of freedom the spelling is not — but only where it
     // can vary INDEPENDENTLY. For a reference required by its holder,
     //
@@ -351,7 +355,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     }
     const facets: ReferenceFacet[] = list ? ["arity", "order", "incidence"] : ["incidence"];
     for (const facet of facets) {
-      emit({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet }, rawPath, steps);
+      emit({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet }, rawPath, steps, arityFloor);
     }
   };
 
@@ -414,7 +418,9 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     // Detected BEFORE resolution: after it a name is just a patterned string.
     if (nameRefOf(raw)) return addReference(rawPath, false, optional, steps);
     const n = resolve(raw);
-    if (n.type === "array" && nameRefOf((n.items ?? {}) as Node)) return addReference(rawPath, true, optional, steps);
+    if (n.type === "array" && nameRefOf((n.items ?? {}) as Node)) {
+      return addReference(rawPath, true, optional, steps, typeof n.minItems === "number" ? n.minItems : 1);
+    }
     if (Array.isArray(n.enum)) return addLeaf(rawPath, steps, n.enum as string[], optional);
     if (n.const !== undefined) return addLeaf(rawPath, steps, [String(n.const)], optional);
     if (Array.isArray(n.anyOf)) return walkUnion(n.anyOf as Node[], rawPath, optional, steps);
@@ -474,9 +480,15 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
         if (nameRefOf(n.additionalProperties as Node)) return addReference(rawPath, false, inner, entry);
         return walk(v, `${rawPath}.*`, inner, entry);
       }
-      return addLeaf(rawPath, steps);
+      return addLeaf(rawPath, steps, undefined, optional);
     }
-    if (isPrimitive(n)) return addLeaf(rawPath, steps);
+    // The optionality has to be PASSED here. These two fall-throughs dropped it,
+    // so every plain primitive — `field.key`, `field.unit.perRow` — was recorded
+    // as required by its holder when it is not. That was invisible while
+    // `requiredLeaves` was read only by the member-absence falsification path;
+    // it stopped being invisible when the leaf's OPERATION started depending on
+    // it, and five optional leaves were holed instead of deleted.
+    if (isPrimitive(n)) return addLeaf(rawPath, steps, undefined, optional);
     throw new Error(`census: unhandled schema node at ${rawPath}: ${JSON.stringify(n).slice(0, 80)}`);
   };
 
@@ -491,14 +503,20 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       // pairs below. A property required by branch k is present exactly when
       // both hold, so it contributes no third degree of freedom.
       const owned = addHolderPresence(rawPath, optional, steps);
-      addLeaf(`${rawPath}.kind`, [...steps, { kind: "prop", name: "kind" }], kinds, optional);
       // The discriminator is required by every branch. `addLeaf` receives the
       // HOLDER's optionality here (that is what makes `absenceReachable` treat
       // the tag as omissible and why discriminators are excluded from it), so
       // the requirement has to be recorded directly or "spell this member as
       // absent" would delete only the tag and leave a branch payload with no
       // branch.
+      //
+      // Recorded BEFORE the leaf is added, not after. `addLeaf` is what emits
+      // the plan, and the plan's operation is chosen from this set: recorded
+      // afterwards, the two discriminators reached `delete-slot` and their
+      // erasure left a payload with no branch — an image the representation
+      // cannot express, which is how the ordering surfaced.
       requiredLeaves.add(label(`${rawPath}.kind`));
+      addLeaf(`${rawPath}.kind`, [...steps, { kind: "prop", name: "kind" }], kinds, optional);
       signatures.set(label(`${rawPath}.kind`), {
         required: Object.fromEntries(
           objects.map((b, i) => [kinds[i], ((Array.isArray(b.required) ? b.required : []) as string[]).filter((k) => k !== "kind").sort()]),
@@ -541,7 +559,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       // collapses to the same id — the leaf covers both spellings and no guard
       // may be emitted, or the array form becomes un-erasable.
       const guarded = objects.length > 0 ? [...steps, { kind: "scalar-only" as const }] : steps;
-      addLeaf(rawPath, guarded, consts.length > 0 && primitives.length === resolved.length ? consts : undefined);
+      addLeaf(rawPath, guarded, consts.length > 0 && primitives.length === resolved.length ? consts : undefined, optional);
     }
     for (const b of resolved) {
       // A scalar spelling IS the object branch's `value`, so that property is

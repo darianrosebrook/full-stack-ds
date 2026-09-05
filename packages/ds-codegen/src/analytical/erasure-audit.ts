@@ -57,8 +57,9 @@
 import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { fileURLToPath } from "node:url";
-import { FIXTURE_SCHEMA, loadCensus, loadPlans } from "./census.js";
+import { authorityIdentities, footprintBasisDigest, type AuthorityIdentities } from "./authority.js";
+import { loadCensus, loadPlans } from "./census.js";
+import { ruleSurfaceDigest } from "./corpus-integrity.js";
 import { loadClosures } from "./closure.js";
 import { deletionFootprint, executePlan, wouldChange, type ErasurePlan } from "./erasure-plan.js";
 import { separatingPairs, type PairFailure } from "./erasure-specimens.js";
@@ -68,13 +69,15 @@ import {
   loadOracle,
   loadWitnesses,
   resolveSide,
+  RULE_SOURCES,
   WITNESSES_FILE,
   type Witness,
 } from "./necessity.js";
 import { canonical } from "./quotient.js";
+import { loadQuotientValidator, QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
+import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { parseFixtures, type Fixture } from "./structure.js";
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const FOOTPRINTS_FILE = path.join(FIXTURES_DIR, "erasure-footprints.json");
 
 const sha = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex");
@@ -331,21 +334,137 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
     .sort((x, y) => x.witness.localeCompare(y.witness));
 }
 
+/**
+ * THE BINDINGS EVERY CERTIFIABLE REPORT CARRIES.
+ *
+ * A property of the report CONTRACT, shared by producer and consumer -- not of
+ * either instance. The comparisons used to enumerate one instance's own keys:
+ * inputs from `recorded.digests`, identities from `live.authority`. So removing
+ * a key deleted its own obligation, and the gate stayed green. Enumerating the
+ * union of both objects would not fix it either, since an identity missing from
+ * both sides still leaves the obligation set.
+ *
+ * `computeReport` builds from these, so producer and consumer cannot disagree
+ * about what a complete report is.
+ */
+export const REPORT_INPUTS: Record<string, () => Buffer> = {
+  "fixtures.jsonl": () => fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl")),
+  "witnesses.json": () => fs.readFileSync(WITNESSES_FILE),
+  "closures-stage2.json": () => fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json")),
+};
+
+/**
+ * The identities every certifiable report carries, by cause.
+ *
+ * The consumer's declared contract. NOTE what this is and is not: the input
+ * bindings above are CONSTRUCTED from their declaration, so producer and
+ * consumer cannot disagree about them. The authority block is produced
+ * independently, by `authorityIdentities(...) + ruleDigest`, and merely
+ * VALIDATED against this list. That is an adequate compatibility check, but it
+ * is a weaker mechanism than shared construction and should not be described
+ * as the same thing.
+ */
+export const REPORT_AUTHORITIES = ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"] as const;
+
+/** A recorded digest is 64 lowercase hex characters, or it is not evidence. */
+const SHA256 = /^[0-9a-f]{64}$/;
+
+/**
+ * Is this binding EVIDENCE, or merely defined?
+ *
+ * Presence closed the deletion path: a required binding can no longer vanish
+ * along with its own comparison. It does not close the AGREEMENT path, because
+ * two reports carrying the same non-evidence compare equal. Measured before
+ * this check existed: `null`, `""` and `"not-a-sha256"` on both sides were all
+ * accepted, as was `quotientSchemaVersion: "banana"`.
+ */
+function inadmissible(key: string, value: unknown, side: string): string | undefined {
+  if (value === undefined) return `the ${side} report carries no ${key}; it cannot be shown what produced it`;
+  if (key === "quotientSchemaVersion") {
+    return typeof value === "number" && Number.isInteger(value) && value > 0
+      ? undefined
+      : `the ${side} report's quotientSchemaVersion is not a schema version: ${JSON.stringify(value)}`;
+  }
+  return typeof value === "string" && SHA256.test(value) ? undefined : `the ${side} report's ${key} is not a sha256 digest: ${JSON.stringify(value)}`;
+}
+
+/**
+ * The digest of a specimen population, by MEMBERSHIP.
+ *
+ * One recipe, used both for the population a report NAMES and for the
+ * population a check was COMPUTED OVER, so the two are directly comparable.
+ * Equal counts are not equal populations: a same-cardinality substitution
+ * leaves every count intact and changes this.
+ */
+export function populationDigest(fixtures: Fixture[]): string {
+  return sha(Buffer.from(fixtures.map(canonical).join("\u0000")));
+}
+
+/** The population one language report was actually computed over. */
+export interface LanguageScope {
+  specimens: number;
+  /** sha over the canonical form of every specimen validated, in order. */
+  populationDigest: string;
+}
+
+export interface LanguageScopes {
+  sourceLanguageDeparture: LanguageScope;
+  quotientLanguageInvalid: LanguageScope;
+}
+
 export interface FootprintReport {
   $comment: string;
   digests: Record<string, string>;
-  specimens: { corpus: number; stimuli: number; synthesized: number; total: number };
+  /**
+   * The authority this measurement was taken under, by CAUSE.
+   *
+   * `digests` above lists the data the report reads. These say what the report
+   * MEANS: which coordinates exist, what an erasure does, what admits a
+   * witness, and what the engine judges. A flat list of file digests reports
+   * that something moved; these report which of those four moved, and only one
+   * of them requires re-verifying erasure behaviour by hand.
+   */
+  authority: AuthorityIdentities & { ruleDigest: string };
+  /**
+   * The identity of the specimen POPULATION, held apart from the four above.
+   *
+   * A footprint claim is population-sensitive — "no specimen separates this" is
+   * a statement about the specimens — while a witness is existential and
+   * survives the population growing. Binding both to one identity would reject
+   * standing that a new specimen cannot possibly have disturbed.
+   */
+  footprintBasisDigest: string;
+  /** Which quotient language these images were measured in. */
+  quotientSchemaVersion: number;
+  specimens: { corpus: number; stimuli: number; synthesized: number; total: number; populationDigest: string };
   /** Coordinates for which no separating pair could be written, and why. */
   unbuilt: PairFailure[];
   /**
-   * Erasures whose result is not a schema-valid representation.
+   * Erasures whose image is not an unmodified SOURCE declaration.
    *
-   * A necessity argument says "no consumer of the QUOTIENTED representation can
-   * tell the two apart". Where the quotient leaves the language, there is no
-   * such consumer, and the argument is standing on a shape the schema rejects.
-   * Reported, never acted on: four of these currently support holding witnesses.
+   * Usually expected, and not by itself a defect. An erasure is a map into a
+   * quotient language; nothing requires that language to be a subset of the
+   * source one, any more than a compiler IR must parse as source. This count
+   * exists to be READ, not to be driven to zero.
    */
-  invalidating: { coordinate: string; specimens: number; error: string }[];
+  sourceLanguageDeparture: LanguageReport[];
+  /**
+   * Erasures whose image is not a legal QUOTIENT image. Always a defect.
+   *
+   * The terminal invariant of this lane, and the one with teeth: a required leaf
+   * deleted with no marker left behind, an array emptied below its floor, a hole
+   * that serializes as `null`, a branch tag written over another branch's
+   * payload. Each of those has actually happened here.
+   */
+  quotientLanguageInvalid: LanguageReport[];
+  /**
+   * Which specimens each report above was computed over.
+   *
+   * Recorded so the artifact cannot name a population in `specimens` while a
+   * report describes a subset of it -- the defect this field exists to make
+   * impossible to reintroduce silently.
+   */
+  scopes: LanguageScopes;
   /** Coordinate id -> measured footprint. Every plan appears, singleton or not. */
   footprints: Record<string, string[]>;
   /** Erasures no specimen distinguishes. A corpus fact; never read as a verdict. */
@@ -359,49 +478,121 @@ export interface FootprintReport {
   witnesses: WitnessAudit[];
 }
 
-/**
- * Which erasures produce a representation the schema rejects.
- *
- * Measured over the AUTHORED specimens only. A synthesized pair is discarded
- * unless both sides validate, so including them would make this look better by
- * construction — the population would be filtered by the property being tested.
- */
-export function invalidatingErasures(fixtures: Fixture[], plans: Map<string, ErasurePlan> = loadPlans()): FootprintReport["invalidating"] {
-  const validate = loadOracle().validate;
-  const out: FootprintReport["invalidating"] = [];
-  for (const p of plans.values()) {
-    let count = 0;
-    let first = "";
-    for (const f of fixtures) {
-      if (!wouldChange(f, p)) continue;
-      const errors = validate(executePlan(f, p));
-      if (errors.length === 0) continue;
-      count++;
-      first ||= errors[0];
-    }
-    if (count > 0) out.push({ coordinate: p.id, specimens: count, error: first });
-  }
-  return out.sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
+export interface LanguageReport {
+  coordinate: string;
+  /** How many specimens the erasure produces an offending image from. */
+  specimens: number;
+  /** The first validator error, verbatim — enough to name the defect class. */
+  error: string;
+  /**
+   * The first specimen the offending image came from.
+   *
+   * A finding that names only a plan cannot be chased: the same plan is legal
+   * on most of the population, and the question is always WHICH specimen it is
+   * illegal on.
+   */
+  specimen: string;
 }
 
-export function computeReport(): FootprintReport {
+/**
+ * Which erasures leave the source language, and which leave the quotient one.
+ *
+ * The same walk answers both, against two different validators, because the
+ * whole point is that these are different questions and were previously one.
+ * `source` rejecting an image is information; `quotient` rejecting it is a bug.
+ *
+ * THE TWO QUESTIONS HAVE DIFFERENT POPULATIONS, and this used to give them one.
+ *
+ * `sourceLanguageDeparture` is measured over the AUTHORED specimens only. That
+ * is a REPORTING POLICY, not a logical necessity, and the old comment overstated
+ * it: the synthesizer filters on "the INPUT validates as source", while this
+ * statistic asks "does the IMAGE fail to validate as source". Those are
+ * different propositions, and a source-valid input does not force a source-valid
+ * image — the whole codomain exists because erasure leaves the source language.
+ * Measured over everything, the synthesized population in fact exposes one
+ * departure coordinate the authored population does not (63 against 62). The
+ * scope is kept because the statistic is about authored intent, and it is now
+ * recorded by membership so the narrower population is stated rather than
+ * assumed.
+ *
+ * That argument does NOT transfer to `quotientLanguageInvalid`, and applying it
+ * there was a coverage defect. Nothing filters the IMAGES — only the inputs —
+ * so a synthesized specimen can produce an illegal quotient image as readily as
+ * an authored one, and it is exactly the population written to reach shapes the
+ * corpus does not. The check reported a `specimens` block naming 208 while
+ * validating 112 of them, so 96 (46%) of the population the acceptance
+ * criterion names never reached the invariant that criterion is about.
+ *
+ * The terminal invariant is now measured over EVERYTHING, in one walk, and both
+ * scopes are reported by membership rather than by count — a report that names
+ * a population it did not check is the defect, not a wrong number.
+ */
+export function languageReports(
+  fixtures: Fixture[],
+  /**
+   * How many leading fixtures are authored. Source departure is tallied over
+   * that prefix; quotient legality over all of them.
+   */
+  authored: number = fixtures.length,
+  plans: Map<string, ErasurePlan> = loadPlans(),
+): { sourceLanguageDeparture: LanguageReport[]; quotientLanguageInvalid: LanguageReport[]; scopes: LanguageScopes } {
+  const source = loadOracle().validate;
+  const quotient = loadQuotientValidator(CONTRACTS_DIR);
+  const tally = (into: Map<string, LanguageReport>, id: string, errors: string[], specimen: string) => {
+    if (errors.length === 0) return;
+    const prev = into.get(id);
+    if (prev) prev.specimens++;
+    else into.set(id, { coordinate: id, specimens: 1, error: errors[0], specimen });
+  };
+  const departed = new Map<string, LanguageReport>();
+  const illegal = new Map<string, LanguageReport>();
+  for (const p of plans.values()) {
+    fixtures.forEach((f, i) => {
+      if (!wouldChange(f, p)) return;
+      const image = executePlan(f, p);
+      if (i < authored) tally(departed, p.id, source(image), f.id);
+      tally(illegal, p.id, quotient(image), f.id);
+    });
+  }
+  const order = (m: Map<string, LanguageReport>) =>
+    [...m.values()].sort((a, b) => b.specimens - a.specimens || a.coordinate.localeCompare(b.coordinate));
+  const scope = (fs: Fixture[]): LanguageScope => ({ specimens: fs.length, populationDigest: populationDigest(fs) });
+  return {
+    sourceLanguageDeparture: order(departed),
+    quotientLanguageInvalid: order(illegal),
+    // MEMBERSHIP, not just a count: two populations of the same size are not
+    // the same population, and the whole failure here was a report naming one
+    // population while checking another.
+    scopes: { sourceLanguageDeparture: scope(fixtures.slice(0, authored)), quotientLanguageInvalid: scope(fixtures) },
+  };
+}
+
+/**
+ * `plans` is injectable so the ACCEPTANCE PATH can be falsified, not only the
+ * helper beneath it. The defect this report was repaired for lived in the
+ * caller's choice of population, so a falsifier that assembles its own array
+ * and calls `languageReports` directly cannot reach it.
+ */
+export function computeReport(plans: Map<string, ErasurePlan> = loadPlans()): FootprintReport {
   const s = specimens();
   const m = measure(s.fixtures);
   return {
     $comment:
-      "Measured semantic footprints (REL-VIEW-ALGEBRA-01). q is in the footprint of P iff q acts on some specimen AND erasing q after P changes nothing — i.e. E_q . E_P = E_P. Derived by measurement over the corpus plus every witness and closure stimulus, never by string prefix on coordinate ids. `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
-    digests: {
-      "fixture.schema.json": sha(fs.readFileSync(FIXTURE_SCHEMA)),
-      "fixtures.jsonl": sha(fs.readFileSync(path.join(FIXTURES_DIR, "fixtures.jsonl"))),
-      "census.ts": sha(fs.readFileSync(path.join(HERE, "census.ts"))),
-      "erasure-plan.ts": sha(fs.readFileSync(path.join(HERE, "erasure-plan.ts"))),
-      "quotient.ts": sha(fs.readFileSync(path.join(HERE, "quotient.ts"))),
-      "witnesses.json": sha(fs.readFileSync(WITNESSES_FILE)),
-      "closures-stage2.json": sha(fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json"))),
-    },
-    specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length },
+      "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
+    // DATA only. The source modules that used to be listed here one at a time
+    // are covered by the identities below, over their whole import closure: a
+    // per-file list under-claims by construction, and `erasure-specimens.ts`
+    // synthesizes every pair the measurement depends on while never appearing
+    // in it.
+    digests: Object.fromEntries(Object.entries(REPORT_INPUTS).map(([name, read]) => [name, sha(read())])),
+    authority: { ...authorityIdentities(QUOTIENT_SCHEMA_VERSION), ruleDigest: ruleSurfaceDigest(RULE_SOURCES) },
+    footprintBasisDigest: footprintBasisDigest(s.fixtures.map(canonical)),
+    quotientSchemaVersion: QUOTIENT_SCHEMA_VERSION,
+    // The population the report NAMES, by membership. A scope that does not
+    // reproduce this digest did not cover it, whatever its count says.
+    specimens: { corpus: s.corpus, stimuli: s.stimuli, synthesized: s.synthesized, total: s.fixtures.length, populationDigest: populationDigest(s.fixtures) },
     unbuilt: s.unbuilt,
-    invalidating: invalidatingErasures(s.fixtures.slice(0, s.corpus + s.stimuli)),
+    ...languageReports(s.fixtures, s.corpus + s.stimuli, plans),
     footprints: Object.fromEntries([...m.footprints].sort(([a], [b]) => a.localeCompare(b))),
     dead: m.dead,
     unseparated: m.unseparated,
@@ -416,10 +607,35 @@ export function loadReport(file = FOOTPRINTS_FILE): FootprintReport {
 }
 
 /** Which recorded facts the live tree no longer produces. */
+type ScopeKey = "sourceLanguageDeparture" | "quotientLanguageInvalid";
+/** A scope AFTER admission: a count that is a count, a digest that is a digest. Only these are compared. */
+type AdmittedScope = { specimens: number; populationDigest: string };
+
 export function checkReport(recorded = loadReport(), live = computeReport()): { ok: boolean; problems: string[] } {
   const problems: string[] = [];
-  for (const [k, v] of Object.entries(recorded.digests)) {
-    if (live.digests[k] !== v) problems.push(`input ${k} moved since the report was recorded`);
+  // Over the REQUIRED set, so a comparison cannot be removed by removing the
+  // key it compares. Presence is established below, per side; this decides
+  // only whether the bound values agree.
+  for (const k of Object.keys(REPORT_INPUTS)) {
+    const was = recorded.digests?.[k];
+    const now = live.digests?.[k];
+    if (was !== undefined && now !== undefined && was !== now) problems.push(`input ${k} moved since the report was recorded`);
+  }
+  // Named separately from the data inputs, and by cause. "An input moved" is
+  // one finding; "the coordinates moved" and "what an erasure does moved" are
+  // two, and they call for different re-verification before re-recording.
+  const recordedAuthority = recorded.authority as unknown as Record<string, string | number>;
+  const liveAuthority = live.authority as unknown as Record<string, string | number>;
+  for (const k of REPORT_AUTHORITIES) {
+    if (recordedAuthority?.[k] === undefined || liveAuthority?.[k] === undefined) continue;
+    if (recordedAuthority[k] !== liveAuthority[k]) {
+      problems.push(`authority ${k} moved since the report was recorded: ${String(recordedAuthority?.[k])} -> ${String(liveAuthority[k])}`);
+    }
+  }
+  if (recorded.footprintBasisDigest !== live.footprintBasisDigest) {
+    // A footprint claim is population-sensitive and a witness is not, so this
+    // rejects the classifications without touching witness standing.
+    problems.push("the specimen population moved: every footprint classification bound to footprintBasisDigest is rejected");
   }
   const ids = new Set([...Object.keys(recorded.footprints), ...Object.keys(live.footprints)]);
   for (const id of [...ids].sort()) {
@@ -427,6 +643,152 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
     const b = live.footprints[id];
     if (JSON.stringify(a) !== JSON.stringify(b)) problems.push(`footprint of ${id}: ${JSON.stringify(a)} -> ${JSON.stringify(b)}`);
   }
+  // THE COVERAGE CHECK. `quotientLanguageInvalid` is the spec's terminal
+  // invariant, and it must be measured over every specimen the report names --
+  // not over a prefix of them. Checked by MEMBERSHIP: a population of the same
+  // size is not the same population.
+  // INTERNAL COHERENCE, ASSERTED OF EACH REPORT SEPARATELY.
+  //
+  // These checks only ever ran against `live`. A freshly computed coherent
+  // report does not make a stored incoherent one coherent, so a recorded
+  // report whose scope count contradicted its own named population, or whose
+  // named-population digest contradicted its own scope digest, was certified.
+  // Presence was required on both sides; agreement was required on neither.
+  const coherent = (r: FootprintReport, side: "RECORDED" | "CURRENT"): { problems: string[]; scopes: Partial<Record<ScopeKey, AdmittedScope>> } => {
+    const out: string[] = [];
+    // COMPLETENESS FIRST. Admission establishes that the required bindings are
+    // present AND are evidence; only then does comparison decide whether their
+    // values agree.
+    for (const k of Object.keys(REPORT_INPUTS)) {
+      const bad = inadmissible(`binding for input ${k}`, r.digests?.[k], side);
+      if (bad) out.push(bad);
+    }
+    const auth = r.authority as unknown as Record<string, unknown> | undefined;
+    for (const k of REPORT_AUTHORITIES) {
+      const bad = inadmissible(k, auth?.[k], side);
+      if (bad) out.push(bad);
+    }
+    // The population identity is carried separately from the authority block
+    // and had only an equality comparison, so two reports missing it agreed.
+    const badFootprint = inadmissible("footprintBasisDigest", r.footprintBasisDigest, side);
+    if (badFootprint) out.push(badFootprint);
+
+    // VERSION COMPATIBILITY, not merely version shape. `inadmissible` above
+    // establishes that the value is version-shaped; a single-version consumer
+    // must also establish that it is THE version its validator implements --
+    // taken from the quotient-image authority, not declared a second time
+    // here. The producer also emits a top-level copy; it is a checked
+    // projection of the authoritative value, never an independent claim.
+    const av = auth?.quotientSchemaVersion;
+    if (typeof av === "number" && av !== QUOTIENT_SCHEMA_VERSION) {
+      out.push(`the ${side} report's quotientSchemaVersion ${av} is not the version this checker validates (${QUOTIENT_SCHEMA_VERSION})`);
+    }
+    const tv = (r as unknown as Record<string, unknown>).quotientSchemaVersion;
+    if (tv !== av) out.push(`the ${side} report's top-level quotientSchemaVersion ${JSON.stringify(tv)} disagrees with authority.quotientSchemaVersion ${JSON.stringify(av)}`);
+
+    // THE POPULATION DESCRIPTIONS ARE ADMITTED BEFORE THEY ARE COMPARED.
+    //
+    // The scope comparisons assumed each scope and the specimen manifest had
+    // already been admitted as a meaningful description. They had not:
+    // `=== undefined` let a scope stand as null, false, 0 or "" and thereby
+    // drop out of its own comparison (a recorded-side-only corruption, needing
+    // no defective producer); null and absent population digests agreed; a
+    // recorded scope count of 999, or a total of 0 beside unchanged component
+    // counts, passed. One admission pass over the fields the consumer reads,
+    // then the relationships the producer guarantees between them.
+    const count = (v: unknown): v is number => typeof v === "number" && Number.isInteger(v) && v >= 0;
+    const digest = (v: unknown): v is string => typeof v === "string" && SHA256.test(v);
+    const obj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
+
+    const m = r.specimens as unknown;
+    let manifestOk = false;
+    if (!obj(m)) out.push(`the ${side} report carries no specimen manifest`);
+    else {
+      manifestOk = true;
+      for (const k of ["corpus", "stimuli", "synthesized", "total"]) {
+        if (!count(m[k])) {
+          out.push(`the ${side} report's specimens.${k} is not a count: ${JSON.stringify(m[k])}`);
+          manifestOk = false;
+        }
+      }
+      if (!digest(m.populationDigest)) {
+        out.push(m.populationDigest === undefined
+          ? `the ${side} report names no population digest; coverage could only be compared by count, which two different populations can share`
+          : `the ${side} report's specimens.populationDigest is not a sha256 digest: ${JSON.stringify(m.populationDigest)}`);
+        manifestOk = false;
+      }
+      if (manifestOk && (m.total as number) !== (m.corpus as number) + (m.stimuli as number) + (m.synthesized as number)) {
+        out.push(`the ${side} report's specimens.total ${m.total} is not corpus + stimuli + synthesized (${m.corpus} + ${m.stimuli} + ${m.synthesized})`);
+        manifestOk = false;
+      }
+    }
+
+    const scopeOf = (k: ScopeKey): AdmittedScope | undefined => {
+      const sc = (r.scopes as unknown as Record<string, unknown> | undefined)?.[k];
+      if (!obj(sc)) {
+        out.push(sc === undefined
+          ? `the ${side} report carries no ${k} scope; it cannot state what it validated`
+          : `the ${side} report's ${k} scope is not a scope: ${JSON.stringify(sc)}`);
+        return undefined;
+      }
+      let ok = true;
+      if (!count(sc.specimens)) { out.push(`the ${side} report's ${k} scope count is not a count: ${JSON.stringify(sc.specimens)}`); ok = false; }
+      if (!digest(sc.populationDigest)) { out.push(`the ${side} report's ${k} scope populationDigest is not a sha256 digest: ${JSON.stringify(sc.populationDigest)}`); ok = false; }
+      return ok ? (sc as AdmittedScope) : undefined;
+    };
+    const src = scopeOf("sourceLanguageDeparture");
+    const q = scopeOf("quotientLanguageInvalid");
+
+    if (manifestOk && obj(m)) {
+      const total = m.total as number;
+      const authored = (m.corpus as number) + (m.stimuli as number);
+      // The count catches a scope that admits it saw fewer...
+      if (q && q.specimens !== total) {
+        out.push(`the ${side} report's terminal invariant was measured over ${q.specimens} of ${total} specimens; a report must not name a population it did not check`);
+      }
+      // ...the digest catches one that saw as many, but not the same ones.
+      if (q && q.populationDigest !== m.populationDigest) {
+        out.push(`the ${side} report's terminal invariant covers a membership that is not the population it names: ${q.populationDigest.slice(0, 12)} vs ${(m.populationDigest as string).slice(0, 12)}`);
+      }
+      // Source departure is measured over the authored prefix by policy, and
+      // the producer states that scope; a count that is not the prefix is a
+      // description of some other measurement.
+      if (src && src.specimens !== authored) {
+        out.push(`the ${side} report's sourceLanguageDeparture scope covers ${src.specimens} specimens, not the ${authored} authored (corpus + stimuli) it is measured over`);
+      }
+    }
+    // What admission RETURNS is what the cross-record comparison below reads.
+    return { problems: out, scopes: { sourceLanguageDeparture: src, quotientLanguageInvalid: q } };
+  };
+  const admittedRecorded = coherent(recorded, "RECORDED");
+  const admittedLive = coherent(live, "CURRENT");
+  problems.push(...admittedRecorded.problems, ...admittedLive.problems);
+
+  // CROSS-RECORD STABILITY, which is a different claim from coverage: two
+  // reports agreeing with each other proves neither covered what it names.
+  //
+  // The first version read `live.scopes` while its message said "recorded",
+  // and compared with `if (was && now && ...)` -- so deleting a recorded scope
+  // disabled the check instead of failing it, and a missing current
+  // source-departure scope was skipped silently. Absence is now reported, and
+  // reported separately on each side: a pre-scope record stays readable as
+  // historical data, it just cannot receive the same certification.
+  //
+  // COMPARED OVER WHAT ADMISSION RETURNED, not over what the report carries.
+  // A scope that failed admission was reported for its side and is not here to
+  // compare -- by construction, not by a second predicate. The earlier form
+  // read `recorded.scopes?.[k]` directly, so a PRESENT scope with a malformed
+  // digest (recorded side only; current report valid and unchanged) was
+  // reported by admission and then dereferenced here: three variants threw a
+  // TypeError out of the gate, and a thrown error is not a refusal.
+  for (const k of ["sourceLanguageDeparture", "quotientLanguageInvalid"] as const) {
+    const was = admittedRecorded.scopes[k];
+    const now = admittedLive.scopes[k];
+    if (was && now && was.populationDigest !== now.populationDigest) {
+      problems.push(`the ${k} population moved: ${was.specimens} -> ${now.specimens} specimens, digest ${was.populationDigest.slice(0, 12)} -> ${now.populationDigest.slice(0, 12)}`);
+    }
+  }
+
   const key = (w: WitnessAudit) => `${w.witness}: ${w.verdict}`;
   const was = recorded.witnesses.map(key).sort();
   const is = live.witnesses.map(key).sort();
@@ -435,15 +797,66 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
   return { ok: problems.length === 0, problems };
 }
 
+/**
+ * What the `--check` gate refuses, and why, over ONE report.
+ *
+ * Exported so the decision is reachable from a test rather than only from
+ * `process.argv`. Both obligations must hold OF THE SAME OBJECT: the block
+ * previously called `checkReport()` -- which computes its own live report
+ * through its default argument -- and then `computeReport()` again, so
+ * consistency described one sweep and legality another, and their conjunction
+ * rested on the unstated assumption that the two agree.
+ *
+ * The causes stay named apart. Consistency is the report checker's obligation
+ * and a report may faithfully describe a defect; zero illegal images is the
+ * acceptance path's, and `footprints --check: OK` must not be readable as the
+ * second when it only established the first.
+ */
+export function gateProblems(recorded: FootprintReport, live: FootprintReport): string[] {
+  return [
+    ...checkReport(recorded, live).problems.map((p) => `consistency: ${p}`),
+    ...live.quotientLanguageInvalid.map(
+      (i) => `terminal invariant: ${i.coordinate} produces an illegal quotient image on ${i.specimens} specimen(s), first ${i.specimen}: ${i.error}`,
+    ),
+  ];
+}
+
 const invokedDirectly = process.argv[1] !== undefined && import.meta.url.endsWith(path.basename(process.argv[1]));
 if (invokedDirectly) {
   if (process.argv.includes("--record")) {
     fs.writeFileSync(FOOTPRINTS_FILE, `${JSON.stringify(computeReport(), null, 2)}\n`);
     console.log(`footprints: recorded ${FOOTPRINTS_FILE}`);
   } else if (process.argv.includes("--check")) {
-    const r = checkReport();
-    console.log(r.ok ? "footprints --check: OK" : `footprints --check: ${r.problems.length} problem(s):\n  ${r.problems.join("\n  ")}`);
-    if (!r.ok) process.exit(1);
+    // TWO OBLIGATIONS, kept apart and both enforced by the gate.
+    //
+    // `checkReport` is a CONSISTENCY checker: it asks whether the record still
+    // faithfully describes the tree, and a report can faithfully describe a
+    // defect. It never consults `quotientLanguageInvalid`, so on its own it
+    // returns ok for a record that accurately reports an illegal image.
+    //
+    // The terminal invariant is a different obligation and belongs to the
+    // acceptance path. The gate must satisfy both, or `footprints --check: OK`
+    // gets read as evidence that no illegal image exists when it only says the
+    // report has not drifted.
+    // ONE REPORT, CERTIFIED BY BOTH OBLIGATIONS. See `gateProblems`.
+    //
+    // This read `checkReport()` -- which computes its own live report through
+    // its default argument -- and then `computeReport()` again. Consistency and
+    // coverage therefore applied to the first object while legality and the
+    // success message described the second, and the conjunction held only under
+    // the unstated assumption that two sweeps agree. The gate must preserve the
+    // identity of what it certifies; sharing the snapshot also removes a second
+    // full population sweep.
+    const recorded = loadReport();
+    const live = computeReport();
+    const problems = gateProblems(recorded, live);
+    const ok = problems.length === 0;
+    console.log(
+      ok
+        ? `footprints --check: OK — report consistent, and 0 illegal quotient images over ${live.scopes.quotientLanguageInvalid.specimens} specimen(s)`
+        : `footprints --check: ${problems.length} problem(s):\n  ${problems.join("\n  ")}`,
+    );
+    if (!ok) process.exit(1);
   } else {
     const report = computeReport();
     const wide = Object.entries(report.footprints).filter(([, f]) => f.length > 1);
@@ -455,8 +868,14 @@ if (invokedDirectly) {
       const key = u.reason.startsWith("schema-invalid") ? "erasing it produces a schema-invalid representation" : u.reason;
       byReason.set(key, [...(byReason.get(key) ?? []), u.coordinate]);
     }
-    console.log(`  ${report.invalidating.length} erasure(s) leave the language (schema-invalid result):`);
-    for (const i of report.invalidating) console.log(`    ${String(i.specimens).padStart(3)}  ${i.coordinate.padEnd(50)} ${i.error}`);
+    // Two counts, deliberately printed with different framing. The first is a
+    // reading; the second is the terminal invariant, and it is the only one a
+    // reader should be alarmed by.
+    console.log(
+      `  ${report.sourceLanguageDeparture.length} erasure(s) leave the SOURCE language over ${report.scopes.sourceLanguageDeparture.specimens} authored specimen(s) (expected: a quotient image need not parse as a declaration)`,
+    );
+    console.log(`  ${report.quotientLanguageInvalid.length} erasure(s) produce an ILLEGAL quotient image over ${report.scopes.quotientLanguageInvalid.specimens} specimen(s) (must be 0):`);
+    for (const i of report.quotientLanguageInvalid) console.log(`    ${String(i.specimens).padStart(3)}  ${i.coordinate.padEnd(50)} ${i.error}`);
     console.log(`  ${report.unbuilt.length} coordinate(s) with no separating pair:`);
     for (const [reason, ids] of [...byReason].sort((a, b) => b[1].length - a[1].length)) {
       console.log(`    ${String(ids.length).padStart(3)}  ${reason}`);

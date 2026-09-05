@@ -21,7 +21,9 @@
  */
 import { loadDerivation, type Coordinate } from "./census.js";
 import { executeAll, executePlan, synthesizePlan, type ErasurePlan } from "./erasure-plan.js";
-import { alphaRename, type Fixture } from "./structure.js";
+import { isForgotten, isMarker, Q, type QuotientImage } from "./quotient-image.js";
+import { alphaRename } from "./alpha-rename.js";
+import type { Fixture } from "./structure.js";
 
 type Json = Record<string, unknown>;
 
@@ -48,10 +50,10 @@ export function planFor(coordinate: Coordinate): ErasurePlan | undefined {
  * every witness naming them failed NO_COLLISION against an unerased fixture,
  * and nothing distinguished that from a semantic result.
  */
-export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
+export function erase(fixture: Fixture | QuotientImage, coordinate: Coordinate): QuotientImage {
   const plan = planFor(coordinate);
   if (plan) return executePlan(fixture, plan);
-  if (coordinate.kind === "reference") return JSON.parse(JSON.stringify(fixture)) as Fixture;
+  if (coordinate.kind === "reference") return JSON.parse(JSON.stringify(fixture)) as QuotientImage;
   throw new Error(`quotient: no erasure plan for ${coordinate.id} (leaf ${coordinate.leaf}); its erasure would silently do nothing`);
 }
 
@@ -66,13 +68,61 @@ export function erase(fixture: Fixture, coordinate: Coordinate): Fixture {
  * before erasing `join.from#incidence` relabels the branch out from under the
  * second locator. 14 of 443 stress sets changed; no witness set did.
  */
-export function eraseAll(fixture: Fixture, coordinates: readonly Coordinate[]): Fixture {
+export function eraseAll(fixture: Fixture | QuotientImage, coordinates: readonly Coordinate[]): QuotientImage {
   const plans = coordinates.map(planFor).filter((p): p is ErasurePlan => p !== undefined);
   return executeAll(fixture, plans);
 }
 
-/** Sort keys recursively so serialization is declaration-order-blind. */
+/**
+ * Evidence sets are certified confluent EXHAUSTIVELY: every listing is executed.
+ * A witness names at most two coordinates and a closure a carrier plus its
+ * normalization, so the bound is never approached by evidence; a larger set is
+ * refused rather than sampled, because a sampled certificate is not one.
+ */
+export const CONFLUENCE_BOUND = 7;
+
+/**
+ * The distinct canonical images a plan set yields across every listing of it.
+ *
+ * One element means the set is CONFLUENT on this fixture: whatever order the
+ * plans are written in, the ordering derived from their edges and the saturated
+ * execution reach the same image. More than one means the composition is
+ * order-dependent with no edge to decide it — a genuinely non-confluent set,
+ * which admission refuses as evidence rather than normalizing through whichever
+ * order the caller happened to write. Merges on one leaf are the case this must
+ * NOT refuse: their raw two-step compositions differ by order, and saturation
+ * reconciles them to the same class.
+ */
+export function distinctListingImages(fixture: Fixture | QuotientImage, plans: readonly ErasurePlan[]): string[] {
+  if (plans.length > CONFLUENCE_BOUND) {
+    throw new RangeError(`quotient: confluence is certified exhaustively up to ${CONFLUENCE_BOUND} plans; ${plans.length} given`);
+  }
+  const images = new Set<string>();
+  for (const listing of permutations(plans)) images.add(canonical(executeAll(fixture, listing)));
+  return [...images].sort();
+}
+function* permutations<T>(xs: readonly T[]): Generator<T[]> {
+  if (xs.length <= 1) {
+    yield [...xs];
+    return;
+  }
+  for (let i = 0; i < xs.length; i++) {
+    for (const rest of permutations([...xs.slice(0, i), ...xs.slice(i + 1)])) yield [xs[i], ...rest];
+  }
+}
+
+/**
+ * Sort keys recursively, and drop a hole's ATTRIBUTION.
+ *
+ * `by` records which erasures opened a hole. It is diagnostic: which erasure
+ * made a hole confers no analytical standing, only that there is one does. If
+ * canonical kept it, two images identical except for the route that produced
+ * them would fail to collide, and the coordinate id — an encoding choice —
+ * would be deciding a necessity result. `members` is NOT dropped: which values
+ * were identified is the content of the class.
+ */
 function sortKeys(v: unknown): unknown {
+  if (isForgotten(v)) return { [Q]: "forgotten" };
   if (Array.isArray(v)) return v.map(sortKeys);
   if (typeof v === "object" && v !== null) {
     return Object.fromEntries(
@@ -84,20 +134,30 @@ function sortKeys(v: unknown): unknown {
   return v;
 }
 
-/** Positional identifiers in first-appearance order: relations r1.., fields f1.. */
-export function nameBlindMap(fixture: Fixture): Record<string, string> {
+/**
+ * Positional identifiers in first-appearance order: relations r1.., fields f1..
+ *
+ * Tolerant of holes, because it runs on images: a forgotten `fields` record has
+ * no field names to number, and numbering the marker's own keys would invent
+ * identifiers out of the erasure's bookkeeping.
+ */
+export function nameBlindMap(fixture: Fixture | QuotientImage): Record<string, string> {
   const map: Record<string, string> = {};
   let r = 0;
   let f = 0;
-  for (const [rel, decl] of Object.entries(fixture.structure.relations)) {
+  const relations = (fixture as Fixture).structure?.relations;
+  if (isMarker(relations) || typeof relations !== "object" || relations === null) return map;
+  for (const [rel, decl] of Object.entries(relations)) {
     if (!(rel in map)) map[rel] = `r${++r}`;
-    for (const field of Object.keys(decl.fields)) if (!(field in map)) map[field] = `f${++f}`;
+    const fields = (decl as { fields?: unknown })?.fields;
+    if (isMarker(fields) || typeof fields !== "object" || fields === null) continue;
+    for (const field of Object.keys(fields)) if (!(field in map)) map[field] = `f${++f}`;
   }
   return map;
 }
 
-/** Name-blind, key-sorted, id-free serialization of a fixture. */
-export function canonical(fixture: Fixture): string {
+/** Name-blind, key-sorted, id-free serialization of a fixture OR of an image. */
+export function canonical(fixture: Fixture | QuotientImage): string {
   const renamed = alphaRename(fixture, nameBlindMap(fixture));
   const { id: _id, ...rest } = renamed as unknown as Json;
   void _id;

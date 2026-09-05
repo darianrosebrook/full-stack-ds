@@ -15,12 +15,22 @@
  * they are tests OF THE CHECKER, not candidate witnesses, and obligation 3 is
  * expected to reject them for exactly that reason.
  */
+import * as fs from "node:fs";
+import * as os from "node:os";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { loadBranchSignatures, loadCensus } from "./census.js";
+import type { Oracle, Witness } from "./necessity.js";
+import type { Fixture } from "./structure.js";
 import {
+  authorityDrift,
   checkClosure,
   checkClosures,
+  CLOSURES_FILE,
   closureCycles,
+  liveAuthority,
+  restampClosures,
   closureGate,
   compatibleControls,
   deriveNormalization,
@@ -34,7 +44,7 @@ import {
   type Standing,
   type StandingIndex,
 } from "./closure.js";
-import { checkWitness, classifyWitness, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
+import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 
 const census = loadCensus();
 const oracle = loadOracle();
@@ -182,14 +192,40 @@ describe("adopting the closure form confers no standing", () => {
   });
 });
 
-describe("the closure form agrees with the 2-set witnesses that already hold", () => {
+describe("the closure form agrees with the 2-set witnesses it was tested against", () => {
   // The adjudication policy licensed closure only once it was "formalized and
   // tested against the existing 2-set witnesses". Two authorities that describe
   // one witness differently is worse than either being wrong, so the derived
   // normalization set must reproduce the residue `classifyWitness` observed.
-  const holding = loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok);
-  const single = primitiveRatified(holding);
-  const multi = holding.filter((w) => w.coordinates.length > 1);
+  //
+  // THE POPULATION MOVED AND THE CLAIM DID NOT. Both 2-set witnesses stopped
+  // holding when the quotient gained a codomain — the branch residue a hole
+  // leaves is observable where a deletion destroyed it — so scoping this block
+  // to HOLDING witnesses would now scope it to the empty set, and every
+  // assertion in it would pass by having nothing to range over. That is the one
+  // outcome a test may not have.
+  //
+  // So it ranges over the 2-sets the codomain ledger names instead. Nothing is
+  // weakened by the move: `classifyWitness` reads a witness's coordinate set
+  // and its erasure, never its standing, and the classifications below are
+  // byte-identical to the ones recorded while both witnesses held. What their
+  // suspension changes is what they SUPPORT, which is adjudicated in
+  // `codomain-adjudications.json` and is not this block's question.
+  const witnesses = loadWitnesses().witnesses;
+  const single = primitiveRatified(witnesses.filter((w) => checkWitness(w, census, oracle).ok));
+  const ledgered = new Set(loadCodomainAdjudications().awaiting.map((a) => a.witness));
+  const multi = witnesses.filter((w) => w.coordinates.length > 1);
+
+  it("ranges over a non-empty set, every member of which is ledgered rather than silently gone", () => {
+    // Stated first, because it is what stops the rest of the block from being
+    // vacuous. If a 2-set disappears from `witnesses.json` this fails; if one
+    // stops holding without an adjudication, the necessity harness fails.
+    expect(multi).toHaveLength(2);
+    for (const w of multi) {
+      expect(checkWitness(w, census, oracle).ok, `${w.coordinates.join(" + ")} holds again`).toBe(false);
+      expect(ledgered.has(w.coordinates.join(" + ")), `${w.coordinates.join(" + ")} stopped holding unledgered`).toBe(true);
+    }
+  });
 
   it("the residue of the one classified witness left equals the operation's footprint", () => {
     const classified = multi.map((w) => classifyWitness(w, census, oracle, single)).filter((k) => k.carrier !== undefined);
@@ -216,6 +252,9 @@ describe("the closure form agrees with the 2-set witnesses that already hold", (
   });
 
   it("the two hygiene witnesses are gone from witnesses.json and present as closures", () => {
+    // The two that remain in `witnesses.json` are the assertion 2-sets, and
+    // they classify exactly as they did while holding — which is the point:
+    // the hygiene pair MIGRATED to the closure ledger, it did not lapse.
     expect(multi.map((w) => classifyWitness(w, census, oracle, single).klass).sort()).toEqual(["indeterminate", "interaction"]);
     const migrated = ledger.closures.filter((c) => c.carrier.startsWith("field.additivity.kind:"));
     expect(migrated).toHaveLength(2);
@@ -637,3 +676,186 @@ describe("the consistency check and the terminal gate are different questions", 
     );
   });
 });
+
+
+/**
+ * WHO OWNS SUPPORT FRESHNESS.
+ *
+ * `evidenceStanding` is a projection: it receives a `CurrentSupport` and reads
+ * its three sets. It performs no witness check and holds no evaluation
+ * identity, so it cannot be the thing that keeps support fresh — and an earlier
+ * summary of mine said "the consumer re-evaluates", which attributed the work
+ * to the wrong boundary.
+ *
+ * The boundary that actually owns freshness is the CALL SITE. Every production
+ * construction of support is inline and per-call:
+ *
+ *   closure.ts:324       loadStanding
+ *   closure.ts:748       checkClosures
+ *   experiments.ts:118   orphanedCoordinates
+ *   erasure-audit.ts:307 auditWitnesses
+ *
+ * all of the form `primitiveRatified(witnesses.filter(w => checkWitness(...).ok))`,
+ * none at module scope, and nothing anywhere persists a support set or a
+ * witness result. So there is no retention boundary to police today — which is
+ * a property that must keep holding, not a fact to state once.
+ */
+describe("support freshness is owned by the call site, and stays owned there", () => {
+  const census = loadCensus();
+  const oracle = loadOracle();
+
+  /**
+   * A genuine tightening of acceptance, injected through the real parameter:
+   * one stimulus stops validating, so every witness resting on it fails
+   * SCHEMA_INVALID. Nothing about the coordinates or the erasures moves.
+   */
+  /** A side is a named fixture or a patch on one; both name a base stimulus. */
+  const stimulusOf = (side: Witness["a"]): string => ("fixture" in side ? side.fixture : side.base);
+
+  const stricter = (fixtureId: string): Oracle => ({
+    ...oracle,
+    validate: (f: unknown) => ((f as Fixture).id === fixtureId ? ["tightened: this stimulus is no longer admitted"] : oracle.validate(f)),
+  });
+
+  it("a previously supported coordinate stops being reported as supported when acceptance tightens", () => {
+    const witnesses = loadWitnesses().witnesses;
+    const before = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census);
+
+    // A coordinate that IS primitive now, and the stimulus its witness rests on.
+    const single = witnesses.find((w) => w.coordinates.length === 1 && before.of(w.coordinates[0]).state === "primitive")!;
+    const target = stimulusOf(single.a);
+    expect(before.of(single.coordinates[0]).state).toBe("primitive");
+
+    // An unaffected control: primitive, and resting on neither of the stimuli
+    // the tightening touches. Without it this test would also pass for a path
+    // that simply reported nothing as supported.
+    const control = witnesses.find(
+      (w) => w.coordinates.length === 1 && w !== single && stimulusOf(w.a) !== target && stimulusOf(w.b) !== target && before.of(w.coordinates[0]).state === "primitive",
+    )!;
+    expect(control, "no unaffected control exists; the assertion below would be vacuous").toBeDefined();
+
+    const after = loadStanding("REL-VIEW-ALGEBRA-01", stricter(target), census);
+    // The invalidated support class is not reported as still holding. NOT a
+    // specific replacement state: with no suspension ledger entry, whatever the
+    // fresh evaluation yields is the correct answer -- the property is that the
+    // stale positive cannot survive.
+    expect(after.of(single.coordinates[0]).state, "a support class invalidated by tighter acceptance was still reported").not.toBe("primitive");
+    expect(after.of(control.coordinates[0]).state, "the control lost standing it should have kept").toBe("primitive");
+
+    // And nothing sticks in either direction: the original acceptance yields
+    // the original answer again. A memoised support set would fail here even
+    // though it passed above.
+    const again = loadStanding("REL-VIEW-ALGEBRA-01", oracle, census);
+    expect(again.of(single.coordinates[0]).state).toBe("primitive");
+  });
+
+  it("no support set is built at MODULE SCOPE or written to disk", () => {
+    // NAMED FOR WHAT IT CHECKS. It was called "no production path retains a
+    // support set or a witness result across evaluations", which is a claim a
+    // line-pattern scan cannot establish, and the mutation run that seemed to
+    // support it was confounded: both freshness mutants were derived from a
+    // scratch copy into which a module-scope constant had already been planted,
+    // so this guard fired on the plant rather than on the mutation.
+    //
+    // Re-run isolated from a pristine baseline:
+    //
+    //   MEMO ONLY  (loadStanding caches its holding set)  -> killed by the
+    //              behavioural test above ONLY. This guard does not see it.
+    //   HOIST ONLY (support built once at module scope)   -> killed by both.
+    //
+    // So the division of labour is: this test excludes the two retention forms
+    // a scan can actually decide -- construction at module scope, and
+    // persistence to disk. Memoisation inside a function, an aliased
+    // construction, or a cache in a helper are NOT covered here; the
+    // behavioural test above is what catches those, and it caught the one
+    // mutant that exercised them.
+    const dir = path.dirname(fileURLToPath(import.meta.url));
+    const sources = fs.readdirSync(dir).filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
+    const offenders: string[] = [];
+    for (const f of sources) {
+      const src = fs.readFileSync(path.join(dir, f), "utf-8");
+      src.split("\n").forEach((line, i) => {
+        // A support set built at MODULE scope outlives every call in the
+        // process and is exactly the retention this forbids.
+        if (/^(export )?const .*\b(primitiveRatified|interactionOnly)\s*\(/.test(line)) offenders.push(`${f}:${i + 1} ${line.trim()}`);
+        // Persisting one is worse: it outlives the process.
+        if (/writeFileSync/.test(line) && /(primitive|support|standing)/i.test(line)) offenders.push(`${f}:${i + 1} ${line.trim()}`);
+      });
+    }
+    expect(offenders, "support was cached at module scope or written to disk; the freshness owner moved").toEqual([]);
+    // And the guard is not vacuous: the pattern it looks for does occur, inside
+    // functions, at the four call sites named above.
+    const perCall = sources.filter((f) => /primitiveRatified\s*\(/.test(fs.readFileSync(path.join(dir, f), "utf-8")));
+    expect(perCall.length, "the guard is scanning for a pattern that no longer appears anywhere").toBeGreaterThan(1);
+  });
+});
+
+describe("the ledger carries the authority its claims were verified under", () => {
+  const copyWith = (mutate: (ledger: Record<string, unknown>) => void): string => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "closures-"));
+    const ledger = JSON.parse(fs.readFileSync(CLOSURES_FILE, "utf-8")) as Record<string, unknown>;
+    mutate(ledger);
+    const file = path.join(dir, "closures.json");
+    fs.writeFileSync(file, `${JSON.stringify(ledger, null, 2)}\n`);
+    return file;
+  };
+  const drifted = (ledger: Record<string, unknown>) => {
+    (ledger.authority as Record<string, unknown>).erasureAuthorityDigest = "0".repeat(64);
+  };
+
+  it("the committed ledger is stamped with the live authority, over every identity the report format names", () => {
+    expect(loadClosures().authority).toEqual(liveAuthority());
+    expect(Object.keys(liveAuthority()).sort()).toEqual(["coordinateBasisDigest", "erasureAuthorityDigest", "quotientSchemaVersion", "ruleDigest", "witnessAuthorityDigest"]);
+  });
+
+  it("a ledger authored under a different authority is refused, not re-read -- for EACH identity, though every derivation still agrees", () => {
+    // Before this, such a ledger passed: every claim was re-derived and agreed,
+    // and nothing recorded that the agreement was under a different executor.
+    // Every identity, not only the erasure one: a compared set missing a key is
+    // a key under which a ledger can move unrefused.
+    const identities = ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"];
+    const results = identities.map((k) => {
+      const moved = k === "quotientSchemaVersion" ? 999 : "0".repeat(64);
+      return [k, checkClosures(copyWith((l) => { (l.authority as Record<string, unknown>)[k] = moved; })), moved] as const;
+    });
+    // THE DISCRIMINATOR FIRST, for every identity: the moved key is named with
+    // both endpoints. (Any mutant of closure.ts also moves witnessAuthorityDigest,
+    // since this module is witness-owned; a mutant that dropped a key from the
+    // compared set must fail HERE, on that key's row, not on the count below.)
+    for (const [k, r, moved] of results) {
+      expect(r.ok, k).toBe(false);
+      expect(r.problems, k).toContainEqual(expect.stringMatching(new RegExp(`^closure ledger authored under a different ${k}: ${moved} -> ([0-9a-f]{64}|1);`)));
+    }
+    // THEN the "only problem" claim: the derivations DO agree; what each lacks is the stamp.
+    for (const [k, r] of results) expect(r.problems, `${k}: more than the stamp was refused`).toHaveLength(1);
+  });
+
+  it("a ledger with no authority block is refused: its claims were verified under an authority nobody can name", () => {
+    const r = checkClosures(copyWith((l) => { delete l.authority; }));
+    expect(r.ok).toBe(false);
+    expect(r.problems).toEqual([expect.stringMatching(/^closure ledger carries no authority block/)]);
+    expect(authorityDrift(undefined, liveAuthority())).toHaveLength(1);
+  });
+
+  it("restamp re-verifies and writes the live authority; it refuses to stamp over a claim that is wrong", () => {
+    const agreeing = copyWith(drifted);
+    const stamped = restampClosures(agreeing);
+    expect(stamped.ok, stamped.message).toBe(true);
+    expect(checkClosures(agreeing).problems).toEqual([]);
+    expect(loadClosures(agreeing).authority).toEqual(liveAuthority());
+    // Unknown top-level keys survive the rewrite.
+    expect(Object.keys(JSON.parse(fs.readFileSync(agreeing, "utf-8")) as object)).toContain("$control");
+
+    const wrong = copyWith((l) => {
+      drifted(l);
+      ((l.closures as Record<string, unknown>[])[0] as Record<string, unknown>).promotion = "holding";
+    });
+    const before = fs.readFileSync(wrong, "utf-8");
+    const refused = restampClosures(wrong);
+    expect(refused.ok).toBe(false);
+    expect(refused.message).toMatch(/refused -- 1 problem\(s\) are not authority drift/);
+    expect(refused.message).toMatch(/recorded promotion "holding"/);
+    expect(fs.readFileSync(wrong, "utf-8"), "a refused restamp must not touch the file").toBe(before);
+  });
+});
+

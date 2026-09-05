@@ -1032,5 +1032,12 @@
       },
       "note": "Migrated from witnesses.json, where it was a 2-set naming a coordinate the required-child presence rule removes."
     }
-  ]
+  ],
+  "authority": {
+    "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
+    "erasureAuthorityDigest": "664d679217720bf59bc3a2914af6b4417f7d19e675657ab0db8a76e0517c796c",
+    "witnessAuthorityDigest": "edb845a1c0db832db2aa3b97223116ac2425e0b8aecd98cb29ed3b7771e47b57",
+    "quotientSchemaVersion": 1,
+    "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
+  }
 }

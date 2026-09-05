@@ -11,6 +11,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import * as z from "zod";
+import { emitQuotientSchema, QUOTIENT_SCHEMA_FILE } from "./quotient-image.js";
 import { Assertion, Fixture, RelationalStructure } from "./relation-model.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -29,9 +30,18 @@ function render(file: string, schema: z.ZodType): string {
   return JSON.stringify(ordered, null, 2) + "\n";
 }
 
-/** Relative path -> emitted bytes. */
+/**
+ * Relative path -> emitted bytes.
+ *
+ * The quotient-image schema is DERIVED from the emitted fixture schema rather
+ * than rendered from a second zod type, so the quotient language cannot drift
+ * from the source language: a property added to the model appears in both, and
+ * nobody maintains the second one. It is emitted last for that reason.
+ */
 export function emitSchemas(): Record<string, string> {
-  return Object.fromEntries(TARGETS.map((t) => [t.file, render(t.file, t.schema)]));
+  const out: Record<string, string> = Object.fromEntries(TARGETS.map((t) => [t.file, render(t.file, t.schema)]));
+  out[QUOTIENT_SCHEMA_FILE] = emitQuotientSchema(out["analytical-fixtures/fixture.schema.json"]);
+  return out;
 }
 
 /** Files whose committed bytes differ from the emission (empty = clean). */
