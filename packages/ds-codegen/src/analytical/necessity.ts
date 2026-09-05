@@ -25,7 +25,7 @@ import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity
 import { DERIVATION_DIAG } from "./codes.js";
 import { type BoundaryFinding, checkDerivations } from "./derivation.js";
 import { type ErasurePlan, resolveSlots, type StructuralLocator } from "./erasure-plan.js";
-import { canonical, collides, erase, eraseAll, planFor } from "./quotient.js";
+import { canonical, collides, distinctListingImages, erase, eraseAll, planFor } from "./quotient.js";
 import { loadQuotientValidator, markersIn } from "./quotient-image.js";
 import type { RelationalStructure } from "./relation-model.js";
 import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
@@ -260,7 +260,17 @@ export type WitnessFailure =
    * attributable to its coordinate — an unevaluated obligation leaves that
    * claim unsupported rather than supported by default.
    */
-  | "ERASURE_ISOLATION_UNEVALUATED";
+  | "ERASURE_ISOLATION_UNEVALUATED"
+  /**
+   * The coordinate set's composed image depends on the order its plans are
+   * listed in, and no ordering edge decides it.
+   *
+   * Refused before any collision is read: a collision found under one listing
+   * and not another is not a fact about the coordinates, it is a fact about
+   * the caller's spelling. Merges on one leaf are NOT this — saturation makes
+   * their listings agree — so the refusal is genuine non-confluence only.
+   */
+  | "ERASURE_NOT_CONFLUENT";
 
 export interface WitnessCheck {
   ok: boolean;
@@ -315,6 +325,23 @@ export function checkWitness(
   }
   if (sameOutcome(a.outcome, b.outcome)) failures.push({ code: "SAME_OUTCOME", detail: JSON.stringify(a.outcome) });
   if (failures.length > 0 || coords.length !== w.coordinates.length) return { ok: false, failures, isolation, a, b };
+  // CONFLUENCE BEFORE COLLISION. A 2-set's collision is read off ONE composed
+  // image per stimulus. If the composition depends on the order the two plans
+  // are listed in, there is no such image, and the set is refused as evidence
+  // rather than decided under whichever listing this file happens to carry.
+  if (coords.length > 1) {
+    const plans = coords.map(planFor).filter((p): p is ErasurePlan => p !== undefined);
+    for (const [label, side] of [["a", a], ["b", b]] as const) {
+      const images = distinctListingImages(side.fixture, plans);
+      if (images.length > 1) {
+        failures.push({
+          code: "ERASURE_NOT_CONFLUENT",
+          detail: `${label}: ${images.length} distinct images across the listings of ${w.coordinates.join(" + ")}; refused as evidence rather than normalized through one order`,
+        });
+      }
+    }
+    if (failures.length > 0) return { ok: false, failures, isolation, a, b };
+  }
   if (canonical(eraseAll(a.fixture, coords)) !== canonical(eraseAll(b.fixture, coords))) {
     failures.push({ code: "NO_COLLISION", detail: `erasing ${w.coordinates.join(" + ")} does not identify the stimuli` });
   }

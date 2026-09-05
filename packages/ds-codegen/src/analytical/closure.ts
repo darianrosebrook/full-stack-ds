@@ -64,7 +64,7 @@ import {
   type Side,
 } from "./necessity.js";
 import { QUOTIENT_SCHEMA_VERSION } from "./quotient-image.js";
-import { canonical, planFor } from "./quotient.js";
+import { canonical, distinctListingImages, planFor } from "./quotient.js";
 import { executeAll } from "./erasure-plan.js";
 
 /**
@@ -565,8 +565,29 @@ export function checkClosure(
   // 4. CARRIER INSUFFICIENCY BEFORE NORMALIZATION: the carrier alone must not
   //    collide, and neither may the carrier with any PROPER subset of the
   //    derived normalization set. That is what makes the set minimal.
+  // A closure's evidence is ONE composed image per stimulus. If the carrier and
+  // its normalization compose differently under different listings, there is no
+  // such image and obligations 4-6 cannot be read; the set is refused as
+  // evidence rather than normalized through the order this function lists them.
+  let confluent = true;
+  if (stimuli) {
+    const cc = coord(closure.carrier);
+    const carrierPlan = cc && planFor(cc);
+    const set = [...derived.normalization.map((o) => forgetBranchField(o)), ...(carrierPlan ? [carrierPlan] : [])];
+    for (const [label, side] of [["a", a!], ["b", b!]] as const) {
+      const images = distinctListingImages(side.fixture, set);
+      if (images.length > 1) {
+        confluent = false;
+        problems.push(`${closure.carrier}: the closure plan set is not confluent on stimulus ${label} (${images.length} distinct images across its listings); refused as evidence rather than normalized through one order`);
+      }
+    }
+  }
+  const refused = (id: string) => unevaluable(id, "the plan set is not confluent; refused as evidence");
+
   if (!stimuli) {
     obligations.push(unevaluable("4-carrier-insufficient-before-normalization", "no stimuli constructed"));
+  } else if (!confluent) {
+    obligations.push(refused("4-carrier-insufficient-before-normalization"));
   } else {
     const n = derived.normalization;
     const offenders: string[] = [];
@@ -594,6 +615,8 @@ export function checkClosure(
   // 5. COMPLETE CLOSURE SUFFICIENCY.
   if (!stimuli) {
     obligations.push(unevaluable("5-complete-closure-sufficiency", "no stimuli constructed"));
+  } else if (!confluent) {
+    obligations.push(refused("5-complete-closure-sufficiency"));
   } else {
     const held = collidesUnder(true, derived.normalization);
     obligations.push({
@@ -614,6 +637,12 @@ export function checkClosure(
       misplaced.length > 0
         ? { id: "6-normalization-is-not-the-cited-cause", held: false, detail: `outside the branch payload: ${misplaced.join(", ")}` }
         : unevaluable("6-normalization-is-not-the-cited-cause", "branch-conditionality holds; the collision half needs stimuli"),
+    );
+  } else if (!confluent) {
+    obligations.push(
+      misplaced.length > 0
+        ? { id: "6-normalization-is-not-the-cited-cause", held: false, detail: `outside the branch payload: ${misplaced.join(", ")}` }
+        : refused("6-normalization-is-not-the-cited-cause"),
     );
   } else {
     const alone = collidesUnder(false, derived.normalization);

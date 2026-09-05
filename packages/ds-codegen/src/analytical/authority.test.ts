@@ -24,6 +24,7 @@ import {
   authorityIdentities,
 } from "./authority.js";
 import { loadPlans } from "./census.js";
+import { checkClosures } from "./closure.js";
 import { gateProblems, loadReport } from "./erasure-audit.js";
 import { executePlan } from "./erasure-plan.js";
 import { adjudicationKey, checkFreeze, loadFreeze } from "./freeze.js";
@@ -394,6 +395,39 @@ describe("evidence earned under one erasure definition is refused under another"
       expect(r.problems.filter((p) => /^closure ledger authored under a different erasureAuthorityDigest: /.test(p))).toHaveLength(1);
       expect(r.problems.filter((p) => /authored normalization does not equal the derived set/.test(p)).length).toBeGreaterThan(0);
       // And the identity moved with it, so a RECORD bound to it (the footprint report) is refused as well.
+      const there = m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION);
+      expect(there.erasureAuthorityDigest).not.toBe(authorityIdentities(QUOTIENT_SCHEMA_VERSION).erasureAuthorityDigest);
+    } finally {
+      copy.remove();
+    }
+  }, 60_000);
+
+  /**
+   * NON-CONFLUENCE IS REFUSED, NOT NORMALIZED. Without the derived
+   * branch-before-discriminator edge, a closure's normalization plans and its
+   * carrier compose differently under different listings. A copy in that state
+   * must not evaluate obligations 4-6 under whichever order `checkClosure`
+   * happens to write: its own gate refuses each such set as evidence, by name.
+   * This tree's executor, with the edge, reads the same ledger as confluent --
+   * so the refusal is a fact about the executor, not about the ledger.
+   */
+  it("a copy without the derived ordering edge refuses its closure sets as non-confluent instead of normalizing them through one listing", async () => {
+    const copy = relocate({
+      file: "erasure-plan.ts",
+      from: "...(p ? derivedRunAfter(p, plans) : [])",
+      to: "...[]",
+    });
+    try {
+      const m = await load(copy.dir);
+      const refusals = m.closure.checkClosures().problems.filter((p) => / is not confluent on stimulus /.test(p));
+      const withStimuli = m.closure.loadClosures().closures.filter((c) => c.a !== undefined && c.b !== undefined);
+      // Without the edge, EVERY closure that has stimuli is refused, so no
+      // closure's collision evidence is admitted through an accidental order.
+      expect(withStimuli.length).toBe(3);
+      const refusedCarriers = [...new Set(refusals.map((p) => p.split(": ")[0]))].sort();
+      expect(refusedCarriers).toEqual(withStimuli.map((c) => c.carrier).sort());
+      for (const p of refusals) expect(p).toMatch(/ \(2 distinct images across its listings\); refused as evidence rather than normalized through one order$/);
+      expect(checkClosures().problems.filter((p) => / is not confluent on stimulus /.test(p))).toEqual([]);
       const there = m.authority.authorityIdentities(QUOTIENT_SCHEMA_VERSION);
       expect(there.erasureAuthorityDigest).not.toBe(authorityIdentities(QUOTIENT_SCHEMA_VERSION).erasureAuthorityDigest);
     } finally {

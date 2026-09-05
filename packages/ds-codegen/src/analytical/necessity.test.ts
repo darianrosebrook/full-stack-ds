@@ -1994,3 +1994,44 @@ describe("C7 — the engine agrees with every hand adjudication (evidence, not s
     expect(fs.existsSync(path.join(path.dirname(BASELINE_FILE), "removals.json"))).toBe(true);
   });
 });
+
+describe("a non-confluent coordinate set is refused as evidence before any collision is read", () => {
+  const census = loadCensus();
+  const oracle = loadOracle();
+  type W = Parameters<typeof checkWitness>[0];
+
+  it("a merge and an absence-spelling on one leaf: refused on each stimulus where the listings disagree, with no collision, minimality or isolation claim", () => {
+    // observation.null:absent~censored merges two members; observation.null:censored~<absent>
+    // spells one of them as absence. Spelled first, `censored` leaves the declaration
+    // and the merge finds nothing; merged first, the class is not `censored` and the
+    // spelling finds nothing. No edge decides it, and no law says which erasure comes
+    // first -- so the pair composes to two different quotients.
+    const w: W = {
+      coordinates: ["observation.null:absent~censored", "observation.null:censored~<absent>"],
+      a: { fixture: "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS" },
+      b: { fixture: "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED" },
+    };
+    const r = checkWitness(w, census, oracle);
+    expect(r.ok).toBe(false);
+    expect(r.failures.length).toBeGreaterThan(0);
+    expect(new Set(r.failures.map((f) => f.code))).toEqual(new Set(["ERASURE_NOT_CONFLUENT"]));
+    for (const f of r.failures) expect(f.detail).toMatch(/^[ab]: 2 distinct images across the listings of observation\.null:absent~censored \+ observation\.null:censored~<absent>; refused as evidence/);
+    // Refused BEFORE the image is read: nothing downstream of the composition is claimed.
+    expect(r.isolation).toEqual([]);
+  });
+
+  it("the refusal is specific to non-confluence: a 2-set whose listings agree is decided on its image, not refused", () => {
+    // The held-open assertion 2-set fails NO_COLLISION on its (confluent) image.
+    const w = loadWitnesses().witnesses.find((x) => x.coordinates.join(" + ") === "assertion.kind + assertion.aggregate.op")!;
+    const r = checkWitness(w, census, oracle);
+    expect(r.failures.map((f) => f.code)).not.toContain("ERASURE_NOT_CONFLUENT");
+    expect(r.failures.map((f) => f.code)).toContain("NO_COLLISION");
+  });
+
+  it("no live witness is a non-confluent set: every failure the committed file carries is a collision or isolation result", () => {
+    for (const w of loadWitnesses().witnesses) {
+      const r = checkWitness(w, census, oracle);
+      expect(r.failures.map((f) => f.code), w.coordinates.join(" + ")).not.toContain("ERASURE_NOT_CONFLUENT");
+    }
+  });
+});
