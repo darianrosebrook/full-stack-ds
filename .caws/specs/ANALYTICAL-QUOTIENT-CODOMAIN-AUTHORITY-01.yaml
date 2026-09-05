@@ -80,12 +80,11 @@ contracts:
     path: 'packages/ds-contracts/quotient-image.schema.json'
 evidence:
   - criterion_id: A1
-    status: unchecked
-    evidence_ref: "0 illegal quotient images over 208 specimens by membership digest (footprints --check; erasure-audit.test.ts). Admission on the report boundary now complete on tip e13eb47f: required keys+values, footprintBasisDigest, both scope objects and the specimen manifest admitted before comparison, count/digest relationships enforced, version compatibility against QUOTIENT_SCHEMA_VERSION, top-level copy checked; 6/6 mutants killed. REMAINING: no independent review of that pass yet; the combined A1-A2 bar's compile-time negative test is open under A2; no integration candidate exists. See evidence-map.json A1."
-    recorded_at: "2026-09-05T07:01:12.451Z"
-    test_nodeid: "packages/ds-codegen/src/analytical/erasure-audit.test.ts > admits each population description before comparing it, on either side"
+    status: pass
+    evidence_ref: "Independent review PASS: one-report certification; complete recorded/current evidence admission; malformed and asymmetric scope evidence refuses; 0 illegal quotient images over the bound 208-specimen population; skipped pairs proven no-op; input-vs-image and synthesized-population falsifiers discriminate. Bounded to the recorded population and authority; no universal-legality or semantic-necessity claim."
+    recorded_at: "2026-09-05T23:51:44.500Z"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
-    commit_sha: e13eb47f
+    commit_sha: "85c8e5a2763dc1b192dae15c67aeca66327cf79b"
   - criterion_id: A2
     status: pass
     evidence_ref: "quotient-image.ts types the codomain (QuotientImage; executePlan/executeAll/erase/canonical accept Fixture | QuotientImage and return QuotientImage); quotient-image.test.ts 'a QuotientImage cannot enter an API that requires a source Fixture, while every Fixture is trivially an image' -- two @ts-expect-error assignments gated by pnpm run typecheck (tsc fails if either stops being an error), Fixture positive control, runtime hole asserted; erasure-audit.ts reports sourceLanguageDeparture (62/112 authored) apart from quotientLanguageInvalid (0/208)"
