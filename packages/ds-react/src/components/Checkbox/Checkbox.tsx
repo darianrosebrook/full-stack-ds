@@ -82,7 +82,7 @@ export function Checkbox({
 
   return (
   <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} data-fsds-component="checkbox" {...rest}>
-    <input className="checkbox__input" type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} ref={inputRef} />
+    <input className="checkbox__input" type="checkbox" onChange={(e) => setChecked((e.currentTarget as HTMLInputElement).checked)} checked={checked} disabled={disabled} name={name} value={value} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} ref={inputRef} />
     <span className="checkbox__indicator" aria-hidden="true" />
   </Stack>
   );

@@ -3094,13 +3094,13 @@ function renderReactBinding(
       // Which event commits is already normalized by FormControlIR.
       if (isValueEvent) {
         if (ch.valueType === "boolean") {
-          return `(e) => ${setter}(e.target.checked)`;
+          return `(e) => ${setter}((e.currentTarget as HTMLInputElement).checked)`;
         }
         if (ch.valueType === "number") {
-          return `(e) => ${setter}(Number(e.target.value))`;
+          return `(e) => ${setter}(Number((e.currentTarget as HTMLInputElement).value))`;
         }
         if (ch.valueType === "string" || ch.valueType === undefined) {
-          return `(e) => ${setter}(e.target.value)`;
+          return `(e) => ${setter}((e.currentTarget as HTMLInputElement).value)`;
         }
         return `(e) => ${setter}(e as unknown as ${ch.valueType})`;
       }

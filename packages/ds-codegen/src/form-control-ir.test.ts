@@ -85,7 +85,9 @@ describe("form-control emitter consumption", () => {
     const angular = generateAngularComponentSource(ir);
     const lit = generateLitComponentSource(ir);
 
-    expect(react).toContain("onInput={(e) => setValue(e.target.value)}");
+    expect(react).toContain(
+      "onInput={(e) => setValue((e.currentTarget as HTMLInputElement).value)}",
+    );
     expect(vue).toContain('@input="(e) => behavior.setValue((e.target as HTMLInputElement).value)"');
     expect(svelte).toContain("oninput={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)}");
     expect(angular).toContain('(input)="handleValueChange($event)"');
