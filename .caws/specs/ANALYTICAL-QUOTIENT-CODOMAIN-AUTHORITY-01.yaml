@@ -83,3 +83,9 @@ evidence:
     test_nodeid: "packages/ds-codegen/src/analytical/erasure-audit.test.ts > a VALID synthesized specimen damaged by a faulty plan fails A1, through the production path"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A2
+    status: unchecked
+    evidence_ref: "Typed QuotientImage; sourceLanguageDeparture (62/112 authored) reported apart from quotientLanguageInvalid (0/208). OPEN: no compile-time negative test refuses a QuotientImage where a Fixture is required (no @ts-expect-error in analytical tests)."
+    recorded_at: "2026-09-05T06:54:56.787Z"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
