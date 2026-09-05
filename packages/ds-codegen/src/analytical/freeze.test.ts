@@ -250,18 +250,27 @@ describe("stage-2 erasure freeze", () => {
     // Record under A, review a comment-only change to B, then move acceptance
     // behaviour to C without re-recording. The class-only matcher accepted it.
     const r = at(A, C, excuse);
-    expect(r.ok, "a review of A->B authorised A->C").toBe(false);
+    // `ok` alone is too weak an assertion here, and two surviving mutants
+    // proved it: a matcher that WRONGLY ACCEPTS the A->B reason for A->C still
+    // reports ok=false, because the now-unmatched adjudication lands in
+    // `stale`. Both branches make `ok` false, and only one of them is correct.
+    // So the acceptance path is asserted directly.
+    expect(r.accepted, "the A->B review excused a transition it did not review").toEqual([]);
+    expect(r.divergences.map((d) => d.key), "the A->C divergence must remain unaccounted").toContain("authority:witnessAuthorityDigest");
+    expect(r.ok).toBe(false);
     expect(r.stale, "the unmatched review must be reported, not silently unused").toEqual([reviewed]);
   });
 
   it("refuses a different starting point under that same review", () => {
     const r = at(D, B, excuse);
-    expect(r.ok, "a review of A->B authorised D->B").toBe(false);
+    expect(r.accepted, "the A->B review excused a different starting point").toEqual([]);
+    expect(r.ok).toBe(false);
     expect(r.stale).toEqual([reviewed]);
   });
 
   it("refuses a reason written for the CLASS rather than a transition", () => {
     const r = at(A, B, { "authority:witnessAuthorityDigest": "a standing permission for this identity" });
+    expect(r.accepted, "a class-wide reason excused a specific transition").toEqual([]);
     expect(r.ok).toBe(false);
     expect(r.stale).toEqual(["authority:witnessAuthorityDigest"]);
   });
