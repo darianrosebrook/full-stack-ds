@@ -117,3 +117,10 @@ evidence:
     test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > every suspension points from a recorded historical standing to a measured current failure"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A7
+    status: unchecked
+    evidence_ref: "witnessAuthorityDigest move refuses freeze certification; adjudication bound to exact transition (A->B ok; A->C, D->B, class-only refused); fresh support beats stale suspension; freshness owned at 4 inline call sites. OPEN: ERASURE-authority freshness (compiler/executor/serializer/ordering/locator change -> consumer refusal) not exercised."
+    recorded_at: "2026-09-05T06:54:59.100Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/freeze.test.ts > refuses a LATER movement of the same identity under that same review"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
