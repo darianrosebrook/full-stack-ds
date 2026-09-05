@@ -431,7 +431,8 @@
       },
       {
         "event": "overlayClick",
-        "enabledBy": "closeOnBackdropClick"
+        "enabledBy": "closeOnBackdropClick",
+        "targetPart": "backdrop"
       }
     ]
   },

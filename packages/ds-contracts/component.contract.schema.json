@@ -2032,6 +2032,11 @@
         "defaultEnabled": {
           "type": "boolean"
         },
+        "targetPart": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anatomy part that owns this trigger's interaction (required for overlayClick): the dismissal click handler binds on this element, not the root — the root is pointer-events:none under a full-cover overlay and can never be the hit target (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01)."
+        },
         "description": {
           "type": "string"
         }

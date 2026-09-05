@@ -417,7 +417,8 @@
         "event": "escape"
       },
       {
-        "event": "overlayClick"
+        "event": "overlayClick",
+        "targetPart": "overlay"
       }
     ]
   },

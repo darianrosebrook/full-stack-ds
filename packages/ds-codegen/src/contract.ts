@@ -606,6 +606,13 @@ export interface ContractDismissalTrigger {
   /** Prop whose truthy value enables this trigger; absent means always-on. */
   enabledBy?: string;
   defaultEnabled?: boolean;
+  /**
+   * Anatomy part that owns this trigger's interaction. Required for
+   * `overlayClick`: the dismissal click binds on this element because the
+   * root is pointer-events:none under a full-cover overlay and can never be
+   * the hit target (FIX-OVERLAY-CLICK-DISMISSAL-BINDING-01).
+   */
+  targetPart?: string;
   description?: string;
 }
 
