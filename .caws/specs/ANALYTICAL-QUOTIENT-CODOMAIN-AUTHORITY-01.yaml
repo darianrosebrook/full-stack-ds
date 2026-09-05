@@ -103,3 +103,10 @@ evidence:
     test_nodeid: "packages/ds-codegen/src/analytical/erasure-plan.test.ts > spells absence of a REQUIRED leaf as absence of its whole declaration, not of the tag"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "Every coordinate has a locator; the only no-plan coordinates are kind 'reference'; plans.size == census.size - references (exact both directions). Typed reason = kind 'reference', pinned by the alpha-renaming no-op test; not a dedicated field."
+    recorded_at: "2026-09-05T06:54:58.171Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/erasure-plan.test.ts > gives every coordinate a locator and every non-reference coordinate exactly one plan"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
