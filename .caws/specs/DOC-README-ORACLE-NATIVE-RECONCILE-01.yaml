@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "README.md and docs/current-implementation-snapshot.md mutation row at merge ad279dc8, corroborated by pnpm run audit:contract-oracle-mutations -- --profile=full --verify-dispositions at 8bb6e521: 5/7 detected, 2/7 reviewed Badge survivors, 0 disposition mismatches; both docs state the non-general-score ceiling"
     recorded_at: "2026-09-05T01:53:04.889Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node scripts/swift-parity-diff.mjs: corpus 51, react-emitting 51, swift-emitting 51, divergent 0; swift test --package-path packages/ds-swiftui: 41 tests, 4 visible AX-host skips, 0 failures; PressProofHarness: all counters match, with OTP text-entry and modal-dismissal limitations printed"
+    recorded_at: "2026-09-05T01:53:37.993Z"
