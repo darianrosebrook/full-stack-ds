@@ -87,3 +87,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run packages/ds-codegen/src/validation/icon-refs.test.ts (mapped missing-glyph rejection)
     recorded_at: "2026-09-05T01:08:22.630Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "live showcase DOM: header search, home, info, external-link each contained matching svg[data-fsds-icon]"
+    recorded_at: "2026-09-05T01:08:24.003Z"
