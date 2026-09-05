@@ -65,3 +65,8 @@ contracts:
   - name: 'usage-tree'
     type: schema
     path: 'packages/ds-contracts/component.usage.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run generate:validate-usage; pnpm exec vitest run src/lib/render-usage.test.tsx — 51 sidecars, 107 examples, zero fallback"
+    recorded_at: "2026-09-05T03:23:56.345Z"
