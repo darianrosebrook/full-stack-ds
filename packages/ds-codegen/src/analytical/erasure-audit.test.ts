@@ -427,11 +427,83 @@ describe("the terminal invariant is measured over the population the report name
       const r = clone(recorded);
       const l = clone(live);
       delete (r.authority as unknown as Record<string, unknown>)[k];
-      expect(verdict(r, live), `RECORDED missing ${k}`).toEqual([expect.stringContaining(`the RECORDED report carries no ${k} identity`)]);
+      expect(verdict(r, live), `RECORDED missing ${k}`).toEqual([expect.stringContaining(`the RECORDED report carries no ${k}`)]);
       delete (l.authority as unknown as Record<string, unknown>)[k];
-      expect(verdict(recorded, l), `CURRENT missing ${k}`).toEqual([expect.stringContaining(`the CURRENT report carries no ${k} identity`)]);
+      expect(verdict(recorded, l), `CURRENT missing ${k}`).toEqual([expect.stringContaining(`the CURRENT report carries no ${k}`)]);
       expect(verdict(r, l).length, `${k} missing from BOTH sides`).toBe(2);
     }
+  });
+
+  it("refuses a binding that is present but is not evidence, with the SAME value on both sides", () => {
+    // Required-key presence closed the deletion path. It did not close the
+    // AGREEMENT path: two reports carrying the same non-evidence compare equal.
+    // A one-sided corruption cannot show this -- it fails merely because the
+    // values differ -- so every case here is corrupted identically on both
+    // sides, and the assertion names the admission problem rather than reading
+    // `ok === false`, which this work has repeatedly shown the wrong cause can
+    // satisfy.
+    const clone = (o: FootprintReport) => JSON.parse(JSON.stringify(o)) as FootprintReport;
+    const both = (f: (x: FootprintReport) => void) => {
+      const r = clone(recorded);
+      const l = clone(live);
+      f(r);
+      f(l);
+      return gateProblems(r, l);
+    };
+    expect(gateProblems(recorded, live), "positive control").toEqual([]);
+
+    for (const value of [null, "", "not-a-sha256", 0]) {
+      const j = JSON.stringify(value);
+      expect(both((x) => { (x.digests as Record<string, unknown>)["witnesses.json"] = value; }), `input digest ${j}`).toEqual([
+        expect.stringContaining("the RECORDED report's binding for input witnesses.json is not a sha256 digest"),
+        expect.stringContaining("the CURRENT report's binding for input witnesses.json is not a sha256 digest"),
+      ]);
+      expect(both((x) => { (x.authority as unknown as Record<string, unknown>).erasureAuthorityDigest = value; }), `authority ${j}`).toEqual([
+        expect.stringContaining("the RECORDED report's erasureAuthorityDigest is not a sha256 digest"),
+        expect.stringContaining("the CURRENT report's erasureAuthorityDigest is not a sha256 digest"),
+      ]);
+      expect(both((x) => { (x as unknown as Record<string, unknown>).footprintBasisDigest = value; }), `footprintBasisDigest ${j}`).toEqual([
+        expect.stringContaining("the RECORDED report's footprintBasisDigest is not a sha256 digest"),
+        expect.stringContaining("the CURRENT report's footprintBasisDigest is not a sha256 digest"),
+      ]);
+    }
+    // A version is not a digest and needs its own rule.
+    expect(both((x) => { (x.authority as unknown as Record<string, unknown>).quotientSchemaVersion = "banana"; })).toEqual([
+      expect.stringContaining("the RECORDED report's quotientSchemaVersion is not a schema version"),
+      expect.stringContaining("the CURRENT report's quotientSchemaVersion is not a schema version"),
+    ]);
+    // And the separately carried population identity, absent on both sides,
+    // which had only an equality comparison and so agreed.
+    expect(both((x) => { delete (x as unknown as Record<string, unknown>).footprintBasisDigest; })).toEqual([
+      expect.stringContaining("the RECORDED report carries no footprintBasisDigest"),
+      expect.stringContaining("the CURRENT report carries no footprintBasisDigest"),
+    ]);
+  });
+
+  it("fields outside the contract carry no authority over the verdict", () => {
+    // THE EXTRA-KEY POLICY, stated rather than left implicit.
+    //
+    // This report format is a MINIMUM-REQUIRED contract: a report may carry
+    // additional fields, and they neither acquire authority nor affect
+    // certification. The alternative -- an exact-key contract, where any extra
+    // field makes a report inadmissible -- would be a different format, and
+    // nothing here needs it.
+    //
+    // Left unstated it was not merely a gap in documentation. Two mutants that
+    // re-enumerate the comparison from `recorded.digests` or from
+    // `liveAuthority` survived, and I classified them equivalent on the
+    // argument that extra keys are outside the contract. That argument
+    // established agreement over the REQUIRED keys only; it does not follow
+    // that either key set equals the required set, and both mutants do inspect
+    // the extras. This test is what makes them distinguishable.
+    const clone = (o: FootprintReport) => JSON.parse(JSON.stringify(o)) as FootprintReport;
+    const r = clone(recorded);
+    const l = clone(live);
+    r.digests["extension.json"] = "a".repeat(64);
+    l.digests["extension.json"] = "b".repeat(64);
+    (r.authority as unknown as Record<string, unknown>).extensionDigest = "a".repeat(64);
+    (l.authority as unknown as Record<string, unknown>).extensionDigest = "b".repeat(64);
+    expect(gateProblems(r, l), "a field outside the contract changed the verdict").toEqual([]);
   });
 
   it("the gate certifies ONE report, and names the cause it refused for", () => {

@@ -353,8 +353,40 @@ export const REPORT_INPUTS: Record<string, () => Buffer> = {
   "closures-stage2.json": () => fs.readFileSync(path.join(FIXTURES_DIR, "closures-stage2.json")),
 };
 
-/** The identities every certifiable report carries, by cause. */
+/**
+ * The identities every certifiable report carries, by cause.
+ *
+ * The consumer's declared contract. NOTE what this is and is not: the input
+ * bindings above are CONSTRUCTED from their declaration, so producer and
+ * consumer cannot disagree about them. The authority block is produced
+ * independently, by `authorityIdentities(...) + ruleDigest`, and merely
+ * VALIDATED against this list. That is an adequate compatibility check, but it
+ * is a weaker mechanism than shared construction and should not be described
+ * as the same thing.
+ */
 export const REPORT_AUTHORITIES = ["coordinateBasisDigest", "erasureAuthorityDigest", "witnessAuthorityDigest", "quotientSchemaVersion", "ruleDigest"] as const;
+
+/** A recorded digest is 64 lowercase hex characters, or it is not evidence. */
+const SHA256 = /^[0-9a-f]{64}$/;
+
+/**
+ * Is this binding EVIDENCE, or merely defined?
+ *
+ * Presence closed the deletion path: a required binding can no longer vanish
+ * along with its own comparison. It does not close the AGREEMENT path, because
+ * two reports carrying the same non-evidence compare equal. Measured before
+ * this check existed: `null`, `""` and `"not-a-sha256"` on both sides were all
+ * accepted, as was `quotientSchemaVersion: "banana"`.
+ */
+function inadmissible(key: string, value: unknown, side: string): string | undefined {
+  if (value === undefined) return `the ${side} report carries no ${key}; it cannot be shown what produced it`;
+  if (key === "quotientSchemaVersion") {
+    return typeof value === "number" && Number.isInteger(value) && value > 0
+      ? undefined
+      : `the ${side} report's quotientSchemaVersion is not a schema version: ${JSON.stringify(value)}`;
+  }
+  return typeof value === "string" && SHA256.test(value) ? undefined : `the ${side} report's ${key} is not a sha256 digest: ${JSON.stringify(value)}`;
+}
 
 /**
  * The digest of a specimen population, by MEMBERSHIP.
@@ -625,11 +657,17 @@ export function checkReport(recorded = loadReport(), live = computeReport()): { 
     // COMPLETENESS FIRST. Admission establishes that the required bindings are
     // present; only then does comparison decide whether their values agree.
     for (const k of Object.keys(REPORT_INPUTS)) {
-      if (r.digests?.[k] === undefined) out.push(`the ${side} report carries no binding for input ${k}; it cannot be shown which data produced it`);
+      const bad = inadmissible(`binding for input ${k}`, r.digests?.[k], side);
+      if (bad) out.push(bad);
     }
     for (const k of REPORT_AUTHORITIES) {
-      if ((r.authority as unknown as Record<string, unknown>)?.[k] === undefined) out.push(`the ${side} report carries no ${k} identity; it cannot be shown which authority produced it`);
+      const bad = inadmissible(k, (r.authority as unknown as Record<string, unknown>)?.[k], side);
+      if (bad) out.push(bad);
     }
+    // The population identity is carried separately from the authority block
+    // and had only an equality comparison, so two reports missing it agreed.
+    const bad = inadmissible("footprintBasisDigest", r.footprintBasisDigest, side);
+    if (bad) out.push(bad);
     if (r.scopes?.sourceLanguageDeparture === undefined) out.push(`the ${side} report carries no sourceLanguageDeparture scope; it cannot state what it validated`);
     if (q === undefined) out.push(`the ${side} report carries no quotientLanguageInvalid scope; it cannot be shown to cover the population it names`);
     if (named === undefined) out.push(`the ${side} report names no population digest; coverage could only be compared by count, which two different populations can share`);
