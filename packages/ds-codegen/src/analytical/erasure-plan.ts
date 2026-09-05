@@ -439,6 +439,49 @@ export function executeAll(fixture: Fixture | QuotientImage, plans: readonly Era
 const MAX_CLOSURE_PASSES = 32;
 
 /** Topological order of `runAfter` edges; ties keep the callers order (stable). */
+/**
+ * Ordering edges DERIVED from locator structure, beside the declared `runAfter`.
+ *
+ * A branch-qualified locator (`… derivedBy [branch join] cardinality`) reaches
+ * its slot only while the discriminator still reads `join`. Any plan whose
+ * locator IS that discriminator — a member merge, a value forget, a member
+ * spelled as absent — relabels the branch out from under it, so the
+ * branch-qualified plan must run first. The census declares exactly these edges
+ * for the plans it emits. A plan synthesized outside the census — a closure's
+ * `forget(<holder>.<branch>.<field>)` — carries no `runAfter`, and until this
+ * rule existed its order against the carrier was decided by listing position:
+ * measured over the 22 closure sets and 208 specimens, 514 stimulus/set
+ * combinations yielded distinct images under different listings.
+ *
+ * The discriminator is the holder's `kind`, which is also what a `branch` step
+ * tests (`resolveSlots`); the two must not drift apart.
+ */
+export function derivedRunAfter(plan: ErasurePlan, present: readonly ErasurePlan[]): ErasurePlanId[] {
+  const target = plan.locator.steps;
+  const out: ErasurePlanId[] = [];
+  for (const other of present) {
+    if (other.id === plan.id) continue;
+    const steps = other.locator.steps;
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].kind !== "branch") continue;
+      if (sameSteps(target, [...steps.slice(0, i), { kind: "prop", name: "kind" }])) {
+        out.push(other.id);
+        break;
+      }
+    }
+  }
+  return out;
+}
+const sameSteps = (a: readonly LocatorStep[], b: readonly LocatorStep[]): boolean =>
+  a.length === b.length &&
+  a.every((s, i) => {
+    const t = b[i];
+    if (s.kind !== t.kind) return false;
+    if (s.kind === "prop" && t.kind === "prop") return s.name === t.name;
+    if (s.kind === "branch" && t.kind === "branch") return s.member === t.member;
+    return true;
+  });
+
 export function orderPlans(plans: readonly ErasurePlan[]): ErasurePlan[] {
   const present = new Set(plans.map((p) => p.id));
   const depth = new Map<ErasurePlanId, number>();
@@ -449,7 +492,7 @@ export function orderPlans(plans: readonly ErasurePlan[]): ErasurePlan[] {
     if (seen.has(id)) return 0; // a cycle is reported by the audit, not silently reordered here
     seen.add(id);
     const p = byId.get(id);
-    const deps = (p?.runAfter ?? []).filter((d) => present.has(d));
+    const deps = [...new Set([...(p?.runAfter ?? []), ...(p ? derivedRunAfter(p, plans) : [])])].filter((d) => present.has(d));
     const r = deps.length === 0 ? 0 : 1 + Math.max(...deps.map((d) => rank(d, seen)));
     depth.set(id, r);
     return r;

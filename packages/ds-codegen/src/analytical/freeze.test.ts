@@ -10,7 +10,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { loadCensus } from "./census.js";
-import { checkFreeze, computeFreeze, corpus, loadFreeze, supersessionOf, type Stage2Freeze } from "./freeze.js";
+import { carriedSupersession, checkFreeze, computeFreeze, corpus, loadFreeze, supersessionOf, type Stage2Freeze } from "./freeze.js";
 
 const frozen = loadFreeze();
 // Scoped to the fixtures the freeze was taken over. Unscoped, a later fixture
@@ -320,13 +320,43 @@ describe("stage-2 erasure freeze", () => {
     // authority became a divergence every genuine supersession carries it. It
     // was classified by plan lookup, found no plan, and was refused as
     // "(no plan)" -- the mechanism refusing its own use case.
-    const prior = { ...frozen, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
+    // One explained image class rides along, so the block has something to
+    // state; the subject itself must not appear beside it.
+    const moved = { ...live.erasure, "relation.grain": { ...live.erasure["relation.grain"], digest: "0".repeat(64) } };
+    const prior = { ...frozen, erasure: moved, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
     const check = checkFreeze(prior, live);
-    expect(check.divergences.map((d) => d.key)).toEqual(["authority:erasureAuthorityDigest"]);
+    expect(check.divergences.map((d) => d.key).sort()).toEqual(["authority:erasureAuthorityDigest", "relation.grain"]);
     let s: ReturnType<typeof supersessionOf> | undefined;
     expect(() => { s = supersessionOf(prior, check); }).not.toThrow();
     expect(s?.erasureAuthorityDigest, "the block must name the authority it replaces").toBe("0".repeat(64));
-    expect(s?.divergences, "the subject is not also a counted class").toEqual([]);
+    expect(s?.divergences.map((d) => `${d.operation}=${d.coordinates}`), "the subject is not also a counted class").toEqual(["forget-value=1"]);
+  });
+
+  it("refuses to supersede an IMAGE-PRESERVING authority move: an empty block would delete the last behavioural statement", () => {
+    // An ordering rule or a certificate helper moves the erasure authority and
+    // changes no recorded image. There is no new behaviour for a supersession to
+    // state, and recording one with no classes is indistinguishable from a
+    // re-record that absorbed a defect -- which is exactly what the test above
+    // ("records what it supersedes") exists to catch.
+    const prior = { ...frozen, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
+    const check = checkFreeze(prior, live);
+    expect(check.divergences.map((d) => d.key)).toEqual(["authority:erasureAuthorityDigest"]);
+    expect(() => supersessionOf(prior, check)).toThrow(/image-preserving move supersedes nothing/);
+  });
+
+  it("a plain re-record carries the supersession forward when the erasure authority is unmoved OR moved without changing an image, and drops it only when images changed", () => {
+    // Unmoved: the committed record against the live tree.
+    expect(carriedSupersession(frozen, checkFreeze(frozen, live))).toEqual(frozen.supersedes);
+    // Image-preserving move: the authority digest differs, nothing else does.
+    const preserving = { ...frozen, authority: { ...frozen.authority, erasureAuthorityDigest: "0".repeat(64) } };
+    expect(carriedSupersession(preserving, checkFreeze(preserving, live))).toEqual(frozen.supersedes);
+    // A witness-authority move is not the erasure authority moving: carried too.
+    const witnessMoved = { ...frozen, authority: { ...frozen.authority, witnessAuthorityDigest: "0".repeat(64) } };
+    expect(carriedSupersession(witnessMoved, checkFreeze(witnessMoved, live))).toEqual(frozen.supersedes);
+    // Moved WITH an image change: nothing is carried; that record must supersede or refuse.
+    const changed = { ...preserving, erasure: { ...live.erasure, "relation.grain": { ...live.erasure["relation.grain"], digest: "0".repeat(64) } } };
+    expect(carriedSupersession(changed, checkFreeze(changed, live))).toBeUndefined();
+    expect(frozen.supersedes, "the committed record has a statement to carry").toBeDefined();
   });
 
   it("refuses to supersede when the erasure authority has not moved", () => {

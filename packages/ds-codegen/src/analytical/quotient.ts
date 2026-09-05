@@ -74,6 +74,44 @@ export function eraseAll(fixture: Fixture | QuotientImage, coordinates: readonly
 }
 
 /**
+ * Evidence sets are certified confluent EXHAUSTIVELY: every listing is executed.
+ * A witness names at most two coordinates and a closure a carrier plus its
+ * normalization, so the bound is never approached by evidence; a larger set is
+ * refused rather than sampled, because a sampled certificate is not one.
+ */
+export const CONFLUENCE_BOUND = 7;
+
+/**
+ * The distinct canonical images a plan set yields across every listing of it.
+ *
+ * One element means the set is CONFLUENT on this fixture: whatever order the
+ * plans are written in, the ordering derived from their edges and the saturated
+ * execution reach the same image. More than one means the composition is
+ * order-dependent with no edge to decide it — a genuinely non-confluent set,
+ * which admission refuses as evidence rather than normalizing through whichever
+ * order the caller happened to write. Merges on one leaf are the case this must
+ * NOT refuse: their raw two-step compositions differ by order, and saturation
+ * reconciles them to the same class.
+ */
+export function distinctListingImages(fixture: Fixture | QuotientImage, plans: readonly ErasurePlan[]): string[] {
+  if (plans.length > CONFLUENCE_BOUND) {
+    throw new RangeError(`quotient: confluence is certified exhaustively up to ${CONFLUENCE_BOUND} plans; ${plans.length} given`);
+  }
+  const images = new Set<string>();
+  for (const listing of permutations(plans)) images.add(canonical(executeAll(fixture, listing)));
+  return [...images].sort();
+}
+function* permutations<T>(xs: readonly T[]): Generator<T[]> {
+  if (xs.length <= 1) {
+    yield [...xs];
+    return;
+  }
+  for (let i = 0; i < xs.length; i++) {
+    for (const rest of permutations([...xs.slice(0, i), ...xs.slice(i + 1)])) yield [xs[i], ...rest];
+  }
+}
+
+/**
  * Sort keys recursively, and drop a hole's ATTRIBUTION.
  *
  * `by` records which erasures opened a hole. It is diagnostic: which erasure

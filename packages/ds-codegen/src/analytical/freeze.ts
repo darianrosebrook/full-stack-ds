@@ -281,12 +281,37 @@ export function supersessionOf(prior: Stage2Freeze, check: FreezeCheck = checkFr
         "Add an entry to SUPERSESSION_EFFECT saying what changed, or adjudicate the keys individually.",
     );
   }
+  if (counts.size === 0) {
+    throw new Error(
+      "freeze: refusing to supersede — the erasure authority moved but no recorded image or verdict changed. " +
+        "An image-preserving move supersedes nothing, and writing an empty supersession would delete the statement of what the last " +
+        "behavioural change did. Re-record plainly; the prior supersession is carried forward.",
+    );
+  }
   return {
     erasureAuthorityDigest: prior.authority?.erasureAuthorityDigest ?? null,
     divergences: [...counts]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([operation, coordinates]) => ({ operation, coordinates, effect: SUPERSESSION_EFFECT[operation] })),
   };
+}
+
+/**
+ * What a PLAIN re-record (no `--supersede`) carries as its supersession.
+ *
+ * The block says what this record's erasure behaviour replaced. Two kinds of
+ * re-record leave that statement true and so carry it forward: one taken
+ * because a DIFFERENT authority moved — what admits a witness, say — and one
+ * taken because the erasure authority moved WITHOUT changing any recorded image
+ * or verdict (an ordering rule, a certificate helper). Dropping the block in
+ * either case would quietly delete the only statement of what the last
+ * behavioural change did. Where the erasure authority moved AND images changed,
+ * nothing is carried: that re-record must state what it supersedes, or refuse.
+ */
+export function carriedSupersession(prior: Stage2Freeze, check: FreezeCheck = checkFreeze(prior)): Stage2Freeze["supersedes"] {
+  const erasureUnmoved = !check.divergences.some((d) => d.key === SUPERSESSION_SUBJECT);
+  const imagePreserving = check.divergences.every((d) => d.key.startsWith("authority:"));
+  return erasureUnmoved || imagePreserving ? prior.supersedes : undefined;
 }
 
 export interface FreezeDivergence {
@@ -474,13 +499,7 @@ if (invokedDirectly) {
     // clears are stated, and the per-key adjudications of the old authority go
     // with the record they belonged to rather than being carried forward.
     const superseding = process.argv.includes("--supersede") && prior !== undefined;
-    // A plain re-record CARRIES THE SUPERSESSION FORWARD when the erasure
-    // authority has not moved. The block says what this record's erasure
-    // behaviour replaced; re-recording because a DIFFERENT authority moved —
-    // what admits a witness, say — does not undo that, and dropping it would
-    // quietly delete the only statement of what the last behavioural change did.
-    const erasureUnmoved = prior?.authority?.erasureAuthorityDigest === authorityBlock().erasureAuthorityDigest;
-    const supersedes = superseding ? supersessionOf(prior) : erasureUnmoved ? prior?.supersedes : undefined;
+    const supersedes = superseding ? supersessionOf(prior!) : prior ? carriedSupersession(prior) : undefined;
     fs.writeFileSync(
       FREEZE_FILE,
       `${JSON.stringify(computeFreeze(superseding ? {} : (prior?.adjudicated ?? {}), scoped, supersedes), null, 2)}\n`,

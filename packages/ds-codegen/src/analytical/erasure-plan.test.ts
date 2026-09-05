@@ -13,9 +13,10 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { loadCensus, loadDerivation, loadLocators, loadPlans, type Coordinate } from "./census.js";
-import { executePlan, orderPlans, wouldChange, type ForgetOperation } from "./erasure-plan.js";
-import { FIXTURES_DIR } from "./necessity.js";
-import { canonical, erase, planFor } from "./quotient.js";
+import { derivedRunAfter, executeAll, executePlan, orderPlans, wouldChange, type ForgetOperation } from "./erasure-plan.js";
+import { forgetBranchField, loadClosures } from "./closure.js";
+import { FIXTURES_DIR, loadOracle, resolveSide } from "./necessity.js";
+import { canonical, CONFLUENCE_BOUND, distinctListingImages, erase, planFor } from "./quotient.js";
 import { isMarker } from "./quotient-image.js";
 import { parseFixtures, type Fixture } from "./structure.js";
 
@@ -652,5 +653,74 @@ describe("lawful forgetting — each operation identifies exactly what its coord
     expect(wrong(["a", "b"])).toHaveLength(2);                        // and arity survives
     // And yet it identifies two lists that name different things.
     expect(JSON.stringify(fx(levels(["a", "b"])))).toBe(JSON.stringify(fx(levels(["a", "c"]))));
+  });
+});
+
+describe("composition — derived ordering and confluence over the bound registry", () => {
+  const fx = (id: string): Fixture => {
+    const f = fixtures.find((x) => x.id === id);
+    if (!f) throw new Error(`no corpus fixture ${id}`);
+    return f;
+  };
+
+  it("orders a synthesized branch-field plan before the discriminator it branches on, with no declared edge", () => {
+    // A closure's normalization plan is built outside the census and carries no
+    // `runAfter`; the carrier's declared edges name census ids, not this one.
+    const carrier = plans.get("relation.derivedBy.kind:aggregate-to-grain~join")!;
+    const forget = forgetBranchField({ holder: "relation.derivedBy", branch: "join", field: "cardinality" });
+    expect(forget.runAfter).toBeUndefined();
+    expect(carrier.runAfter ?? []).not.toContain(forget.id);
+    expect(derivedRunAfter(carrier, [carrier, forget])).toEqual([forget.id]);
+    expect(derivedRunAfter(forget, [carrier, forget])).toEqual([]);
+    expect(orderPlans([carrier, forget]).map((p) => p.id)).toEqual([forget.id, carrier.id]);
+    expect(orderPlans([forget, carrier]).map((p) => p.id)).toEqual([forget.id, carrier.id]);
+    // The edge is load-bearing: merged first, the branch step no longer finds
+    // `join` and the cardinality survives as residue.
+    const target = fx("FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN");
+    const edgeOrder = canonical(executePlan(executePlan(target, forget), carrier));
+    expect(canonical(executePlan(executePlan(target, carrier), forget))).not.toBe(edgeOrder);
+    expect(canonical(executeAll(target, [carrier, forget]))).toBe(edgeOrder);
+    expect(canonical(executeAll(target, [forget, carrier]))).toBe(edgeOrder);
+  });
+
+  it("every closure set yields one image whatever its listing, on its own stimuli and on the fixtures that used to split it", () => {
+    const oracle = loadOracle();
+    const splitters = ["FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN", "FX_NESTED_SUBTOTAL_OFF_HIERARCHY", "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS"].map(fx);
+    let sets = 0;
+    for (const c of loadClosures().closures) {
+      const carrier = planFor(byId.get(c.carrier)!);
+      expect(carrier, c.carrier).toBeDefined();
+      const set = [carrier!, ...c.normalization.map((n) => forgetBranchField(n))];
+      const stimuli = [c.a, c.b].filter((s) => s !== undefined).map((s) => resolveSide(s!, oracle).fixture);
+      for (const f of [...splitters, ...stimuli]) expect(distinctListingImages(f, set), `${c.carrier} on ${f.id}`).toHaveLength(1);
+      sets++;
+    }
+    expect(sets).toBe(22);
+  });
+
+  it("merges on one leaf do not commute as raw two-step compositions, and saturation reconciles them to the connected class", () => {
+    const p = plans.get("field.transformation:nominal~ordinal")!;
+    const q = plans.get("field.transformation:nominal~interval")!;
+    const f = fx("FX_SURVEY_MEAN_SATISFACTION");
+    expect(canonical(executePlan(executePlan(f, p), q))).not.toBe(canonical(executePlan(executePlan(f, q), p)));
+    expect(distinctListingImages(f, [p, q])).toHaveLength(1);
+    const image = executeAll(f, [p, q]) as unknown as { structure: { relations: Record<string, { fields: Record<string, { transformation: unknown }> }> } };
+    const classes = Object.values(image.structure.relations).flatMap((r) => Object.values(r.fields).map((x) => x.transformation)).filter(isMarker);
+    expect(classes.length).toBeGreaterThan(0);
+    for (const c of classes) expect(c).toEqual({ "@q": "member-class", members: ["interval", "nominal", "ordinal"] });
+  });
+
+  it("a merge against an absence-spelling on one leaf, and arity against order on one list, are genuinely non-confluent", () => {
+    // Neither pair has an edge, and no law says which erasure comes first: the
+    // two listings are two different quotients, which is what admission refuses.
+    const absence = ["observation.null:absent~censored", "observation.null:censored~<absent>"].map((id) => planFor(byId.get(id)!)!);
+    expect(distinctListingImages(fx("FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"), absence)).toHaveLength(2);
+    const list = ["relation.derivedBy.project.keep#arity", "relation.derivedBy.project.keep#order"].map((id) => planFor(byId.get(id)!)!);
+    expect(distinctListingImages(fx("FX_PROJECT_DROPS_NEST_LEVEL"), list)).toHaveLength(2);
+  });
+
+  it("refuses to certify beyond the exhaustive bound rather than sampling", () => {
+    const tooMany = [...plans.values()].slice(0, CONFLUENCE_BOUND + 1);
+    expect(() => distinctListingImages(fixtures[0], tooMany)).toThrow(/certified exhaustively up to 7 plans; 8 given/);
   });
 });
