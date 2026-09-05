@@ -17,43 +17,43 @@ const componentAxeOptions = {
 
 describe("Avatar — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("avatar");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "avatar", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("avatar");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("img");
   });
 
   it("applies size=small variant class", () => {
-    const wrapper = mount(Avatar as Component, { props: { "size": "small" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder", "size": "small" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("avatar--small");
   });
 
   it("applies size=medium variant class", () => {
-    const wrapper = mount(Avatar as Component, { props: { "size": "medium" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder", "size": "medium" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("avatar--medium");
   });
 
   it("applies size=large variant class", () => {
-    const wrapper = mount(Avatar as Component, { props: { "size": "large" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder", "size": "large" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("avatar--large");
   });
 
   it("applies size=extra-large variant class", () => {
-    const wrapper = mount(Avatar as Component, { props: { "size": "extra-large" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder", "size": "extra-large" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("avatar--extra-large");
   });
 });

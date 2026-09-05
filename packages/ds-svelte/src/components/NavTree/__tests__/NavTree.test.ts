@@ -17,33 +17,33 @@ const componentAxeOptions = {
 
 describe("NavTree — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("nav-tree");
   });
 
   it("merges custom class", () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("nav-tree");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder" } });
     expect(container.firstElementChild?.getAttribute("role")).toBe("listitem");
   });
 
   it("applies iconSize=sm variant class", () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "iconSize": "sm" } });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder", "iconSize": "sm" } });
     expect(container.firstElementChild?.className).toContain("nav-tree--sm");
   });
 
   it("applies iconSize=md variant class", () => {
-    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "iconSize": "md" } });
+    const { container } = render(NavTree as unknown as Component<Record<string, unknown>>, { props: { "label": "placeholder", "iconSize": "md" } });
     expect(container.firstElementChild?.className).toContain("nav-tree--md");
   });
 });

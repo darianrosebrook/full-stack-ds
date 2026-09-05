@@ -17,33 +17,33 @@ const componentAxeOptions = {
 
 describe("CodeSnippet — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "text": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "text": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("code-snippet");
   });
 
   it("merges custom class", () => {
-    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "text": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("code-snippet");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("applies as=code variant class", () => {
-    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "as": "code" } });
+    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "text": "placeholder", "as": "code" } });
     expect(container.firstElementChild?.className).toContain("code-snippet--code");
   });
 
   it("applies as=kbd variant class", () => {
-    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "as": "kbd" } });
+    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "text": "placeholder", "as": "kbd" } });
     expect(container.firstElementChild?.className).toContain("code-snippet--kbd");
   });
 
   it("applies as=samp variant class", () => {
-    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "as": "samp" } });
+    const { container } = render(CodeSnippet as unknown as Component<Record<string, unknown>>, { props: { "text": "placeholder", "as": "samp" } });
     expect(container.firstElementChild?.className).toContain("code-snippet--samp");
   });
 });

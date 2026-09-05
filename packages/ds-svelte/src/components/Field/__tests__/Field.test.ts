@@ -17,43 +17,43 @@ const componentAxeOptions = {
 
 describe("Field — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("field");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("field");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild?.getAttribute("role")).toBe("group");
   });
 
   it("applies status=idle variant class", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "status": "idle" } });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "status": "idle" } });
     expect(container.firstElementChild?.className).toContain("field--idle");
   });
 
   it("applies status=validating variant class", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "status": "validating" } });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "status": "validating" } });
     expect(container.firstElementChild?.className).toContain("field--validating");
   });
 
   it("applies status=valid variant class", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "status": "valid" } });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "status": "valid" } });
     expect(container.firstElementChild?.className).toContain("field--valid");
   });
 
   it("applies status=invalid variant class", () => {
-    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "status": "invalid" } });
+    const { container } = render(Field as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "status": "invalid" } });
     expect(container.firstElementChild?.className).toContain("field--invalid");
   });
 });

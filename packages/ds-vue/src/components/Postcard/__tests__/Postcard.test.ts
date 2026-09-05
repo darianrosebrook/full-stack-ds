@@ -17,33 +17,33 @@ const componentAxeOptions = {
 
 describe("Postcard — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Postcard as Component, { props: {}, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {} }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Postcard as Component, { props: {}, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {} }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("postcard");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Postcard as Component, { props: {}, attrs: { "data-testid": "postcard", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {} }, attrs: { "data-testid": "postcard", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("postcard");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("applies type=image variant class", () => {
-    const wrapper = mount(Postcard as Component, { props: { "type": "image" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "image" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("postcard--image");
   });
 
   it("applies type=video variant class", () => {
-    const wrapper = mount(Postcard as Component, { props: { "type": "video" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "video" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("postcard--video");
   });
 
   it("applies type=audio variant class", () => {
-    const wrapper = mount(Postcard as Component, { props: { "type": "audio" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "audio" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("postcard--audio");
   });
 });

@@ -5,41 +5,47 @@ import { IconComponent } from "../Icon.component";
 // @generated:end
 
 // @generated:start tests
+function createFixture() {
+  const fixture = TestBed.createComponent(IconComponent);
+  fixture.componentInstance["name"] = "placeholder" as never;
+  return fixture;
+}
+
 describe("Icon — unit", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [IconComponent] });
   });
 
   it("creates the component", () => {
-    const fixture = TestBed.createComponent(IconComponent);
+    const fixture = createFixture();
     expect(fixture.componentInstance).toBeInstanceOf(IconComponent);
   });
 
   it("applies the base CSS class", () => {
-    const fixture = TestBed.createComponent(IconComponent);
+    const fixture = createFixture();
     expect(classTokens(fixture.componentInstance)).toContain("icon");
   });
 
   it("applies size=sm variant class", () => {
-    const fixture = TestBed.createComponent(IconComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "sm";
     expect(classTokens(fixture.componentInstance)).toContain("icon--sm");
   });
 
   it("applies size=md variant class", () => {
-    const fixture = TestBed.createComponent(IconComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "md";
     expect(classTokens(fixture.componentInstance)).toContain("icon--md");
   });
 
   it("applies size=lg variant class", () => {
-    const fixture = TestBed.createComponent(IconComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "lg";
     expect(classTokens(fixture.componentInstance)).toContain("icon--lg");
   });
 
   it("applies size=xl variant class", () => {
-    const fixture = TestBed.createComponent(IconComponent);
+    const fixture = createFixture();
     fixture.componentInstance.size = "xl";
     expect(classTokens(fixture.componentInstance)).toContain("icon--xl");
   });

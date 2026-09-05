@@ -281,6 +281,17 @@ export function generateLitTest(ir: ComponentIR): string {
   const lines: string[] = [];
 
   emitComponentAxeOptions(lines);
+  const hasRequiredProps = plan.requiredProps.length > 0;
+  if (hasRequiredProps) {
+    const requiredProps: Record<string, LitTestPropSource> = Object.fromEntries(
+      plan.requiredProps.map((prop) => [
+        prop.name,
+        { code: runtimeRequiredPropExpression(prop.expression) },
+      ]),
+    );
+    lines.push(`const requiredProps = ${objectLiteral(requiredProps)};`);
+    lines.push(``);
+  }
   lines.push(`describe("${plan.name} — unit", () => {`);
   lines.push(`  it("renders with default props", async () => {`);
   lines.push(`    const { element } = await renderElement("${elementName}");`);
@@ -737,6 +748,9 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(
     `async function renderElement(tagName: string, props: Record<string, unknown> = {}, content: AccessibilityContent[] = []): Promise<RenderedElement> {`,
   );
+  if (hasRequiredProps) {
+    lines.push(`  await customElements.whenDefined(tagName);`);
+  }
   lines.push(
     `  const element = document.createElement(tagName) as LitTestElement;`,
   );
@@ -747,22 +761,33 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(`    if (child && fixture.slotName) child.slot = fixture.slotName;`);
   lines.push(`    element.append(template.content.cloneNode(true));`);
   lines.push(`  }`);
+  const emitPropAssignments = (entries: string): void => {
+    lines.push(`  for (const [key, value] of Object.entries(${entries})) {`);
+    lines.push(
+      `    (element as unknown as Record<string, unknown>)[key] = value;`,
+    );
+    lines.push(`    if (typeof value === "boolean") {`);
+    lines.push(`      if (value) element.setAttribute(key, "");`);
+    lines.push(`    } else {`);
+    lines.push(`      element.setAttribute(key, String(value));`);
+    lines.push(`    }`);
+    lines.push(`  }`);
+  };
+  // Lit schedules its first update from connectedCallback. Components with
+  // required inputs must receive them before connection so an object-path
+  // binding cannot render once through `undefined`.
+  if (hasRequiredProps) {
+    emitPropAssignments("{ ...requiredProps, ...props }");
+  }
   // Append to an isolated container so axe doesn't walk sibling elements
   // from prior test renders when scoping to this element's context.
   lines.push(`  const container = document.createElement("div");`);
   lines.push(`  container.append(element);`);
   lines.push(`  document.body.append(container);`);
-  lines.push(`  await customElements.whenDefined(tagName);`);
-  lines.push(`  for (const [key, value] of Object.entries(props)) {`);
-  lines.push(
-    `    (element as unknown as Record<string, unknown>)[key] = value;`,
-  );
-  lines.push(`    if (typeof value === "boolean") {`);
-  lines.push(`      if (value) element.setAttribute(key, "");`);
-  lines.push(`    } else {`);
-  lines.push(`      element.setAttribute(key, String(value));`);
-  lines.push(`    }`);
-  lines.push(`  }`);
+  if (!hasRequiredProps) {
+    lines.push(`  await customElements.whenDefined(tagName);`);
+    emitPropAssignments("props");
+  }
   lines.push(`  element.requestUpdate?.();`);
   lines.push(`  await element.updateComplete;`);
   lines.push(`  // Named slots can schedule one follow-up render via slotchange.`);

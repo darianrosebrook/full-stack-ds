@@ -17,78 +17,78 @@ const componentAxeOptions = {
 
 describe("Image — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Image as Component, { props: {}, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Image as Component, { props: {}, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Image as Component, { props: {}, attrs: { "data-testid": "image", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder" }, attrs: { "data-testid": "image", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Image as Component, { props: {}, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("img");
   });
 
   it("applies size=xs variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "size": "xs" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "xs" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-xs");
   });
 
   it("applies size=sm variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "size": "sm" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "sm" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-sm");
   });
 
   it("applies size=md variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "size": "md" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "md" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-md");
   });
 
   it("applies size=lg variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "size": "lg" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "lg" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-lg");
   });
 
   it("applies size=xl variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "size": "xl" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "xl" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-xl");
   });
 
   it("applies size=full variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "size": "full" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "full" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-full");
   });
 
   it("applies radius=none variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "radius": "none" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "radius": "none" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--radius-none");
   });
 
   it("applies radius=sm variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "radius": "sm" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "radius": "sm" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--radius-sm");
   });
 
   it("applies radius=md variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "radius": "md" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "radius": "md" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--radius-md");
   });
 
   it("applies radius=lg variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "radius": "lg" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "radius": "lg" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--radius-lg");
   });
 
   it("applies radius=full variant class", () => {
-    const wrapper = mount(Image as Component, { props: { "radius": "full" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "radius": "full" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--radius-full");
   });
 });

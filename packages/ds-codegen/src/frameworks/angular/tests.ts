@@ -3,6 +3,7 @@ import { renderSections, type Section } from "../../preserve.js";
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
+  runtimeRequiredPropExpression,
 } from "../../test-plan.js";
 
 export function generateAngularTest(ir: ComponentIR): string {
@@ -20,6 +21,10 @@ export function generateAngularTest(ir: ComponentIR): string {
   // prop tests are emitted for Angular.
 
   const needsJest = isDomTree || emitEscape || emitOverlayClick;
+  const fixtureExpression =
+    plan.requiredProps.length > 0
+      ? "createFixture()"
+      : `TestBed.createComponent(${className})`;
 
   const importsLines: string[] = [
     `import { describe, expect, it${needsJest ? ", beforeEach, jest" : ""} } from "@jest/globals";`,
@@ -29,6 +34,18 @@ export function generateAngularTest(ir: ComponentIR): string {
   const importsBody = importsLines.join("\n");
 
   const lines: string[] = [];
+  if (isDomTree && plan.requiredProps.length > 0) {
+    lines.push(`function createFixture() {`);
+    lines.push(`  const fixture = TestBed.createComponent(${className});`);
+    for (const prop of plan.requiredProps) {
+      lines.push(
+        `  fixture.componentInstance[${JSON.stringify(prop.name)}] = ${runtimeRequiredPropExpression(prop.expression)} as never;`,
+      );
+    }
+    lines.push(`  return fixture;`);
+    lines.push(`}`);
+    lines.push(``);
+  }
   lines.push(`describe("${plan.name} — unit", () => {`);
 
   if (isDomTree) {
@@ -39,12 +56,12 @@ export function generateAngularTest(ir: ComponentIR): string {
     lines.push(`  });`);
     lines.push(``);
     lines.push(`  it("creates the component", () => {`);
-    lines.push(`    const fixture = TestBed.createComponent(${className});`);
+    lines.push(`    const fixture = ${fixtureExpression};`);
     lines.push(`    expect(fixture.componentInstance).toBeInstanceOf(${className});`);
     lines.push(`  });`);
     lines.push(``);
     lines.push(`  it("applies the base CSS class", () => {`);
-    lines.push(`    const fixture = TestBed.createComponent(${className});`);
+    lines.push(`    const fixture = ${fixtureExpression};`);
     lines.push(`    expect(classTokens(fixture.componentInstance)).toContain("${plan.cssPrefix}");`);
     lines.push(`  });`);
 
@@ -61,7 +78,7 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(
         `  it("toggles the ${channelClick.channel.name} channel from the ${channelClick.node.part ?? "root"} click", () => {`,
       );
-      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const fixture = ${fixtureExpression};`);
       lines.push(`    const seen: boolean[] = [];`);
       lines.push(
         `    fixture.componentInstance.${channelClick.channel.changeHandlerProp} = (v: boolean) => seen.push(v);`,
@@ -82,7 +99,7 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(
         `  it("applies ${variant.dimension}=${variant.value} variant class", () => {`,
       );
-      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const fixture = ${fixtureExpression};`);
       lines.push(
         `    fixture.componentInstance.${variant.dimension} = "${variant.value}";`,
       );
@@ -104,7 +121,7 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(
         `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
       );
-      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const fixture = ${fixtureExpression};`);
       lines.push(
         `    fixture.componentInstance.${indeterminateFact.propertyKey} = true;`,
       );
@@ -134,7 +151,7 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(
         `  it("re-applies .${indeterminateFact.propertyKey} when the input changes from true to false, and aria-checked reflects checked state again", () => {`,
       );
-      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const fixture = ${fixtureExpression};`);
       lines.push(
         `    fixture.componentRef.setInput("${indeterminateFact.propertyKey}", true);`,
       );
@@ -190,7 +207,7 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(`  });`);
       lines.push(``);
       lines.push(`  it("closes on Escape key", () => {`);
-      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const fixture = ${fixtureExpression};`);
       lines.push(`    const ${testCase.spyName} = jest.fn();`);
       lines.push(
         `    fixture.componentInstance.${testCase.channel.valueProp} = true;`,
@@ -218,7 +235,7 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(`  });`);
       lines.push(``);
       lines.push(`  it("closes on overlay click", () => {`);
-      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const fixture = ${fixtureExpression};`);
       lines.push(`    const ${testCase.spyName} = jest.fn();`);
       lines.push(
         `    fixture.componentInstance.${testCase.channel.valueProp} = true;`,

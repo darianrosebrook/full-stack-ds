@@ -17,33 +17,33 @@ const componentAxeOptions = {
 
 describe("Postcard — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {} } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {} } });
     expect(container.firstElementChild?.className).toContain("postcard");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("postcard");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("applies type=image variant class", () => {
-    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "type": "image" } });
+    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "image" } });
     expect(container.firstElementChild?.className).toContain("postcard--image");
   });
 
   it("applies type=video variant class", () => {
-    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "type": "video" } });
+    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "video" } });
     expect(container.firstElementChild?.className).toContain("postcard--video");
   });
 
   it("applies type=audio variant class", () => {
-    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "type": "audio" } });
+    const { container } = render(Postcard as unknown as Component<Record<string, unknown>>, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "audio" } });
     expect(container.firstElementChild?.className).toContain("postcard--audio");
   });
 });

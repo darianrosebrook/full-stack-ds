@@ -17,17 +17,17 @@ const componentAxeOptions = {
 
 describe("Markdown — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Markdown as Component, { props: {}, attrs: { "data-testid": "markdown" }, slots: { "default": "content" } });
+    const wrapper = mount(Markdown as Component, { props: { "content": "placeholder" }, attrs: { "data-testid": "markdown" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Markdown as Component, { props: {}, attrs: { "data-testid": "markdown" }, slots: { "default": "content" } });
+    const wrapper = mount(Markdown as Component, { props: { "content": "placeholder" }, attrs: { "data-testid": "markdown" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("markdown");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Markdown as Component, { props: {}, attrs: { "data-testid": "markdown", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Markdown as Component, { props: { "content": "placeholder" }, attrs: { "data-testid": "markdown", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("markdown");
     expect(wrapper.classes()).toContain("custom");
   });

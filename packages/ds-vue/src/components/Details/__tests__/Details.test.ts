@@ -17,60 +17,60 @@ const componentAxeOptions = {
 
 describe("Details — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true }, attrs: { "data-testid": "details", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("group");
   });
 
   it("applies variant=default variant class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "variant": "default" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "variant": "default" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--default");
   });
 
   it("applies variant=inline variant class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "variant": "inline" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "variant": "inline" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--inline");
   });
 
   it("applies variant=compact variant class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "variant": "compact" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "variant": "compact" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--compact");
   });
 
   it("applies icon=left variant class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "icon": "left" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "icon": "left" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--left");
   });
 
   it("applies icon=right variant class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "icon": "right" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "icon": "right" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--right");
   });
 
   it("applies icon=none variant class", () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "icon": "none" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "icon": "none" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--none");
   });
 });
 
 describe("Details — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Details as Component, { props: { "open": true, "summary": "placeholder" }, attrs: { "data-testid": "details", "aria-label": "Test Details" }, slots: { "default": "<span>content</span>" } });
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details", "aria-label": "Test Details" }, slots: { "default": "<span>content</span>" } });
     const results = await axe(wrapper.element, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

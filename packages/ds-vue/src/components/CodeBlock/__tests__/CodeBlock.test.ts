@@ -17,17 +17,17 @@ const componentAxeOptions = {
 
 describe("CodeBlock — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(CodeBlock as Component, { props: {}, attrs: { "data-testid": "code-block" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeBlock as Component, { props: { "code": "placeholder", "language": "bash" }, attrs: { "data-testid": "code-block" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(CodeBlock as Component, { props: {}, attrs: { "data-testid": "code-block" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeBlock as Component, { props: { "code": "placeholder", "language": "bash" }, attrs: { "data-testid": "code-block" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-block");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(CodeBlock as Component, { props: {}, attrs: { "data-testid": "code-block", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeBlock as Component, { props: { "code": "placeholder", "language": "bash" }, attrs: { "data-testid": "code-block", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-block");
     expect(wrapper.classes()).toContain("custom");
   });

@@ -17,38 +17,38 @@ const componentAxeOptions = {
 
 describe("Icon — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("icon");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("icon");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("applies size=sm variant class", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "sm" } });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "sm" } });
     expect(container.firstElementChild?.className).toContain("icon--sm");
   });
 
   it("applies size=md variant class", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "md" } });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "md" } });
     expect(container.firstElementChild?.className).toContain("icon--md");
   });
 
   it("applies size=lg variant class", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "lg" } });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "lg" } });
     expect(container.firstElementChild?.className).toContain("icon--lg");
   });
 
   it("applies size=xl variant class", () => {
-    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "xl" } });
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "xl" } });
     expect(container.firstElementChild?.className).toContain("icon--xl");
   });
 });
