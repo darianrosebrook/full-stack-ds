@@ -80,3 +80,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx packages/ds-react/src/components/Icon/__tests__/Icon.test.tsx — passed; live browser computed Status/Icon/path color rgb(110, 177, 87) with check glyph"
     recorded_at: "2026-09-05T06:10:12.956Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm exec vitest run src/lib/render-usage.test.tsx — 65 tests passed across 51 component sidecars; live Command root count 1, populated, outside-preview count 0"
+    recorded_at: "2026-09-05T06:10:15.259Z"
