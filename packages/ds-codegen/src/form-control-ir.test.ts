@@ -85,9 +85,12 @@ describe("form-control emitter consumption", () => {
     const angular = generateAngularComponentSource(ir);
     const lit = generateLitComponentSource(ir);
 
+    // React's synthetic onChange is its idiomatic per-input text event; the
+    // other targets spell the same semantic commit as the native input event.
     expect(react).toContain(
-      "onInput={(e) => setValue((e.currentTarget as HTMLInputElement).value)}",
+      "onChange={(e) => setValue((e.currentTarget as HTMLInputElement).value)}",
     );
+    expect(react).not.toContain("onInput={(e) => setValue(");
     expect(vue).toContain('@input="(e) => behavior.setValue((e.target as HTMLInputElement).value)"');
     expect(svelte).toContain("oninput={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)}");
     expect(angular).toContain('(input)="handleValueChange($event)"');

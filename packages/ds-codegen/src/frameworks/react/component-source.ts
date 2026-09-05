@@ -2181,6 +2181,9 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     propertyBindingRefs,
     iconGlyphIdents,
     fieldAssociationConsumerPart: ir.fieldAssociation?.consumerPart,
+    formControlPart: ir.formControl?.part.name,
+    formControlEvent: ir.formControl?.event,
+    formControlCommit: ir.formControl?.commit,
     rootSelectorAnchored: selectorAnchor !== null,
   };
 
@@ -2313,6 +2316,16 @@ interface ReactRenderContext {
    * non-labelable wrapper root.
    */
   fieldAssociationConsumerPart?: string;
+  /**
+   * Form-control event identity. React's idiomatic text-entry notification is
+   * `onChange` even when the contract's semantic commit is per-input; keeping
+   * the originating part/event in context lets this target spell that one
+   * semantic fact idiomatically without rewriting unrelated authored input
+   * events.
+   */
+  formControlPart?: string;
+  formControlEvent?: "input" | "change" | "click";
+  formControlCommit?: "input" | "change" | "activation";
   /**
    * Selector-anchored root panel: the root element gets the anchored
    * position wiring (ref, fixed-position style, data-placement) emitted by
@@ -2569,7 +2582,14 @@ function renderReactDomNode(
   // for channel-routed events too. Legacy `bindings.onX` paths feed
   // through the attribute loop below until the retention drops.
   for (const [eventName, expr] of Object.entries(node.events)) {
-    const jsxEventProp = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    const reactEventName =
+      ctx.formControlPart === node.part &&
+      ctx.formControlEvent === eventName &&
+      ctx.formControlCommit === "input"
+        ? "change"
+        : eventName;
+    const jsxEventProp =
+      "on" + reactEventName.charAt(0).toUpperCase() + reactEventName.slice(1);
     const valueExpr = renderReactBinding(jsxEventProp, expr, ctx);
     if (valueExpr === null) continue;
     attrs.push(`${jsxEventProp}={${valueExpr}}`);

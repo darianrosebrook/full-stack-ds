@@ -796,7 +796,7 @@ export interface ContractForm {
 export interface ContractFormControl {
   part: string;
   channel: string;
-  valueModel: 'text' | 'boolean' | 'selection';
+  valueModel: 'text' | 'boolean';
   commit: 'input' | 'change' | 'activation';
 }
 

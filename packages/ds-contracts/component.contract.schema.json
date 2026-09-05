@@ -1666,10 +1666,9 @@
           "type": "string",
           "enum": [
             "text",
-            "boolean",
-            "selection"
+            "boolean"
           ],
-          "description": "Semantic shape of the value. Text and boolean are admitted by this slice; selection reserves the composite-control vocabulary for a later capability."
+          "description": "Semantic shape of the value admitted by this capability. Composite selection controls require a separate capability."
         },
         "commit": {
           "type": "string",

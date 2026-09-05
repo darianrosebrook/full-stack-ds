@@ -783,7 +783,7 @@ export interface FormControlIR {
   part: PartIR;
   /** Normalized controlled/uncontrolled value channel. */
   channel: NormalizedChannelIR;
-  valueModel: "text" | "boolean" | "selection";
+  valueModel: "text" | "boolean";
   commit: "input" | "change" | "activation";
   /** Web DOM event derived from commit semantics and injected on `part`. */
   event: "input" | "change" | "click";
@@ -4488,13 +4488,8 @@ export function buildFormControlIR(
       `Contract "${contract.name}": formControl.channel "${control.channel}" is not a declared channel.`,
     );
   }
-  const expectedValueType =
-    control.valueModel === "text"
-      ? "string"
-      : control.valueModel === "boolean"
-        ? "boolean"
-        : undefined;
-  if (expectedValueType && channel.valueType !== expectedValueType) {
+  const expectedValueType = control.valueModel === "text" ? "string" : "boolean";
+  if (channel.valueType !== expectedValueType) {
     throw new Error(
       `Contract "${contract.name}": formControl.valueModel "${control.valueModel}" requires channel "${control.channel}" to have valueType "${expectedValueType}" (got "${channel.valueType ?? "undefined"}").`,
     );
