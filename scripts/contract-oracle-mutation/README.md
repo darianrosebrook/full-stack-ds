@@ -54,6 +54,9 @@ Interpret outcomes by evidence class:
   before calling the detection independent.
 - `hand-authored-runtime`: a committed Playwright fact rail contradicted it.
 - `survived`: no selected stage contradicted the fact.
+- `inconclusive`: a stage went red without matching a reviewed detector stage,
+  evidence class, and failure marker. The red is retained for adjudication but
+  is not credited as a mutation kill.
 
 A detection is not automatically proof that the contract was independently
 checked. A survivor is a measured blind spot, not proof that the original fact
@@ -65,17 +68,18 @@ was right. The catalog therefore distinguishes two reviewed dispositions:
   reason. If one becomes detected, its disposition is stale and must be
   re-adjudicated rather than left on the books as permanent debt.
 
-For a detected mutant, the disposition also pins its first failing stage and
-evidence class. `--verify-dispositions` fails if a mutant remains detected but
-its first detector changes. This prevents an independent runtime or authored
-test oracle from disappearing behind a newly earlier structural or
-contract-derived echo check while the aggregate kill count stays green.
-Because `mixed-test` stages contain generated and hand-authored assertions in
-one process, those dispositions also pin a stable authored-test failure marker.
-The outcome therefore drifts if the suite remains red but the intended authored
-oracle no longer appears in its log.
+For a detected mutant, the disposition pins its first failing stage, evidence
+class, and a stable failure marker. A red earns `detected` only when all three
+match; otherwise it is `inconclusive` and the run fails closed. This prevents an
+unrelated timeout or infrastructure failure from being credited as a new
+oracle, and prevents an independent runtime or authored-test oracle from
+disappearing behind a newly earlier structural or contract-derived echo check
+while the aggregate kill count stays green. For `mixed-test` stages, the marker
+names the authored assertion specifically because generated and hand-authored
+assertions execute in one process.
 
-Disposition verification fails on outcome or first-detector mismatch. This is
+Disposition verification fails on outcome or first-detector mismatch, and any
+inconclusive red fails even in measurement-only mode. This is
 stricter than an aggregate survivor threshold: swapping one newly surviving
 protected mutant for one newly detected sentinel leaves the count unchanged
 but still fails.

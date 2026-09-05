@@ -14,6 +14,7 @@ import {
   CONTRACT_MUTANTS,
   applyContractMutation,
   changedLeaves,
+  classifyMutationOutcome,
   compareMutationDisposition,
   summarizeMutationResults,
 } from "./catalog.mjs";
@@ -343,6 +344,10 @@ function renderMarkdown(report, reportDir) {
     "- Baseline: " + (report.baseline.passed ? "passed" : "failed"),
     "- Detected: " + report.summary.detected + "/" + report.summary.total,
     "- Survived: " + report.summary.survived + "/" + report.summary.total,
+    "- Inconclusive reds: " +
+      report.summary.inconclusive +
+      "/" +
+      report.summary.total,
     "- Disposition mismatches: " + report.summary.dispositionMismatches,
     "- Detector provenance mismatches: " +
       report.summary.provenanceMismatches,
@@ -358,10 +363,11 @@ function renderMarkdown(report, reportDir) {
     "the original contract value is correct. For detected mutants, the reviewed",
     "first stage and evidence class are part of that disposition: replacing an",
     "independent detector with a derived one is drift even if both kill the mutant.",
-    "Mixed-test dispositions also pin a stable authored-test failure marker so a",
-    "generated failure cannot silently replace the intended independent assertion.",
-    "Unexpected detections fail too: they mean a known blind spot gained an oracle",
-    "and its ledger entry is stale.",
+    "Every detected disposition pins a stable failure marker. Mixed-test markers",
+    "name the authored assertion specifically, so a generated failure cannot",
+    "silently replace the intended independent assertion. A red at an unreviewed",
+    "stage, class, or marker is inconclusive and fails closed; it is not credited",
+    "as a mutation kill until its log is adjudicated and the catalog is updated.",
     "",
     "## Results",
     "",
@@ -388,14 +394,19 @@ function renderMarkdown(report, reportDir) {
           : "none") +
         " | " +
         (detection
-          ? detection.stage + " / " + detection.evidenceClass
+          ? detection.stage +
+            " / " +
+            detection.evidenceClass +
+            (detection.attributed ? "" : " (unattributed red)")
           : "none") +
         " | " +
         (expectedDetection?.evidenceMarker
           ? detection?.evidenceMarkerPresent
             ? "found"
             : "MISSING"
-          : "n/a") +
+          : detection
+            ? "not reviewed"
+            : "n/a") +
         " | " +
         (disposition.matches ? "match" : "MISMATCH") +
         " |",
@@ -403,8 +414,8 @@ function renderMarkdown(report, reportDir) {
   }
 
   lines.push("", "## Field classes", "");
-  lines.push("| Field class | Total | Detected | Survived |");
-  lines.push("|---|---:|---:|---:|");
+  lines.push("| Field class | Total | Detected | Survived | Inconclusive |");
+  lines.push("|---|---:|---:|---:|---:|");
   for (const [fieldClass, counts] of Object.entries(
     report.summary.byFieldClass,
   )) {
@@ -417,6 +428,8 @@ function renderMarkdown(report, reportDir) {
         counts.detected +
         " | " +
         counts.survived +
+        " | " +
+        counts.inconclusive +
         " |",
     );
   }
@@ -536,7 +549,7 @@ async function main() {
     FSDS_E2E_PORT: String(e2ePort),
   };
   const report = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     commit,
     profile: options.profile,
     verifyDispositions: options.verifyDispositions,
@@ -658,6 +671,12 @@ async function main() {
               expectedDetection.evidenceMarker,
             )
           : null;
+      const outcome = classifyMutationOutcome({
+        failure: failed,
+        expectedDetection,
+        evidenceMarkerPresent,
+      });
+      const detectionAttributed = outcome === "detected";
       const result = {
         id: mutant.id,
         fieldClass: mutant.fieldClass,
@@ -669,7 +688,7 @@ async function main() {
         expectedOutcome: mutant.expectedOutcome,
         expectedDetection,
         gap: mutant.gap ?? null,
-        outcome: failed ? "detected" : "survived",
+        outcome,
         firstDetection: failed
           ? {
               stage: failed.stage,
@@ -679,6 +698,7 @@ async function main() {
               timedOut: failed.timedOut,
               logPath: failed.logPath,
               evidenceMarkerPresent,
+              attributed: detectionAttributed,
             }
           : null,
         stages,
@@ -721,14 +741,26 @@ async function main() {
         report.summary.total +
         "; survived " +
         report.summary.survived +
+        "; inconclusive " +
+        report.summary.inconclusive +
         "/" +
         report.summary.total,
     );
     console.log("[mutation] report: " + join(reportDir, "report.md"));
 
+    if (report.summary.inconclusive > 0) {
+      console.error(
+        "[mutation] inconclusive red: " +
+          report.summary.inconclusive +
+          " failure(s) did not match a reviewed detector stage, evidence class, and marker",
+      );
+      process.exitCode = 2;
+    }
+
     if (
       options.verifyDispositions &&
-      report.summary.dispositionMismatches > 0
+      report.summary.dispositionMismatches > 0 &&
+      process.exitCode !== 2
     ) {
       console.error(
         "[mutation] disposition mismatch: " +

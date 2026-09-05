@@ -20,6 +20,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "generate-check",
       evidenceClass: "structural",
+      evidenceMarker:
+        '[A11Y_IDREF_DECORATIVE_NAME_TARGET] aria-labelledby target "searchIcon"',
     },
   },
   {
@@ -72,6 +74,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "audit-variant-realization",
       evidenceClass: "contract-derived",
+      evidenceMarker: "Dialog.size=md",
     },
   },
   {
@@ -88,6 +91,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "admission",
       evidenceClass: "structural",
+      evidenceMarker:
+        'Type \'"wide"\' is not assignable to type \'DialogSize | undefined\'.',
     },
   },
   {
@@ -186,6 +191,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "audit-motion",
       evidenceClass: "contract-derived",
+      evidenceMarker:
+        "Accordion::MOTION_PROPERTY_UNREALIZED::expand declares width",
     },
   },
 ]);
@@ -258,6 +265,23 @@ export function changedLeaves(before, after, pointer = [], changes = []) {
   return changes;
 }
 
+export function classifyMutationOutcome({
+  failure,
+  expectedDetection,
+  evidenceMarkerPresent,
+}) {
+  if (!failure) return "survived";
+  if (
+    expectedDetection &&
+    failure.stage === expectedDetection.stage &&
+    failure.evidenceClass === expectedDetection.evidenceClass &&
+    evidenceMarkerPresent === true
+  ) {
+    return "detected";
+  }
+  return "inconclusive";
+}
+
 export function compareMutationDisposition(result) {
   const outcomeMatches = result.outcome === result.expectedOutcome;
   const provenanceCompared =
@@ -291,6 +315,7 @@ export function summarizeMutationResults(results) {
     total: results.length,
     detected: 0,
     survived: 0,
+    inconclusive: 0,
     byEvidenceClass: {},
     byFieldClass: {},
     dispositionMismatches: 0,
@@ -298,6 +323,7 @@ export function summarizeMutationResults(results) {
     evidenceMarkerMismatches: 0,
     unexpectedSurvivors: 0,
     unexpectedDetections: 0,
+    unattributedReds: 0,
   };
 
   for (const result of results) {
@@ -308,6 +334,9 @@ export function summarizeMutationResults(results) {
       const evidenceClass = result.firstDetection.evidenceClass;
       totals.byEvidenceClass[evidenceClass] =
         (totals.byEvidenceClass[evidenceClass] ?? 0) + 1;
+    } else if (result.outcome === "inconclusive") {
+      totals.inconclusive += 1;
+      totals.unattributedReds += 1;
     }
 
     const disposition = compareMutationDisposition(result);
@@ -337,10 +366,12 @@ export function summarizeMutationResults(results) {
       total: 0,
       detected: 0,
       survived: 0,
+      inconclusive: 0,
     });
     field.total += 1;
     if (result.outcome === "survived") field.survived += 1;
     if (result.outcome === "detected") field.detected += 1;
+    if (result.outcome === "inconclusive") field.inconclusive += 1;
   }
 
   totals.detectionRate =

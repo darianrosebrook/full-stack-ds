@@ -6,6 +6,7 @@ import {
   CONTRACT_MUTANTS,
   applyContractMutation,
   changedLeaves,
+  classifyMutationOutcome,
   getAtPointer,
   summarizeMutationResults,
 } from "./catalog.mjs";
@@ -32,6 +33,61 @@ function check(name, actual, expected) {
   );
 }
 
+const reviewedFailure = {
+  stage: "root-tests",
+  evidenceClass: "mixed-test",
+};
+const reviewedDetection = {
+  stage: "root-tests",
+  evidenceClass: "mixed-test",
+  evidenceMarker: "authored assertion",
+};
+check(
+  "a clean profile survives",
+  classifyMutationOutcome({
+    failure: undefined,
+    expectedDetection: reviewedDetection,
+    evidenceMarkerPresent: null,
+  }),
+  "survived",
+);
+check(
+  "an exact reviewed detector with its marker earns a kill",
+  classifyMutationOutcome({
+    failure: reviewedFailure,
+    expectedDetection: reviewedDetection,
+    evidenceMarkerPresent: true,
+  }),
+  "detected",
+);
+check(
+  "a red against a reviewed survivor is inconclusive",
+  classifyMutationOutcome({
+    failure: reviewedFailure,
+    expectedDetection: undefined,
+    evidenceMarkerPresent: null,
+  }),
+  "inconclusive",
+);
+check(
+  "a red at the wrong stage is inconclusive",
+  classifyMutationOutcome({
+    failure: { ...reviewedFailure, stage: "framework-tests" },
+    expectedDetection: reviewedDetection,
+    evidenceMarkerPresent: true,
+  }),
+  "inconclusive",
+);
+check(
+  "a red without the reviewed marker is inconclusive",
+  classifyMutationOutcome({
+    failure: reviewedFailure,
+    expectedDetection: reviewedDetection,
+    evidenceMarkerPresent: false,
+  }),
+  "inconclusive",
+);
+
 check(
   "mutant ids are unique",
   new Set(CONTRACT_MUTANTS.map((mutant) => mutant.id)).size,
@@ -56,20 +112,12 @@ for (const mutant of CONTRACT_MUTANTS) {
       EVIDENCE_CLASSES.has(mutant.expectedDetection?.evidenceClass),
       true,
     );
-    if (mutant.expectedDetection?.evidenceClass === "mixed-test") {
-      check(
-        mutant.id + " pins the authored failure inside its mixed test stage",
-        typeof mutant.expectedDetection.evidenceMarker === "string" &&
-          mutant.expectedDetection.evidenceMarker.length > 0,
-        true,
-      );
-    } else {
-      check(
-        mutant.id + " uses evidence markers only for mixed test stages",
-        mutant.expectedDetection?.evidenceMarker,
-        undefined,
-      );
-    }
+    check(
+      mutant.id + " pins the reviewed failure inside its detector stage",
+      typeof mutant.expectedDetection.evidenceMarker === "string" &&
+        mutant.expectedDetection.evidenceMarker.length > 0,
+      true,
+    );
   } else {
     check(
       mutant.id + " does not invent detector provenance for a survivor",
@@ -122,10 +170,12 @@ const summary = summarizeMutationResults([
     expectedDetection: {
       stage: "generate-check",
       evidenceClass: "structural",
+      evidenceMarker: "reviewed structural diagnostic",
     },
     firstDetection: {
       stage: "generate-check",
       evidenceClass: "structural",
+      evidenceMarkerPresent: true,
     },
   },
   {
@@ -166,26 +216,29 @@ const summary = summarizeMutationResults([
   },
   {
     fieldClass: "boolean-default",
-    outcome: "detected",
+    outcome: "inconclusive",
     expectedOutcome: "survived",
     firstDetection: { evidenceClass: "mixed-test" },
   },
 ]);
-check("summary counts detected mutants", summary.detected, 4);
+check("summary counts detected mutants", summary.detected, 3);
 check("summary counts surviving mutants", summary.survived, 2);
+check("summary counts unattributed reds separately", summary.inconclusive, 1);
 check("summary groups detector evidence", summary.byEvidenceClass, {
   structural: 2,
-  "mixed-test": 2,
+  "mixed-test": 1,
 });
 check("summary rejects outcome or detector-provenance drift", summary.dispositionMismatches, 4);
 check("summary names detector-provenance drift", summary.provenanceMismatches, 2);
 check("summary names missing authored evidence markers", summary.evidenceMarkerMismatches, 2);
 check("summary names newly surviving protected mutants", summary.unexpectedSurvivors, 1);
-check("summary names newly detected blind-spot sentinels", summary.unexpectedDetections, 1);
+check("summary does not credit unattributed reds as new detectors", summary.unexpectedDetections, 0);
+check("summary exposes unattributed reds", summary.unattributedReds, 1);
 check("summary reports per-field survival", summary.byFieldClass["boolean-default"], {
   total: 2,
-  detected: 1,
+  detected: 0,
   survived: 1,
+  inconclusive: 1,
 });
 
 const coreDispositionAttempt = spawnSync(
