@@ -89,7 +89,9 @@ const instanceId = useId();
         <div :class="'dialog__body'" :id="`${instanceId}-body`">
           <slot />
         </div>
-        <div :class="'dialog__footer'"></div>
+        <div :class="'dialog__footer'">
+          <slot name="footer" />
+        </div>
       </div>
     </div>
   </Teleport>

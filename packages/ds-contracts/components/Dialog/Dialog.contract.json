@@ -136,7 +136,13 @@
             },
             {
               "tag": "div",
-              "part": "footer"
+              "part": "footer",
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "footer"
+                }
+              ]
             }
           ]
         }

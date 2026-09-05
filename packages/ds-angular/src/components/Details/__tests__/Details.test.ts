@@ -5,53 +5,59 @@ import { DetailsComponent } from "../Details.component";
 // @generated:end
 
 // @generated:start tests
+function createFixture() {
+  const fixture = TestBed.createComponent(DetailsComponent);
+  fixture.componentInstance["summary"] = "placeholder" as never;
+  return fixture;
+}
+
 describe("Details — unit", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [DetailsComponent] });
   });
 
   it("creates the component", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     expect(fixture.componentInstance).toBeInstanceOf(DetailsComponent);
   });
 
   it("applies the base CSS class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     expect(classTokens(fixture.componentInstance)).toContain("details");
   });
 
   it("applies variant=default variant class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     fixture.componentInstance.variant = "default";
     expect(classTokens(fixture.componentInstance)).toContain("details--default");
   });
 
   it("applies variant=inline variant class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     fixture.componentInstance.variant = "inline";
     expect(classTokens(fixture.componentInstance)).toContain("details--inline");
   });
 
   it("applies variant=compact variant class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     fixture.componentInstance.variant = "compact";
     expect(classTokens(fixture.componentInstance)).toContain("details--compact");
   });
 
   it("applies icon=left variant class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     fixture.componentInstance.icon = "left";
     expect(classTokens(fixture.componentInstance)).toContain("details--left");
   });
 
   it("applies icon=right variant class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     fixture.componentInstance.icon = "right";
     expect(classTokens(fixture.componentInstance)).toContain("details--right");
   });
 
   it("applies icon=none variant class", () => {
-    const fixture = TestBed.createComponent(DetailsComponent);
+    const fixture = createFixture();
     fixture.componentInstance.icon = "none";
     expect(classTokens(fixture.componentInstance)).toContain("details--none");
   });

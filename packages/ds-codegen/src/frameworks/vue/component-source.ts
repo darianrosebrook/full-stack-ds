@@ -918,9 +918,9 @@ export function generateVueDisclosureStateParts(
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
   const triggerTag = itemNode?.tag ?? "button";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = vueFindDomNode(ir.dom, regionPart.name);
   const innerChild = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -995,8 +995,14 @@ export function generateVueDisclosureStateParts(
   triggerInner.push(`${triggerIndent}  @click="ctx.toggleItem(props.value)"`);
   triggerInner.push(`${triggerIndent}>`);
   triggerInner.push(`${triggerIndent}  <slot />`);
-  if (chevronPartName) {
-    triggerInner.push(`${triggerIndent}  <span class="${cssPrefix}__${chevronPartName}"></span>`);
+  if (chevronNode) {
+    triggerInner.push(
+      renderVueDomNode(
+        chevronNode,
+        { classRecipe: cssPrefix, channelByName: new Map(), isRoot: false },
+        triggerIndent.length + 2,
+      ),
+    );
   }
   triggerInner.push(`${triggerIndent}</${triggerTag}>`);
 
@@ -1005,6 +1011,9 @@ export function generateVueDisclosureStateParts(
     `// @generated:start imports`,
     `import { computed } from "vue";`,
     `import { use${name}Context } from "./use${name}.js";`,
+    ...(chevronNode?.componentRef
+      ? [`import ${chevronNode.componentRef} from "../${chevronNode.componentRef}/${chevronNode.componentRef}.vue";`]
+      : []),
     `// @generated:end`,
     ``,
     `// @custom:start imports`,

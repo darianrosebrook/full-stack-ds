@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
+import { IconComponent } from "../Icon/Icon.component.js";
 import { useCommand } from "./useCommand.js";
 // @generated:end
 
@@ -23,7 +24,7 @@ let nextInstanceId = 0;
 @Component({
   selector: "fsds-command",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, IconComponent],
   host: { "data-fsds-component": "command" },
   template: `<div [ngClass]="classes()">
   <ng-container *ngIf="behavior.open()">
@@ -32,7 +33,7 @@ let nextInstanceId = 0;
   <ng-container *ngIf="behavior.open()">
     <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="(label ?? 'Command palette')">
       <div [ngClass]="'command__inputWrapper'">
-        <span [ngClass]="'command__searchIcon'" aria-hidden="true"></span>
+        <fsds-icon [ngClass]="'command__searchIcon'" name="search" size="sm"></fsds-icon>
         <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [attr.aria-label]="(searchLabel ?? 'Search commands')" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" [attr.aria-controls]="instanceId + '-list'" />
       </div>
       <div [ngClass]="'command__list'" role="listbox" [attr.id]="instanceId + '-list'" [attr.aria-labelledby]="instanceId + '-input'">

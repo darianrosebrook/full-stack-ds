@@ -17,43 +17,43 @@ const componentAxeOptions = {
 
 describe("Avatar — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("avatar");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("avatar");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder" } });
     expect(container.firstElementChild?.getAttribute("role")).toBe("img");
   });
 
   it("applies size=small variant class", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "size": "small" } });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "small" } });
     expect(container.firstElementChild?.className).toContain("avatar--small");
   });
 
   it("applies size=medium variant class", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "size": "medium" } });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "medium" } });
     expect(container.firstElementChild?.className).toContain("avatar--medium");
   });
 
   it("applies size=large variant class", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "size": "large" } });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "large" } });
     expect(container.firstElementChild?.className).toContain("avatar--large");
   });
 
   it("applies size=extra-large variant class", () => {
-    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "size": "extra-large" } });
+    const { container } = render(Avatar as unknown as Component<Record<string, unknown>>, { props: { "name": "placeholder", "size": "extra-large" } });
     expect(container.firstElementChild?.className).toContain("avatar--extra-large");
   });
 });

@@ -17,17 +17,17 @@ const componentAxeOptions = {
 
 describe("CodeBlock — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: { "code": "placeholder", "language": "bash" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: { "code": "placeholder", "language": "bash" } });
     expect(container.firstElementChild?.className).toContain("code-block");
   });
 
   it("merges custom class", () => {
-    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: { "code": "placeholder", "language": "bash", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("code-block");
     expect(container.firstElementChild?.className).toContain("custom");
   });

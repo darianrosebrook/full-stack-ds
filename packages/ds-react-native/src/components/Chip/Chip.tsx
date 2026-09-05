@@ -81,7 +81,9 @@ export function Chip({
         <View
           style={[styles.icon, iconStyleForSize]}
           accessible={false}
-        />
+        >
+          <RNText>{icon}</RNText>
+        </View>
         ) : null}
         <View
           style={styles.text}

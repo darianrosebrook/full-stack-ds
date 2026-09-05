@@ -17,43 +17,43 @@ const componentAxeOptions = {
 
 describe("Field — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Field as Component, { props: {}, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Field as Component, { props: {}, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("field");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Field as Component, { props: {}, attrs: { "data-testid": "field", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "field", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("field");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const wrapper = mount(Field as Component, { props: {}, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("group");
   });
 
   it("applies status=idle variant class", () => {
-    const wrapper = mount(Field as Component, { props: { "status": "idle" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder", "status": "idle" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("field--idle");
   });
 
   it("applies status=validating variant class", () => {
-    const wrapper = mount(Field as Component, { props: { "status": "validating" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder", "status": "validating" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("field--validating");
   });
 
   it("applies status=valid variant class", () => {
-    const wrapper = mount(Field as Component, { props: { "status": "valid" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder", "status": "valid" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("field--valid");
   });
 
   it("applies status=invalid variant class", () => {
-    const wrapper = mount(Field as Component, { props: { "status": "invalid" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder", "status": "invalid" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("field--invalid");
   });
 });

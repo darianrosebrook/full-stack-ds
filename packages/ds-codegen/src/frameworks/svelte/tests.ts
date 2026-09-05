@@ -371,10 +371,19 @@ type RenderProps = Record<string, RenderPropValue>;
 
 function renderExpression(
   componentName: string,
-  plan: { renderOpenProp?: string },
+  plan: {
+    renderOpenProp?: string;
+    requiredProps: Array<{ name: string; expression: string }>;
+  },
   props: RenderProps = {},
 ): string {
   const allProps: RenderProps = {
+    ...Object.fromEntries(
+      plan.requiredProps.map((prop) => [
+        prop.name,
+        { code: runtimeRequiredPropExpression(prop.expression) },
+      ]),
+    ),
     ...(plan.renderOpenProp ? { [plan.renderOpenProp]: true } : {}),
     ...props,
   };

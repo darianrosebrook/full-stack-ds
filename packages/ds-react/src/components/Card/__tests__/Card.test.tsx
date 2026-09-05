@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { Card, CardHeader, CardContent, CardFooter, CardDescription } from "../Card";
+import { Card, CardHeader, CardMedia, CardContent, CardFooter, CardActions, CardBadge, CardDescription, CardLink, CardNote } from "../Card";
 
 declare module "vitest" {
   interface Assertion<T> {

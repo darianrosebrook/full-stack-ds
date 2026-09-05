@@ -17,17 +17,17 @@ const componentAxeOptions = {
 
 describe("Markdown — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Markdown as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Markdown as unknown as Component<Record<string, unknown>>, { props: { "content": "placeholder" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Markdown as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Markdown as unknown as Component<Record<string, unknown>>, { props: { "content": "placeholder" } });
     expect(container.firstElementChild?.className).toContain("markdown");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Markdown as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Markdown as unknown as Component<Record<string, unknown>>, { props: { "content": "placeholder", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("markdown");
     expect(container.firstElementChild?.className).toContain("custom");
   });

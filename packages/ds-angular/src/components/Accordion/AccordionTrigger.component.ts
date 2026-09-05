@@ -2,6 +2,7 @@
 import { Component, Input, computed, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useAccordionContext } from "./useAccordion.js";
+import { IconComponent } from "../Icon/Icon.component.js";
 // @generated:end
 
 // @custom:start imports
@@ -12,7 +13,7 @@ import { useAccordionContext } from "./useAccordion.js";
 @Component({
   selector: "fsds-accordion-trigger",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, IconComponent],
   template: `<h3 class="accordion__header"><button
   type="button"
   [ngClass]="classes()"
@@ -23,7 +24,7 @@ import { useAccordionContext } from "./useAccordion.js";
   [attr.aria-expanded]="isOpen()"
   [disabled]="ctx.disabled()"
   (click)="ctx.toggleItem(value)"
-><ng-content /><span class="accordion__chevron"></span></button></h3>`,
+><ng-content /><fsds-icon [ngClass]="'accordion__chevron'" name="chevron-down" size="sm"></fsds-icon></button></h3>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionTriggerComponent {

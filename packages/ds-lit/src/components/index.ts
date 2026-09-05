@@ -4,10 +4,10 @@ export { AlertNoticeElement, AlertNoticeBodyElement, AlertNoticeTitleElement } f
 export { AvatarElement } from "./Avatar/Avatar.js";
 export { BadgeElement, BadgeContentElement } from "./Badge/Badge.js";
 export { BlockquoteElement } from "./Blockquote/Blockquote.js";
-export { BreadcrumbsElement, BreadcrumbsListElement } from "./Breadcrumbs/Breadcrumbs.js";
+export { BreadcrumbsElement, BreadcrumbsItemElement, BreadcrumbsListElement } from "./Breadcrumbs/Breadcrumbs.js";
 export { ButtonElement } from "./Button/Button.js";
 export { CalendarElement, CalendarHeaderElement } from "./Calendar/Calendar.js";
-export { CardElement, CardContentElement, CardDescriptionElement, CardFooterElement, CardHeaderElement } from "./Card/Card.js";
+export { CardElement, CardActionsElement, CardBadgeElement, CardContentElement, CardDescriptionElement, CardFooterElement, CardHeaderElement, CardLinkElement, CardMediaElement, CardNoteElement } from "./Card/Card.js";
 export { CheckboxElement } from "./Checkbox/Checkbox.js";
 export { ChipElement } from "./Chip/Chip.js";
 export { CodeBlockElement } from "./CodeBlock/CodeBlock.js";

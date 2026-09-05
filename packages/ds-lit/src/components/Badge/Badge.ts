@@ -183,7 +183,7 @@ export class BadgeElement extends LitElement {
   override render() {
     return html`<span class="${this.computeClasses()}">
   ${this.icon ? html`
-  <span class=${'badge__icon'} aria-hidden="true"></span>
+  <span class=${'badge__icon'} aria-hidden="true">${this.icon}</span>
   ` : nothing}
   <span class=${'badge__content'}>
     <slot></slot>

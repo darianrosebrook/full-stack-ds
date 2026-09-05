@@ -2,6 +2,7 @@
 // @generated:start imports
 import { useCommand } from "./useCommand.svelte.js";
 import { portal } from "../../primitives/index.js";
+import Icon from "../Icon/Icon.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -65,7 +66,7 @@ const instanceId = $props.id();
   {#if behavior.open}
   <div class={'command__dialog'} role="dialog" aria-modal="true" aria-label={label}>
     <div class={'command__inputWrapper'}>
-      <span class={'command__searchIcon'} aria-hidden="true"></span>
+      <Icon class={'command__searchIcon'} name="search" size="sm" />
       <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} aria-expanded={behavior.open} aria-label={searchLabel} placeholder={placeholder} value={behavior.search} id={`${instanceId}-input`} aria-controls={`${instanceId}-list`} />
     </div>
     <div class={'command__list'} role="listbox" id={`${instanceId}-list`} aria-labelledby={`${instanceId}-input`}>

@@ -32,6 +32,7 @@ export interface SheetProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDe
   children?: ReactNode;
   slots?: {
     description?: ReactNode;
+    footer?: ReactNode;
     title?: ReactNode;
   };
 }
@@ -206,7 +207,9 @@ export function Sheet({
           <div className="sheet__body">
             {children}
           </div>
-          <div className="sheet__footer" />
+          <div className="sheet__footer">
+            {slots?.footer}
+          </div>
         </div>
       ) : null}
     </Stack>

@@ -45,7 +45,7 @@
         "multiple": true
       },
       "chevron": {
-        "tag": "span",
+        "componentRef": "fsds.Icon",
         "description": "Decorative disclosure indicator that reflects the expanded state visually.",
         "role": "decoration"
       },
@@ -88,8 +88,12 @@
                       "tag": "children"
                     },
                     {
-                      "tag": "span",
-                      "part": "chevron"
+                      "componentRef": "fsds.Icon",
+                      "part": "chevron",
+                      "attrs": {
+                        "name": "chevron-down",
+                        "size": "sm"
+                      }
                     }
                   ]
                 }

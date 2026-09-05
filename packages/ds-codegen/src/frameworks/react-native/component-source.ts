@@ -1209,6 +1209,10 @@ function emitVariantStyleConsts(ir: ComponentIR): string[] {
   // Em-sized parts select their per-variant geometry entry from the same
   // axis prop that drives the root/text variant consts above.
   for (const part of emSizedParts(ir)) {
+    // A componentRef owns its visual geometry through its own props/styles.
+    // The host component must not emit a dead local selection constant for
+    // the replaced DOM part (for example Button.spinner -> Spinner).
+    if (findDomNodeForPart(ir.dom, part.part)?.componentInstance) continue;
     const pairs = facts
       .filter((fact) => fact.axis === part.axis)
       .filter((fact) => emSizeStyleEntries(fact, part.factor).length > 0)
@@ -1222,6 +1226,18 @@ function emitVariantStyleConsts(ir: ComponentIR): string[] {
     );
   }
   return lines;
+}
+
+function findDomNodeForPart(
+  node: DomNodeIR,
+  part: string,
+): DomNodeIR | undefined {
+  if (node.part === part) return node;
+  for (const child of node.children) {
+    const match = findDomNodeForPart(child, part);
+    if (match) return match;
+  }
+  return undefined;
 }
 
 /**

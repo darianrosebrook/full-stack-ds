@@ -1071,9 +1071,9 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
     : undefined;
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = ir.dom
     ? findDisclosureNode(ir.dom, regionPart.name)
     : undefined;
@@ -1168,8 +1168,14 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
   lines.push(`${triggerIndent}  onClick={() => ctx.toggleItem(value)}`);
   lines.push(`${triggerIndent}>`);
   lines.push(`${triggerIndent}  {children}`);
-  if (chevronPartName) {
-    lines.push(`${triggerIndent}  <span className="${prefix}__${chevronPartName}" />`);
+  if (chevronNode) {
+    lines.push(
+      renderReactDomNode(
+        chevronNode,
+        { classRecipe: prefix, channelByName: new Map(), isRoot: false },
+        triggerIndent.length + 2,
+      ),
+    );
   }
   lines.push(`${triggerIndent}</${triggerTag}>`);
   if (headerPartName) {
@@ -2971,6 +2977,7 @@ function jsxAttrName(name: string): string {
   if (name === "autocomplete") return "autoComplete";
   if (name === "autofocus") return "autoFocus";
   if (name === "contenteditable") return "contentEditable";
+  if (name === "datetime") return "dateTime";
   if (name === "spellcheck") return "spellCheck";
   if (name === "inputmode") return "inputMode";
   if (name === "enterkeyhint") return "enterKeyHint";

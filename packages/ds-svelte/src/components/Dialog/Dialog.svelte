@@ -33,10 +33,11 @@ interface Props {
   ariaDescribedby?: string;
   class?: string;
   children?: import('svelte').Snippet;
+  footer?: import('svelte').Snippet;
   title?: import('svelte').Snippet;
 }
 
-let { open, defaultOpen, onOpenChange, modal = true, size = "md", dismissible = true, closeOnEscape = true, closeOnBackdropClick = true, initialFocus, returnFocus, ariaLabel, ariaLabelledby, ariaDescribedby, class: className, children, title }: Props = $props();
+let { open, defaultOpen, onOpenChange, modal = true, size = "md", dismissible = true, closeOnEscape = true, closeOnBackdropClick = true, initialFocus, returnFocus, ariaLabel, ariaLabelledby, ariaDescribedby, class: className, children, footer, title }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -83,7 +84,9 @@ const instanceId = $props.id();
     <div class={'dialog__body'} id={`${instanceId}-body`}>
       {@render children?.()}
     </div>
-    <div class={'dialog__footer'}></div>
+    <div class={'dialog__footer'}>
+      {@render footer?.()}
+    </div>
   </div>
   {/if}
 </div>

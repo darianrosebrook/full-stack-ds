@@ -27,17 +27,25 @@ export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; as
   template: `<article [ngClass]="classes()">
   <div [ngClass]="'postcard__header'">
     <div [ngClass]="'postcard__userInfo'">
-      <span [ngClass]="'postcard__displayName'"></span>
-      <span [ngClass]="'postcard__handle'"></span>
+      <span [ngClass]="'postcard__displayName'">
+        {{ author.name }}
+      </span>
+      <span [ngClass]="'postcard__handle'">
+        {{ author.handle }}
+      </span>
     </div>
-    <time [ngClass]="'postcard__timestamp'"></time>
+    <time [ngClass]="'postcard__timestamp'" [attr.datetime]="timestamp">
+      {{ timestamp }}
+    </time>
   </div>
   <div [ngClass]="'postcard__content'">
     <ng-content />
   </div>
   <div [ngClass]="'postcard__footer'">
     <div [ngClass]="'postcard__stats'">
-      <span [ngClass]="'postcard__stat'"></span>
+      <span [ngClass]="'postcard__stat'">
+        {{ stats.likes }}
+      </span>
     </div>
   </div>
 </article>`,

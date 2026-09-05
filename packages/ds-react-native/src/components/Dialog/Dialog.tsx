@@ -27,6 +27,7 @@ export interface DialogProps {
   ariaDescribedby?: string;
   slots?: {
     title?: ReactNode;
+    footer?: ReactNode;
   };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -106,7 +107,9 @@ export function Dialog({
           </View>
           <View
             style={styles.footer}
-          />
+          >
+            {slots?.footer}
+          </View>
         </View>
         ) : null}
       </View>

@@ -756,9 +756,9 @@ export function generateSvelteDisclosureStateParts(
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
   const triggerTag = itemNode?.tag ?? "button";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = svelteFindDomNode(ir.dom, regionPart.name);
   const innerChild = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -814,6 +814,11 @@ export function generateSvelteDisclosureStateParts(
   triggerLines.push(`<script lang="ts">`);
   triggerLines.push(`// @generated:start imports`);
   triggerLines.push(`import { use${name}Context } from "./use${name}.svelte.js";`);
+  if (chevronNode?.componentRef) {
+    triggerLines.push(
+      `import ${chevronNode.componentRef} from "../${chevronNode.componentRef}/${chevronNode.componentRef}.svelte";`,
+    );
+  }
   triggerLines.push(`// @generated:end`);
   triggerLines.push(``);
   triggerLines.push(`// @custom:start imports`);
@@ -866,7 +871,20 @@ export function generateSvelteDisclosureStateParts(
   triggerLines.push(`  onclick={() => ctx.toggleItem(value)}`);
   triggerLines.push(`>`);
   triggerLines.push(`  {@render children?.()}`);
-  if (chevronPartName) triggerLines.push(`  <span class="${cssPrefix}__${chevronPartName}"></span>`);
+  if (chevronNode) {
+    triggerLines.push(
+      renderSvelteDomNode(
+        chevronNode,
+        {
+          classRecipe: cssPrefix,
+          channelByName: new Map(),
+          hookVar: "ctx",
+          isRoot: false,
+        },
+        2,
+      ),
+    );
+  }
   triggerLines.push(`</${triggerTag}>`);
   if (headerPartName) triggerLines.push(`</${headerTag}>`);
   triggerLines.push(``);

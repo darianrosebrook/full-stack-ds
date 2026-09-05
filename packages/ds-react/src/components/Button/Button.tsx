@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { Spinner } from "../Spinner/Spinner";
 import "./Button.css";
 // @generated:end
 
@@ -72,7 +73,7 @@ export function Button({
   return (
   <Stack layout="native" as="button" className={`${classNames}`} onClick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} data-fsds-component="button" {...rest}>
     {loading ? (
-      <span className="button__spinner" aria-hidden="true" />
+      <Spinner className="button__spinner" size="sm" inline={loading} ariaHidden={loading} />
     ) : null}
     <span className="button__loadingText">
       {children}

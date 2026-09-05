@@ -40,7 +40,9 @@ let nextInstanceId = 0;
       <div [ngClass]="'dialog__body'" [attr.id]="instanceId + '-body'">
         <ng-content />
       </div>
-      <div [ngClass]="'dialog__footer'"></div>
+      <div [ngClass]="'dialog__footer'">
+        <ng-content select="[slot=footer]" />
+      </div>
     </div>
   </ng-container>
 </div>`,

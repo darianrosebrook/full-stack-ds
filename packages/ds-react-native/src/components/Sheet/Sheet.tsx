@@ -23,6 +23,7 @@ export interface SheetProps {
   slots?: {
     title?: ReactNode;
     description?: ReactNode;
+    footer?: ReactNode;
   };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -106,7 +107,9 @@ export function Sheet({
           </View>
           <View
             style={styles.footer}
-          />
+          >
+            {slots?.footer}
+          </View>
         </View>
         ) : null}
       </View>

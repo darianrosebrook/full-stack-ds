@@ -17,38 +17,38 @@ const componentAxeOptions = {
 
 describe("Icon — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Icon as Component, { props: {}, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Icon as Component, { props: {}, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("icon");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Icon as Component, { props: {}, attrs: { "data-testid": "icon", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "icon", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("icon");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("applies size=sm variant class", () => {
-    const wrapper = mount(Icon as Component, { props: { "size": "sm" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder", "size": "sm" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("icon--sm");
   });
 
   it("applies size=md variant class", () => {
-    const wrapper = mount(Icon as Component, { props: { "size": "md" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder", "size": "md" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("icon--md");
   });
 
   it("applies size=lg variant class", () => {
-    const wrapper = mount(Icon as Component, { props: { "size": "lg" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder", "size": "lg" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("icon--lg");
   });
 
   it("applies size=xl variant class", () => {
-    const wrapper = mount(Icon as Component, { props: { "size": "xl" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
+    const wrapper = mount(Icon as Component, { props: { "name": "placeholder", "size": "xl" }, attrs: { "data-testid": "icon" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("icon--xl");
   });
 });

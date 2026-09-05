@@ -17,53 +17,53 @@ const componentAxeOptions = {
 
 describe("Details — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true } });
     expect(container.firstElementChild?.className).toContain("details");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("details");
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true } });
     expect(container.firstElementChild?.getAttribute("role")).toBe("group");
   });
 
   it("applies variant=default variant class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "default" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "variant": "default" } });
     expect(container.firstElementChild?.className).toContain("details--default");
   });
 
   it("applies variant=inline variant class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "inline" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "variant": "inline" } });
     expect(container.firstElementChild?.className).toContain("details--inline");
   });
 
   it("applies variant=compact variant class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "compact" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "variant": "compact" } });
     expect(container.firstElementChild?.className).toContain("details--compact");
   });
 
   it("applies icon=left variant class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "icon": "left" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "icon": "left" } });
     expect(container.firstElementChild?.className).toContain("details--left");
   });
 
   it("applies icon=right variant class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "icon": "right" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "icon": "right" } });
     expect(container.firstElementChild?.className).toContain("details--right");
   });
 
   it("applies icon=none variant class", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "open": true, "icon": "none" } });
+    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "icon": "none" } });
     expect(container.firstElementChild?.className).toContain("details--none");
   });
 });

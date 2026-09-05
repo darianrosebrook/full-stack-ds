@@ -5,18 +5,24 @@ import { MarkdownComponent } from "../Markdown.component";
 // @generated:end
 
 // @generated:start tests
+function createFixture() {
+  const fixture = TestBed.createComponent(MarkdownComponent);
+  fixture.componentInstance["content"] = "placeholder" as never;
+  return fixture;
+}
+
 describe("Markdown — unit", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [MarkdownComponent] });
   });
 
   it("creates the component", () => {
-    const fixture = TestBed.createComponent(MarkdownComponent);
+    const fixture = createFixture();
     expect(fixture.componentInstance).toBeInstanceOf(MarkdownComponent);
   });
 
   it("applies the base CSS class", () => {
-    const fixture = TestBed.createComponent(MarkdownComponent);
+    const fixture = createFixture();
     expect(classTokens(fixture.componentInstance)).toContain("markdown");
   });
 });

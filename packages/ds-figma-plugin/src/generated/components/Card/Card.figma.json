@@ -28,7 +28,7 @@
       "name": "media",
       "semanticElement": null,
       "nativeTag": null,
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -52,7 +52,7 @@
       "name": "actions",
       "semanticElement": null,
       "nativeTag": null,
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -60,7 +60,7 @@
       "name": "badge",
       "semanticElement": null,
       "nativeTag": null,
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -76,7 +76,7 @@
       "name": "link",
       "semanticElement": null,
       "nativeTag": null,
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     },
@@ -84,7 +84,7 @@
       "name": "note",
       "semanticElement": null,
       "nativeTag": null,
-      "isCompound": false,
+      "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
     }

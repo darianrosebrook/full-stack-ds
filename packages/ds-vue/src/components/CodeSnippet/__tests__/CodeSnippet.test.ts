@@ -17,33 +17,33 @@ const componentAxeOptions = {
 
 describe("CodeSnippet — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(CodeSnippet as Component, { props: {}, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(CodeSnippet as Component, { props: {}, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-snippet");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(CodeSnippet as Component, { props: {}, attrs: { "data-testid": "code-snippet", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder" }, attrs: { "data-testid": "code-snippet", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-snippet");
     expect(wrapper.classes()).toContain("custom");
   });
 
   it("applies as=code variant class", () => {
-    const wrapper = mount(CodeSnippet as Component, { props: { "as": "code" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder", "as": "code" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-snippet--code");
   });
 
   it("applies as=kbd variant class", () => {
-    const wrapper = mount(CodeSnippet as Component, { props: { "as": "kbd" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder", "as": "kbd" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-snippet--kbd");
   });
 
   it("applies as=samp variant class", () => {
-    const wrapper = mount(CodeSnippet as Component, { props: { "as": "samp" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder", "as": "samp" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-snippet--samp");
   });
 });

@@ -13,6 +13,8 @@ const componentAxeOptions = {
   },
 };
 
+const requiredProps = { "summary": "placeholder" };
+
 describe("Details — unit", () => {
   it("renders with default props", async () => {
     const { element } = await renderElement("fsds-details");
@@ -119,6 +121,7 @@ function classTokens(element: Element | null | undefined): string[] {
 }
 
 async function renderElement(tagName: string, props: Record<string, unknown> = {}, content: AccessibilityContent[] = []): Promise<RenderedElement> {
+  await customElements.whenDefined(tagName);
   const element = document.createElement(tagName) as LitTestElement;
   for (const fixture of content) {
     const template = document.createElement("template");
@@ -127,11 +130,7 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
     if (child && fixture.slotName) child.slot = fixture.slotName;
     element.append(template.content.cloneNode(true));
   }
-  const container = document.createElement("div");
-  container.append(element);
-  document.body.append(container);
-  await customElements.whenDefined(tagName);
-  for (const [key, value] of Object.entries(props)) {
+  for (const [key, value] of Object.entries({ ...requiredProps, ...props })) {
     (element as unknown as Record<string, unknown>)[key] = value;
     if (typeof value === "boolean") {
       if (value) element.setAttribute(key, "");
@@ -139,6 +138,9 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
       element.setAttribute(key, String(value));
     }
   }
+  const container = document.createElement("div");
+  container.append(element);
+  document.body.append(container);
   element.requestUpdate?.();
   await element.updateComplete;
   // Named slots can schedule one follow-up render via slotchange.

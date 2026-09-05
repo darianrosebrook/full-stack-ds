@@ -47,8 +47,11 @@ interface UsageExamplesProps {
   tokenOverrides?: Record<string, string>;
 }
 
-const contractsByRef = new Map(
-  bundle.components.map((entry) => [`fsds.${entry.name}`, entry.contract]),
+const compositionsByRef = new Map(
+  bundle.components.map((entry) => [
+    `fsds.${entry.name}`,
+    entry.usageComposition,
+  ]),
 );
 
 function coerceUsagePropOverride(value: unknown): UsagePropValue | undefined {
@@ -203,7 +206,7 @@ function ExampleFrame({
       >
         <PreviewContent portalKind={portalKind}>
           {renderUsageTree(renderedTree, {
-            resolveContract: (ref) => contractsByRef.get(ref),
+            resolveComposition: (ref) => compositionsByRef.get(ref),
           })}
         </PreviewContent>
       </Stack>

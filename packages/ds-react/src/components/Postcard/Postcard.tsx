@@ -118,17 +118,25 @@ export function Postcard({
   <Stack layout="native" as="article" className={`${classNames}`} data-testid={testId} data-fsds-component="postcard" {...rest}>
     <div className="postcard__header">
       <div className="postcard__userInfo">
-        <span className="postcard__displayName" />
-        <span className="postcard__handle" />
+        <span className="postcard__displayName">
+          {author.name}
+        </span>
+        <span className="postcard__handle">
+          {author.handle}
+        </span>
       </div>
-      <time className="postcard__timestamp" />
+      <time className="postcard__timestamp" dateTime={timestamp}>
+        {timestamp}
+      </time>
     </div>
     <div className="postcard__content">
       {children}
     </div>
     <div className="postcard__footer">
       <div className="postcard__stats">
-        <span className="postcard__stat" />
+        <span className="postcard__stat">
+          {stats.likes}
+        </span>
       </div>
     </div>
   </Stack>

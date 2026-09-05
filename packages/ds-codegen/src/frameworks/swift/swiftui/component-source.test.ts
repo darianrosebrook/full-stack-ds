@@ -222,12 +222,17 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
   it("emits one ViewBuilder region per compound part", () => {
     const source = emitCard();
     expect(source).toContain(
-      "public struct Card<Header: View, Content: View, Footer: View, Description: View>: View {",
+      "public struct Card<Header: View, Media: View, Content: View, Footer: View, Actions: View, Badge: View, Description: View, Link: View, Note: View>: View {",
     );
     expect(source).toContain("@ViewBuilder header: () -> Header = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder media: () -> Media = { EmptyView() }");
     expect(source).toContain("@ViewBuilder content: () -> Content = { EmptyView() }");
     expect(source).toContain("@ViewBuilder footer: () -> Footer = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder actions: () -> Actions = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder badge: () -> Badge = { EmptyView() }");
     expect(source).toContain("@ViewBuilder description: () -> Description = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder link: () -> Link = { EmptyView() }");
+    expect(source).toContain("@ViewBuilder note: () -> Note = { EmptyView() }");
     expect(source).toContain("VStack(spacing: gap) {");
   });
 

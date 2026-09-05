@@ -17,17 +17,17 @@ const componentAxeOptions = {
 
 describe("Status — unit", () => {
   it("renders with default props", () => {
-    const wrapper = mount(Status as Component, { props: {}, attrs: { "data-testid": "status" }, slots: { "default": "content" } });
+    const wrapper = mount(Status as Component, { props: { "status": "info" }, attrs: { "data-testid": "status" }, slots: { "default": "content" } });
     expect(wrapper.element).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const wrapper = mount(Status as Component, { props: {}, attrs: { "data-testid": "status" }, slots: { "default": "content" } });
+    const wrapper = mount(Status as Component, { props: { "status": "info" }, attrs: { "data-testid": "status" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("status");
   });
 
   it("merges custom class", () => {
-    const wrapper = mount(Status as Component, { props: {}, attrs: { "data-testid": "status", "class": "custom" }, slots: { "default": "content" } });
+    const wrapper = mount(Status as Component, { props: { "status": "info" }, attrs: { "data-testid": "status", "class": "custom" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("status");
     expect(wrapper.classes()).toContain("custom");
   });

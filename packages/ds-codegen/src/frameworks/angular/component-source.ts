@@ -597,9 +597,9 @@ export function generateAngularDisclosureStateParts(
   const headerNode = angularFindParentOf(ir.dom, itemPart.name);
   const headerPartName = headerNode?.part;
   const headerTag = headerNode?.tag ?? "div";
-  const chevronPartName = itemNode?.children?.find(
+  const chevronNode = itemNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
-  )?.part;
+  );
   const innerNode = angularFindDomNode(ir.dom, regionPart.name);
   const innerChild = innerNode?.children?.find(
     (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
@@ -652,12 +652,26 @@ export function generateAngularDisclosureStateParts(
   // Trigger component
   const triggerTemplateOpen = headerPartName ? `<${headerTag} class="${cssPrefix}__${headerPartName}">` : "";
   const triggerTemplateClose = headerPartName ? `</${headerTag}>` : "";
-  const chevronMarkup = chevronPartName ? `<span class="${cssPrefix}__${chevronPartName}"></span>` : "";
+  const chevronMarkup = chevronNode
+    ? renderAngularDomNode(
+        chevronNode,
+        {
+          classRecipe: cssPrefix,
+          channelByName: new Map(),
+          styledByName: new Map(),
+          isRoot: false,
+        },
+        0,
+      )
+    : "";
   const triggerContent = [
     `// @generated:start imports`,
     `import { Component, Input, computed, ChangeDetectionStrategy } from "@angular/core";`,
     `import { NgClass } from "@angular/common";`,
     `import { use${name}Context } from "./use${name}.js";`,
+    ...(chevronNode?.componentRef
+      ? [`import { ${chevronNode.componentRef}Component } from "../${chevronNode.componentRef}/${chevronNode.componentRef}.component.js";`]
+      : []),
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -668,7 +682,7 @@ export function generateAngularDisclosureStateParts(
     `@Component({`,
     `  selector: "fsds-${toKebab(triggerName)}",`,
     `  standalone: true,`,
-    `  imports: [NgClass],`,
+    `  imports: [NgClass${chevronNode?.componentRef ? `, ${chevronNode.componentRef}Component` : ""}],`,
     `  template: \`${triggerTemplateOpen}<button`,
     `  type="button"`,
     `  [ngClass]="classes()"`,
@@ -2953,6 +2967,7 @@ function renderAngularDomNode(
 const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>> = {
   label: new Set(["form"]),
   svg: new Set(["height", "width"]),
+  time: new Set(["datetime"]),
 };
 
 function angularAttrBinding(

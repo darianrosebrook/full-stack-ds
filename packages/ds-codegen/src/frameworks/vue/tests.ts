@@ -377,10 +377,20 @@ interface MountOverrides {
 
 function mountExpression(
   componentName: string,
-  plan: { renderOpenProp?: string; testId: string },
+  plan: {
+    renderOpenProp?: string;
+    requiredProps: Array<{ name: string; expression: string }>;
+    testId: string;
+  },
   overrides: MountOverrides = {},
 ): string {
   const props: Record<string, MountValue> = {
+    ...Object.fromEntries(
+      plan.requiredProps.map((prop) => [
+        prop.name,
+        { code: runtimeRequiredPropExpression(prop.expression) },
+      ]),
+    ),
     ...(plan.renderOpenProp ? { [plan.renderOpenProp]: true } : {}),
     ...(overrides.props ?? {}),
   };

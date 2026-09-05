@@ -56,7 +56,9 @@ export function Badge({
       <View
         style={[styles.icon, iconStyleForSize]}
         accessible={false}
-      />
+      >
+        <RNText>{icon}</RNText>
+      </View>
       ) : null}
       <View
         style={styles.content}

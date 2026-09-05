@@ -36,6 +36,7 @@ export interface DialogProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaD
   "data-testid"?: string;
   children?: ReactNode;
   slots?: {
+    footer?: ReactNode;
     title?: ReactNode;
   };
 }
@@ -175,7 +176,9 @@ export function Dialog({
           <div className="dialog__body" id={`${instanceId}-body`}>
             {children}
           </div>
-          <div className="dialog__footer" />
+          <div className="dialog__footer">
+            {slots?.footer}
+          </div>
         </div>
       ) : null}
     </Stack>

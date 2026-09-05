@@ -288,7 +288,9 @@ export class DialogElement extends LitElement {
     <div class=${'dialog__body'} id="dialog-body">
       <slot></slot>
     </div>
-    <div class=${'dialog__footer'}></div>
+    <div class=${'dialog__footer'}>
+      <slot name="footer"></slot>
+    </div>
   </div>
   ` : nothing}
 </div>`;

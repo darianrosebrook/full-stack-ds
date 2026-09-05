@@ -17,17 +17,17 @@ const componentAxeOptions = {
 
 describe("Status — unit", () => {
   it("renders with default props", () => {
-    const { container } = render(Status as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Status as unknown as Component<Record<string, unknown>>, { props: { "status": "info" } });
     expect(container.firstElementChild).toBeTruthy();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Status as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Status as unknown as Component<Record<string, unknown>>, { props: { "status": "info" } });
     expect(container.firstElementChild?.className).toContain("status");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Status as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
+    const { container } = render(Status as unknown as Component<Record<string, unknown>>, { props: { "status": "info", "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("status");
     expect(container.firstElementChild?.className).toContain("custom");
   });
