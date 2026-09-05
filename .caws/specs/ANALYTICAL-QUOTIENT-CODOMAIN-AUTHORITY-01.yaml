@@ -90,12 +90,9 @@ evidence:
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
   - criterion_id: A3
-    status: unchecked
-    evidence_ref: "forget-value yields a marker, siblings survive (erasure-plan.test.ts law table; 'forget-value departs the source language'); mutant 'writes a KNOWN VALUE' killed. OPEN: operation-law evidence not bound to erasureAuthorityDigest."
-    recorded_at: "2026-09-05T06:54:57.232Z"
-    test_nodeid: "packages/ds-codegen/src/analytical/erasure-plan.test.ts > forget-value departs the source language: a hole is never confusable with a declared value"
-    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
-    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+    status: pass
+    evidence_ref: "erasure-plan.test.ts: lawful forgetting table, forget-value rows (IDENTIFIES/SEPARATES, required leaf becomes a typed hole, siblings survive) + operationFor chooses forget-value from requiredLeaves; authority.test.ts: 'a wrong-but-local operation fails the law, moves exactly the erasure identity, and both consumers refuse the evidence earned under the old one' (binding to erasureAuthorityDigest, with unmutated-relocation control); law-table receipts L1/L2 killed"
+    recorded_at: "2026-09-05T11:33:03.368Z"
   - criterion_id: A4
     status: pass
     evidence_ref: "Required leaves holed, optional deleted; holder deletion only via delete-holder/delete-tagged-holder; absence of a required leaf spelled as absence of the declaration. QUALIFICATION: delete-tagged-holder and forget-branch-field have no law-table row (reachable only via synthesizePlan)."
