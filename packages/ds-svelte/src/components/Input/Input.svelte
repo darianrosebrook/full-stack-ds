@@ -55,4 +55,4 @@ const fieldAssociation = useFieldAssociation();
 // @custom:end
 </script>
 
-<input class={classes} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} data-fsds-component="input" role="textbox" id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />
+<input class={classes} oninput={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} data-fsds-component="input" role="textbox" />

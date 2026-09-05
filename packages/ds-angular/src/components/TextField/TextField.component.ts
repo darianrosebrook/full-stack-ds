@@ -29,7 +29,7 @@ let nextInstanceId = 0;
   <label [ngClass]="'text-field__label'" [attr.id]="instanceId + '-label'">
     <ng-content select="[slot=label]" />
   </label>
-  <input [ngClass]="'text-field__field'" (change)="handleValueChange($event)" [type]="type" [value]="behavior.value()" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-labelledby]="instanceId + '-label'" [attr.aria-describedby]="fieldAriaDescribedby" />
+  <input [ngClass]="'text-field__field'" (input)="handleValueChange($event)" [type]="type" [value]="behavior.value()" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-labelledby]="instanceId + '-label'" [attr.aria-describedby]="fieldAriaDescribedby" />
   <span [ngClass]="'text-field__description'" [attr.id]="instanceId + '-description'">
     <ng-content select="[slot=description]" />
   </span>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import { useFieldAssociation } from "../../primitives/index.js";
 import { useSwitch } from "./useSwitch.js";
 // @generated:end
 
@@ -57,6 +58,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const fieldAssociation = useFieldAssociation();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -64,7 +69,7 @@ const classNames = computed(() => [
 
 <template>
   <label :class="classNames" :data-testid="props['data-testid']" data-fsds-component="switch">
-    <input :class="'switch__input'" type="checkbox" role="switch" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" :name="props.name" :value="props.value" />
+    <input :class="'switch__input'" type="checkbox" role="switch" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" :name="props.name" :value="props.value" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
     <span :class="'switch__track'" aria-hidden="true">
       <span :class="'switch__thumb'"></span>
     </span>

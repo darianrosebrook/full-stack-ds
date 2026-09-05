@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useCheckbox } from "./useCheckbox.svelte.js";
+import { useFieldAssociation } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -53,12 +54,16 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const fieldAssociation = useFieldAssociation();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <label class={classes} data-fsds-component="checkbox">
-  <input class={'checkbox__input'} type="checkbox" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} aria-checked={(indeterminate ? "mixed" : behavior.checked)} indeterminate={indeterminate} />
+  <input class={'checkbox__input'} type="checkbox" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} aria-checked={(indeterminate ? "mixed" : behavior.checked)} indeterminate={indeterminate} id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />
   <span class={'checkbox__indicator'} aria-hidden="true"></span>
 </label>
