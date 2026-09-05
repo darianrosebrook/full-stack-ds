@@ -130,3 +130,9 @@ evidence:
     recorded_at: "2026-09-05T06:54:59.599Z"
     artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
     commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
+  - criterion_id: A9
+    status: unchecked
+    evidence_ref: "UNEXECUTED. Legacy-vs-new comparison over the full population with the legacy path pinned; every divergence adjudicated individually. Population is now 208 (96 synthesized), not the 205 the criterion names; the number is a description, not a target."
+    recorded_at: "2026-09-05T06:55:00.057Z"
+    artifact_path: packages/ds-contracts/analytical-fixtures/evidence-map.json
+    commit_sha: c8f2c19281392b1a1920f1cc9c7274467211d859
