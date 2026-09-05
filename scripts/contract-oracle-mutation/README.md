@@ -70,6 +70,10 @@ evidence class. `--verify-dispositions` fails if a mutant remains detected but
 its first detector changes. This prevents an independent runtime or authored
 test oracle from disappearing behind a newly earlier structural or
 contract-derived echo check while the aggregate kill count stays green.
+Because `mixed-test` stages contain generated and hand-authored assertions in
+one process, those dispositions also pin a stable authored-test failure marker.
+The outcome therefore drifts if the suite remains red but the intended authored
+oracle no longer appears in its log.
 
 Disposition verification fails on outcome or first-detector mismatch. This is
 stricter than an aggregate survivor threshold: swapping one newly surviving

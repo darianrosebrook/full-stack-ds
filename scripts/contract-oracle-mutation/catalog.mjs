@@ -36,6 +36,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "root-tests",
       evidenceClass: "mixed-test",
+      evidenceMarker:
+        "Dialog — named slots > uses the authored title and body as the unique dialog name and description",
     },
   },
   {
@@ -52,6 +54,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "root-tests",
       evidenceClass: "mixed-test",
+      evidenceMarker:
+        "Icon — authored accessibility policy > defaults an unlabeled icon to decorative presentation semantics",
     },
   },
   {
@@ -66,8 +70,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
       "Changing a valid visual default should require authored behavioral or visual evidence.",
     expectedOutcome: "detected",
     expectedDetection: {
-      stage: "root-tests",
-      evidenceClass: "mixed-test",
+      stage: "audit-variant-realization",
+      evidenceClass: "contract-derived",
     },
   },
   {
@@ -82,7 +86,7 @@ export const CONTRACT_MUTANTS = Object.freeze([
       "Renaming a variant while leaving its style selector behind should be detected by realization checks.",
     expectedOutcome: "detected",
     expectedDetection: {
-      stage: "generate-check",
+      stage: "admission",
       evidenceClass: "structural",
     },
   },
@@ -164,6 +168,8 @@ export const CONTRACT_MUTANTS = Object.freeze([
     expectedDetection: {
       stage: "root-tests",
       evidenceClass: "mixed-test",
+      evidenceMarker:
+        "TextOverflowIR — real ShowMore/Truncate contracts > builds textOverflow for ShowMore with kind line-clamp and line sourced from prop:maxLines",
     },
   },
   {
@@ -263,12 +269,20 @@ export function compareMutationDisposition(result) {
     (result.firstDetection?.stage === result.expectedDetection.stage &&
       result.firstDetection?.evidenceClass ===
         result.expectedDetection.evidenceClass);
+  const evidenceMarkerCompared =
+    provenanceCompared &&
+    typeof result.expectedDetection.evidenceMarker === "string";
+  const evidenceMarkerMatches =
+    !evidenceMarkerCompared ||
+    result.firstDetection?.evidenceMarkerPresent === true;
 
   return {
-    matches: outcomeMatches && provenanceMatches,
+    matches: outcomeMatches && provenanceMatches && evidenceMarkerMatches,
     outcomeMatches,
     provenanceCompared,
     provenanceMatches,
+    evidenceMarkerCompared,
+    evidenceMarkerMatches,
   };
 }
 
@@ -281,6 +295,7 @@ export function summarizeMutationResults(results) {
     byFieldClass: {},
     dispositionMismatches: 0,
     provenanceMismatches: 0,
+    evidenceMarkerMismatches: 0,
     unexpectedSurvivors: 0,
     unexpectedDetections: 0,
   };
@@ -298,11 +313,18 @@ export function summarizeMutationResults(results) {
     const disposition = compareMutationDisposition(result);
     const outcomeMismatch = !disposition.outcomeMatches;
     const provenanceMismatch =
-      disposition.provenanceCompared && !disposition.provenanceMatches;
+      disposition.provenanceCompared &&
+      (!disposition.provenanceMatches || !disposition.evidenceMarkerMatches);
 
     if (!disposition.matches) {
       totals.dispositionMismatches += 1;
       if (provenanceMismatch) totals.provenanceMismatches += 1;
+      if (
+        disposition.evidenceMarkerCompared &&
+        !disposition.evidenceMarkerMatches
+      ) {
+        totals.evidenceMarkerMismatches += 1;
+      }
       if (outcomeMismatch && result.outcome === "survived") {
         totals.unexpectedSurvivors += 1;
       }

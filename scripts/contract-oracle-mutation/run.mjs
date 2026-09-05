@@ -346,6 +346,8 @@ function renderMarkdown(report, reportDir) {
     "- Disposition mismatches: " + report.summary.dispositionMismatches,
     "- Detector provenance mismatches: " +
       report.summary.provenanceMismatches,
+    "- Evidence-marker mismatches: " +
+      report.summary.evidenceMarkerMismatches,
     "",
     "Detection means a selected gate went red. It does not by itself prove an",
     "independent correctness oracle: structural and contract-derived detectors",
@@ -356,13 +358,15 @@ function renderMarkdown(report, reportDir) {
     "the original contract value is correct. For detected mutants, the reviewed",
     "first stage and evidence class are part of that disposition: replacing an",
     "independent detector with a derived one is drift even if both kill the mutant.",
+    "Mixed-test dispositions also pin a stable authored-test failure marker so a",
+    "generated failure cannot silently replace the intended independent assertion.",
     "Unexpected detections fail too: they mean a known blind spot gained an oracle",
     "and its ledger entry is stale.",
     "",
     "## Results",
     "",
-    "| Mutant | Field class | Expected outcome | Actual outcome | Expected first detector | Actual first detector | Disposition |",
-    "|---|---|---|---|---|---|---|",
+    "| Mutant | Field class | Expected outcome | Actual outcome | Expected first detector | Actual first detector | Evidence marker | Disposition |",
+    "|---|---|---|---|---|---|---|---|",
   ];
 
   for (const result of report.results) {
@@ -386,6 +390,12 @@ function renderMarkdown(report, reportDir) {
         (detection
           ? detection.stage + " / " + detection.evidenceClass
           : "none") +
+        " | " +
+        (expectedDetection?.evidenceMarker
+          ? detection?.evidenceMarkerPresent
+            ? "found"
+            : "MISSING"
+          : "n/a") +
         " | " +
         (disposition.matches ? "match" : "MISMATCH") +
         " |",
@@ -641,6 +651,13 @@ async function main() {
         env,
       });
       const failed = stages.find((stage) => stage.code !== 0);
+      const expectedDetection = mutant.expectedDetection ?? null;
+      const evidenceMarkerPresent =
+        failed && expectedDetection?.evidenceMarker
+          ? readFileSync(join(reportDir, failed.logPath), "utf8").includes(
+              expectedDetection.evidenceMarker,
+            )
+          : null;
       const result = {
         id: mutant.id,
         fieldClass: mutant.fieldClass,
@@ -650,7 +667,7 @@ async function main() {
         to: mutant.to,
         hypothesis: mutant.hypothesis,
         expectedOutcome: mutant.expectedOutcome,
-        expectedDetection: mutant.expectedDetection ?? null,
+        expectedDetection,
         gap: mutant.gap ?? null,
         outcome: failed ? "detected" : "survived",
         firstDetection: failed
@@ -661,6 +678,7 @@ async function main() {
               signal: failed.signal,
               timedOut: failed.timedOut,
               logPath: failed.logPath,
+              evidenceMarkerPresent,
             }
           : null,
         stages,

@@ -56,6 +56,20 @@ for (const mutant of CONTRACT_MUTANTS) {
       EVIDENCE_CLASSES.has(mutant.expectedDetection?.evidenceClass),
       true,
     );
+    if (mutant.expectedDetection?.evidenceClass === "mixed-test") {
+      check(
+        mutant.id + " pins the authored failure inside its mixed test stage",
+        typeof mutant.expectedDetection.evidenceMarker === "string" &&
+          mutant.expectedDetection.evidenceMarker.length > 0,
+        true,
+      );
+    } else {
+      check(
+        mutant.id + " uses evidence markers only for mixed test stages",
+        mutant.expectedDetection?.evidenceMarker,
+        undefined,
+      );
+    }
   } else {
     check(
       mutant.id + " does not invent detector provenance for a survivor",
@@ -121,8 +135,24 @@ const summary = summarizeMutationResults([
     expectedDetection: {
       stage: "root-tests",
       evidenceClass: "mixed-test",
+      evidenceMarker: "authored relationship assertion",
     },
     firstDetection: { evidenceClass: "structural" },
+  },
+  {
+    fieldClass: "text-overflow-binding",
+    outcome: "detected",
+    expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+      evidenceMarker: "authored IR assertion",
+    },
+    firstDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+      evidenceMarkerPresent: false,
+    },
   },
   {
     fieldClass: "relationship-target",
@@ -141,14 +171,15 @@ const summary = summarizeMutationResults([
     firstDetection: { evidenceClass: "mixed-test" },
   },
 ]);
-check("summary counts detected mutants", summary.detected, 3);
+check("summary counts detected mutants", summary.detected, 4);
 check("summary counts surviving mutants", summary.survived, 2);
 check("summary groups detector evidence", summary.byEvidenceClass, {
   structural: 2,
-  "mixed-test": 1,
+  "mixed-test": 2,
 });
-check("summary rejects outcome or detector-provenance drift", summary.dispositionMismatches, 3);
-check("summary names detector-provenance drift", summary.provenanceMismatches, 1);
+check("summary rejects outcome or detector-provenance drift", summary.dispositionMismatches, 4);
+check("summary names detector-provenance drift", summary.provenanceMismatches, 2);
+check("summary names missing authored evidence markers", summary.evidenceMarkerMismatches, 2);
 check("summary names newly surviving protected mutants", summary.unexpectedSurvivors, 1);
 check("summary names newly detected blind-spot sentinels", summary.unexpectedDetections, 1);
 check("summary reports per-field survival", summary.byFieldClass["boolean-default"], {
