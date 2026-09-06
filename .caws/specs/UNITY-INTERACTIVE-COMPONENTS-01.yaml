@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-09-06T06:57:53.545Z'
-updated_at: '2026-09-06T07:05:08.966Z'
+updated_at: '2026-09-06T07:23:09.671Z'
 created_by_session: '01a07581-2e8c-7851-abc0-0126a0e13465'
 blast_radius:
   modules:
@@ -29,6 +29,7 @@ scope:
   out: []
   support:
     - docs/normal-form.md
+    - CLAUDE.md
 invariants:
   - 'Component semantics derive from normalized contract IR; no component-identity dispatch in the Unity emitter.'
   - 'Unity stays outside the TypeScript admission rail; real Unity compilation and interaction tests are a separate evidence lane.'
