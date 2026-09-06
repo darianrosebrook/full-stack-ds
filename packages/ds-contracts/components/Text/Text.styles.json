@@ -2,15 +2,27 @@
   "root": {
     "color": {
       "resolvesTo": "text.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text.design.root.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.root.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.root.typography.line-height"
+      }
     },
     "margin": {
       "literal": "0",
@@ -30,19 +42,35 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-7aecafa55fab.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.bold",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-7aecafa55fab.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.heading",
-      "fallback": "1"
+      "fallback": "1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-7aecafa55fab.typography.line-height"
+      }
     },
     "letter-spacing": {
       "resolvesTo": "text.typography.letterSpacing.tight",
-      "fallback": "-0.018rem"
+      "fallback": "-0.018rem",
+      "design": {
+        "property": "typography.tracking",
+        "slot": "text.design.condition-7aecafa55fab.typography.tracking"
+      }
     }
   },
   "--headline": {
@@ -56,19 +84,35 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-8819f782ecc4.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.bold",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-8819f782ecc4.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.heading",
-      "fallback": "1"
+      "fallback": "1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-8819f782ecc4.typography.line-height"
+      }
     },
     "letter-spacing": {
       "resolvesTo": "text.typography.letterSpacing.tight",
-      "fallback": "-0.018rem"
+      "fallback": "-0.018rem",
+      "design": {
+        "property": "typography.tracking",
+        "slot": "text.design.condition-8819f782ecc4.typography.tracking"
+      }
     }
   },
   "--title": {
@@ -82,15 +126,27 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-ad1d0c32b0fa.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.bold",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-ad1d0c32b0fa.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.heading",
-      "fallback": "1"
+      "fallback": "1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-ad1d0c32b0fa.typography.line-height"
+      }
     }
   },
   "--body": {
@@ -104,15 +160,27 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-2ccff328366e.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.regular",
-      "fallback": "400"
+      "fallback": "400",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-2ccff328366e.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-2ccff328366e.typography.line-height"
+      }
     }
   },
   "--caption": {
@@ -126,15 +194,27 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-e697e79ba40b.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.regular",
-      "fallback": "400"
+      "fallback": "400",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-e697e79ba40b.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.tight",
-      "fallback": "1.2"
+      "fallback": "1.2",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-e697e79ba40b.typography.line-height"
+      }
     }
   },
   "--overline": {
@@ -148,15 +228,27 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-9b05002ba0aa.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.medium",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-9b05002ba0aa.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.tight",
-      "fallback": "1.2"
+      "fallback": "1.2",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-9b05002ba0aa.typography.line-height"
+      }
     },
     "text-transform": {
       "literal": "uppercase",
@@ -166,7 +258,11 @@
     },
     "letter-spacing": {
       "resolvesTo": "text.typography.letterSpacing.wide",
-      "fallback": "0.018rem"
+      "fallback": "0.018rem",
+      "design": {
+        "property": "typography.tracking",
+        "slot": "text.design.condition-9b05002ba0aa.typography.tracking"
+      }
     }
   },
   "--code": {
@@ -176,17 +272,29 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-3a2bffe9ebbb.typography.size"
+      }
     },
     "font-family": {
       "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.family",
+        "slot": "text.design.condition-3a2bffe9ebbb.typography.family"
+      }
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text.design.condition-3a2bffe9ebbb.typography.line-height"
+      }
     }
   },
   "--xs": {
@@ -196,7 +304,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-ac39d57baace.typography.size"
+      }
     }
   },
   "--sm": {
@@ -206,7 +318,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-24964d7ed3a7.typography.size"
+      }
     }
   },
   "--md": {
@@ -216,7 +332,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-dc35d39122c5.typography.size"
+      }
     }
   },
   "--lg": {
@@ -226,7 +346,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-72800fd5573d.typography.size"
+      }
     }
   },
   "--xl": {
@@ -236,7 +360,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-bcfaa22e125a.typography.size"
+      }
     }
   },
   "--2xl": {
@@ -246,7 +374,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-b6534e1dde7a.typography.size"
+      }
     }
   },
   "--3xl": {
@@ -256,7 +388,11 @@
     },
     "font-size": {
       "resolvesTo": "text.size.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text.design.condition-c64026a43137.typography.size"
+      }
     }
   },
   "--light": {
@@ -266,7 +402,11 @@
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.light",
-      "fallback": "300"
+      "fallback": "300",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-2f78ecef044e.typography.weight"
+      }
     }
   },
   "--normal": {
@@ -276,7 +416,11 @@
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.regular",
-      "fallback": "400"
+      "fallback": "400",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-223331540ae2.typography.weight"
+      }
     }
   },
   "--medium": {
@@ -286,7 +430,11 @@
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.medium",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-a9821c9eea70.typography.weight"
+      }
     }
   },
   "--semibold": {
@@ -296,7 +444,11 @@
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.medium",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-eae8588b0e7e.typography.weight"
+      }
     }
   },
   "--bold": {
@@ -306,7 +458,11 @@
     },
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.bold",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text.design.condition-7e6b52652555.typography.weight"
+      }
     }
   },
   "--left": {
@@ -314,7 +470,11 @@
       "literal": "left",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "text.design.condition-47358d2a8919.typography.alignment"
+      }
     }
   },
   "--center": {
@@ -322,7 +482,11 @@
       "literal": "center",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "text.design.condition-ebb0f544c082.typography.alignment"
+      }
     }
   },
   "--right": {
@@ -330,7 +494,11 @@
       "literal": "right",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "text.design.condition-1cb2ef480bf6.typography.alignment"
+      }
     }
   },
   "--justify": {
@@ -338,7 +506,11 @@
       "literal": "justify",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "text.design.condition-7acb888507a7.typography.alignment"
+      }
     }
   },
   "--none": {

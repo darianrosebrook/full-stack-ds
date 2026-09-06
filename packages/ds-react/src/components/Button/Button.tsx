@@ -71,7 +71,7 @@ export function Button({
     .join(" ");
 
   return (
-  <Stack layout="native" as="button" className={`${classNames}`} onClick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} data-fsds-component="button" {...rest}>
+  <Stack layout="native" as="button" className={`${classNames}`} onClick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} data-fsds-component="button" data-fsds-box="" {...rest}>
     {loading ? (
       <Spinner className="button__spinner" size="sm" inline={loading} ariaHidden={loading} />
     ) : null}

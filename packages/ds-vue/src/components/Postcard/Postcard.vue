@@ -48,7 +48,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <article :class="classNames" :data-testid="props['data-testid']" data-fsds-component="postcard">
+  <article :class="classNames" :data-testid="props['data-testid']" data-fsds-component="postcard" data-fsds-box="">
     <div :class="'postcard__header'">
       <div :class="'postcard__userInfo'">
         <span :class="'postcard__displayName'">

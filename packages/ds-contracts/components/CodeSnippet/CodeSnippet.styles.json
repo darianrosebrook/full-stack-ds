@@ -2,43 +2,79 @@
   "root": {
     "background-color": {
       "resolvesTo": "code-snippet.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "code-snippet.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "code-snippet.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "code-snippet.design.root.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "code-snippet.design.root.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "code-snippet.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "code-snippet.design.root.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "code-snippet.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "code-snippet.design.root.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "code-snippet.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-snippet.design.root.foreground.color"
+      }
     },
     "font-family": {
       "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.family",
+        "slot": "code-snippet.design.root.typography.family"
+      }
     },
     "font-size": {
       "resolvesTo": "code-snippet.size.fontSize.default",
-      "fallback": "0.875rem"
+      "fallback": "0.875rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "code-snippet.design.root.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "code-snippet.typography.lineHeight.default",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "code-snippet.design.root.typography.line-height"
+      }
     },
     "margin": {
       "literal": "0",
@@ -48,11 +84,19 @@
     },
     "padding-block": {
       "resolvesTo": "code-snippet.size.padding.block",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "spacing.padding-block",
+        "slot": "code-snippet.design.root.spacing.padding-block"
+      }
     },
     "padding-inline": {
       "resolvesTo": "code-snippet.size.padding.inline",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.padding-inline",
+        "slot": "code-snippet.design.root.spacing.padding-inline"
+      }
     },
     "white-space": {
       "literal": "nowrap",
@@ -64,11 +108,19 @@
   "--kbd": {
     "box-shadow": {
       "resolvesTo": "code-snippet.elevation.kbd",
-      "fallback": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a"
+      "fallback": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "code-snippet.design.condition-7b91481c8112.elevation.shadow"
+      }
     },
     "font-weight": {
       "resolvesTo": "semantic.typography.font.weight.medium",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "code-snippet.design.condition-7b91481c8112.typography.weight"
+      }
     }
   },
   "--samp": {
@@ -76,13 +128,21 @@
       "literal": "transparent",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "code-snippet.design.condition-c7eae7a69682.background.fill"
+      }
     },
     "border-color": {
       "literal": "transparent",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.color",
+        "slot": "code-snippet.design.condition-c7eae7a69682.border.color"
+      }
     }
   }
 }

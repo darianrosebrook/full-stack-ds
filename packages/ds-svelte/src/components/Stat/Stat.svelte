@@ -43,6 +43,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="stat">
+<div class={classes} data-fsds-component="stat" data-fsds-box="">
   {@render children?.()}
 </div>

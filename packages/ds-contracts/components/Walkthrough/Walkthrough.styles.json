@@ -20,39 +20,71 @@
     },
     "background-color": {
       "resolvesTo": "walkthrough.surface.bg",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "walkthrough.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "walkthrough.surface.border",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "walkthrough.design.root.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "walkthrough.design.root.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "walkthrough.design.root.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "walkthrough.surface.radius",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "walkthrough.design.root.shape.radius"
+      }
     },
     "box-shadow": {
       "resolvesTo": "walkthrough.surface.shadow",
-      "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a"
+      "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "walkthrough.design.root.elevation.shadow"
+      }
     },
     "padding": {
       "resolvesTo": "walkthrough.surface.padding",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "walkthrough.design.root.spacing.padding"
+      }
     },
     "gap": {
       "resolvesTo": "walkthrough.dots.gap",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "walkthrough.design.root.spacing.gap"
+      }
     }
   },
   "content": {
@@ -70,7 +102,11 @@
     },
     "gap": {
       "resolvesTo": "walkthrough.description.marginTop",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "walkthrough.design.content.spacing.gap"
+      }
     }
   },
   "title": {
@@ -82,15 +118,27 @@
     },
     "font-size": {
       "resolvesTo": "walkthrough.title.fontSize",
-      "fallback": "20px"
+      "fallback": "20px",
+      "design": {
+        "property": "typography.size",
+        "slot": "walkthrough.design.title.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "walkthrough.title.fontWeight",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "walkthrough.design.title.typography.weight"
+      }
     },
     "color": {
       "resolvesTo": "walkthrough.title.color",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "walkthrough.design.title.foreground.color"
+      }
     }
   },
   "description": {
@@ -102,17 +150,29 @@
     },
     "font-size": {
       "resolvesTo": "walkthrough.description.fontSize",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "walkthrough.design.description.typography.size"
+      }
     },
     "color": {
       "resolvesTo": "walkthrough.description.color",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "walkthrough.design.description.foreground.color"
+      }
     },
     "line-height": {
       "literal": "1.5",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.line-height",
+        "slot": "walkthrough.design.description.typography.line-height"
+      }
     }
   },
   "controls": {
@@ -136,7 +196,11 @@
     },
     "gap": {
       "resolvesTo": "walkthrough.controls.gap",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "walkthrough.design.controls.spacing.gap"
+      }
     },
     "margin-top": {
       "resolvesTo": "walkthrough.controls.marginTop",
@@ -144,19 +208,31 @@
     },
     "border-top-color": {
       "resolvesTo": "walkthrough.surface.border",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.top.color",
+        "slot": "walkthrough.design.controls.border.top.color"
+      }
     },
     "border-top-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.style",
+        "slot": "walkthrough.design.controls.border.top.style"
+      }
     },
     "border-top-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.width",
+        "slot": "walkthrough.design.controls.border.top.width"
+      }
     },
     "padding-top": {
       "resolvesTo": "walkthrough.controls.marginTop",
@@ -178,7 +254,11 @@
     },
     "color": {
       "resolvesTo": "walkthrough.button.secondary.color",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "walkthrough.design.skip.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -190,7 +270,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "walkthrough.design.skip.spacing.padding"
+      }
     },
     "margin-right": {
       "literal": "auto",
@@ -202,31 +286,55 @@
   "prev": {
     "background-color": {
       "resolvesTo": "walkthrough.button.secondary.bg",
-      "fallback": "#00000000"
+      "fallback": "#00000000",
+      "design": {
+        "property": "background.fill",
+        "slot": "walkthrough.design.prev.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "walkthrough.button.secondary.border",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "walkthrough.design.prev.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "walkthrough.design.prev.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "walkthrough.design.prev.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "walkthrough.button.primary.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "walkthrough.design.prev.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "walkthrough.button.secondary.color",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "walkthrough.design.prev.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -238,7 +346,11 @@
   "next": {
     "background-color": {
       "resolvesTo": "walkthrough.button.primary.bg",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "background.fill",
+        "slot": "walkthrough.design.next.background.fill"
+      }
     },
     "border": {
       "literal": "none",
@@ -248,11 +360,19 @@
     },
     "border-radius": {
       "resolvesTo": "walkthrough.button.primary.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "walkthrough.design.next.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "walkthrough.button.primary.color",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "foreground.color",
+        "slot": "walkthrough.design.next.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -288,7 +408,11 @@
     },
     "gap": {
       "resolvesTo": "walkthrough.dots.gap",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "walkthrough.design.dots.spacing.gap"
+      }
     }
   },
   "dot": {
@@ -300,21 +424,37 @@
     },
     "width": {
       "resolvesTo": "walkthrough.dots.size",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "walkthrough.design.dot.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "walkthrough.dots.size",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "walkthrough.design.dot.sizing.height"
+      }
     },
     "border-radius": {
       "literal": "50%",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "walkthrough.design.dot.shape.radius"
+      }
     },
     "background-color": {
       "resolvesTo": "walkthrough.dots.idle",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "background.fill",
+        "slot": "walkthrough.design.dot.background.fill"
+      }
     },
     "border": {
       "literal": "none",
@@ -326,7 +466,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "walkthrough.design.dot.spacing.padding"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -338,11 +482,19 @@
   "counter": {
     "color": {
       "resolvesTo": "walkthrough.description.color",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "walkthrough.design.counter.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "walkthrough.description.fontSize",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "walkthrough.design.counter.typography.size"
+      }
     }
   }
 }

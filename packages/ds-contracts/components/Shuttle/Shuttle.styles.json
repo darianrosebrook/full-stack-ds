@@ -2,19 +2,35 @@
   "root": {
     "background-color": {
       "resolvesTo": "shuttle.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "shuttle.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "shuttle.color.border.accent",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "border.color",
+        "slot": "shuttle.design.root.border.color"
+      }
     },
     "padding": {
       "resolvesTo": "shuttle.size.padding.default",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "shuttle.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "shuttle.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "shuttle.design.root.shape.radius"
+      }
     }
   },
   "item": {
@@ -34,11 +50,19 @@
       "literal": "4px 8px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "shuttle.design.item.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "shuttle.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "shuttle.design.item.foreground.color"
+      }
     },
     "border-block-end-style": {
       "literal": "solid",
@@ -50,11 +74,19 @@
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.block-end.width",
+        "slot": "shuttle.design.item.border.block-end.width"
+      }
     },
     "border-block-end-color": {
       "resolvesTo": "shuttle.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.block-end.color",
+        "slot": "shuttle.design.item.border.block-end.color"
+      }
     },
     "cursor": {
       "literal": "pointer",

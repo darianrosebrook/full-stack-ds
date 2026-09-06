@@ -30,7 +30,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="markdown">{#each parseMarkdown(content ?? "") as block, blockIndex}{@render markdownBlock(block, blockIndex)}{/each}</div>
+<div class={classes} data-fsds-component="markdown" data-fsds-box="">{#each parseMarkdown(content ?? "") as block, blockIndex}{@render markdownBlock(block, blockIndex)}{/each}</div>
 
 {#snippet markdownBlock(block: MarkdownBlock, blockIndex: number)}
   {#if block.kind === "heading"}

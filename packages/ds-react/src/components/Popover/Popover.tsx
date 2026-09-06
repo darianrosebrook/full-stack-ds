@@ -145,7 +145,7 @@ export function Popover({
         placement,
       }}
     >
-      <span className={classNames} data-testid={testId}>
+      <span data-fsds-component="popover" data-fsds-box="" className={classNames} data-testid={testId}>
         {children}
       </span>
     </PopoverContext.Provider>

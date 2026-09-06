@@ -50,7 +50,8 @@ export type PopoverPlacement = "top" | "bottom" | "left" | "right" | "auto";
       deps: [],
     },
   ],
-  template: `<span [ngClass]="classes()"><ng-content /></span>`,
+  host: { "data-fsds-component": "popover" },
+  template: `<span data-fsds-box="" [ngClass]="classes()"><ng-content /></span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopoverComponent implements OnChanges, OnInit {

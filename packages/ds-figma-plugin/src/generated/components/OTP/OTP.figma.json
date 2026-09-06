@@ -134,6 +134,242 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "otp.design.group.spacing.gap",
+      "cssVar": "--fsds-otp-design-group-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "group",
+      "part": "group",
+      "defaultValue": "4px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__group"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "otp.design.field.typography.alignment",
+      "cssVar": "--fsds-otp-design-field-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "center",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "otp.design.field.typography.size",
+      "cssVar": "--fsds-otp-design-field-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "1rem",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "otp.design.field.border.style",
+      "cssVar": "--fsds-otp-design-field-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "otp.design.field.border.width",
+      "cssVar": "--fsds-otp-design-field-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "otp.design.field.shape.radius",
+      "cssVar": "--fsds-otp-design-field-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "6px",
+      "resolvesTo": "otp.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "otp.design.field.border.color",
+      "cssVar": "--fsds-otp-design-field-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "otp.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "otp.design.field.background.fill",
+      "cssVar": "--fsds-otp-design-field-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "otp.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "otp.design.field.foreground.color",
+      "cssVar": "--fsds-otp-design-field-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "#141414",
+      "resolvesTo": "otp.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "otp.design.condition-2b8ec1586f15.border.color",
+      "cssVar": "--fsds-otp-design-condition-2b8ec1586f15-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".otp__field:focus-visible",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "otp.color.border.accent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "otp.design.condition-2b8ec1586f15.focus.width",
+      "cssVar": "--fsds-otp-design-condition-2b8ec1586f15-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".otp__field:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "otp.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "otp.design.condition-2b8ec1586f15.focus.color",
+      "cssVar": "--fsds-otp-design-condition-2b8ec1586f15-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".otp__field:focus-visible",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "otp.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "otp.design.condition-2b8ec1586f15.focus.style",
+      "cssVar": "--fsds-otp-design-condition-2b8ec1586f15-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".otp__field:focus-visible",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "otp.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "otp.design.condition-2b8ec1586f15.focus.offset",
+      "cssVar": "--fsds-otp-design-condition-2b8ec1586f15-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".otp__field:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "otp.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "otp.design.condition-82e351952582.appearance.opacity",
+      "cssVar": "--fsds-otp-design-condition-82e351952582-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".otp__field:disabled",
+      "part": null,
+      "defaultValue": "0.5",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".otp__field:disabled"
+    }
+  ],
   "variants": {
     "mode": [
       "numeric",

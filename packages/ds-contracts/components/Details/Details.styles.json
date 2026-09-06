@@ -2,23 +2,43 @@
   "root": {
     "padding": {
       "resolvesTo": "details.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "details.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "details.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "details.design.root.shape.radius"
+      }
     },
     "background-color": {
       "resolvesTo": "details.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "details.design.root.background.fill"
+      }
     },
     "gap": {
       "resolvesTo": "details.spacing.gap.default",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "details.design.root.spacing.gap"
+      }
     },
     "line-height": {
       "resolvesTo": "details.typography.lineHeight.body",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "details.design.root.typography.line-height"
+      }
     },
     "display": {
       "literal": "block",
@@ -30,7 +50,11 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "details.design.root.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
@@ -38,7 +62,11 @@
         "web",
         "ios",
         "android"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "details.design.root.border.width"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -48,21 +76,37 @@
     },
     "border-color": {
       "resolvesTo": "details.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "details.design.root.border.color"
+      }
     },
     "color": {
       "resolvesTo": "details.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "details.design.root.foreground.color"
+      }
     }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "details.color.background.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "details.design.hover.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "details.color.border.hover",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "border.color",
+        "slot": "details.design.hover.border.color"
+      }
     }
   },
   "summary": {
@@ -86,7 +130,11 @@
     },
     "gap": {
       "resolvesTo": "details.spacing.gap.default",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "details.design.summary.spacing.gap"
+      }
     },
     "list-style": {
       "literal": "none",
@@ -96,15 +144,27 @@
     },
     "padding": {
       "resolvesTo": "details.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "details.design.summary.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "details.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "details.design.summary.foreground.color"
+      }
     },
     "font-weight": {
       "resolvesTo": "details.typography.fontWeight.medium",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "details.design.summary.typography.weight"
+      }
     }
   },
   ".details__summary:hover": {
@@ -116,21 +176,37 @@
   ".details__summary:focus-visible": {
     "outline-width": {
       "resolvesTo": "details.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "details.design.condition-2b765dd646fc.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "details.focus.ring.color",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "focus.color",
+        "slot": "details.design.condition-2b765dd646fc.focus.color"
+      }
     },
     "outline-offset": {
       "resolvesTo": "details.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "details.design.condition-2b765dd646fc.focus.offset"
+      }
     },
     "outline-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.style",
+        "slot": "details.design.condition-2b765dd646fc.focus.style"
+      }
     }
   },
   "summaryContent": {
@@ -148,7 +224,11 @@
     },
     "gap": {
       "resolvesTo": "details.spacing.gap.default",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "details.design.summary-content.spacing.gap"
+      }
     },
     "flex": {
       "literal": "1 1 auto",
@@ -166,7 +246,11 @@
     },
     "color": {
       "resolvesTo": "details.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "details.design.summary-text.foreground.color"
+      }
     }
   },
   "icon": {
@@ -184,11 +268,19 @@
     },
     "width": {
       "resolvesTo": "details.size.icon",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "details.design.icon.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "details.size.icon",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "details.design.icon.sizing.height"
+      }
     },
     "transition": {
       "literal": "transform 200ms ease",
@@ -226,15 +318,27 @@
     },
     "padding": {
       "resolvesTo": "details.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "details.design.content.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "details.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "details.design.content.foreground.color"
+      }
     },
     "line-height": {
       "resolvesTo": "details.typography.lineHeight.body",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "details.design.content.typography.line-height"
+      }
     }
   },
   "--compact": {

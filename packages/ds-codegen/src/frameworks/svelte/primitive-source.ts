@@ -41,7 +41,7 @@ export function generateSvelteStackPrimitiveSource(ir: PrimitiveIR): string {
   const styleBlocks: string[] = [];
   const baseDecls = ["box-sizing: border-box;"];
   if (ir.layout.gap) {
-    baseDecls.push(`gap: var(${ir.layout.gap.cssVar});`);
+    baseDecls.push(`gap: var(${ir.layout.gap.cssVar}, 0);`);
   }
   styleBlocks.push(`  .${block} {\n    ${baseDecls.join("\n    ")}\n  }`);
 
@@ -68,6 +68,8 @@ export function generateSvelteStackPrimitiveSource(ir: PrimitiveIR): string {
     role?: string;
     class?: string;
     'data-testid'?: string;
+    'data-fsds-component'?: string;
+    'data-fsds-box'?: string;
     children?: import('svelte').Snippet;
   }
 
@@ -78,6 +80,8 @@ export function generateSvelteStackPrimitiveSource(ir: PrimitiveIR): string {
     role,
     class: className,
     'data-testid': dataTestid,
+    'data-fsds-component': componentBoundary,
+    'data-fsds-box': componentBox,
     children,
   }: Props = $props();
 
@@ -86,12 +90,14 @@ export function generateSvelteStackPrimitiveSource(ir: PrimitiveIR): string {
   );
 </script>
 
-<svelte:element this={as} class={classes} {role} data-testid={dataTestid}>
+<svelte:element this={as} class={classes} {role} data-testid={dataTestid} data-fsds-component={componentBoundary} data-fsds-box={componentBox}>
   {@render children?.()}
 </svelte:element>
 
 <style>
+@layer components.primitive {
 ${styleBlocks.join("\n\n")}
+}
 </style>
 `;
 }

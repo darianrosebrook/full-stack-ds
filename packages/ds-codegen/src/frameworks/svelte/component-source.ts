@@ -503,7 +503,7 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
     renderSections(scriptSections, "line"),
     `</script>`,
     ``,
-    `<div class={classes} data-testid={dataTestid}>`,
+    `<div data-fsds-component="${ir.cssPrefix}" data-fsds-box="" class={classes} data-testid={dataTestid}>`,
     `  {@render children?.()}`,
     `</div>`,
     ``,
@@ -734,7 +734,7 @@ function generateSvelteDisclosureStateRootSource(ir: ComponentIR): string {
     `</script>`,
     ``,
     `<!-- svelte-ignore a11y_no_static_element_interactions -->`,
-    `<div bind:this={rootRef} class={classes} data-testid={dataTestid} onkeydown={handleKeyDown}>`,
+    `<div data-fsds-component="${ir.cssPrefix}" data-fsds-box="" bind:this={rootRef} class={classes} data-testid={dataTestid} onkeydown={handleKeyDown}>`,
     `  {@render children?.()}`,
     `</div>`,
     ``,
@@ -1356,7 +1356,7 @@ function generateTemplate(ir: ComponentIR): string {
   const roleAttr = root.effectiveRole ? ` role="${root.effectiveRole}"` : "";
 
   return [
-    `<Stack${asAttr}${roleAttr} class={classes}>`,
+    `<Stack${asAttr}${roleAttr} data-fsds-component="${ir.cssPrefix}" data-fsds-box="" class={classes}>`,
     `  {@render children?.()}`,
     `</Stack>`,
   ].join("\n");
@@ -2086,7 +2086,7 @@ function renderSvelteDomNode(
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
     if (ctx.cssPrefix) {
-      attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
+      attrs.push(`data-fsds-component="${ctx.cssPrefix}" data-fsds-box=""`);
     }
     if (ctx.rootUsePortal) {
       attrs.push(`use:portal={{ enabled: true }}`);

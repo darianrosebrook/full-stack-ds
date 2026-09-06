@@ -32,6 +32,12 @@ export function extractReadVars(css: string): Set<string> {
 // component name is the path segment between "components/" and the file.
 // Eager: the panel needs the whole map up front; it is build-time data, not
 // lazy content.
+const BOX_MODEL_CSS = import.meta.glob<string>(
+  "../../../packages/ds-react/src/primitives/box-model.css",
+  { query: "?raw", import: "default", eager: true },
+);
+const boxModelCss = Object.values(BOX_MODEL_CSS).join("\n");
+
 const GENERATED_CSS = import.meta.glob<string>(
   "../../../packages/ds-react/src/components/*/*.css",
   { query: "?raw", import: "default", eager: true },
@@ -44,7 +50,7 @@ const READS_BY_COMPONENT: Map<string, Set<string>> = (() => {
     const m = path.match(/components\/([^/]+)\/[^/]+\.css$/);
     if (!m) continue;
     const name = m[1];
-    const reads = map.get(name) ?? new Set<string>();
+    const reads = map.get(name) ?? extractReadVars(boxModelCss);
     for (const v of extractReadVars(css)) reads.add(v);
     map.set(name, reads);
   }

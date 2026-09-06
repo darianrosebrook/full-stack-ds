@@ -36,27 +36,51 @@
     },
     "background-color": {
       "resolvesTo": "switch.color.track.background.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "background.fill",
+        "slot": "switch.design.track.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "switch.color.track.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "switch.design.track.border.color"
+      }
     },
     "width": {
       "resolvesTo": "switch.size.md.track.width",
-      "fallback": "48px"
+      "fallback": "48px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "switch.design.track.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "switch.size.md.track.height",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "switch.design.track.sizing.height"
+      }
     },
     "border-radius": {
       "resolvesTo": "switch.size.md.track.radius",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "switch.design.track.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "switch.size.md.track.padding",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "switch.design.track.spacing.padding"
+      }
     },
     "display": {
       "literal": "inline-block",
@@ -84,7 +108,11 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "switch.design.track.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
@@ -92,7 +120,11 @@
         "web",
         "ios",
         "android"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "switch.design.track.border.width"
+      }
     }
   },
   "thumb": {
@@ -104,19 +136,35 @@
     },
     "background-color": {
       "resolvesTo": "switch.color.thumb.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "switch.design.thumb.background.fill"
+      }
     },
     "box-shadow": {
       "resolvesTo": "switch.color.thumb.shadow.default",
-      "fallback": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a"
+      "fallback": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "switch.design.thumb.elevation.shadow"
+      }
     },
     "width": {
       "resolvesTo": "switch.size.md.thumb.size",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "switch.design.thumb.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "switch.size.md.thumb.height",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "switch.design.thumb.sizing.height"
+      }
     },
     "top": {
       "resolvesTo": "switch.size.md.track.padding",
@@ -152,7 +200,11 @@
         "web",
         "ios",
         "android"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "switch.design.thumb.shape.radius"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -164,7 +216,11 @@
   "input": {
     "outline-color": {
       "resolvesTo": "switch.color.input.outline.focus",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "switch.design.input.focus.color"
+      }
     },
     "position": {
       "literal": "absolute",
@@ -188,7 +244,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "switch.design.input.spacing.padding"
+      }
     },
     "margin": {
       "literal": "-1px",
@@ -336,29 +396,53 @@
   ".switch--sm .switch__track": {
     "width": {
       "resolvesTo": "switch.size.sm.track.width",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "switch.design.condition-3199c3ad1795.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "switch.size.sm.track.height",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "switch.design.condition-3199c3ad1795.sizing.height"
+      }
     },
     "border-radius": {
       "resolvesTo": "switch.size.sm.track.radius",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "switch.design.condition-3199c3ad1795.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "switch.size.sm.track.padding",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "switch.design.condition-3199c3ad1795.spacing.padding"
+      }
     }
   },
   ".switch--sm .switch__thumb": {
     "width": {
       "resolvesTo": "switch.size.sm.thumb.size",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "switch.design.condition-97b936929ea8.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "switch.size.sm.thumb.height",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "switch.design.condition-97b936929ea8.sizing.height"
+      }
     },
     "top": {
       "resolvesTo": "switch.size.sm.track.padding",
@@ -382,29 +466,53 @@
   ".switch--lg .switch__track": {
     "width": {
       "resolvesTo": "switch.size.lg.track.width",
-      "fallback": "64px"
+      "fallback": "64px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "switch.design.condition-88d6e6531fe5.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "switch.size.lg.track.height",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "switch.design.condition-88d6e6531fe5.sizing.height"
+      }
     },
     "border-radius": {
       "resolvesTo": "switch.size.lg.track.radius",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "switch.design.condition-88d6e6531fe5.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "switch.size.lg.track.padding",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "switch.design.condition-88d6e6531fe5.spacing.padding"
+      }
     }
   },
   ".switch--lg .switch__thumb": {
     "width": {
       "resolvesTo": "switch.size.lg.thumb.size",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "switch.design.condition-9a61de98af78.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "switch.size.lg.thumb.height",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "switch.design.condition-9a61de98af78.sizing.height"
+      }
     },
     "top": {
       "resolvesTo": "switch.size.lg.track.padding",

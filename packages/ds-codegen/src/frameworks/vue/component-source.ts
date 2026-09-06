@@ -666,7 +666,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
 
   const templateBody = [
     `<template>`,
-    `  <div :class="classNames" :data-testid="props['data-testid']">`,
+    `  <div data-fsds-component="${ir.cssPrefix}" data-fsds-box="" :class="classNames" :data-testid="props['data-testid']">`,
     `    <slot />`,
     `  </div>`,
     `</template>`,
@@ -880,6 +880,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
   const templateBody = [
     `<template>`,
     `  <div`,
+    `    data-fsds-component="${ir.cssPrefix}" data-fsds-box=""`,
     `    ref="rootRef"`,
     `    :class="classNames"`,
     `    :data-testid="props['data-testid']"`,
@@ -1432,7 +1433,7 @@ function generateTemplate(ir: ComponentIR): string {
 
   return [
     `<template>`,
-    `  <Stack${asAttr}${roleAttr}${propAttrs}${eventAttrs}${testIdAttr} :class="classNames">`,
+    `  <Stack${asAttr}${roleAttr}${propAttrs}${eventAttrs}${testIdAttr} data-fsds-component="${ir.cssPrefix}" data-fsds-box="" :class="classNames">`,
     `    <slot />`,
     `  </Stack>`,
     `</template>`,
@@ -2331,7 +2332,7 @@ function renderVueDomNode(
     }
     attrs.push(`:data-testid="props['data-testid']"`);
     if (ctx.cssPrefix) {
-      attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
+      attrs.push(`data-fsds-component="${ctx.cssPrefix}" data-fsds-box=""`);
     }
     // Selector-anchored root: fixed-position style computed against the
     // active step's page anchor, hidden until the first measurement so the

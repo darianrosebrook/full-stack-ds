@@ -1,19 +1,21 @@
+@import "../../primitives/box-model.css";
 @import "./Spinner.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .spinner {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
-  transition-duration: var(--fsds-spinner-anim-duration, 800ms);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, 0);
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
+  transition-duration: var(--fsds-spinner-design-root-motion-duration, var(--fsds-spinner-anim-duration, 800ms));
 }
 
 .spinner__visual {
@@ -21,40 +23,40 @@
   width: 1em;
   height: 1em;
   box-sizing: border-box;
-  border-radius: 50%;
-  border-style: solid;
-  border-width: var(--fsds-spinner-thickness-regular, 3px);
-  border-color: var(--fsds-spinner-color-track, #d0d0d0);
-  border-top-color: var(--fsds-spinner-color-accent, #d92d2e);
+  border-radius: var(--fsds-spinner-design-visual-shape-radius, 50%);
+  border-style: var(--fsds-spinner-design-visual-border-style, solid);
+  border-width: var(--fsds-spinner-design-visual-border-width, var(--fsds-spinner-thickness-regular, 3px));
+  border-color: var(--fsds-spinner-design-visual-border-color, var(--fsds-spinner-color-track, #d0d0d0));
+  border-top-color: var(--fsds-spinner-design-visual-border-top-color, var(--fsds-spinner-color-accent, #d92d2e));
   animation: spin var(--fsds-spinner-anim-duration, 800ms) linear infinite;
 }
 
 .spinner--xs {
-  font-size: var(--fsds-spinner-size-xs, 12px);
+  font-size: var(--fsds-spinner-design-condition-ac39d57baace-typography-size, var(--fsds-spinner-size-xs, 12px));
 }
 
 .spinner--sm {
-  font-size: var(--fsds-spinner-size-sm, 16px);
+  font-size: var(--fsds-spinner-design-condition-24964d7ed3a7-typography-size, var(--fsds-spinner-size-sm, 16px));
 }
 
 .spinner--md {
-  font-size: var(--fsds-spinner-size-md, 20px);
+  font-size: var(--fsds-spinner-design-condition-dc35d39122c5-typography-size, var(--fsds-spinner-size-md, 20px));
 }
 
 .spinner--lg {
-  font-size: var(--fsds-spinner-size-lg, 24px);
+  font-size: var(--fsds-spinner-design-condition-72800fd5573d-typography-size, var(--fsds-spinner-size-lg, 24px));
 }
 
 .spinner--hairline .spinner__visual {
-  border-width: var(--fsds-spinner-thickness-hairline, 2px);
+  border-width: var(--fsds-spinner-design-condition-ddd83ecdda11-border-width, var(--fsds-spinner-thickness-hairline, 2px));
 }
 
 .spinner--regular .spinner__visual {
-  border-width: var(--fsds-spinner-thickness-regular, 3px);
+  border-width: var(--fsds-spinner-design-condition-5fe4ba5b6059-border-width, var(--fsds-spinner-thickness-regular, 3px));
 }
 
 .spinner--bold .spinner__visual {
-  border-width: var(--fsds-spinner-thickness-bold, 4px);
+  border-width: var(--fsds-spinner-design-condition-f69ec4fadb37-border-width, var(--fsds-spinner-thickness-bold, 4px));
 }
 /* @generated:end */
 
@@ -80,6 +82,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

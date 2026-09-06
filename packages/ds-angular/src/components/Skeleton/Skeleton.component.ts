@@ -24,7 +24,7 @@ export type SkeletonRadius = "sm" | "md" | "lg";
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "skeleton" },
-  template: `<div [ngClass]="classes()" [attr.role]="((decorative ?? true) ? 'presentation' : 'status')" [attr.aria-busy]="((decorative ?? true) ? 'false' : 'true')" [attr.aria-hidden]="((decorative ?? true) ? 'true' : 'false')" [attr.aria-label]="ariaLabel">
+  template: `<div [ngClass]="classes()" [attr.role]="((decorative ?? true) ? 'presentation' : 'status')" [attr.aria-busy]="((decorative ?? true) ? 'false' : 'true')" [attr.aria-hidden]="((decorative ?? true) ? 'true' : 'false')" [attr.aria-label]="ariaLabel" data-fsds-box="">
   <ng-container *ngIf="lines">
     <div [ngClass]="'skeleton__stack'">
       <ng-container *ngFor="let _ of arrayFromCount(lines); let index = index">

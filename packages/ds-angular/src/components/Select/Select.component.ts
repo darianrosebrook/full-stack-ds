@@ -26,7 +26,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "select" },
-  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
+  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled" data-fsds-box="">
   <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-controls]="instanceId + '-options'">
     <span [ngClass]="'select__text'"></span>
   </button>

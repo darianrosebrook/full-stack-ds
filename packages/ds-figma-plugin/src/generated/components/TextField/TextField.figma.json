@@ -132,6 +132,615 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "text-field.design.root.spacing.gap",
+      "cssVar": "--fsds-text-field-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "text-field.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.label.typography.size",
+      "cssVar": "--fsds-text-field-design-label-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "label",
+      "part": "label",
+      "defaultValue": "0.875rem",
+      "resolvesTo": "text-field.typography.label.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__label"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text-field.design.label.typography.weight",
+      "cssVar": "--fsds-text-field-design-label-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "label",
+      "part": "label",
+      "defaultValue": "500",
+      "resolvesTo": "text-field.typography.label.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__label"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.label.typography.line-height",
+      "cssVar": "--fsds-text-field-design-label-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "label",
+      "part": "label",
+      "defaultValue": "1.5",
+      "resolvesTo": "text-field.typography.label.line-height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__label"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text-field.design.label.foreground.color",
+      "cssVar": "--fsds-text-field-design-label-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "label",
+      "part": "label",
+      "defaultValue": "#141414",
+      "resolvesTo": "text-field.color.input.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__label"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "text-field.design.field.border.style",
+      "cssVar": "--fsds-text-field-design-field-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "text-field.design.field.background.fill",
+      "cssVar": "--fsds-text-field-design-field-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "text-field.color.input.background",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "text-field.design.field.border.color",
+      "cssVar": "--fsds-text-field-design-field-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "text-field.color.input.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.border.width",
+      "cssVar": "--fsds-text-field-design-field-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "1px",
+      "resolvesTo": "text-field.border.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.shape.radius",
+      "cssVar": "--fsds-text-field-design-field-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "6px",
+      "resolvesTo": "text-field.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text-field.design.field.foreground.color",
+      "cssVar": "--fsds-text-field-design-field-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "#141414",
+      "resolvesTo": "text-field.color.input.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.typography.size",
+      "cssVar": "--fsds-text-field-design-field-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "1rem",
+      "resolvesTo": "text-field.typography.field.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.typography.line-height",
+      "cssVar": "--fsds-text-field-design-field-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "1.5",
+      "resolvesTo": "text-field.typography.field.line-height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "sizing.min-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.sizing.min-height",
+      "cssVar": "--fsds-text-field-design-field-sizing-min-height",
+      "cssProperty": "min-height",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "32px",
+      "resolvesTo": "text-field.field.min-height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.spacing.padding-block",
+      "cssVar": "--fsds-text-field-design-field-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "4px",
+      "resolvesTo": "text-field.field.padding-block",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "text-field.design.field.spacing.padding-inline",
+      "cssVar": "--fsds-text-field-design-field-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "8px",
+      "resolvesTo": "text-field.field.padding-inline",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "text-field.design.field.motion.duration",
+      "cssVar": "--fsds-text-field-design-field-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "150ms",
+      "resolvesTo": "text-field.motion.duration.fast",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "motion.easing",
+      "group": "motion",
+      "valueType": "easing",
+      "slot": "text-field.design.field.motion.easing",
+      "cssVar": "--fsds-text-field-design-field-motion-easing",
+      "cssProperty": "transition-timing-function",
+      "selectorKey": "field",
+      "part": "field",
+      "defaultValue": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "resolvesTo": "text-field.motion.easing.standard",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.description.typography.size",
+      "cssVar": "--fsds-text-field-design-description-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "0.875rem",
+      "resolvesTo": "text-field.typography.supporting.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__description"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.description.typography.line-height",
+      "cssVar": "--fsds-text-field-design-description-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "1.5",
+      "resolvesTo": "text-field.typography.supporting.line-height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__description"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text-field.design.description.foreground.color",
+      "cssVar": "--fsds-text-field-design-description-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "#727272",
+      "resolvesTo": "text-field.color.supporting.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__description"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.error.typography.size",
+      "cssVar": "--fsds-text-field-design-error-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "error",
+      "part": "error",
+      "defaultValue": "0.875rem",
+      "resolvesTo": "text-field.typography.supporting.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__error"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text-field.design.error.typography.line-height",
+      "cssVar": "--fsds-text-field-design-error-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "error",
+      "part": "error",
+      "defaultValue": "1.5",
+      "resolvesTo": "text-field.typography.supporting.line-height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__error"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text-field.design.error.foreground.color",
+      "cssVar": "--fsds-text-field-design-error-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "error",
+      "part": "error",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "text-field.color.error",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__error"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text-field.design.condition-cd558e65951a.foreground.color",
+      "cssVar": "--fsds-text-field-design-condition-cd558e65951a-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".text-field__field::placeholder",
+      "part": null,
+      "defaultValue": "#727272",
+      "resolvesTo": "text-field.color.input.placeholder",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field::placeholder"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "text-field.design.condition-42d441aafe9d.border.color",
+      "cssVar": "--fsds-text-field-design-condition-42d441aafe9d-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".text-field__field:hover:not(:disabled)",
+      "part": null,
+      "defaultValue": "#888889",
+      "resolvesTo": "text-field.color.input.borderHover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:hover:not(:disabled)"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "text-field.design.condition-77dab6d6abaf.border.color",
+      "cssVar": "--fsds-text-field-design-condition-77dab6d6abaf-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "text-field.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "text-field.design.condition-77dab6d6abaf.focus.width",
+      "cssVar": "--fsds-text-field-design-condition-77dab6d6abaf-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "text-field.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "text-field.design.condition-77dab6d6abaf.focus.color",
+      "cssVar": "--fsds-text-field-design-condition-77dab6d6abaf-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "text-field.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "text-field.design.condition-77dab6d6abaf.focus.style",
+      "cssVar": "--fsds-text-field-design-condition-77dab6d6abaf-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "text-field.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "text-field.design.condition-77dab6d6abaf.focus.offset",
+      "cssVar": "--fsds-text-field-design-condition-77dab6d6abaf-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "text-field.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "text-field.design.condition-552c09ee517a.border.color",
+      "cssVar": "--fsds-text-field-design-condition-552c09ee517a-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".text-field--invalid .text-field__field",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "text-field.color.input.borderError",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field--invalid .text-field__field"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "text-field.design.condition-2e4a716b9443.border.color",
+      "cssVar": "--fsds-text-field-design-condition-2e4a716b9443-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".text-field--invalid .text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "text-field.color.input.borderError",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field--invalid .text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "text-field.design.condition-2e4a716b9443.focus.color",
+      "cssVar": "--fsds-text-field-design-condition-2e4a716b9443-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".text-field--invalid .text-field__field:focus-visible",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "text-field.color.input.borderError",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field--invalid .text-field__field:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "text-field.design.condition-6d2f506c00a2.background.fill",
+      "cssVar": "--fsds-text-field-design-condition-6d2f506c00a2-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".text-field__field:disabled",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "text-field.color.input.backgroundDisabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:disabled"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "text-field.design.condition-6d2f506c00a2.border.color",
+      "cssVar": "--fsds-text-field-design-condition-6d2f506c00a2-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".text-field__field:disabled",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "text-field.color.input.borderDisabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:disabled"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text-field.design.condition-6d2f506c00a2.foreground.color",
+      "cssVar": "--fsds-text-field-design-condition-6d2f506c00a2-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".text-field__field:disabled",
+      "part": null,
+      "defaultValue": "#727272",
+      "resolvesTo": "text-field.color.input.textDisabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:disabled"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "text-field.design.condition-6d2f506c00a2.appearance.opacity",
+      "cssVar": "--fsds-text-field-design-condition-6d2f506c00a2-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".text-field__field:disabled",
+      "part": null,
+      "defaultValue": "0.5",
+      "resolvesTo": "text-field.opacity.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text-field__field:disabled"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

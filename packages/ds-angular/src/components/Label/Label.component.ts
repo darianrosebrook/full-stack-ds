@@ -21,7 +21,7 @@ import { NgClass } from "@angular/common";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "label" },
-  template: `<label [ngClass]="classes()" [htmlFor]="htmlFor" [attr.form]="form">
+  template: `<label [ngClass]="classes()" [htmlFor]="htmlFor" [attr.form]="form" data-fsds-box="">
   <ng-content />
 </label>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

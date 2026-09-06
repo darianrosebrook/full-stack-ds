@@ -41,7 +41,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<nav class={classes} aria-label={ariaLabel} data-fsds-component="nav-list">
+<nav class={classes} aria-label={ariaLabel} data-fsds-component="nav-list" data-fsds-box="">
   <ul class={'nav-list__list'}>
     {@render children?.()}
   </ul>

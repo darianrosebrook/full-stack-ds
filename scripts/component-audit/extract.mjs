@@ -9,6 +9,7 @@
  *
  * READ-ONLY: never writes to contracts, sidecars, or generated artifacts.
  */
+import { getCssPrefix } from "../../packages/ds-codegen/dist/contract.js";
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -109,8 +110,20 @@ function topLevelDecls(body) {
 
 /** var(--chain, fallback) → fallback; literal → itself. */
 function fallbackOf(value) {
-  const m = value.match(/var\([^,]+,\s*([^)]+)\)\s*$/);
-  return (m ? m[1] : value).trim();
+  let current = value.trim();
+  while (current.startsWith('var(') && current.endsWith(')')) {
+    const body = current.slice(4, -1);
+    let depth = 0;
+    let comma = -1;
+    for (let i = 0; i < body.length; i++) {
+      if (body[i] === '(') depth++;
+      if (body[i] === ')') depth--;
+      if (body[i] === ',' && depth === 0) { comma = i; break; }
+    }
+    if (comma < 0) break;
+    current = body.slice(comma + 1).trim();
+  }
+  return current;
 }
 
 const DIMENSION_PROPS = new Set([
@@ -178,16 +191,13 @@ export function extractStatic(name) {
   const css = readText(resolve(REACT, name, `${name}.css`));
   const tokensCss = readText(resolve(REACT, name, `${name}.tokens.css`));
 
-  // cssPrefix from the first `.X {` rule in the generated tokens.css (authoritative).
-  const prefixMatch =
-    tokensCss.match(/\.([a-zA-Z][\w-]*)\s*\{/) || css.match(/\.([a-zA-Z][\w-]*)\s*\{/);
-  const prefix = prefixMatch ? prefixMatch[1] : name.toLowerCase();
+  const prefix = getCssPrefix(contract);
 
   const rootTag = contract?.anatomy?.dom?.tag ?? contract?.anatomy?.details?.root?.tag ?? "div";
   const category = contract?.category ?? "";
   const layer = contract?.layer ?? "";
 
-  // --- Box model: emitted --fsds-box-model-* from tokens.css root block ---
+  // --- Box model: component defaults now live at consumer fallbacks. ---
   const tokensBody = blockBody(tokensCss, `.${prefix}`);
   const tokenDecls = topLevelDecls(tokensBody);
   const boxEmitted = {};
@@ -204,6 +214,10 @@ export function extractStatic(name) {
       }
     }
   }
+  const rootDecls = topLevelDecls(blockBody(css, `.${prefix}`));
+  for (const [property, value] of rootDecls) {
+    if (BOX_SLOTS.includes(property)) boxEmitted[property] = fallbackOf(value);
+  }
   const boxOverrides = {};
   for (const slot of BOX_SLOTS) {
     const v = boxEmitted[slot];
@@ -215,8 +229,6 @@ export function extractStatic(name) {
   }
 
   // --- Token usage: root .{prefix} block in the component CSS ---
-  const cssBody = blockBody(css, `.${prefix}`);
-  const rootDecls = topLevelDecls(cssBody);
   const { tokenized, literal, literalDims } = detectHardcodedDims(rootDecls);
 
   // --- Layout (declared): display + flex/grid hints from styles.root ---

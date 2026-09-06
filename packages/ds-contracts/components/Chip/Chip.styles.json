@@ -22,7 +22,11 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "chip.design.root.border.style"
+      }
     },
     "white-space": {
       "literal": "nowrap",
@@ -38,57 +42,109 @@
     },
     "background-color": {
       "resolvesTo": "chip.color.background.default",
-      "fallback": "#fafafa"
+      "fallback": "#fafafa",
+      "design": {
+        "property": "background.fill",
+        "slot": "chip.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "chip.color.foreground.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "chip.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "chip.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "chip.design.root.border.color"
+      }
     },
     "border-width": {
       "resolvesTo": "chip.size.border",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "chip.design.root.border.width"
+      }
     },
     "padding-block": {
       "resolvesTo": "chip.size.padding.vertical",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.padding-block",
+        "slot": "chip.design.root.spacing.padding-block"
+      }
     },
     "padding-inline": {
       "resolvesTo": "chip.size.padding.horizontal",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding-inline",
+        "slot": "chip.design.root.spacing.padding-inline"
+      }
     },
     "gap": {
       "resolvesTo": "chip.size.gap",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "chip.design.root.spacing.gap"
+      }
     },
     "border-radius": {
       "resolvesTo": "chip.size.radius",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "chip.design.root.shape.radius"
+      }
     },
     "min-height": {
       "resolvesTo": "chip.size.minHeight",
-      "fallback": "36px"
+      "fallback": "36px",
+      "design": {
+        "property": "sizing.min-height",
+        "slot": "chip.design.root.sizing.min-height"
+      }
     },
     "font-size": {
       "resolvesTo": "chip.text.size",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "typography.size",
+        "slot": "chip.design.root.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "chip.text.weight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "chip.design.root.typography.weight"
+      }
     },
     "transition-duration": {
       "resolvesTo": "chip.motion.duration.fast",
-      "fallback": "150ms"
+      "fallback": "150ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "chip.design.root.motion.duration"
+      }
     }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "chip.color.background.hover",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "background.fill",
+        "slot": "chip.design.hover.background.fill"
+      }
     }
   },
   "__action": {
@@ -266,11 +322,19 @@
     },
     "font-size": {
       "resolvesTo": "chip.text.size",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "typography.size",
+        "slot": "chip.design.text.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "chip.text.weight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "chip.design.text.typography.weight"
+      }
     }
   },
   "--selected": {

@@ -55,6 +55,70 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.bottom.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "divider.design.root.border.bottom.style",
+      "cssVar": "--fsds-divider-design-root-border-bottom-style",
+      "cssProperty": "border-bottom-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "none",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".divider"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "divider.design.root.border.top.color",
+      "cssVar": "--fsds-divider-design-root-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "divider.color.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".divider"
+    },
+    {
+      "property": "border.top.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "divider.design.root.border.top.style",
+      "cssVar": "--fsds-divider-design-root-border-top-style",
+      "cssProperty": "border-top-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".divider"
+    },
+    {
+      "property": "border.top.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "divider.design.root.border.top.width",
+      "cssVar": "--fsds-divider-design-root-border-top-width",
+      "cssProperty": "border-top-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "divider.size.thickness",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".divider"
+    }
+  ],
   "variants": {
     "orientation": [
       "horizontal",

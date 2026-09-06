@@ -1,3 +1,4 @@
+import { buildDesignBindings, type DesignBindingIR } from './design-properties.js';
 /**
  * Component IR: the framework-neutral derivation of a validated contract.
  *
@@ -1648,6 +1649,7 @@ export interface ComponentIR {
    * CSS. Additive — web emitters ignore this and read `cssBlocks`.
    */
   tokenFacts: TokenFactIR[];
+  designBindings: DesignBindingIR[];
 
   /**
    * Component-local token scopes as typed data. This mirrors the web
@@ -1872,6 +1874,13 @@ export function buildComponentIR(
   const keyframes = buildKeyframes(contract);
   const motion = buildMotion(contract);
   const tokenFacts = buildTokenFacts(contract.tokens ?? {});
+  const designBindings = buildDesignBindings(contract).map(binding => ({
+    ...binding,
+    selector: binding.selectorKey === "root" ? `.${cssPrefix}` : guardInteractionSelector(
+      expandStylesKey(binding.selectorKey, cssPrefix, expandOptionsForContract(contract, cssPrefix)),
+      suppressionGuardFor(contract),
+    ),
+  }));
   const tokenScopes = buildTokenScopes(contract, cssPrefix);
 
   const behavior = buildBehaviorIR(contract, styledProps);
@@ -2010,6 +2019,7 @@ export function buildComponentIR(
     keyframes,
     motion,
     tokenFacts,
+    designBindings,
     tokenScopes,
     behavior,
     surface,

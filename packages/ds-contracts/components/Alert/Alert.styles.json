@@ -22,13 +22,21 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "alert.design.root.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "alert.design.root.border.width"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -38,35 +46,67 @@
     },
     "padding": {
       "resolvesTo": "alert.size.padding",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "alert.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "alert.size.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "alert.design.root.shape.radius"
+      }
     },
     "gap": {
       "resolvesTo": "alert.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "alert.design.root.spacing.gap"
+      }
     },
     "font-size": {
       "resolvesTo": "alert.text.size",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "alert.design.root.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "alert.text.weight",
-      "fallback": "400"
+      "fallback": "400",
+      "design": {
+        "property": "typography.weight",
+        "slot": "alert.design.root.typography.weight"
+      }
     },
     "background-color": {
       "resolvesTo": "alert.color.background.primary",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "alert.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "alert.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "alert.color.border.primary",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "alert.design.root.border.color"
+      }
     }
   },
   "icon": {
@@ -116,7 +156,11 @@
     },
     "gap": {
       "resolvesTo": "alert.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "alert.design.body.spacing.gap"
+      }
     }
   },
   "dismiss": {
@@ -160,7 +204,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "alert.design.dismiss.spacing.padding"
+      }
     },
     "margin-left": {
       "literal": "auto",
@@ -172,7 +220,11 @@
       "literal": "inherit",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert.design.dismiss.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -190,7 +242,11 @@
       "literal": "1",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.line-height",
+        "slot": "alert.design.dismiss.typography.line-height"
+      }
     }
   },
   ".alert__dismiss:hover": {
@@ -198,7 +254,11 @@
       "literal": "0.7",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "alert.design.condition-713bb5876e6d.appearance.opacity"
+      }
     }
   },
   ".alert__dismiss:focus-visible": {
@@ -212,7 +272,11 @@
       "literal": "2px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.offset",
+        "slot": "alert.design.condition-366042b99cd1.focus.offset"
+      }
     }
   },
   "title": {
@@ -224,11 +288,19 @@
     },
     "font-weight": {
       "resolvesTo": "alert.typography.title.fontWeight",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "alert.design.title.typography.weight"
+      }
     },
     "font-size": {
       "resolvesTo": "alert.typography.title.fontSize",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "alert.design.title.typography.size"
+      }
     }
   },
   ".alert--info": {

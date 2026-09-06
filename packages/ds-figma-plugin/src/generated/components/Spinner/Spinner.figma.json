@@ -81,6 +81,214 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "spinner.design.root.motion.duration",
+      "cssVar": "--fsds-spinner-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "800ms",
+      "resolvesTo": "spinner.anim.duration",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "spinner.design.visual.shape.radius",
+      "cssVar": "--fsds-spinner-design-visual-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "visual",
+      "part": "visual",
+      "defaultValue": "50%",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner__visual"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "spinner.design.visual.border.style",
+      "cssVar": "--fsds-spinner-design-visual-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "visual",
+      "part": "visual",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner__visual"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "spinner.design.visual.border.width",
+      "cssVar": "--fsds-spinner-design-visual-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "visual",
+      "part": "visual",
+      "defaultValue": "3px",
+      "resolvesTo": "spinner.thickness.regular",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner__visual"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "spinner.design.visual.border.color",
+      "cssVar": "--fsds-spinner-design-visual-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "visual",
+      "part": "visual",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "spinner.color.track",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner__visual"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "spinner.design.visual.border.top.color",
+      "cssVar": "--fsds-spinner-design-visual-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "visual",
+      "part": "visual",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "spinner.color.accent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner__visual"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-ac39d57baace.typography.size",
+      "cssVar": "--fsds-spinner-design-condition-ac39d57baace-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--xs",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "spinner.size.xs",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--xs"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-24964d7ed3a7.typography.size",
+      "cssVar": "--fsds-spinner-design-condition-24964d7ed3a7-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "spinner.size.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--sm"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-dc35d39122c5.typography.size",
+      "cssVar": "--fsds-spinner-design-condition-dc35d39122c5-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--md",
+      "part": null,
+      "defaultValue": "20px",
+      "resolvesTo": "spinner.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--md"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-72800fd5573d.typography.size",
+      "cssVar": "--fsds-spinner-design-condition-72800fd5573d-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "spinner.size.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--lg"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-ddd83ecdda11.border.width",
+      "cssVar": "--fsds-spinner-design-condition-ddd83ecdda11-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": ".spinner--hairline .spinner__visual",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "spinner.thickness.hairline",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--hairline .spinner__visual"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-5fe4ba5b6059.border.width",
+      "cssVar": "--fsds-spinner-design-condition-5fe4ba5b6059-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": ".spinner--regular .spinner__visual",
+      "part": null,
+      "defaultValue": "3px",
+      "resolvesTo": "spinner.thickness.regular",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--regular .spinner__visual"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "spinner.design.condition-f69ec4fadb37.border.width",
+      "cssVar": "--fsds-spinner-design-condition-f69ec4fadb37-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": ".spinner--bold .spinner__visual",
+      "part": null,
+      "defaultValue": "4px",
+      "resolvesTo": "spinner.thickness.bold",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".spinner--bold .spinner__visual"
+    }
+  ],
   "variants": {
     "size": [
       "xs",

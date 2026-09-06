@@ -29,9 +29,10 @@ const classNames = computed(() =>
 </template>
 
 <style scoped>
+@layer components.primitive {
 .stack {
   box-sizing: border-box;
-  gap: var(--fsds-semantic-spacing-gap-stack);
+  gap: var(--fsds-semantic-spacing-gap-stack, 0);
 }
 .stack--layout-stack {
   display: flex;
@@ -55,5 +56,6 @@ const classNames = computed(() =>
 .stack--layout-stack.stack--horizontal,
 .stack--layout-inline-stack.stack--horizontal {
   flex-direction: row;
+}
 }
 </style>

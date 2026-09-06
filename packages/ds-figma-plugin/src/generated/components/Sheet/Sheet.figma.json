@@ -155,6 +155,609 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "sheet.design.overlay.background.fill",
+      "cssVar": "--fsds-sheet-design-overlay-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "overlay",
+      "part": "overlay",
+      "defaultValue": "rgba(0,0,0,0.40)",
+      "resolvesTo": "sheet.color.overlay",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__overlay"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "sheet.design.content.background.fill",
+      "cssVar": "--fsds-sheet-design-content-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "sheet.color.background",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "sheet.design.content.foreground.color",
+      "cssVar": "--fsds-sheet-design-content-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#141414",
+      "resolvesTo": "sheet.color.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "sheet.design.content.border.color",
+      "cssVar": "--fsds-sheet-design-content-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "sheet.color.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "sheet.design.content.border.style",
+      "cssVar": "--fsds-sheet-design-content-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "sheet.design.content.border.width",
+      "cssVar": "--fsds-sheet-design-content-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "1px",
+      "resolvesTo": "sheet.border.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "sheet.design.content.elevation.shadow",
+      "cssVar": "--fsds-sheet-design-content-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
+      "resolvesTo": "sheet.shadow",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.content.sizing.width",
+      "cssVar": "--fsds-sheet-design-content-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "400px",
+      "resolvesTo": "sheet.size.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__content"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "sheet.design.header.spacing.padding",
+      "cssVar": "--fsds-sheet-design-header-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "16px",
+      "resolvesTo": "sheet.spacing.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__header"
+    },
+    {
+      "property": "border.bottom.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "sheet.design.header.border.bottom.color",
+      "cssVar": "--fsds-sheet-design-header-border-bottom-color",
+      "cssProperty": "border-bottom-color",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "sheet.color.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__header"
+    },
+    {
+      "property": "border.bottom.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "sheet.design.header.border.bottom.style",
+      "cssVar": "--fsds-sheet-design-header-border-bottom-style",
+      "cssProperty": "border-bottom-style",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__header"
+    },
+    {
+      "property": "border.bottom.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "sheet.design.header.border.bottom.width",
+      "cssVar": "--fsds-sheet-design-header-border-bottom-width",
+      "cssProperty": "border-bottom-width",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__header"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "sheet.design.header.spacing.gap",
+      "cssVar": "--fsds-sheet-design-header-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "8px",
+      "resolvesTo": "sheet.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__header"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "sheet.design.title.typography.size",
+      "cssVar": "--fsds-sheet-design-title-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "14px",
+      "resolvesTo": "sheet.text.sizeTitle",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__title"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "sheet.design.title.typography.weight",
+      "cssVar": "--fsds-sheet-design-title-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "500",
+      "resolvesTo": "sheet.text.weightTitle",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__title"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "sheet.design.title.foreground.color",
+      "cssVar": "--fsds-sheet-design-title-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "#141414",
+      "resolvesTo": "sheet.color.textTitle",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__title"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "sheet.design.description.foreground.color",
+      "cssVar": "--fsds-sheet-design-description-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "#474647",
+      "resolvesTo": "sheet.color.textDescription",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__description"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "sheet.design.description.typography.size",
+      "cssVar": "--fsds-sheet-design-description-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "16px",
+      "resolvesTo": "sheet.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__description"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "sheet.design.body.spacing.padding",
+      "cssVar": "--fsds-sheet-design-body-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "body",
+      "part": "body",
+      "defaultValue": "16px",
+      "resolvesTo": "sheet.spacing.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__body"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "sheet.design.body.foreground.color",
+      "cssVar": "--fsds-sheet-design-body-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "body",
+      "part": "body",
+      "defaultValue": "#141414",
+      "resolvesTo": "sheet.color.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__body"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "sheet.design.footer.spacing.gap",
+      "cssVar": "--fsds-sheet-design-footer-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "8px",
+      "resolvesTo": "sheet.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__footer"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "sheet.design.footer.spacing.padding",
+      "cssVar": "--fsds-sheet-design-footer-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "16px",
+      "resolvesTo": "sheet.spacing.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__footer"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "sheet.design.footer.border.top.color",
+      "cssVar": "--fsds-sheet-design-footer-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "sheet.color.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__footer"
+    },
+    {
+      "property": "border.top.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "sheet.design.footer.border.top.style",
+      "cssVar": "--fsds-sheet-design-footer-border-top-style",
+      "cssProperty": "border-top-style",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__footer"
+    },
+    {
+      "property": "border.top.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "sheet.design.footer.border.top.width",
+      "cssVar": "--fsds-sheet-design-footer-border-top-width",
+      "cssProperty": "border-top-width",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__footer"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.close.sizing.width",
+      "cssVar": "--fsds-sheet-design-close-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "16px",
+      "resolvesTo": "sheet.size.close",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__close"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.close.sizing.height",
+      "cssVar": "--fsds-sheet-design-close-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "16px",
+      "resolvesTo": "sheet.size.close",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__close"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "sheet.design.close.background.fill",
+      "cssVar": "--fsds-sheet-design-close-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "transparent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__close"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "sheet.design.close.shape.radius",
+      "cssVar": "--fsds-sheet-design-close-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "9999px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__close"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "sheet.design.close.foreground.color",
+      "cssVar": "--fsds-sheet-design-close-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "#474647",
+      "resolvesTo": "sheet.color.textDescription",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet__close"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-3353c09caca2.sizing.width",
+      "cssVar": "--fsds-sheet-design-condition-3353c09caca2-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".sheet--right .sheet__content",
+      "part": null,
+      "defaultValue": "400px",
+      "resolvesTo": "sheet.size.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--right .sheet__content"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-3353c09caca2.shape.radius",
+      "cssVar": "--fsds-sheet-design-condition-3353c09caca2-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".sheet--right .sheet__content",
+      "part": null,
+      "defaultValue": "6px",
+      "resolvesTo": "sheet.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--right .sheet__content"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-d23e02c83c85.sizing.width",
+      "cssVar": "--fsds-sheet-design-condition-d23e02c83c85-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".sheet--left .sheet__content",
+      "part": null,
+      "defaultValue": "400px",
+      "resolvesTo": "sheet.size.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--left .sheet__content"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-d23e02c83c85.shape.radius",
+      "cssVar": "--fsds-sheet-design-condition-d23e02c83c85-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".sheet--left .sheet__content",
+      "part": null,
+      "defaultValue": "6px",
+      "resolvesTo": "sheet.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--left .sheet__content"
+    },
+    {
+      "property": "sizing.max-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-6c34977b12bc.sizing.max-height",
+      "cssVar": "--fsds-sheet-design-condition-6c34977b12bc-sizing-max-height",
+      "cssProperty": "max-height",
+      "selectorKey": ".sheet--top .sheet__content",
+      "part": null,
+      "defaultValue": "300px",
+      "resolvesTo": "sheet.size.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--top .sheet__content"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-6c34977b12bc.shape.radius",
+      "cssVar": "--fsds-sheet-design-condition-6c34977b12bc-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".sheet--top .sheet__content",
+      "part": null,
+      "defaultValue": "6px",
+      "resolvesTo": "sheet.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--top .sheet__content"
+    },
+    {
+      "property": "sizing.max-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-82e96a66a421.sizing.max-height",
+      "cssVar": "--fsds-sheet-design-condition-82e96a66a421-sizing-max-height",
+      "cssProperty": "max-height",
+      "selectorKey": ".sheet--bottom .sheet__content",
+      "part": null,
+      "defaultValue": "300px",
+      "resolvesTo": "sheet.size.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--bottom .sheet__content"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "sheet.design.condition-82e96a66a421.shape.radius",
+      "cssVar": "--fsds-sheet-design-condition-82e96a66a421-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".sheet--bottom .sheet__content",
+      "part": null,
+      "defaultValue": "6px",
+      "resolvesTo": "sheet.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".sheet--bottom .sheet__content"
+    }
+  ],
   "variants": {
     "side": [
       "top",

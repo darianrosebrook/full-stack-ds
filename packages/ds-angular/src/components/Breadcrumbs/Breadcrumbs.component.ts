@@ -22,7 +22,7 @@ import { StackComponent } from "../../primitives/index.js";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "breadcrumbs" },
-  template: `<nav [ngClass]="classes()" [attr.aria-label]="(ariaLabel ?? 'Breadcrumb')">
+  template: `<nav [ngClass]="classes()" [attr.aria-label]="(ariaLabel ?? 'Breadcrumb')" data-fsds-box="">
   <ol [ngClass]="'breadcrumbs__list'">
     <ng-content />
   </ol>

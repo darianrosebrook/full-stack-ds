@@ -22,13 +22,21 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "alert-notice.design.root.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "alert-notice.design.root.border.width"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -38,35 +46,67 @@
     },
     "background-color": {
       "resolvesTo": "alert-notice.color.background.danger",
-      "fallback": "#fac2c2"
+      "fallback": "#fac2c2",
+      "design": {
+        "property": "background.fill",
+        "slot": "alert-notice.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.danger",
-      "fallback": "#900909"
+      "fallback": "#900909",
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert-notice.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.danger",
-      "fallback": "#b31b1b"
+      "fallback": "#b31b1b",
+      "design": {
+        "property": "border.color",
+        "slot": "alert-notice.design.root.border.color"
+      }
     },
     "padding": {
       "resolvesTo": "alert-notice.size.padding",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "alert-notice.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "alert-notice.size.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "alert-notice.design.root.shape.radius"
+      }
     },
     "gap": {
       "resolvesTo": "alert-notice.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "alert-notice.design.root.spacing.gap"
+      }
     },
     "font-size": {
       "resolvesTo": "alert-notice.text.size",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "alert-notice.design.root.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "alert-notice.text.weight",
-      "fallback": "400"
+      "fallback": "400",
+      "design": {
+        "property": "typography.weight",
+        "slot": "alert-notice.design.root.typography.weight"
+      }
     }
   },
   "icon": {
@@ -116,7 +156,11 @@
     },
     "gap": {
       "resolvesTo": "alert-notice.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "alert-notice.design.body.spacing.gap"
+      }
     }
   },
   "dismiss": {
@@ -160,7 +204,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "alert-notice.design.dismiss.spacing.padding"
+      }
     },
     "margin-left": {
       "literal": "auto",
@@ -172,7 +220,11 @@
       "literal": "inherit",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert-notice.design.dismiss.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -190,7 +242,11 @@
       "literal": "1",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.line-height",
+        "slot": "alert-notice.design.dismiss.typography.line-height"
+      }
     }
   },
   ".alert-notice__dismiss:hover": {
@@ -198,7 +254,11 @@
       "literal": "0.7",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "alert-notice.design.condition-e375831e57be.appearance.opacity"
+      }
     }
   },
   ".alert-notice__dismiss:focus-visible": {
@@ -212,7 +272,11 @@
       "literal": "2px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.offset",
+        "slot": "alert-notice.design.condition-9ed815ed65bb.focus.offset"
+      }
     }
   },
   "title": {
@@ -224,67 +288,123 @@
     },
     "font-weight": {
       "resolvesTo": "alert-notice.typography.title.fontWeight",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "alert-notice.design.title.typography.weight"
+      }
     },
     "font-size": {
       "resolvesTo": "alert-notice.typography.title.fontSize",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "alert-notice.design.title.typography.size"
+      }
     }
   },
   ".alert-notice--info": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.info",
-      "fallback": "#95dafb"
+      "fallback": "#95dafb",
+      "design": {
+        "property": "background.fill",
+        "slot": "alert-notice.design.condition-182cc1d47525.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.info",
-      "fallback": "#013ab0"
+      "fallback": "#013ab0",
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert-notice.design.condition-182cc1d47525.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.info",
-      "fallback": "#034fd6"
+      "fallback": "#034fd6",
+      "design": {
+        "property": "border.color",
+        "slot": "alert-notice.design.condition-182cc1d47525.border.color"
+      }
     }
   },
   ".alert-notice--success": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.success",
-      "fallback": "#b3dba7"
+      "fallback": "#b3dba7",
+      "design": {
+        "property": "background.fill",
+        "slot": "alert-notice.design.condition-a13a779ed375.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.success",
-      "fallback": "#2c4f09"
+      "fallback": "#2c4f09",
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert-notice.design.condition-a13a779ed375.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.success",
-      "fallback": "#3a6614"
+      "fallback": "#3a6614",
+      "design": {
+        "property": "border.color",
+        "slot": "alert-notice.design.condition-a13a779ed375.border.color"
+      }
     }
   },
   ".alert-notice--warning": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.warning",
-      "fallback": "#fdc67f"
+      "fallback": "#fdc67f",
+      "design": {
+        "property": "background.fill",
+        "slot": "alert-notice.design.condition-2962e1fcfbab.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.warning",
-      "fallback": "#6c3a00"
+      "fallback": "#6c3a00",
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert-notice.design.condition-2962e1fcfbab.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.warning",
-      "fallback": "#8b4b00"
+      "fallback": "#8b4b00",
+      "design": {
+        "property": "border.color",
+        "slot": "alert-notice.design.condition-2962e1fcfbab.border.color"
+      }
     }
   },
   ".alert-notice--error": {
     "background-color": {
       "resolvesTo": "alert-notice.color.background.danger",
-      "fallback": "#fac2c2"
+      "fallback": "#fac2c2",
+      "design": {
+        "property": "background.fill",
+        "slot": "alert-notice.design.condition-0b9f98f51d02.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "alert-notice.color.foreground.danger",
-      "fallback": "#900909"
+      "fallback": "#900909",
+      "design": {
+        "property": "foreground.color",
+        "slot": "alert-notice.design.condition-0b9f98f51d02.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "alert-notice.color.border.danger",
-      "fallback": "#b31b1b"
+      "fallback": "#b31b1b",
+      "design": {
+        "property": "border.color",
+        "slot": "alert-notice.design.condition-0b9f98f51d02.border.color"
+      }
     }
   },
   "--inline": {

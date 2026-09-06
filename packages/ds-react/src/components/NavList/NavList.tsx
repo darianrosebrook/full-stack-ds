@@ -84,7 +84,7 @@ export function NavList({
     .join(" ");
 
   return (
-  <Stack layout="native" as="nav" className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} data-fsds-component="nav-list" {...rest}>
+  <Stack layout="native" as="nav" className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} data-fsds-component="nav-list" data-fsds-box="" {...rest}>
     <ul className="nav-list__list">
       {children}
     </ul>

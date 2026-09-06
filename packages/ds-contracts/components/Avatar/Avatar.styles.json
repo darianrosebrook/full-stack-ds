@@ -32,45 +32,85 @@
     },
     "border-radius": {
       "resolvesTo": "avatar.size.radius.default",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "avatar.design.root.shape.radius"
+      }
     },
     "background-color": {
       "resolvesTo": "avatar.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "avatar.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "avatar.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "avatar.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "avatar.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "avatar.design.root.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "avatar.design.root.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "avatar.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "avatar.design.root.border.width"
+      }
     },
     "width": {
       "resolvesTo": "avatar.size.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "avatar.design.root.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "avatar.size.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "avatar.design.root.sizing.height"
+      }
     },
     "font-weight": {
       "resolvesTo": "avatar.typography.fontWeight.medium",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "avatar.design.root.typography.weight"
+      }
     },
     "font-family": {
       "resolvesTo": "avatar.typography.fontFamily.sans",
-      "fallback": "\"Inter\", sans-serif"
+      "fallback": "\"Inter\", sans-serif",
+      "design": {
+        "property": "typography.family",
+        "slot": "avatar.design.root.typography.family"
+      }
     }
   },
   "image": {
@@ -102,41 +142,73 @@
   "--small": {
     "width": {
       "resolvesTo": "avatar.size.small",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "avatar.design.condition-42b522a9c46e.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "avatar.size.small",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "avatar.design.condition-42b522a9c46e.sizing.height"
+      }
     }
   },
   "--medium": {
     "width": {
       "resolvesTo": "avatar.size.medium",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "avatar.design.condition-a9821c9eea70.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "avatar.size.medium",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "avatar.design.condition-a9821c9eea70.sizing.height"
+      }
     }
   },
   "--large": {
     "width": {
       "resolvesTo": "avatar.size.large",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "avatar.design.condition-cbbd2740a3e5.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "avatar.size.large",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "avatar.design.condition-cbbd2740a3e5.sizing.height"
+      }
     }
   },
   "--extra-large": {
     "width": {
       "resolvesTo": "avatar.size.extra-large",
-      "fallback": "48px"
+      "fallback": "48px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "avatar.design.condition-ee2a0b1d0aee.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "avatar.size.extra-large",
-      "fallback": "48px"
+      "fallback": "48px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "avatar.design.condition-ee2a0b1d0aee.sizing.height"
+      }
     }
   }
 }

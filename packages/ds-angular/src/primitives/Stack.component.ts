@@ -31,6 +31,19 @@ import {
   standalone: true,
   imports: [],
   template: `<ng-content />`,
+  styles: [`@layer components.primitive {
+:host(.fsds-stack--layout-stack) { display: flex; }
+:host(.fsds-stack--layout-inline-stack) { display: inline-flex; }
+:host(.fsds-stack--layout-block) { display: block; }
+:host(.fsds-stack--layout-inline) { display: inline; }
+:host(.fsds-stack--layout-contents) { display: contents; }
+:host(.fsds-stack--layout-stack) { gap: var(--fsds-semantic-spacing-gap-stack, 0); }
+:host(.fsds-stack--layout-stack.fsds-stack--vertical) { flex-direction: column; }
+:host(.fsds-stack--layout-stack.fsds-stack--horizontal) { flex-direction: row; }
+:host(.fsds-stack--layout-inline-stack) { gap: var(--fsds-semantic-spacing-gap-stack, 0); }
+:host(.fsds-stack--layout-inline-stack.fsds-stack--vertical) { flex-direction: column; }
+:host(.fsds-stack--layout-inline-stack.fsds-stack--horizontal) { flex-direction: row; }
+}`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StackComponent {
@@ -45,38 +58,6 @@ export class StackComponent {
     return ["fsds-stack", `fsds-stack--layout-${this.layout}`, `fsds-stack--${this.variant}`, this.className]
       .filter(Boolean)
       .join(" ");
-  }
-
-  @HostBinding("style.display")
-  get hostDisplay(): string | null {
-    switch (this.layout) {
-      case "stack":
-        return "flex";
-      case "inline-stack":
-        return "inline-flex";
-      case "block":
-        return "block";
-      case "inline":
-        return "inline";
-      case "contents":
-        return "contents";
-      case "native":
-        return null;
-    }
-  }
-
-  @HostBinding("style.flex-direction")
-  get hostFlexDirection(): string | null {
-    return this.layout === "stack" || this.layout === "inline-stack"
-      ? this.variant === "horizontal" ? "row" : "column"
-      : null;
-  }
-
-  @HostBinding("style.gap")
-  get hostGap(): string | null {
-    return this.layout === "stack" || this.layout === "inline-stack"
-      ? "var(--fsds-semantic-spacing-gap-stack)"
-      : null;
   }
 
   @HostBinding("attr.role")

@@ -1,3 +1,4 @@
+import { emitBoxModelBoundaryCss } from '../../box-model.js';
 /**
  * Vue 3 FrameworkEmitter (proof-of-concept).
  *
@@ -138,6 +139,7 @@ export function createVueEmitter(): FrameworkEmitter {
 
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
+        { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
         {
           relativePath: `${ir.name}.vue`,
           contents: generateVueStackPrimitiveSource(ir),

@@ -50,7 +50,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <Stack role="group" :data-testid="props['data-testid']" :class="classNames">
+  <Stack role="group" :data-testid="props['data-testid']" data-fsds-component="card" data-fsds-box="" :class="classNames">
     <slot />
   </Stack>
 </template>

@@ -44,6 +44,183 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "status.design.root.border.style",
+      "cssVar": "--fsds-status-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "status.design.root.background.fill",
+      "cssVar": "--fsds-status-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "status.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "status.design.root.foreground.color",
+      "cssVar": "--fsds-status-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#474647",
+      "resolvesTo": "status.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "status.design.root.border.color",
+      "cssVar": "--fsds-status-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "status.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "status.design.root.border.width",
+      "cssVar": "--fsds-status-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "status.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "status.design.root.shape.radius",
+      "cssVar": "--fsds-status-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "9999px",
+      "resolvesTo": "status.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "sizing.min-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "status.design.root.sizing.min-height",
+      "cssVar": "--fsds-status-design-root-sizing-min-height",
+      "cssProperty": "min-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "24px",
+      "resolvesTo": "status.size.minHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "status.design.root.typography.size",
+      "cssVar": "--fsds-status-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "12px",
+      "resolvesTo": "status.size.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "status.design.root.typography.weight",
+      "cssVar": "--fsds-status-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "500",
+      "resolvesTo": "status.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "status.design.root.typography.line-height",
+      "cssVar": "--fsds-status-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1",
+      "resolvesTo": "status.typography.lineHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "status.design.label.foreground.color",
+      "cssVar": "--fsds-status-design-label-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "label",
+      "part": "label",
+      "defaultValue": "#474647",
+      "resolvesTo": "status.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".status__label"
+    }
+  ],
   "variants": {
     "status": [
       "info",

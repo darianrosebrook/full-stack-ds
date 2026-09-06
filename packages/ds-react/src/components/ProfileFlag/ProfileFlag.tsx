@@ -45,7 +45,7 @@ export function ProfileFlag({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="profile-flag" {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="profile-flag" data-fsds-box="" {...rest}>
     {children}
   </Stack>
   );

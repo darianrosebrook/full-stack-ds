@@ -1,27 +1,29 @@
+@import "../../primitives/box-model.css";
 @import "./Checkbox.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .checkbox {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-input-size-medium-padding-block, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-input-size-medium-padding-block, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-input-size-medium-padding-inline, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-input-size-medium-padding-inline, 8px));
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-input-size-medium-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-input-size-medium-min-height, 32px));
+  max-height: var(--fsds-box-model-max-height, none);
   display: inline-flex;
   align-items: center;
   cursor: pointer;
 
   &:has(.checkbox__input:focus-visible) .checkbox__indicator {
-    outline-width: var(--fsds-checkbox-focus-ring-width, 2px);
-    outline-color: var(--fsds-checkbox-focus-ring-color, #0566fe);
-    outline-style: var(--fsds-checkbox-focus-ring-style, solid);
-    outline-offset: var(--fsds-checkbox-focus-ring-offset, 2px);
+    outline-width: var(--fsds-checkbox-design-condition-0c6bee9c3217-focus-width, var(--fsds-checkbox-focus-ring-width, 2px));
+    outline-color: var(--fsds-checkbox-design-condition-0c6bee9c3217-focus-color, var(--fsds-checkbox-focus-ring-color, #0566fe));
+    outline-style: var(--fsds-checkbox-design-condition-0c6bee9c3217-focus-style, var(--fsds-checkbox-focus-ring-style, solid));
+    outline-offset: var(--fsds-checkbox-design-condition-0c6bee9c3217-focus-offset, var(--fsds-checkbox-focus-ring-offset, 2px));
   }
 }
 
@@ -29,7 +31,7 @@
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
+  padding: var(--fsds-checkbox-design-input-spacing-padding, 0);
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
@@ -42,13 +44,13 @@
   position: relative;
   width: 16px;
   height: 16px;
-  border-radius: var(--fsds-checkbox-border-radius, 4px);
-  border-color: var(--fsds-checkbox-color-border-default, #a0a0a1);
-  background-color: var(--fsds-checkbox-color-background-default, #ffffff);
-  border-style: solid;
-  border-width: var(--fsds-checkbox-border-width, 1px);
+  border-radius: var(--fsds-checkbox-design-indicator-shape-radius, var(--fsds-checkbox-border-radius, 4px));
+  border-color: var(--fsds-checkbox-design-indicator-border-color, var(--fsds-checkbox-color-border-default, #a0a0a1));
+  background-color: var(--fsds-checkbox-design-indicator-background-fill, var(--fsds-checkbox-color-background-default, #ffffff));
+  border-style: var(--fsds-checkbox-design-indicator-border-style, solid);
+  border-width: var(--fsds-checkbox-design-indicator-border-width, var(--fsds-checkbox-border-width, 1px));
   box-sizing: border-box;
-  transition-duration: var(--fsds-checkbox-transition-duration, 150ms);
+  transition-duration: var(--fsds-checkbox-design-indicator-motion-duration, var(--fsds-checkbox-transition-duration, 150ms));
 }
 /* @generated:end */
 
@@ -62,6 +64,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

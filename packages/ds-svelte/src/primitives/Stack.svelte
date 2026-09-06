@@ -7,6 +7,8 @@
     role?: string;
     class?: string;
     'data-testid'?: string;
+    'data-fsds-component'?: string;
+    'data-fsds-box'?: string;
     children?: import('svelte').Snippet;
   }
 
@@ -17,6 +19,8 @@
     role,
     class: className,
     'data-testid': dataTestid,
+    'data-fsds-component': componentBoundary,
+    'data-fsds-box': componentBox,
     children,
   }: Props = $props();
 
@@ -25,14 +29,15 @@
   );
 </script>
 
-<svelte:element this={as} class={classes} {role} data-testid={dataTestid}>
+<svelte:element this={as} class={classes} {role} data-testid={dataTestid} data-fsds-component={componentBoundary} data-fsds-box={componentBox}>
   {@render children?.()}
 </svelte:element>
 
 <style>
+@layer components.primitive {
   .FSDS-stack {
     box-sizing: border-box;
-    gap: var(--fsds-semantic-spacing-gap-stack);
+    gap: var(--fsds-semantic-spacing-gap-stack, 0);
   }
 
   .FSDS-stack--layout-stack {
@@ -64,4 +69,5 @@
   .FSDS-stack--layout-inline-stack.FSDS-stack--horizontal {
     flex-direction: row;
   }
+}
 </style>

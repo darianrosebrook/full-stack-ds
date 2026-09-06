@@ -24,7 +24,7 @@ export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; as
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "postcard" },
-  template: `<article [ngClass]="classes()">
+  template: `<article [ngClass]="classes()" data-fsds-box="">
   <div [ngClass]="'postcard__header'">
     <div [ngClass]="'postcard__userInfo'">
       <span [ngClass]="'postcard__displayName'">

@@ -93,7 +93,7 @@ export class MarkdownBlockRendererComponent {
   standalone: true,
   imports: [NgClass, NgFor, MarkdownBlockRendererComponent],
   host: { "data-fsds-component": "markdown" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" data-fsds-box="">
   <fsds-markdown-block *ngFor="let block of markdownBlocks" [block]="block"></fsds-markdown-block>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

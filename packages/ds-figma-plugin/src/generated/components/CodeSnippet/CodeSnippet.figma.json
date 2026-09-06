@@ -37,6 +37,244 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "code-snippet.design.root.background.fill",
+      "cssVar": "--fsds-code-snippet-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "code-snippet.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "code-snippet.design.root.border.color",
+      "cssVar": "--fsds-code-snippet-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "code-snippet.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "code-snippet.design.root.border.style",
+      "cssVar": "--fsds-code-snippet-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "code-snippet.design.root.border.width",
+      "cssVar": "--fsds-code-snippet-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "code-snippet.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "code-snippet.design.root.shape.radius",
+      "cssVar": "--fsds-code-snippet-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "code-snippet.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-snippet.design.root.foreground.color",
+      "cssVar": "--fsds-code-snippet-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "code-snippet.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "typography.family",
+      "group": "typography",
+      "valueType": "fontFamily",
+      "slot": "code-snippet.design.root.typography.family",
+      "cssVar": "--fsds-code-snippet-design-root-typography-family",
+      "cssProperty": "font-family",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "code-snippet.design.root.typography.size",
+      "cssVar": "--fsds-code-snippet-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0.875rem",
+      "resolvesTo": "code-snippet.size.fontSize.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "code-snippet.design.root.typography.line-height",
+      "cssVar": "--fsds-code-snippet-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "code-snippet.typography.lineHeight.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "code-snippet.design.root.spacing.padding-block",
+      "cssVar": "--fsds-code-snippet-design-root-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "code-snippet.size.padding.block",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "code-snippet.design.root.spacing.padding-inline",
+      "cssVar": "--fsds-code-snippet-design-root-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "2px",
+      "resolvesTo": "code-snippet.size.padding.inline",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "code-snippet.design.condition-7b91481c8112.elevation.shadow",
+      "cssVar": "--fsds-code-snippet-design-condition-7b91481c8112-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "--kbd",
+      "part": null,
+      "defaultValue": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
+      "resolvesTo": "code-snippet.elevation.kbd",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet--kbd"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "code-snippet.design.condition-7b91481c8112.typography.weight",
+      "cssVar": "--fsds-code-snippet-design-condition-7b91481c8112-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--kbd",
+      "part": null,
+      "defaultValue": "500",
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet--kbd"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "code-snippet.design.condition-c7eae7a69682.background.fill",
+      "cssVar": "--fsds-code-snippet-design-condition-c7eae7a69682-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "--samp",
+      "part": null,
+      "defaultValue": "transparent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet--samp"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "code-snippet.design.condition-c7eae7a69682.border.color",
+      "cssVar": "--fsds-code-snippet-design-condition-c7eae7a69682-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "--samp",
+      "part": null,
+      "defaultValue": "transparent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-snippet--samp"
+    }
+  ],
   "variants": {
     "as": [
       "code",

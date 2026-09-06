@@ -1,55 +1,57 @@
+@import "../../primitives/box-model.css";
 @import "./NavList.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .nav-list {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-structure-size-gap, 16px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   display: block;
 }
 
 .nav-list__list {
   display: flex;
   flex-direction: column;
-  gap: var(--fsds-nav-list-size-gap-list, 1px);
+  gap: var(--fsds-nav-list-design-list-spacing-gap, var(--fsds-nav-list-size-gap-list, 1px));
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: var(--fsds-nav-list-design-list-spacing-padding, 0);
 }
 
 .nav-list__item {
   display: block;
-  color: var(--fsds-nav-list-color-foreground-default, #474647);
-  padding-block: var(--fsds-nav-list-size-padding-block, 2px);
-  padding-inline: var(--fsds-nav-list-size-padding-inline, 8px);
-  border-radius: var(--fsds-nav-list-size-radius-default, 6px);
+  color: var(--fsds-nav-list-design-item-foreground-color, var(--fsds-nav-list-color-foreground-default, #474647));
+  padding-block: var(--fsds-nav-list-design-item-spacing-padding-block, var(--fsds-nav-list-size-padding-block, 2px));
+  padding-inline: var(--fsds-nav-list-design-item-spacing-padding-inline, var(--fsds-nav-list-size-padding-inline, 8px));
+  border-radius: var(--fsds-nav-list-design-item-shape-radius, var(--fsds-nav-list-size-radius-default, 6px));
   transition-property: background-color, color;
-  transition-duration: 120ms;
+  transition-duration: var(--fsds-nav-list-design-item-motion-duration, 120ms);
 }
 
 .nav-list__item:hover {
-  background-color: color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent);
-  color: var(--fsds-nav-list-color-foreground-hover, #141414);
+  background-color: var(--fsds-nav-list-design-condition-6eb1fb141fc8-background-fill, color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent));
+  color: var(--fsds-nav-list-design-condition-6eb1fb141fc8-foreground-color, var(--fsds-nav-list-color-foreground-hover, #141414));
 }
 
 .nav-list__item:focus-visible {
-  outline-style: solid;
-  outline-width: 2px;
-  outline-color: var(--fsds-nav-list-color-outline-focus, #d92d2e);
-  outline-offset: -2px;
+  outline-style: var(--fsds-nav-list-design-condition-d48c60eed8cf-focus-style, solid);
+  outline-width: var(--fsds-nav-list-design-condition-d48c60eed8cf-focus-width, 2px);
+  outline-color: var(--fsds-nav-list-design-condition-d48c60eed8cf-focus-color, var(--fsds-nav-list-color-outline-focus, #d92d2e));
+  outline-offset: var(--fsds-nav-list-design-condition-d48c60eed8cf-focus-offset, -2px);
 }
 
 .nav-list__item[aria-current="page"] {
-  background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent);
-  color: var(--fsds-nav-list-color-foreground-current, #141414);
+  background-color: var(--fsds-nav-list-design-condition-64c35a3ee9a3-background-fill, color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent));
+  color: var(--fsds-nav-list-design-condition-64c35a3ee9a3-foreground-color, var(--fsds-nav-list-color-foreground-current, #141414));
 }
 /* @generated:end */
 
@@ -63,6 +65,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

@@ -257,7 +257,9 @@ describe("polymorphic root lowering", () => {
     const src = generateAngularComponentSource(polymorphicIr);
     expect(src).toContain(`import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";`);
     expect(src).toContain(`<ng-container [ngSwitch]="this.as || 'code'">`);
-    expect(src).toContain(`<kbd [ngClass]="classes()" *ngSwitchCase="'kbd'">`);
+    const kbd = src.match(/<kbd\s[^>]*>/)?.[0];
+    expect(kbd).toContain('[ngClass]="classes()"');
+    expect(kbd).toContain(`*ngSwitchCase="'kbd'"`);
     expect(src).toContain(`{{ text }}`);
   });
 

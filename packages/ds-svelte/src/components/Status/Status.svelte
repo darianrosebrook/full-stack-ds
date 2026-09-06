@@ -40,7 +40,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<span class={classes} data-fsds-component="status">
+<span class={classes} data-fsds-component="status" data-fsds-box="">
   <Icon class={'status__icon'} size="sm" name={(status === "info" ? "info" : (status === "success" ? "check" : (status === "warning" ? "triangle-alert" : (status === "danger" ? "triangle-alert" : "triangle-alert"))))} />
   <span class={'status__label'}>
     {@render children?.()}

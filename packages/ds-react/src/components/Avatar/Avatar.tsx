@@ -53,7 +53,7 @@ export function Avatar({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} aria-label={name} role="img" data-testid={testId} data-fsds-component="avatar" {...rest}>
+  <Stack layout="native" className={`${classNames}`} aria-label={name} role="img" data-testid={testId} data-fsds-component="avatar" data-fsds-box="" {...rest}>
     {src ? (
       <Image className="avatar__image" src={src} alt={""} />
     ) : null}

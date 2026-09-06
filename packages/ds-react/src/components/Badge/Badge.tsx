@@ -77,7 +77,7 @@ export function Badge({
     .join(" ");
 
   return (
-  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="badge" {...rest}>
+  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="badge" data-fsds-box="" {...rest}>
     {icon ? (
       <span className="badge__icon" aria-hidden="true">
         {icon}

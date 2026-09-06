@@ -66,7 +66,7 @@ export function Skeleton({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} data-fsds-component="skeleton" {...rest}>
+  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} data-fsds-component="skeleton" data-fsds-box="" {...rest}>
     {lines ? (
       <div className="skeleton__stack">
         {Array.from({ length: lines }, (_, index) => (

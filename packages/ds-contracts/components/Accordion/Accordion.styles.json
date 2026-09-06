@@ -14,23 +14,43 @@
     },
     "border-color": {
       "resolvesTo": "accordion.border.color",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "accordion.design.root.border.color"
+      }
     },
     "border-radius": {
       "resolvesTo": "accordion.border.radius",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "accordion.design.root.shape.radius"
+      }
     },
     "gap": {
       "resolvesTo": "accordion.spacing.gap",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "accordion.design.root.spacing.gap"
+      }
     },
     "font-size": {
       "resolvesTo": "accordion.text.sizeContent",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "accordion.design.root.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "accordion.text.lineHeightContent",
-      "fallback": "1.8"
+      "fallback": "1.8",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "accordion.design.root.typography.line-height"
+      }
     }
   },
   "item": {
@@ -38,27 +58,47 @@
       "literal": "transparent",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "accordion.design.item.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "accordion.border.color",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "accordion.design.item.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "accordion.design.item.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "accordion.design.item.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "accordion.border.radius",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "accordion.design.item.shape.radius"
+      }
     },
     "overflow": {
       "literal": "hidden",
@@ -102,7 +142,11 @@
     },
     "padding": {
       "resolvesTo": "accordion.spacing.paddingY",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "accordion.design.trigger.spacing.padding"
+      }
     },
     "background": {
       "literal": "transparent",
@@ -124,55 +168,99 @@
     },
     "font-size": {
       "resolvesTo": "accordion.text.size",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "accordion.design.trigger.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "accordion.text.weight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "accordion.design.trigger.typography.weight"
+      }
     },
     "color": {
       "resolvesTo": "accordion.color.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "accordion.design.trigger.foreground.color"
+      }
     },
     "text-align": {
       "literal": "left",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "accordion.design.trigger.typography.alignment"
+      }
     },
     "line-height": {
       "resolvesTo": "accordion.text.lineHeight",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "accordion.design.trigger.typography.line-height"
+      }
     }
   },
   ".accordion__trigger:hover": {
     "background-color": {
       "resolvesTo": "accordion.color.background.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "accordion.design.condition-c66924892931.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "accordion.color.textHover",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "accordion.design.condition-c66924892931.foreground.color"
+      }
     }
   },
   ".accordion__trigger:focus-visible": {
     "outline-width": {
       "resolvesTo": "accordion.focus.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "accordion.design.condition-92aee6ee190f.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "accordion.focus.color",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "focus.color",
+        "slot": "accordion.design.condition-92aee6ee190f.focus.color"
+      }
     },
     "outline-offset": {
       "resolvesTo": "accordion.focus.offset",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "accordion.design.condition-92aee6ee190f.focus.offset"
+      }
     },
     "outline-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.style",
+        "slot": "accordion.design.condition-92aee6ee190f.focus.style"
+      }
     }
   },
   "chevron": {
@@ -190,11 +278,19 @@
     },
     "width": {
       "resolvesTo": "accordion.icon.size",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "accordion.design.chevron.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "accordion.icon.size",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "accordion.design.chevron.sizing.height"
+      }
     },
     "align-items": {
       "literal": "center",
@@ -216,7 +312,11 @@
     },
     "color": {
       "resolvesTo": "accordion.color.icon",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "accordion.design.chevron.foreground.color"
+      }
     }
   },
   ".accordion__trigger[aria-expanded=\"true\"] .accordion__chevron": {
@@ -244,25 +344,45 @@
   "contentInner": {
     "padding": {
       "resolvesTo": "accordion.spacing.paddingY",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "accordion.design.content-inner.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "accordion.color.textSecondary",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "accordion.design.content-inner.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "accordion.text.sizeContent",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "accordion.design.content-inner.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "accordion.text.lineHeightContent",
-      "fallback": "1.8"
+      "fallback": "1.8",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "accordion.design.content-inner.typography.line-height"
+      }
     }
   },
   ".accordion--disabled": {
     "opacity": {
       "resolvesTo": "accordion.opacity.disabled",
-      "fallback": "0.5"
+      "fallback": "0.5",
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "accordion.design.condition-1a120a363d7a.appearance.opacity"
+      }
     },
     "pointer-events": {
       "literal": "none",

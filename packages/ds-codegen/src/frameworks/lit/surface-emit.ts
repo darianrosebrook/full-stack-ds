@@ -68,7 +68,7 @@ function surfaceStaticStylesLine(
   return [
     `  static override styles = css\``,
     `    ${hostRule}`,
-    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd() || "    "),
+    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd()),
     `  \`;`,
   ];
 }
@@ -380,7 +380,7 @@ function emitRootClass(
     `  }`,
     ``,
     `  override render() {`,
-    `    return html\`<span class="\${this._classes()}"><slot></slot></span>\`;`,
+    `    return html\`<span data-fsds-box="" class="\${this._classes()}"><slot></slot></span>\`;`,
     `  }`,
     ``,
     `  private _classes(): string {`,

@@ -285,7 +285,7 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
     `    },`,
     `  ],`,
     `  host: { "data-fsds-component": "${ir.cssPrefix}" },`,
-    `  template: \`<div [ngClass]="classes()"><ng-content /></div>\`,`,
+    `  template: \`<div data-fsds-box="" [ngClass]="classes()"><ng-content /></div>\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
     `export class ${name}Component implements OnChanges {`,
@@ -479,7 +479,7 @@ function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
     `    },`,
     `  ],`,
     `  host: { "data-fsds-component": "${ir.cssPrefix}" },`,
-    `  template: \`<div [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>\`,`,
+    `  template: \`<div data-fsds-box="" [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
     `export class ${name}Component implements OnChanges {`,
@@ -1269,7 +1269,7 @@ function generateTemplate(ir: ComponentIR): string {
   const { root } = ir;
   const asAttr = root.element !== "div" ? ` as="${root.element}"` : "";
   const roleAttr = root.effectiveRole ? ` role="${root.effectiveRole}"` : "";
-  return `<fsds-stack${asAttr}${roleAttr} [ngClass]="classes()"><ng-content /></fsds-stack>`;
+  return `<fsds-stack${asAttr}${roleAttr} data-fsds-box="" [ngClass]="classes()"><ng-content /></fsds-stack>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -2604,6 +2604,7 @@ function renderAngularDomNode(
   }
 
   if (ctx.isRoot) {
+    attrs.push(`data-fsds-box=""`);
     attrs.unshift(`[ngClass]="classes()"`);
     if (ctx.autoDismissPause) {
       attrs.push(

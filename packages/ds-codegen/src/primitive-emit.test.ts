@@ -77,7 +77,7 @@ describe("emitPrimitives across frameworks", () => {
       expect(files.length).toBeGreaterThan(0);
       const joined = files.map((f) => f.contents).join("\n");
       // The gap must read the semantic token var, never a hard-coded value.
-      expect(joined).toContain(`var(${GAP_VAR})`);
+      expect(joined).toContain(`var(${GAP_VAR}, 0)`);
       // Every emitted primitive file carries the generated banner so it is
       // not mistaken for hand-authored source.
       for (const file of files) {

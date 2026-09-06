@@ -34,7 +34,11 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "button.design.root.border.style"
+      }
     },
     "white-space": {
       "literal": "nowrap",
@@ -50,43 +54,83 @@
     },
     "background-color": {
       "resolvesTo": "button.color.background.default",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "background.fill",
+        "slot": "button.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "button.color.foreground.default",
-      "fallback": "#fafafa"
+      "fallback": "#fafafa",
+      "design": {
+        "property": "foreground.color",
+        "slot": "button.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "button.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "button.design.root.border.color"
+      }
     },
     "gap": {
       "resolvesTo": "button.size.gap.default",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "button.design.root.spacing.gap"
+      }
     },
     "border-radius": {
       "resolvesTo": "button.size.radius",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "button.design.root.shape.radius"
+      }
     },
     "border-width": {
       "resolvesTo": "button.size.border",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "button.design.root.border.width"
+      }
     },
     "font-size": {
       "resolvesTo": "button.size.fontSize.medium",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "button.design.root.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "button.text.weight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "button.design.root.typography.weight"
+      }
     },
     "transition-duration": {
       "resolvesTo": "button.motion.duration.fast",
-      "fallback": "150ms"
+      "fallback": "150ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "button.design.root.motion.duration"
+      }
     },
     "transition-timing-function": {
       "resolvesTo": "button.motion.easing.standard",
-      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "design": {
+        "property": "motion.easing",
+        "slot": "button.design.root.motion.easing"
+      }
     }
   },
   "--small": {
@@ -358,33 +402,57 @@
   "hover": {
     "background-color": {
       "resolvesTo": "button.color.background.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "button.design.hover.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "button.color.border.hover",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "border.color",
+        "slot": "button.design.hover.border.color"
+      }
     }
   },
   "active": {
     "background-color": {
       "resolvesTo": "button.color.background.active",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "background.fill",
+        "slot": "button.design.active.background.fill"
+      }
     }
   },
   "focus": {
     "border-color": {
       "resolvesTo": "button.color.border.focus",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "border.color",
+        "slot": "button.design.focus.border.color"
+      }
     }
   },
   "disabled": {
     "background-color": {
       "resolvesTo": "button.color.background.disabled",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "background.fill",
+        "slot": "button.design.disabled.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "button.color.foreground.disabled",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "button.design.disabled.foreground.color"
+      }
     }
   },
   "spinner": {
@@ -444,7 +512,11 @@
       "literal": "0.7",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "button.design.condition-ac2be5befb6d.appearance.opacity"
+      }
     }
   }
 }

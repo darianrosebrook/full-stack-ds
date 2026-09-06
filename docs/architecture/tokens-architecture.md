@@ -4,7 +4,7 @@ authority: architecture
 status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
-updated: 2026-07-30
+updated: 2026-09-06
 verified_at_commit: 652a157f
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
@@ -40,7 +40,7 @@ The same way the admission rail makes its non-claims explicit, this graph's load
 
 - **It does not prove value correctness.** That `semantic.color.foreground.primary` resolves to `#141414` is a design decision, not a system invariant. Color contrast and visual coherence are reviewed separately.
 - **It does not prove cross-shard reference resolution succeeds at validate time.** A `{x.y.z}` interpolation that fails to resolve at the resolver pass becomes a `var(--fsds-x-y-z)` call in the CSS output, which fails at *runtime* via fallback to the inline value, not at *build time*. The composer logs `[tokens] Reference validation warnings` but the build still emits.
-- **It does not prove componenticity scope.** `tokens.css` is global by design. Per-component fallback isolation (`[data-fsds-component="X"]`) is the job of `TOKENS-WORKSTREAM-STEP-06A`'s tokens emitter (still pending at the time this doc lands).
+- **The global graph does not own component boundaries.** Component-specific design addresses and shared box resets are emitted separately. See [component design bindings](design/component-design-bindings.md) for their current scoping and runtime evidence.
 - **It does not prove `$type` correctness across composite alias chains.** A `dimension`-typed token may reference a `string`-typed primitive via `{x.y.z}` and produce a syntactically valid but semantically wrong CSS value. The W3C validator catches direct shape violations; chained type drift would need its own pass.
 - **It does not prove that the old token surface and the new one produced byte-identical CSS.** They do not. The new surface drops legacy variants the contracts didn't depend on (verified by the byte-compare gate; see "Cutover provenance" below) and uses different composite-flattening conventions (e.g. `0px 1px 3px #0000001f` vs. `0 1px 3px rgba(0, 0, 0, 0.12)` — semantically equivalent, lexically different).
 
@@ -241,12 +241,12 @@ The diagnostic-code shape mirrors the admission rail: every issue is a JSON-poin
 
 An override is live only if some rule READS the custom property. A declared slot with zero `var(--fsds-…)` reads is unwired interface — legitimate to declare (the declaration is the design-tool override surface; see the dead-slot ledger's interface framing), but never a live control: an edit on it cannot move the rendered component, and a dead knob costs a designer a debugging session to disprove.
 
-- **Proof source:** the committed generated React CSS, scanned for `var(--fsds-*)` reads — the same authority the dead-slot audit reads. No IR change was needed: reads are derivable from the emitted CSS directly (`src/components/properties-panel/css-read-proof.ts`).
-- **Binding rule:** role resolution (`resolveBoxModel`, `resolveFillColor`, `resolveTypography`) prefers the read slot when several name-matching candidates exist, and omits the role when none is read. This is what fixes shadow pairs like Button's `box-model.gap` (authored first, never read) vs `button.size.gap.default` (the slot `Button.css` actually reads) — 11 corpus components had the editor bound to the unread half of such a pair.
+- **Proof source:** the committed generated React CSS and imported shared box-model stylesheet, scanned for `var(--fsds-*)` reads — the same authority the dead-slot audit reads. No IR change was needed: reads are derivable from the emitted CSS directly (`src/components/properties-panel/css-read-proof.ts`).
+- **Binding rule:** legacy role resolution (`resolveBoxModel`, `resolveFillColor`, `resolveTypography`) prefers read slots and omits an unread role. Shared box-model controls now consume the common gap slot at component boundaries. New design-property controls use explicit typed bindings rather than token-name heuristics.
 - **Rendering rule:** unread token rows stay visible — declaration is interface, not drift — but render explicitly `unwired` (disabled field + badge), never as an editable control.
 - **Fail-open boundary:** rows without a proof source (no generated CSS for the name) keep legacy behavior rather than hiding controls; the proof marks `isRead`, and only a positive `false` withdraws a control.
 
-Verified at runtime by `e2e/editor-binding-rail.spec.ts` (Button: gap control binds the read slot and moves the preview's computed gap in both directions; the unread slot renders unwired) and pinned by the read-proof block of `src/components/properties-panel/control-derivation.test.ts`.
+Verified at runtime by `e2e/editor-binding-rail.spec.ts` (Button: the shared gap control moves the preview's computed gap and clearing restores the default) and pinned by the read-proof block of `src/components/properties-panel/control-derivation.test.ts`.
 
 ## Load-bearing decisions
 
@@ -381,7 +381,7 @@ Component-scoped CSS custom properties live alongside the global graph but are n
 | Pool | Source | Selector | Authority |
 |---|---|---|---|
 | **Component-local slots** | `<Name>.tokens.json` | `.<cssPrefix>` | Per-component themable surface. Slot names are cssPrefix-namespaced (e.g. `--fsds-button-color-background-default`). Authors declare what slots exist per component; consumers override per instance. |
-| **Box-model primitive slots** | `box-model.primitive.schema.json` + `primitives/BoxModel.primitive.json` | `.<cssPrefix>` (every component) | Closed slot pool of 14 unscoped names (`--fsds-box-model-padding-inline-start`, etc.) automatically declared on every component's root with literal defaults. See [`ARCH-BOX-MODEL-PRIMITIVE-001`](./design/box-model-primitive.md). |
+| **Box-model primitive slots** | `box-model.primitive.schema.json` + `primitives/BoxModel.primitive.json` | `.<cssPrefix>` (every component) | Closed slot pool of shared names (`--fsds-box-model-padding-inline-start`, etc.), reset once per component boundary by a shared stylesheet, with component defaults at consumer sites. See [`ARCH-BOX-MODEL-PRIMITIVE-001`](./design/box-model-primitive.md). |
 
 Both pools may `resolvesTo` paths in the global graph above — they extend the cascade with per-component override surfaces rather than competing with it. The box-model pool is the universal floor (every component gets it); component-local slots are the per-component vocabulary.
 

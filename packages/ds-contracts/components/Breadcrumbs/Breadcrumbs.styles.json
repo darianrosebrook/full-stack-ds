@@ -2,15 +2,27 @@
   "root": {
     "background-color": {
       "resolvesTo": "breadcrumbs.color.background.elevated",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "breadcrumbs.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "breadcrumbs.color.border.subtle",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "breadcrumbs.design.root.border.color"
+      }
     },
     "line-height": {
       "resolvesTo": "breadcrumbs.typography.lineHeight.collapse",
-      "fallback": "1"
+      "fallback": "1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "breadcrumbs.design.root.typography.line-height"
+      }
     },
     "display": {
       "literal": "block",
@@ -20,21 +32,37 @@
     },
     "border-radius": {
       "resolvesTo": "breadcrumbs.shape.radius.medium",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "breadcrumbs.design.root.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "breadcrumbs.spacing.padding.default",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "breadcrumbs.design.root.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "breadcrumbs.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "breadcrumbs.design.root.foreground.color"
+      }
     }
   },
   "focus": {
     "outline-color": {
       "resolvesTo": "breadcrumbs.color.focus",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "focus.color",
+        "slot": "breadcrumbs.design.focus.focus.color"
+      }
     }
   },
   "list": {
@@ -48,7 +76,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "breadcrumbs.design.list.spacing.padding"
+      }
     },
     "margin": {
       "literal": "0",
@@ -76,7 +108,11 @@
     },
     "gap": {
       "resolvesTo": "breadcrumbs.spacing.gap.default",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "breadcrumbs.design.list.spacing.gap"
+      }
     }
   }
 }

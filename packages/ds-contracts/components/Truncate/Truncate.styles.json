@@ -74,11 +74,19 @@
     },
     "color": {
       "resolvesTo": "truncate.color.foreground.link",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "foreground.color",
+        "slot": "truncate.design.toggle.foreground.color"
+      }
     },
     "font-weight": {
       "resolvesTo": "truncate.typography.fontWeight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "truncate.design.toggle.typography.weight"
+      }
     },
     "margin-top": {
       "resolvesTo": "truncate.spacing.toggle",
@@ -100,7 +108,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "truncate.design.toggle.spacing.padding"
+      }
     },
     "cursor": {
       "literal": "pointer",

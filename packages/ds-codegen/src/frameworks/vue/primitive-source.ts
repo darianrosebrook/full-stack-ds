@@ -33,7 +33,7 @@ export function generateVueStackPrimitiveSource(ir: PrimitiveIR): string {
   const styleBlocks: string[] = [];
   const baseDecls = ["box-sizing: border-box;"];
   if (ir.layout.gap) {
-    baseDecls.push(`gap: var(${ir.layout.gap.cssVar});`);
+    baseDecls.push(`gap: var(${ir.layout.gap.cssVar}, 0);`);
   }
   styleBlocks.push(`.${prefix} {\n  ${baseDecls.join("\n  ")}\n}`);
 
@@ -82,7 +82,9 @@ const classNames = computed(() =>
 </template>
 
 <style scoped>
+@layer components.primitive {
 ${styleBlocks.join("\n")}
+}
 </style>
 `;
 }

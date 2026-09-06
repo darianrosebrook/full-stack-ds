@@ -198,6 +198,606 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "walkthrough.design.root.background.fill",
+      "cssVar": "--fsds-walkthrough-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "walkthrough.surface.bg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "walkthrough.design.root.border.color",
+      "cssVar": "--fsds-walkthrough-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "walkthrough.surface.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "walkthrough.design.root.border.style",
+      "cssVar": "--fsds-walkthrough-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.border.width",
+      "cssVar": "--fsds-walkthrough-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.shape.radius",
+      "cssVar": "--fsds-walkthrough-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "walkthrough.surface.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "walkthrough.design.root.elevation.shadow",
+      "cssVar": "--fsds-walkthrough-design-root-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
+      "resolvesTo": "walkthrough.surface.shadow",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.spacing.padding",
+      "cssVar": "--fsds-walkthrough-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "32px",
+      "resolvesTo": "walkthrough.surface.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.spacing.gap",
+      "cssVar": "--fsds-walkthrough-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "4px",
+      "resolvesTo": "walkthrough.dots.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.content.spacing.gap",
+      "cssVar": "--fsds-walkthrough-design-content-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "8px",
+      "resolvesTo": "walkthrough.description.marginTop",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__content"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.title.typography.size",
+      "cssVar": "--fsds-walkthrough-design-title-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "20px",
+      "resolvesTo": "walkthrough.title.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__title"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "walkthrough.design.title.typography.weight",
+      "cssVar": "--fsds-walkthrough-design-title-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "700",
+      "resolvesTo": "walkthrough.title.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__title"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "walkthrough.design.title.foreground.color",
+      "cssVar": "--fsds-walkthrough-design-title-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "#141414",
+      "resolvesTo": "walkthrough.title.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__title"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.description.typography.size",
+      "cssVar": "--fsds-walkthrough-design-description-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "16px",
+      "resolvesTo": "walkthrough.description.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__description"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "walkthrough.design.description.foreground.color",
+      "cssVar": "--fsds-walkthrough-design-description-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "#474647",
+      "resolvesTo": "walkthrough.description.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__description"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.description.typography.line-height",
+      "cssVar": "--fsds-walkthrough-design-description-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "1.5",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__description"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.controls.spacing.gap",
+      "cssVar": "--fsds-walkthrough-design-controls-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "controls",
+      "part": "controls",
+      "defaultValue": "12px",
+      "resolvesTo": "walkthrough.controls.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__controls"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "walkthrough.design.controls.border.top.color",
+      "cssVar": "--fsds-walkthrough-design-controls-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "controls",
+      "part": "controls",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "walkthrough.surface.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__controls"
+    },
+    {
+      "property": "border.top.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "walkthrough.design.controls.border.top.style",
+      "cssVar": "--fsds-walkthrough-design-controls-border-top-style",
+      "cssProperty": "border-top-style",
+      "selectorKey": "controls",
+      "part": "controls",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__controls"
+    },
+    {
+      "property": "border.top.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.controls.border.top.width",
+      "cssVar": "--fsds-walkthrough-design-controls-border-top-width",
+      "cssProperty": "border-top-width",
+      "selectorKey": "controls",
+      "part": "controls",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__controls"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "walkthrough.design.skip.foreground.color",
+      "cssVar": "--fsds-walkthrough-design-skip-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "skip",
+      "part": "skip",
+      "defaultValue": "#474647",
+      "resolvesTo": "walkthrough.button.secondary.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__skip"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.skip.spacing.padding",
+      "cssVar": "--fsds-walkthrough-design-skip-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "skip",
+      "part": "skip",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__skip"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "walkthrough.design.prev.background.fill",
+      "cssVar": "--fsds-walkthrough-design-prev-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "prev",
+      "part": "prev",
+      "defaultValue": "#00000000",
+      "resolvesTo": "walkthrough.button.secondary.bg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__prev"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "walkthrough.design.prev.border.color",
+      "cssVar": "--fsds-walkthrough-design-prev-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "prev",
+      "part": "prev",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "walkthrough.button.secondary.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__prev"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "walkthrough.design.prev.border.style",
+      "cssVar": "--fsds-walkthrough-design-prev-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "prev",
+      "part": "prev",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__prev"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.prev.border.width",
+      "cssVar": "--fsds-walkthrough-design-prev-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "prev",
+      "part": "prev",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__prev"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.prev.shape.radius",
+      "cssVar": "--fsds-walkthrough-design-prev-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "prev",
+      "part": "prev",
+      "defaultValue": "6px",
+      "resolvesTo": "walkthrough.button.primary.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__prev"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "walkthrough.design.prev.foreground.color",
+      "cssVar": "--fsds-walkthrough-design-prev-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "prev",
+      "part": "prev",
+      "defaultValue": "#474647",
+      "resolvesTo": "walkthrough.button.secondary.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__prev"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "walkthrough.design.next.background.fill",
+      "cssVar": "--fsds-walkthrough-design-next-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "next",
+      "part": "next",
+      "defaultValue": "#0566fe",
+      "resolvesTo": "walkthrough.button.primary.bg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__next"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.next.shape.radius",
+      "cssVar": "--fsds-walkthrough-design-next-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "next",
+      "part": "next",
+      "defaultValue": "6px",
+      "resolvesTo": "walkthrough.button.primary.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__next"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "walkthrough.design.next.foreground.color",
+      "cssVar": "--fsds-walkthrough-design-next-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "next",
+      "part": "next",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "walkthrough.button.primary.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__next"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.dots.spacing.gap",
+      "cssVar": "--fsds-walkthrough-design-dots-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "dots",
+      "part": "dots",
+      "defaultValue": "4px",
+      "resolvesTo": "walkthrough.dots.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__dots"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.dot.sizing.width",
+      "cssVar": "--fsds-walkthrough-design-dot-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "dot",
+      "part": "dot",
+      "defaultValue": "8px",
+      "resolvesTo": "walkthrough.dots.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__dot"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.dot.sizing.height",
+      "cssVar": "--fsds-walkthrough-design-dot-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "dot",
+      "part": "dot",
+      "defaultValue": "8px",
+      "resolvesTo": "walkthrough.dots.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__dot"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.dot.shape.radius",
+      "cssVar": "--fsds-walkthrough-design-dot-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "dot",
+      "part": "dot",
+      "defaultValue": "50%",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__dot"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "walkthrough.design.dot.background.fill",
+      "cssVar": "--fsds-walkthrough-design-dot-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "dot",
+      "part": "dot",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "walkthrough.dots.idle",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__dot"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.dot.spacing.padding",
+      "cssVar": "--fsds-walkthrough-design-dot-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "dot",
+      "part": "dot",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__dot"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "walkthrough.design.counter.foreground.color",
+      "cssVar": "--fsds-walkthrough-design-counter-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "counter",
+      "part": "counter",
+      "defaultValue": "#474647",
+      "resolvesTo": "walkthrough.description.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__counter"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.counter.typography.size",
+      "cssVar": "--fsds-walkthrough-design-counter-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "counter",
+      "part": "counter",
+      "defaultValue": "16px",
+      "resolvesTo": "walkthrough.description.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough__counter"
+    }
+  ],
   "variants": {
     "placement": [
       "top",

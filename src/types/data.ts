@@ -1,3 +1,4 @@
+import type { DesignBindingIR } from '../../packages/ds-codegen/src/design-properties';
 export type Framework = "react" | "vue" | "svelte" | "angular" | "lit";
 
 /** The admitted Web framework targets. Single source of truth for display
@@ -300,6 +301,8 @@ export interface BoxModelSurfaceSlot {
 }
 
 export interface ComponentBundle {
+  /** Typed, independently settable design properties from the style sidecar. */
+  designBindings?: DesignBindingIR[];
   name: string;
   contract: ComponentContract;
   contractPath: string;

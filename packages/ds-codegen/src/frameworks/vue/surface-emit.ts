@@ -192,7 +192,7 @@ function emitRootSfc(
     `</script>`,
     ``,
     `<template>`,
-    `  <span :class="classNames" :data-testid="props['data-testid']">`,
+    `  <span data-fsds-component="${cssPrefix}" data-fsds-box="" :class="classNames" :data-testid="props['data-testid']">`,
     `    <slot />`,
     `  </span>`,
     `</template>`,

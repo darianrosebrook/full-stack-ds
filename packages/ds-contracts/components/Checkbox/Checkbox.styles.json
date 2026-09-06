@@ -48,7 +48,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "checkbox.design.input.spacing.padding"
+      }
     },
     "margin": {
       "literal": "-1px",
@@ -114,25 +118,45 @@
     },
     "border-radius": {
       "resolvesTo": "checkbox.border.radius",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "checkbox.design.indicator.shape.radius"
+      }
     },
     "border-color": {
       "resolvesTo": "checkbox.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "checkbox.design.indicator.border.color"
+      }
     },
     "background-color": {
       "resolvesTo": "checkbox.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "checkbox.design.indicator.background.fill"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "checkbox.design.indicator.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "checkbox.border.width",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "checkbox.design.indicator.border.width"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -142,7 +166,11 @@
     },
     "transition-duration": {
       "resolvesTo": "checkbox.transition.duration",
-      "fallback": "150ms"
+      "fallback": "150ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "checkbox.design.indicator.motion.duration"
+      }
     }
   },
   ".checkbox:has(.checkbox__input:checked) .checkbox__indicator": {
@@ -160,19 +188,35 @@
   ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator": {
     "outline-width": {
       "resolvesTo": "checkbox.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "checkbox.design.condition-0c6bee9c3217.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "checkbox.focus.ring.color",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "checkbox.design.condition-0c6bee9c3217.focus.color"
+      }
     },
     "outline-style": {
       "resolvesTo": "checkbox.focus.ring.style",
-      "fallback": "solid"
+      "fallback": "solid",
+      "design": {
+        "property": "focus.style",
+        "slot": "checkbox.design.condition-0c6bee9c3217.focus.style"
+      }
     },
     "outline-offset": {
       "resolvesTo": "checkbox.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "checkbox.design.condition-0c6bee9c3217.focus.offset"
+      }
     }
   }
 }

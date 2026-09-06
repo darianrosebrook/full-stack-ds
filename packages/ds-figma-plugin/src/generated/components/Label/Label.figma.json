@@ -37,6 +37,40 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "label.design.root.foreground.color",
+      "cssVar": "--fsds-label-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "label.color.text.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".label"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "label.design.root.typography.line-height",
+      "cssVar": "--fsds-label-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.2",
+      "resolvesTo": "label.typo.lineHeight.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".label"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [],

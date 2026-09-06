@@ -30,7 +30,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgFor],
   host: { "data-fsds-component": "walkthrough" },
-  template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')" [attr.data-placement]="_position.state().placement" [style.position]="'fixed'" [style.top.px]="_position.state().top" [style.left.px]="_position.state().left" [style.visibility]="_position.state().ready ? 'visible' : 'hidden'">
+  template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')" data-fsds-box="" [attr.data-placement]="_position.state().placement" [style.position]="'fixed'" [style.top.px]="_position.state().top" [style.left.px]="_position.state().left" [style.visibility]="_position.state().ready ? 'visible' : 'hidden'">
   <div [ngClass]="'walkthrough__content'" role="group" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-description'">
     <h3 [ngClass]="'walkthrough__title'" [attr.aria-label]="(label ?? 'Feature tour')" [attr.id]="instanceId + '-title'">
       <ng-content select="[slot=title]" />

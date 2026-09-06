@@ -86,7 +86,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="markdown">
+  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="markdown" data-fsds-box="">
     <MarkdownTree />
   </div>
 </template>

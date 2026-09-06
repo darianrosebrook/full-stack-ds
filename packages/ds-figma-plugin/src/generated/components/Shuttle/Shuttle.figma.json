@@ -63,6 +63,134 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "shuttle.design.root.background.fill",
+      "cssVar": "--fsds-shuttle-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "shuttle.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "shuttle.design.root.border.color",
+      "cssVar": "--fsds-shuttle-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "shuttle.color.border.accent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "shuttle.design.root.spacing.padding",
+      "cssVar": "--fsds-shuttle-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "24px",
+      "resolvesTo": "shuttle.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "shuttle.design.root.shape.radius",
+      "cssVar": "--fsds-shuttle-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "shuttle.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "shuttle.design.item.spacing.padding",
+      "cssVar": "--fsds-shuttle-design-item-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "4px 8px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle__item"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "shuttle.design.item.foreground.color",
+      "cssVar": "--fsds-shuttle-design-item-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#141414",
+      "resolvesTo": "shuttle.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle__item"
+    },
+    {
+      "property": "border.block-end.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "shuttle.design.item.border.block-end.width",
+      "cssVar": "--fsds-shuttle-design-item-border-block-end-width",
+      "cssProperty": "border-block-end-width",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle__item"
+    },
+    {
+      "property": "border.block-end.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "shuttle.design.item.border.block-end.color",
+      "cssVar": "--fsds-shuttle-design-item-border-block-end-color",
+      "cssProperty": "border-block-end-color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "shuttle.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".shuttle__item"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [],

@@ -14,39 +14,71 @@
     },
     "background-color": {
       "resolvesTo": "calendar.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "calendar.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "calendar.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "calendar.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "calendar.design.root.border.color"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "calendar.design.root.border.width"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "calendar.design.root.border.style"
+      }
     },
     "padding": {
       "resolvesTo": "calendar.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "calendar.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "calendar.design.root.shape.radius"
+      }
     },
     "box-shadow": {
       "resolvesTo": "calendar.elevation.default",
-      "fallback": "0px 4px 6px #0000000d, 0px 10px 15px #0000001a"
+      "fallback": "0px 4px 6px #0000000d, 0px 10px 15px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "calendar.design.root.elevation.shadow"
+      }
     }
   },
   "header": {
@@ -100,11 +132,19 @@
     },
     "width": {
       "resolvesTo": "calendar.size.nav",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "calendar.design.nav.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "calendar.size.nav",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "calendar.design.nav.sizing.height"
+      }
     },
     "background": {
       "literal": "transparent",
@@ -120,7 +160,11 @@
     },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.day",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "calendar.design.nav.shape.radius"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -130,49 +174,85 @@
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.muted",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "calendar.design.nav.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "calendar.typography.caption.size",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "calendar.design.nav.typography.size"
+      }
     },
     "line-height": {
       "literal": "1",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.line-height",
+        "slot": "calendar.design.nav.typography.line-height"
+      }
     }
   },
   ".calendar__nav:hover": {
     "background-color": {
       "resolvesTo": "calendar.color.day.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "calendar.design.condition-6584d030955c.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "calendar.design.condition-6584d030955c.foreground.color"
+      }
     }
   },
   "caption": {
     "font-size": {
       "resolvesTo": "calendar.typography.caption.size",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "calendar.design.caption.typography.size"
+      }
     },
     "font-weight": {
       "literal": "600",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.weight",
+        "slot": "calendar.design.caption.typography.weight"
+      }
     },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "calendar.design.caption.foreground.color"
+      }
     },
     "line-height": {
       "literal": "1.2",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.line-height",
+        "slot": "calendar.design.caption.typography.line-height"
+      }
     }
   },
   "grid": {
@@ -192,7 +272,11 @@
       "literal": "2px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.gap",
+        "slot": "calendar.design.grid.spacing.gap"
+      }
     },
     "width": {
       "literal": "100%",
@@ -250,13 +334,21 @@
     },
     "min-width": {
       "resolvesTo": "calendar.size.cell",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.min-width",
+        "slot": "calendar.design.cell.sizing.min-width"
+      }
     },
     "padding": {
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "calendar.design.cell.spacing.padding"
+      }
     }
   },
   "day": {
@@ -318,57 +410,101 @@
       "literal": "inherit",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "foreground.color",
+        "slot": "calendar.design.day.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "calendar.typography.day.size",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "calendar.design.day.typography.size"
+      }
     },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.day",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "calendar.design.day.shape.radius"
+      }
     }
   },
   ".calendar__day:hover": {
     "background-color": {
       "resolvesTo": "calendar.color.day.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "calendar.design.condition-929097c4f87c.background.fill"
+      }
     }
   },
   ".calendar__day:focus-visible": {
     "outline-width": {
       "resolvesTo": "calendar.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "calendar.design.condition-f2bc584abce8.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "calendar.color.focus.ring",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "calendar.design.condition-f2bc584abce8.focus.color"
+      }
     },
     "outline-offset": {
       "resolvesTo": "calendar.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "calendar.design.condition-f2bc584abce8.focus.offset"
+      }
     },
     "outline-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.style",
+        "slot": "calendar.design.condition-f2bc584abce8.focus.style"
+      }
     }
   },
   ".calendar__cell[aria-selected=\"true\"] .calendar__day": {
     "background-color": {
       "resolvesTo": "calendar.color.day.selected.background",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "background.fill",
+        "slot": "calendar.design.condition-f43aab96a58c.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "calendar.color.day.selected.foreground",
-      "fallback": "#fafafa"
+      "fallback": "#fafafa",
+      "design": {
+        "property": "foreground.color",
+        "slot": "calendar.design.condition-f43aab96a58c.foreground.color"
+      }
     },
     "font-weight": {
       "literal": "600",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.weight",
+        "slot": "calendar.design.condition-f43aab96a58c.typography.weight"
+      }
     }
   },
   ".calendar__cell[aria-current=\"date\"] .calendar__day": {
@@ -376,13 +512,21 @@
       "literal": "inset 0 0 0 1px var(--fsds-calendar-color-today-ring)",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "calendar.design.condition-789437ce1e22.elevation.shadow"
+      }
     },
     "font-weight": {
       "literal": "600",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.weight",
+        "slot": "calendar.design.condition-789437ce1e22.typography.weight"
+      }
     }
   }
 }

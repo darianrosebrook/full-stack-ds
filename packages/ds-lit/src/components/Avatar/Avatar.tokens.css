@@ -1,20 +1,6 @@
 @layer components {
 /* @generated:start tokens */
 .avatar {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: 0;
-  --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
   --fsds-avatar-size-default: var(--fsds-core-spacing-size-06, 16px);
   --fsds-avatar-size-small: var(--fsds-core-spacing-size-06, 16px);
   --fsds-avatar-size-medium: var(--fsds-core-spacing-size-07, 24px);

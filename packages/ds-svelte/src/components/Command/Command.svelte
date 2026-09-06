@@ -59,7 +59,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="command" use:portal={{ enabled: true }}>
+<div class={classes} data-fsds-component="command" data-fsds-box="" use:portal={{ enabled: true }}>
   {#if behavior.open}
   <div class={'command__overlay'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpen(false); } }}></div>
   {/if}

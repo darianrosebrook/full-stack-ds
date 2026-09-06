@@ -48,7 +48,7 @@ export function CodeSnippet({
   const As = as ?? "code";
 
   return (
-  <Stack layout="native" as={As} className={`${classNames}`} spellCheck="false" data-testid={testId} data-fsds-component="code-snippet" {...rest}>
+  <Stack layout="native" as={As} className={`${classNames}`} spellCheck="false" data-testid={testId} data-fsds-component="code-snippet" data-fsds-box="" {...rest}>
     {text}
   </Stack>
   );

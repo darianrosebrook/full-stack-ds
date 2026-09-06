@@ -151,6 +151,280 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "image.design.root.background.fill",
+      "cssVar": "--fsds-image-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "image.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "image.design.root.foreground.color",
+      "cssVar": "--fsds-image-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "image.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-97f4094db01a.sizing.width",
+      "cssVar": "--fsds-image-design-condition-97f4094db01a-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".image--size-xs",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "image.size.xs",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-xs"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-97f4094db01a.sizing.height",
+      "cssVar": "--fsds-image-design-condition-97f4094db01a-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".image--size-xs",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "image.size.xs",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-xs"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-2d67a81a05e1.sizing.width",
+      "cssVar": "--fsds-image-design-condition-2d67a81a05e1-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".image--size-sm",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "image.size.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-sm"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-2d67a81a05e1.sizing.height",
+      "cssVar": "--fsds-image-design-condition-2d67a81a05e1-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".image--size-sm",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "image.size.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-sm"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-8e1efb4eb84e.sizing.width",
+      "cssVar": "--fsds-image-design-condition-8e1efb4eb84e-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".image--size-md",
+      "part": null,
+      "defaultValue": "48px",
+      "resolvesTo": "image.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-md"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-8e1efb4eb84e.sizing.height",
+      "cssVar": "--fsds-image-design-condition-8e1efb4eb84e-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".image--size-md",
+      "part": null,
+      "defaultValue": "48px",
+      "resolvesTo": "image.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-md"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-d030467f8081.sizing.width",
+      "cssVar": "--fsds-image-design-condition-d030467f8081-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".image--size-lg",
+      "part": null,
+      "defaultValue": "64px",
+      "resolvesTo": "image.size.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-lg"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-d030467f8081.sizing.height",
+      "cssVar": "--fsds-image-design-condition-d030467f8081-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".image--size-lg",
+      "part": null,
+      "defaultValue": "64px",
+      "resolvesTo": "image.size.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-lg"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-f5bb7eeb08f7.sizing.width",
+      "cssVar": "--fsds-image-design-condition-f5bb7eeb08f7-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".image--size-xl",
+      "part": null,
+      "defaultValue": "96px",
+      "resolvesTo": "image.size.xl",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-xl"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "image.design.condition-f5bb7eeb08f7.sizing.height",
+      "cssVar": "--fsds-image-design-condition-f5bb7eeb08f7-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".image--size-xl",
+      "part": null,
+      "defaultValue": "96px",
+      "resolvesTo": "image.size.xl",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--size-xl"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "image.design.condition-7ff92e698786.shape.radius",
+      "cssVar": "--fsds-image-design-condition-7ff92e698786-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".image--radius-none",
+      "part": null,
+      "defaultValue": "0px",
+      "resolvesTo": "image.radius.none",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--radius-none"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "image.design.condition-82add41f9b7f.shape.radius",
+      "cssVar": "--fsds-image-design-condition-82add41f9b7f-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".image--radius-sm",
+      "part": null,
+      "defaultValue": "4px",
+      "resolvesTo": "image.radius.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--radius-sm"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "image.design.condition-7453c4d117a5.shape.radius",
+      "cssVar": "--fsds-image-design-condition-7453c4d117a5-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".image--radius-md",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "image.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--radius-md"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "image.design.condition-339951a6bd4f.shape.radius",
+      "cssVar": "--fsds-image-design-condition-339951a6bd4f-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".image--radius-lg",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "image.radius.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--radius-lg"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "image.design.condition-6872d88ea9c6.shape.radius",
+      "cssVar": "--fsds-image-design-condition-6872d88ea9c6-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".image--radius-full",
+      "part": null,
+      "defaultValue": "9999px",
+      "resolvesTo": "image.radius.full",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image--radius-full"
+    }
+  ],
   "variants": {
     "size": [
       "xs",

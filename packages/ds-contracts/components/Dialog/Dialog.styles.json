@@ -92,21 +92,37 @@
     },
     "background-color": {
       "resolvesTo": "dialog.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "dialog.design.modal.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "dialog.color.foreground.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "dialog.design.modal.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "dialog.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "dialog.design.modal.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "dialog.design.modal.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
@@ -114,23 +130,43 @@
         "web",
         "ios",
         "android"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "dialog.design.modal.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "dialog.size.radius.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "dialog.design.modal.shape.radius"
+      }
     },
     "box-shadow": {
       "resolvesTo": "dialog.elevation.default",
-      "fallback": "0px 12px 16px #0000000f, 0px 25px 50px #00000026"
+      "fallback": "0px 12px 16px #0000000f, 0px 25px 50px #00000026",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "dialog.design.modal.elevation.shadow"
+      }
     },
     "width": {
       "resolvesTo": "dialog.size.md.width",
-      "fallback": "500px"
+      "fallback": "500px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "dialog.design.modal.sizing.width"
+      }
     },
     "max-width": {
       "resolvesTo": "dialog.size.md.maxWidth",
-      "fallback": "90vw"
+      "fallback": "90vw",
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "dialog.design.modal.sizing.max-width"
+      }
     },
     "max-height": {
       "literal": "90vh",
@@ -188,13 +224,21 @@
     },
     "border-bottom-color": {
       "resolvesTo": "dialog.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.bottom.color",
+        "slot": "dialog.design.header.border.bottom.color"
+      }
     },
     "border-bottom-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.style",
+        "slot": "dialog.design.header.border.bottom.style"
+      }
     },
     "border-bottom-width": {
       "literal": "1px",
@@ -202,7 +246,11 @@
         "web",
         "ios",
         "android"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.width",
+        "slot": "dialog.design.header.border.bottom.width"
+      }
     }
   },
   "title": {
@@ -214,19 +262,35 @@
     },
     "font-size": {
       "resolvesTo": "dialog.typography.title.fontSize",
-      "fallback": "18px"
+      "fallback": "18px",
+      "design": {
+        "property": "typography.size",
+        "slot": "dialog.design.title.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "dialog.typography.title.fontWeight",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "dialog.design.title.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "dialog.typography.title.lineHeight",
-      "fallback": "1"
+      "fallback": "1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "dialog.design.title.typography.line-height"
+      }
     },
     "color": {
       "resolvesTo": "dialog.color.foreground.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "dialog.design.title.foreground.color"
+      }
     }
   },
   "body": {
@@ -284,7 +348,11 @@
     },
     "gap": {
       "resolvesTo": "dialog.spacing.footer.gap",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "dialog.design.footer.spacing.gap"
+      }
     },
     "padding-top": {
       "resolvesTo": "dialog.spacing.header.paddingTop",
@@ -304,13 +372,21 @@
     },
     "border-top-color": {
       "resolvesTo": "dialog.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.top.color",
+        "slot": "dialog.design.footer.border.top.color"
+      }
     },
     "border-top-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.style",
+        "slot": "dialog.design.footer.border.top.style"
+      }
     },
     "border-top-width": {
       "literal": "1px",
@@ -318,7 +394,11 @@
         "web",
         "ios",
         "android"
-      ]
+      ],
+      "design": {
+        "property": "border.top.width",
+        "slot": "dialog.design.footer.border.top.width"
+      }
     }
   },
   "closeButton": {
@@ -338,11 +418,19 @@
     },
     "width": {
       "resolvesTo": "dialog.size.closeButton.size",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "dialog.design.close-button.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "dialog.size.closeButton.size",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "dialog.design.close-button.sizing.height"
+      }
     },
     "display": {
       "literal": "inline-flex",
@@ -366,7 +454,11 @@
       "literal": "transparent",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "dialog.design.close-button.background.fill"
+      }
     },
     "border": {
       "literal": "0",
@@ -378,7 +470,11 @@
       "literal": "9999px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "dialog.design.close-button.shape.radius"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -400,41 +496,73 @@
   ".dialog--sm .dialog__modal": {
     "width": {
       "resolvesTo": "dialog.size.sm.width",
-      "fallback": "400px"
+      "fallback": "400px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "dialog.design.condition-c6049c96ab74.sizing.width"
+      }
     },
     "max-width": {
       "resolvesTo": "dialog.size.sm.maxWidth",
-      "fallback": "90vw"
+      "fallback": "90vw",
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "dialog.design.condition-c6049c96ab74.sizing.max-width"
+      }
     }
   },
   ".dialog--lg .dialog__modal": {
     "width": {
       "resolvesTo": "dialog.size.lg.width",
-      "fallback": "700px"
+      "fallback": "700px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "dialog.design.condition-3fb7229a17a8.sizing.width"
+      }
     },
     "max-width": {
       "resolvesTo": "dialog.size.lg.maxWidth",
-      "fallback": "90vw"
+      "fallback": "90vw",
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "dialog.design.condition-3fb7229a17a8.sizing.max-width"
+      }
     }
   },
   ".dialog--xl .dialog__modal": {
     "width": {
       "resolvesTo": "dialog.size.xl.width",
-      "fallback": "900px"
+      "fallback": "900px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "dialog.design.condition-81887f72fc05.sizing.width"
+      }
     },
     "max-width": {
       "resolvesTo": "dialog.size.xl.maxWidth",
-      "fallback": "95vw"
+      "fallback": "95vw",
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "dialog.design.condition-81887f72fc05.sizing.max-width"
+      }
     }
   },
   ".dialog--full .dialog__modal": {
     "width": {
       "resolvesTo": "dialog.size.full.width",
-      "fallback": "100vw"
+      "fallback": "100vw",
+      "design": {
+        "property": "sizing.width",
+        "slot": "dialog.design.condition-aa10b66155cb.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "dialog.size.full.height",
-      "fallback": "100vh"
+      "fallback": "100vh",
+      "design": {
+        "property": "sizing.height",
+        "slot": "dialog.design.condition-aa10b66155cb.sizing.height"
+      }
     },
     "max-width": {
       "literal": "100vw",
@@ -452,7 +580,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "dialog.design.condition-aa10b66155cb.shape.radius"
+      }
     }
   }
 }

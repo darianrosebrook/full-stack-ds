@@ -25,7 +25,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "text-field" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" data-fsds-box="">
   <label [ngClass]="'text-field__label'" [attr.id]="instanceId + '-label'">
     <ng-content select="[slot=label]" />
   </label>

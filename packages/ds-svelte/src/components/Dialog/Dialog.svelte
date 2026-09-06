@@ -69,7 +69,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} data-fsds-component="dialog" use:portal={{ enabled: true }}>
+<div class={classes} data-fsds-component="dialog" data-fsds-box="" use:portal={{ enabled: true }}>
   {#if behavior.openness}
   <div class={'dialog__backdrop'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}></div>
   {/if}

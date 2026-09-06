@@ -32,7 +32,11 @@
     },
     "gap": {
       "resolvesTo": "toast.spacing.stackGap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "toast.design.root.spacing.gap"
+      }
     },
     "z-index": {
       "literal": "1000",
@@ -50,39 +54,71 @@
   "item": {
     "background-color": {
       "resolvesTo": "toast.surface.bg",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "toast.design.item.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "toast.surface.border",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "toast.design.item.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "toast.design.item.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "toast.design.item.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "toast.surface.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "toast.design.item.shape.radius"
+      }
     },
     "box-shadow": {
       "resolvesTo": "toast.surface.shadow",
-      "fallback": "0px 4px 6px #0000000d, 0px 10px 15px #0000001a"
+      "fallback": "0px 4px 6px #0000000d, 0px 10px 15px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "toast.design.item.elevation.shadow"
+      }
     },
     "padding": {
       "resolvesTo": "toast.spacing.padding",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "toast.design.item.spacing.padding"
+      }
     },
     "max-width": {
       "resolvesTo": "toast.size.maxWidth",
-      "fallback": "400px"
+      "fallback": "400px",
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "toast.design.item.sizing.max-width"
+      }
     },
     "display": {
       "literal": "flex",
@@ -130,7 +166,11 @@
     },
     "gap": {
       "resolvesTo": "toast.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "toast.design.row.spacing.gap"
+      }
     },
     "flex": {
       "literal": "1 1 auto",
@@ -150,7 +190,11 @@
       "literal": "600",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.weight",
+        "slot": "toast.design.title.typography.weight"
+      }
     },
     "flex": {
       "literal": "1 1 auto",
@@ -168,13 +212,21 @@
     },
     "color": {
       "resolvesTo": "toast.color.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "toast.design.description.foreground.color"
+      }
     },
     "font-size": {
       "literal": "inherit",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.size",
+        "slot": "toast.design.description.typography.size"
+      }
     }
   },
   "action": {
@@ -210,7 +262,11 @@
     },
     "color": {
       "resolvesTo": "toast.color.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "toast.design.action.foreground.color"
+      }
     }
   },
   "close": {
@@ -248,7 +304,11 @@
       "literal": "9999px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "toast.design.close.shape.radius"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -258,7 +318,11 @@
     },
     "color": {
       "resolvesTo": "toast.color.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "toast.design.close.foreground.color"
+      }
     },
     "flex-shrink": {
       "literal": "0",

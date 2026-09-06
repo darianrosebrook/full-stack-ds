@@ -10,47 +10,91 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "input.design.root.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "input.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "input.design.root.border.width"
+      }
     },
     "background-color": {
       "resolvesTo": "input.color.bg.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "input.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "input.color.text.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "input.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "input.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "input.design.root.border.color"
+      }
     },
     "min-height": {
       "resolvesTo": "input.size.height.default",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.min-height",
+        "slot": "input.design.root.sizing.min-height"
+      }
     },
     "border-radius": {
       "resolvesTo": "input.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "input.design.root.shape.radius"
+      }
     },
     "font-size": {
       "resolvesTo": "input.typography.size.default",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "input.design.root.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "input.typography.line-height.default",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "input.design.root.typography.line-height"
+      }
     },
     "padding-block": {
       "resolvesTo": "input.size.padding-block.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding-block",
+        "slot": "input.design.root.spacing.padding-block"
+      }
     },
     "padding-inline": {
       "resolvesTo": "input.size.padding-inline.default",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding-inline",
+        "slot": "input.design.root.spacing.padding-inline"
+      }
     },
     "transition-property": {
       "literal": "background-color, border-color, color, outline-color",
@@ -60,79 +104,143 @@
     },
     "transition-duration": {
       "resolvesTo": "input.motion.duration.fast",
-      "fallback": "150ms"
+      "fallback": "150ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "input.design.root.motion.duration"
+      }
     },
     "transition-timing-function": {
       "resolvesTo": "input.motion.easing.standard",
-      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "design": {
+        "property": "motion.easing",
+        "slot": "input.design.root.motion.easing"
+      }
     }
   },
   "::placeholder": {
     "color": {
       "resolvesTo": "input.color.text.placeholder",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "foreground.color",
+        "slot": "input.design.condition-bd9b5883064e.foreground.color"
+      }
     }
   },
   "hover": {
     "border-color": {
       "resolvesTo": "input.color.border.hover",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "border.color",
+        "slot": "input.design.hover.border.color"
+      }
     }
   },
   "focus": {
     "border-color": {
       "resolvesTo": "input.color.focus.default",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "border.color",
+        "slot": "input.design.focus.border.color"
+      }
     },
     "outline-width": {
       "resolvesTo": "input.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "input.design.focus.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "input.focus.ring.color",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "input.design.focus.focus.color"
+      }
     },
     "outline-style": {
       "resolvesTo": "input.focus.ring.style",
-      "fallback": "solid"
+      "fallback": "solid",
+      "design": {
+        "property": "focus.style",
+        "slot": "input.design.focus.focus.style"
+      }
     },
     "outline-offset": {
       "resolvesTo": "input.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "input.design.focus.focus.offset"
+      }
     }
   },
   "--invalid": {
     "border-color": {
       "resolvesTo": "input.color.invalid.default",
-      "fallback": "#b31b1b"
+      "fallback": "#b31b1b",
+      "design": {
+        "property": "border.color",
+        "slot": "input.design.condition-273725daa81e.border.color"
+      }
     }
   },
   ".input--invalid:focus-visible": {
     "border-color": {
       "resolvesTo": "input.color.invalid.default",
-      "fallback": "#b31b1b"
+      "fallback": "#b31b1b",
+      "design": {
+        "property": "border.color",
+        "slot": "input.design.condition-8805a1996611.border.color"
+      }
     },
     "outline-color": {
       "resolvesTo": "semantic.focus.ring.intent.danger",
-      "fallback": "#b31b1b"
+      "fallback": "#b31b1b",
+      "design": {
+        "property": "focus.color",
+        "slot": "input.design.condition-8805a1996611.focus.color"
+      }
     }
   },
   "disabled": {
     "background-color": {
       "resolvesTo": "input.color.bg.disabled",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "background.fill",
+        "slot": "input.design.disabled.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "input.color.border.disabled",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "input.design.disabled.border.color"
+      }
     },
     "color": {
       "resolvesTo": "input.color.text.disabled",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "input.design.disabled.foreground.color"
+      }
     },
     "opacity": {
       "resolvesTo": "input.opacity.disabled",
-      "fallback": "0.5"
+      "fallback": "0.5",
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "input.design.disabled.appearance.opacity"
+      }
     },
     "cursor": {
       "literal": "not-allowed",

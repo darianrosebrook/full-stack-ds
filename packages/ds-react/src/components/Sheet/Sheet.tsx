@@ -189,7 +189,7 @@ export function Sheet({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="sheet" {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="sheet" data-fsds-box="" {...rest}>
       {openness ? (
         <div className="sheet__overlay" aria-hidden="true" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} />
       ) : null}

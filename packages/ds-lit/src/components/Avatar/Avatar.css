@@ -1,4 +1,6 @@
+@import "../../primitives/box-model.css";
 @import "./Avatar.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .avatar {
@@ -7,27 +9,27 @@
   justify-content: center;
   flex-shrink: 0;
   box-sizing: border-box;
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-avatar-size-default, 16px);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-avatar-size-default, 16px);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, 0);
+  width: var(--fsds-avatar-design-root-sizing-width, var(--fsds-avatar-size-default, 16px));
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-avatar-design-root-sizing-height, var(--fsds-avatar-size-default, 16px));
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   overflow: hidden;
   position: relative;
-  border-radius: var(--fsds-avatar-size-radius-default, 9999px);
-  background-color: var(--fsds-avatar-color-background-default, #f7f7f7);
-  color: var(--fsds-avatar-color-foreground-primary, #141414);
-  border-color: var(--fsds-avatar-color-border-default, #b8b8b8);
-  border-style: solid;
-  border-width: var(--fsds-avatar-size-border-default, 1px);
-  font-weight: var(--fsds-avatar-typography-font-weight-medium, 500);
-  font-family: var(--fsds-avatar-typography-font-family-sans, "Inter", sans-serif);
+  border-radius: var(--fsds-avatar-design-root-shape-radius, var(--fsds-avatar-size-radius-default, 9999px));
+  background-color: var(--fsds-avatar-design-root-background-fill, var(--fsds-avatar-color-background-default, #f7f7f7));
+  color: var(--fsds-avatar-design-root-foreground-color, var(--fsds-avatar-color-foreground-primary, #141414));
+  border-color: var(--fsds-avatar-design-root-border-color, var(--fsds-avatar-color-border-default, #b8b8b8));
+  border-style: var(--fsds-avatar-design-root-border-style, solid);
+  border-width: var(--fsds-avatar-design-root-border-width, var(--fsds-avatar-size-border-default, 1px));
+  font-weight: var(--fsds-avatar-design-root-typography-weight, var(--fsds-avatar-typography-font-weight-medium, 500));
+  font-family: var(--fsds-avatar-design-root-typography-family, var(--fsds-avatar-typography-font-family-sans, "Inter", sans-serif));
 }
 
 .avatar__image {
@@ -38,26 +40,27 @@
 }
 
 .avatar--small {
-  width: var(--fsds-avatar-size-small, 16px);
-  height: var(--fsds-avatar-size-small, 16px);
+  width: var(--fsds-avatar-design-condition-42b522a9c46e-sizing-width, var(--fsds-avatar-size-small, 16px));
+  height: var(--fsds-avatar-design-condition-42b522a9c46e-sizing-height, var(--fsds-avatar-size-small, 16px));
 }
 
 .avatar--medium {
-  width: var(--fsds-avatar-size-medium, 24px);
-  height: var(--fsds-avatar-size-medium, 24px);
+  width: var(--fsds-avatar-design-condition-a9821c9eea70-sizing-width, var(--fsds-avatar-size-medium, 24px));
+  height: var(--fsds-avatar-design-condition-a9821c9eea70-sizing-height, var(--fsds-avatar-size-medium, 24px));
 }
 
 .avatar--large {
-  width: var(--fsds-avatar-size-large, 32px);
-  height: var(--fsds-avatar-size-large, 32px);
+  width: var(--fsds-avatar-design-condition-cbbd2740a3e5-sizing-width, var(--fsds-avatar-size-large, 32px));
+  height: var(--fsds-avatar-design-condition-cbbd2740a3e5-sizing-height, var(--fsds-avatar-size-large, 32px));
 }
 
 .avatar--extra-large {
-  width: var(--fsds-avatar-size-extra-large, 48px);
-  height: var(--fsds-avatar-size-extra-large, 48px);
+  width: var(--fsds-avatar-design-condition-ee2a0b1d0aee-sizing-width, var(--fsds-avatar-size-extra-large, 48px));
+  height: var(--fsds-avatar-design-condition-ee2a0b1d0aee-sizing-height, var(--fsds-avatar-size-extra-large, 48px));
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

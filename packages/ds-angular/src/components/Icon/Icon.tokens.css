@@ -1,20 +1,6 @@
 @layer components {
 /* @generated:start tokens */
 .icon {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: 0;
-  --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
   --fsds-icon-size-sm: var(--fsds-core-icon-size-sm, 16px);
   --fsds-icon-size-md: var(--fsds-core-icon-size-md, 20px);
   --fsds-icon-size-lg: var(--fsds-core-icon-size-lg, 24px);

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { main as usageMain } from "./usage.js";
+import { main as usageMain, usageRegressions } from "./usage.js";
 import { main as contrastMain } from "./check-contrast.js";
 
 /**
@@ -137,5 +137,16 @@ describe("contrast main (in-process)", () => {
 
     expect(existsSpy).toHaveBeenCalled();
     expect(exitSpy).toHaveBeenCalledWith(2);
+  });
+});
+
+
+describe("usage authority boundaries", () => {
+  it("permits unused semantic vocabulary while detecting an unused core value", () => {
+    expect(usageRegressions(["semantic.color.future", "core.spacing.new"], [])).toEqual(["core.spacing.new"]);
+  });
+  it("does not hide a core regression behind an equal total count", () => {
+    expect(usageRegressions(["core.spacing.new"], ["core.spacing.old"])).toEqual(["core.spacing.new"]);
+    expect(usageRegressions(["core.spacing.old", "semantic.color.future"], ["core.spacing.old"])).toEqual([]);
   });
 });

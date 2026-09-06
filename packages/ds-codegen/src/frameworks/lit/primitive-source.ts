@@ -40,7 +40,7 @@ export function generateLitStackPrimitiveSource(ir: PrimitiveIR): string {
 
   const baseDecls = ["box-sizing: border-box;"];
   if (ir.layout.gap) {
-    baseDecls.push(`gap: var(${ir.layout.gap.cssVar});`);
+    baseDecls.push(`gap: var(${ir.layout.gap.cssVar}, 0);`);
   }
 
   const hostRules: string[] = [];

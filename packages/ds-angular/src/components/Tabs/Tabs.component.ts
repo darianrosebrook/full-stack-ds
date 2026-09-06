@@ -49,7 +49,7 @@ export type TabsActivationMode = "automatic" | "manual";
     },
   ],
   host: { "data-fsds-component": "tabs" },
-  template: `<div [ngClass]="classes()"><ng-content /></div>`,
+  template: `<div data-fsds-box="" [ngClass]="classes()"><ng-content /></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent implements OnChanges {

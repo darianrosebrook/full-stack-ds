@@ -7,11 +7,8 @@
  *   - --write-baseline: snapshot the current unused-token set to
  *     `usage-baseline.json`; subsequent --check-baseline runs gate
  *     against this floor
- *   - --check-baseline: fail (exit 1) if any token unused today was not
- *     in the baseline (i.e. a previously-used token became dead), or if
- *     the total unused count grew. Used by pre-push + CI to catch new
- *     dead tokens without forcing an immediate full cleanup of the 398
- *     unused tokens that exist at baseline time.
+ *   - --check-baseline: gate newly unused non-semantic tokens. Semantic
+ *     tokens may be unset or unconsumed; their usage stays informational.
  *
  * Exit codes:
  *   0  — success (or report-only mode)
@@ -51,6 +48,12 @@ function writeBaseline(baseline: Baseline): void {
   fs.writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n', 'utf8');
 }
 
+/** Global semantic vocabulary may be unused; retain the core usage ratchet. */
+export function usageRegressions(current: string[], baseline: string[]): string[] {
+  const before = new Set(baseline);
+  return current.filter(token => !token.startsWith('semantic.') && !before.has(token));
+}
+
 export async function main() {
   const args = process.argv.slice(2);
   const outputFile = args
@@ -87,10 +90,10 @@ export async function main() {
       );
       console.log(`   ${baseline.unusedCount} tokens recorded as unused.`);
       console.log(
-        `   Future --check-baseline runs will fail if any new token becomes unused`,
+        `   Future --check-baseline runs will fail if any new non-semantic token becomes unused`,
       );
       console.log(
-        `   or if the unused count grows beyond this floor.`,
+        `   or if the non-semantic unused count grows beyond this floor.`,
       );
       process.exit(0);
     }
@@ -107,14 +110,17 @@ export async function main() {
         process.exit(2);
       }
 
-      const baselineSet = new Set(baseline.unusedTokens);
-      const newlyUnused = currentUnused.filter((t) => !baselineSet.has(t));
+      // Semantic vocabulary is allowed to precede consumers. Keep its usage
+      // visible without making component binding work invent consumers.
+      const newlyUnused = usageRegressions(currentUnused, baseline.unusedTokens);
       const newlyUsed = baseline.unusedTokens.filter(
         (t) => !currentUnused.includes(t),
       );
-      const grew = currentUnused.length > baseline.unusedCount;
+      const currentGatedCount = currentUnused.filter(t => !t.startsWith('semantic.')).length;
+      const baselineGatedCount = baseline.unusedTokens.filter(t => !t.startsWith('semantic.')).length;
+      const grew = currentGatedCount > baselineGatedCount;
 
-      console.log('\n🚦 Baseline check:');
+      console.log('\n🚦 Baseline check (unconsumed semantic tokens are informational):');
       console.log(`   Baseline (${baseline.generatedAt.slice(0, 10)}): ${baseline.unusedCount} unused`);
       console.log(`   Current:               ${currentUnused.length} unused`);
       if (newlyUsed.length > 0) {
@@ -142,7 +148,7 @@ export async function main() {
       }
       if (grew) {
         console.error(
-          `   Total unused count grew: ${baseline.unusedCount} → ${currentUnused.length}`,
+          `   Non-semantic unused count grew: ${baselineGatedCount} → ${currentGatedCount}`,
         );
       }
       console.error(

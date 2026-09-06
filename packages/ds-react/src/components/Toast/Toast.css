@@ -1,18 +1,20 @@
+@import "../../primitives/box-model.css";
 @import "./Toast.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .toast {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-toast-spacing-stack-gap, 8px);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-surface-size-padding-block, 16px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-surface-size-padding-block, 16px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-surface-size-padding-inline, 16px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-surface-size-padding-inline, 16px));
+  gap: var(--fsds-toast-design-root-spacing-gap, var(--fsds-toast-spacing-stack-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-surface-size-min-width, 64px));
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   position: fixed;
   bottom: 0;
   right: 0;
@@ -23,14 +25,14 @@
 }
 
 .toast__item {
-  background-color: var(--fsds-toast-surface-bg, #f7f7f7);
-  border-color: var(--fsds-toast-surface-border, #d0d0d0);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: var(--fsds-toast-surface-radius, 6px);
-  box-shadow: var(--fsds-toast-surface-shadow, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a);
-  padding: var(--fsds-toast-spacing-padding, 12px);
-  max-width: var(--fsds-toast-size-max-width, 400px);
+  background-color: var(--fsds-toast-design-item-background-fill, var(--fsds-toast-surface-bg, #f7f7f7));
+  border-color: var(--fsds-toast-design-item-border-color, var(--fsds-toast-surface-border, #d0d0d0));
+  border-style: var(--fsds-toast-design-item-border-style, solid);
+  border-width: var(--fsds-toast-design-item-border-width, 1px);
+  border-radius: var(--fsds-toast-design-item-shape-radius, var(--fsds-toast-surface-radius, 6px));
+  box-shadow: var(--fsds-toast-design-item-elevation-shadow, var(--fsds-toast-surface-shadow, 0px 4px 6px #0000000d, 0px 10px 15px #0000001a));
+  padding: var(--fsds-toast-design-item-spacing-padding, var(--fsds-toast-spacing-padding, 12px));
+  max-width: var(--fsds-toast-design-item-sizing-max-width, var(--fsds-toast-size-max-width, 400px));
   display: flex;
   flex-direction: column;
   position: relative;
@@ -41,20 +43,20 @@
 .toast__row {
   display: flex;
   align-items: flex-start;
-  gap: var(--fsds-toast-spacing-gap, 8px);
+  gap: var(--fsds-toast-design-row-spacing-gap, var(--fsds-toast-spacing-gap, 8px));
   flex: 1 1 auto;
 }
 
 .toast__title {
   margin: 0;
-  font-weight: 600;
+  font-weight: var(--fsds-toast-design-title-typography-weight, 600);
   flex: 1 1 auto;
 }
 
 .toast__description {
   flex: 1 1 auto;
-  color: var(--fsds-toast-color-default, #141414);
-  font-size: inherit;
+  color: var(--fsds-toast-design-description-foreground-color, var(--fsds-toast-color-default, #141414));
+  font-size: var(--fsds-toast-design-description-typography-size, inherit);
 }
 
 .toast__action {
@@ -63,7 +65,7 @@
   background: transparent;
   border: 0;
   cursor: pointer;
-  color: var(--fsds-toast-color-default, #141414);
+  color: var(--fsds-toast-design-action-foreground-color, var(--fsds-toast-color-default, #141414));
 }
 
 .toast__close {
@@ -72,13 +74,14 @@
   justify-content: center;
   background: transparent;
   border: 0;
-  border-radius: 9999px;
+  border-radius: var(--fsds-toast-design-close-shape-radius, 9999px);
   cursor: pointer;
-  color: var(--fsds-toast-color-default, #141414);
+  color: var(--fsds-toast-design-close-foreground-color, var(--fsds-toast-color-default, #141414));
   flex-shrink: 0;
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

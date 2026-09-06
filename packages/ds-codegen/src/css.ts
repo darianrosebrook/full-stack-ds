@@ -1,3 +1,4 @@
+import { emitBoxModelBoundaryCss } from './box-model.js';
 /**
  * CSS string formatting from IR.
  *
@@ -329,9 +330,33 @@ export function reducedMotionBlock(ir: ComponentIR): string {
  *   `keyframes`  (gen, optional) — keyframes if any
  *   `overrides`  (cust, empty default) — designer escape hatch
  */
+/** CSS override syntax belongs to web realization, not the native style projection. */
+function webCssBlocks(ir: ComponentIR): ComponentIR["cssBlocks"] {
+  const rootSelector = `.${ir.cssPrefix}`;
+  const defaults = ir.cssBlocks.find(block => block.selector === rootSelector)?.declarations ?? {};
+  const bindings = ir.designBindings ?? [];
+  return ir.cssBlocks.map(block => {
+    const declarations = { ...block.declarations };
+    if (block.selector === rootSelector) {
+      for (const [property, value] of Object.entries(declarations)) {
+        const match = value.match(/^var\((--fsds-box-model-[a-z-]+)\)$/);
+        if (match && !property.startsWith("--")) {
+          const fallback = defaults[match[1]] ?? (property.startsWith("max-") ? "none" : property === "width" || property === "height" ? "auto" : "0");
+          declarations[property] = `var(${match[1]}, ${fallback})`;
+        }
+      }
+    }
+    for (const binding of bindings) {
+      if (binding.selector !== block.selector || !(binding.cssProperty in declarations)) continue;
+      declarations[binding.cssProperty] = `var(${binding.cssVar}, ${declarations[binding.cssProperty]})`;
+    }
+    return { ...block, declarations };
+  });
+}
+
 export function emitCss(ir: ComponentIR): string {
   const rootSelector = `.${ir.cssPrefix}`;
-  const grouped = groupBlocksByRoot(ir.cssBlocks, rootSelector)
+  const grouped = groupBlocksByRoot(webCssBlocks(ir), rootSelector)
     .map((g) => filterGroupedBlock(g, "properties"))
     .map((g) => formatGroupedBlock(g))
     .filter((s) => s.length > 0);
@@ -339,12 +364,13 @@ export function emitCss(ir: ComponentIR): string {
   // The @import lives outside the `@generated:start styles` block so
   // designer-authored regions don't fight it. It's emitted as raw
   // pre-content via `renderSections`' "between" region.
-  const importLine = `@import "./${ir.name}.tokens.css";`;
+  const importLine = `@import "../../primitives/box-model.css";\n@import "./${ir.name}.tokens.css";`;
   const stylesBody = grouped.join("\n\n").trimEnd();
   const keyframesBody = ir.keyframes.map(formatKeyframes).join("\n").trimEnd();
 
   const sections: Section[] = [
     { kind: "between", body: importLine },
+    { kind: "between", body: "@layer components.defaults {" },
     { kind: "between", body: "" },
     { kind: "generated", id: "styles", body: stylesBody },
     { kind: "between", body: "" },
@@ -363,6 +389,7 @@ export function emitCss(ir: ComponentIR): string {
     );
   }
   sections.push(
+    { kind: "between", body: "}" },
     { kind: "custom", id: "overrides", body: "" },
     { kind: "between", body: "" },
   );
@@ -403,8 +430,9 @@ export function emitTokensCss(ir: ComponentIR): string {
   // existing `[data-<prefix>-content]` selector if it needs custom
   // sizing.
   const portalEnabled = ir.behavior.portal?.enabled === true;
-  const grouped = groupBlocksByRoot(ir.cssBlocks, rootSelector)
+  const grouped = groupBlocksByRoot(webCssBlocks(ir), rootSelector)
     .map((g) => filterGroupedBlock(g, "slots"))
+    .map((g) => g.selector === rootSelector ? { ...g, decls: Object.fromEntries(Object.entries(g.decls).filter(([key]) => !key.startsWith("--fsds-box-model-"))) } : g)
     .flatMap((g) => {
       if (!portalEnabled || g.selector !== rootSelector) return [g];
       // Split the root block into box-model (stays on `.<cssPrefix>`)
@@ -492,21 +520,22 @@ export function generateCSS(contract: ComponentContract): string {
 export function emitLitInlineCss(ir: ComponentIR): string {
   const rootSelector = `.${ir.cssPrefix}`;
 
-  const tokensGroups = groupBlocksByRoot(ir.cssBlocks, rootSelector)
+  const tokensGroups = groupBlocksByRoot(webCssBlocks(ir), rootSelector)
     .map((g) => filterGroupedBlock(g, "slots"))
+    .map((g) => g.selector === rootSelector ? { ...g, decls: Object.fromEntries(Object.entries(g.decls).filter(([key]) => !key.startsWith("--fsds-box-model-"))) } : g)
     .map((g) => formatGroupedBlock(g))
     .filter((s) => s.length > 0);
 
-  const propertyGroups = groupBlocksByRoot(ir.cssBlocks, rootSelector)
+  const propertyGroups = groupBlocksByRoot(webCssBlocks(ir), rootSelector)
     .map((g) => filterGroupedBlock(g, "properties"))
     .map((g) => formatGroupedBlock(g))
     .filter((s) => s.length > 0);
 
   const keyframesBody = ir.keyframes.map(formatKeyframes).join("\n").trimEnd();
 
-  const parts: string[] = [];
+  const parts: string[] = [emitBoxModelBoundaryCss(true)];
   if (tokensGroups.length > 0) parts.push(tokensGroups.join("\n\n"));
-  if (propertyGroups.length > 0) parts.push(propertyGroups.join("\n\n"));
+  if (propertyGroups.length > 0) parts.push(`@layer components.defaults {\n${propertyGroups.join("\n\n")}\n}`);
   if (keyframesBody) parts.push(keyframesBody);
 
   return parts.join("\n\n").trimEnd();

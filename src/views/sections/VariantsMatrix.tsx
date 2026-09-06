@@ -39,7 +39,7 @@ export function VariantsMatrix({
   const tokens = materialTokenRows(component);
   const overrideCss =
     tokenOverrides && Object.keys(tokenOverrides).length > 0
-      ? tokenOverridesToCss(tokenOverrides, tokens)
+      ? tokenOverridesToCss(tokenOverrides, tokens, component.name)
       : "";
 
   if (keys.length === 0) return null;

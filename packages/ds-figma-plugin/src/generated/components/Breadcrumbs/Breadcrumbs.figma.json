@@ -85,6 +85,151 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "breadcrumbs.design.root.background.fill",
+      "cssVar": "--fsds-breadcrumbs-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "breadcrumbs.color.background.elevated",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "breadcrumbs.design.root.border.color",
+      "cssVar": "--fsds-breadcrumbs-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "breadcrumbs.color.border.subtle",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "breadcrumbs.design.root.typography.line-height",
+      "cssVar": "--fsds-breadcrumbs-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1",
+      "resolvesTo": "breadcrumbs.typography.lineHeight.collapse",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "breadcrumbs.design.root.shape.radius",
+      "cssVar": "--fsds-breadcrumbs-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "breadcrumbs.shape.radius.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "breadcrumbs.design.root.spacing.padding",
+      "cssVar": "--fsds-breadcrumbs-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "breadcrumbs.spacing.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "breadcrumbs.design.root.foreground.color",
+      "cssVar": "--fsds-breadcrumbs-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "breadcrumbs.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "breadcrumbs.design.focus.focus.color",
+      "cssVar": "--fsds-breadcrumbs-design-focus-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "breadcrumbs.color.focus",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs:focus-visible"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "breadcrumbs.design.list.spacing.padding",
+      "cssVar": "--fsds-breadcrumbs-design-list-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "list",
+      "part": "list",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs__list"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "breadcrumbs.design.list.spacing.gap",
+      "cssVar": "--fsds-breadcrumbs-design-list-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "list",
+      "part": "list",
+      "defaultValue": "8px",
+      "resolvesTo": "breadcrumbs.spacing.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".breadcrumbs__list"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

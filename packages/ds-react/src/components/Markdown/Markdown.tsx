@@ -129,7 +129,7 @@ export function Markdown({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="markdown" {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="markdown" data-fsds-box="" {...rest}>
     {renderMarkdownBlocks(content)}
   </Stack>
   );

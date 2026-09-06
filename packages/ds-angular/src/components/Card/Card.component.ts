@@ -23,7 +23,7 @@ export type CardDensity = "default" | "inset";
   standalone: true,
   imports: [NgClass, StackComponent],
   host: { "data-fsds-component": "card" },
-  template: `<fsds-stack role="group" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack role="group" data-fsds-box="" [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {

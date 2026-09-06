@@ -115,6 +115,263 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "skeleton.design.root.background.fill",
+      "cssVar": "--fsds-skeleton-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "skeleton.color.base",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.root.shape.radius",
+      "cssVar": "--fsds-skeleton-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "skeleton.design.root.motion.duration",
+      "cssVar": "--fsds-skeleton-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "400ms",
+      "resolvesTo": "skeleton.anim.duration",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton"
+    },
+    {
+      "property": "motion.easing",
+      "group": "motion",
+      "valueType": "easing",
+      "slot": "skeleton.design.root.motion.easing",
+      "cssVar": "--fsds-skeleton-design-root-motion-easing",
+      "cssProperty": "transition-timing-function",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "resolvesTo": "skeleton.anim.easing",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "skeleton.design.shape.background.fill",
+      "cssVar": "--fsds-skeleton-design-shape-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "shape",
+      "part": "shape",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "skeleton.color.base",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton__shape"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.shape.shape.radius",
+      "cssVar": "--fsds-skeleton-design-shape-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "shape",
+      "part": "shape",
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton__shape"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "skeleton.design.condition-bb9852400063.background.fill",
+      "cssVar": "--fsds-skeleton-design-condition-bb9852400063-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".skeleton:has(.skeleton__stack)",
+      "part": null,
+      "defaultValue": "transparent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton:has(.skeleton__stack)"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-f1cb085b34e5.sizing.height",
+      "cssVar": "--fsds-skeleton-design-condition-f1cb085b34e5-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".skeleton:has(.skeleton__stack) .skeleton__shape",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "skeleton.shape.height.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton:has(.skeleton__stack) .skeleton__shape"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "skeleton.design.stack.spacing.gap",
+      "cssVar": "--fsds-skeleton-design-stack-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "stack",
+      "part": "stack",
+      "defaultValue": "12px",
+      "resolvesTo": "skeleton.gap.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton__stack"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-bd614435ddb4.shape.radius",
+      "cssVar": "--fsds-skeleton-design-condition-bd614435ddb4-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "--block",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--block"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-1c40d16552ca.shape.radius",
+      "cssVar": "--fsds-skeleton-design-condition-1c40d16552ca-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "--text",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--text"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-1c40d16552ca.sizing.height",
+      "cssVar": "--fsds-skeleton-design-condition-1c40d16552ca-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--text",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "skeleton.shape.height.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--text"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-6c84e66d0bf9.shape.radius",
+      "cssVar": "--fsds-skeleton-design-condition-6c84e66d0bf9-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "--avatar",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--avatar"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-36338882e838.shape.radius",
+      "cssVar": "--fsds-skeleton-design-condition-36338882e838-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "--media",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--media"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-5c609fce7db7.shape.radius",
+      "cssVar": "--fsds-skeleton-design-condition-5c609fce7db7-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "--dataviz",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--dataviz"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "skeleton.design.condition-97dab48677d5.shape.radius",
+      "cssVar": "--fsds-skeleton-design-condition-97dab48677d5-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "--actions",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "skeleton.radius.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".skeleton--actions"
+    }
+  ],
   "variants": {
     "variant": [
       "block",

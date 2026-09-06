@@ -14,7 +14,11 @@
     },
     "gap": {
       "resolvesTo": "text-field.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "text-field.design.root.spacing.gap"
+      }
     }
   },
   "label": {
@@ -26,19 +30,35 @@
     },
     "font-size": {
       "resolvesTo": "text-field.typography.label.size",
-      "fallback": "0.875rem"
+      "fallback": "0.875rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text-field.design.label.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "text-field.typography.label.weight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "text-field.design.label.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "text-field.typography.label.line-height",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text-field.design.label.typography.line-height"
+      }
     },
     "color": {
       "resolvesTo": "text-field.color.input.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text-field.design.label.foreground.color"
+      }
     }
   },
   "field": {
@@ -64,47 +84,91 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "text-field.design.field.border.style"
+      }
     },
     "background-color": {
       "resolvesTo": "text-field.color.input.background",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "text-field.design.field.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "text-field.color.input.border",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "text-field.design.field.border.color"
+      }
     },
     "border-width": {
       "resolvesTo": "text-field.border.width",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "text-field.design.field.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "text-field.border.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "text-field.design.field.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "text-field.color.input.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text-field.design.field.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "text-field.typography.field.size",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text-field.design.field.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "text-field.typography.field.line-height",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text-field.design.field.typography.line-height"
+      }
     },
     "min-height": {
       "resolvesTo": "text-field.field.min-height",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.min-height",
+        "slot": "text-field.design.field.sizing.min-height"
+      }
     },
     "padding-block": {
       "resolvesTo": "text-field.field.padding-block",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding-block",
+        "slot": "text-field.design.field.spacing.padding-block"
+      }
     },
     "padding-inline": {
       "resolvesTo": "text-field.field.padding-inline",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding-inline",
+        "slot": "text-field.design.field.spacing.padding-inline"
+      }
     },
     "transition-property": {
       "literal": "background-color, border-color, color, outline-color",
@@ -114,11 +178,19 @@
     },
     "transition-duration": {
       "resolvesTo": "text-field.motion.duration.fast",
-      "fallback": "150ms"
+      "fallback": "150ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "text-field.design.field.motion.duration"
+      }
     },
     "transition-timing-function": {
       "resolvesTo": "text-field.motion.easing.standard",
-      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "design": {
+        "property": "motion.easing",
+        "slot": "text-field.design.field.motion.easing"
+      }
     }
   },
   "description": {
@@ -130,15 +202,27 @@
     },
     "font-size": {
       "resolvesTo": "text-field.typography.supporting.size",
-      "fallback": "0.875rem"
+      "fallback": "0.875rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text-field.design.description.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "text-field.typography.supporting.line-height",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text-field.design.description.typography.line-height"
+      }
     },
     "color": {
       "resolvesTo": "text-field.color.supporting.text",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text-field.design.description.foreground.color"
+      }
     }
   },
   "error": {
@@ -150,83 +234,151 @@
     },
     "font-size": {
       "resolvesTo": "text-field.typography.supporting.size",
-      "fallback": "0.875rem"
+      "fallback": "0.875rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "text-field.design.error.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "text-field.typography.supporting.line-height",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "text-field.design.error.typography.line-height"
+      }
     },
     "color": {
       "resolvesTo": "text-field.color.error",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text-field.design.error.foreground.color"
+      }
     }
   },
   ".text-field__field::placeholder": {
     "color": {
       "resolvesTo": "text-field.color.input.placeholder",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text-field.design.condition-cd558e65951a.foreground.color"
+      }
     }
   },
   ".text-field__field:hover:not(:disabled)": {
     "border-color": {
       "resolvesTo": "text-field.color.input.borderHover",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "border.color",
+        "slot": "text-field.design.condition-42d441aafe9d.border.color"
+      }
     }
   },
   ".text-field__field:focus-visible": {
     "border-color": {
       "resolvesTo": "text-field.focus.ring.color",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "border.color",
+        "slot": "text-field.design.condition-77dab6d6abaf.border.color"
+      }
     },
     "outline-width": {
       "resolvesTo": "text-field.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "text-field.design.condition-77dab6d6abaf.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "text-field.focus.ring.color",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "text-field.design.condition-77dab6d6abaf.focus.color"
+      }
     },
     "outline-style": {
       "resolvesTo": "text-field.focus.ring.style",
-      "fallback": "solid"
+      "fallback": "solid",
+      "design": {
+        "property": "focus.style",
+        "slot": "text-field.design.condition-77dab6d6abaf.focus.style"
+      }
     },
     "outline-offset": {
       "resolvesTo": "text-field.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "text-field.design.condition-77dab6d6abaf.focus.offset"
+      }
     }
   },
   ".text-field--invalid .text-field__field": {
     "border-color": {
       "resolvesTo": "text-field.color.input.borderError",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "border.color",
+        "slot": "text-field.design.condition-552c09ee517a.border.color"
+      }
     }
   },
   ".text-field--invalid .text-field__field:focus-visible": {
     "border-color": {
       "resolvesTo": "text-field.color.input.borderError",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "border.color",
+        "slot": "text-field.design.condition-2e4a716b9443.border.color"
+      }
     },
     "outline-color": {
       "resolvesTo": "text-field.color.input.borderError",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "focus.color",
+        "slot": "text-field.design.condition-2e4a716b9443.focus.color"
+      }
     }
   },
   ".text-field__field:disabled": {
     "background-color": {
       "resolvesTo": "text-field.color.input.backgroundDisabled",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "background.fill",
+        "slot": "text-field.design.condition-6d2f506c00a2.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "text-field.color.input.borderDisabled",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "text-field.design.condition-6d2f506c00a2.border.color"
+      }
     },
     "color": {
       "resolvesTo": "text-field.color.input.textDisabled",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "text-field.design.condition-6d2f506c00a2.foreground.color"
+      }
     },
     "opacity": {
       "resolvesTo": "text-field.opacity.disabled",
-      "fallback": "0.5"
+      "fallback": "0.5",
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "text-field.design.condition-6d2f506c00a2.appearance.opacity"
+      }
     },
     "cursor": {
       "literal": "not-allowed",

@@ -22,7 +22,7 @@ export type StatTrend = "up" | "down" | "neutral";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "stat" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" data-fsds-box="">
   <ng-content />
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -25,7 +25,7 @@ export class StackElement extends LitElement {
   static styles = css`
     :host {
       box-sizing: border-box;
-      gap: var(--fsds-semantic-spacing-gap-stack);
+      gap: var(--fsds-semantic-spacing-gap-stack, 0);
     }
 
     :host([layout="stack"]) {

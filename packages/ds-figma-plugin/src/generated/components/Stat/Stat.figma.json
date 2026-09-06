@@ -37,6 +37,167 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "stat.design.root.foreground.color",
+      "cssVar": "--fsds-stat-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "stat.color.foreground.value",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "stat.design.root.typography.size",
+      "cssVar": "--fsds-stat-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "24px",
+      "resolvesTo": "stat.size.value.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "stat.design.root.typography.weight",
+      "cssVar": "--fsds-stat-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "700",
+      "resolvesTo": "stat.typography.weight.value",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "stat.design.root.typography.line-height",
+      "cssVar": "--fsds-stat-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.1",
+      "resolvesTo": "stat.typography.lineHeight.value",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat"
+    },
+    {
+      "property": "typography.tracking",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "stat.design.root.typography.tracking",
+      "cssVar": "--fsds-stat-design-root-typography-tracking",
+      "cssProperty": "letter-spacing",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "-0.02em",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "stat.design.condition-150f0c29952e.foreground.color",
+      "cssVar": "--fsds-stat-design-condition-150f0c29952e-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "--up",
+      "part": null,
+      "defaultValue": "#497f21",
+      "resolvesTo": "stat.color.foreground.trend.up",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat--up"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "stat.design.condition-c3362b4b3c5b.foreground.color",
+      "cssVar": "--fsds-stat-design-condition-c3362b4b3c5b-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "--down",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "stat.color.foreground.trend.down",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat--down"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "stat.design.condition-611d8c5b8be1.foreground.color",
+      "cssVar": "--fsds-stat-design-condition-611d8c5b8be1-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "--neutral",
+      "part": null,
+      "defaultValue": "#474647",
+      "resolvesTo": "stat.color.foreground.trend.neutral",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat--neutral"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "stat.design.condition-24964d7ed3a7.typography.size",
+      "cssVar": "--fsds-stat-design-condition-24964d7ed3a7-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "18px",
+      "resolvesTo": "stat.size.value.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat--sm"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "stat.design.condition-72800fd5573d.typography.size",
+      "cssVar": "--fsds-stat-design-condition-72800fd5573d-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "stat.size.value.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".stat--lg"
+    }
+  ],
   "variants": {
     "size": [
       "sm",

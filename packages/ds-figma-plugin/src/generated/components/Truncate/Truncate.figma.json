@@ -98,6 +98,55 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "truncate.design.toggle.foreground.color",
+      "cssVar": "--fsds-truncate-design-toggle-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "toggle",
+      "part": "toggle",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "truncate.color.foreground.link",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".truncate__toggle"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "truncate.design.toggle.typography.weight",
+      "cssVar": "--fsds-truncate-design-toggle-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "toggle",
+      "part": "toggle",
+      "defaultValue": "500",
+      "resolvesTo": "truncate.typography.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".truncate__toggle"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "truncate.design.toggle.spacing.padding",
+      "cssVar": "--fsds-truncate-design-toggle-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "toggle",
+      "part": "toggle",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".truncate__toggle"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

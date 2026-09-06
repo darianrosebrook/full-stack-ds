@@ -2,11 +2,19 @@
   "root": {
     "color": {
       "resolvesTo": "label.color.text.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "label.design.root.foreground.color"
+      }
     },
     "line-height": {
       "resolvesTo": "label.typo.lineHeight.default",
-      "fallback": "1.2"
+      "fallback": "1.2",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "label.design.root.typography.line-height"
+      }
     }
   }
 }

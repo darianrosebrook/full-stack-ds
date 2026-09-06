@@ -53,7 +53,7 @@ const iconGlyph = computed(() => resolveIcon(props.icon ?? "", iconGlyphPx.value
 </script>
 
 <template>
-  <li :class="classNames" role="listitem" :data-testid="props['data-testid']" data-fsds-component="nav-tree">
+  <li :class="classNames" role="listitem" :data-testid="props['data-testid']" data-fsds-component="nav-tree" data-fsds-box="">
     <div :class="'nav-tree__heading'">
       <span v-if="props.icon" :class="'nav-tree__icon'" aria-hidden="true">
         <svg v-if="iconGlyph" fill="none" xmlns="http://www.w3.org/2000/svg" :data-fsds-icon="iconGlyph.name" :viewBox="iconGlyph.viewBox" :width="iconGlyphPx ?? iconGlyph.size" :height="iconGlyphPx ?? iconGlyph.size">

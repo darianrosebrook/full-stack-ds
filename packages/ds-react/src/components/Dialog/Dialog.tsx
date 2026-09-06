@@ -161,7 +161,7 @@ export function Dialog({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="dialog" {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="dialog" data-fsds-box="" {...rest}>
       {openness ? (
         <div className="dialog__backdrop" aria-hidden="true" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} />
       ) : null}

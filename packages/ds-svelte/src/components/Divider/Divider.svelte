@@ -34,4 +34,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<hr class={classes} data-fsds-component="divider" role="separator" />
+<hr class={classes} data-fsds-component="divider" data-fsds-box="" role="separator" />

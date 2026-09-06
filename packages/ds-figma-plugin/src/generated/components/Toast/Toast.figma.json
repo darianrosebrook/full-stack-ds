@@ -138,6 +138,259 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "toast.design.root.spacing.gap",
+      "cssVar": "--fsds-toast-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "toast.spacing.stackGap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "toast.design.item.background.fill",
+      "cssVar": "--fsds-toast-design-item-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "toast.surface.bg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "toast.design.item.border.color",
+      "cssVar": "--fsds-toast-design-item-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "toast.surface.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "toast.design.item.border.style",
+      "cssVar": "--fsds-toast-design-item-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "toast.design.item.border.width",
+      "cssVar": "--fsds-toast-design-item-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "toast.design.item.shape.radius",
+      "cssVar": "--fsds-toast-design-item-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "6px",
+      "resolvesTo": "toast.surface.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "toast.design.item.elevation.shadow",
+      "cssVar": "--fsds-toast-design-item-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "0px 4px 6px #0000000d, 0px 10px 15px #0000001a",
+      "resolvesTo": "toast.surface.shadow",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "toast.design.item.spacing.padding",
+      "cssVar": "--fsds-toast-design-item-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "12px",
+      "resolvesTo": "toast.spacing.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "toast.design.item.sizing.max-width",
+      "cssVar": "--fsds-toast-design-item-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "400px",
+      "resolvesTo": "toast.size.maxWidth",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__item"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "toast.design.row.spacing.gap",
+      "cssVar": "--fsds-toast-design-row-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "row",
+      "part": "row",
+      "defaultValue": "8px",
+      "resolvesTo": "toast.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__row"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "toast.design.title.typography.weight",
+      "cssVar": "--fsds-toast-design-title-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "600",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__title"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "toast.design.description.foreground.color",
+      "cssVar": "--fsds-toast-design-description-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "#141414",
+      "resolvesTo": "toast.color.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__description"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "toast.design.description.typography.size",
+      "cssVar": "--fsds-toast-design-description-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "description",
+      "part": "description",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__description"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "toast.design.action.foreground.color",
+      "cssVar": "--fsds-toast-design-action-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "action",
+      "part": "action",
+      "defaultValue": "#141414",
+      "resolvesTo": "toast.color.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__action"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "toast.design.close.shape.radius",
+      "cssVar": "--fsds-toast-design-close-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "9999px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__close"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "toast.design.close.foreground.color",
+      "cssVar": "--fsds-toast-design-close-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "close",
+      "part": "close",
+      "defaultValue": "#141414",
+      "resolvesTo": "toast.color.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toast__close"
+    }
+  ],
   "variants": {
     "variant": [
       "info",

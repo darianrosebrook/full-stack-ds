@@ -21,7 +21,7 @@ export type ProfileFlagData = { id: string; username: string; full_name: string;
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "profile-flag" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" data-fsds-box="">
   <ng-content />
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

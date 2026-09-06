@@ -1,31 +1,33 @@
+@import "../../primitives/box-model.css";
 @import "./Alert.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .alert {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-alert-spacing-gap, 8px);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-feedback-size-padding-block, 16px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-feedback-size-padding-block, 16px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-feedback-size-padding-inline, 16px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-feedback-size-padding-inline, 16px));
+  gap: var(--fsds-alert-design-root-spacing-gap, var(--fsds-alert-spacing-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border-style: solid;
-  border-width: 1px;
+  border-style: var(--fsds-alert-design-root-border-style, solid);
+  border-width: var(--fsds-alert-design-root-border-width, 1px);
   box-sizing: border-box;
-  padding: var(--fsds-alert-size-padding, 16px);
-  border-radius: var(--fsds-alert-size-radius, 6px);
-  font-size: var(--fsds-alert-text-size, 14px);
-  font-weight: var(--fsds-alert-text-weight, 400);
-  background-color: var(--fsds-alert-color-background-primary, #ffffff);
-  color: var(--fsds-alert-color-foreground-primary, #141414);
-  border-color: var(--fsds-alert-color-border-primary, #a0a0a1);
+  padding: var(--fsds-alert-design-root-spacing-padding, var(--fsds-alert-size-padding, 16px));
+  border-radius: var(--fsds-alert-design-root-shape-radius, var(--fsds-alert-size-radius, 6px));
+  font-size: var(--fsds-alert-design-root-typography-size, var(--fsds-alert-text-size, 14px));
+  font-weight: var(--fsds-alert-design-root-typography-weight, var(--fsds-alert-text-weight, 400));
+  background-color: var(--fsds-alert-design-root-background-fill, var(--fsds-alert-color-background-primary, #ffffff));
+  color: var(--fsds-alert-design-root-foreground-color, var(--fsds-alert-color-foreground-primary, #141414));
+  border-color: var(--fsds-alert-design-root-border-color, var(--fsds-alert-color-border-primary, #a0a0a1));
 }
 
 .alert__icon {
@@ -39,7 +41,7 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--fsds-alert-spacing-gap, 8px);
+  gap: var(--fsds-alert-design-body-spacing-gap, var(--fsds-alert-spacing-gap, 8px));
 }
 
 .alert__dismiss {
@@ -49,30 +51,31 @@
   flex-shrink: 0;
   background: transparent;
   border: 0;
-  padding: 0;
+  padding: var(--fsds-alert-design-dismiss-spacing-padding, 0);
   margin-left: auto;
-  color: inherit;
+  color: var(--fsds-alert-design-dismiss-foreground-color, inherit);
   cursor: pointer;
   font: inherit;
-  line-height: 1;
+  line-height: var(--fsds-alert-design-dismiss-typography-line-height, 1);
 }
 
 .alert__dismiss:hover {
-  opacity: 0.7;
+  opacity: var(--fsds-alert-design-condition-713bb5876e6d-appearance-opacity, 0.7);
 }
 
 .alert__dismiss:focus-visible {
   outline: 2px solid currentColor;
-  outline-offset: 2px;
+  outline-offset: var(--fsds-alert-design-condition-366042b99cd1-focus-offset, 2px);
 }
 
 .alert__title {
   margin: 0;
-  font-weight: var(--fsds-alert-typography-title-font-weight, 700);
-  font-size: var(--fsds-alert-typography-title-font-size, 16px);
+  font-weight: var(--fsds-alert-design-title-typography-weight, var(--fsds-alert-typography-title-font-weight, 700));
+  font-size: var(--fsds-alert-design-title-typography-size, var(--fsds-alert-typography-title-font-size, 16px));
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

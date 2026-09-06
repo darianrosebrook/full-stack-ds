@@ -52,6 +52,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<svelte:element this={as ?? "ul"} class={classes} data-fsds-component="list">
+<svelte:element this={as ?? "ul"} class={classes} data-fsds-component="list" data-fsds-box="">
   {@render children?.()}
 </svelte:element>

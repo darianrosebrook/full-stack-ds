@@ -24,7 +24,7 @@ export type ButtonType = "button" | "submit" | "reset";
   standalone: true,
   imports: [NgClass, NgIf, SpinnerComponent],
   host: { "data-fsds-component": "button" },
-  template: `<button [ngClass]="classes()" (click)="onClick && onClick()" [type]="(type ?? 'button')" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
+  template: `<button [ngClass]="classes()" (click)="onClick && onClick()" [type]="(type ?? 'button')" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading" data-fsds-box="">
   <ng-container *ngIf="loading">
     <fsds-spinner [ngClass]="'button__spinner'" size="sm" [inline]="loading" [ariaHidden]="loading"></fsds-spinner>
   </ng-container>

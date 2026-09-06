@@ -53,7 +53,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-fsds-component="button">
+<button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-fsds-component="button" data-fsds-box="">
   {#if loading}
   <Spinner class={'button__spinner'} size="sm" inline={loading} ariaHidden={loading} />
   {/if}

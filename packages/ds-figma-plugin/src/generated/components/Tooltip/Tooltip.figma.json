@@ -98,6 +98,150 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "tooltip.design.content.background.fill",
+      "cssVar": "--fsds-tooltip-design-content-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#141414",
+      "resolvesTo": "tooltip.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "tooltip.design.content.foreground.color",
+      "cssVar": "--fsds-tooltip-design-content-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#fafafa",
+      "resolvesTo": "tooltip.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "tooltip.design.content.border.color",
+      "cssVar": "--fsds-tooltip-design-content-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "tooltip.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "tooltip.design.content.shape.radius",
+      "cssVar": "--fsds-tooltip-design-content-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "4px",
+      "resolvesTo": "tooltip.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "tooltip.design.content.spacing.padding",
+      "cssVar": "--fsds-tooltip-design-content-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "8px",
+      "resolvesTo": "tooltip.size.padding.x",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "tooltip.design.content.sizing.max-width",
+      "cssVar": "--fsds-tooltip-design-content-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "200px",
+      "resolvesTo": "tooltip.size.maxWidth",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "tooltip.design.content.typography.size",
+      "cssVar": "--fsds-tooltip-design-content-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "14px",
+      "resolvesTo": "tooltip.typography.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "tooltip.design.content.border.style",
+      "cssVar": "--fsds-tooltip-design-content-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "tooltip.design.content.border.width",
+      "cssVar": "--fsds-tooltip-design-content-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": "[data-tooltip-content]"
+    }
+  ],
   "variants": {
     "placement": [
       "top",

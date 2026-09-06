@@ -23,7 +23,7 @@ export type AlertNoticeLevel = "page" | "section" | "inline";
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "alert-notice" },
-  template: `<div [ngClass]="classes()" role="alert">
+  template: `<div [ngClass]="classes()" role="alert" data-fsds-box="">
   <ng-container *ngIf="icon">
     <span [ngClass]="'alert-notice__icon'" aria-hidden="true">
       {{ icon }}

@@ -1,25 +1,27 @@
+@import "../../primitives/box-model.css";
 @import "./Divider.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .divider {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
   width: 100%;
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   display: block;
   border-right-style: none;
-  border-bottom-style: none;
+  border-bottom-style: var(--fsds-divider-design-root-border-bottom-style, none);
   border-left-style: none;
-  border-top-color: var(--fsds-divider-color-default, #b8b8b8);
-  border-top-style: solid;
-  border-top-width: var(--fsds-divider-size-thickness, 1px);
+  border-top-color: var(--fsds-divider-design-root-border-top-color, var(--fsds-divider-color-default, #b8b8b8));
+  border-top-style: var(--fsds-divider-design-root-border-top-style, solid);
+  border-top-width: var(--fsds-divider-design-root-border-top-width, var(--fsds-divider-size-thickness, 1px));
   margin-top: var(--fsds-divider-spacing-margin, 8px);
   margin-bottom: var(--fsds-divider-spacing-margin, 8px);
 }
@@ -40,6 +42,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

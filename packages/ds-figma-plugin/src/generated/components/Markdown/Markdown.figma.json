@@ -116,6 +116,56 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "markdown.design.root.foreground.color",
+      "cssVar": "--fsds-markdown-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "markdown.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".markdown"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "markdown.design.root.typography.size",
+      "cssVar": "--fsds-markdown-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0.875rem",
+      "resolvesTo": "markdown.typography.fontSize.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".markdown"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "markdown.design.root.typography.line-height",
+      "cssVar": "--fsds-markdown-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "markdown.typography.lineHeight.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".markdown"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [],

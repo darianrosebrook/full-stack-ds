@@ -1,33 +1,35 @@
+@import "../../primitives/box-model.css";
 @import "./List.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .list {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-list-color-foreground-primary, #141414);
-  border-color: var(--fsds-list-color-border-default, #d0d0d0);
-  padding: var(--fsds-list-size-padding-default, 16px);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-structure-size-gap, 16px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
+  color: var(--fsds-list-design-root-foreground-color, var(--fsds-list-color-foreground-primary, #141414));
+  border-color: var(--fsds-list-design-root-border-color, var(--fsds-list-color-border-default, #d0d0d0));
+  padding: var(--fsds-list-design-root-spacing-padding, var(--fsds-list-size-padding-default, 16px));
 }
 
 .list--size-sm {
-  font-size: var(--fsds-list-size-sm, 14px);
+  font-size: var(--fsds-list-design-condition-f14e3fae918a-typography-size, var(--fsds-list-size-sm, 14px));
 }
 
 .list--size-md {
-  font-size: var(--fsds-list-size-md, 16px);
+  font-size: var(--fsds-list-design-condition-8791efdf7f0f-typography-size, var(--fsds-list-size-md, 16px));
 }
 
 .list--size-lg {
-  font-size: var(--fsds-list-size-lg, 18px);
+  font-size: var(--fsds-list-design-condition-b1a65b7b2e57-typography-size, var(--fsds-list-size-lg, 18px));
 }
 
 .list--spacing-none > * + * {
@@ -76,7 +78,7 @@
 
 .list--variant-unstyled {
   list-style: none;
-  padding: 0;
+  padding: var(--fsds-list-design-condition-45022d26848f-spacing-padding, 0);
   margin: 0;
 }
 
@@ -84,13 +86,13 @@
   display: flex;
   flex-direction: row;
   list-style: none;
-  gap: var(--fsds-list-spacing-md, 12px);
+  gap: var(--fsds-list-design-condition-49c5416e5f1d-spacing-gap, var(--fsds-list-spacing-md, 12px));
 }
 
 .list--variant-divided > * + * {
-  border-block-start-width: 1px;
+  border-block-start-width: var(--fsds-list-design-condition-d02d544e812f-border-block-start-width, 1px);
   border-block-start-style: solid;
-  border-block-start-color: var(--fsds-list-color-border-default, #d0d0d0);
+  border-block-start-color: var(--fsds-list-design-condition-d02d544e812f-border-block-start-color, var(--fsds-list-color-border-default, #d0d0d0));
 }
 
 .list--variant-spaced > * {
@@ -98,6 +100,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

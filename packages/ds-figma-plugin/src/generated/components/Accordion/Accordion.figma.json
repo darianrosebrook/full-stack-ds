@@ -121,6 +121,483 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "accordion.design.root.border.color",
+      "cssVar": "--fsds-accordion-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "accordion.border.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "accordion.design.root.shape.radius",
+      "cssVar": "--fsds-accordion-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "4px",
+      "resolvesTo": "accordion.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "accordion.design.root.spacing.gap",
+      "cssVar": "--fsds-accordion-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "24px",
+      "resolvesTo": "accordion.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "accordion.design.root.typography.size",
+      "cssVar": "--fsds-accordion-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "14px",
+      "resolvesTo": "accordion.text.sizeContent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "accordion.design.root.typography.line-height",
+      "cssVar": "--fsds-accordion-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.8",
+      "resolvesTo": "accordion.text.lineHeightContent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "accordion.design.item.background.fill",
+      "cssVar": "--fsds-accordion-design-item-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "transparent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__item"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "accordion.design.item.border.color",
+      "cssVar": "--fsds-accordion-design-item-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "accordion.border.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__item"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "accordion.design.item.border.style",
+      "cssVar": "--fsds-accordion-design-item-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__item"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "accordion.design.item.border.width",
+      "cssVar": "--fsds-accordion-design-item-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__item"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "accordion.design.item.shape.radius",
+      "cssVar": "--fsds-accordion-design-item-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "4px",
+      "resolvesTo": "accordion.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__item"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "accordion.design.trigger.spacing.padding",
+      "cssVar": "--fsds-accordion-design-trigger-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "8px",
+      "resolvesTo": "accordion.spacing.paddingY",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "accordion.design.trigger.typography.size",
+      "cssVar": "--fsds-accordion-design-trigger-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "16px",
+      "resolvesTo": "accordion.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "accordion.design.trigger.typography.weight",
+      "cssVar": "--fsds-accordion-design-trigger-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "500",
+      "resolvesTo": "accordion.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "accordion.design.trigger.foreground.color",
+      "cssVar": "--fsds-accordion-design-trigger-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "#141414",
+      "resolvesTo": "accordion.color.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "accordion.design.trigger.typography.alignment",
+      "cssVar": "--fsds-accordion-design-trigger-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "left",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "accordion.design.trigger.typography.line-height",
+      "cssVar": "--fsds-accordion-design-trigger-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "1.5",
+      "resolvesTo": "accordion.text.lineHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "accordion.design.condition-c66924892931.background.fill",
+      "cssVar": "--fsds-accordion-design-condition-c66924892931-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".accordion__trigger:hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "accordion.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "accordion.design.condition-c66924892931.foreground.color",
+      "cssVar": "--fsds-accordion-design-condition-c66924892931-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".accordion__trigger:hover",
+      "part": null,
+      "defaultValue": "#474647",
+      "resolvesTo": "accordion.color.textHover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "accordion.design.condition-92aee6ee190f.focus.width",
+      "cssVar": "--fsds-accordion-design-condition-92aee6ee190f-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".accordion__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "accordion.focus.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "accordion.design.condition-92aee6ee190f.focus.color",
+      "cssVar": "--fsds-accordion-design-condition-92aee6ee190f-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".accordion__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "accordion.focus.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "accordion.design.condition-92aee6ee190f.focus.offset",
+      "cssVar": "--fsds-accordion-design-condition-92aee6ee190f-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".accordion__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "1px",
+      "resolvesTo": "accordion.focus.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "accordion.design.condition-92aee6ee190f.focus.style",
+      "cssVar": "--fsds-accordion-design-condition-92aee6ee190f-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".accordion__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "accordion.design.chevron.sizing.width",
+      "cssVar": "--fsds-accordion-design-chevron-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "chevron",
+      "part": "chevron",
+      "defaultValue": "8px",
+      "resolvesTo": "accordion.icon.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__chevron"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "accordion.design.chevron.sizing.height",
+      "cssVar": "--fsds-accordion-design-chevron-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "chevron",
+      "part": "chevron",
+      "defaultValue": "8px",
+      "resolvesTo": "accordion.icon.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__chevron"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "accordion.design.chevron.foreground.color",
+      "cssVar": "--fsds-accordion-design-chevron-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "chevron",
+      "part": "chevron",
+      "defaultValue": "#727272",
+      "resolvesTo": "accordion.color.icon",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__chevron"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "accordion.design.content-inner.spacing.padding",
+      "cssVar": "--fsds-accordion-design-content-inner-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "contentInner",
+      "part": "contentInner",
+      "defaultValue": "8px",
+      "resolvesTo": "accordion.spacing.paddingY",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__contentInner"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "accordion.design.content-inner.foreground.color",
+      "cssVar": "--fsds-accordion-design-content-inner-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "contentInner",
+      "part": "contentInner",
+      "defaultValue": "#474647",
+      "resolvesTo": "accordion.color.textSecondary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__contentInner"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "accordion.design.content-inner.typography.size",
+      "cssVar": "--fsds-accordion-design-content-inner-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "contentInner",
+      "part": "contentInner",
+      "defaultValue": "14px",
+      "resolvesTo": "accordion.text.sizeContent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__contentInner"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "accordion.design.content-inner.typography.line-height",
+      "cssVar": "--fsds-accordion-design-content-inner-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "contentInner",
+      "part": "contentInner",
+      "defaultValue": "1.8",
+      "resolvesTo": "accordion.text.lineHeightContent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion__contentInner"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "accordion.design.condition-1a120a363d7a.appearance.opacity",
+      "cssVar": "--fsds-accordion-design-condition-1a120a363d7a-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".accordion--disabled",
+      "part": null,
+      "defaultValue": "0.5",
+      "resolvesTo": "accordion.opacity.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".accordion--disabled"
+    }
+  ],
   "variants": {
     "type": [
       "single",

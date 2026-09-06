@@ -22,7 +22,7 @@ export type StatusIntent = "info" | "success" | "warning" | "danger" | "error";
   standalone: true,
   imports: [NgClass, IconComponent],
   host: { "data-fsds-component": "status" },
-  template: `<span [ngClass]="classes()">
+  template: `<span [ngClass]="classes()" data-fsds-box="">
   <fsds-icon [ngClass]="'status__icon'" size="sm" [name]="(status === 'info' ? 'info' : (status === 'success' ? 'check' : (status === 'warning' ? 'triangle-alert' : (status === 'danger' ? 'triangle-alert' : 'triangle-alert'))))"></fsds-icon>
   <span [ngClass]="'status__label'">
     <ng-content />

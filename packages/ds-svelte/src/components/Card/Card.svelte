@@ -45,6 +45,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<Stack role="group" class={classes}>
+<Stack role="group" data-fsds-component="card" data-fsds-box="" class={classes}>
   {@render children?.()}
 </Stack>

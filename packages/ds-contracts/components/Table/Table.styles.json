@@ -2,15 +2,27 @@
   "root": {
     "color": {
       "resolvesTo": "table.color.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "table.design.root.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "table.text.size",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "table.design.root.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "table.text.lineHeight",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "table.design.root.typography.line-height"
+      }
     },
     "width": {
       "literal": "100%",
@@ -34,15 +46,27 @@
     },
     "border-color": {
       "resolvesTo": "table.color.border",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "table.design.container.border.color"
+      }
     },
     "border-width": {
       "resolvesTo": "table.border.width",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "table.design.container.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "table.size.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "table.design.container.shape.radius"
+      }
     },
     "width": {
       "literal": "100%",
@@ -54,13 +78,21 @@
   "caption": {
     "font-size": {
       "resolvesTo": "table.text.sizeCaption",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "typography.size",
+        "slot": "table.design.caption.typography.size"
+      }
     },
     "text-align": {
       "literal": "start",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "table.design.caption.typography.alignment"
+      }
     },
     "padding-bottom": {
       "resolvesTo": "table.spacing.caption",
@@ -70,27 +102,47 @@
   "head": {
     "background-color": {
       "resolvesTo": "table.color.background.footer",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "table.design.head.background.fill"
+      }
     }
   },
   "footer": {
     "background-color": {
       "resolvesTo": "table.color.background.footer",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "table.design.footer.background.fill"
+      }
     },
     "font-weight": {
       "resolvesTo": "table.text.weightFooter",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "table.design.footer.typography.weight"
+      }
     }
   },
   "headerCell": {
     "font-weight": {
       "resolvesTo": "table.text.weightHead",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "table.design.header-cell.typography.weight"
+      }
     },
     "color": {
       "resolvesTo": "table.color.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "table.design.header-cell.foreground.color"
+      }
     },
     "padding-left": {
       "resolvesTo": "table.spacing.cellX",
@@ -110,23 +162,39 @@
     },
     "border-bottom-width": {
       "resolvesTo": "table.border.width",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.bottom.width",
+        "slot": "table.design.header-cell.border.bottom.width"
+      }
     },
     "border-bottom-color": {
       "resolvesTo": "table.color.border",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.bottom.color",
+        "slot": "table.design.header-cell.border.bottom.color"
+      }
     },
     "border-bottom-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.style",
+        "slot": "table.design.header-cell.border.bottom.style"
+      }
     },
     "text-align": {
       "literal": "start",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "table.design.header-cell.typography.alignment"
+      }
     }
   },
   "cell": {
@@ -148,29 +216,49 @@
     },
     "border-bottom-width": {
       "resolvesTo": "table.border.width",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.bottom.width",
+        "slot": "table.design.cell.border.bottom.width"
+      }
     },
     "border-bottom-color": {
       "resolvesTo": "table.color.border",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.bottom.color",
+        "slot": "table.design.cell.border.bottom.color"
+      }
     },
     "border-bottom-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.style",
+        "slot": "table.design.cell.border.bottom.style"
+      }
     }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "table.color.background.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "table.design.hover.background.fill"
+      }
     }
   },
   "selected": {
     "background-color": {
       "resolvesTo": "table.color.background.selected",
-      "fallback": "#95dafb"
+      "fallback": "#95dafb",
+      "design": {
+        "property": "background.fill",
+        "slot": "table.design.selected.background.fill"
+      }
     }
   }
 }

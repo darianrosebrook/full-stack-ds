@@ -2,47 +2,87 @@
   "root": {
     "color": {
       "resolvesTo": "blockquote.color.foreground.primary",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "blockquote.design.root.foreground.color"
+      }
     },
     "background-color": {
       "resolvesTo": "blockquote.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "blockquote.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "blockquote.color.border.default",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "border.color",
+        "slot": "blockquote.design.root.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "blockquote.design.root.border.style"
+      }
     },
     "border-width": {
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "blockquote.design.root.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "blockquote.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "blockquote.design.root.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "blockquote.size.padding.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "blockquote.design.root.spacing.padding"
+      }
     },
     "font-size": {
       "resolvesTo": "blockquote.size.fontSize.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "blockquote.design.root.typography.size"
+      }
     },
     "font-style": {
       "resolvesTo": "blockquote.typography.fontStyle",
-      "fallback": "italic"
+      "fallback": "italic",
+      "design": {
+        "property": "typography.style",
+        "slot": "blockquote.design.root.typography.style"
+      }
     },
     "font-weight": {
       "resolvesTo": "blockquote.typography.fontWeight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "blockquote.design.root.typography.weight"
+      }
     },
     "margin": {
       "literal": "0",
@@ -60,7 +100,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "blockquote.design.condition-2265c444f472.border.width"
+      }
     }
   },
   "--bordered": {
@@ -74,7 +118,11 @@
     },
     "border-inline-start-width": {
       "resolvesTo": "blockquote.size.border.accent",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "border.inline-start.width",
+        "slot": "blockquote.design.condition-324ffc53428a.border.inline-start.width"
+      }
     },
     "border-inline-start-style": {
       "literal": "solid",
@@ -84,11 +132,19 @@
     },
     "border-inline-start-color": {
       "resolvesTo": "blockquote.color.border.default",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "border.inline-start.color",
+        "slot": "blockquote.design.condition-324ffc53428a.border.inline-start.color"
+      }
     },
     "padding-inline-start": {
       "resolvesTo": "blockquote.size.padding.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.padding-inline-start",
+        "slot": "blockquote.design.condition-324ffc53428a.spacing.padding-inline-start"
+      }
     }
   },
   "--highlighted": {
@@ -112,11 +168,19 @@
     },
     "font-size": {
       "resolvesTo": "blockquote.size.fontSize.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "blockquote.design.condition-24964d7ed3a7.typography.size"
+      }
     },
     "padding": {
       "resolvesTo": "blockquote.size.padding.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "blockquote.design.condition-24964d7ed3a7.spacing.padding"
+      }
     }
   },
   "--md": {
@@ -130,11 +194,19 @@
     },
     "font-size": {
       "resolvesTo": "blockquote.size.fontSize.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "blockquote.design.condition-dc35d39122c5.typography.size"
+      }
     },
     "padding": {
       "resolvesTo": "blockquote.size.padding.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "blockquote.design.condition-dc35d39122c5.spacing.padding"
+      }
     }
   },
   "--lg": {
@@ -148,11 +220,19 @@
     },
     "font-size": {
       "resolvesTo": "blockquote.size.fontSize.md",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "blockquote.design.condition-72800fd5573d.typography.size"
+      }
     },
     "padding": {
       "resolvesTo": "blockquote.size.padding.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "blockquote.design.condition-72800fd5573d.spacing.padding"
+      }
     }
   }
 }

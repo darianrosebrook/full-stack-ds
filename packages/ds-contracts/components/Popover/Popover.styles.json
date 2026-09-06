@@ -62,27 +62,51 @@
     },
     "background-color": {
       "resolvesTo": "popover.color.background.content",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "popover.design.content.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "popover.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "popover.design.content.border.color"
+      }
     },
     "border-radius": {
       "resolvesTo": "popover.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "popover.design.content.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "popover.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "popover.design.content.spacing.padding"
+      }
     },
     "gap": {
       "resolvesTo": "popover.size.gap.default",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "popover.design.content.spacing.gap"
+      }
     },
     "box-shadow": {
       "resolvesTo": "popover.elevation.default",
-      "fallback": "0px 8px 10px #0000000a, 0px 20px 25px #0000001a"
+      "fallback": "0px 8px 10px #0000000a, 0px 20px 25px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "popover.design.content.elevation.shadow"
+      }
     },
     "z-index": {
       "resolvesTo": "popover.layer.content",
@@ -98,13 +122,21 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "popover.design.content.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "popover.design.content.border.width"
+      }
     }
   }
 }

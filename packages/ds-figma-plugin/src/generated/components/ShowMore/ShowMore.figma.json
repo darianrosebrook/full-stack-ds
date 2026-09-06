@@ -89,6 +89,149 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "show-more.design.root.background.fill",
+      "cssVar": "--fsds-show-more-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "show-more.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "show-more.design.root.foreground.color",
+      "cssVar": "--fsds-show-more-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#474647",
+      "resolvesTo": "show-more.color.foreground.secondary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "show-more.design.root.spacing.padding",
+      "cssVar": "--fsds-show-more-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "24px",
+      "resolvesTo": "show-more.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "show-more.design.root.shape.radius",
+      "cssVar": "--fsds-show-more-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "show-more.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "show-more.design.trigger.foreground.color",
+      "cssVar": "--fsds-show-more-design-trigger-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "#141414",
+      "resolvesTo": "show-more.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more__trigger"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "show-more.design.trigger.border.style",
+      "cssVar": "--fsds-show-more-design-trigger-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more__trigger"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "show-more.design.trigger.border.width",
+      "cssVar": "--fsds-show-more-design-trigger-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more__trigger"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "show-more.design.trigger.border.color",
+      "cssVar": "--fsds-show-more-design-trigger-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "show-more.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more__trigger"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "show-more.design.trigger.spacing.padding",
+      "cssVar": "--fsds-show-more-design-trigger-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".show-more__trigger"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

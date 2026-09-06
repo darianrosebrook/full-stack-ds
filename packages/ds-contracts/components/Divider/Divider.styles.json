@@ -22,7 +22,11 @@
       "literal": "none",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.style",
+        "slot": "divider.design.root.border.bottom.style"
+      }
     },
     "border-left-style": {
       "literal": "none",
@@ -32,17 +36,29 @@
     },
     "border-top-color": {
       "resolvesTo": "divider.color.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.top.color",
+        "slot": "divider.design.root.border.top.color"
+      }
     },
     "border-top-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.style",
+        "slot": "divider.design.root.border.top.style"
+      }
     },
     "border-top-width": {
       "resolvesTo": "divider.size.thickness",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.top.width",
+        "slot": "divider.design.root.border.top.width"
+      }
     },
     "margin-top": {
       "resolvesTo": "divider.spacing.margin",

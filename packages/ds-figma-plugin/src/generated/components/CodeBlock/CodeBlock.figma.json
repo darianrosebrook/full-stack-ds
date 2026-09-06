@@ -62,6 +62,340 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "code-block.design.root.background.fill",
+      "cssVar": "--fsds-code-block-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "code-block.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "code-block.design.root.border.color",
+      "cssVar": "--fsds-code-block-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "code-block.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "code-block.design.root.border.style",
+      "cssVar": "--fsds-code-block-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "code-block.design.root.border.width",
+      "cssVar": "--fsds-code-block-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "code-block.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "code-block.design.root.shape.radius",
+      "cssVar": "--fsds-code-block-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "code-block.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.root.foreground.color",
+      "cssVar": "--fsds-code-block-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "code-block.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "typography.family",
+      "group": "typography",
+      "valueType": "fontFamily",
+      "slot": "code-block.design.root.typography.family",
+      "cssVar": "--fsds-code-block-design-root-typography-family",
+      "cssProperty": "font-family",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "code-block.design.root.typography.size",
+      "cssVar": "--fsds-code-block-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0.875rem",
+      "resolvesTo": "code-block.size.fontSize.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "code-block.design.root.typography.line-height",
+      "cssVar": "--fsds-code-block-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "code-block.typography.lineHeight.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "code-block.design.root.spacing.padding",
+      "cssVar": "--fsds-code-block-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "code-block.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block"
+    },
+    {
+      "property": "typography.family",
+      "group": "typography",
+      "valueType": "fontFamily",
+      "slot": "code-block.design.code.typography.family",
+      "cssVar": "--fsds-code-block-design-code-typography-family",
+      "cssProperty": "font-family",
+      "selectorKey": "code",
+      "part": "code",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__code"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "code-block.design.code.typography.size",
+      "cssVar": "--fsds-code-block-design-code-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "code",
+      "part": "code",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__code"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-b26259dbe6d6.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-b26259dbe6d6-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"plain\"]",
+      "part": null,
+      "defaultValue": "#141414",
+      "resolvesTo": "code-block.token.color.plain",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"plain\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-8d8c610b44f8.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-8d8c610b44f8-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"comment\"]",
+      "part": null,
+      "defaultValue": "#474647",
+      "resolvesTo": "code-block.token.color.comment",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"comment\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-4b23b87f0ae5.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-4b23b87f0ae5-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"keyword\"]",
+      "part": null,
+      "defaultValue": "#013ab0",
+      "resolvesTo": "code-block.token.color.keyword",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"keyword\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-e64795b05064.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-e64795b05064-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"definition\"]",
+      "part": null,
+      "defaultValue": "#900909",
+      "resolvesTo": "code-block.token.color.definition",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"definition\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-6acac665cbb0.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-6acac665cbb0-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"punctuation\"]",
+      "part": null,
+      "defaultValue": "#013ab0",
+      "resolvesTo": "code-block.token.color.punctuation",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"punctuation\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-bb5556a6dabf.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-bb5556a6dabf-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"property\"]",
+      "part": null,
+      "defaultValue": "#6c3a00",
+      "resolvesTo": "code-block.token.color.property",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"property\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-460d112a4b91.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-460d112a4b91-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"static\"]",
+      "part": null,
+      "defaultValue": "#900909",
+      "resolvesTo": "code-block.token.color.static",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"static\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-02a586e46f1c.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-02a586e46f1c-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"string\"]",
+      "part": null,
+      "defaultValue": "#900909",
+      "resolvesTo": "code-block.token.color.string",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"string\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "code-block.design.condition-106897d75995.foreground.color",
+      "cssVar": "--fsds-code-block-design-condition-106897d75995-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".code-block__token[data-token=\"tag\"]",
+      "part": null,
+      "defaultValue": "#900909",
+      "resolvesTo": "code-block.token.color.tag",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".code-block__token[data-token=\"tag\"]"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [],
