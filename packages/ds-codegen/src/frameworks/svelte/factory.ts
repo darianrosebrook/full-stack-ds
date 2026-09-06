@@ -1,3 +1,4 @@
+import { INTERACTION_RUNTIME_SOURCE } from "../../interaction-runtime.js";
 /**
  * Svelte 5 FrameworkEmitter.
  *
@@ -169,6 +170,7 @@ export function createSvelteEmitter(): FrameworkEmitter {
 
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
+        { relativePath: "interaction.ts", contents: INTERACTION_RUNTIME_SOURCE },
         {
           relativePath: `${ir.name}.svelte`,
           contents: generateSvelteStackPrimitiveSource(ir),

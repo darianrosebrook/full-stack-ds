@@ -123,5 +123,41 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
 // @generated:end
 
 // @custom:start tests
+describe("ShowMore — channel lifecycle", () => {
+  it("honors a default set before first render and does not reapply it", async () => {
+    const element = document.createElement("fsds-show-more") as LitTestElement & { defaultExpanded: boolean };
+    element.defaultExpanded = true;
+    document.body.append(element);
+    await element.updateComplete;
+    const trigger = element.shadowRoot!.querySelector("button")!;
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+    trigger.click();
+    await element.updateComplete;
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+    element.defaultExpanded = false;
+    await element.updateComplete;
+    element.defaultExpanded = true;
+    await element.updateComplete;
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("notifies once and follows every controlled update without committing locally", async () => {
+    const element = document.createElement("fsds-show-more") as LitTestElement & { expanded: boolean; onExpandedChange: (next: boolean) => void };
+    const seen: boolean[] = [];
+    element.onExpandedChange = next => seen.push(next);
+    element.expanded = false;
+    document.body.append(element);
+    for (const expanded of [false, true, false]) {
+      element.expanded = expanded;
+      await element.updateComplete;
+      const trigger = element.shadowRoot!.querySelector("button")!;
+      expect(trigger.getAttribute("aria-expanded")).toBe(String(expanded));
+      trigger.click();
+      await element.updateComplete;
+      expect(trigger.getAttribute("aria-expanded")).toBe(String(expanded));
+    }
+    expect(seen).toEqual([true, false, true]);
+  });
+});
 
 // @custom:end

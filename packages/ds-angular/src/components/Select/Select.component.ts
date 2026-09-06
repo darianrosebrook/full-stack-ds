@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgIf, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useSelect } from "./useSelect.js";
@@ -56,10 +56,14 @@ let nextInstanceId = 0;
 })
 export class SelectComponent {
   @Input() options: SelectOption[] = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}];
-  @Input() value?: string | string[];
+  private readonly inputValue = signal<string | string[] | undefined>(undefined);
+  @Input() get value(): string | string[] | undefined { return this.inputValue(); }
+  set value(value: string | string[] | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: string | string[] = "beta";
   @Input() onChange?: (value: string | string[]) => void;
-  @Input() open?: boolean;
+  private readonly inputOpen = signal<boolean | undefined>(undefined);
+  @Input() get open(): boolean | undefined { return this.inputOpen(); }
+  set open(value: boolean | undefined) { this.inputOpen.set(value); }
   @Input() defaultOpen?: boolean = true;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() multiple?: boolean;
@@ -75,7 +79,10 @@ export class SelectComponent {
   @Input() position?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useSelect({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useSelect>;
+  protected get behavior(): ReturnType<typeof useSelect> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useSelect({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
@@ -83,18 +90,19 @@ export class SelectComponent {
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "select",
       (this.size ?? "md") ? `select--${(this.size ?? "md")}` : null,
       this.position ? `select--${this.position}` : null,
       this.behavior.open() ? "select--open" : null,
       this.disabled ? "select--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   // BindingExpressionV2 predicate:memberOf helper. Adapts to the runtime
   // shape of `selection`: scalar equality when not an array, set

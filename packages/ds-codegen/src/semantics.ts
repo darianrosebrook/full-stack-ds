@@ -1,4 +1,3 @@
-import type { BindingExpression, NormalizedChannelIR } from "./ir.js";
 import type {
   ComponentContract,
   ContractSurfaceDismissalMode,
@@ -543,30 +542,4 @@ export function resolveAnchoredSurfacePolicy(
     defaultContentRole,
     publicDismissalProps,
   };
-}
-
-/**
- * Source fact: a contract-authored boolean channel click on a native summary.
- * Applies by: DOM host capability + event + binding/channel kind, never name.
- * Native summary activation would mutate its parent details independently of
- * the channel. Cancel that default so controlled values and disabled triggers
- * remain authoritative. Native Enter/Space still dispatch the same click.
- * Removable when native disclosure activation is explicitly modeled in IR.
- */
-export function resolveNativeDisclosureActivation(
-  hostTag: string | undefined,
-  eventName: string,
-  binding: BindingExpression,
-  channels: ReadonlyMap<string, NormalizedChannelIR>,
-): NormalizedChannelIR | null {
-  if (hostTag !== "summary" || eventName !== "click" ||
-      binding.kind !== "channel" || binding.field !== "onChange") return null;
-  const channel = channels.get(binding.channel);
-  return channel?.valueType === "boolean" && channel.callbackKind !== "event"
-    ? channel : null;
-}
-
-/** DOM semantics of the disabled disclosure trigger; emitters supply syntax. */
-export function nativeDisclosureActivationEnabled(currentTarget: string): string {
-  return `${currentTarget}.getAttribute('aria-disabled') !== 'true'`;
 }

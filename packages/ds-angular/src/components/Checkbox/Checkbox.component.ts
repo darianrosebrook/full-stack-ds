@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useCheckbox } from "./useCheckbox.js";
 import { FieldAssociationService } from "../../primitives/index.js";
@@ -31,7 +31,9 @@ export type CheckboxSize = "sm" | "md" | "lg";
 })
 export class CheckboxComponent {
   @Input() size?: CheckboxSize = "md";
-  @Input() checked?: boolean;
+  private readonly inputChecked = signal<boolean | undefined>(undefined);
+  @Input() get checked(): boolean | undefined { return this.inputChecked(); }
+  set checked(value: boolean | undefined) { this.inputChecked.set(value); }
   @Input() defaultChecked?: boolean;
   @Input() onChange?: (checked: boolean) => void;
   @Input() indeterminate?: boolean;
@@ -44,22 +46,26 @@ export class CheckboxComponent {
   protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useCheckbox({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useCheckbox>;
+  protected get behavior(): ReturnType<typeof useCheckbox> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useCheckbox({
     checked: () => this.checked,
     defaultChecked: this.defaultChecked,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "checkbox",
       (this.size ?? "md") ? `checkbox--${(this.size ?? "md")}` : null,
       this.behavior.checked() ? "checkbox--checked" : null,
       this.disabled ? "checkbox--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   protected handleCheckedChange(event: Event): void {
     this.behavior.setChecked((event.target as HTMLInputElement).checked);

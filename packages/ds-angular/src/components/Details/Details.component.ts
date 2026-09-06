@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { StackComponent } from "../../primitives/index.js";
 import { IconComponent } from "../Icon/Icon.component.js";
 import { useDetails } from "./useDetails.js";
@@ -28,7 +29,7 @@ let nextInstanceId = 0;
   imports: [NgClass, NgIf, IconComponent],
   host: { "data-fsds-component": "details" },
   template: `<details [ngClass]="classes()" [open]="behavior.open()">
-  <summary [ngClass]="'details__summary'" (click)="$event.preventDefault(); $any($event.currentTarget).getAttribute('aria-disabled') !== 'true' && behavior.setOpen(!behavior.open())" [attr.aria-disabled]="disabled" [attr.aria-controls]="summaryAriaControls">
+  <summary [ngClass]="'details__summary'" (click)="canActivateInteraction($event, true) && behavior.setOpen(!behavior.open())" [attr.aria-disabled]="disabled" [attr.aria-controls]="summaryAriaControls">
     <span [ngClass]="'details__summaryContent'">
       <fsds-icon [ngClass]="'details__icon'" name="chevron-down" size="sm"></fsds-icon>
       <span [ngClass]="'details__summaryText'">
@@ -59,15 +60,17 @@ export class DetailsComponent {
   protected readonly instanceId = `fsds-details-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
   private initializedBehavior?: ReturnType<typeof useDetails>;
   protected get behavior(): ReturnType<typeof useDetails> {
-    return this.initializedBehavior ??= useDetails({
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useDetails({
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
   }
+  protected canActivateInteraction = canActivateInteraction;
 
   classes(): string {
     return [

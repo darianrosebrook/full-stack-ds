@@ -253,5 +253,17 @@
         "node-ref"
       ]
     }
+  },
+  "interaction": {
+    "channel": "open",
+    "content": "content",
+    "presence": "unmount",
+    "triggers": [
+      {
+        "part": "trigger",
+        "operation": "open"
+      }
+    ],
+    "disabledProp": "disabled"
   }
 }

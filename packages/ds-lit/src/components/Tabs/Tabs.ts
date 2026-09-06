@@ -202,6 +202,10 @@ export class TabsElement extends LitElement {
     .tabs--pills .tabs__indicator {
       display: none;
     }
+
+    .tabs__panel[hidden]:not([hidden="until-found"]) {
+      display: none !important;
+    }
   `;
 
   @property({ type: String })
@@ -223,11 +227,14 @@ export class TabsElement extends LitElement {
   @property({ type: String })
   idBase?: string;
 
-  private behavior = new TabsBehavior(this, {
+  private initializedBehavior?: TabsBehavior;
+  private get behavior(): TabsBehavior {
+    return this.initializedBehavior ??= new TabsBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
   });
+  }
 
   private _generatedIdBase: string | null = null;
 
@@ -443,6 +450,10 @@ export class TabsListElement extends LitElement {
 
     .tabs--pills .tabs__indicator {
       display: none;
+    }
+
+    .tabs__panel[hidden]:not([hidden="until-found"]) {
+      display: none !important;
     }
   `;
 
@@ -671,6 +682,10 @@ export class TabsTabElement extends LitElement {
     .tabs--pills .tabs__indicator {
       display: none;
     }
+
+    .tabs__panel[hidden]:not([hidden="until-found"]) {
+      display: none !important;
+    }
   `;
 
   @property() value = "";
@@ -886,6 +901,10 @@ export class TabsPanelElement extends LitElement {
 
     .tabs--pills .tabs__indicator {
       display: none;
+    }
+
+    .tabs__panel[hidden]:not([hidden="until-found"]) {
+      display: none !important;
     }
   `;
 

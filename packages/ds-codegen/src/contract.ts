@@ -831,6 +831,15 @@ export type ContractMorphology =
   | "loading-block"
   | "replaced-media";
 
+/** State, invoking hosts and content presence, independent of geometry. */
+export interface ContractInteraction {
+  channel: string;
+  content: string;
+  presence: "hidden" | "unmount" | "clamp";
+  triggers: Array<{ part: string; operation: "toggle" | "open" | "close" | "select" | "toggle-item" }>;
+  disabledProp?: string;
+}
+
 export interface ComponentContract {
   name: string;
   layer?: string;
@@ -884,6 +893,7 @@ export interface ComponentContract {
     }>;
   };
   form?: ContractForm;
+  interaction?: ContractInteraction;
   formControl?: ContractFormControl;
   compositeControl?: ContractCompositeControl;
   motion?: ContractMotion;

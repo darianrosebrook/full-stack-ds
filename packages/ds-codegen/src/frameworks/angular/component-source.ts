@@ -57,8 +57,6 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
-  resolveNativeDisclosureActivation,
-  nativeDisclosureActivationEnabled,
   resolveSurfaceAutoDismiss,
   portalsRootToBody,
   selectorAnchoredRootPortal,
@@ -314,9 +312,12 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
     `  }`,
     ``,
     `  private destroyRef = inject(DestroyRef);`,
-    `  protected behavior = use${name}({`,
+    `  private initializedBehavior?: ReturnType<typeof use${name}>;`,
+    `  protected get behavior(): ReturnType<typeof use${name}> {`,
+    `    return this.initializedBehavior ??= use${name}({`,
     ...hookOptionsSignal,
-    `  });`,
+    `    });`,
+    `  }`,
     ``,
     `  classes = computed(() =>`,
     `    [`,
@@ -397,6 +398,7 @@ function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
     `import { Component, Input, OnChanges, SimpleChanges, ElementRef, computed, signal, forwardRef, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";`,
     `import { NgClass } from "@angular/common";`,
     `import { use${name}, ${name}ContextToken } from "./use${name}.js";`,
+    `import { toggleInteractionItem } from "../../primitives/interaction.js";`,
   ].join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");
@@ -502,9 +504,12 @@ function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
     ``,
     `  private destroyRef = inject(DestroyRef);`,
     `  private elRef = inject(ElementRef<HTMLElement>);`,
-    `  protected behavior = use${name}({`,
+    `  private initializedBehavior?: ReturnType<typeof use${name}>;`,
+    `  protected get behavior(): ReturnType<typeof use${name}> {`,
+    `    return this.initializedBehavior ??= use${name}({`,
     ...hookOptionsSignal,
-    `  });`,
+    `    });`,
+    `  }`,
     ``,
     `  isItemOpen(itemValue: string): boolean {`,
     `    const v = this.behavior.${channelName}();`,
@@ -513,19 +518,7 @@ function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
     ``,
     `  toggleItem(itemValue: string): void {`,
     `    const v = this.behavior.${channelName}();`,
-    `    if (this._type() === "multiple") {`,
-    `      const current = Array.isArray(v) ? v : [];`,
-    `      this.behavior.${setterName}(`,
-    `        current.includes(itemValue)`,
-    `          ? current.filter((x) => x !== itemValue)`,
-    `          : [...current, itemValue],`,
-    `      );`,
-    `    } else {`,
-    `      const current = typeof v === "string" ? v : "";`,
-    hasCollapsible
-      ? `      this.behavior.${setterName}(current === itemValue && this._collapsible() ? "" : itemValue);`
-      : `      this.behavior.${setterName}(itemValue);`,
-    `    }`,
+    `    this.behavior.${setterName}(toggleInteractionItem(v, itemValue, this._type() === "multiple", this._collapsible()));`,
     `  }`,
     ``,
     `  handleKeyDown(e: KeyboardEvent): void {`,
@@ -1144,7 +1137,7 @@ function generateImports(ir: ComponentIR): string {
   }
 
   const lines: string[] = [
-    `import { ${coreNames.join(", ")} } from "@angular/core";`,
+    `import { ${[...new Set(coreNames)].join(", ")} } from "@angular/core";`,
     `import { NgClass } from "@angular/common";`,
     `import { StackComponent } from "../../primitives/index.js";`,
   ];
@@ -1404,23 +1397,10 @@ function collectChannelUpdates(
   return seen;
 }
 
-// Native disclosures use a channel-backed open property. Angular computed
-// values cannot track plain @Input fields: bridge those controlled inputs to
-// signals, and initialize defaults on the first read after input assignment.
-// Applies by native activation capability; removable when every channel input
-// in this backend has a reactive input bridge.
-function nativeDisclosureChannels(ir: ComponentIR): Map<string, NormalizedChannelIR> {
-  const result = new Map<string, NormalizedChannelIR>();
-  const channels = new Map(ir.behavior.normalizedChannels.map(ch => [ch.name, ch]));
-  const visit = (node: DomNodeIR): void => {
-    for (const [event, binding] of Object.entries(node.events)) {
-      const channel = resolveNativeDisclosureActivation(node.tag, event, binding, channels);
-      if (channel) result.set(channel.valueProp, channel);
-    }
-    node.children.forEach(visit);
-  };
-  if (ir.dom?.tag === "details") visit(ir.dom);
-  return result;
+// Every controlled channel input must participate in Angular dependency
+// tracking. This is framework input law, independent of interaction family.
+function channelInputs(ir: ComponentIR): Map<string, NormalizedChannelIR> {
+  return new Map(ir.behavior.normalizedChannels.map(channel => [channel.valueProp, channel]));
 }
 
 function generateDomTreeImports(ir: ComponentIR): string {
@@ -1438,7 +1418,8 @@ function generateDomTreeImports(ir: ComponentIR): string {
   ) {
     coreNames.push("effect");
   }
-  if (nativeDisclosureChannels(ir).size > 0) coreNames.push("signal");
+  if (ir.interaction?.focusContainer) coreNames.push("ViewChild", "ElementRef");
+  if (channelInputs(ir).size > 0) coreNames.push("signal", "Injector", "runInInjectionContext", "untracked");
   // When any dom node uses `if: "children"`, the component needs AfterContentInit
   // and ElementRef to detect content projection at runtime.
   if (ir.dom && treeHasChildrenGuard(ir.dom)) {
@@ -1482,9 +1463,10 @@ function generateDomTreeImports(ir: ComponentIR): string {
   }
   const commonImports = commonNames.join(", ");
   const lines: string[] = [
-    `import { ${coreNames.join(", ")} } from "@angular/core";`,
+    `import { ${[...new Set(coreNames)].join(", ")} } from "@angular/core";`,
     `import { ${commonImports} } from "@angular/common";`,
   ];
+  if (ir.interaction && ir.dom && ir.interaction.triggers.some(t => t.operation !== "select" && t.operation !== "toggle-item")) lines.push(`import { canActivateInteraction } from "../../primitives/interaction.js";`);
   if (ir.compoundParts.length > 0) {
     lines.push(`import { StackComponent } from "../../primitives/index.js";`);
   }
@@ -1597,11 +1579,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const channels = ir.behavior.normalizedChannels;
   const channelByName = new Map(channels.map((c) => [c.name, c]));
   const hasHook = channels.length > 0;
-  const disclosureChannels = nativeDisclosureChannels(ir);
-  const disclosureChannelAccessors = new Map<string, string>();
-  for (const ch of disclosureChannels.values()) {
-    disclosureChannelAccessors.set(ch.valueProp, `this.behavior.${ch.name}()`);
-    disclosureChannelAccessors.set(ch.name, `this.behavior.${ch.name}()`);
+  const controlledChannels = channelInputs(ir);
+  const channelAccessors = new Map<string, string>();
+  for (const ch of controlledChannels.values()) {
+    channelAccessors.set(ch.valueProp, `this.behavior.${ch.name}()`);
+    channelAccessors.set(ch.name, `this.behavior.${ch.name}()`);
   }
 
   const overlayClickTrigger = ir.behavior.normalizedDismissalTriggers.find(
@@ -1683,7 +1665,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
         idRefGetterLines.push(
           ``,
           `  get ${getterName}(): string | undefined {`,
-          `    return ${angularIdRefListExpr(refAttr.refs, refAttr.passthroughProp, disclosureChannelAccessors)};`,
+          `    return ${angularIdRefListExpr(refAttr.refs, refAttr.passthroughProp, channelAccessors)};`,
           `  }`,
         );
       }
@@ -1834,7 +1816,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   for (const p of ir.styledProps) {
     if (ANGULAR_RESERVED.has(p.name)) continue;
     const propLine = generateInputProp(p);
-    if (disclosureChannels.has(p.name)) {
+    if (controlledChannels.has(p.name)) {
       const type = lowerAngularPropType(p.propType);
       lines.push(`  private readonly input${capitalizeAngular(p.safeName)} = signal<${type} | undefined>(undefined);`);
       lines.push(`  @Input() get ${p.safeName}(): ${type} | undefined { return this.input${capitalizeAngular(p.safeName)}(); }`);
@@ -1900,14 +1882,20 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     declaredProps.add(dim);
   }
 
+  if (ir.interaction?.focusContainer) {
+    lines.push(`  @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {`);
+    lines.push(`    this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;`);
+    lines.push(`  }`);
+  }
   if (hasHook) {
     lines.push(``);
     lines.push(`  private destroyRef = inject(DestroyRef);`);
     // Build the hook call
-    if (disclosureChannels.size > 0) {
+    if (controlledChannels.size > 0) {
+      lines.push(`  private injector = inject(Injector);`);
       lines.push(`  private initializedBehavior?: ReturnType<typeof use${ir.name}>;`);
       lines.push(`  protected get behavior(): ReturnType<typeof use${ir.name}> {`);
-      lines.push(`    return this.initializedBehavior ??= use${ir.name}({`);
+      lines.push(`    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => use${ir.name}({`);
     } else {
       lines.push(`  protected behavior = use${ir.name}({`);
     }
@@ -1929,7 +1917,10 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     }
     lines.push(`    destroyRef: this.destroyRef,`);
     lines.push(`  });`);
-    if (disclosureChannels.size > 0) lines.push(`  }`);
+    if (controlledChannels.size > 0) {
+      lines[lines.length - 1] = `  })));`;
+      lines.push(`  }`);
+    }
     // Ephemeral-surface auto-dismiss (WCAG 2.2.1). The effect tracks the
     // behavior's open signal; sync() restarts/clears the timer; pause
     // listeners land on the template root.
@@ -1950,6 +1941,8 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       );
     }
   }
+
+  if (ir.interaction && ir.dom && ir.interaction.triggers.some(t => t.operation !== "select" && t.operation !== "toggle-item")) lines.push(`  protected canActivateInteraction = canActivateInteraction;`);
 
   // classes computed
   lines.push(``);
@@ -2386,7 +2379,7 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
   // only plain @Input properties — non-signals — so the computation would
   // cache the initial value forever. Emit a getter method instead so each
   // call reflects current @Input values.
-  const hasSignalDeps = channels.length > 0 && nativeDisclosureChannels(ir).size === 0;
+  const hasSignalDeps = channels.length > 0 && channelInputs(ir).size === 0;
   const lines: string[] = hasSignalDeps
     ? [
         `  classes = computed(() =>`,
@@ -2540,6 +2533,7 @@ function renderAngularDomNode(
   }
 
   const attrs: string[] = [];
+  if (node.focusContainer) attrs.push(`#interactionPanel`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2560,9 +2554,11 @@ function renderAngularDomNode(
   // produces `(click)="behavior.X()"`. Legacy `bindings.onX` is filtered
   // below to avoid double-emit.
   for (const [eventName, expr] of Object.entries(node.events)) {
-    const disclosure = resolveNativeDisclosureActivation(node.tag, eventName, expr, ctx.channelByName);
+    const activation = eventName === "click" ? node.activation : undefined;
+    const disclosure = activation?.channel;
     if (disclosure) {
-      attrs.push(`(click)="$event.preventDefault(); ${nativeDisclosureActivationEnabled("$any($event.currentTarget)")} && behavior.set${capitalizeAngular(disclosure.name)}(!behavior.${disclosure.name}())"`);
+      const next = activation!.operation === "toggle" ? `!behavior.${disclosure.name}()` : String(activation!.operation === "open");
+      attrs.push(`(click)="canActivateInteraction($event, ${activation!.cancelNativeDefault}) && behavior.set${capitalizeAngular(disclosure.name)}(${next})"`);
       continue;
     }
     const rendered = renderAngularEvent(eventName, expr, ctx, node.tag);

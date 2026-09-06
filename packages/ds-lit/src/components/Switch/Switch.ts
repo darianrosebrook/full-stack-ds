@@ -193,11 +193,14 @@ export class SwitchElement extends LitElement {
   @property({ type: String }) name?: string;
   @property({ type: String }) value?: string;
 
-  private behavior = new SwitchBehavior(this, {
+  private initializedBehavior?: SwitchBehavior;
+  private get behavior(): SwitchBehavior {
+    return this.initializedBehavior ??= new SwitchBehavior(this, {
     checked: () => this.checked,
     defaultChecked: this.defaultChecked,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   private handleCheckedChange(event: Event): void {
     this.behavior.setChecked((event.target as HTMLInputElement).checked);

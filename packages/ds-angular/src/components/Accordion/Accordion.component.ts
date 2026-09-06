@@ -2,6 +2,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ElementRef, computed, signal, forwardRef, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useAccordion, AccordionContextToken } from "./useAccordion.js";
+import { toggleInteractionItem } from "../../primitives/interaction.js";
 // @generated:end
 
 // @custom:start imports
@@ -70,12 +71,15 @@ export class AccordionComponent implements OnChanges {
 
   private destroyRef = inject(DestroyRef);
   private elRef = inject(ElementRef<HTMLElement>);
-  protected behavior = useAccordion({
+  private initializedBehavior?: ReturnType<typeof useAccordion>;
+  protected get behavior(): ReturnType<typeof useAccordion> {
+    return this.initializedBehavior ??= useAccordion({
     value: () => this._controlledValue(),
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
     destroyRef: this.destroyRef,
-  });
+    });
+  }
 
   isItemOpen(itemValue: string): boolean {
     const v = this.behavior.openness();
@@ -84,17 +88,7 @@ export class AccordionComponent implements OnChanges {
 
   toggleItem(itemValue: string): void {
     const v = this.behavior.openness();
-    if (this._type() === "multiple") {
-      const current = Array.isArray(v) ? v : [];
-      this.behavior.setOpenness(
-        current.includes(itemValue)
-          ? current.filter((x) => x !== itemValue)
-          : [...current, itemValue],
-      );
-    } else {
-      const current = typeof v === "string" ? v : "";
-      this.behavior.setOpenness(current === itemValue && this._collapsible() ? "" : itemValue);
-    }
+    this.behavior.setOpenness(toggleInteractionItem(v, itemValue, this._type() === "multiple", this._collapsible()));
   }
 
   handleKeyDown(e: KeyboardEvent): void {

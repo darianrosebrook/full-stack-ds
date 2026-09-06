@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
+import { toggleInteractionItem } from "../../primitives/interaction.js";
 import { computed, ref } from "vue";
 import { useAccordion, provideAccordionContext } from "./useAccordion.js";
 // @generated:end
@@ -56,17 +57,7 @@ function isItemOpen(itemValue: string): boolean {
 
 function toggleItem(itemValue: string): void {
   const v = openness.value;
-  if (props.type === "multiple") {
-    const current = Array.isArray(v) ? v : [];
-    setOpenness(
-      current.includes(itemValue)
-        ? current.filter((x) => x !== itemValue)
-        : [...current, itemValue],
-    );
-  } else {
-    const current = typeof v === "string" ? v : "";
-    setOpenness(current === itemValue && props.collapsible ? "" : itemValue);
-  }
+  setOpenness(toggleInteractionItem(v, itemValue, props.type === "multiple", Boolean(props.collapsible)));
 }
 
 function handleKeyDown(e: KeyboardEvent): void {

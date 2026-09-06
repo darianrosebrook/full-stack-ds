@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed, useId } from "vue";
 import { useDialog } from "./useDialog.js";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 // @generated:end
 
 // @custom:start imports
@@ -56,6 +57,7 @@ const behavior = useDialog({
   closeOnEscape: props.closeOnEscape,
   closeOnBackdropClick: props.closeOnBackdropClick,
 });
+function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }
 // @generated:end
 
 // @generated:start classes
@@ -79,12 +81,12 @@ const instanceId = useId();
   <Teleport to="body">
     <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="dialog">
       <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
-      <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[`${instanceId}-body`, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
+      <div v-if="behavior.openness.value" :class="'dialog__modal'" :ref="bindInteractionPanel" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[`${instanceId}-body`, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'dialog__header'">
           <h2 :class="'dialog__title'" :id="`${instanceId}-title`">
             <slot name="title" />
           </h2>
-          <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
+          <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog" @click="(e: MouseEvent) => { if (canActivateInteraction(e, false)) behavior.setOpenness(false); }"></button>
         </div>
         <div :class="'dialog__body'" :id="`${instanceId}-body`">
           <slot />

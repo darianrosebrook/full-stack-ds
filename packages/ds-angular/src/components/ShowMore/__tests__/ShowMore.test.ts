@@ -37,5 +37,40 @@ function classTokens(component: { classes: () => string }): string[] {
 // @generated:end
 
 // @custom:start tests
+describe("ShowMore — channel lifecycle", () => {
+  beforeEach(() => { TestBed.configureTestingModule({ imports: [ShowMoreComponent] }); });
+
+  it("reads the initial default after inputs arrive and does not reapply it", () => {
+    const fixture = TestBed.createComponent(ShowMoreComponent);
+    fixture.componentRef.setInput("defaultExpanded", true);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector("button") as HTMLButtonElement;
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+    trigger.click();
+    fixture.detectChanges();
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+    fixture.componentRef.setInput("defaultExpanded", false);
+    fixture.detectChanges();
+    fixture.componentRef.setInput("defaultExpanded", true);
+    fixture.detectChanges();
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("notifies once and follows every controlled parent update without committing locally", () => {
+    const fixture = TestBed.createComponent(ShowMoreComponent);
+    const seen: boolean[] = [];
+    fixture.componentRef.setInput("onExpandedChange", (next: boolean) => seen.push(next));
+    for (const expanded of [false, true, false]) {
+      fixture.componentRef.setInput("expanded", expanded);
+      fixture.detectChanges();
+      const trigger = fixture.nativeElement.querySelector("button") as HTMLButtonElement;
+      expect(trigger.getAttribute("aria-expanded")).toBe(String(expanded));
+      trigger.click();
+      fixture.detectChanges();
+      expect(trigger.getAttribute("aria-expanded")).toBe(String(expanded));
+    }
+    expect(seen).toEqual([true, false, true]);
+  });
+});
 
 // @custom:end

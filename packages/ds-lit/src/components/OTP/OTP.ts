@@ -111,11 +111,14 @@ export class OTPElement extends LitElement {
   @property({ type: String }) fieldLabel?: string = "One-time password digit";
   @property({ type: String }) ariaDescribedby?: string;
 
-  private behavior = new OTPBehavior(this, {
+  private initializedBehavior?: OTPBehavior;
+  private get behavior(): OTPBehavior {
+    return this.initializedBehavior ??= new OTPBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

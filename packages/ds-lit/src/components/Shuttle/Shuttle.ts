@@ -80,11 +80,14 @@ export class ShuttleElement extends LitElement {
   @property({ attribute: false }) defaultValue?: string[] = ["alpha","beta","gamma"];
   @property({ attribute: false }) onValueChange?: (value: string[]) => void;
 
-  private behavior = new ShuttleBehavior(this, {
+  private initializedBehavior?: ShuttleBehavior;
+  private get behavior(): ShuttleBehavior {
+    return this.initializedBehavior ??= new ShuttleBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

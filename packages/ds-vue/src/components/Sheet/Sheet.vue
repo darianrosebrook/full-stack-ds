@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed, useId } from "vue";
 import { useSheet } from "./useSheet.js";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 // @generated:end
 
 // @custom:start imports
@@ -46,6 +47,7 @@ const behavior = useSheet({
   defaultOpen: props.defaultOpen,
   onOpenChange: props.onOpenChange,
 });
+function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }
 // @generated:end
 
 // @generated:start classes
@@ -70,7 +72,7 @@ const instanceId = useId();
   <Teleport to="body">
     <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="sheet">
       <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true" @click.self="behavior.setOpenness(false)"></div>
-      <div v-if="behavior.openness.value" :class="'sheet__content'" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :data-side="props.side" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
+      <div v-if="behavior.openness.value" :class="'sheet__content'" :ref="bindInteractionPanel" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :data-side="props.side" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'sheet__header'">
           <h2 :class="'sheet__title'" :id="`${instanceId}-title`">
             <slot name="title" />
@@ -78,7 +80,7 @@ const instanceId = useId();
           <p :class="'sheet__description'" :id="`${instanceId}-description`">
             <slot name="description" />
           </p>
-          <button :class="'sheet__close'" type="button" aria-label="Close sheet" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
+          <button :class="'sheet__close'" type="button" aria-label="Close sheet" @click="(e: MouseEvent) => { if (canActivateInteraction(e, false)) behavior.setOpenness(false); }"></button>
         </div>
         <div :class="'sheet__body'">
           <slot />

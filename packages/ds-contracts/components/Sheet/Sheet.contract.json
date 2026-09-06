@@ -135,9 +135,6 @@
                   "attrs": {
                     "type": "button",
                     "aria-label": "Close sheet"
-                  },
-                  "events": {
-                    "click": "channel:openness.onChange"
                   }
                 }
               ]
@@ -535,5 +532,16 @@
         "node-ref"
       ]
     }
+  },
+  "interaction": {
+    "channel": "openness",
+    "content": "content",
+    "presence": "unmount",
+    "triggers": [
+      {
+        "part": "close",
+        "operation": "close"
+      }
+    ]
   }
 }

@@ -1,3 +1,4 @@
+import { INTERACTION_RUNTIME_SOURCE } from "../../interaction-runtime.js";
 /**
  * React FrameworkEmitter implementation.
  *
@@ -81,6 +82,7 @@ export function createReactEmitter(
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       const base = ir.name.toLowerCase();
       return [
+        { relativePath: "interaction.ts", contents: INTERACTION_RUNTIME_SOURCE },
         {
           relativePath: `${base}.tsx`,
           contents: generateReactStackPrimitiveSource(ir),

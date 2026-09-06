@@ -1,3 +1,4 @@
+import { buildInteractionIR, type InteractionIR, type ActivationIR } from "./interaction.js";
 /**
  * Component IR: the framework-neutral derivation of a validated contract.
  *
@@ -833,6 +834,10 @@ export interface CompositeControlIR {
  * its idiomatic representation.
  */
 export interface DomNodeIR {
+  /** Normalized host activation; emitters only lower framework syntax. */
+  activation?: ActivationIR;
+  /** Bind the rendered content host to the focus-scope behavior. */
+  focusContainer?: boolean;
   /** HTML tag, or `"slot"`/`"children"` placeholder. */
   tag: string;
   /**
@@ -1667,6 +1672,8 @@ export interface ComponentIR {
    */
   surface: SurfaceIR | undefined;
 
+  /** Value channel, invoking hosts and content presence relationship. */
+  interaction?: InteractionIR;
   /** Interactive control capability, independent of native form submission. */
   formControl: FormControlIR | undefined;
 
@@ -1890,6 +1897,13 @@ export function buildComponentIR(
     behavior.normalizedChannels,
     dom,
   );
+  const interaction = buildInteractionIR(contract, parts, behavior.normalizedChannels, dom);
+  if (interaction?.presence === "hidden") {
+    cssBlocks.push({
+      selector: `.${cssPrefix}__${interaction.content.name}[hidden]:not([hidden="until-found"])`,
+      declarations: { display: "none !important" },
+    });
+  }
   validateDismissalTargetParts(contract, dom);
   const rootRole =
     effectiveRole && !domTreeOwnsRole(dom, effectiveRole)
@@ -2013,6 +2027,7 @@ export function buildComponentIR(
     tokenScopes,
     behavior,
     surface,
+    interaction,
     formControl,
     compositeControl,
     textOverflow,

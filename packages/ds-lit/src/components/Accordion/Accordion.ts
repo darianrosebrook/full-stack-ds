@@ -8,6 +8,7 @@ import {
   provideContext,
   ContextConsumerController,
 } from '../../primitives/index.js';
+import { toggleInteractionItem } from "../../primitives/interaction.js";
 import '../Icon/Icon.js';
 // @generated:end
 
@@ -170,6 +171,10 @@ export class AccordionElement extends LitElement {
       opacity: var(--fsds-accordion-opacity-disabled, 0.5);
       pointer-events: none;
     }
+
+    .accordion__content[hidden]:not([hidden="until-found"]) {
+      display: none !important;
+    }
   `;
 
   @property({ type: String })
@@ -185,11 +190,14 @@ export class AccordionElement extends LitElement {
   @property({ type: Boolean })
   disabled?: boolean;
 
-  private behavior = new AccordionBehavior(this, {
+  private initializedBehavior?: AccordionBehavior;
+  private get behavior(): AccordionBehavior {
+    return this.initializedBehavior ??= new AccordionBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
   });
+  }
 
   private _generatedIdBase: string | null = null;
   private get resolvedIdBase(): string {
@@ -206,17 +214,7 @@ export class AccordionElement extends LitElement {
 
   toggleItem(itemValue: string): void {
     const v = this.behavior.openness;
-    if ((this.type ?? "single") === "multiple") {
-      const current = Array.isArray(v) ? v : [];
-      this.behavior.setOpenness(
-        current.includes(itemValue)
-          ? current.filter((x) => x !== itemValue)
-          : [...current, itemValue],
-      );
-    } else {
-      const current = typeof v === "string" ? v : "";
-      this.behavior.setOpenness(current === itemValue && this.collapsible ? "" : itemValue);
-    }
+    this.behavior.setOpenness(toggleInteractionItem(v, itemValue, (this.type ?? "single") === "multiple", Boolean(this.collapsible)));
     this._provideCtx();
   }
 
@@ -411,6 +409,10 @@ export class AccordionItemElement extends LitElement {
       opacity: var(--fsds-accordion-opacity-disabled, 0.5);
       pointer-events: none;
     }
+
+    .accordion__content[hidden]:not([hidden="until-found"]) {
+      display: none !important;
+    }
   `;
 
   override render() {
@@ -553,6 +555,10 @@ export class AccordionTriggerElement extends LitElement {
     .accordion--disabled {
       opacity: var(--fsds-accordion-opacity-disabled, 0.5);
       pointer-events: none;
+    }
+
+    .accordion__content[hidden]:not([hidden="until-found"]) {
+      display: none !important;
     }
   `;
 
@@ -741,6 +747,10 @@ export class AccordionContentElement extends LitElement {
     .accordion--disabled {
       opacity: var(--fsds-accordion-opacity-disabled, 0.5);
       pointer-events: none;
+    }
+
+    .accordion__content[hidden]:not([hidden="until-found"]) {
+      display: none !important;
     }
   `;
 

@@ -1,4 +1,5 @@
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useShowMore } from "./useShowMore";
@@ -103,7 +104,7 @@ export function ShowMore({
     <div className="show-more__content" style={{ "--fsds-show-more-content-max-lines": maxLines } as CSSProperties}>
       {children}
     </div>
-    <button className="show-more__trigger" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
+    <button className="show-more__trigger" type="button" onClick={(e) => { if (canActivateInteraction(e, false)) setExpanded(!expanded); }} aria-expanded={expanded}>
       {(expanded ? showLessLabel : showMoreLabel)}
     </button>
   </Stack>

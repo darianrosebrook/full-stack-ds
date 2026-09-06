@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useOTP } from "./useOTP.js";
@@ -34,7 +34,9 @@ export type OTPMode = "numeric" | "alphanumeric";
 })
 export class OTPComponent {
   @Input() length?: number = 6;
-  @Input() value?: string;
+  private readonly inputValue = signal<string | undefined>(undefined);
+  @Input() get value(): string | undefined { return this.inputValue(); }
+  set value(value: string | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: string;
   @Input() onChange?: (value: string) => void;
   @Input() onComplete?: (value: string) => void;
@@ -47,21 +49,25 @@ export class OTPComponent {
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useOTP({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useOTP>;
+  protected get behavior(): ReturnType<typeof useOTP> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useOTP({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "otp",
       (this.mode ?? "numeric") ? `otp--${(this.mode ?? "numeric")}` : null,
       this.disabled ? "otp--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   // Materializes an array of length N for *ngFor count-iteration.
   // Memoized by length so re-renders don't churn the iteration source.

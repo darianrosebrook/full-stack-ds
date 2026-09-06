@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useInput } from "./useInput.js";
 import { FieldAssociationService } from "../../primitives/index.js";
@@ -28,7 +28,9 @@ import { FieldAssociationService } from "../../primitives/index.js";
 })
 export class InputComponent {
   @Input() type?: string;
-  @Input() value?: string;
+  private readonly inputValue = signal<string | undefined>(undefined);
+  @Input() get value(): string | undefined { return this.inputValue(); }
+  set value(value: string | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: string;
   @Input() onChange?: (value: string) => void;
   @Input() placeholder?: string;
@@ -42,21 +44,25 @@ export class InputComponent {
   protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useInput({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useInput>;
+  protected get behavior(): ReturnType<typeof useInput> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useInput({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "input",
       this.disabled ? "input--disabled" : null,
       this.invalid ? "input--invalid" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   protected handleValueChange(event: Event): void {
     this.behavior.setValue((event.target as HTMLInputElement).value);

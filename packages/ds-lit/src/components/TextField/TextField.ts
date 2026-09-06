@@ -171,11 +171,14 @@ export class TextFieldElement extends LitElement {
   @property({ type: String }) name?: string;
   @property({ type: String }) ariaDescribedby?: string;
 
-  private behavior = new TextFieldBehavior(this, {
+  private initializedBehavior?: TextFieldBehavior;
+  private get behavior(): TextFieldBehavior {
+    return this.initializedBehavior ??= new TextFieldBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   private handleValueChange(event: Event): void {
     this.behavior.setValue((event.target as HTMLInputElement).value);

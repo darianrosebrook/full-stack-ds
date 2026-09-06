@@ -1,4 +1,5 @@
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useSheet } from "./useSheet";
@@ -170,7 +171,7 @@ export function Sheet({
   slots,
   ...rest
 }: SheetProps) {
-  const { openness, setOpenness, renderInPortal } = useSheet({
+  const { panelRef, openness, setOpenness, renderInPortal } = useSheet({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
@@ -194,7 +195,7 @@ export function Sheet({
         <div className="sheet__overlay" aria-hidden="true" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} />
       ) : null}
       {openness ? (
-        <div className="sheet__content" role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
+        <div className="sheet__content" role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} ref={panelRef} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
           <div className="sheet__header">
             <h2 className="sheet__title" id={`${instanceId}-title`}>
               {slots?.title}
@@ -202,7 +203,7 @@ export function Sheet({
             <p className="sheet__description" id={`${instanceId}-description`}>
               {slots?.description}
             </p>
-            <button className="sheet__close" type="button" aria-label="Close sheet" onClick={() => setOpenness(!openness)} />
+            <button className="sheet__close" type="button" aria-label="Close sheet" onClick={(e) => { if (canActivateInteraction(e, false)) setOpenness(false); }} />
           </div>
           <div className="sheet__body">
             {children}

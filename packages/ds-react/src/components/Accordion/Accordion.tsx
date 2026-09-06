@@ -1,4 +1,6 @@
 // @generated:start imports
+import { InteractionHost, type InteractionHostProps } from "../../primitives/InteractionHost";
+import { toggleInteractionItem } from "../../primitives/interaction.js";
 import { type HTMLAttributes, type KeyboardEvent, type ReactNode, useCallback, useId, useRef } from "react";
 import { Icon } from "../Icon/Icon";
 import { useAccordion } from "./useAccordion";
@@ -65,7 +67,7 @@ export function AccordionItem({
   );
 }
 
-export interface AccordionTriggerProps {
+export interface AccordionTriggerProps extends Omit<InteractionHostProps, "value"> {
   value: string;
   children?: ReactNode;
   className?: string;
@@ -75,8 +77,10 @@ export interface AccordionTriggerProps {
 export function AccordionTrigger({
   value,
   children,
+  asChild,
   className,
   "data-testid": testId,
+  ...hostProps
 }: AccordionTriggerProps) {
   const ctx = useAccordionContext();
   const isOpen = ctx.isItemOpen(value);
@@ -88,7 +92,7 @@ export function AccordionTrigger({
 
   return (
     <h3 className="accordion__header">
-      <button
+      <InteractionHost as="button" {...hostProps} asChild={asChild}
         type="button"
         className={classNames}
         data-disclosure-trigger=""
@@ -98,11 +102,13 @@ export function AccordionTrigger({
         aria-expanded={isOpen}
         disabled={ctx.disabled}
         data-testid={testId}
-        onClick={() => ctx.toggleItem(value)}
+        onActivate={() => ctx.toggleItem(value)}
       >
         {children}
+        {!asChild && (
         <Icon className="accordion__chevron" name="chevron-down" size="sm" />
-      </button>
+        )}
+      </InteractionHost>
     </h3>
   );
 }
@@ -172,17 +178,7 @@ export function Accordion({
 
   const toggleItem = useCallback(
     (itemValue: string) => {
-      if (type === "multiple") {
-        const current = Array.isArray(openness) ? openness : [];
-        const next = current.includes(itemValue)
-          ? current.filter((v) => v !== itemValue)
-          : [...current, itemValue];
-        setOpenness(next);
-      } else {
-        const current = typeof openness === "string" ? openness : "";
-        const next = current === itemValue && collapsible ? "" : itemValue;
-        setOpenness(next);
-      }
+      setOpenness(toggleInteractionItem(openness, itemValue, type === "multiple", Boolean(collapsible)));
     },
     [openness, setOpenness, type, collapsible],
   );

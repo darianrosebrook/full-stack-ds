@@ -1,4 +1,5 @@
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { type DetailsHTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { Icon } from "../Icon/Icon";
@@ -91,7 +92,7 @@ export function Details({
 
   return (
   <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} data-fsds-component="details" {...rest}>
-    <summary className="details__summary" onClick={(e) => { e.preventDefault(); if (e.currentTarget.getAttribute('aria-disabled') !== 'true') { setOpen(!open); } }} aria-disabled={disabled} aria-controls={open ? `${instanceId}-content` : undefined}>
+    <summary className="details__summary" onClick={(e) => { if (canActivateInteraction(e, true)) setOpen(!open); }} aria-disabled={disabled} aria-controls={open ? `${instanceId}-content` : undefined}>
       <span className="details__summaryContent">
         <Icon className="details__icon" name="chevron-down" size="sm" />
         <span className="details__summaryText">

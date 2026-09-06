@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { IconComponent } from "../Icon/Icon.component.js";
@@ -47,10 +47,14 @@ let nextInstanceId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommandComponent implements OnInit, OnDestroy {
-  @Input() open?: boolean;
+  private readonly inputOpen = signal<boolean | undefined>(undefined);
+  @Input() get open(): boolean | undefined { return this.inputOpen(); }
+  set open(value: boolean | undefined) { this.inputOpen.set(value); }
   @Input() defaultOpen?: boolean;
   @Input() onOpenChange?: (open: boolean) => void;
-  @Input() search?: string;
+  private readonly inputSearch = signal<string | undefined>(undefined);
+  @Input() get search(): string | undefined { return this.inputSearch(); }
+  set search(value: string | undefined) { this.inputSearch.set(value); }
   @Input() defaultSearch?: string;
   @Input() onSearchChange?: (value: string) => void;
   @Input() placeholder?: string = "Search...";
@@ -64,7 +68,10 @@ export class CommandComponent implements OnInit, OnDestroy {
   protected readonly instanceId = `fsds-command-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useCommand({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useCommand>;
+  protected get behavior(): ReturnType<typeof useCommand> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useCommand({
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
@@ -72,14 +79,15 @@ export class CommandComponent implements OnInit, OnDestroy {
     defaultSearch: this.defaultSearch,
     onSearchChange: (v) => this.onSearchChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "command",
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   protected handleSearchChange(event: Event): void {
     this.behavior.setSearch((event.target as HTMLInputElement).value);

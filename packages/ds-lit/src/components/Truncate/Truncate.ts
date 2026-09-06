@@ -93,11 +93,14 @@ export class TruncateElement extends LitElement {
   @property({ type: String }) expandText?: string = "Show more";
   @property({ type: String }) collapseText?: string = "Show less";
 
-  private behavior = new TruncateBehavior(this, {
+  private initializedBehavior?: TruncateBehavior;
+  private get behavior(): TruncateBehavior {
+    return this.initializedBehavior ??= new TruncateBehavior(this, {
     expanded: () => this.expanded,
     defaultExpanded: this.defaultExpanded,
     onExpandedChange: (v) => this.onExpandedChange?.(v),
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

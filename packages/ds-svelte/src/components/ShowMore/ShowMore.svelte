@@ -1,5 +1,6 @@
 <script lang="ts">
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { useShowMore } from "./useShowMore.svelte.js";
 // @generated:end
 
@@ -49,5 +50,5 @@ const classes = $derived(
   <div class={'show-more__content'} style:--fsds-show-more-content-max-lines={maxLines}>
     {@render children?.()}
   </div>
-  <button class={'show-more__trigger'} type="button" onclick={() => behavior.setExpanded(!behavior.expanded)} aria-expanded={behavior.expanded}>{(behavior.expanded ? showLessLabel : showMoreLabel)}</button>
+  <button class={'show-more__trigger'} type="button" onclick={(e) => { if (canActivateInteraction(e, false)) behavior.setExpanded(!behavior.expanded); }} aria-expanded={behavior.expanded}>{(behavior.expanded ? showLessLabel : showMoreLabel)}</button>
 </div>

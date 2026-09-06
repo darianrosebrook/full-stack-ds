@@ -122,11 +122,14 @@ export class CheckboxElement extends LitElement {
   override ariaLabel: string | null = null;
   @property({ type: String }) ariaLabelledby?: string;
 
-  private behavior = new CheckboxBehavior(this, {
+  private initializedBehavior?: CheckboxBehavior;
+  private get behavior(): CheckboxBehavior {
+    return this.initializedBehavior ??= new CheckboxBehavior(this, {
     checked: () => this.checked,
     defaultChecked: this.defaultChecked,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   private handleCheckedChange(event: Event): void {
     this.behavior.setChecked((event.target as HTMLInputElement).checked);

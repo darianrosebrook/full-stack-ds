@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useToggleSwitch } from "./useToggleSwitch.js";
 // @generated:end
@@ -26,7 +26,9 @@ export type ToggleSwitchSize = "small" | "medium" | "large";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleSwitchComponent {
-  @Input() checked?: boolean;
+  private readonly inputChecked = signal<boolean | undefined>(undefined);
+  @Input() get checked(): boolean | undefined { return this.inputChecked(); }
+  set checked(value: boolean | undefined) { this.inputChecked.set(value); }
   @Input() defaultChecked?: boolean;
   @Input() onChange?: (checked: boolean) => void;
   @Input() size?: ToggleSwitchSize = "medium";
@@ -36,22 +38,26 @@ export class ToggleSwitchComponent {
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useToggleSwitch({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useToggleSwitch>;
+  protected get behavior(): ReturnType<typeof useToggleSwitch> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useToggleSwitch({
     checked: () => this.checked,
     defaultChecked: this.defaultChecked,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "toggle-switch",
       (this.size ?? "medium") ? `toggle-switch--${(this.size ?? "medium")}` : null,
       this.behavior.checked() ? "toggle-switch--checked" : null,
       this.disabled ? "toggle-switch--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 }
 // @generated:end
 

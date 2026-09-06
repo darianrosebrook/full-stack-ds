@@ -226,7 +226,9 @@ export class SelectElement extends LitElement {
   @property({ type: Boolean }) empty?: boolean;
   @property() position?: string;
 
-  private behavior = new SelectBehavior(this, {
+  private initializedBehavior?: SelectBehavior;
+  private get behavior(): SelectBehavior {
+    return this.initializedBehavior ??= new SelectBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
@@ -234,6 +236,7 @@ export class SelectElement extends LitElement {
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

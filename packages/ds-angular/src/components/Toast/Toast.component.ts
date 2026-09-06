@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, effect, OnInit, OnDestroy, ElementRef } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, effect, signal, Injector, runInInjectionContext, untracked, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useToast } from "./useToast.js";
@@ -50,7 +50,9 @@ let nextInstanceId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastComponent implements OnInit, OnDestroy {
-  @Input() open?: boolean;
+  private readonly inputOpen = signal<boolean | undefined>(undefined);
+  @Input() get open(): boolean | undefined { return this.inputOpen(); }
+  set open(value: boolean | undefined) { this.inputOpen.set(value); }
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() title?: string;
   @Input() variant?: ToastVariant = "info";
@@ -62,11 +64,15 @@ export class ToastComponent implements OnInit, OnDestroy {
   protected readonly instanceId = `fsds-toast-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useToast({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useToast>;
+  protected get behavior(): ReturnType<typeof useToast> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useToast({
     open: () => this.open,
     onOpenChange: (v) => this.onOpenChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
   protected autoDismiss = createAutoDismiss({
     open: () => Boolean(this.behavior.open()),
@@ -76,14 +82,14 @@ export class ToastComponent implements OnInit, OnDestroy {
   });
   private autoDismissEffect = effect(() => this.autoDismiss.sync());
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "toast",
       (this.variant ?? "info") ? `toast--${(this.variant ?? "info")}` : null,
       (this.politeness ?? "polite") ? `toast--${(this.politeness ?? "polite")}` : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   get itemAriaLabelledby(): string | undefined {
     return [this.title ? `${this.instanceId}-title` : null].filter(Boolean).join(" ") || undefined;

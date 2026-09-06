@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useShuttle } from "./useShuttle.js";
@@ -36,25 +36,31 @@ import { useShuttle } from "./useShuttle.js";
 })
 export class ShuttleComponent {
   @Input() ariaLabel?: string;
-  @Input() value?: string[];
+  private readonly inputValue = signal<string[] | undefined>(undefined);
+  @Input() get value(): string[] | undefined { return this.inputValue(); }
+  set value(value: string[] | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: string[] = ["alpha","beta","gamma"];
   @Input() onValueChange?: (value: string[]) => void;
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useShuttle({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useShuttle>;
+  protected get behavior(): ReturnType<typeof useShuttle> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useShuttle({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "shuttle",
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 }
 
 @Component({

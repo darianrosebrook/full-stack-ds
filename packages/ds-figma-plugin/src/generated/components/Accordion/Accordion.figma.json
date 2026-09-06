@@ -387,6 +387,12 @@
           "opacity": "var(--fsds-accordion-opacity-disabled, 0.5)",
           "pointer-events": "none"
         }
+      },
+      {
+        "selector": ".accordion__content[hidden]:not([hidden=\"until-found\"])",
+        "declarations": {
+          "display": "none !important"
+        }
       }
     ],
     "keyframes": []

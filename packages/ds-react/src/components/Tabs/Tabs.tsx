@@ -1,4 +1,5 @@
 // @generated:start imports
+import { InteractionHost, type InteractionHostProps } from "../../primitives/InteractionHost";
 import { type HTMLAttributes, type KeyboardEvent, type ReactNode, useCallback, useEffect, useRef } from "react";
 import { useTabs } from "./useTabs";
 import { createCompoundContext } from "../../primitives/hooks";
@@ -140,7 +141,7 @@ export function TabsList({
   );
 }
 
-export interface TabsTabProps {
+export interface TabsTabProps extends Omit<InteractionHostProps, "value"> {
   value: string;
   disabled?: boolean;
   children?: ReactNode;
@@ -152,8 +153,10 @@ export function TabsTab({
   value,
   disabled,
   children,
+  asChild,
   className,
   "data-testid": testId,
+  ...hostProps
 }: TabsTabProps) {
   const ctx = useTabsContext();
   const isActive = ctx.activeTab === value;
@@ -174,7 +177,7 @@ export function TabsTab({
   }, [registerTab, unregisterTab]);
 
   return (
-    <button
+    <InteractionHost {...hostProps} asChild={asChild}
       role="tab"
       type="button"
       className={classNames}
@@ -185,10 +188,10 @@ export function TabsTab({
       aria-selected={isActive}
       tabIndex={isActive ? 0 : -1}
       disabled={disabled}
-      onClick={() => ctx.setActiveTab(value)}
+      onActivate={() => ctx.setActiveTab(value)}
     >
       {children}
-    </button>
+    </InteractionHost>
   );
 }
 

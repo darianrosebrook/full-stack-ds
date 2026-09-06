@@ -183,12 +183,15 @@ export class WalkthroughElement extends LitElement {
   @property({ type: Boolean }) closeOnOutsideClick?: boolean = false;
   @property({ type: String }) placement?: WalkthroughPlacement = "auto";
 
-  private behavior = new WalkthroughBehavior(this, {
+  private initializedBehavior?: WalkthroughBehavior;
+  private get behavior(): WalkthroughBehavior {
+    return this.initializedBehavior ??= new WalkthroughBehavior(this, {
     index: () => this.index,
     defaultIndex: this.defaultIndex,
     onStepChange: (v) => this.onStepChange?.(v),
     closeOnOutsideClick: this.closeOnOutsideClick,
   });
+  }
 
   private _moving = false;
   private _portaled = false;

@@ -250,7 +250,9 @@ export class CommandElement extends LitElement {
   @property({ type: Boolean }) shouldFilter?: boolean = true;
   @property({ attribute: false }) filter?: ((value: string, search: string) => number) | undefined;
 
-  private behavior = new CommandBehavior(this, {
+  private initializedBehavior?: CommandBehavior;
+  private get behavior(): CommandBehavior {
+    return this.initializedBehavior ??= new CommandBehavior(this, {
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
@@ -258,6 +260,7 @@ export class CommandElement extends LitElement {
     defaultSearch: this.defaultSearch,
     onSearchChange: (v) => this.onSearchChange?.(v),
   });
+  }
 
   private handleSearchChange(event: Event): void {
     this.behavior.setSearch((event.target as HTMLInputElement).value);

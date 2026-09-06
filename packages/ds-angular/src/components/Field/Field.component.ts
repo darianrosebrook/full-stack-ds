@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useField } from "./useField.js";
@@ -58,7 +58,9 @@ export class FieldComponent {
   @Input() required?: boolean;
   @Input() disabled?: boolean;
   @Input() readOnly?: boolean;
-  @Input() value?: string;
+  private readonly inputValue = signal<string | undefined>(undefined);
+  @Input() get value(): string | undefined { return this.inputValue(); }
+  set value(value: string | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: string;
   @Input() onChange?: (value: string) => void;
   @Input() validate?: ((value: string, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
@@ -73,21 +75,25 @@ export class FieldComponent {
   }));
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useField({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useField>;
+  protected get behavior(): ReturnType<typeof useField> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useField({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "field",
       this.status ? `field--${this.status}` : null,
       this.disabled ? "field--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 }
 
 @Component({

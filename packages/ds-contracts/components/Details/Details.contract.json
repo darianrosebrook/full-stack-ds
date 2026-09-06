@@ -61,9 +61,6 @@
           "bindings": {
             "aria-disabled": "prop:disabled"
           },
-          "events": {
-            "click": "channel:open.onChange"
-          },
           "children": [
             {
               "tag": "span",
@@ -318,5 +315,17 @@
         "ReactNode"
       ]
     }
+  },
+  "interaction": {
+    "channel": "open",
+    "content": "content",
+    "presence": "unmount",
+    "triggers": [
+      {
+        "part": "summary",
+        "operation": "toggle"
+      }
+    ],
+    "disabledProp": "disabled"
   }
 }

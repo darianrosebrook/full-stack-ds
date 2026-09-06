@@ -138,11 +138,14 @@ export class InputElement extends LitElement {
   override ariaLabel: string | null = null;
   @property({ type: String }) ariaLabelledby?: string;
 
-  private behavior = new InputBehavior(this, {
+  private initializedBehavior?: InputBehavior;
+  private get behavior(): InputBehavior {
+    return this.initializedBehavior ??= new InputBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   private handleValueChange(event: Event): void {
     this.behavior.setValue((event.target as HTMLInputElement).value);

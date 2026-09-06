@@ -51,6 +51,7 @@ import { isSurfaceComponent } from "./surface-emit.js";
  * expansion channel — discriminated by `isDisclosureContainer`.
  */
 export function isCompoundStateContainer(ir: ComponentIR): boolean {
+  if (ir.interaction) return ir.interaction.triggers.some(t => t.operation === "select" || t.operation === "toggle-item");
   return !!getInteractiveItemPart(ir) && !!getRegionPart(ir);
 }
 
@@ -83,6 +84,8 @@ export function getMultipleItemPart(ir: ComponentIR): PartIR | undefined {
  * one part) when there is no `anatomy.dom` to walk.
  */
 export function getInteractiveItemPart(ir: ComponentIR): PartIR | undefined {
+  const binding = ir.interaction?.triggers.find(t => t.operation === "select" || t.operation === "toggle-item");
+  if (binding) return binding.part;
   const coLocated = ir.parts.find(
     (p) => p.details?.multiple === true && p.details?.interactive === true,
   );
@@ -110,6 +113,7 @@ export function getInteractiveItemPart(ir: ComponentIR): PartIR | undefined {
  * component-name matching.
  */
 export function isDisclosureContainer(ir: ComponentIR): boolean {
+  if (ir.interaction) return ir.interaction.triggers.some(t => t.operation === "toggle-item");
   if (!ir.dom) return false;
   const itemPart = getInteractiveItemPart(ir);
   const regionPart = getRegionPart(ir);
@@ -150,6 +154,7 @@ function collectDescendantPartNames(
 
 /** Returns the first part with role="region" (e.g. panel). */
 export function getRegionPart(ir: ComponentIR): PartIR | undefined {
+  if (ir.interaction) return ir.interaction.content;
   return ir.parts.find((p) => p.details?.role === "region");
 }
 
