@@ -59,3 +59,11 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/native-style-support/report.json
     commit_sha: "87cbef8eb83c760736eb524c0937e293fee1fca0"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: ComposerRadiusTests execute the generated Card consumer; silent-fallback mutant fails the expected assertion; Card and Field paint absolute radii and explicitly reject percentages
+    recorded_at: "2026-09-06T07:35:07.270Z"
+    command: swift test --package-path packages/ds-swiftui
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/native-style-support/swift.json
+    commit_sha: "87cbef8eb83c760736eb524c0937e293fee1fca0"
