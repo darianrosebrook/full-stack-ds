@@ -39,3 +39,12 @@ acceptance:
     then: 'desktop and narrow screenshots and source-bound evidence describe the supported behavior and limits'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Desktop and narrow feed rendering, original mixed media, caption truncation, Avatar sizing, no horizontal overflow and component controls."
+    recorded_at: "2026-09-06T09:04:14.126Z"
+    command: FSDS_E2E_PORT=5201 pnpm exec playwright test e2e/retoken-pages.spec.ts e2e/text-truncation.spec.ts --workers=2
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/pin-detail/validation-summary.json
+    commit_sha: "35ff7836"
