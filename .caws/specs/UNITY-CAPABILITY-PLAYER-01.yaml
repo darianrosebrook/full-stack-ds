@@ -40,3 +40,9 @@ contracts:
   - name: 'unity-capability'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/unity/capabilities.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "capabilities.test.ts: corpus enumeration, unknown valid prop exposed, API versus semantics distinction; tmp/unity-capability-player/capabilities.json"
+    recorded_at: "2026-09-06T08:26:52.533Z"
+    commit_sha: "3044082d"
