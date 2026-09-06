@@ -220,8 +220,8 @@ if [ "${RUN_RAIL:-false}" = true ]; then
   echo ""; say "compose↔RN token-usage parity (compose-parity-diff)"
   if ! pnpm run parity:compose-tokens; then
     echo ""
-    say "compose token scopes diverged from RN for an admitted component —"
-    say "regenerate (contracts drive both trees) and commit the output."
+    say "Compose token consumption or shared binding checks failed —"
+    say "repair the reported binding, regenerate, and commit the output."
     exit 1
   fi
 else say "skip governed:rail"; fi
@@ -274,11 +274,9 @@ if [ "${RUN_A11Y_AUDIT:-false}" = true ]; then
   pnpm run audit:a11y-realization
 else say "skip audit:a11y-realization"; fi
 
-# Styling-realization ledgers (RAIL-STYLING-REALIZATION-LEDGERS-01).
-# Two-directional ratchets over the dead-slot and pseudo-state matrices: a new
-# finding that nobody ledgered fails, and so does a ledger entry that no longer
-# reproduces. This is the GATE OF RECORD for both audits — CI runs them too,
-# but the author gets the verdict here, before the push.
+# Styling-realization gates. Component token consumption has no allowance
+# ledger: unused declarations and missing consumers fail. Pseudo-state and
+# suppression retain their two-directional ratchets. CI runs these gates too.
 if [ "${RUN_STYLING_AUDITS:-false}" = true ]; then
   echo ""; say "audit:dead-slots + audit:pseudo-state + audit:state-suppression"
   pnpm run audit:dead-slots
