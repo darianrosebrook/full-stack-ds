@@ -57,3 +57,8 @@ evidence:
     evidence_ref: "Godot 4.7.2 fresh import, separate editor API scene save/reload, macOS export and template-build receipt passed; tmp/godot-comparative/read.log export.log godot.json godot.png; runnable project preserved."
     recorded_at: "2026-09-06T08:46:19.098Z"
     commit_sha: "62f37334"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Seven emitter tests pass including unknown-prop/surface rejection and changed foreground token; Godot changed-token fixture resolves #123456 in Theme resource; known prop and styling exclusions emitted in capabilities.json. Full repository rail and suites passed."
+    recorded_at: "2026-09-06T08:46:19.692Z"
+    commit_sha: "62f37334"
