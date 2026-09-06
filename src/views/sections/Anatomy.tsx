@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Stack } from "@full-stack-ds/react";
+import { Badge, Stack } from "@full-stack-ds/react";
 import type { AnatomyDetailed, ComponentContract, DomNode, PartDetails } from "../../types/data";
 
 interface AnatomyProps {
@@ -37,7 +37,11 @@ export function Anatomy({ contract }: AnatomyProps) {
             <Stack className="anatomy-key-item stack-gap-04" key={p}>
               <Stack variant="horizontal" className="anatomy-key-heading stack-gap-04">
                 <code>{p}</code>
-                {partDetails?.tag && <span className="pill pill--mono">&lt;{partDetails.tag}&gt;</span>}
+                {partDetails?.tag && (
+                  <Badge variant="tag" size="sm">
+                    <code>&lt;{partDetails.tag}&gt;</code>
+                  </Badge>
+                )}
               </Stack>
               <span className="muted">
                 {partDetails?.description ?? semanticPartSummary(partDetails)}
@@ -86,7 +90,9 @@ function AnatomyPartMeta({ details }: { details: PartDetails }) {
   return (
     <Stack variant="horizontal" className="anatomy-key-meta stack-gap-03">
       {metadata.map((item) => (
-        <span className="pill pill--mono" key={String(item)}>{item}</span>
+        <Badge variant="tag" size="sm" key={String(item)}>
+          <code>{item}</code>
+        </Badge>
       ))}
     </Stack>
   );

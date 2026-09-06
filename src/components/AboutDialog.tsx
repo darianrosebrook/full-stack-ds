@@ -1,12 +1,15 @@
 import { useState } from "react";
 import {
   Avatar,
-  Stack,
   CodeBlock,
   Dialog,
   Image,
   Markdown,
   ProfileFlag,
+  Tabs,
+  TabsList,
+  TabsPanel,
+  TabsTab,
 } from "@full-stack-ds/react";
 
 const ABOUT_MD = `## One contract, five frameworks
@@ -48,8 +51,16 @@ export function AboutDialog({ open, onOpenChange }: { open: boolean; onOpenChang
       slots={{ title: "About Full-Stack DS" }}
       aria-label="About Full-Stack DS"
     >
-      {tab === "about" ? (
-        <>
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as "about" | "commands")}
+        appearance="underline"
+      >
+        <TabsList>
+          <TabsTab value="about">About</TabsTab>
+          <TabsTab value="commands">Commands</TabsTab>
+        </TabsList>
+        <TabsPanel value="about">
           <ProfileFlag>
             <Avatar src={FIGURE_URI} name="Full-Stack DS" size="32" />
             <span>
@@ -63,21 +74,14 @@ export function AboutDialog({ open, onOpenChange }: { open: boolean; onOpenChang
             radius="md"
           />
           <Markdown content={ABOUT_MD} />
-        </>
-      ) : (
-        <CodeBlock
-          language="bash"
-          code={`pnpm run dev                      # showcase at :5173\npnpm run generate -- --target=all   # regenerate every target\npnpm run governed:rail             # admission rail (required mode)\npnpm run docs:check-claims         # governed doc numbers`}
-        />
-      )}
-      <Stack variant="horizontal" className="stack-gap-04" style={{ marginTop: "var(--fsds-core-spacing-size-05)" }}>
-        <button type="button" className={`view-tab${tab === "about" ? " view-tab--active" : ""}`} onClick={() => setTab("about")}>
-          About
-        </button>
-        <button type="button" className={`view-tab${tab === "commands" ? " view-tab--active" : ""}`} onClick={() => setTab("commands")}>
-          Commands
-        </button>
-      </Stack>
+        </TabsPanel>
+        <TabsPanel value="commands">
+          <CodeBlock
+            language="bash"
+            code={`pnpm run dev                      # showcase at :5173\npnpm run generate -- --target=all   # regenerate every target\npnpm run governed:rail             # admission rail (required mode)\npnpm run docs:check-claims         # governed doc numbers`}
+          />
+        </TabsPanel>
+      </Tabs>
     </Dialog>
   );
 }

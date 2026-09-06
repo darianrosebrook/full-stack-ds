@@ -1,4 +1,5 @@
 import {
+  Badge,
   Table,
   TableBody,
   TableCell,
@@ -30,9 +31,14 @@ export function PropsTable({ members }: PropsTableProps) {
               <TableCell>
                 <code>{m.name}</code>
                 {m.required && (
-                  <span className="pill pill--accent" style={{ marginLeft: "var(--fsds-core-spacing-size-05)" }}>
+                  <Badge
+                    variant="tag"
+                    intent="danger"
+                    size="sm"
+                    style={{ marginLeft: "var(--fsds-core-spacing-size-05)" }}
+                  >
                     required
-                  </span>
+                  </Badge>
                 )}
               </TableCell>
               <TableCell>
