@@ -1,0 +1,47 @@
+id: GODOT-COMPARATIVE-PILOT-01
+title: 'Godot contract target and Unity comparative behavior pilot'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+worktree: godot-comparative
+created_at: '2026-09-06T08:32:18.713Z'
+updated_at: '2026-09-06T08:32:20.544Z'
+created_by_session: '01a07581-2e8c-7851-abc0-0126a0e13465'
+blast_radius:
+  modules:
+    - 'Godot target runtime token projection and comparative engine witnesses'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-godot'
+    - 'packages/ds-codegen'
+    - 'packages/ds-unity/Tests'
+    - 'scripts/godot-pilot.mjs'
+    - 'scripts/engine-comparison.mjs'
+    - 'fsds.targets.json'
+    - 'pnpm-workspace.yaml'
+    - 'docs/architecture/godot-target.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'Shared traces are frozen before implementation and engine adaptations remain explicit.'
+  - 'Unsupported declared capabilities reject admission rather than silently disappear.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given shared behavior traces; when Unity and Godot execute them; then normalized observations agree for admitted operations'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Godot generated controls; when imported saved reopened and exported; then runtime and standalone witnesses prove the bounded pilot'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given token facts and unsupported capabilities; when generation runs; then projected theme values reach runtime and unsupported facts diagnose explicitly'
+non_functional: {}
+contracts:
+  - name: 'engine-traces'
+    type: behavior
+    path: 'packages/ds-godot/fixtures/traces.json'
