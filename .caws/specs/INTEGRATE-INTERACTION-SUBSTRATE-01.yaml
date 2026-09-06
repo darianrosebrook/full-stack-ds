@@ -60,3 +60,10 @@ evidence:
     command: "FSDS_E2E_BASE=http://127.0.0.1:5187 FSDS_E2E_PORT=5187 pnpm exec playwright test e2e/details-disclosure.spec.ts e2e/interaction-substrate.spec.ts e2e/design-bindings.spec.ts --workers=1"
     exit_code: 0
     commit_sha: d9134efc
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "After merge d9134efc, c840754c/f0e85046/b5b6fc6f are ancestors of main; original dead-slot-matrix.json SHA256 9099aab8620e0f933b8d5a58154ff382d0c46ce858f228eff3f2813bda3a4690 and .md a905bbba6853a76d70938b1f25c90c7b12ec91fdaab1ad83b33790401ed342d8 match pre-integration bytes"
+    recorded_at: "2026-09-06T05:49:31.013Z"
+    command: "git merge-base --is-ancestor f0e85046 main && git merge-base --is-ancestor b5b6fc6f main && git merge-base --is-ancestor c840754c main && shasum -a 256 .caws/worktrees/details-activation/docs/dead-slot-audit/dead-slot-matrix.json .caws/worktrees/details-activation/docs/dead-slot-audit/dead-slot-matrix.md"
+    exit_code: 0
+    commit_sha: d9134efc
