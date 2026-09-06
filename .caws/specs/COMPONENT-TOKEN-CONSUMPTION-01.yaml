@@ -88,3 +88,9 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/token-consumption/property-rejection-tests.log
     commit_sha: bba5beae
+  - criterion_id: A4
+    status: pass
+    evidence_ref: governed rail pass; 3765 root and 2527 framework tests pass (two existing Lit skips); 135 browser checks pass (one existing Angular skip); generated SwiftUI and Compose compile; controlled default CSS comparison matches for 16 mounted DOM samples; gallery and inspector visually reviewed
+    recorded_at: "2026-09-06T06:27:14.152Z"
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/token-consumption/evidence.json
+    commit_sha: "8b60da3afb6394634cdb239d14670f5b301b73b6"
