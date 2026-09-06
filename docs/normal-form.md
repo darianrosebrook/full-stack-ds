@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 16c7b0ea585f8f2131fa640966af19eacf272e56
+verified_at_commit: cdaa1cb1
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -51,6 +51,8 @@ The component design-binding campaign (`COMPONENT-DESIGN-BINDINGS-01`) adds anot
 The image-feed attempt found a declared Text truncation control with no realization and a missing anatomy children outlet. The contract now carries both, and the Angular emitter shares projected content across selectable host tags. Browser checks exercise those facts across the five Web targets; they do not establish arbitrary component completeness. See [the composed page attempt](architecture/design/retoken-page-attempts.md).
 
 The native clipping follow-up preserves a root clipping fact with platform applicability in the IR, then lowers it separately from rounded background paint. SwiftUI region composers explicitly reject unsupported radius units at consumption. The [native follow-up](architecture/design/design-contract-recon.md#native-follow-up) records the macOS pixel and generated-consumer witnesses and their limits; it does not extend the Web override API to native targets.
+
+Native token consumption also requires target-specific evidence. Compose's direct state lookups must retain definitions in the addressed scope, while theme references do not justify unused component-table copies. The native parity gate checks lookup coverage and shared addresses instead of requiring identical dictionaries across backends. Generated Kotlin resolver tests pin toggle fallbacks and override precedence; the projected-content control path consumes all four logical padding edges. See [component token consumption](architecture/design/component-token-consumption.md). These are binding and resolver facts, not native visual parity.
 
 ## The discipline this is an instance of
 

@@ -218,7 +218,7 @@ if [ "${RUN_RAIL:-false}" = true ]; then
     exit 1
   fi
   echo ""; say "compose↔RN token-usage parity (compose-parity-diff)"
-  if ! node scripts/compose-parity-diff.mjs; then
+  if ! pnpm run parity:compose-tokens; then
     echo ""
     say "compose token scopes diverged from RN for an admitted component —"
     say "regenerate (contracts drive both trees) and commit the output."

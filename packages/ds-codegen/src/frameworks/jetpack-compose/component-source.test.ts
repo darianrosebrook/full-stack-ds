@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildComponentIR } from "../../ir.js";
-import { generateJetpackComposeComponentSource } from "./component-source.js";
+import { generateJetpackComposeComponentSource, generateJetpackComposeTokensFile } from "./component-source.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,6 +30,30 @@ function loadContract(name: string): unknown {
 
 const irFor = (name: string) =>
   buildComponentIR(loadContract(name) as Parameters<typeof buildComponentIR>[0]);
+
+describe("Compose direct token bindings", () => {
+  it("preserves independent padding edges in projected-content controls", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Button"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Button"));
+    for (const edge of ["inline-start", "inline-end", "block-start", "block-end"]) {
+      expect(source).toContain(`layeredSlot("box-model.padding-${edge}")`);
+      expect(tokens).toContain(`name = "box-model.padding-${edge}"`);
+    }
+    expect(source).toContain("PaddingValues(start = paddingInlineStart, top = paddingBlockStart, end = paddingInlineEnd, bottom = paddingBlockEnd)");
+  });
+  it.each(["Switch", "ToggleSwitch"])("keeps %s direct state lookups and their authored fallbacks", name => {
+    const source = generateJetpackComposeComponentSource(irFor(name));
+    const tokens = generateJetpackComposeTokensFile(irFor(name));
+    const reads = [...source.matchAll(/TokenScopes\["([^"]+)"\]\?\.get\("([^"]+)"\)/g)];
+    expect(reads.length).toBeGreaterThan(0);
+    for (const [, scope, slot] of reads) {
+      const block = tokens.split(`"${scope}" to mapOf(`)[1]?.split("\n    ),")[0] ?? "";
+      expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
+    }
+    expect(tokens).toContain('fallback = "4px"');
+    expect(tokens).not.toContain('name = "box-model.gap"');
+  });
+});
 
 describe("generateJetpackComposeComponentSource — static-content path", () => {
   it("emits a composable with a content lambda and theme chrome for a static root (Text)", () => {

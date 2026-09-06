@@ -64,47 +64,11 @@ val textTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.typography.font.weight.bold",
             fallback = "700",
         ),
-        "text.size.xs" to ComponentTokenDefinition(
-            name = "text.size.xs",
-            cssVar = "--fsds-text-size-xs",
-            ref = "core.typography.ramp.2",
-            fallback = "0.75rem",
-        ),
-        "text.size.sm" to ComponentTokenDefinition(
-            name = "text.size.sm",
-            cssVar = "--fsds-text-size-sm",
-            ref = "core.typography.ramp.3",
-            fallback = "0.875rem",
-        ),
         "text.size.md" to ComponentTokenDefinition(
             name = "text.size.md",
             cssVar = "--fsds-text-size-md",
             ref = "core.typography.ramp.4",
             fallback = "1rem",
-        ),
-        "text.size.lg" to ComponentTokenDefinition(
-            name = "text.size.lg",
-            cssVar = "--fsds-text-size-lg",
-            ref = "core.typography.ramp.5",
-            fallback = "1.125rem",
-        ),
-        "text.size.xl" to ComponentTokenDefinition(
-            name = "text.size.xl",
-            cssVar = "--fsds-text-size-xl",
-            ref = "core.typography.ramp.6",
-            fallback = "1.25rem",
-        ),
-        "text.size.2xl" to ComponentTokenDefinition(
-            name = "text.size.2xl",
-            cssVar = "--fsds-text-size-2xl",
-            ref = "core.typography.ramp.7",
-            fallback = "1.5rem",
-        ),
-        "text.size.3xl" to ComponentTokenDefinition(
-            name = "text.size.3xl",
-            cssVar = "--fsds-text-size-3xl",
-            ref = "core.typography.ramp.8",
-            fallback = "2rem",
         ),
     ),
     "variant_display" to mapOf(

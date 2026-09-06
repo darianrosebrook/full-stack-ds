@@ -213,11 +213,11 @@ jobs:
             packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components
 
       # Compose↔RN token-usage parity: every compose-admitted component's
-      # generated token scope must equal the RN component's scope exactly
-      # (two-directional), and every scope entry must resolve through the
-      # theme chain. Reads the committed generated trees — no regen needed.
+      # emitted scopes follow its own consumers, shared addresses agree, and
+      # supported chrome roles remain consumed. Includes rejection selfchecks.
+      # Reads the generated trees after the drift check.
       - name: Compose-RN token parity
-        run: node scripts/compose-parity-diff.mjs
+        run: pnpm run parity:compose-tokens
 
       # Iconography has two independent committed-output obligations. The byte
       # check proves package-root index.mjs/index.d.ts equal a fresh build; the

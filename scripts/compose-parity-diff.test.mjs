@@ -1,0 +1,74 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { inspectComposeTokens } from './compose-parity-diff.mjs';
+
+const definition = (key, scope = 'root', fields = 'fallback = "8px",') =>
+  `"${scope}" to mapOf("${key}" to ComponentTokenDefinition(name = "${key}", cssVar = "--fsds-${key.replaceAll('.', '-')}", ${fields})),`;
+const fixture = (changes = {}) => ({
+  name: 'Example',
+  component: 'fun Example(modifier: Modifier = Modifier) { val x = exampleTokenScopes["root"]?.get("example.width") }',
+  tokens: definition('example.width'),
+  rnTokens: 'name: "example.width", cssVar: "--fsds-example-width", name: "box-model.gap", cssVar: "--fsds-box-model-gap",',
+  rnStyles: 'const gap = tokens.root?.["box-model.gap"];',
+  ...changes,
+});
+
+test('different consumed target vocabularies are valid', () => {
+  assert.deepEqual(inspectComposeTokens(fixture()), []);
+  assert.deepEqual(inspectComposeTokens(fixture({ rnTokens: '', rnStyles: '' })), []);
+});
+test('a missing definition or a definition in the wrong state cannot satisfy a read', () => {
+  assert.deepEqual(inspectComposeTokens(fixture({ tokens: '' })), ['DEAD LOOKUP root/example.width']);
+  assert.deepEqual(inspectComposeTokens(fixture({ tokens: definition('example.width', 'checked') })), [
+    'UNCONSUMED checked/example.width', 'DEAD LOOKUP root/example.width',
+  ]);
+});
+test('unconsumed baggage is rejected in either a new name or an unread state', () => {
+  assert.deepEqual(inspectComposeTokens(fixture({ tokens: definition('example.width') + definition('unused') })), ['UNCONSUMED root/unused']);
+  assert.deepEqual(inspectComposeTokens(fixture({ tokens: definition('example.width') + definition('example.width', 'hover') })), ['UNCONSUMED hover/example.width']);
+});
+test('shared identity drift, malformed identity and unresolvable entries are rejected', () => {
+  assert.match(inspectComposeTokens(fixture({ rnTokens: 'name: "example.width", cssVar: "--fsds-wrong",' }))[0], /SHARED IDENTITY/);
+  assert.match(inspectComposeTokens(fixture({ tokens: definition('example.width').replace('name = "example.width"', 'name = "wrong"') }))[0], /INVALID IDENTITY/);
+  assert.deepEqual(inspectComposeTokens(fixture({ tokens: definition('example.width', 'root', '') })), ['UNRESOLVABLE root/example.width: no ref, literal or fallback']);
+  for (const fields of ['literal = "0",', 'ref = "semantic.size",', 'fallback = "0",']) {
+    assert.deepEqual(inspectComposeTokens(fixture({ tokens: definition('example.width', 'root', fields) })), []);
+  }
+});
+test('a supported styling role cannot disappear even if its definition disappears too', () => {
+  assert.deepEqual(inspectComposeTokens(fixture({ rnStyles: 'tokens.root?.["example.color.background.default"]' })), [
+    'USAGE DIVERGENCE static: example.color.background.default',
+  ]);
+});
+test('layered branch reads are covered and unrelated strings do not credit consumption', () => {
+  const input = fixture({
+    component: 'fun Example(modifier: Modifier = Modifier) { layeredSlot(when (size) { Small -> "example.small"; Large -> "example.large" }) }',
+    tokens: definition('example.small') + definition('example.large', 'variant_large'),
+  });
+  assert.deepEqual(inspectComposeTokens(input), []);
+  assert.deepEqual(inspectComposeTokens({ ...input, tokens: definition('example.small') }), ['DEAD LOOKUP layered/example.large']);
+  assert.deepEqual(inspectComposeTokens(fixture({ component: 'fun Example(modifier: Modifier = Modifier) { /* layeredSlot("example.width") */ val label = when (x) { X -> "example.width" } }' })), ['UNCONSUMED root/example.width']);
+});
+test('content propagation and modifier ordering remain obligations', () => {
+  const input = fixture({
+    component: 'fun Example(modifier: Modifier = Modifier, content: @Composable () -> Unit) { layeredSlot("example.color.foreground.primary") }',
+    tokens: definition('example.color.foreground.primary'),
+  });
+  assert.deepEqual(inspectComposeTokens(input), ['CONTENT COLOR: missing LocalFsdsContentColor']);
+  assert.deepEqual(inspectComposeTokens({ ...input, component: input.component.replace('layeredSlot(', 'LocalFsdsContentColor; layeredSlot(') }), []);
+  assert.deepEqual(inspectComposeTokens(fixture({ component: fixture().component.replace('modifier: Modifier = Modifier', 'size: Int = 8, modifier: Modifier = Modifier') })), ['MODIFIER ORDER: modifier must be first optional']);
+});
+
+test('projected controls claim canonical padding edges and typography loss cannot erase its obligation', () => {
+  assert.deepEqual(inspectComposeTokens(fixture({
+    component: fixture().component.replace('val x =', 'FsdsButtonScope; val x ='),
+    rnStyles: 'tokens.root?.["box-model.padding-inline-end"]; tokens.root?.["box-model.padding-block-end"];',
+  })), [
+    'USAGE DIVERGENCE button: box-model.padding-inline-end',
+    'USAGE DIVERGENCE button: box-model.padding-block-end',
+  ]);
+  assert.deepEqual(inspectComposeTokens(fixture({
+    rnTokens: 'name: "text.size.md", cssVar: "--fsds-text-size-md",',
+    rnStyles: 'tokens.root?.["text.size.md"];',
+  })), ['USAGE DIVERGENCE static: text.size.md']);
+});
