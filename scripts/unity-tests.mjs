@@ -43,7 +43,7 @@ fs.mkdirSync(path.join(project, 'ProjectSettings'), { recursive: true });
 fs.mkdirSync(path.join(project, 'Packages'), { recursive: true });
 fs.writeFileSync(path.join(project, 'ProjectSettings/ProjectVersion.txt'), 'm_EditorVersion: 6000.5.3f1\n');
 fs.writeFileSync(path.join(project, 'Packages/manifest.json'), JSON.stringify({
-  dependencies: { 'com.unity.test-framework': '1.6.0', 'com.unity.modules.uielements': '1.0.0' },
+  dependencies: { 'com.unity.test-framework': '1.7.0', 'com.unity.modules.uielements': '1.0.0' },
   testables: ['com.fullstackds.ui'],
 }, null, 2));
 const destination = path.join(project, 'Packages/com.fullstackds.ui');
@@ -57,7 +57,11 @@ const log = path.join(evidence, 'editor.log');
 console.log(`Unity package lane: ${editor}\nProject: ${project}\nLog: ${log}`);
 const run = spawnSync(editor, ['-batchmode', '-nographics', '-projectPath', project, '-runTests', '-testPlatform', 'EditMode', '-testResults', results, '-logFile', log], { stdio: 'inherit', timeout: 600_000 });
 if (run.error) throw run.error;
-if (!fs.existsSync(results)) throw new Error(`Unity produced no test results (exit ${run.status}); inspect ${log}`);
+if (!fs.existsSync(results)) {
+  const output = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
+  const reason = /No valid Unity Editor license found/.test(output) ? 'Activate an Editor license in Unity Hub before running this lane.' : 'Unity exited before producing test results.';
+  throw new Error(`${reason} Exit ${run.status}; inspect ${log}`);
+}
 const xml = fs.readFileSync(results, 'utf8');
 const summary = xml.match(/<test-run\b[^>]*>/)?.[0];
 console.log(summary);
