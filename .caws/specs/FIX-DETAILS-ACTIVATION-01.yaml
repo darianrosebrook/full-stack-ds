@@ -82,3 +82,10 @@ evidence:
     command: "FSDS_E2E_BASE=http://localhost:5174 FSDS_E2E_PORT=5174 pnpm exec playwright test e2e/details-disclosure.spec.ts --grep 'homepage parity' --workers=1"
     exit_code: 0
     commit_sha: d9134efc
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "e2e/details-disclosure.spec.ts validates controlled and disabled native summary activation on five web targets, with callback counts on four recorder-enabled targets; framework Details behavior tests cover channel ownership"
+    recorded_at: "2026-09-06T05:49:54.017Z"
+    command: "FSDS_E2E_BASE=http://127.0.0.1:5187 FSDS_E2E_PORT=5187 pnpm exec playwright test e2e/details-disclosure.spec.ts e2e/interaction-substrate.spec.ts e2e/design-bindings.spec.ts --workers=1"
+    exit_code: 0
+    commit_sha: d9134efc
