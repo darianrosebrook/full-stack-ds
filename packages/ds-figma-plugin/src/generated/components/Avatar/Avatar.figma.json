@@ -447,7 +447,6 @@
           "--fsds-avatar-size-radius-default": "var(--fsds-semantic-shape-control-radius-pill, 9999px)",
           "--fsds-avatar-size-border-default": "var(--fsds-semantic-shape-control-border-default-width, 1px)",
           "--fsds-avatar-color-background-default": "var(--fsds-semantic-color-background-secondary, #f7f7f7)",
-          "--fsds-avatar-color-background-inverse": "var(--fsds-semantic-color-background-inverse, #141414)",
           "--fsds-avatar-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-avatar-color-border-default": "var(--fsds-semantic-color-border-light, #b8b8b8)",
           "--fsds-avatar-typography-font-weight-medium": "var(--fsds-core-typography-weight-medium, 500)",

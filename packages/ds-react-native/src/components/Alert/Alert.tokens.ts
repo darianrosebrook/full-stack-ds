@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const alertTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -26,11 +16,6 @@ export const alertTokenScopes = {
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.feedback.size.padding-block",
       fallback: 16,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
-      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -50,41 +35,15 @@ export const alertTokenScopes = {
       ref: "semantic.feedback.size.gap",
       fallback: 8,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       literal: 0,
     },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
-    },
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       literal: 0,
-    },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
-    },
-    "alert.color.background.primary": {
-      name: "alert.color.background.primary",
-      cssVar: "--fsds-alert-color-background-primary",
-      ref: "semantic.color.background.primary",
-      fallback: "#ffffff",
     },
     "alert.color.foreground.primary": {
       name: "alert.color.foreground.primary",
@@ -98,23 +57,11 @@ export const alertTokenScopes = {
       ref: "semantic.color.border.primary",
       fallback: "#a0a0a1",
     },
-    "alert.size.padding": {
-      name: "alert.size.padding",
-      cssVar: "--fsds-alert-size-padding",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
     "alert.size.radius": {
       name: "alert.size.radius",
       cssVar: "--fsds-alert-size-radius",
       ref: "semantic.shape.control.radius.default",
       fallback: 6,
-    },
-    "alert.spacing.gap": {
-      name: "alert.spacing.gap",
-      cssVar: "--fsds-alert-spacing-gap",
-      ref: "semantic.spacing.gap.gridSmall",
-      fallback: 8,
     },
     "alert.text.size": {
       name: "alert.text.size",
@@ -127,54 +74,6 @@ export const alertTokenScopes = {
       cssVar: "--fsds-alert-text-weight",
       ref: "semantic.typography.font.weight.regular",
       fallback: "400",
-    },
-    "alert.icon.size": {
-      name: "alert.icon.size",
-      cssVar: "--fsds-alert-icon-size",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
-    "alert.typography.title.fontWeight": {
-      name: "alert.typography.title.fontWeight",
-      cssVar: "--fsds-alert-typography-title-font-weight",
-      ref: "semantic.typography.font.weight.bold",
-      fallback: "700",
-    },
-    "alert.typography.title.fontSize": {
-      name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-font-size",
-      ref: "semantic.typography.body.02",
-      fallback: 16,
-    },
-    "alert.size.padding.inline": {
-      name: "alert.size.padding.inline",
-      cssVar: "--fsds-alert-size-padding-inline",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "alert.size.padding.page": {
-      name: "alert.size.padding.page",
-      cssVar: "--fsds-alert-size-padding-page",
-      ref: "core.spacing.size.07",
-      fallback: 24,
-    },
-    "alert.typography.page.fontSize": {
-      name: "alert.typography.page.fontSize",
-      cssVar: "--fsds-alert-typography-page-font-size",
-      ref: "semantic.typography.body.02",
-      fallback: 16,
-    },
-    "alert.typography.page.title.fontSize": {
-      name: "alert.typography.page.title.fontSize",
-      cssVar: "--fsds-alert-typography-page-title-font-size",
-      ref: "semantic.typography.body.01",
-      fallback: 18,
-    },
-    "alert.typography.inline.fontSize": {
-      name: "alert.typography.inline.fontSize",
-      cssVar: "--fsds-alert-typography-inline-font-size",
-      ref: "semantic.typography.body.04",
-      fallback: 12,
     },
   },
   "variant_info": {
@@ -258,12 +157,6 @@ export const alertTokenScopes = {
     },
   },
   "variant_inline": {
-    "alert.size.padding": {
-      name: "alert.size.padding",
-      cssVar: "--fsds-alert-size-padding",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
     "alert.spacing.gap": {
       name: "alert.spacing.gap",
       cssVar: "--fsds-alert-spacing-gap",
@@ -276,20 +169,8 @@ export const alertTokenScopes = {
       ref: "semantic.typography.body.04",
       fallback: 12,
     },
-    "alert.typography.title.fontSize": {
-      name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-font-size",
-      ref: "semantic.typography.body.03",
-      fallback: 14,
-    },
   },
   "variant_section": {
-    "alert.size.padding": {
-      name: "alert.size.padding",
-      cssVar: "--fsds-alert-size-padding",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
     "alert.spacing.gap": {
       name: "alert.spacing.gap",
       cssVar: "--fsds-alert-spacing-gap",
@@ -302,20 +183,8 @@ export const alertTokenScopes = {
       ref: "semantic.typography.body.03",
       fallback: 14,
     },
-    "alert.typography.title.fontSize": {
-      name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-font-size",
-      ref: "semantic.typography.body.02",
-      fallback: 16,
-    },
   },
   "variant_page": {
-    "alert.size.padding": {
-      name: "alert.size.padding",
-      cssVar: "--fsds-alert-size-padding",
-      ref: "core.spacing.size.07",
-      fallback: 24,
-    },
     "alert.spacing.gap": {
       name: "alert.spacing.gap",
       cssVar: "--fsds-alert-spacing-gap",
@@ -327,18 +196,6 @@ export const alertTokenScopes = {
       cssVar: "--fsds-alert-text-size",
       ref: "semantic.typography.body.02",
       fallback: 16,
-    },
-    "alert.typography.title.fontSize": {
-      name: "alert.typography.title.fontSize",
-      cssVar: "--fsds-alert-typography-title-font-size",
-      ref: "semantic.typography.body.01",
-      fallback: 18,
-    },
-    "alert.typography.title.fontWeight": {
-      name: "alert.typography.title.fontWeight",
-      cssVar: "--fsds-alert-typography-title-font-weight",
-      ref: "semantic.typography.font.weight.bold",
-      fallback: "700",
     },
   },
 } satisfies ComponentTokenScopes;

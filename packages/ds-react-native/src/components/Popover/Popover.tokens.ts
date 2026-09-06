@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const popoverTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -26,11 +16,6 @@ export const popoverTokenScopes = {
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.surface.size.padding-block",
       fallback: 16,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
-      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -50,42 +35,16 @@ export const popoverTokenScopes = {
       ref: "semantic.surface.size.gap",
       fallback: 8,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.surface.size.min-width",
       fallback: 64,
     },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
-    },
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       literal: 0,
-    },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
-    },
-    "popover.size.padding.default": {
-      name: "popover.size.padding.default",
-      cssVar: "--fsds-popover-size-padding-default",
-      ref: "core.spacing.size.06",
-      fallback: 16,
     },
     "popover.size.radius.default": {
       name: "popover.size.radius.default",
@@ -93,35 +52,11 @@ export const popoverTokenScopes = {
       ref: "semantic.shape.control.radius.default",
       fallback: 6,
     },
-    "popover.size.gap.default": {
-      name: "popover.size.gap.default",
-      cssVar: "--fsds-popover-size-gap-default",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "popover.color.background.content": {
-      name: "popover.color.background.content",
-      cssVar: "--fsds-popover-color-background-content",
-      ref: "semantic.color.background.elevated",
-      fallback: "#ffffff",
-    },
     "popover.color.border.default": {
       name: "popover.color.border.default",
       cssVar: "--fsds-popover-color-border-default",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
-    },
-    "popover.elevation.default": {
-      name: "popover.elevation.default",
-      cssVar: "--fsds-popover-elevation-default",
-      ref: "semantic.elevation.surface.popover",
-      fallback: "0px 8px 10px #0000000a, 0px 20px 25px #0000001a",
-    },
-    "popover.layer.content": {
-      name: "popover.layer.content",
-      cssVar: "--fsds-popover-layer-content",
-      ref: "core.layer.dropdown",
-      fallback: "1000",
     },
   },
 } satisfies ComponentTokenScopes;

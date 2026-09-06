@@ -35,8 +35,8 @@ const RAW_CONTROL_DEBT: Record<string, DebtEntry> = {
     rationale: "Recursive native disclosure pending a ref-forwarding, state-synchronized Details API.",
   },
   "components/properties-panel/PropertiesPanel.tsx": {
-    tags: { button: 2, input: 5, select: 1 },
-    rationale: "Inspector form controls are being migrated in the design-bindings slice.",
+    tags: { button: 2, input: 4, select: 1 },
+    rationale: "Remaining prop and color controls use native inputs; design-property values use the generated Input and retired unwired rows are removed.",
   },
   "components/properties-panel/PropertySection.tsx": {
     tags: { button: 1 },

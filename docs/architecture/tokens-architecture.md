@@ -5,7 +5,7 @@ status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 652a157f
+verified_at_commit: 2fce1451
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
   - src/components/properties-panel/**
@@ -239,12 +239,11 @@ The diagnostic-code shape mirrors the admission rail: every issue is a JSON-poin
 
 > **A properties-panel control is offered only for a slot the committed generated CSS provably reads.**
 
-An override is live only if some rule READS the custom property. A declared slot with zero `var(--fsds-…)` reads is unwired interface — legitimate to declare (the declaration is the design-tool override surface; see the dead-slot ledger's interface framing), but never a live control: an edit on it cannot move the rendered component, and a dead knob costs a designer a debugging session to disprove.
+An override is live when it reaches a real property through the CSS dependency graph. Component declarations without a property or behavior consumer fail validation; semantic vocabulary may remain unused. The [component consumption contract](design/component-token-consumption.md) governs retirement and target-specific projection.
 
-- **Proof source:** the committed generated React CSS and imported shared box-model stylesheet, scanned for `var(--fsds-*)` reads — the same authority the dead-slot audit reads. No IR change was needed: reads are derivable from the emitted CSS directly (`src/components/properties-panel/css-read-proof.ts`).
-- **Binding rule:** legacy role resolution (`resolveBoxModel`, `resolveFillColor`, `resolveTypography`) prefers read slots and omits an unread role. Shared box-model controls now consume the common gap slot at component boundaries. New design-property controls use explicit typed bindings rather than token-name heuristics.
-- **Rendering rule:** unread token rows stay visible — declaration is interface, not drift — but render explicitly `unwired` (disabled field + badge), never as an editable control.
-- **Fail-open boundary:** rows without a proof source (no generated CSS for the name) keep legacy behavior rather than hiding controls; the proof marks `isRead`, and only a positive `false` withdraws a control.
+- **Proof source:** generated React CSS and the imported shared box stylesheet, parsed into property roots and declaration dependencies. Disconnected aliases, comments, and quoted strings do not count.
+- **Binding rule:** material resolvers prefer read slots and omit unread roles. New design-property controls use explicit typed bindings. Shared box controls retain the layered shorthand, axis, and side precedence.
+- **Rendering rule:** native-only or compile-time-only declarations are not editable Web CSS controls. Missing CSS proof establishes no live control.
 
 Verified at runtime by `e2e/editor-binding-rail.spec.ts` (Button: the shared gap control moves the preview's computed gap and clearing restores the default) and pinned by the read-proof block of `src/components/properties-panel/control-derivation.test.ts`.
 

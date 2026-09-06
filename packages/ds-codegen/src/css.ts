@@ -1,4 +1,5 @@
 import { emitBoxModelBoundaryCss } from './box-model.js';
+import { analyzeCssTokenConsumption, onlyConsumedDeclarations } from './css-token-consumption.js';
 /**
  * CSS string formatting from IR.
  *
@@ -346,12 +347,36 @@ function webCssBlocks(ir: ComponentIR): ComponentIR["cssBlocks"] {
         }
       }
     }
+    // Variant and part defaults are values at property consumers, never public
+    // overrides. Otherwise a default side value defeats a consumer's axis or
+    // shorthand in the shared side layer.
+    if (block.selector !== rootSelector) {
+      for (const [name, value] of Object.entries(declarations)) {
+        if (!name.startsWith("--fsds-box-model-")) continue;
+        const property = name.slice("--fsds-box-model-".length);
+        if (!(property in declarations)) declarations[property] = `var(${name}, ${value})`;
+        delete declarations[name];
+      }
+    }
     for (const binding of bindings) {
       if (binding.selector !== block.selector || !(binding.cssProperty in declarations)) continue;
       declarations[binding.cssProperty] = `var(${binding.cssVar}, ${declarations[binding.cssProperty]})`;
     }
     return { ...block, declarations };
   });
+}
+
+/** Reachability in the web realization; behavior defaults do not become CSS knobs. */
+export function webTokenConsumption(ir: ComponentIR) {
+  const root = `.${ir.cssPrefix}`;
+  const declarations = webCssBlocks(ir).map(block => `${block.selector} {\n${
+    Object.entries(block.declarations)
+      .filter(([name]) => block.selector !== root || !name.startsWith("--fsds-box-model-"))
+      .map(([name, value]) => `${name}: ${value};`).join("\n")
+  }\n}`).join("\n");
+  return analyzeCssTokenConsumption([
+    declarations, ...ir.keyframes.map(formatKeyframes), emitBoxModelBoundaryCss(),
+  ]);
 }
 
 export function emitCss(ir: ComponentIR): string {
@@ -410,6 +435,7 @@ export function emitCss(ir: ComponentIR): string {
  */
 export function emitTokensCss(ir: ComponentIR): string {
   const rootSelector = `.${ir.cssPrefix}`;
+  const consumed = webTokenConsumption(ir).consumed;
   // Portal-aware: when the contract enables a portal for its surface,
   // the content node renders at document.body. Component-local slot
   // declarations scoped to `.<cssPrefix>` don't reach it, so the
@@ -430,7 +456,7 @@ export function emitTokensCss(ir: ComponentIR): string {
   // existing `[data-<prefix>-content]` selector if it needs custom
   // sizing.
   const portalEnabled = ir.behavior.portal?.enabled === true;
-  const grouped = groupBlocksByRoot(webCssBlocks(ir), rootSelector)
+  const grouped = groupBlocksByRoot(onlyConsumedDeclarations(webCssBlocks(ir), consumed), rootSelector)
     .map((g) => filterGroupedBlock(g, "slots"))
     .map((g) => g.selector === rootSelector ? { ...g, decls: Object.fromEntries(Object.entries(g.decls).filter(([key]) => !key.startsWith("--fsds-box-model-"))) } : g)
     .flatMap((g) => {
@@ -519,8 +545,9 @@ export function generateCSS(contract: ComponentContract): string {
  */
 export function emitLitInlineCss(ir: ComponentIR): string {
   const rootSelector = `.${ir.cssPrefix}`;
+  const consumed = webTokenConsumption(ir).consumed;
 
-  const tokensGroups = groupBlocksByRoot(webCssBlocks(ir), rootSelector)
+  const tokensGroups = groupBlocksByRoot(onlyConsumedDeclarations(webCssBlocks(ir), consumed), rootSelector)
     .map((g) => filterGroupedBlock(g, "slots"))
     .map((g) => g.selector === rootSelector ? { ...g, decls: Object.fromEntries(Object.entries(g.decls).filter(([key]) => !key.startsWith("--fsds-box-model-"))) } : g)
     .map((g) => formatGroupedBlock(g))

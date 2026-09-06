@@ -24,11 +24,6 @@
     "fallback": "4px",
     "layer": "core"
   },
-  "profile-flag.spacing.padding.default": {
-    "resolvesTo": "core.spacing.size.04",
-    "fallback": "8px",
-    "layer": "core"
-  },
   "profile-flag.spacing.padding.right": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",

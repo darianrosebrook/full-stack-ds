@@ -139,27 +139,6 @@ function TokenRow({
   onChange: (v: string) => void;
   onOpenPicker: () => void;
 }) {
-  // Unwired (FIX-EDITOR-CONTROL-BINDING-PROOF-01): no generated CSS rule reads
-  // this slot's var, so an edit cannot move the rendered component. The row
-  // stays visible — the declaration is interface, not drift — but renders as a
-  // disabled field with an explicit unwired marker instead of a live control.
-  if (row.isRead === false) {
-    return (
-      <div className="fsds-pp__token-row fsds-pp__token-row--unwired" data-unwired={row.slot}>
-        <span className="fsds-pp__swatch fsds-pp__swatch--dim" aria-hidden />
-        <input
-          className="fsds-pp__token-value"
-          type="text"
-          value={value}
-          disabled
-          aria-label={`${row.slot} value (unwired)`}
-        />
-        <span className="fsds-pp__unwired-badge" title="No generated CSS rule reads this slot — edits cannot affect the preview">
-          unwired
-        </span>
-      </div>
-    );
-  }
   return (
     <div className="fsds-pp__token-row">
       {row.isColor ? (
@@ -212,25 +191,21 @@ export function PropertiesPanel({
   foundationTokens,
 }: PropertiesPanelProps) {
   const { variantAxes, props, tokens } = deriveControls(component.contract);
-  // Read-proof (FIX-EDITOR-CONTROL-BINDING-PROOF-01): the `--fsds-*` vars the
-  // committed generated React CSS actually reads. Rows whose var is never
-  // read are declared-but-unwired interface — they render explicitly as
-  // unwired and never become editable controls, because an edit on them
-  // cannot move the rendered component. Null (no CSS for the name) leaves
-  // rows unmarked and behavior unchanged.
-  const readVars = readCssVarsFor(component.name);
+  // Only the emitted Web dependency closure establishes an editable control.
+  // Native-only tokens and missing proof do not produce Web controls.
+  const readVars = readCssVarsFor(component.name) ?? new Set<string>();
   // The box-model sections read the normalized MATERIAL surface (authored
   // sidecar rows + inherited primitive/profile slots from the data plugin),
   // not raw sidecar presence. The Component-tokens section keeps `tokens`
   // (authored-only): the sidecar is the authoring surface, the material rows
   // are the realized one.
   const materialRows = materialTokenRows({ ...component, readCssVars: readVars });
-  const markedTokens = markRowsRead(tokens, readVars);
+  const markedTokens = markRowsRead(tokens, readVars).filter(row => row.isRead === true);
   const overrideCount =
     Object.keys(propValues).length + Object.keys(tokenValues).length;
   // Which token row's picker is open (by slot), and whether it's color-only.
   const [designScope, setDesignScope] = useState('root');
-  const bindings = component.designBindings ?? [];
+  const bindings = (component.designBindings ?? []).filter(binding => readVars.has(binding.cssVar));
   const designScopes = [...new Set(bindings.map(b => b.selectorKey))];
   const activeDesignScope = designScopes.includes(designScope) ? designScope : designScopes[0];
   const activeBindings = bindings.filter(b => b.selectorKey === activeDesignScope);

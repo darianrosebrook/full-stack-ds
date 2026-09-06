@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const tooltipTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -26,11 +16,6 @@ export const tooltipTokenScopes = {
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.surface.size.padding-block",
       fallback: 16,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
-      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -50,36 +35,16 @@ export const tooltipTokenScopes = {
       ref: "semantic.surface.size.gap",
       fallback: 8,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.surface.size.min-width",
       fallback: 64,
     },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
-    },
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       literal: 0,
-    },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
     },
     "tooltip.color.background.default": {
       name: "tooltip.color.background.default",
@@ -87,52 +52,17 @@ export const tooltipTokenScopes = {
       ref: "semantic.color.background.inverse",
       fallback: "#141414",
     },
-    "tooltip.color.foreground.default": {
-      name: "tooltip.color.foreground.default",
-      cssVar: "--fsds-tooltip-color-foreground-default",
-      ref: "semantic.color.foreground.on-inverse",
-      fallback: "#fafafa",
-    },
     "tooltip.color.border.default": {
       name: "tooltip.color.border.default",
       cssVar: "--fsds-tooltip-color-border-default",
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
-    "tooltip.size.padding.y": {
-      name: "tooltip.size.padding.y",
-      cssVar: "--fsds-tooltip-size-padding-y",
-      ref: "core.spacing.size.03",
-      fallback: 4,
-    },
-    "tooltip.size.padding.x": {
-      name: "tooltip.size.padding.x",
-      cssVar: "--fsds-tooltip-size-padding-x",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
     "tooltip.size.radius.default": {
       name: "tooltip.size.radius.default",
       cssVar: "--fsds-tooltip-size-radius-default",
       ref: "semantic.shape.radius.small",
       fallback: 4,
-    },
-    "tooltip.size.maxWidth": {
-      name: "tooltip.size.maxWidth",
-      cssVar: "--fsds-tooltip-size-max-width",
-      literal: 200,
-    },
-    "tooltip.typography.fontSize": {
-      name: "tooltip.typography.fontSize",
-      cssVar: "--fsds-tooltip-typography-font-size",
-      ref: "semantic.typography.caption.01",
-      fallback: 14,
-    },
-    "tooltip.layer.content": {
-      name: "tooltip.layer.content",
-      cssVar: "--fsds-tooltip-layer-content",
-      ref: "core.layer.tooltip",
-      fallback: "1800",
     },
   },
 } satisfies ComponentTokenScopes;

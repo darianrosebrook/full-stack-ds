@@ -54,21 +54,6 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "toast.accent.default": {
-    "resolvesTo": "semantic.color.status.info",
-    "fallback": "#0566fe",
-    "layer": "semantic"
-  },
-  "toast.color.intent.bg": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#f7f7f7",
-    "layer": "semantic"
-  },
-  "toast.color.intent.border": {
-    "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#d0d0d0",
-    "layer": "semantic"
-  },
   "toast.spacing.padding": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
@@ -86,16 +71,6 @@
   },
   "toast.size.maxWidth": {
     "literal": "400px"
-  },
-  "toast.motion.enter": {
-    "resolvesTo": "core.motion.duration.short",
-    "fallback": "150ms",
-    "layer": "core"
-  },
-  "toast.motion.leave": {
-    "resolvesTo": "core.motion.duration.short",
-    "fallback": "150ms",
-    "layer": "core"
   },
   "toast.timing.auto-dismiss": {
     "resolvesTo": "semantic.motion.dwell.notification",

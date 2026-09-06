@@ -68,11 +68,6 @@
     "fallback": "#f7f7f7",
     "layer": "semantic"
   },
-  "tabs.color.focus": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
   "tabs.color.underline.active": {
     "resolvesTo": "semantic.color.border.accent",
     "fallback": "#d92d2e",
@@ -80,8 +75,5 @@
   },
   "tabs.size.indicator.thickness": {
     "literal": "2px"
-  },
-  "tabs.size.vertical.listWidth": {
-    "literal": "160px"
   }
 }

@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const switchTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -26,11 +16,6 @@ export const switchTokenScopes = {
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.action.size.medium.padding-block",
       fallback: 4,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
-      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -50,26 +35,11 @@ export const switchTokenScopes = {
       ref: "semantic.action.size.medium.gap",
       fallback: 8,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.action.size.medium.min-width",
       fallback: 32,
-    },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
     },
     "box-model.min-height": {
       name: "box-model.min-height",
@@ -77,33 +47,10 @@ export const switchTokenScopes = {
       ref: "semantic.action.size.medium.min-height",
       fallback: 32,
     },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
-    },
-    "switch.motion.duration": {
-      name: "switch.motion.duration",
-      cssVar: "--fsds-switch-motion-duration",
-      ref: "semantic.motion.interaction.press.duration",
-      fallback: 100,
-    },
-    "switch.motion.easing": {
-      name: "switch.motion.easing",
-      cssVar: "--fsds-switch-motion-easing",
-      ref: "semantic.motion.interaction.press.easing",
-      fallback: "cubic-bezier(0.4, 0, 0.2, 1)",
-    },
     "switch.color.track.background.default": {
       name: "switch.color.track.background.default",
       cssVar: "--fsds-switch-color-track-background-default",
       ref: "semantic.color.background.tertiary",
-      fallback: "#d0d0d0",
-    },
-    "switch.color.track.border.default": {
-      name: "switch.color.track.border.default",
-      cssVar: "--fsds-switch-color-track-border-default",
-      ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
     "switch.color.thumb.background.default": {
@@ -111,18 +58,6 @@ export const switchTokenScopes = {
       cssVar: "--fsds-switch-color-thumb-background-default",
       ref: "semantic.color.background.primary",
       fallback: "#ffffff",
-    },
-    "switch.color.thumb.shadow.default": {
-      name: "switch.color.thumb.shadow.default",
-      cssVar: "--fsds-switch-color-thumb-shadow-default",
-      ref: "semantic.elevation.surface.raised",
-      fallback: "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
-    },
-    "switch.color.input.outline.focus": {
-      name: "switch.color.input.outline.focus",
-      cssVar: "--fsds-switch-color-input-outline-focus",
-      ref: "semantic.color.border.focus",
-      fallback: "#0566fe",
     },
     "switch.size.md.track.width": {
       name: "switch.size.md.track.width",
@@ -142,24 +77,6 @@ export const switchTokenScopes = {
       ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
-    "switch.size.md.track.padding": {
-      name: "switch.size.md.track.padding",
-      cssVar: "--fsds-switch-size-md-track-padding",
-      ref: "core.spacing.size.01",
-      fallback: 1,
-    },
-    "switch.size.md.thumb.size": {
-      name: "switch.size.md.thumb.size",
-      cssVar: "--fsds-switch-size-md-thumb-size",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
-    "switch.size.md.thumb.height": {
-      name: "switch.size.md.thumb.height",
-      cssVar: "--fsds-switch-size-md-thumb-height",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
     "switch.size.sm.track.width": {
       name: "switch.size.sm.track.width",
       cssVar: "--fsds-switch-size-sm-track-width",
@@ -172,30 +89,6 @@ export const switchTokenScopes = {
       ref: "core.spacing.size.06",
       fallback: 16,
     },
-    "switch.size.sm.track.radius": {
-      name: "switch.size.sm.track.radius",
-      cssVar: "--fsds-switch-size-sm-track-radius",
-      ref: "semantic.shape.control.radius.pill",
-      fallback: 9999,
-    },
-    "switch.size.sm.track.padding": {
-      name: "switch.size.sm.track.padding",
-      cssVar: "--fsds-switch-size-sm-track-padding",
-      ref: "core.spacing.size.01",
-      fallback: 1,
-    },
-    "switch.size.sm.thumb.size": {
-      name: "switch.size.sm.thumb.size",
-      cssVar: "--fsds-switch-size-sm-thumb-size",
-      ref: "core.spacing.size.05",
-      fallback: 12,
-    },
-    "switch.size.sm.thumb.height": {
-      name: "switch.size.sm.thumb.height",
-      cssVar: "--fsds-switch-size-sm-thumb-height",
-      ref: "core.spacing.size.05",
-      fallback: 12,
-    },
     "switch.size.lg.track.width": {
       name: "switch.size.lg.track.width",
       cssVar: "--fsds-switch-size-lg-track-width",
@@ -207,60 +100,6 @@ export const switchTokenScopes = {
       cssVar: "--fsds-switch-size-lg-track-height",
       ref: "core.spacing.size.08",
       fallback: 32,
-    },
-    "switch.size.lg.track.radius": {
-      name: "switch.size.lg.track.radius",
-      cssVar: "--fsds-switch-size-lg-track-radius",
-      ref: "semantic.shape.control.radius.pill",
-      fallback: 9999,
-    },
-    "switch.size.lg.track.padding": {
-      name: "switch.size.lg.track.padding",
-      cssVar: "--fsds-switch-size-lg-track-padding",
-      ref: "core.spacing.size.01",
-      fallback: 1,
-    },
-    "switch.size.lg.thumb.size": {
-      name: "switch.size.lg.thumb.size",
-      cssVar: "--fsds-switch-size-lg-thumb-size",
-      ref: "core.spacing.size.07",
-      fallback: 24,
-    },
-    "switch.size.lg.thumb.height": {
-      name: "switch.size.lg.thumb.height",
-      cssVar: "--fsds-switch-size-lg-thumb-height",
-      ref: "core.spacing.size.07",
-      fallback: 24,
-    },
-    "switch.size.sm.thumb.translate.off": {
-      name: "switch.size.sm.thumb.translate.off",
-      cssVar: "--fsds-switch-size-sm-thumb-translate-off",
-      literal: 0,
-    },
-    "switch.size.sm.thumb.translate.on": {
-      name: "switch.size.sm.thumb.translate.on",
-      cssVar: "--fsds-switch-size-sm-thumb-translate-on",
-      literal: 16,
-    },
-    "switch.size.md.thumb.translate.off": {
-      name: "switch.size.md.thumb.translate.off",
-      cssVar: "--fsds-switch-size-md-thumb-translate-off",
-      literal: 0,
-    },
-    "switch.size.md.thumb.translate.on": {
-      name: "switch.size.md.thumb.translate.on",
-      cssVar: "--fsds-switch-size-md-thumb-translate-on",
-      literal: 24,
-    },
-    "switch.size.lg.thumb.translate.off": {
-      name: "switch.size.lg.thumb.translate.off",
-      cssVar: "--fsds-switch-size-lg-thumb-translate-off",
-      literal: 0,
-    },
-    "switch.size.lg.thumb.translate.on": {
-      name: "switch.size.lg.thumb.translate.on",
-      cssVar: "--fsds-switch-size-lg-thumb-translate-on",
-      literal: 36,
     },
   },
   "checked": {
@@ -275,146 +114,6 @@ export const switchTokenScopes = {
       cssVar: "--fsds-switch-color-thumb-background-default",
       ref: "semantic.color.foreground.on.brand",
       fallback: "#ffffff",
-    },
-  },
-  "disabled": {
-    "switch.color.track.background.default": {
-      name: "switch.color.track.background.default",
-      cssVar: "--fsds-switch-color-track-background-default",
-      ref: "semantic.color.background.disabled",
-      fallback: "#d0d0d0",
-    },
-  },
-  "variant_sm": {
-    "box-model.padding-block-start": {
-      name: "box-model.padding-block-start",
-      cssVar: "--fsds-box-model-padding-block-start",
-      ref: "semantic.action.size.small.padding-block",
-      fallback: 2,
-    },
-    "box-model.padding-block-end": {
-      name: "box-model.padding-block-end",
-      cssVar: "--fsds-box-model-padding-block-end",
-      ref: "semantic.action.size.small.padding-block",
-      fallback: 2,
-    },
-    "box-model.padding-inline-start": {
-      name: "box-model.padding-inline-start",
-      cssVar: "--fsds-box-model-padding-inline-start",
-      ref: "semantic.action.size.small.padding-inline",
-      fallback: 4,
-    },
-    "box-model.padding-inline-end": {
-      name: "box-model.padding-inline-end",
-      cssVar: "--fsds-box-model-padding-inline-end",
-      ref: "semantic.action.size.small.padding-inline",
-      fallback: 4,
-    },
-    "box-model.gap": {
-      name: "box-model.gap",
-      cssVar: "--fsds-box-model-gap",
-      ref: "semantic.action.size.small.gap",
-      fallback: 4,
-    },
-    "box-model.min-height": {
-      name: "box-model.min-height",
-      cssVar: "--fsds-box-model-min-height",
-      ref: "semantic.action.size.small.min-height",
-      fallback: 24,
-    },
-    "box-model.min-width": {
-      name: "box-model.min-width",
-      cssVar: "--fsds-box-model-min-width",
-      ref: "semantic.action.size.small.min-width",
-      fallback: 24,
-    },
-  },
-  "variant_md": {
-    "box-model.padding-block-start": {
-      name: "box-model.padding-block-start",
-      cssVar: "--fsds-box-model-padding-block-start",
-      ref: "semantic.action.size.medium.padding-block",
-      fallback: 4,
-    },
-    "box-model.padding-block-end": {
-      name: "box-model.padding-block-end",
-      cssVar: "--fsds-box-model-padding-block-end",
-      ref: "semantic.action.size.medium.padding-block",
-      fallback: 4,
-    },
-    "box-model.padding-inline-start": {
-      name: "box-model.padding-inline-start",
-      cssVar: "--fsds-box-model-padding-inline-start",
-      ref: "semantic.action.size.medium.padding-inline",
-      fallback: 8,
-    },
-    "box-model.padding-inline-end": {
-      name: "box-model.padding-inline-end",
-      cssVar: "--fsds-box-model-padding-inline-end",
-      ref: "semantic.action.size.medium.padding-inline",
-      fallback: 8,
-    },
-    "box-model.gap": {
-      name: "box-model.gap",
-      cssVar: "--fsds-box-model-gap",
-      ref: "semantic.action.size.medium.gap",
-      fallback: 8,
-    },
-    "box-model.min-height": {
-      name: "box-model.min-height",
-      cssVar: "--fsds-box-model-min-height",
-      ref: "semantic.action.size.medium.min-height",
-      fallback: 32,
-    },
-    "box-model.min-width": {
-      name: "box-model.min-width",
-      cssVar: "--fsds-box-model-min-width",
-      ref: "semantic.action.size.medium.min-width",
-      fallback: 32,
-    },
-  },
-  "variant_lg": {
-    "box-model.padding-block-start": {
-      name: "box-model.padding-block-start",
-      cssVar: "--fsds-box-model-padding-block-start",
-      ref: "semantic.action.size.large.padding-block",
-      fallback: 8,
-    },
-    "box-model.padding-block-end": {
-      name: "box-model.padding-block-end",
-      cssVar: "--fsds-box-model-padding-block-end",
-      ref: "semantic.action.size.large.padding-block",
-      fallback: 8,
-    },
-    "box-model.padding-inline-start": {
-      name: "box-model.padding-inline-start",
-      cssVar: "--fsds-box-model-padding-inline-start",
-      ref: "semantic.action.size.large.padding-inline",
-      fallback: 16,
-    },
-    "box-model.padding-inline-end": {
-      name: "box-model.padding-inline-end",
-      cssVar: "--fsds-box-model-padding-inline-end",
-      ref: "semantic.action.size.large.padding-inline",
-      fallback: 16,
-    },
-    "box-model.gap": {
-      name: "box-model.gap",
-      cssVar: "--fsds-box-model-gap",
-      ref: "semantic.action.size.large.gap",
-      fallback: 12,
-    },
-    "box-model.min-height": {
-      name: "box-model.min-height",
-      cssVar: "--fsds-box-model-min-height",
-      ref: "semantic.action.size.large.min-height",
-      fallback: 48,
-    },
-    "box-model.min-width": {
-      name: "box-model.min-width",
-      cssVar: "--fsds-box-model-min-width",
-      ref: "semantic.action.size.large.min-width",
-      fallback: 48,
     },
   },
 } satisfies ComponentTokenScopes;

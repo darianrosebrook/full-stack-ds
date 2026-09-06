@@ -70,8 +70,6 @@ export class AlertNoticeElement extends LitElement {
 
 
     .alert-notice {
-      --fsds-alert-notice-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-alert-notice-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-subtle, #95dafb);
       --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
       --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
@@ -89,14 +87,8 @@ export class AlertNoticeElement extends LitElement {
       --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
-      --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-typography-title-font-weight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-02, 16px);
-      --fsds-alert-notice-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-alert-notice-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-alert-notice-typography-page-font-size: var(--fsds-semantic-typography-body-02, 16px);
-      --fsds-alert-notice-typography-page-title-font-size: var(--fsds-semantic-typography-body-01, 18px);
-      --fsds-alert-notice-typography-inline-font-size: var(--fsds-semantic-typography-body-04, 12px);
     }
 
     .alert-notice--inline {
@@ -311,8 +303,6 @@ export class AlertNoticeBodyElement extends LitElement {
 
 
     .alert-notice {
-      --fsds-alert-notice-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-alert-notice-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-subtle, #95dafb);
       --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
       --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
@@ -330,14 +320,8 @@ export class AlertNoticeBodyElement extends LitElement {
       --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
-      --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-typography-title-font-weight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-02, 16px);
-      --fsds-alert-notice-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-alert-notice-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-alert-notice-typography-page-font-size: var(--fsds-semantic-typography-body-02, 16px);
-      --fsds-alert-notice-typography-page-title-font-size: var(--fsds-semantic-typography-body-01, 18px);
-      --fsds-alert-notice-typography-inline-font-size: var(--fsds-semantic-typography-body-04, 12px);
     }
 
     .alert-notice--inline {
@@ -523,8 +507,6 @@ export class AlertNoticeTitleElement extends LitElement {
 
 
     .alert-notice {
-      --fsds-alert-notice-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-alert-notice-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-subtle, #95dafb);
       --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-subtle, #b3dba7);
       --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-subtle, #fdc67f);
@@ -542,14 +524,8 @@ export class AlertNoticeTitleElement extends LitElement {
       --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
-      --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-typography-title-font-weight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-notice-typography-title-font-size: var(--fsds-semantic-typography-body-02, 16px);
-      --fsds-alert-notice-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-alert-notice-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-alert-notice-typography-page-font-size: var(--fsds-semantic-typography-body-02, 16px);
-      --fsds-alert-notice-typography-page-title-font-size: var(--fsds-semantic-typography-body-01, 18px);
-      --fsds-alert-notice-typography-inline-font-size: var(--fsds-semantic-typography-body-04, 12px);
     }
 
     .alert-notice--inline {

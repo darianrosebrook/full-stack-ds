@@ -9,16 +9,6 @@ import com.fullstackds.tokens.ComponentTokenScopes
 // @generated:start component
 val textTokenScopes: ComponentTokenScopes = mapOf(
     "root" to mapOf(
-        "box-model.padding" to ComponentTokenDefinition(
-            name = "box-model.padding",
-            cssVar = "--fsds-box-model-padding",
-            literal = "0",
-        ),
-        "box-model.padding-block" to ComponentTokenDefinition(
-            name = "box-model.padding-block",
-            cssVar = "--fsds-box-model-padding-block",
-            literal = "0",
-        ),
         "box-model.padding-block-start" to ComponentTokenDefinition(
             name = "box-model.padding-block-start",
             cssVar = "--fsds-box-model-padding-block-start",
@@ -27,11 +17,6 @@ val textTokenScopes: ComponentTokenScopes = mapOf(
         "box-model.padding-block-end" to ComponentTokenDefinition(
             name = "box-model.padding-block-end",
             cssVar = "--fsds-box-model-padding-block-end",
-            literal = "0",
-        ),
-        "box-model.padding-inline" to ComponentTokenDefinition(
-            name = "box-model.padding-inline",
-            cssVar = "--fsds-box-model-padding-inline",
             literal = "0",
         ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
@@ -44,41 +29,10 @@ val textTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-padding-inline-end",
             literal = "0",
         ),
-        "box-model.gap" to ComponentTokenDefinition(
-            name = "box-model.gap",
-            cssVar = "--fsds-box-model-gap",
-            ref = "semantic.display.size.gap",
-            fallback = "4px",
-        ),
-        "box-model.width" to ComponentTokenDefinition(
-            name = "box-model.width",
-            cssVar = "--fsds-box-model-width",
-            literal = "auto",
-        ),
-        "box-model.min-width" to ComponentTokenDefinition(
-            name = "box-model.min-width",
-            cssVar = "--fsds-box-model-min-width",
-            literal = "0",
-        ),
-        "box-model.max-width" to ComponentTokenDefinition(
-            name = "box-model.max-width",
-            cssVar = "--fsds-box-model-max-width",
-            literal = "none",
-        ),
-        "box-model.height" to ComponentTokenDefinition(
-            name = "box-model.height",
-            cssVar = "--fsds-box-model-height",
-            literal = "auto",
-        ),
         "box-model.min-height" to ComponentTokenDefinition(
             name = "box-model.min-height",
             cssVar = "--fsds-box-model-min-height",
             literal = "0",
-        ),
-        "box-model.max-height" to ComponentTokenDefinition(
-            name = "box-model.max-height",
-            cssVar = "--fsds-box-model-max-height",
-            literal = "none",
         ),
         "text.color.foreground.primary" to ComponentTokenDefinition(
             name = "text.color.foreground.primary",
@@ -109,36 +63,6 @@ val textTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-text-typography-font-weight-bold",
             ref = "semantic.typography.font.weight.bold",
             fallback = "700",
-        ),
-        "text.typography.lineHeight.heading" to ComponentTokenDefinition(
-            name = "text.typography.lineHeight.heading",
-            cssVar = "--fsds-text-typography-line-height-heading",
-            ref = "semantic.typography.line.height.heading",
-            fallback = "1",
-        ),
-        "text.typography.lineHeight.body" to ComponentTokenDefinition(
-            name = "text.typography.lineHeight.body",
-            cssVar = "--fsds-text-typography-line-height-body",
-            ref = "semantic.typography.line.height.body",
-            fallback = "1.5",
-        ),
-        "text.typography.lineHeight.tight" to ComponentTokenDefinition(
-            name = "text.typography.lineHeight.tight",
-            cssVar = "--fsds-text-typography-line-height-tight",
-            ref = "semantic.typography.line.height.tight",
-            fallback = "1.2",
-        ),
-        "text.typography.letterSpacing.wide" to ComponentTokenDefinition(
-            name = "text.typography.letterSpacing.wide",
-            cssVar = "--fsds-text-typography-letter-spacing-wide",
-            ref = "semantic.typography.letter.spacing.wide",
-            fallback = "0.018rem",
-        ),
-        "text.typography.letterSpacing.tight" to ComponentTokenDefinition(
-            name = "text.typography.letterSpacing.tight",
-            cssVar = "--fsds-text-typography-letter-spacing-tight",
-            ref = "semantic.typography.letter.spacing.tight",
-            fallback = "-0.018rem",
         ),
         "text.size.xs" to ComponentTokenDefinition(
             name = "text.size.xs",

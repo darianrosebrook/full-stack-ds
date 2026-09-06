@@ -1,30 +1,9 @@
-// CSS read-proof for the properties panel (FIX-EDITOR-CONTROL-BINDING-PROOF-01).
-//
-// An override is only live if some rule READS the custom property. The
-// committed generated React CSS is that proof source — the same authority the
-// dead-slot audit scans — because the panel writes the same `--fsds-*`
-// variables the generated component CSS consumes. A slot whose var never
-// appears in a `var(--fsds-…)` read is declared-but-unwired interface: the
-// editor must not offer it as a live control (spec invariant: "a dead knob is
-// worse than an absent one").
-//
-// Deliberately in the panel package (not the data plugin): the proof travels
-// with the only consumer, and the generated CSS is importable directly via
-// Vite's `?raw` glob — no bundle-shape change, no plugin coupling.
+// The inspector exposes only the emitted CSS dependency closure rooted in
+// real properties. Native-only declarations are not Web CSS controls.
+import { analyzeCssTokenConsumption } from "../../../packages/ds-codegen/src/css-token-consumption";
 
-/**
- * Extract every custom-property READ from a CSS source text. A read is a
- * `var(<name>` occurrence — with or without a fallback — so
- * `var(--fsds-box-model-gap, 8px)` and `var(--fsds-box-model-gap)` both
- * count. Non-`--fsds-` vars are ignored (not panel interface). Duplicate
- * reads collapse into the set.
- */
 export function extractReadVars(css: string): Set<string> {
-  const reads = new Set<string>();
-  const re = /var\(\s*(--fsds-[a-z0-9-]+)/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(css)) !== null) reads.add(m[1]);
-  return reads;
+  return new Set([...analyzeCssTokenConsumption([css]).consumed].filter(name => name.startsWith("--fsds-")));
 }
 
 // Committed generated React CSS, raw per component. Keys are the glob paths
@@ -45,15 +24,15 @@ const GENERATED_CSS = import.meta.glob<string>(
 
 /** componentName → set of `--fsds-*` vars its generated CSS reads. */
 const READS_BY_COMPONENT: Map<string, Set<string>> = (() => {
-  const map = new Map<string, Set<string>>();
+  const sheets = new Map<string, string[]>();
   for (const [path, css] of Object.entries(GENERATED_CSS)) {
-    const m = path.match(/components\/([^/]+)\/[^/]+\.css$/);
-    if (!m) continue;
-    const name = m[1];
-    const reads = map.get(name) ?? extractReadVars(boxModelCss);
-    for (const v of extractReadVars(css)) reads.add(v);
-    map.set(name, reads);
+    const match = path.match(/components\/([^/]+)\/[^/]+\.css$/);
+    if (!match) continue;
+    const group = sheets.get(match[1]) ?? [boxModelCss];
+    group.push(css);
+    sheets.set(match[1], group);
   }
+  const map = new Map([...sheets].map(([name, css]) => [name, extractReadVars(css.join("\n"))]));
   return map;
 })();
 
@@ -61,7 +40,7 @@ const READS_BY_COMPONENT: Map<string, Set<string>> = (() => {
  * The read-proof for one component's slot vars. Returns null when no
  * generated CSS exists for the name (unknown component) so callers can
  * distinguish "provably unread" (empty/falsy membership) from "no proof
- * source" — the latter must fail open to legacy behavior, not hide controls.
+ * source" — missing proof never establishes a live control.
  */
 export function readCssVarsFor(componentName: string): Set<string> | null {
   return READS_BY_COMPONENT.get(componentName) ?? null;

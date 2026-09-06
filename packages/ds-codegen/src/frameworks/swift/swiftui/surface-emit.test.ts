@@ -138,9 +138,9 @@ describe("generateSwiftUISurfaceFiles — toast (generative substrate proof)", (
     // The shared substrate — same field every controllable component emits.
     expect(componentFile).toContain("@StateObject private var open: ControllableValue<Bool>");
     expect(componentFile).toContain("ControllableValue(controlled: open, defaultValue: defaultOpen, onChange: onOpenChange)");
-    // Ephemeral presence ⇒ dwell task driven by the motion token (150ms).
+    // Ephemeral presence ⇒ dwell task driven by the notification dismissal policy (6000ms).
     expect(componentFile).toContain(".task(id: open.value)");
-    expect(componentFile).toContain("Task.sleep(for: .milliseconds(150))");
+    expect(componentFile).toContain("Task.sleep(for: .milliseconds(6000))");
     expect(componentFile).toContain("open.set(false)");
     // No per-class projection survives.
     expect(componentFile).not.toContain("controlledOpen");

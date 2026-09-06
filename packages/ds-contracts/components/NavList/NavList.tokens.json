@@ -39,11 +39,6 @@
     "fallback": "0.08",
     "layer": "semantic"
   },
-  "nav-list.color.background.current": {
-    "resolvesTo": "semantic.color.background.accentSubtle",
-    "fallback": "#95dafb",
-    "layer": "semantic"
-  },
   "nav-list.color.outline.focus": {
     "resolvesTo": "semantic.color.border.accent",
     "fallback": "#d92d2e",
@@ -68,20 +63,5 @@
     "resolvesTo": "core.spacing.size.01",
     "fallback": "1px",
     "layer": "core"
-  },
-  "nav-list.size.gap.group": {
-    "resolvesTo": "core.spacing.size.04",
-    "fallback": "8px",
-    "layer": "core"
-  },
-  "nav-list.size.fontSize.item": {
-    "resolvesTo": "semantic.typography.body.03",
-    "fallback": "14px",
-    "layer": "semantic"
-  },
-  "nav-list.size.fontSize.groupLabel": {
-    "resolvesTo": "semantic.typography.caption.03",
-    "fallback": "10px",
-    "layer": "semantic"
   }
 }

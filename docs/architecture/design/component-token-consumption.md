@@ -1,0 +1,51 @@
+---
+doc_id: ARCH-COMPONENT-TOKEN-CONSUMPTION-001
+authority: architecture
+status: implemented
+title: Component token consumption
+owner: "@darianrosebrook"
+updated: 2026-09-06
+verified_at_commit: bba5beae
+governs:
+  - packages/ds-codegen/src/css-token-consumption.ts
+  - packages/ds-codegen/src/validation/component-token-consumption.ts
+  - packages/ds-codegen/src/frameworks/native-token-consumption.ts
+  - packages/ds-codegen/src/frameworks/react-native/token-consumption.ts
+  - scripts/dead-slot-audit/**
+---
+
+# Component token consumption
+
+Component-scoped tokens are an executable interface. A declared address must reach a supported property or behavior. Unset overrides are valid; unused semantic vocabulary is valid. An unused component declaration is a contract error, with no compatibility alias, debt allowance, or reseed mode.
+
+`generate:check` applies `validateComponentTokenConsumption`. Web roots are actual CSS properties, including keyframes and imported shared box-model consumers. The dependency walk follows `var()` references and nested fallbacks through declarations. A declaration, a disconnected alias chain, a comment, or a quoted example cannot establish consumption. Raw CSS custom-property declarations cannot bypass this rule by avoiding dotted token names. Alias cycles fail validation. The analysis conservatively combines selectors; it does not establish that a selector is reachable in every state.
+
+`audit:dead-slots` additionally reads the emitted CSS for every Web target and checks native dictionaries against their actual emitted lookups. It rejects a missing expected property consumer, an unconsumed emitted declaration, or a cycle. Missing artifacts fail the audit. Its report lives in ignored `tmp/component-token-consumption/`; there is no committed findings baseline to expand.
+
+Web token sheets and Lit inline styles contain only the used declaration closure. Public `design.*` override addresses remain unset and are consumed at the property, retaining the authored fallback chain. Shared box-model defaults remain at consumers, including variant and part defaults. Variant defaults previously occupied side override variables and defeated a consumer's axis/shorthand override; property fallbacks now preserve the shared layer precedence. No per-component reset pool is emitted.
+
+Native output is projected independently. React Native token dictionaries follow actual typed `tokens.<scope>[name]` reads; Compose follows its emitted `layeredSlot` calls and axis branches; SwiftUI follows emitted color and dimension suffix lookups. Each keeps the referenced definitions and their resolution dependencies. The registry allowlists govern which explicit native targets may establish a source consumer. Figma descriptors carry contract metadata, not proof of live Figma controls.
+
+Compile-time behavior defaults are distinct from runtime CSS overrides. Toast's notification dwell remains a behavior input and a React Native theme lookup. Web CSS does not declare an inert duration variable. SwiftUI now selects that same dismissal policy instead of using the first unrelated animation duration.
+
+## Retirement decisions
+
+The cleanup changes token declarations and backend lookups, not anatomy or supported axes. Existing property bindings are the retained design surface.
+
+| Retired surface | Retained authority or decision |
+| --- | --- |
+| Button's old medium-named padding and height aliases | Canonical box-model slots. Compose now reads them; all supported size variants had identical references and fallbacks at the retired and canonical addresses. |
+| Alert/AlertNotice per-level padding and typography aliases | The existing level variants redefine the live padding/text/title slots. Icon size can be added as a supported property binding when icon geometry is authored. |
+| Field's alternate validating/valid colors and spacing presets | Existing status rules and design bindings govern the actual rendered border, text, and spacing. |
+| Avatar, Calendar, NavList, Skeleton, Postcard, Toast alternate color/radius presets | Existing property and variant bindings govern the rendered choices; an extra named preset without a consumer is not a second interface. |
+| Chip/Sheet/Table focus aliases | Existing focus properties and generated child controls retain their current bindings. No focus behavior or focus rule is removed. |
+| Select icon colors; Image error/icon sizing; Calendar weekday/range vocabulary | These addresses did not bind a supported authored property. This does not delete anatomy or authorize inferring missing behavior from a generated artifact. A future feature must introduce its property and binding together. |
+| Remaining duplicate spacing, typography, overlay, accent, and motion names | The current authored property/fallback chain and its typed design override remain authoritative. Unsupported alternate names are removed instead of aliased. |
+
+Real native consumers are retained: Accordion border width, AlertNotice foreground, NavList background, Skeleton small radius, and Toast dismissal dwell. Their absence from Web CSS does not make them dead across targets. The Web inspector offers only the CSS property dependency closure, so native-only slots do not appear as working Web controls.
+
+## Verification and limits
+
+The focused tests introduce orphan declarations, sever property consumers, create disconnected aliases and cycles, and check that native projection retains real lookups while omitting unrelated data. Browser tests exercise defaults, clearing overrides, shared box precedence, nested isolation, and representative interactions. The campaign also compares sampled default computed styles before and after retirement and reviews the composed default/retokened gallery.
+
+The static gate establishes dependency reachability, not arbitrary CSS value validity, accessibility adequacy, selector reachability in every state, or visual correctness under every theme. Native source projection does not by itself establish device behavior or cross-framework visual parity.

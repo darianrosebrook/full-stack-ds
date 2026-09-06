@@ -9,32 +9,11 @@ import com.fullstackds.tokens.ComponentTokenScopes
 // @generated:start component
 val buttonTokenScopes: ComponentTokenScopes = mapOf(
     "root" to mapOf(
-        "box-model.padding" to ComponentTokenDefinition(
-            name = "box-model.padding",
-            cssVar = "--fsds-box-model-padding",
-            literal = "0",
-        ),
-        "box-model.padding-block" to ComponentTokenDefinition(
-            name = "box-model.padding-block",
-            cssVar = "--fsds-box-model-padding-block",
-            literal = "0",
-        ),
         "box-model.padding-block-start" to ComponentTokenDefinition(
             name = "box-model.padding-block-start",
             cssVar = "--fsds-box-model-padding-block-start",
             ref = "semantic.action.size.medium.padding-block",
             fallback = "4px",
-        ),
-        "box-model.padding-block-end" to ComponentTokenDefinition(
-            name = "box-model.padding-block-end",
-            cssVar = "--fsds-box-model-padding-block-end",
-            ref = "semantic.action.size.medium.padding-block",
-            fallback = "4px",
-        ),
-        "box-model.padding-inline" to ComponentTokenDefinition(
-            name = "box-model.padding-inline",
-            cssVar = "--fsds-box-model-padding-inline",
-            literal = "0",
         ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
             name = "box-model.padding-inline-start",
@@ -42,49 +21,17 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.action.size.medium.padding-inline",
             fallback = "8px",
         ),
-        "box-model.padding-inline-end" to ComponentTokenDefinition(
-            name = "box-model.padding-inline-end",
-            cssVar = "--fsds-box-model-padding-inline-end",
-            ref = "semantic.action.size.medium.padding-inline",
-            fallback = "8px",
-        ),
-        "box-model.gap" to ComponentTokenDefinition(
-            name = "box-model.gap",
-            cssVar = "--fsds-box-model-gap",
-            ref = "semantic.action.size.medium.gap",
-            fallback = "8px",
-        ),
-        "box-model.width" to ComponentTokenDefinition(
-            name = "box-model.width",
-            cssVar = "--fsds-box-model-width",
-            literal = "auto",
-        ),
         "box-model.min-width" to ComponentTokenDefinition(
             name = "box-model.min-width",
             cssVar = "--fsds-box-model-min-width",
             ref = "semantic.action.size.medium.min-width",
             fallback = "32px",
         ),
-        "box-model.max-width" to ComponentTokenDefinition(
-            name = "box-model.max-width",
-            cssVar = "--fsds-box-model-max-width",
-            literal = "none",
-        ),
-        "box-model.height" to ComponentTokenDefinition(
-            name = "box-model.height",
-            cssVar = "--fsds-box-model-height",
-            literal = "auto",
-        ),
         "box-model.min-height" to ComponentTokenDefinition(
             name = "box-model.min-height",
             cssVar = "--fsds-box-model-min-height",
             ref = "semantic.action.size.medium.min-height",
             fallback = "32px",
-        ),
-        "box-model.max-height" to ComponentTokenDefinition(
-            name = "box-model.max-height",
-            cssVar = "--fsds-box-model-max-height",
-            literal = "none",
         ),
         "button.color.background.default" to ComponentTokenDefinition(
             name = "button.color.background.default",
@@ -128,23 +75,11 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.border.light",
             fallback = "#b8b8b8",
         ),
-        "button.color.border.hover" to ComponentTokenDefinition(
-            name = "button.color.border.hover",
-            cssVar = "--fsds-button-color-border-hover",
-            ref = "semantic.interaction.border.hover",
-            fallback = "#888889",
-        ),
         "button.color.border.focus" to ComponentTokenDefinition(
             name = "button.color.border.focus",
             cssVar = "--fsds-button-color-border-focus",
             ref = "semantic.focus.ring.color",
             fallback = "#0566fe",
-        ),
-        "button.size.gap.default" to ComponentTokenDefinition(
-            name = "button.size.gap.default",
-            cssVar = "--fsds-button-size-gap-default",
-            ref = "semantic.action.size.medium.gap",
-            fallback = "8px",
         ),
         "button.size.radius" to ComponentTokenDefinition(
             name = "button.size.radius",
@@ -158,47 +93,11 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.shape.control.border.defaultWidth",
             fallback = "1px",
         ),
-        "button.text.weight" to ComponentTokenDefinition(
-            name = "button.text.weight",
-            cssVar = "--fsds-button-text-weight",
-            ref = "semantic.typography.font.weight.medium",
-            fallback = "500",
-        ),
         "button.motion.duration.fast" to ComponentTokenDefinition(
             name = "button.motion.duration.fast",
             cssVar = "--fsds-button-motion-duration-fast",
             ref = "core.motion.duration.short",
             fallback = "150ms",
-        ),
-        "button.motion.easing.standard" to ComponentTokenDefinition(
-            name = "button.motion.easing.standard",
-            cssVar = "--fsds-button-motion-easing-standard",
-            ref = "core.motion.easing.standard",
-            fallback = "cubic-bezier(0.4, 0, 0.2, 1)",
-        ),
-        "button.size.padding-block.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-block.medium",
-            cssVar = "--fsds-button-size-padding-block-medium",
-            ref = "core.spacing.size.04",
-            fallback = "8px",
-        ),
-        "button.size.padding-inline.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-inline.medium",
-            cssVar = "--fsds-button-size-padding-inline-medium",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
-        "button.size.minHeight.medium" to ComponentTokenDefinition(
-            name = "button.size.minHeight.medium",
-            cssVar = "--fsds-button-size-min-height-medium",
-            ref = "core.dimension.actionMinHeight",
-            fallback = "36px",
-        ),
-        "button.size.fontSize.medium" to ComponentTokenDefinition(
-            name = "button.size.fontSize.medium",
-            cssVar = "--fsds-button-size-font-size-medium",
-            ref = "semantic.typography.action.02",
-            fallback = "1rem",
         ),
     ),
     "variant_small" to mapOf(
@@ -208,21 +107,9 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             ref = "core.spacing.size.03",
             fallback = "4px",
         ),
-        "box-model.padding-block-end" to ComponentTokenDefinition(
-            name = "box-model.padding-block-end",
-            cssVar = "--fsds-box-model-padding-block-end",
-            ref = "core.spacing.size.03",
-            fallback = "4px",
-        ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
             name = "box-model.padding-inline-start",
             cssVar = "--fsds-box-model-padding-inline-start",
-            ref = "core.spacing.size.04",
-            fallback = "8px",
-        ),
-        "box-model.padding-inline-end" to ComponentTokenDefinition(
-            name = "box-model.padding-inline-end",
-            cssVar = "--fsds-box-model-padding-inline-end",
             ref = "core.spacing.size.04",
             fallback = "8px",
         ),
@@ -231,30 +118,6 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-min-height",
             ref = "core.dimension.actionMinHeightSmall",
             fallback = "28px",
-        ),
-        "button.size.padding-block.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-block.medium",
-            cssVar = "--fsds-button-size-padding-block-medium",
-            ref = "core.spacing.size.03",
-            fallback = "4px",
-        ),
-        "button.size.padding-inline.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-inline.medium",
-            cssVar = "--fsds-button-size-padding-inline-medium",
-            ref = "core.spacing.size.04",
-            fallback = "8px",
-        ),
-        "button.size.minHeight.medium" to ComponentTokenDefinition(
-            name = "button.size.minHeight.medium",
-            cssVar = "--fsds-button-size-min-height-medium",
-            ref = "core.dimension.actionMinHeightSmall",
-            fallback = "28px",
-        ),
-        "button.size.fontSize.medium" to ComponentTokenDefinition(
-            name = "button.size.fontSize.medium",
-            cssVar = "--fsds-button-size-font-size-medium",
-            ref = "semantic.typography.action.03",
-            fallback = "0.875rem",
         ),
     ),
     "variant_medium" to mapOf(
@@ -264,21 +127,9 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             ref = "core.spacing.size.04",
             fallback = "8px",
         ),
-        "box-model.padding-block-end" to ComponentTokenDefinition(
-            name = "box-model.padding-block-end",
-            cssVar = "--fsds-box-model-padding-block-end",
-            ref = "core.spacing.size.04",
-            fallback = "8px",
-        ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
             name = "box-model.padding-inline-start",
             cssVar = "--fsds-box-model-padding-inline-start",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
-        "box-model.padding-inline-end" to ComponentTokenDefinition(
-            name = "box-model.padding-inline-end",
-            cssVar = "--fsds-box-model-padding-inline-end",
             ref = "core.spacing.size.05",
             fallback = "12px",
         ),
@@ -287,30 +138,6 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-min-height",
             ref = "core.dimension.actionMinHeight",
             fallback = "36px",
-        ),
-        "button.size.padding-block.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-block.medium",
-            cssVar = "--fsds-button-size-padding-block-medium",
-            ref = "core.spacing.size.04",
-            fallback = "8px",
-        ),
-        "button.size.padding-inline.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-inline.medium",
-            cssVar = "--fsds-button-size-padding-inline-medium",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
-        "button.size.minHeight.medium" to ComponentTokenDefinition(
-            name = "button.size.minHeight.medium",
-            cssVar = "--fsds-button-size-min-height-medium",
-            ref = "core.dimension.actionMinHeight",
-            fallback = "36px",
-        ),
-        "button.size.fontSize.medium" to ComponentTokenDefinition(
-            name = "button.size.fontSize.medium",
-            cssVar = "--fsds-button-size-font-size-medium",
-            ref = "semantic.typography.action.02",
-            fallback = "1rem",
         ),
     ),
     "variant_large" to mapOf(
@@ -320,21 +147,9 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             ref = "core.spacing.size.05",
             fallback = "12px",
         ),
-        "box-model.padding-block-end" to ComponentTokenDefinition(
-            name = "box-model.padding-block-end",
-            cssVar = "--fsds-box-model-padding-block-end",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
             name = "box-model.padding-inline-start",
             cssVar = "--fsds-box-model-padding-inline-start",
-            ref = "core.spacing.size.06",
-            fallback = "16px",
-        ),
-        "box-model.padding-inline-end" to ComponentTokenDefinition(
-            name = "box-model.padding-inline-end",
-            cssVar = "--fsds-box-model-padding-inline-end",
             ref = "core.spacing.size.06",
             fallback = "16px",
         ),
@@ -343,30 +158,6 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-min-height",
             ref = "core.dimension.actionMinHeightLarge",
             fallback = "48px",
-        ),
-        "button.size.padding-block.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-block.medium",
-            cssVar = "--fsds-button-size-padding-block-medium",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
-        "button.size.padding-inline.medium" to ComponentTokenDefinition(
-            name = "button.size.padding-inline.medium",
-            cssVar = "--fsds-button-size-padding-inline-medium",
-            ref = "core.spacing.size.06",
-            fallback = "16px",
-        ),
-        "button.size.minHeight.medium" to ComponentTokenDefinition(
-            name = "button.size.minHeight.medium",
-            cssVar = "--fsds-button-size-min-height-medium",
-            ref = "core.dimension.actionMinHeightLarge",
-            fallback = "48px",
-        ),
-        "button.size.fontSize.medium" to ComponentTokenDefinition(
-            name = "button.size.fontSize.medium",
-            cssVar = "--fsds-button-size-font-size-medium",
-            ref = "semantic.typography.action.01",
-            fallback = "1.125rem",
         ),
     ),
     "variant_primary" to mapOf(
@@ -405,12 +196,6 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-button-color-border-default",
             ref = "semantic.color.action.background.primary.default",
             fallback = "#0566fe",
-        ),
-        "button.color.border.hover" to ComponentTokenDefinition(
-            name = "button.color.border.hover",
-            cssVar = "--fsds-button-color-border-hover",
-            ref = "semantic.color.action.background.primary.hover",
-            fallback = "#034fd6",
         ),
     ),
     "variant_secondary" to mapOf(
@@ -505,12 +290,6 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-button-color-border-default",
             ref = "semantic.color.action.background.danger.default",
             fallback = "#d92d2e",
-        ),
-        "button.color.border.hover" to ComponentTokenDefinition(
-            name = "button.color.border.hover",
-            cssVar = "--fsds-button-color-border-hover",
-            ref = "semantic.color.action.background.danger.hover",
-            fallback = "#b31b1b",
         ),
         "button.color.border.focus" to ComponentTokenDefinition(
             name = "button.color.border.focus",

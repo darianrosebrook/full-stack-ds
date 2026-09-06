@@ -17,27 +17,12 @@ import SwiftUI
 enum PopoverTokens {
     public static let scopes: FsdsComponentTokenScopes = [
         "root": [
-            "box-model.padding": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding", name: "box-model.padding", literal: .string("0")),
-            "box-model.padding-block": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding-block", name: "box-model.padding-block", literal: .string("0")),
             "box-model.padding-block-start": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding-block-start", name: "box-model.padding-block-start", ref: "semantic.surface.size.padding-block", fallback: .string("16px")),
-            "box-model.padding-block-end": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding-block-end", name: "box-model.padding-block-end", ref: "semantic.surface.size.padding-block", fallback: .string("16px")),
-            "box-model.padding-inline": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding-inline", name: "box-model.padding-inline", literal: .string("0")),
             "box-model.padding-inline-start": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding-inline-start", name: "box-model.padding-inline-start", ref: "semantic.surface.size.padding-inline", fallback: .string("16px")),
-            "box-model.padding-inline-end": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-padding-inline-end", name: "box-model.padding-inline-end", ref: "semantic.surface.size.padding-inline", fallback: .string("16px")),
             "box-model.gap": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-gap", name: "box-model.gap", ref: "semantic.surface.size.gap", fallback: .string("8px")),
-            "box-model.width": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-width", name: "box-model.width", literal: .string("auto")),
-            "box-model.min-width": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-width", name: "box-model.min-width", ref: "semantic.surface.size.min-width", fallback: .string("64px")),
-            "box-model.max-width": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-width", name: "box-model.max-width", literal: .string("none")),
-            "box-model.height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-height", name: "box-model.height", literal: .string("auto")),
             "box-model.min-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-min-height", name: "box-model.min-height", literal: .string("0")),
-            "box-model.max-height": FsdsComponentTokenDefinition(cssVar: "--fsds-box-model-max-height", name: "box-model.max-height", literal: .string("none")),
-            "popover.size.padding.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-size-padding-default", name: "popover.size.padding.default", ref: "core.spacing.size.06", fallback: .string("16px")),
             "popover.size.radius.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-size-radius-default", name: "popover.size.radius.default", ref: "semantic.shape.control.radius.default", fallback: .string("6px")),
-            "popover.size.gap.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-size-gap-default", name: "popover.size.gap.default", ref: "core.spacing.size.04", fallback: .string("8px")),
-            "popover.color.background.content": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-color-background-content", name: "popover.color.background.content", ref: "semantic.color.background.elevated", fallback: .adaptive(light: "#ffffff", dark: "#141414")),
             "popover.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-color-border-default", name: "popover.color.border.default", ref: "semantic.color.border.subtle", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
-            "popover.elevation.default": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-elevation-default", name: "popover.elevation.default", ref: "semantic.elevation.surface.popover", fallback: .string("0px 8px 10px #0000000a, 0px 20px 25px #0000001a")),
-            "popover.layer.content": FsdsComponentTokenDefinition(cssVar: "--fsds-popover-layer-content", name: "popover.layer.content", ref: "core.layer.dropdown", fallback: .string("1000")),
         ],
     ]
 }

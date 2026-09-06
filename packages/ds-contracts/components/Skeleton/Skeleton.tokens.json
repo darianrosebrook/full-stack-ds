@@ -9,11 +9,6 @@
     "fallback": "#f5a2a1",
     "layer": "semantic"
   },
-  "skeleton.color.static": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#f7f7f7",
-    "layer": "semantic"
-  },
   "skeleton.radius.sm": {
     "resolvesTo": "semantic.shape.radius.small",
     "fallback": "4px",
@@ -22,16 +17,6 @@
   "skeleton.radius.md": {
     "resolvesTo": "semantic.shape.radius.medium",
     "fallback": "8px",
-    "layer": "semantic"
-  },
-  "skeleton.radius.lg": {
-    "resolvesTo": "semantic.shape.radius.large",
-    "fallback": "16px",
-    "layer": "semantic"
-  },
-  "skeleton.radius.full": {
-    "resolvesTo": "semantic.shape.control.radius.pill",
-    "fallback": "9999px",
     "layer": "semantic"
   },
   "skeleton.gap.compact": {

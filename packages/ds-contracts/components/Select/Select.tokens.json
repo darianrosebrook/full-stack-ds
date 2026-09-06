@@ -44,11 +44,6 @@
     "fallback": "#a0a0a1",
     "layer": "semantic"
   },
-  "select.color.icon.default": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#474647",
-    "layer": "semantic"
-  },
   "select.color.placeholder.default": {
     "resolvesTo": "semantic.color.foreground.secondary",
     "fallback": "#474647",
@@ -92,11 +87,6 @@
   "select.font.lineHeight.default": {
     "resolvesTo": "semantic.typography.line.height.body",
     "fallback": "1.5",
-    "layer": "semantic"
-  },
-  "select.color.icon.isOpen": {
-    "resolvesTo": "semantic.color.foreground.accent",
-    "fallback": "#d92d2e",
     "layer": "semantic"
   },
   "select.focus.ring.width": {

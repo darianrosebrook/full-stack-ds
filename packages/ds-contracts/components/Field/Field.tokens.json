@@ -49,11 +49,6 @@
     "fallback": "12px",
     "layer": "semantic"
   },
-  "field.pad.y": {
-    "resolvesTo": "semantic.spacing.density.compact.sm",
-    "fallback": "8px",
-    "layer": "semantic"
-  },
   "field.color.bg": {
     "resolvesTo": "semantic.color.background.elevated",
     "fallback": "#ffffff",
@@ -67,11 +62,6 @@
   "field.color.border": {
     "resolvesTo": "semantic.color.border.subtle",
     "fallback": "#d0d0d0",
-    "layer": "semantic"
-  },
-  "field.color.borderBold": {
-    "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#888889",
     "layer": "semantic"
   },
   "field.color.focus-border": {
@@ -93,26 +83,6 @@
     "resolvesTo": "semantic.color.feedback.border.success",
     "fallback": "#3a6614",
     "layer": "semantic"
-  },
-  "field.color.validating-border": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
-  "field.color.validating-text": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#474647",
-    "layer": "semantic"
-  },
-  "field.color.valid-text": {
-    "resolvesTo": "semantic.color.foreground.success",
-    "fallback": "#497f21",
-    "layer": "semantic"
-  },
-  "field.spacing.indicator": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
-    "layer": "core"
   },
   "field.label.fontSize": {
     "resolvesTo": "semantic.typography.body.small.font.size",

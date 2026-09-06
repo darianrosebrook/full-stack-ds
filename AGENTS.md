@@ -104,7 +104,7 @@ pnpm run iconography:validate
 # Derived-obligation ledgers — each is a two-directional ratchet gated at pre-push and in CI
 pnpm run audit:behavior-realization            # Contract-declared interactivity vs. generated output
 pnpm run audit:a11y-realization                # Contract-declared a11y vs. generated output
-pnpm run audit:dead-slots                      # Declared slots vs. consumed slots
+pnpm run audit:dead-slots                      # Zero-gap component token consumption (no allowance ledger)
 pnpm run audit:pseudo-state                    # Declared state styling vs. realized CSS
 pnpm run audit:state-suppression               # Declared suppression vs. honoured in CSS
 pnpm run audit:token-resolvability             # Token references that never resolve
@@ -268,6 +268,8 @@ The emission manifest at `packages/ds-codegen/.emission-manifest.json` is **giti
 Read `docs/specifications/admission-rail.md`, `docs/specifications/governed-ci.md`, `docs/specifications/manifest-schema.md` before touching anything under `packages/ds-codegen/src/validation/`.
 
 ### Token graph
+
+Component-scoped token declarations require a real property or behavior consumer. `generate:check` rejects unconsumed declarations and cycles; `audit:dead-slots` checks emitted CSS without a known-dead allowance. Emit only the target's used declaration closure. Unset design overrides and unused semantic vocabulary remain valid. Do not restore compatibility aliases or a debt ledger. See [component token consumption](docs/architecture/design/component-token-consumption.md).
 
 `composed.tokens.json` is gitignored regenerable scratch; `resolved.tokens.json` and `tokens.css` are COMMITTED outputs, drift-gated by `tokens:build:check` (the contrast validators — curated and component-derived — read `resolved.tokens.json`). Every CI/pre-push run still starts with `pnpm -F @full-stack-ds/tokens build` before running `generate:check`, because the semantic check loads the composed graph to verify contract `resolvesTo` paths. Without that build, every contract reports `token graph not built` DRIFT.
 

@@ -14,16 +14,6 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "image.size.icon": {
-    "resolvesTo": "core.spacing.size.08",
-    "fallback": "32px",
-    "layer": "core"
-  },
-  "image.typography.error.fontSize": {
-    "resolvesTo": "semantic.typography.body.04",
-    "fallback": "12px",
-    "layer": "semantic"
-  },
   "image.size.xs": {
     "literal": "24px"
   },

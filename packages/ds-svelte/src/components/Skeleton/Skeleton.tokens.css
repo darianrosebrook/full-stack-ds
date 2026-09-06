@@ -3,11 +3,7 @@
 .skeleton {
   --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #f7f7f7);
   --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f5a2a1);
-  --fsds-skeleton-color-static: var(--fsds-semantic-color-background-secondary, #f7f7f7);
-  --fsds-skeleton-radius-sm: var(--fsds-semantic-shape-radius-small, 4px);
   --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
-  --fsds-skeleton-radius-lg: var(--fsds-semantic-shape-radius-large, 16px);
-  --fsds-skeleton-radius-full: var(--fsds-semantic-shape-control-radius-pill, 9999px);
   --fsds-skeleton-gap-compact: var(--fsds-core-spacing-size-03, 4px);
   --fsds-skeleton-gap-md: var(--fsds-core-spacing-size-05, 12px);
   --fsds-skeleton-gap-spacious: var(--fsds-core-spacing-size-07, 24px);

@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const buttonTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -26,11 +16,6 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.action.size.medium.padding-block",
       fallback: 4,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
-      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -50,26 +35,11 @@ export const buttonTokenScopes = {
       ref: "semantic.action.size.medium.gap",
       fallback: 8,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       ref: "semantic.action.size.medium.min-width",
       fallback: 32,
-    },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
     },
     "box-model.min-height": {
       name: "box-model.min-height",
@@ -77,22 +47,11 @@ export const buttonTokenScopes = {
       ref: "semantic.action.size.medium.min-height",
       fallback: 32,
     },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
-    },
     "button.color.background.default": {
       name: "button.color.background.default",
       cssVar: "--fsds-button-color-background-default",
       ref: "semantic.color.action.background.primary.default",
       fallback: "#0566fe",
-    },
-    "button.color.background.hover": {
-      name: "button.color.background.hover",
-      cssVar: "--fsds-button-color-background-hover",
-      ref: "semantic.interaction.background.hover",
-      fallback: "#f7f7f7",
     },
     "button.color.background.active": {
       name: "button.color.background.active",
@@ -112,35 +71,11 @@ export const buttonTokenScopes = {
       ref: "semantic.color.foreground.inverse",
       fallback: "#fafafa",
     },
-    "button.color.foreground.disabled": {
-      name: "button.color.foreground.disabled",
-      cssVar: "--fsds-button-color-foreground-disabled",
-      ref: "semantic.color.foreground.disabled",
-      fallback: "#727272",
-    },
     "button.color.border.default": {
       name: "button.color.border.default",
       cssVar: "--fsds-button-color-border-default",
       ref: "semantic.color.border.light",
       fallback: "#b8b8b8",
-    },
-    "button.color.border.hover": {
-      name: "button.color.border.hover",
-      cssVar: "--fsds-button-color-border-hover",
-      ref: "semantic.interaction.border.hover",
-      fallback: "#888889",
-    },
-    "button.color.border.focus": {
-      name: "button.color.border.focus",
-      cssVar: "--fsds-button-color-border-focus",
-      ref: "semantic.focus.ring.color",
-      fallback: "#0566fe",
-    },
-    "button.size.gap.default": {
-      name: "button.size.gap.default",
-      cssVar: "--fsds-button-size-gap-default",
-      ref: "semantic.action.size.medium.gap",
-      fallback: 8,
     },
     "button.size.radius": {
       name: "button.size.radius",
@@ -159,36 +94,6 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-text-weight",
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
-    },
-    "button.motion.duration.fast": {
-      name: "button.motion.duration.fast",
-      cssVar: "--fsds-button-motion-duration-fast",
-      ref: "core.motion.duration.short",
-      fallback: 150,
-    },
-    "button.motion.easing.standard": {
-      name: "button.motion.easing.standard",
-      cssVar: "--fsds-button-motion-easing-standard",
-      ref: "core.motion.easing.standard",
-      fallback: "cubic-bezier(0.4, 0, 0.2, 1)",
-    },
-    "button.size.padding-block.medium": {
-      name: "button.size.padding-block.medium",
-      cssVar: "--fsds-button-size-padding-block-medium",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "button.size.padding-inline.medium": {
-      name: "button.size.padding-inline.medium",
-      cssVar: "--fsds-button-size-padding-inline-medium",
-      ref: "core.spacing.size.05",
-      fallback: 12,
-    },
-    "button.size.minHeight.medium": {
-      name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-min-height-medium",
-      ref: "core.dimension.actionMinHeight",
-      fallback: 36,
     },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
@@ -225,24 +130,6 @@ export const buttonTokenScopes = {
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
-      ref: "core.dimension.actionMinHeightSmall",
-      fallback: 28,
-    },
-    "button.size.padding-block.medium": {
-      name: "button.size.padding-block.medium",
-      cssVar: "--fsds-button-size-padding-block-medium",
-      ref: "core.spacing.size.03",
-      fallback: 4,
-    },
-    "button.size.padding-inline.medium": {
-      name: "button.size.padding-inline.medium",
-      cssVar: "--fsds-button-size-padding-inline-medium",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "button.size.minHeight.medium": {
-      name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-min-height-medium",
       ref: "core.dimension.actionMinHeightSmall",
       fallback: 28,
     },
@@ -284,24 +171,6 @@ export const buttonTokenScopes = {
       ref: "core.dimension.actionMinHeight",
       fallback: 36,
     },
-    "button.size.padding-block.medium": {
-      name: "button.size.padding-block.medium",
-      cssVar: "--fsds-button-size-padding-block-medium",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "button.size.padding-inline.medium": {
-      name: "button.size.padding-inline.medium",
-      cssVar: "--fsds-button-size-padding-inline-medium",
-      ref: "core.spacing.size.05",
-      fallback: 12,
-    },
-    "button.size.minHeight.medium": {
-      name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-min-height-medium",
-      ref: "core.dimension.actionMinHeight",
-      fallback: 36,
-    },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-font-size-medium",
@@ -340,24 +209,6 @@ export const buttonTokenScopes = {
       ref: "core.dimension.actionMinHeightLarge",
       fallback: 48,
     },
-    "button.size.padding-block.medium": {
-      name: "button.size.padding-block.medium",
-      cssVar: "--fsds-button-size-padding-block-medium",
-      ref: "core.spacing.size.05",
-      fallback: 12,
-    },
-    "button.size.padding-inline.medium": {
-      name: "button.size.padding-inline.medium",
-      cssVar: "--fsds-button-size-padding-inline-medium",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
-    "button.size.minHeight.medium": {
-      name: "button.size.minHeight.medium",
-      cssVar: "--fsds-button-size-min-height-medium",
-      ref: "core.dimension.actionMinHeightLarge",
-      fallback: 48,
-    },
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-font-size-medium",
@@ -371,12 +222,6 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-color-background-default",
       ref: "semantic.color.action.background.primary.default",
       fallback: "#0566fe",
-    },
-    "button.color.background.hover": {
-      name: "button.color.background.hover",
-      cssVar: "--fsds-button-color-background-hover",
-      ref: "semantic.color.action.background.primary.hover",
-      fallback: "#034fd6",
     },
     "button.color.background.active": {
       name: "button.color.background.active",
@@ -402,12 +247,6 @@ export const buttonTokenScopes = {
       ref: "semantic.color.action.background.primary.default",
       fallback: "#0566fe",
     },
-    "button.color.border.hover": {
-      name: "button.color.border.hover",
-      cssVar: "--fsds-button-color-border-hover",
-      ref: "semantic.color.action.background.primary.hover",
-      fallback: "#034fd6",
-    },
   },
   "variant_secondary": {
     "button.color.background.default": {
@@ -415,12 +254,6 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-color-background-default",
       ref: "semantic.color.action.background.secondary.default",
       fallback: "#fafafa",
-    },
-    "button.color.background.hover": {
-      name: "button.color.background.hover",
-      cssVar: "--fsds-button-color-background-hover",
-      ref: "semantic.color.action.background.secondary.hover",
-      fallback: "#d0d0d0",
     },
     "button.color.background.active": {
       name: "button.color.background.active",
@@ -472,12 +305,6 @@ export const buttonTokenScopes = {
       ref: "semantic.color.action.background.danger.default",
       fallback: "#d92d2e",
     },
-    "button.color.background.hover": {
-      name: "button.color.background.hover",
-      cssVar: "--fsds-button-color-background-hover",
-      ref: "semantic.color.action.background.danger.hover",
-      fallback: "#b31b1b",
-    },
     "button.color.background.active": {
       name: "button.color.background.active",
       cssVar: "--fsds-button-color-background-active",
@@ -501,18 +328,6 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-color-border-default",
       ref: "semantic.color.action.background.danger.default",
       fallback: "#d92d2e",
-    },
-    "button.color.border.hover": {
-      name: "button.color.border.hover",
-      cssVar: "--fsds-button-color-border-hover",
-      ref: "semantic.color.action.background.danger.hover",
-      fallback: "#b31b1b",
-    },
-    "button.color.border.focus": {
-      name: "button.color.border.focus",
-      cssVar: "--fsds-button-color-border-focus",
-      ref: "semantic.focus.ring.intent.danger",
-      fallback: "#b31b1b",
     },
   },
   "variant_ghost": {

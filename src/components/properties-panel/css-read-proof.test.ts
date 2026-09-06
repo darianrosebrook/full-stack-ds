@@ -2,6 +2,10 @@ import { describe, it, expect } from "vitest";
 import { extractReadVars, readCssVarsFor } from "./css-read-proof";
 
 describe("extractReadVars", () => {
+  it("excludes disconnected aliases and comments, but follows rooted aliases", () => {
+    expect(extractReadVars('.a { --fsds-dead: var(--fsds-other); /* width: var(--fsds-fake) */ --fsds-live: var(--fsds-base); width: var(--fsds-live); }'))
+      .toEqual(new Set(["--fsds-live", "--fsds-base"]));
+  });
   it("captures var reads with and without fallbacks", () => {
     const css = `
       .a { gap: var(--fsds-button-size-gap-default, 8px); }
@@ -49,6 +53,11 @@ describe("readCssVarsFor — corpus ground truth", () => {
     expect(reads).not.toBeNull();
     expect(reads!.has("--fsds-tabs-spacing-gap")).toBe(true);
     expect(reads!.has("--fsds-box-model-gap")).toBe(true);
+  });
+
+  it("does not expose native-only or compile-time tokens as Web controls", () => {
+    expect(readCssVarsFor("Accordion")!.has("--fsds-accordion-border-width")).toBe(false);
+    expect(readCssVarsFor("Toast")!.has("--fsds-toast-timing-auto-dismiss")).toBe(false);
   });
 
   it("returns null for an unknown component (no proof source, not empty proof)", () => {

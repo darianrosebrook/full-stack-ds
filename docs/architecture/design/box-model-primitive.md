@@ -5,7 +5,7 @@ status: implemented
 title: Box-Model Primitive Slot Pool
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 108c2452
+verified_at_commit: 2fce1451
 governs:
   - packages/ds-contracts/box-model.primitive.schema.json
   - packages/ds-contracts/primitives/BoxModel.primitive.json
@@ -27,7 +27,7 @@ Each `[data-fsds-component]` boundary resets the public `--fsds-box-model-*` var
 
 The rendered box carries `data-fsds-box`; shared geometry rules target that marker. React, Vue, and Svelte put both markers on the same root. Angular and Lit have a component host boundary and a separate inner box: overrides set on the host inherit to that box without applying padding twice. Lit emits the boundary reset with `:host(...)` inside its shadow context. Svelte's primitive explicitly forwards both markers. Angular primitive layout uses layered CSS rather than inline host styles, so component and consumer controls can win.
 
-Generated component token stylesheets no longer redeclare the same root box-model pool. Variant/state assignments remain where authored. Box overrides stay local to each boundary instead of inheriting into unrelated nested components.
+Generated component token stylesheets no longer redeclare the same root box-model pool. Variant, state, and part defaults also lower to property fallbacks; they no longer populate the public shared override variables. Box overrides stay local to each boundary instead of inheriting into unrelated nested components.
 
 Within the existing `components` cascade layer, the shared order is:
 
@@ -54,8 +54,9 @@ Padding uses logical axes and sides so it follows writing mode. Margin belongs t
 
 - `box-model.primitive.schema.json` enumerates legal slots and authoring value shapes.
 - `primitives/BoxModel.primitive.json` defines defaults; `box-model.ts` merges them and emits shared controls from the same slot enumeration.
-- `ir.ts` retains default facts for all backends. `css.ts` places concrete fallbacks at Web consumer sites and filters duplicate root declarations from emitted token CSS.
-- `box-model.test.ts` verifies default precedence, schema rejection, and non-hoisting.
+- `ir.ts` retains default facts for all backends. `css.ts` places concrete fallbacks at Web consumer sites and removes shared override defaults from every component declaration block.
+- `box-model.test.ts` verifies default precedence, schema rejection, non-hoisting, and variant defaults at property consumers.
+- `e2e/component-token-consumption.spec.ts` verifies that variant defaults cannot defeat shorthand, axis, and side overrides across Web targets.
 - `e2e/design-bindings.spec.ts` checks actual browser shorthand/side behavior, restoration, nested isolation, and consumer precedence without the global semantic stylesheet.
 
-Portal surfaces need their own applicable boundary/selector; this does not transport an ancestor's custom properties into a portal. Native emitters retain their previous material token projection. Shared CSS controls do not imply a native override API, identical behavior on all host elements, or visual correctness for every possible value.
+Portal surfaces need their own applicable boundary/selector; this does not transport an ancestor's custom properties into a portal. Native emitters project the normalized material facts down to the slots their generated code reads. Shared CSS controls do not imply a native override API, identical behavior on all host elements, or visual correctness for every possible value.

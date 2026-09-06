@@ -39,11 +39,6 @@
     "fallback": "#f7f7f7",
     "layer": "semantic"
   },
-  "avatar.color.background.inverse": {
-    "resolvesTo": "semantic.color.background.inverse",
-    "fallback": "#141414",
-    "layer": "semantic"
-  },
   "avatar.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",

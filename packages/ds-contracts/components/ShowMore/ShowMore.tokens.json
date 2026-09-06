@@ -54,11 +54,6 @@
     "fallback": "#b8b8b8",
     "layer": "semantic"
   },
-  "show-more.color.border.accent": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
   "show-more.size.padding.default": {
     "resolvesTo": "core.spacing.size.07",
     "fallback": "24px",
@@ -67,11 +62,6 @@
   "show-more.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "6px",
-    "layer": "semantic"
-  },
-  "show-more.overlay.imageOverlay": {
-    "resolvesTo": "semantic.color.background.image.overlay",
-    "fallback": "rgba(0, 0, 0, 0.5)",
     "layer": "semantic"
   }
 }

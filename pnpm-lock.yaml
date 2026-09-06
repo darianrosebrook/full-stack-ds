@@ -275,6 +275,9 @@ importers:
       ajv:
         specifier: ^8.18.0
         version: 8.20.0
+      postcss:
+        specifier: 8.5.14
+        version: 8.5.14
       zod:
         specifier: ^4.5.4
         version: 4.5.4

@@ -106,10 +106,8 @@ export class TabsElement extends LitElement {
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     @layer components.defaults {
@@ -392,10 +390,8 @@ export class TabsListElement extends LitElement {
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     @layer components.defaults {
@@ -659,10 +655,8 @@ export class TabsTabElement extends LitElement {
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     @layer components.defaults {
@@ -915,10 +909,8 @@ export class TabsPanelElement extends LitElement {
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #f7f7f7);
-      --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-tabs-size-indicator-thickness: 2px;
-      --fsds-tabs-size-vertical-list-width: 160px;
     }
 
     @layer components.defaults {

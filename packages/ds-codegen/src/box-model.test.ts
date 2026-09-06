@@ -215,7 +215,7 @@ describe("emitTokensCss with box-model defaults", () => {
     expect(out).toContain("padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);");
   });
 
-  it("emits Button size variants as box-model slot redefinitions", () => {
+  it("emits Button size defaults at properties without occupying shared overrides", () => {
     const contract = loadButtonContractWithSidecars();
     const ir = buildComponentIR(contract);
     const tokensCss = emitTokensCss(ir);
@@ -224,14 +224,12 @@ describe("emitTokensCss with box-model defaults", () => {
     expect(css).toContain(
       "font-size: var(--fsds-button-design-root-typography-size, var(--fsds-button-size-font-size-medium, 1rem));",
     );
-    expect(tokensCss).toContain(
-      "--fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-small, 28px);",
-    );
-    expect(tokensCss).toContain(
-      "--fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-large, 48px);",
-    );
-    expect(tokensCss).toContain(
-      "--fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);",
+    expect(tokensCss).not.toContain("--fsds-box-model-min-height:");
+    expect(css).toContain("min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height-small, 28px));");
+    expect(css).toContain("min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height-large, 48px));");
+    expect(tokensCss).not.toContain("--fsds-box-model-padding-inline-start:");
+    expect(emitCss(ir)).toContain(
+      "padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-06, 16px));",
     );
   });
 });
@@ -259,6 +257,7 @@ describe("portal-aware emission", () => {
     const withTokens = {
       ...contract,
       tokens: mergeBoxModelDefaults(authored),
+      styles: { root: { "background-color": { resolvesTo: "portalprobe.color.bg", fallback: "#fff" } } },
     };
     const ir = buildComponentIR(withTokens);
     // Force portal on the IR (the contract field above is the

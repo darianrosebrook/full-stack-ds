@@ -44,11 +44,6 @@
     "fallback": "#d0d0d0",
     "layer": "semantic"
   },
-  "tooltip.size.padding.y": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "tooltip.size.padding.x": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",

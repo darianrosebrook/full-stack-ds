@@ -70,18 +70,14 @@ export class StatElement extends LitElement {
 
     .stat {
       --fsds-stat-color-foreground-value: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-stat-color-foreground-label: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-stat-color-foreground-trend-up: var(--fsds-semantic-color-feedback-foreground-success-default, #497f21);
       --fsds-stat-color-foreground-trend-down: var(--fsds-semantic-color-feedback-foreground-danger-default, #d92d2e);
       --fsds-stat-color-foreground-trend-neutral: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-stat-size-value-sm: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-stat-size-value-md: var(--fsds-semantic-typography-heading-02, 24px);
       --fsds-stat-size-value-lg: var(--fsds-semantic-typography-heading-01, 32px);
-      --fsds-stat-size-label: var(--fsds-semantic-typography-caption-02, 12px);
-      --fsds-stat-size-gap: var(--fsds-core-spacing-size-02, 2px);
       --fsds-stat-typography-line-height-value: 1.1;
       --fsds-stat-typography-weight-value: var(--fsds-semantic-typography-font-weight-bold, 700);
-      --fsds-stat-typography-weight-label: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
 
     @layer components.defaults {
