@@ -1,0 +1,41 @@
+id: DESIGN-SEMANTIC-PORTABILITY-RECON-01
+title: 'Measure design binding authority and cross-target semantic preservation'
+risk_tier: 2
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-06T06:49:14.668Z'
+updated_at: '2026-09-06T06:49:14.668Z'
+created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
+blast_radius:
+  modules:
+    - 'Reproducible design-contract recon and bounded claim adjudication'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/design-contract-recon.mjs'
+    - 'scripts/design-contract-recon.test.mjs'
+    - 'docs/architecture/design/design-contract-recon.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'Recon preserves production contracts, emitters and runtime behavior; differences are classified against declared target support.'
+  - 'No universal success or failure is inferred from a bounded witness; schema limitations, backend defects and new-binding causality remain separate.'
+acceptance:
+  - id: A1
+    given: 'the current target and design contracts'
+    when: 'probe obligations are established'
+    then: 'each experiment distinguishes admitted behavior from unsupported extension and names its oracle'
+  - id: A2
+    given: 'unchanged production code'
+    when: 'counterexamples and positive controls run'
+    then: 'emitted artifacts and runtime or executable adapter facts establish whether meaning is preserved with and without design metadata'
+  - id: A3
+    given: 'the recorded observations'
+    when: 'the recon is adjudicated'
+    then: 'a reproducible bounded verdict identifies any demonstrated defect and the narrowest justified next action without speculative rearchitecture'
+non_functional: {}
+contracts:
+  - name: 'design-property-meaning'
+    type: contract-test
+    path: 'packages/ds-codegen/src/design-properties.ts'
