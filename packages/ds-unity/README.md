@@ -56,10 +56,12 @@ pnpm run test:unity
 
 `test:unity` copies the package and sample into `tmp/unity-pilot/project`, then runs real Unity EditMode tests. It needs an activated Editor license and a graphics device for the live Editor panels. Set `UNITY_EDITOR` to the Editor executable when using a different installation. Logs and NUnit XML stay in `tmp/unity-pilot`. Styling tests enter Play mode, render a real Player panel into a texture, and save PNG witnesses under `tmp/unity-pilot/screenshots`; Editor typography, spacing and focus are checked through resolved styles and geometry.
 
+`node scripts/unity-player.mjs` builds and launches a fresh standalone macOS consumer, writes source-bound evidence under `tmp/unity-player/<run-id>`, and rejects absent/mismatched results. Its synthetic UI events prove bounded in-Player behavior, not input-device integration. The recorded environment is Unity 6000.5.3f1 with Metal; the declared 6000.0 minimum and other platforms remain unverified.
+
 `node scripts/unity-tests.mjs --compile-only` is a separate diagnostic using the installed macOS Unity SDK, real Unity assemblies and Unity's UXML source generator. It checks runtime, Editor showcase and sample compilation; it does **not** run Unity, import UXML or execute tests.
 
 ## Pilot boundary
 
 The allowlist is in the repository's `fsds.targets.json`. The Unity backend is selected by `--target=all` but is outside the TypeScript admission rail. Its EditMode lane is local and explicit, not an existing CI gate.
 
-This slice implements the interactions above. It does not claim full framework parity, screen-reader integration, controller/gamepad navigation, player-build admission, or full visual parity. Default-size switch geometry uses typed token fallback facts; the remaining visual skin is a small Unity-specific base theme. Dynamic brands, other switch sizes, token-color projection, motion, exact compound anatomy, icon-catalog fidelity, browser form props and DOM IDs are not ported. The disclosure marker uses a text affordance rather than the iconography catalog. Tabs keeps an inactive panel's object state even when detached.
+This slice implements the interactions above. It does not claim full framework parity, screen-reader integration, controller/gamepad navigation, cross-platform player-build admission, or full visual parity. Default-size switch geometry uses typed token fallback facts; the remaining visual skin is a small Unity-specific base theme. Dynamic brands, other switch sizes, token-color projection, motion, exact compound anatomy, icon-catalog fidelity, browser form props and DOM IDs are not ported. The disclosure marker uses a text affordance rather than the iconography catalog. Tabs keeps an inactive panel's object state even when detached.

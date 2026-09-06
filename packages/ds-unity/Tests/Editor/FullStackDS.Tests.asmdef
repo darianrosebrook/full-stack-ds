@@ -9,5 +9,15 @@
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
+  ],
+  "defineConstraints": [
+    "FSDS_TEST_FRAMEWORK"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.test-framework",
+      "expression": "1.0.0",
+      "define": "FSDS_TEST_FRAMEWORK"
+    }
   ]
 }
