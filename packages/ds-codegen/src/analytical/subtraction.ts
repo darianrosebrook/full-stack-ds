@@ -302,7 +302,18 @@ if (invokedDirectly) {
   }
   if (process.argv.includes("--gate")) {
     for (const { file, r } of results) console.log(`${file}: ${r.ok ? "OK" : r.message}`);
-    if (results.some(({ r }) => !r.ok)) process.exit(1);
+    // The close condition `final-quotient` is part of the gate: every basis can
+    // carry a verdict while the verdicts collectively erase a distinction.
+    // final-quotient imports this module for the bases, so the import here is
+    // dynamic AND deferred: awaiting it at top level would wait on this
+    // module's own evaluation and never settle (Node exits 13). The promise
+    // keeps the process alive until the check has run.
+    const basesFailed = results.some(({ r }) => !r.ok);
+    void import("./final-quotient.js").then(({ checkFinalQuotient, summarizeFinalQuotient }) => {
+      const fq = checkFinalQuotient(SPEC);
+      console.log(summarizeFinalQuotient(fq));
+      if (basesFailed || !fq.ok) process.exit(1);
+    });
   } else {
     console.log(`subtraction: ${all.length} basis file(s) opened by ${SPEC}`);
     for (const { file, ledger } of all) console.log(`  ${file} — ${ledger.basis.count} candidates frozen at ${ledger.basis.frozenAt}`);

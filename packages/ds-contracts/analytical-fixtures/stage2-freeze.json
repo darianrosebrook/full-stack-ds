@@ -6,7 +6,7 @@
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
     "erasureAuthorityDigest": "664d679217720bf59bc3a2914af6b4417f7d19e675657ab0db8a76e0517c796c",
-    "witnessAuthorityDigest": "03389322b9dfb17c97628bedcce01b027441ef2f5089654b66c42975655e5a53",
+    "witnessAuthorityDigest": "2e0eadf93d0d6afec1cb91f8a143f65545e32112cbc6f358e51377f0550fa30c",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
