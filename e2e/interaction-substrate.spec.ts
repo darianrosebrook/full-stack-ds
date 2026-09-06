@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("one adopted host composes tooltip, dialog, handlers, refs and focus return", async ({ page }) => {
   await page.goto("/");
-  await page.evaluate(async url => { await import(/* @vite-ignore */ url); }, "/e2e/fixtures/interaction-substrate.tsx");
+  await page.evaluate(async url => { (await import(/* @vite-ignore */ url)).mountFixture(); }, "/e2e/fixtures/interaction-substrate.tsx");
   const fixture = page.getByRole("region", { name: "Interaction substrate fixture" });
   const trigger = fixture.getByRole("button", { name: "Open composed dialog" });
   await expect(trigger).toHaveCount(1);
@@ -20,7 +20,7 @@ test("one adopted host composes tooltip, dialog, handlers, refs and focus return
 
 test("adopted repeated triggers hide inactive content in layout and accessibility", async ({ page }) => {
   await page.goto("/");
-  await page.evaluate(async url => { await import(/* @vite-ignore */ url); }, "/e2e/fixtures/interaction-substrate.tsx");
+  await page.evaluate(async url => { (await import(/* @vite-ignore */ url)).mountFixture(); }, "/e2e/fixtures/interaction-substrate.tsx");
   const fixture = page.getByRole("region", { name: "Interaction substrate fixture" });
   const first = fixture.getByRole("button", { name: "First disclosure" });
   await expect(first).toHaveAttribute("aria-expanded", "true");

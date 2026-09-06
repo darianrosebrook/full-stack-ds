@@ -46,7 +46,11 @@ function Fixture() {
     <ShowMore maxLines={2}><p style={{ maxWidth: 180 }}>Long content with enough words to span many lines. The collapsed state must clip these lines, while expanding reveals every line of this text.</p></ShowMore>
   </section>;
 }
-const container = document.createElement("div");
-container.id = "interaction-fixture";
-document.body.prepend(container);
-createRoot(container).render(<Fixture />);
+export function mountFixture() {
+  const container = document.createElement("div");
+  container.id = "interaction-fixture";
+  document.body.prepend(container);
+  const root = createRoot(container);
+  root.render(<Fixture />);
+  return () => { root.unmount(); container.remove(); };
+}
