@@ -1,0 +1,57 @@
+# Full Stack DS for Unity UI Toolkit
+
+A local UPM package with contract-generated Switch, Accordion, Popover and Tabs controls. Unity 6 is the API baseline. Generated controls carry `[UxmlElement]` and are usable from C#, UXML and UI Builder; the same runtime assembly serves Editor windows and `UIDocument` panels.
+
+## Import
+
+In Unity's Package Manager, choose **Install package from disk** and select this directory's `package.json`. Keep the package directory at a stable path. This is a local package, not a published Unity registry dependency.
+
+Open **Window → Full Stack DS → Interactive Controls** for the C# showcase. Import **Interactive controls** from the package's Samples section to get `Controls.uxml` and `RuntimeExample.cs`. Open the UXML in UI Builder. For runtime use, assign it to a `UIDocument` with a `PanelSettings` asset and add `RuntimeExample` to that GameObject.
+
+```xml
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:ds="FullStackDS">
+    <ds:Switch label="Enable sound" checked="true" />
+    <ds:Accordion collapsible="true">
+        <ds:AccordionItem value="graphics" label="Graphics">
+            <ui:Label text="Rendering preferences" />
+        </ds:AccordionItem>
+    </ds:Accordion>
+    <ds:Tabs>
+        <ds:TabsItem value="first" label="First"><ui:Label text="First panel" /></ds:TabsItem>
+        <ds:TabsItem value="second" label="Second"><ui:Label text="Second panel" /></ds:TabsItem>
+    </ds:Tabs>
+    <ds:Popover label="Help"><ui:Label text="Helpful content" /></ds:Popover>
+</ui:UXML>
+```
+
+## State and composition
+
+Switch uses `Checked`, `value`, `SetValueWithoutNotify` and Unity's `RegisterValueChangedCallback`. Popover uses `Open` and the same boolean-channel APIs. `Label` supplies trigger text. Both expose the actual UI Toolkit `Trigger`; Popover routes `Add(child)` into its `Content` container.
+
+Accordion and Tabs expose `Value`, `Values`, `ValueChanged`, and `SetValuesWithoutNotify`. Construct an `AccordionItem` or `TabsItem`, set its non-empty unique `Value` and `Label`, add arbitrary content with `item.Add(child)`, then call `group.AddItem(item)`. UXML children register on panel attachment. Use `RemoveItem` before changing keys or moving an item to another group. For imperative `Add`/`Remove` outside these helpers, call `SynchronizeChildren` to update registration.
+
+Accordion defaults to single selection with `Collapsible = false`; use `Type = "multiple"` and `Values` for multiple sections. Tabs supports horizontal/vertical orientation, automatic/manual activation, looping, disabled items, Home/End, arrow navigation and `UnmountInactive`. Native UI Toolkit buttons own pointer and submit activation. Accordion's vertical arrows move focus without selecting.
+
+Values assigned before attachment provide initial state. For owner-controlled state, set `Controlled = true`, handle `ValueRequested`, and commit an accepted value through `Checked`, `Open`, `Value` or `Values`. A request alone does not change presentation. This is a C# adaptation of the contract's controlled/default channel trio; C# event signatures use arrays for both Accordion selection modes.
+
+Popover portals content to its current panel root. It uses the anchor/content union for outside-pointer and blur dismissal, returns focus to the trigger on Escape, and flips/shifts at panel edges. Dismissal flags remain configurable. Removing a Popover unregisters its panel callbacks and removes the floating content.
+
+## Regenerate and verify
+
+From the repository root:
+
+```sh
+pnpm run generate:unity
+pnpm exec vitest run packages/ds-codegen/src/frameworks/unity/factory.test.ts
+pnpm run test:unity
+```
+
+`test:unity` copies the package and sample into `tmp/unity-pilot/project`, then runs real Unity EditMode tests. It needs an activated Editor license and a graphics device for the live Editor panels. Set `UNITY_EDITOR` to the Editor executable when using a different installation. Logs and NUnit XML stay in `tmp/unity-pilot`.
+
+`node scripts/unity-tests.mjs --compile-only` is a separate diagnostic using the installed macOS Unity SDK, real Unity assemblies and Unity's UXML source generator. It checks runtime, Editor showcase and sample compilation; it does **not** run Unity, import UXML or execute tests.
+
+## Pilot boundary
+
+The allowlist is in the repository's `fsds.targets.json`. The Unity backend is selected by `--target=all` but is outside the TypeScript admission rail. Its EditMode lane is local and explicit, not an existing CI gate.
+
+This slice implements the interactions above. It does not claim full framework parity, screen-reader integration, controller/gamepad navigation, player-build admission, or visual correctness. Default-size switch geometry uses typed token fallback facts; the remaining visual skin is a small Unity-specific base theme. Dynamic brands, other switch sizes, token-color projection, motion, exact compound anatomy, icon-catalog fidelity, browser form props and DOM IDs are not ported. The disclosure marker uses a text affordance rather than the iconography catalog. Tabs keeps an inactive panel's object state even when detached.

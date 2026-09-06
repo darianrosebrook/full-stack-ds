@@ -19,6 +19,19 @@ const SAFE_BUILTIN_PERMISSIONS = {
 } as const;
 
 export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackManifestV1>> = {
+  unity: {
+    schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
+    target: { id: "unity", family: "native-view", label: "Unity UI Toolkit", maturity: "experimental" },
+    compatibility: { codegenProtocol: "builtin-framework-emitter-v1", componentIR: "ComponentIR@v1", targetFamilyIR: "unity-ui-toolkit@pilot" },
+    entrypoints: { emitter: "packages/ds-codegen/src/frameworks/unity/factory.ts" },
+    outputs: { componentsRoot: "Runtime/Components", barrelFile: "Components.generated.cs", fileKinds: ["component-source", "barrel"] },
+    capabilities: { components: true, tests: false, behavior: true, compoundParts: true, surface: true, tokens: "native-theme-module", customRegions: false },
+    permissions: SAFE_BUILTIN_PERMISSIONS,
+    admission: {
+      commands: [{ check: "unity-editmode", command: ["node", "scripts/unity-tests.mjs"], scope: { packageRoot: "packages/ds-unity/", extensions: [".cs", ".uxml"], coverage: "covered_by_package_check" } }],
+      knownGaps: ["Pilot allowlist only; outside the TypeScript admission rail. Unity Editor tests are an explicit local lane, not CI.", "No screen-reader, player-build, controller-input, full styling/motion or visual parity claim. Token geometry uses declared fallback values."],
+    },
+  },
   react: {
     schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
     target: {

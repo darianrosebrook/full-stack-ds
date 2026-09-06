@@ -22,7 +22,8 @@ export type BuiltinTargetId =
   | "figma"
   | "react-native"
   | "swiftui"
-  | "jetpack-compose";
+  | "jetpack-compose"
+  | "unity";
 export type TargetId = string;
 
 /**
@@ -126,6 +127,7 @@ export const KNOWN_TARGETS: readonly BuiltinTargetId[] = [
   "react-native",
   "swiftui",
   "jetpack-compose",
+  "unity",
 ];
 
 export function isBuiltinTargetId(value: string): value is BuiltinTargetId {

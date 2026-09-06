@@ -11,6 +11,7 @@
  * later executable adapter slice admits them.
  */
 import fs from "node:fs";
+import { createUnityEmitter } from "./frameworks/unity/factory.js";
 import path from "node:path";
 import type { BuiltinTargetId, FrameworkEmitter, TargetId } from "./emitter.js";
 import { createAngularEmitter } from "./frameworks/angular/factory.js";
@@ -323,6 +324,16 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       componentsRoot: jetpackComposeRoot,
       barrelFile: "Components.generated.kt",
       admittedComponents: declaredComponents("jetpack-compose"),
+    });
+  }
+
+  if (configuredTargets.has("unity") && workspaceExists(path.join(opts.workspaceRoot, "packages/ds-unity"))) {
+    registerBuiltinTarget(bindings, declarations, {
+      id: "unity",
+      emitter: createUnityEmitter(),
+      componentsRoot: path.join(opts.workspaceRoot, "packages/ds-unity/Runtime/Components"),
+      barrelFile: "Components.generated.cs",
+      admittedComponents: declaredComponents("unity"),
     });
   }
 

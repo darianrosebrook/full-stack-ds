@@ -1,0 +1,17 @@
+{
+  "name": "com.fullstackds.ui",
+  "version": "0.1.0",
+  "displayName": "Full Stack DS \u2014 UI Toolkit",
+  "description": "Contract-generated interactive UI Toolkit controls.",
+  "unity": "6000.0",
+  "author": {
+    "name": "Full Stack DS"
+  },
+  "samples": [
+    {
+      "displayName": "Interactive controls",
+      "description": "UXML composition and runtime UIDocument host.",
+      "path": "Samples~/InteractiveControls"
+    }
+  ]
+}
