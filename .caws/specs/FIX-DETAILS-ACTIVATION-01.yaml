@@ -89,3 +89,10 @@ evidence:
     command: "FSDS_E2E_BASE=http://127.0.0.1:5187 FSDS_E2E_PORT=5187 pnpm exec playwright test e2e/details-disclosure.spec.ts e2e/interaction-substrate.spec.ts e2e/design-bindings.spec.ts --workers=1"
     exit_code: 0
     commit_sha: d9134efc
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "All targets regenerated from merged emitters; governed admission overall pass; root 273 files / 3746 tests and all framework suites pass; integrated browser 32 passed; lint, typecheck and docs gates pass"
+    recorded_at: "2026-09-06T05:49:56.204Z"
+    command: "pnpm run governed:rail && pnpm run test:frameworks && pnpm exec vitest run --maxWorkers=2"
+    exit_code: 0
+    commit_sha: d9134efc
