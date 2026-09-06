@@ -1,5 +1,6 @@
 <script lang="ts">
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { useSheet } from "./useSheet.svelte.js";
 import { portal } from "../../primitives/index.js";
 // @generated:end
@@ -69,7 +70,7 @@ const instanceId = $props.id();
   <div class={'sheet__overlay'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}></div>
   {/if}
   {#if behavior.openness}
-  <div class={'sheet__content'} role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
+  <div class={'sheet__content'} bind:this={behavior.panelRef.el} role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
     <div class={'sheet__header'}>
       <h2 class={'sheet__title'} id={`${instanceId}-title`}>
         {@render title?.()}
@@ -77,7 +78,7 @@ const instanceId = $props.id();
       <p class={'sheet__description'} id={`${instanceId}-description`}>
         {@render description?.()}
       </p>
-      <button class={'sheet__close'} type="button" aria-label="Close sheet" onclick={() => behavior.setOpenness(!behavior.openness)}></button>
+      <button class={'sheet__close'} type="button" aria-label="Close sheet" onclick={(e) => { if (canActivateInteraction(e, false)) behavior.setOpenness(false); }}></button>
     </div>
     <div class={'sheet__body'}>
       {@render children?.()}

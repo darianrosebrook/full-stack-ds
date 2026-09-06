@@ -1,4 +1,5 @@
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useDialog } from "./useDialog";
@@ -141,7 +142,7 @@ export function Dialog({
   slots,
   ...rest
 }: DialogProps) {
-  const { openness, setOpenness, renderInPortal } = useDialog({
+  const { panelRef, openness, setOpenness, renderInPortal } = useDialog({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
@@ -166,12 +167,12 @@ export function Dialog({
         <div className="dialog__backdrop" aria-hidden="true" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} />
       ) : null}
       {openness ? (
-        <div className="dialog__modal" role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
+        <div className="dialog__modal" role="dialog" aria-modal="true" aria-label={ariaLabel} ref={panelRef} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
           <div className="dialog__header">
             <h2 className="dialog__title" id={`${instanceId}-title`}>
               {slots?.title}
             </h2>
-            <button className="dialog__closeButton" type="button" aria-label="Close dialog" onClick={() => setOpenness(!openness)} />
+            <button className="dialog__closeButton" type="button" aria-label="Close dialog" onClick={(e) => { if (canActivateInteraction(e, false)) setOpenness(false); }} />
           </div>
           <div className="dialog__body" id={`${instanceId}-body`}>
             {children}

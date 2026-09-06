@@ -1,5 +1,6 @@
 <script lang="ts">
 // @generated:start imports
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { useDialog } from "./useDialog.svelte.js";
 import { portal } from "../../primitives/index.js";
 // @generated:end
@@ -74,12 +75,12 @@ const instanceId = $props.id();
   <div class={'dialog__backdrop'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}></div>
   {/if}
   {#if behavior.openness}
-  <div class={'dialog__modal'} role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
+  <div class={'dialog__modal'} bind:this={behavior.panelRef.el} role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
     <div class={'dialog__header'}>
       <h2 class={'dialog__title'} id={`${instanceId}-title`}>
         {@render title?.()}
       </h2>
-      <button class={'dialog__closeButton'} type="button" aria-label="Close dialog" onclick={() => behavior.setOpenness(!behavior.openness)}></button>
+      <button class={'dialog__closeButton'} type="button" aria-label="Close dialog" onclick={(e) => { if (canActivateInteraction(e, false)) behavior.setOpenness(false); }}></button>
     </div>
     <div class={'dialog__body'} id={`${instanceId}-body`}>
       {@render children?.()}

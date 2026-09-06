@@ -1,3 +1,4 @@
+import { requestInteractionChange } from "../interaction.js";
 import { signal, computed, type Signal } from '@angular/core';
 
 export interface ControllableStateOptions<T> {
@@ -27,8 +28,7 @@ export function createControllableState<T>(
   const value = computed(() => opts.controlled?.() ?? internal());
 
   function set(next: T): void {
-    internal.set(next);
-    opts.onChange?.(next);
+    requestInteractionChange(opts.controlled?.(), next, internal.set, opts.onChange);
   }
 
   return { value, set };

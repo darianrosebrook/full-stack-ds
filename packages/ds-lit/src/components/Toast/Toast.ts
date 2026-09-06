@@ -200,10 +200,13 @@ export class ToastElement extends LitElement {
   @property({ attribute: false }) action?: unknown;
   @property({ attribute: false }) duration?: number | null;
 
-  private behavior = new ToastBehavior(this, {
+  private initializedBehavior?: ToastBehavior;
+  private get behavior(): ToastBehavior {
+    return this.initializedBehavior ??= new ToastBehavior(this, {
     open: () => this.open,
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
+  }
 
   private autoDismiss = new AutoDismissController(this, {
     open: () => Boolean(this.behavior.open),

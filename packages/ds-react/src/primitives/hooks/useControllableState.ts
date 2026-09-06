@@ -1,3 +1,4 @@
+import { requestInteractionChange } from "../interaction.js";
 import { useCallback, useRef, useState } from "react";
 
 /**
@@ -40,8 +41,10 @@ export function useControllableState<T>(options: {
       typeof next === "function"
         ? (next as (prev: T) => T)(valueRef.current)
         : next;
-    if (!isControlledRef.current) setInternal(resolved);
-    onChangeRef.current?.(resolved);
+    requestInteractionChange(isControlledRef.current ? valueRef.current : undefined, resolved, value => {
+      valueRef.current = value;
+      setInternal(value);
+    }, onChangeRef.current);
   }, []);
 
   return [value, setValue];

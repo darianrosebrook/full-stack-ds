@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: b9fc2c41
+verified_at_commit: 108c2452
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -13,6 +13,8 @@ governs:
   - packages/ds-contracts/primitives/primitive.contract.schema.json
   - packages/ds-contracts/a2ui/derive.ts
   - packages/ds-codegen/src/ir.ts
+  - packages/ds-codegen/src/interaction.ts
+  - packages/ds-codegen/src/interaction-runtime.ts
   - packages/ds-codegen/src/preserve.ts
   - packages/ds-codegen/src/frameworks/**
 ---
@@ -79,7 +81,7 @@ The word "semantic" is doing work. The contract owns what the component *means*:
 
 ### 2. A framework-neutral intermediate representation derived from the contract by deterministic projection
 
-Between contract and target sits an IR — `packages/ds-codegen/src/ir.ts` — that is built once per contract by `buildComponentIR` and consumed by all emitters. The IR is the single place where contract field interpretation happens. "Which props become BEM value modifiers", "which role is implicit on the chosen root element", "which surface attachment selects a controller", and "when does this form control commit its value" — these decisions are made once, in the IR, never in target-specific code.
+Between contract and target sits an IR — assembled in `packages/ds-codegen/src/ir.ts` with focused semantic builders such as `interaction.ts` — that is built once per contract by `buildComponentIR` and consumed by all emitters. The IR is the single place where contract field interpretation happens. "Which props become BEM value modifiers", "which role is implicit on the chosen root element", "which surface attachment selects a controller", and "when does this form control commit its value" — these decisions are made once, in the IR, never in target-specific code.
 
 The IR matters because it is what makes adding a new framework target *cheap*. Without it, each framework's emitter would re-interpret raw contract fields, and the cost of adding the sixth framework would be a multiple of the cost of adding the fifth. With it, a new emitter consumes the IR and produces idiomatic source — no contract semantics to relearn.
 
@@ -90,6 +92,8 @@ The projection from contract to IR is deterministic: a pure function, no I/O, no
 Every component in this repo is composed of one primitive: `Stack`, defined in `packages/ds-contracts/primitives/Stack.primitive.json`. There is no `Button` primitive, no `Input` primitive, no `Dialog` primitive. `Button` is `<Stack as="button">` with a contract that constrains its props. `Dialog` is `<Stack as="div" role="dialog">` plus compound parts, also stacks.
 
 This is the constraint that pins the contract at the right level of abstraction. If a contract needs to escape into a new primitive to express something, the contract is missing a field. The intent is that every new behavior must be expressible *in the contract*, not in a new primitive. Across the current <!-- component-count -->51 components, no second primitive has been required; whether that continues under broader component pressure is open.
+
+Here “one primitive” means one rendered primitive **contract**. Runtime adapters also exist: focus hooks, state adapters and `InteractionHost` bind behavior to a target element. React's host adapter can adopt an existing child without an additional wrapper. These adapters do not add component semantics to the primitive-contract corpus.
 
 The number of primitives is part of the claim. One is not a magic number — two or three might also be in normal form for a different problem — but the claim is that the set is small, fixed, and chosen at the highest level of abstraction the domain permits. Systems that have a sprawling primitive catalog have not yet found the right abstraction.
 
@@ -157,7 +161,9 @@ These are not hypothetical. They are the symptoms that show up across the broade
 
 **`buildFormControlIR`** separates semantic intent from framework event idiom. A control contract names its rendered interactive part, value channel/model, and commit semantic (`input`, `change`, or `activation`). The builder validates that the part exists, is interactive, renders exactly once, and that the channel type agrees with the value model. It then injects one normalized event binding on that part. React, Vue, Svelte, Angular, and Lit spell the listener differently—including React's idiomatic `onChange` for the same per-input text commit that the other Web targets spell as `input`—but none decides whether a text field is per-keystroke or blur-timed. The same target part also receives ambient Field association, so a compound checkbox labels its native input rather than its wrapper. Native form serialization remains a separate `form` fact: ToggleSwitch is a boolean control without falsely claiming that its button realization contributes to `FormData`.
 
-Both functions are short. Read together, they are where the architectural choices in this codebase are most concentrated.
+`buildInteractionIR` in `interaction.ts` applies the same discipline to trigger/content relationships. Contracts name the channel, triggering parts, operation and presence policy. It validates those references, synthesizes plain activation bindings, and binds trapped content to a focus handle. The shared web runtime owns controlled-state commits, cancellation and repeated-item transitions; framework adapters own reactive inputs and host attachment. Renamed-contract tests and browser witnesses cover this migration, including the matrix disclosure and real inactive-panel visibility. They do not establish complete focus-policy or accessibility parity; see [Interaction substrate](architecture/interaction-substrate.md).
+
+These builders make the distinction between declared intent and an attached, observable realization explicit.
 
 ## The cross-paradigm spread is the test
 
@@ -197,6 +203,6 @@ The seven properties are stated at the level of generality where they are meant 
 
 ## What this codebase demonstrates, and does not
 
-It demonstrates that, for the <!-- component-count -->51 components built so far, a single typed contract corpus drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive — with React Native admitted to the same rail, the full-corpus SwiftUI emitter carrying bounded compile/test/paint/host-interaction facts outside it, and the partial-corpus Jetpack Compose emitter carrying compile and resolver-test facts outside it — with fail-closed boundary checks and preserved custom regions across regenerations. The IR is centralized in one file; that relocation is an observable complexity cost, not evidence that the IR is small. A reader can clone the repo, regenerate, and inspect the IR and representative contracts directly.
+It demonstrates that, for the <!-- component-count -->51 components built so far, a single typed contract corpus drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive — with React Native admitted to the same rail, the full-corpus SwiftUI emitter carrying bounded compile/test/paint/host-interaction facts outside it, and the partial-corpus Jetpack Compose emitter carrying compile and resolver-test facts outside it — with fail-closed boundary checks and preserved custom regions across regenerations. The IR centralizes semantic interpretation in the codegen layer, with focused builders beside its main assembly module; that relocation is an observable complexity cost, not evidence that the IR is small. A reader can clone the repo, regenerate, and inspect the IR and representative contracts directly.
 
 It does not demonstrate that every compositional system must take this shape, that the contract will continue to hold past 100 components, that native behavior is broadly runtime-correct, that macOS host facts transfer to iOS/Android devices, or that the architecture transfers to substrates outside UI engineering. Those are open questions, named here so the reader does not have to infer them.

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, effect, signal } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked, OnInit, OnDestroy, ElementRef, effect } from "@angular/core";
 import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useWalkthrough } from "./useWalkthrough.js";
@@ -55,7 +55,9 @@ let nextInstanceId = 0;
 })
 export class WalkthroughComponent implements OnInit, OnDestroy {
   @Input() steps?: WalkthroughStepSpec[] = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}];
-  @Input() index?: number;
+  private readonly inputIndex = signal<number | undefined>(undefined);
+  @Input() get index(): number | undefined { return this.inputIndex(); }
+  set index(value: number | undefined) { this.inputIndex.set(value); }
   @Input() defaultIndex?: number = 0;
   @Input() onStepChange?: (index: number) => void;
   @Input() onComplete?: () => void;
@@ -70,21 +72,25 @@ export class WalkthroughComponent implements OnInit, OnDestroy {
   protected readonly instanceId = `fsds-walkthrough-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useWalkthrough({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useWalkthrough>;
+  protected get behavior(): ReturnType<typeof useWalkthrough> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useWalkthrough({
     index: () => this.index,
     defaultIndex: this.defaultIndex,
     onStepChange: (v) => this.onStepChange?.(v),
     closeOnOutsideClick: this.closeOnOutsideClick,
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "walkthrough",
       (this.placement ?? "auto") ? `walkthrough--${(this.placement ?? "auto")}` : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   private _el = inject(ElementRef<HTMLElement>);
   private _portalOriginParent: Node | null = null;

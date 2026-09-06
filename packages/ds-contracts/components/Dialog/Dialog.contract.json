@@ -118,9 +118,6 @@
                   "attrs": {
                     "type": "button",
                     "aria-label": "Close dialog"
-                  },
-                  "events": {
-                    "click": "channel:openness.onChange"
                   }
                 }
               ]
@@ -521,5 +518,16 @@
         "node-ref"
       ]
     }
+  },
+  "interaction": {
+    "channel": "openness",
+    "content": "modal",
+    "presence": "unmount",
+    "triggers": [
+      {
+        "part": "closeButton",
+        "operation": "close"
+      }
+    ]
   }
 }

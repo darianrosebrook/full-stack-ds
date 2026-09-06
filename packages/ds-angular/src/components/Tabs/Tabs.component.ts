@@ -83,13 +83,16 @@ export class TabsComponent implements OnChanges {
   }
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useTabs({
+  private initializedBehavior?: ReturnType<typeof useTabs>;
+  protected get behavior(): ReturnType<typeof useTabs> {
+    return this.initializedBehavior ??= useTabs({
     value: () => this._controlledValue(),
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
     idBase: this.idBase,
     destroyRef: this.destroyRef,
-  });
+    });
+  }
 
   classes = computed(() =>
     [

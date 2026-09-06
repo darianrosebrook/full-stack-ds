@@ -326,5 +326,17 @@
         "Popover.Content"
       ]
     }
+  },
+  "interaction": {
+    "channel": "open",
+    "content": "content",
+    "presence": "unmount",
+    "triggers": [
+      {
+        "part": "trigger",
+        "operation": "toggle"
+      }
+    ],
+    "disabledProp": "disabled"
   }
 }

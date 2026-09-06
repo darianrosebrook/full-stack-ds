@@ -119,6 +119,14 @@ describe("Accordion — disclosure behavior", () => {
     expect(triggers(fixture)[1].getAttribute("aria-expanded")).toBe("true");
   });
 
+  it("reads the repeated channel default after parent inputs arrive", () => {
+    const fixture = setup({ type: "multiple", defaultValue: ["b"] });
+    expect(triggers(fixture).map(trigger => trigger.getAttribute("aria-expanded"))).toEqual(["false", "true"]);
+    triggers(fixture)[0].click();
+    fixture.detectChanges();
+    expect(triggers(fixture).map(trigger => trigger.getAttribute("aria-expanded"))).toEqual(["true", "true"]);
+  });
+
   it("emits disclosure ARIA, not tab ARIA", () => {
     const fixture = setup({ type: "single" });
     const host = fixture.nativeElement as HTMLElement;

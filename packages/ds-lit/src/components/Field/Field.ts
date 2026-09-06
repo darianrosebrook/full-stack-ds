@@ -218,11 +218,14 @@ export class FieldElement extends LitElement {
   @property({ type: String }) status?: FieldStatus;
   @property({ type: Boolean }) validating?: boolean;
 
-  private behavior = new FieldBehavior(this, {
+  private initializedBehavior?: FieldBehavior;
+  private get behavior(): FieldBehavior {
+    return this.initializedBehavior ??= new FieldBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

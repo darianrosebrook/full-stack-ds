@@ -3,6 +3,7 @@
 import { computed, useId } from "vue";
 import { useDetails } from "./useDetails.js";
 import Icon from "../Icon/Icon.vue";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 // @generated:end
 
 // @custom:start imports
@@ -72,7 +73,7 @@ const instanceId = useId();
 
 <template>
   <details :class="classNames" :open="behavior.open.value" role="group" :data-testid="props['data-testid']" data-fsds-component="details" data-fsds-box="">
-    <summary :class="'details__summary'" :aria-controls="props.open ? `${instanceId}-content` : undefined">
+    <summary :class="'details__summary'" @click="(e: MouseEvent) => { if (canActivateInteraction(e, true)) behavior.setOpen(!behavior.open.value); }" :aria-disabled="props.disabled" :aria-controls="props.open ? `${instanceId}-content` : undefined">
       <span :class="'details__summaryContent'">
         <Icon :class="'details__icon'" name="chevron-down" size="sm" />
         <span :class="'details__summaryText'">

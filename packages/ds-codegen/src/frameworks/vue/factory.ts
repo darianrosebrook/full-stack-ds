@@ -1,4 +1,5 @@
 import { emitBoxModelBoundaryCss } from '../../box-model.js';
+import { INTERACTION_RUNTIME_SOURCE } from "../../interaction-runtime.js";
 /**
  * Vue 3 FrameworkEmitter (proof-of-concept).
  *
@@ -140,6 +141,7 @@ export function createVueEmitter(): FrameworkEmitter {
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
         { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
+        { relativePath: "interaction.ts", contents: INTERACTION_RUNTIME_SOURCE },
         {
           relativePath: `${ir.name}.vue`,
           contents: generateVueStackPrimitiveSource(ir),

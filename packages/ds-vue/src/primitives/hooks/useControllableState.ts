@@ -1,3 +1,4 @@
+import { requestInteractionChange } from "../interaction.js";
 import { computed, ref, type ComputedRef, type Ref } from "vue";
 
 export interface UseControllableStateOptions<T> {
@@ -38,10 +39,7 @@ export function useControllableState<T>(
       typeof next === "function"
         ? (next as (prev: T) => T)(value.value)
         : next;
-    if (options.controlled?.() === undefined) {
-      internal.value = resolved;
-    }
-    options.onChange?.(resolved);
+    requestInteractionChange(options.controlled?.(), resolved, value => { internal.value = value; }, options.onChange);
   }
 
   return { value, set };

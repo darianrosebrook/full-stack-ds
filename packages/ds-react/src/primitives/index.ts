@@ -19,3 +19,5 @@ export type {
   UseFocusTrapOptions,
   UsePortalOptions,
 } from "./hooks";
+
+export { InteractionHost, bindInteractionHost, type InteractionHostProps } from "./InteractionHost";

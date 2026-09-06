@@ -96,7 +96,7 @@ export function Sheet({
             </RNText>
             <Pressable
               style={styles.close}
-              onPress={() => setOpennessValue(!openness)}
+              onPress={() => setOpennessValue(false)}
               accessibilityRole="button"
             />
           </View>

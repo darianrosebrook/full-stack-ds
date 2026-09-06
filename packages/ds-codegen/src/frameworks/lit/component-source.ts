@@ -825,11 +825,16 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
     lines.push(...channelLines);
     lines.push(``);
   }
-  lines.push(`  private behavior = new ${ir.name}Behavior(this, {`);
+  lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
+  lines.push(`  private get behavior(): ${ir.name}Behavior {`);
+  if (ir.interaction?.focusContainer) lines.push(`    const host = this;`);
+  lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
+  if (ir.interaction?.focusContainer) lines.push(`    get containerEl() { return host.interactionPanel; },`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
   lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
   lines.push(`  });`);
+  lines.push(`  }`);
   lines.push(``);
   // idBase: use attribute if supplied, otherwise use a stable element id (set lazily).
   lines.push(`  private _generatedIdBase: string | null = null;`);
@@ -1203,11 +1208,16 @@ function generateDisclosureRootClass(ir: ComponentIR): string {
     lines.push(...channelLines);
     lines.push(``);
   }
-  lines.push(`  private behavior = new ${ir.name}Behavior(this, {`);
+  lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
+  lines.push(`  private get behavior(): ${ir.name}Behavior {`);
+  if (ir.interaction?.focusContainer) lines.push(`    const host = this;`);
+  lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
+  if (ir.interaction?.focusContainer) lines.push(`    get containerEl() { return host.interactionPanel; },`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
   lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
   lines.push(`  });`);
+  lines.push(`  }`);
   lines.push(``);
   lines.push(`  private _generatedIdBase: string | null = null;`);
   lines.push(`  private get resolvedIdBase(): string {`);
@@ -1224,21 +1234,7 @@ function generateDisclosureRootClass(ir: ComponentIR): string {
   lines.push(``);
   lines.push(`  toggleItem(itemValue: string): void {`);
   lines.push(`    const v = this.behavior.${channelName};`);
-  lines.push(`    if ((this.type ?? "single") === "multiple") {`);
-  lines.push(`      const current = Array.isArray(v) ? v : [];`);
-  lines.push(`      this.behavior.${setterName}(`);
-  lines.push(`        current.includes(itemValue)`);
-  lines.push(`          ? current.filter((x) => x !== itemValue)`);
-  lines.push(`          : [...current, itemValue],`);
-  lines.push(`      );`);
-  lines.push(`    } else {`);
-  lines.push(`      const current = typeof v === "string" ? v : "";`);
-  if (hasCollapsible) {
-    lines.push(`      this.behavior.${setterName}(current === itemValue && this.collapsible ? "" : itemValue);`);
-  } else {
-    lines.push(`      this.behavior.${setterName}(itemValue);`);
-  }
-  lines.push(`    }`);
+  lines.push(`    this.behavior.${setterName}(toggleInteractionItem(v, itemValue, (this.type ?? "single") === "multiple", ${hasCollapsible ? "Boolean(this.collapsible)" : "false"}));`);
   lines.push(`    this._provideCtx();`);
   lines.push(`  }`);
   lines.push(``);
@@ -1459,6 +1455,7 @@ function generateDisclosureStateSource(ir: ComponentIR): string {
   const regionPart = getRegionPart(ir);
   const multiplePart = getMultipleItemPart(ir);
   let importsBody = generateCompoundStateImports(ir);
+  importsBody += `\nimport { toggleInteractionItem } from "../../primitives/interaction.js";`;
   const typesBody = generateDisclosureContextTypesLit(ir);
 
   const itemNode = ir.dom && itemPart ? litFindDomNode(ir.dom, itemPart.name) : undefined;
@@ -1636,6 +1633,8 @@ function generateDomTreeImports(ir: ComponentIR): string {
     litImports.push("type PropertyValues");
   }
   const lines: string[] = [`import { ${litImports.join(", ")} } from 'lit';`];
+  if (ir.interaction?.focusContainer) lines.push(`import { ref } from 'lit/directives/ref.js';`);
+  if (ir.interaction && ir.dom && ir.interaction.triggers.some(t => t.operation !== "select" && t.operation !== "toggle-item")) lines.push(`import { canActivateInteraction } from "../../primitives/interaction.js";`);
   // Always include `property`; add `state` when the dom tree has a children
   // guard so the private _hasChildren reactive field can be declared.
   const decorators = ["property"];
@@ -1853,9 +1852,14 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(`  }`);
   }
 
+  if (ir.interaction?.focusContainer) lines.push(`  private interactionPanel?: HTMLElement;`);
   if (hasBehavior) {
     lines.push(``);
-    lines.push(`  private behavior = new ${ir.name}Behavior(this, {`);
+    lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
+    lines.push(`  private get behavior(): ${ir.name}Behavior {`);
+    if (ir.interaction?.focusContainer) lines.push(`    const host = this;`);
+    lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
+    if (ir.interaction?.focusContainer) lines.push(`    get containerEl() { return host.interactionPanel; },`);
     for (const ch of channels) {
       lines.push(`    ${ch.valueProp}: () => this.${ch.valueProp},`);
       if (ch.defaultValueProp) {
@@ -1873,6 +1877,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       );
     }
     lines.push(`  });`);
+    lines.push(`  }`);
     // Ephemeral-surface auto-dismiss (WCAG 2.2.1). The controller re-syncs
     // on host updates; pause listeners land on the template root.
     const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
@@ -2503,6 +2508,7 @@ function renderLitDomNode(
   }
 
   const attrs: string[] = [];
+  if (node.focusContainer) attrs.push(`\${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })}`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2561,6 +2567,13 @@ function renderLitDomNode(
   // callback props. ifDefined() would wrap the listener-producing
   // function itself, breaking listener installation.
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const activation = eventName === "click" ? node.activation : undefined;
+    const disclosure = activation?.channel;
+    if (disclosure) {
+      const next = activation!.operation === "toggle" ? `!this.behavior.${disclosure.name}` : String(activation!.operation === "open");
+      attrs.push(`@click=\${(e: MouseEvent) => { if (canActivateInteraction(e, ${activation!.cancelNativeDefault})) this.behavior.set${capitalizeLit(disclosure.name)}(${next}); }}`);
+      continue;
+    }
     const rendered = renderLitEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);

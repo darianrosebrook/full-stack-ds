@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useCalendar } from "./useCalendar.js";
@@ -49,7 +49,9 @@ export type CalendarMode = "single" | "range";
 })
 export class CalendarComponent {
   @Input() caption?: string = "Calendar";
-  @Input() value?: Date | Date[] | null;
+  private readonly inputValue = signal<Date | Date[] | null | undefined>(undefined);
+  @Input() get value(): Date | Date[] | null | undefined { return this.inputValue(); }
+  set value(value: Date | Date[] | null | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: Date | Date[] | null;
   @Input() onChange?: (value: Date | Date[] | null) => void;
   @Input() mode?: CalendarMode = "single";
@@ -62,22 +64,26 @@ export class CalendarComponent {
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useCalendar({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useCalendar>;
+  protected get behavior(): ReturnType<typeof useCalendar> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useCalendar({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
     shouldCloseOnSelect: this.shouldCloseOnSelect,
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "calendar",
       (this.mode ?? "single") ? `calendar--${(this.mode ?? "single")}` : null,
       this.disabled ? "calendar--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 }
 
 @Component({

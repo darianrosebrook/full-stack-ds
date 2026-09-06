@@ -728,6 +728,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
   const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
 
   const importsBody = [
+    `import { toggleInteractionItem } from "../../primitives/interaction.js";`,
     `import { computed, ref } from "vue";`,
     `import { use${name}, provide${name}Context } from "./use${name}.js";`,
   ].join("\n");
@@ -789,21 +790,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
   hookLines.push(``);
   hookLines.push(`function toggleItem(itemValue: string): void {`);
   hookLines.push(`  const v = ${channelName}.value;`);
-  hookLines.push(`  if (props.type === "multiple") {`);
-  hookLines.push(`    const current = Array.isArray(v) ? v : [];`);
-  hookLines.push(`    ${setter}(`);
-  hookLines.push(`      current.includes(itemValue)`);
-  hookLines.push(`        ? current.filter((x) => x !== itemValue)`);
-  hookLines.push(`        : [...current, itemValue],`);
-  hookLines.push(`    );`);
-  hookLines.push(`  } else {`);
-  hookLines.push(`    const current = typeof v === "string" ? v : "";`);
-  if (hasCollapsible) {
-    hookLines.push(`    ${setter}(current === itemValue && props.collapsible ? "" : itemValue);`);
-  } else {
-    hookLines.push(`    ${setter}(itemValue);`);
-  }
-  hookLines.push(`  }`);
+  hookLines.push(`  ${setter}(toggleInteractionItem(v, itemValue, props.type === "multiple", ${hasCollapsible ? "Boolean(props.collapsible)" : "false"}));`);
   hookLines.push(`}`);
   hookLines.push(``);
   hookLines.push(`function handleKeyDown(e: KeyboardEvent): void {`);
@@ -1623,6 +1610,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     );
     importLines.push(`import { h, Fragment, defineComponent, type VNode } from "vue";`);
   }
+  if (ir.interaction && ir.dom && ir.interaction.triggers.some(t => t.operation !== "select" && t.operation !== "toggle-item")) importLines.push(`import { canActivateInteraction } from "../../primitives/interaction.js";`);
   const importsBody = importLines.join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");
@@ -1653,6 +1641,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     }
     hookLines.push(`});`);
   }
+  if (ir.interaction?.focusContainer) hookLines.push(`function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }`);
   // Ephemeral-surface auto-dismiss (WCAG 2.2.1: pause listeners land on the
   // root via v-on). The presence budget flows from the *.timing.auto-dismiss
   // token (generation-resolved default) with the duration prop as override.
@@ -2096,6 +2085,7 @@ function renderVueDomNode(
   }
 
   const attrs: string[] = [];
+  if (node.focusContainer) attrs.push(`:ref="bindInteractionPanel"`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2179,6 +2169,13 @@ function renderVueDomNode(
   // no-op when undefined. Channel events delegate to the existing
   // channel-handler logic.
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const activation = eventName === "click" ? node.activation : undefined;
+    const disclosure = activation?.channel;
+    if (disclosure) {
+      const next = activation!.operation === "toggle" ? `!behavior.${disclosure.name}.value` : String(activation!.operation === "open");
+      attrs.push(`@click="(e: MouseEvent) => { if (canActivateInteraction(e, ${activation!.cancelNativeDefault})) behavior.set${capitalize(disclosure.name)}(${next}); }"`);
+      continue;
+    }
     const rendered = renderVueEvent(eventName, expr, ctx);
     if (rendered === null) continue;
     attrs.push(rendered);

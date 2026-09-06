@@ -1,5 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
+import { ref } from 'lit/directives/ref.js';
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { property } from 'lit/decorators.js';
 import { DialogBehavior } from './DialogBehavior.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -254,14 +256,20 @@ export class DialogElement extends LitElement {
   override ariaLabel: string | null = null;
   @property({ type: String }) ariaLabelledby?: string;
   @property({ type: String }) ariaDescribedby?: string;
+  private interactionPanel?: HTMLElement;
 
-  private behavior = new DialogBehavior(this, {
+  private initializedBehavior?: DialogBehavior;
+  private get behavior(): DialogBehavior {
+    const host = this;
+    return this.initializedBehavior ??= new DialogBehavior(this, {
+    get containerEl() { return host.interactionPanel; },
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
     closeOnEscape: this.closeOnEscape,
     closeOnBackdropClick: this.closeOnBackdropClick,
   });
+  }
 
   private _handleOverlayClick = (): void => {
     if (this.closeOnBackdropClick !== false) {
@@ -314,12 +322,12 @@ export class DialogElement extends LitElement {
   <div class=${'dialog__backdrop'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'dialog__modal'} role="dialog" aria-modal="true" aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null && !this.ariaLabel ? 'dialog-title' : null, this.ariaLabelledby].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined(['dialog-body', this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'dialog__modal'} ${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })} role="dialog" aria-modal="true" aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null && !this.ariaLabel ? 'dialog-title' : null, this.ariaLabelledby].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined(['dialog-body', this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'dialog__header'}>
       <h2 class=${'dialog__title'} id="dialog-title">
         <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>
       </h2>
-      <button class=${'dialog__closeButton'} type="button" aria-label="Close dialog" @click=${() => this.behavior.setOpenness(!this.behavior.openness)}></button>
+      <button class=${'dialog__closeButton'} type="button" aria-label="Close dialog" @click=${(e: MouseEvent) => { if (canActivateInteraction(e, false)) this.behavior.setOpenness(false); }}></button>
     </div>
     <div class=${'dialog__body'} id="dialog-body">
       <slot></slot>

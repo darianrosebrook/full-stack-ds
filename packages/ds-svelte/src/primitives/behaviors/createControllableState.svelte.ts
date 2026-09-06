@@ -1,3 +1,4 @@
+import { requestInteractionChange } from "../interaction.js";
 export interface ControllableStateOptions<T> {
   controlled?: () => T | undefined;
   defaultValue: T;
@@ -16,8 +17,7 @@ export function createControllableState<T>(
   const value = $derived(opts.controlled?.() ?? internal);
 
   function set(next: T) {
-    internal = next;
-    opts.onChange?.(next);
+    requestInteractionChange(opts.controlled?.(), next, value => { internal = value; }, opts.onChange);
   }
 
   return {
