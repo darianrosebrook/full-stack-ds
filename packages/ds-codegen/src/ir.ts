@@ -1310,6 +1310,37 @@ export interface TokenScopeIR {
   values: TokenScopeValueIR[];
 }
 
+/** Platform-scoped root clipping. Unsupported requests survive normalization
+ * so an emitter can reject them rather than treat them as absent.
+ */
+export type RootClippingIR = Partial<Record<StylePlatform,
+  { mode: "visible" | "hidden" } | { mode: "unsupported"; declaration: string }
+>>;
+
+function buildRootClipping(contract: ComponentContract): RootClippingIR {
+  const result: RootClippingIR = {};
+  for (const platform of ["web", "ios", "android"] as const) {
+    for (const property of ["overflow", "overflow-x", "overflow-y"]) {
+      const entry = contract.styles?.root?.[property];
+      if (!entry || (entry.platforms && !entry.platforms.includes(platform))) continue;
+      const value = entry.literal?.trim();
+      result[platform] = property === "overflow" && (value === "visible" || value === "hidden")
+        ? { mode: value }
+        : { mode: "unsupported", declaration: `${property}: ${entry.resolvesTo ?? value}` };
+    }
+  }
+  return result;
+}
+
+/** Static root clipping support boundary for native consumers. */
+export function nativeRootClipping(ir: ComponentIR, platform: "ios" | "android"): "visible" | "hidden" | undefined {
+  const fact = ir.rootClipping[platform];
+  if (fact?.mode === "unsupported") {
+    throw new Error(`[NATIVE_ROOT_CLIPPING_UNSUPPORTED] ${ir.name} (${platform}) root ${fact.declaration}; supported: literal overflow visible or hidden`);
+  }
+  return fact?.mode;
+}
+
 export interface RootSemanticsIR {
   /** Resolved root HTML element for the component. */
   element: string;
@@ -1640,6 +1671,7 @@ export interface ComponentIR {
 
   /** CSS facts (target-neutral). */
   cssBlocks: CssBlockIR[];
+  rootClipping: RootClippingIR;
   keyframes: KeyframeIR[];
 
   /**
@@ -2030,6 +2062,7 @@ export function buildComponentIR(
       polymorphicTagProp,
     },
     cssBlocks,
+    rootClipping: buildRootClipping(contract),
     keyframes,
     motion,
     tokenFacts,

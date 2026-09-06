@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import vm from 'node:vm';
 import ts from 'typescript';
@@ -139,6 +139,7 @@ export async function runRecon(out) {
   const browser = await chromium.launch({ headless: true });
   const chromiumVersion = browser.version();
   let web, clippingReport;
+  const clipping = {};
   try {
     const page = await browser.newPage();
     web = { defaults: await webFacts(page, card), erased: await webFacts(page, withoutDesign(card)),
@@ -147,7 +148,6 @@ export async function runRecon(out) {
       independentMedia: await webFacts(page, card, { '--fsds-card-design-media-shape-radius': '23px' }) };
     // Both inputs explicitly request all declared platforms. Changing only this
     // property must change clipping, or be rejected as unsupported.
-    const clipping = {};
     for (const overflow of ['visible', 'hidden']) {
       const input = structuredClone(card);
       input.styles.root.overflow = { literal: overflow, platforms: ['web', 'ios', 'android'],
@@ -184,20 +184,87 @@ export async function runRecon(out) {
   write('web.json', web);
   write('react-native.json', rn);
 
-  // Compile the actual token runtime and freshly generated Card. The expression
-  // below matches Card's suffix lookup and nil-coalescing at its radius consumer.
-  assert.ok(files.swiftui.includes('private var radius: CGFloat { pxSlot("size.radius.default") ?? 0 }'), 'Re-adjudicate changed Swift radius consumer');
-  write('main.swift', `import Foundation\nimport SwiftUI\nvar observations: [String: Any] = [:]\nfor value in ["8px", "20px", "50%"] {\n let tokens = resolveFsdsLayeredTokens(CardTokens.scopes, FsdsTheme(tokens: ["card.size.radius.default": .string(value)]), layers: ["root"])\n let raw = tokens.first { $0.key.hasSuffix("size.radius.default") }?.value\n observations[value] = ["parsed": raw?.px.map { Double($0) } as Any? ?? NSNull(), "consumerRadius": Double(raw?.px ?? 0)]\n}\nlet data = try JSONSerialization.data(withJSONObject: observations, options: [.sortedKeys])\nprint(String(data: data, encoding: .utf8)!)\n`);
-  const executable = resolve(out, 'swift-radius-probe');
-  execFileSync('swiftc', [resolve(ROOT, 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift'), resolve(out, 'Card.swift'), resolve(out, 'main.swift'), '-o', executable], { encoding: 'utf8', timeout: 120000 });
-  const swift = JSON.parse(execFileSync(executable, { encoding: 'utf8' }));
+  // Render freshly emitted Card through the real SwiftUI/AppKit host. A separate
+  // process per override makes an unsupported-value precondition observable.
+  write('main.swift', `import Foundation
+import SwiftUI
+import AppKit
+let value = CommandLine.arguments[1]
+let theme = FsdsTheme(tokens: [
+ "card.size.radius.default": .string(value),
+ "card.color.background.default": .string("#00ff00"),
+ "card.size.statusAccent.width": .number(0),
+ "box-model.padding-block-start": .number(0),
+ "box-model.padding-inline-start": .number(0),
+ "box-model.gap": .number(0)
+])
+let witness = Color(.sRGB, red: 1, green: 0, blue: 0, opacity: 1)
+let card = Card(content: {
+ Color.clear.frame(width: 200, height: 100)
+  .overlay(witness.frame(width: 20, height: 20)
+    .overlay(witness.frame(width: 20, height: 20).offset(x: 110)))
+}).environment(\\.fsdsTheme, theme)
+let host = NSHostingView(rootView: ZStack { Color.white; card }.frame(width: 280, height: 140))
+host.frame = NSRect(x: 0, y: 0, width: 280, height: 140)
+host.layoutSubtreeIfNeeded()
+let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds)!
+host.cacheDisplay(in: host.bounds, to: rep)
+let pixel = rep.colorAt(x: 250, y: 70)!.usingColorSpace(.sRGB)!
+let corner = rep.colorAt(x: 42, y: 2)!.usingColorSpace(.sRGB)!
+let reference = rep.colorAt(x: 140, y: 70)!.usingColorSpace(.sRGB)!
+precondition(reference.redComponent > 0.9 && reference.greenComponent < 0.5, "Missing interior paint control")
+try rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: CommandLine.arguments[2]))
+let data = try JSONSerialization.data(withJSONObject: ["rendered": true,
+ "outsideChildPainted": abs(pixel.redComponent - reference.redComponent) < 0.02 && abs(pixel.greenComponent - reference.greenComponent) < 0.02 && abs(pixel.blueComponent - reference.blueComponent) < 0.02,
+ "squareCornerPainted": corner.greenComponent > 0.9 && corner.redComponent < 0.1,
+ "outsidePixel": [pixel.redComponent, pixel.greenComponent, pixel.blueComponent]], options: [.sortedKeys])
+print(String(data: data, encoding: .utf8)!)
+`);
+  const swift = {};
+  const field = corpus.find(contract => contract.name === 'Field');
+  assert.ok(field, 'Missing Field composer');
+  const mainTemplate = readFileSync(resolve(out, 'main.swift'), 'utf8');
+  for (const [mode, source] of Object.entries({ defaults: files.swiftui,
+    visible: clipping.visible.native.swiftui, hidden: clipping.hidden.native.swiftui,
+    field: nativeArtifacts(buildComponentIR(field)).swiftui })) {
+    const mainPath = resolve(out, mode, 'main.swift');
+    mkdirSync(dirname(mainPath), { recursive: true });
+    writeFileSync(mainPath, mode === 'field' ? mainTemplate
+      .replace('Card(content:', 'FsdsField(control:')
+      .replaceAll('card.size.radius.default', 'field.radius')
+      .replaceAll('card.color.background.default', 'field.color.bg')
+      .replace('x: 42, y: 2', 'x: 42, y: 22') : mainTemplate);
+    write(`${mode === 'field' ? 'Field' : 'Card'}-${mode}.swift`, source);
+    const executable = resolve(out, `swift-${mode}-probe`);
+    execFileSync('swiftc', [resolve(ROOT, 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift'),
+      resolve(out, `${mode === 'field' ? 'Field' : 'Card'}-${mode}.swift`), mainPath, '-o', executable], { encoding: 'utf8', timeout: 120000 });
+    swift[mode] = {};
+    for (const value of ['defaults', 'field'].includes(mode) ? ['0px', '8px', '20px', '50%'] : ['20px']) {
+      const run = spawnSync(executable, [value, resolve(out, `swift-${mode}-${value}.png`)], { encoding: 'utf8', timeout: 30000 });
+      if (run.error) throw run.error;
+      write(`swift-${mode}-${value}.stderr`, run.stderr);
+      if (run.status === 0) swift[mode][value] = JSON.parse(run.stdout);
+      else {
+        assert.match(run.stderr, /FSDS_SWIFTUI_RADIUS_UNSUPPORTED/, 'Unexpected native execution failure');
+        swift[mode][value] = { rejected: true, signal: run.signal, status: run.status };
+      }
+    }
+  }
+  clippingReport.rnRuntime = Object.fromEntries(['visible', 'hidden'].map(mode => [mode,
+    nativeStyles(clipping[mode].native['react-native']).root.overflow]));
+  write('clipping.json', clippingReport);
   write('swift.json', swift);
   assert.deepEqual(web.defaults, web.erased, 'Metadata removal must retain the sampled Web defaults');
   assert.equal(web.absolute.radius, '20px', 'Absolute radius positive control');
   assert.equal(web.independentMedia.radius, web.defaults.radius, 'Part override must leave root unchanged');
   assert.equal(web.independentMedia.mediaRadius, '23px', 'Part override positive control');
   assert.equal(rn['20px'], 20, 'RN absolute radius positive control');
-  assert.equal(swift['20px'].consumerRadius, 20, 'Swift absolute radius positive control');
+  assert.equal(swift.defaults['20px'].rendered, true, 'Swift absolute radius positive control');
+  assert.equal(swift.defaults['0px'].rendered, true, 'Swift zero radius positive control');
+  assert.equal(swift.defaults['0px'].squareCornerPainted, true, 'Zero radius corner positive control');
+  assert.equal(swift.defaults['20px'].squareCornerPainted, false, 'Absolute radius must affect rendered geometry');
+  assert.equal(swift.field['0px'].squareCornerPainted, true, 'Field zero radius positive control');
+  assert.equal(swift.field['20px'].squareCornerPainted, false, 'Field radius must affect rendered geometry');
 
   const nativeOnly = structuredClone(card);
   nativeOnly.styles.root['border-radius'].platforms = ['ios'];
@@ -216,7 +283,7 @@ export async function runRecon(out) {
     metadataChangedDefaults: erasure.filter(row => !row.defaultsEqual || !row.tokenScopesEqual || !row.figmaDefaultsEqual).map(row => row.component),
     nativeOnlyRejection, web, rnRadius: { absolute: rn['20px'], percentage: rn['50%'] }, swift,
     clipping: clippingReport,
-    ceiling: 'Web facts use Chromium and generated CSS on a controlled DOM; RN observes style construction; Swift executes token resolution, not device geometry. Corpus erasure compares emitted bytes, not native behavior.',
+    ceiling: 'Web facts use Chromium and generated CSS on a controlled DOM; RN observes style construction; Swift renders freshly emitted Card and Field on a macOS host; this is not iOS device geometry. Corpus erasure compares emitted bytes, not native behavior.',
   };
   write('report.json', report);
   console.log(JSON.stringify(report, null, 2));

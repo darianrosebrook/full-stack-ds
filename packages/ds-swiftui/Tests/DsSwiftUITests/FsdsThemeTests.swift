@@ -5,7 +5,61 @@
 // resolver and pin the staged-assignment behavior.
 import Foundation
 import XCTest
+import SwiftUI
+import AppKit
 @testable import DsSwiftUI
+
+final class ComposerRadiusTests: XCTestCase {
+    @MainActor
+    func testGeneratedComposerRejectsUnsupportedRadius() throws {
+        if ProcessInfo.processInfo.environment["FSDS_RADIUS_REJECTION_CHILD"] == "1" {
+            let card = Card(content: { Color.clear.frame(width: 100, height: 100) })
+                .environment(\.fsdsTheme, FsdsTheme(tokens: ["card.size.radius.default": .string("50%")]))
+            let host = NSHostingView(rootView: card)
+            host.frame = NSRect(x: 0, y: 0, width: 100, height: 100)
+            host.layoutSubtreeIfNeeded()
+            return
+        }
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+        process.arguments = ["xctest", "-XCTest",
+            "DsSwiftUITests.ComposerRadiusTests/testGeneratedComposerRejectsUnsupportedRadius",
+            Bundle(for: Self.self).bundlePath]
+        process.environment = ProcessInfo.processInfo.environment.merging(
+            ["FSDS_RADIUS_REJECTION_CHILD": "1"], uniquingKeysWith: { _, child in child })
+        let output = Pipe()
+        process.standardOutput = output
+        process.standardError = output
+        try process.run()
+        let data = output.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        XCTAssertNotEqual(process.terminationStatus, 0, "The actual composer must reject, not render zero radius")
+        XCTAssertTrue(String(decoding: data, as: UTF8.self).contains("FSDS_SWIFTUI_RADIUS_UNSUPPORTED"))
+    }
+
+    func testSupportedAbsoluteValuesAndAbsence() throws {
+        XCTAssertNil(fsdsRequireRadius(nil, slot: "radius"))
+        for (input, expected): (FsdsTokenValue, CGFloat) in [
+            (.number(0), 0), (.string("0px"), 0), (.string("20px"), 20),
+            (.number(2.5), 2.5), (.string("8"), 8)
+        ] {
+            XCTAssertEqual(try input.validatedRadius(), expected)
+            XCTAssertEqual(fsdsRequireRadius(input, slot: "radius"), expected)
+        }
+    }
+
+    func testUnsupportedUnitsAndInvalidGeometryAreExplicitErrors() {
+        for input: FsdsTokenValue in [
+            .string("50%"), .string("2rem"), .string("calc(1px + 2px)"),
+            .string("-1px"), .number(-1), .number(.infinity), .number(.nan),
+            .adaptive(light: "#ffffff", dark: "#000000")
+        ] {
+            XCTAssertThrowsError(try input.validatedRadius()) { error in
+                XCTAssertTrue(String(describing: error).contains("FSDS_SWIFTUI_RADIUS_UNSUPPORTED"))
+            }
+        }
+    }
+}
 
 /// Flatten the double-optional produced by optional-Value dictionary reads.
 private func flat(_ value: FsdsTokenValue??) -> FsdsTokenValue? {

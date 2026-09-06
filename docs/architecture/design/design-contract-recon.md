@@ -12,7 +12,9 @@ governs:
 
 # Design binding authority and native style preservation recon
 
-**Decision: retain the current Web design-binding implementation. This recon does not justify an unwind or a slot-first schema rewrite.** It demonstrates separate, existing losses in native style realization: Card's clipping choice is ignored, and a percentage radius override becomes zero at SwiftUI's radius consumer. These findings constrain cross-target style-parity claims; they do not falsify the repository's stated cross-framework Web DOM claim.
+**Decision: retain the current Web design-binding implementation. This recon does not justify an unwind or a slot-first schema rewrite.** Its initial run demonstrated separate, existing losses in native style realization: Card's clipping choice is ignored, and a percentage radius override becomes zero at SwiftUI's radius consumer. These findings constrain cross-target style-parity claims; they do not falsify the repository's stated cross-framework Web DOM claim.
+
+The bounded follow-up in `NATIVE-STYLE-SUPPORT-01` resolves those witnesses at native realization boundaries; see [Native follow-up](#native-follow-up). The historical observations below remain dated evidence.
 
 The audit is deliberately bounded. It does not establish that the entire contract is substrate-neutral, that every native style is correct, or that every design binding has adequate semantics. It establishes where the measured information is preserved and lost, and whether removing the new design metadata changes that result.
 
@@ -43,7 +45,7 @@ node scripts/design-contract-recon.mjs
 
 The probe writes only under ignored `tmp/design-contract-recon/` by default; `--out=/absolute/path` selects an evidence directory. It leaves production contracts, emitters and runtimes unchanged. Exit zero means the measurement completed, **not** that every measured capability passed. Missing corpus, mismatched target sets, missing tools, failed compilation and failed positive controls abort the run. This is an experiment, not a CI allowance ledger or a regression test that requires defects to persist.
 
-`report.json` records the checkout commit, production source hashes, probe hash and tool versions. `metadata-erasure.json` contains per-component/per-target digests. `clipping.json`, `web.json`, `react-native.json`, `swift.json`, freshly emitted Card source and the Swift probe source preserve the observations. Generated output is not committed.
+`report.json` records the checkout commit, production source hashes, probe hash and tool versions. `metadata-erasure.json` contains per-component/per-target digests for the named React Native, SwiftUI and Compose cohort. `clipping.json`, `web.json`, `react-native.json`, `swift.json`, freshly emitted Card source and the Swift probe source preserve the observations. Generated output is not committed.
 
 The recorded run used production sources from `main@3827f483`; the worktree additionally contained CAWS lifecycle commits and this recon's files. Historical observations below are dated 2026-09-06, not permanent corpus counts. Re-run the script for current results.
 
@@ -52,7 +54,7 @@ The recorded run used production sources from `main@3827f483`; the worktree addi
 | Metadata erasure | Current contract loader, IR builder and registered native emitters, with and without only the `design` fields | Emitted source/default-fact identity; not native runtime equivalence under all inputs |
 | Web radius/clipping | Chromium, generated CSS and shared box CSS on a controlled Card-shaped DOM | Computed styles and outside-child hit testing; not a framework mount or screenshot-fidelity claim |
 | React Native radius | Actual token runtime plus freshly emitted token/style modules | Values handed to `StyleSheet.create`; registration is intercepted, so no device geometry claim |
-| Swift radius | Actual `FsdsTheme.swift` and freshly emitted Card compiled with `swiftc`; executable invokes its token-resolution path | Parsed radius and the same `?? 0` consumer expression; no simulator or native rendering claim |
+| Swift radius and clipping | Actual `FsdsTheme.swift` and freshly emitted Card compiled with `swiftc`, rendered through `NSHostingView` in separate processes | Current probe measures pixels and explicit radius rejection on macOS; the original run measured the `?? 0` expression. Neither proves iOS device behavior |
 | Figma | Descriptor defaults before/after erasure | Metadata carriage only; no live Figma materialization |
 
 The scoped script invokes schema, semantic-reference, token-reference, style-reference, selector-collision, fallback and component-consumption checks for the clipping fixtures. It does not call hypothetical-fixture artifact-drift checks against the unrelated committed Card bytes. Schema acceptance is not framework admission or a promise of complete native style support.
@@ -117,3 +119,16 @@ The relevant Swift parser and clipping emission also exist at `059fda91^` (`84f0
 | Slot-first schema would solve these findings | Not established | Re-keying metadata alone does not repair either loss |
 
 The next justified implementation is a bounded native style-support slice, beginning with clipping and radius-unit admission. A semantic-contract change becomes justified if that work produces a decision that cannot be carried without ambiguity by the existing contract. No production rewrite or native fix is included in this recon.
+
+
+## Native follow-up
+
+`NATIVE-STYLE-SUPPORT-01` keeps the Web binding schema intact. Normalization now carries the authored root clipping decision with its platform applicability. React Native lowers it to `overflow`, using `Platform.select` when iOS and Android differ. SwiftUI's generic region-composer path (Card and Field in the measured corpus) rounds the background independently and clips descendants only for an explicit `hidden` request. Absent clipping leaves content visible.
+
+The supported native root policy is deliberately finite: literal `overflow: visible` or `hidden`. Root axis-specific, scrolling, multi-value and token-driven requests raise `NATIVE_ROOT_CLIPPING_UNSUPPORTED` when these consumers generate. A fallback does not constitute support for changing a clipping token at runtime. Web-only declarations remain Web-only. This slice does not claim native realization of conditional or part-scoped clipping, nor clipping parity for other SwiftUI emission classes or Compose.
+
+SwiftUI region-composer radii now accept finite nonnegative numbers and decimal px lengths. An absent value stays absent and existing authored fallbacks still resolve normally. An explicit unsupported value, including `50%`, raises `FSDS_SWIFTUI_RADIUS_UNSUPPORTED` through a precondition at the generated radius consumer; it is not silently replaced by zero or another fallback. Applications handling external theme input can call `FsdsTokenValue.validatedRadius()` and handle its typed error before rendering. This rejection policy is scoped to region composers; other SwiftUI radius consumers still require their own support audit.
+
+The updated probe renders freshly emitted default, visible and hidden Card variants through a real macOS host. It samples the overflowing child against an interior copy of the same witness color, avoiding assumptions about display color conversion. It also renders Field, samples both composers under `0px` and `20px`, and runs percentage overrides in their own processes. The follow-up observed visible/hidden pixels diverging, the corner changing with absolute radius, and percentage rejection reaching the generated view. React Native's actual generated style factory receives distinct overflow values; that remains style-construction evidence, not device paint. Corpus metadata erasure still preserves measured native emissions and defaults.
+
+Reproduction remains the command sequence above, plus `swift test --package-path packages/ds-swiftui` and `pnpm exec vitest run packages/ds-codegen/src/frameworks/native-style-support.test.ts`. Probe output includes per-case PNGs and stderr alongside the source hashes and JSON measurements. Exit zero still means the experiment completed; use the observations to adjudicate the result. General native visual parity and a portable relative-radius model remain unproven.

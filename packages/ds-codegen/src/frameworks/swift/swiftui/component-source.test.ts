@@ -243,7 +243,8 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
     expect(source).toContain(
       "Rectangle().fill(statusAccent).frame(width: statusAccentWidth)",
     );
-    expect(source).toContain(".clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))");
+    expect(source).toContain(".background(background, in: RoundedRectangle(cornerRadius: radius, style: .continuous))");
+    expect(source).not.toContain(".clipShape(");
     expect(source).toContain(".foregroundStyle(foreground)");
   });
 
@@ -286,7 +287,7 @@ describe("generateSwiftUIComponentSource — named-slot composer (Field)", () =>
     expect(source).toContain("enum FieldTokens {");
     expect(source).toContain('.adaptive(light: "#ffffff", dark:');
     expect(source).toContain('colorSlot("color.bg") ?? .accentColor');
-    expect(source).toContain('pxSlot("radius") ?? 0');
+    expect(source).toContain('pxSlot("radius", requireRadius: true) ?? 0');
     expect(source).toContain('colorSlot("color.border") ?? .clear');
     expect(source).toContain("status: FieldStatus? = nil,");
     expect(source).toContain('status.map { "variant_\\($0.rawValue)" }');

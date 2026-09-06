@@ -84,14 +84,15 @@ public struct FsdsField<Label: View, Control: View, Help: View, Error: View, Val
         layered.first { $0.key.hasSuffix(suffix) }?.value?.color
     }
 
-    private func pxSlot(_ suffix: String) -> CGFloat? {
-        layered.first { $0.key.hasSuffix(suffix) }?.value?.px
+    private func pxSlot(_ suffix: String, requireRadius: Bool = false) -> CGFloat? {
+        let value = layered.first { $0.key.hasSuffix(suffix) }?.value
+        return requireRadius ? fsdsRequireRadius(value, slot: suffix) : value?.px
     }
 
     private var background: Color { colorSlot("color.bg") ?? .accentColor }
     private var foreground: Color { colorSlot("color.fg") ?? .primary }
     private var borderColor: Color { colorSlot("color.border") ?? .clear }
-    private var radius: CGFloat { pxSlot("radius") ?? 0 }
+    private var radius: CGFloat { pxSlot("radius", requireRadius: true) ?? 0 }
     private var blockPadding: CGFloat { pxSlot("padding-block-start") ?? 0 }
     private var inlinePadding: CGFloat { pxSlot("padding-inline-start") ?? 0 }
     private var gap: CGFloat { pxSlot("box-model.gap") ?? 0 }
@@ -111,8 +112,7 @@ public struct FsdsField<Label: View, Control: View, Help: View, Error: View, Val
         regions
             .padding(.vertical, blockPadding)
             .padding(.horizontal, inlinePadding)
-            .background(background)
-            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .background(background, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
             .foregroundStyle(foreground)
     }
 }
