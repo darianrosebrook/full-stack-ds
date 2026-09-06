@@ -1,0 +1,45 @@
+id: INTEGRATE-INTERACTION-SUBSTRATE-01
+title: 'Integrate shared interaction substrate with current design bindings'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-06T05:33:38.825Z'
+updated_at: '2026-09-06T05:33:38.825Z'
+created_by_session: '01a074e4-7308-7fc1-afa3-495ead6426ec'
+blast_radius:
+  modules:
+    - 'contract IR, framework emitters, generated components, interaction runtime'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-contracts/components'
+    - 'packages/ds-*/src/**'
+    - 'docs/architecture/interaction-substrate.md'
+    - 'docs/normal-form.md'
+    - 'e2e/details-disclosure.spec.ts'
+    - 'e2e/interaction-substrate.spec.ts'
+    - 'e2e/fixtures/interaction-substrate.tsx'
+  out: []
+invariants:
+  - 'Preserve both source histories and regenerate component conflicts from resolved emitters.'
+  - 'Do not discard or alter the original worktree audit reports.'
+acceptance:
+  - id: A1
+    given: 'the committed interaction work and current main design bindings'
+    when: 'their emitter and IR changes are integrated'
+    then: 'both capabilities remain realized without component-name branches'
+  - id: A2
+    given: 'the integrated generated packages'
+    when: 'admission, framework and browser checks run'
+    then: 'the matrix, controlled channels, hidden panels and adopted host composition pass'
+  - id: A3
+    given: 'the original worktree audit reports'
+    when: 'integration lands'
+    then: 'their bytes remain preserved and the original implementation commits are ancestors of main'
+non_functional: {}
+contracts:
+  - name: 'interaction-composition'
+    type: behavior
