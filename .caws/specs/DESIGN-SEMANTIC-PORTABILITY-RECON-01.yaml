@@ -46,3 +46,11 @@ evidence:
     recorded_at: "2026-09-06T06:59:54.772Z"
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/design-contract-recon/report.json
     commit_sha: b27a8202
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Reproducible counterexamples: all-platform visible/hidden survives platform normalization and changes Chromium hit testing while RN and Swift emissions remain byte-identical with and without metadata; actual Swift runtime resolves 20px to 20 and 50% to nil then consumer zero; complete corpus metadata erasure preserves native emissions and defaults"
+    recorded_at: "2026-09-06T07:00:15.502Z"
+    command: node scripts/design-contract-recon.mjs
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/design-contract-recon/report.json
+    commit_sha: b27a8202
