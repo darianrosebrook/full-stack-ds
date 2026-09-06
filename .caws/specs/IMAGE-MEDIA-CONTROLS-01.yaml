@@ -68,9 +68,9 @@ contracts:
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: "Finite map normalization, map/source/namespace rejection and framework emission; css-var-bindings 19 tests passed."
-    recorded_at: "2026-09-06T08:17:39.458Z"
-    command: pnpm exec vitest run packages/ds-codegen/src/frameworks/css-var-bindings.test.ts packages/ds-codegen/src/design-properties.test.ts packages/ds-codegen/src/frameworks/react-native.test.ts
+    evidence_ref: "Finite map normalization, map/source/namespace rejection and framework emission; css-var-bindings 19 tests passed within the recorded 38-test focused run."
+    recorded_at: "2026-09-06T08:18:30.641Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/frameworks/css-var-bindings.test.ts packages/ds-codegen/src/design-properties.test.ts packages/ds-codegen/src/frameworks/react-native/surface-emit.test.ts packages/ds-codegen/src/frameworks/react-native/tests.test.ts
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/retoken-pages/image-media-focused.log
     commit_sha: dbafd5644ae330074fe07ea5d9a111071804ea69
