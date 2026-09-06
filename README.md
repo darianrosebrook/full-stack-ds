@@ -1,6 +1,6 @@
-# Full Stack Design System
+# Full Stack DS
 
-A contract-governed design-system experiment that generates React, Vue, Svelte, Angular, and Lit packages from JSON component contracts built on top of one polymorphic primitive — `Stack` — while also exercising governance surfaces for generated artifacts, tokens, target packs, runtime previews, design-tool descriptors, agent-facing projection, and documentation.
+A falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof. One polymorphic primitive (`Stack`) plus JSON contracts drive code generation for React, Vue, Svelte, Angular, and Lit — and the same discipline (domain authority → normalized substrate → governed composition → heterogeneous projections → evidence) is applied across design tokens, iconography, analytical relations, the documentation site itself, and the evidence machinery. The research program is stated in [`docs/research-program.md`](docs/research-program.md); the seven properties the claim rests on are in [`docs/normal-form.md`](docs/normal-form.md).
 
 ## Current state routing
 
@@ -14,11 +14,13 @@ This repository is not, primarily, a design system. It is a falsifiable claim ab
 
 That claim boundary has expanded. The current system also includes generated-artifact admission, token governance, target-pack registry scaffolding, Figma descriptor projection, runtime fact assertions, and partially derived component evidence pages. Those surfaces strengthen the architecture, but they do not turn the project into a proof of production adoption, complete accessibility adequacy, visual quality, live Figma publication, executable external target packs, or substrate-neutral UI semantics.
 
+The claim is domain-shaped, not component-shaped. React, Vue, Svelte, Angular, Lit, React Native, SwiftUI, Jetpack Compose, Unity, Godot, and Figma live inside one cell of the research program — the components row — and target count is pressure on the claim, not its scorecard. The domain table is in [`docs/research-program.md`](docs/research-program.md).
+
 The full normal-form claim, evidence status, and falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md). The consumer-facing stance — strict internal invariants, boring external affordances, and admitted override surfaces — is named in [`docs/architecture/consumer-projection-doctrine.md`](docs/architecture/consumer-projection-doctrine.md).
 
 ## What this is
 
-This project is a **contract testing ground**. Every component is defined by a JSON contract that describes its anatomy, props, variants, states, styles, tokens, accessibility, types, and behavior. From that contract and its sidecars, the codegen emits framework-idiomatic component sources, behavior primitives, tests, styles, barrels, descriptors, and documentation projections.
+The design system is the existence proof, not the project. It is a **contract testing ground**: every component is defined by a JSON contract that describes its anatomy, props, variants, states, styles, tokens, accessibility, types, and behavior. From that contract and its sidecars, the codegen emits framework-idiomatic component sources, behavior primitives, tests, styles, barrels, descriptors, and documentation projections.
 
 The authoritative component corpus is discovered from `packages/ds-contracts/components/<Name>/<Name>.contract.json`. Do not treat a hand-written count in prose as authoritative. The loader in [`packages/ds-codegen/src/contracts-fs.ts`](packages/ds-codegen/src/contracts-fs.ts) owns the filesystem layout, including optional sidecars:
 
@@ -48,7 +50,7 @@ Every component — from `Button` to `Dialog` to `Calendar` — is composed from
 <Stack as="input" type="email" />
 ```
 
-This constraint tests whether the contract carries enough information to describe the current component corpus across interactivity, accessibility, styling, documentation, and projection surfaces. It is evidence for the architecture, not proof that the primitive count will remain one forever.
+This constraint tests whether the contract carries enough information to describe the current component corpus across interactivity, accessibility, styling, documentation, and projection surfaces. It is the generative-substrate experiment in miniature — named artifacts fall out of lower-order facts instead of being authored one by one (see "Normal form is not reuse" in [`docs/research-program.md`](docs/research-program.md)). It is evidence for the architecture, not proof that the primitive count will remain one forever.
 
 The current witness covers:
 

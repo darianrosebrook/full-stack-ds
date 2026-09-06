@@ -115,28 +115,31 @@ export function Home({ bundle }: HomeProps) {
 
   return (
     <div className="page">
-      <p className="page-eyebrow">Contract-driven design system</p>
+      <p className="page-eyebrow">A falsifiable architectural claim</p>
       <h1 className="page-title">
-        One contract.
+        The components are the demo.
         <br />
-        {web.length} web frameworks.
-        <br />
-        Zero divergence.
+        The claim is the project.
       </h1>
       <p className="page-lede">
-        Every component on this site is described by a single JSON contract.
-        That contract is the source of truth — {web.length} web framework
-        emitters ({webNames})
+        Every component on this site is described by a single JSON contract;{" "}
+        {web.length} web framework emitters ({webNames})
         {beyond.length > 0 &&
           ` plus ${beyond.map((t) => present(t.id).short).join(", ")}`}{" "}
-        read it and produce idiomatic, native source for each runtime. This
-        showcase lets you compare them side-by-side and trace every line back
-        to the field that produced it.
+        read it and produce idiomatic, native source for each runtime. But the
+        component corpus is the existence proof, not the project: the same
+        discipline — one authority, governed composition, target-specific
+        projections, observable drift — is applied to design tokens,
+        iconography, analytical relations, this documentation site, and the
+        evidence that attests all of it. Compare targets side-by-side here,
+        trace every line back to the field that produced it, and read the
+        research program in <code>docs/research-program.md</code>.
       </p>
       <p className="muted" style={{ marginTop: "calc(-1 * var(--fsds-core-spacing-size-05))" }}>
-        Why one contract, five frameworks, {primitives.length === 1 ? "one primitive" : `${primitives.length} primitives`}?
-        The constraint exists to test an architectural claim about compositional
-        systems generally — read it on the{" "}
+        Why one contract, {web.length} frameworks, {primitives.length === 1 ? "one primitive" : `${primitives.length} primitives`}?
+        Because a family of artifacts should fall out of a generative substrate
+        — the constraint exists to test an architectural claim about
+        compositional systems generally. Read it on the{" "}
         <a href={buildHref({ kind: "architecture" })}>Architecture</a> page. The
         numbers below are censused from the <CodeSnippet text="packages/" /> tree at build
         time, so they always reflect what is actually here.

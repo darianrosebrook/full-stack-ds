@@ -90,7 +90,7 @@ describe("AboutDialog", () => {
   it("renders open with markdown content and the figure", () => {
     render(<AboutDialog open onOpenChange={() => {}} />);
     expect(screen.getAllByRole("dialog", { name: "About Full-Stack DS" }).length).toBeGreaterThan(0);
-    expect(screen.getByText("One contract, five frameworks")).toBeDefined();
+    expect(screen.getByText("The components are the demo; the claim is the project")).toBeDefined();
     expect(screen.getAllByRole("img").length).toBeGreaterThanOrEqual(2);
   });
 });
