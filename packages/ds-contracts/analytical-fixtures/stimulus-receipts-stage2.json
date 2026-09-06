@@ -1,0 +1,58 @@
+{
+  "$comment": "Occurrence-bound prediction receipts for closure stimuli. A receipt names the ONE holder occurrence its cause explains; the checker measures that every differing path lies under it. Freeze order is load-bearing: `digest` covers the authored fields and is computed before the engine is asked, so a prediction edited toward an engine result fails clause 0 rather than passing silently.",
+  "spec": "REL-VIEW-ALGEBRA-01",
+  "receipts": [
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:aggregate-to-grain~project",
+        "base": "FX_PROJECT_DROPS_NEST_LEVEL",
+        "targetOccurrence": "structure.relations.flat.derivedBy",
+        "source": {
+          "member": "project",
+          "authority": "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP / REL_DERIVATION_DISCARDS_MEMBERSHIP: the projection at this occurrence drops the nest level that carried membership"
+        },
+        "target": {
+          "member": "aggregate-to-grain",
+          "authority": "CASE_NESTED_SUBTOTALS_OFF_GRAIN / REL_GRAIN_SUBTOTAL_MISMATCH: a nest over levels [country, state] declares exactly its prefixes as grains, so a subtotal to [sale_id] is not one of them",
+          "preconditions": [
+            {
+              "path": "structure.relations.hierarchy.derivedBy.kind",
+              "holds": "equals",
+              "value": "nest"
+            },
+            {
+              "path": "structure.relations.hierarchy.derivedBy.levels",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.flat.grain",
+              "holds": "present"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.flat.derivedBy",
+            "value": {
+              "kind": "aggregate-to-grain",
+              "from": "hierarchy",
+              "toGrain": [
+                "sale_id"
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_SUBTOTAL_MISMATCH"
+          ],
+          "terms": []
+        },
+        "provenance": "retrofit",
+        "authoredAt": "2026-09-06",
+        "digest": "7040f72e8e173ed38935971ab3cd5e71919be849d6d366c02a891fdb58737182"
+      }
+    }
+  ]
+}

@@ -609,7 +609,7 @@ export function changedPaths(before: unknown, after: unknown): string[] {
  * erasure.
  */
 const SENTINEL = "\u0000slot";
-function slotPaths(fixture: Fixture, locator: StructuralLocator): string[] {
+export function slotPaths(fixture: Fixture, locator: StructuralLocator): string[] {
   const marked = JSON.parse(JSON.stringify(fixture)) as Fixture;
   for (const s of resolveSlots(marked, locator)) (s.parent as Record<string, unknown>)[s.key as string] = SENTINEL;
   const changed = changedPaths(fixture, marked);

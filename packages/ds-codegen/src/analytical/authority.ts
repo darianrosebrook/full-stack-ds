@@ -128,12 +128,21 @@ export const ERASURE_AUTHORITY: AuthorityIdentity = {
  * `derivation.ts` and `codes.ts` are the instrument the isolation check runs
  * and are covered by the rule digest, which is a different cause and stays
  * that way.
+ *
+ * `stimulus.ts` is named as an entry point rather than left to the walk. The
+ * closure gate reaches it through a deferred `import()` — a static import back
+ * would be a cycle — and `localImports` reads static relative specifiers only,
+ * so the walk cannot see it. (It reads them out of the file TEXT, so writing
+ * one here as an example would itself register as an import.) It decides which stimulus pairs are admitted as
+ * evidence for a carrier, which is this identity's question, and an
+ * unreachable owner is how a module ends up governing evidence while no
+ * identity moves when it changes.
  */
 export const WITNESS_AUTHORITY: AuthorityIdentity = {
   name: "witnessAuthority",
   invalidates: "every witness and closure verdict, since what counts as holding may have changed",
-  entryPoints: ["necessity.ts", "closure.ts"],
-  owns: ["capabilities.ts", "closure.ts", "corpus-integrity.ts", "experiments.ts", "necessity.ts", "subtraction.ts"],
+  entryPoints: ["necessity.ts", "closure.ts", "stimulus.ts"],
+  owns: ["capabilities.ts", "closure.ts", "corpus-integrity.ts", "experiments.ts", "necessity.ts", "stimulus.ts", "subtraction.ts"],
   excluded: {
     "census.ts": "owned by coordinateBasis",
     "relation-model.ts": "owned by coordinateBasis",
