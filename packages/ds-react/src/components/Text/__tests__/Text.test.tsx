@@ -22,159 +22,159 @@ const componentAxeOptions = {
 
 describe("Text — unit", () => {
   it("renders with default props", () => {
-    render(<Text data-testid="text" />);
+    render(<Text data-testid="text"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Text data-testid="text" />);
+    render(<Text data-testid="text"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text");
   });
 
   it("merges custom className", () => {
-    render(<Text data-testid="text" className="custom" />);
+    render(<Text data-testid="text" className="custom"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text", "custom");
   });
 
   it("applies variant=display variant class", () => {
-    render(<Text data-testid="text" variant="display" />);
+    render(<Text data-testid="text" variant="display"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--display");
   });
 
   it("applies variant=headline variant class", () => {
-    render(<Text data-testid="text" variant="headline" />);
+    render(<Text data-testid="text" variant="headline"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--headline");
   });
 
   it("applies variant=title variant class", () => {
-    render(<Text data-testid="text" variant="title" />);
+    render(<Text data-testid="text" variant="title"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--title");
   });
 
   it("applies variant=body variant class", () => {
-    render(<Text data-testid="text" variant="body" />);
+    render(<Text data-testid="text" variant="body"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--body");
   });
 
   it("applies variant=caption variant class", () => {
-    render(<Text data-testid="text" variant="caption" />);
+    render(<Text data-testid="text" variant="caption"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--caption");
   });
 
   it("applies variant=overline variant class", () => {
-    render(<Text data-testid="text" variant="overline" />);
+    render(<Text data-testid="text" variant="overline"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--overline");
   });
 
   it("applies variant=code variant class", () => {
-    render(<Text data-testid="text" variant="code" />);
+    render(<Text data-testid="text" variant="code"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--code");
   });
 
   it("applies size=xs variant class", () => {
-    render(<Text data-testid="text" size="xs" />);
+    render(<Text data-testid="text" size="xs"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--xs");
   });
 
   it("applies size=sm variant class", () => {
-    render(<Text data-testid="text" size="sm" />);
+    render(<Text data-testid="text" size="sm"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<Text data-testid="text" size="md" />);
+    render(<Text data-testid="text" size="md"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<Text data-testid="text" size="lg" />);
+    render(<Text data-testid="text" size="lg"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--lg");
   });
 
   it("applies size=xl variant class", () => {
-    render(<Text data-testid="text" size="xl" />);
+    render(<Text data-testid="text" size="xl"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--xl");
   });
 
   it("applies size=2xl variant class", () => {
-    render(<Text data-testid="text" size="2xl" />);
+    render(<Text data-testid="text" size="2xl"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--2xl");
   });
 
   it("applies size=3xl variant class", () => {
-    render(<Text data-testid="text" size="3xl" />);
+    render(<Text data-testid="text" size="3xl"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--3xl");
   });
 
   it("applies weight=light variant class", () => {
-    render(<Text data-testid="text" weight="light" />);
+    render(<Text data-testid="text" weight="light"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--light");
   });
 
   it("applies weight=normal variant class", () => {
-    render(<Text data-testid="text" weight="normal" />);
+    render(<Text data-testid="text" weight="normal"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--normal");
   });
 
   it("applies weight=medium variant class", () => {
-    render(<Text data-testid="text" weight="medium" />);
+    render(<Text data-testid="text" weight="medium"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--medium");
   });
 
   it("applies weight=semibold variant class", () => {
-    render(<Text data-testid="text" weight="semibold" />);
+    render(<Text data-testid="text" weight="semibold"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--semibold");
   });
 
   it("applies weight=bold variant class", () => {
-    render(<Text data-testid="text" weight="bold" />);
+    render(<Text data-testid="text" weight="bold"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--bold");
   });
 
   it("applies align=left variant class", () => {
-    render(<Text data-testid="text" align="left" />);
+    render(<Text data-testid="text" align="left"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--left");
   });
 
   it("applies align=center variant class", () => {
-    render(<Text data-testid="text" align="center" />);
+    render(<Text data-testid="text" align="center"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--center");
   });
 
   it("applies align=right variant class", () => {
-    render(<Text data-testid="text" align="right" />);
+    render(<Text data-testid="text" align="right"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--right");
   });
 
   it("applies align=justify variant class", () => {
-    render(<Text data-testid="text" align="justify" />);
+    render(<Text data-testid="text" align="justify"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--justify");
   });
 
   it("applies transform=none variant class", () => {
-    render(<Text data-testid="text" transform="none" />);
+    render(<Text data-testid="text" transform="none"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--none");
   });
 
   it("applies transform=uppercase variant class", () => {
-    render(<Text data-testid="text" transform="uppercase" />);
+    render(<Text data-testid="text" transform="uppercase"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--uppercase");
   });
 
   it("applies transform=lowercase variant class", () => {
-    render(<Text data-testid="text" transform="lowercase" />);
+    render(<Text data-testid="text" transform="lowercase"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--lowercase");
   });
 
   it("applies transform=capitalize variant class", () => {
-    render(<Text data-testid="text" transform="capitalize" />);
+    render(<Text data-testid="text" transform="capitalize"><span>content</span></Text>);
     expect(screen.getByTestId("text")).toHaveClass("text--capitalize");
   });
 });
 
 describe("Text — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { baseElement } = render(<><Text /></>);
+    const { baseElement } = render(<><Text><span>content</span></Text></>);
     const component = baseElement.querySelector('[data-fsds-component="text"]');
     expect(component).not.toBeNull();
     const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { describe, expect, it } from "vitest";
-import type { Component } from "svelte";
+import { createRawSnippet, type Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
 import Text from "../Text.svelte";
@@ -170,7 +170,7 @@ describe("Text — unit", () => {
 
 describe("Text — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Text as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Text as unknown as Component<Record<string, unknown>>, { props: { "children": createRawSnippet(() => ({ render: () => "<span>content</span>" })) } });
     const results = await axe(container, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

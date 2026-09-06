@@ -19,6 +19,19 @@ const SAFE_BUILTIN_PERMISSIONS = {
 } as const;
 
 export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackManifestV1>> = {
+  godot: {
+    schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
+    target: { id: "godot", family: "native-view", label: "Godot Control", maturity: "experimental" },
+    compatibility: { codegenProtocol: "builtin-framework-emitter-v1", componentIR: "ComponentIR@v1", targetFamilyIR: "godot-control@pilot" },
+    entrypoints: { emitter: "packages/ds-codegen/src/frameworks/godot/factory.ts" },
+    outputs: { componentsRoot: "addons/full_stack_ds/components", barrelFile: "catalog.gd", fileKinds: ["component-source", "barrel"] },
+    capabilities: { components: true, tests: false, behavior: true, compoundParts: true, surface: true, tokens: "native-theme-module", customRegions: false },
+    permissions: SAFE_BUILTIN_PERMISSIONS,
+    admission: {
+      commands: [{ check: "godot-runtime-export", command: ["node", "scripts/godot-pilot.mjs"], scope: { packageRoot: "packages/ds-godot/", extensions: [".gd", ".tscn", ".tres"], coverage: "covered_by_package_check" } }],
+      knownGaps: ["Pilot allowlist only; outside the TypeScript admission rail. Godot runtime/export checks are explicit local lanes, not CI.", "Only frozen semantic traces and foreground token fallbacks are covered. Other props, styling, accessibility and physical input remain outside admission."],
+    },
+  },
   unity: {
     schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
     target: { id: "unity", family: "native-view", label: "Unity UI Toolkit", maturity: "experimental" },

@@ -544,5 +544,10 @@
         "web"
       ]
     }
+  },
+  ".text[data-truncate=\"true\"]": {
+    "overflow": { "literal": "hidden", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] },
+    "text-overflow": { "literal": "ellipsis", "platforms": ["web"] }
   }
 }
