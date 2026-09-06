@@ -57,3 +57,10 @@ evidence:
     command: "pnpm exec vitest run packages/ds-codegen/src/frameworks/native-token-consumption.test.ts packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts; ./packages/ds-jetpack-compose/gradlew -p packages/ds-jetpack-compose :library:test --no-daemon; swift test --package-path packages/ds-swiftui --scratch-path tmp/swift-build"
     exit_code: 0
     artifact_path: tmp/native-token-consumption/validation.json
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "tmp/native-token-consumption/fsds-native-parity-final.log: 8 rejection fixtures and 23 corpus components pass; original empty toggle tables and omitted Button end-edge reads failed before repair; scoped artifact audit rejects wrong-state definitions"
+    recorded_at: "2026-09-06T09:33:21.247Z"
+    command: "pnpm run parity:compose-tokens"
+    exit_code: 0
+    artifact_path: tmp/native-token-consumption/fsds-native-parity-final.log
