@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: pnpm exec vitest run src/components/AboutDialog.test.tsx
     recorded_at: "2026-09-06T05:06:02.860Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: pnpm exec vitest run src/consumption/dogfooding-guard.test.ts src/consumption/css-hygiene.test.ts
+    recorded_at: "2026-09-06T05:06:10.521Z"
