@@ -1,5 +1,22 @@
 {
   "root": {
+    "width": { "literal": "revert-layer", "platforms": ["web"] },
+    "height": { "literal": "revert-layer", "platforms": ["web"] },
+    "aspect-ratio": {
+      "literal": "var(--fsds-image-prop-aspect-ratio, auto)",
+      "platforms": ["web"],
+      "design": { "property": "sizing.aspect-ratio", "slot": "image.design.root.sizing.aspect-ratio" }
+    },
+    "object-fit": {
+      "literal": "var(--fsds-image-prop-object-fit, fill)",
+      "platforms": ["web"],
+      "design": { "property": "media.fit", "slot": "image.design.root.media.fit" }
+    },
+    "object-position": {
+      "literal": "var(--fsds-image-prop-object-position, 50% 50%)",
+      "platforms": ["web"],
+      "design": { "property": "media.position", "slot": "image.design.root.media.position" }
+    },
     "display": {
       "literal": "block",
       "platforms": [

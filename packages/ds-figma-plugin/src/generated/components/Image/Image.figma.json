@@ -83,7 +83,7 @@
       "safeName": "aspectRatio",
       "type": "ImageAspectRatio",
       "required": false,
-      "description": "Aspect ratio preset or numeric ratio.",
+      "description": "Aspect ratio preset: square 1:1, video 16:9, photo 4:3, wide 21:9, portrait 2:3. Applied when an axis is automatic.",
       "defaultExpr": null,
       "nodeKind": null
     },
@@ -152,6 +152,51 @@
     }
   ],
   "designBindings": [
+    {
+      "property": "sizing.aspect-ratio",
+      "group": "sizing",
+      "valueType": "ratio",
+      "slot": "image.design.root.sizing.aspect-ratio",
+      "cssVar": "--fsds-image-design-root-sizing-aspect-ratio",
+      "cssProperty": "aspect-ratio",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "var(--fsds-image-prop-aspect-ratio, auto)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image"
+    },
+    {
+      "property": "media.fit",
+      "group": "media",
+      "valueType": "enum",
+      "slot": "image.design.root.media.fit",
+      "cssVar": "--fsds-image-design-root-media-fit",
+      "cssProperty": "object-fit",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "var(--fsds-image-prop-object-fit, fill)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image"
+    },
+    {
+      "property": "media.position",
+      "group": "media",
+      "valueType": "position",
+      "slot": "image.design.root.media.position",
+      "cssVar": "--fsds-image-design-root-media-position",
+      "cssProperty": "object-position",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "var(--fsds-image-prop-object-position, 50% 50%)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".image"
+    },
     {
       "property": "background.fill",
       "group": "background",
@@ -542,12 +587,15 @@
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
           "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
           "gap": "var(--fsds-box-model-gap)",
-          "width": "var(--fsds-box-model-width)",
+          "width": "revert-layer",
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "100%",
-          "height": "var(--fsds-box-model-height)",
+          "height": "revert-layer",
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
+          "aspect-ratio": "var(--fsds-image-prop-aspect-ratio, auto)",
+          "object-fit": "var(--fsds-image-prop-object-fit, fill)",
+          "object-position": "var(--fsds-image-prop-object-position, 50% 50%)",
           "background-color": "var(--fsds-image-color-background-default, #f7f7f7)",
           "color": "var(--fsds-image-color-foreground-primary, #141414)"
         }

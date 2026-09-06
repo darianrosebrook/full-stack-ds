@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ImgHTMLAttributes, type ReactNode } from "react";
+import { type CSSProperties, type ImgHTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./Image.css";
 // @generated:end
@@ -75,7 +75,7 @@ export function Image({
     .join(" ");
 
   return (
-  <Stack layout="native" as="img" className={`${classNames}`} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" data-testid={testId} data-fsds-component="image" data-fsds-box="" {...rest} />
+  <Stack layout="native" as="img" className={`${classNames}`} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" data-testid={testId} data-fsds-component="image" data-fsds-box="" {...rest} style={{ "--fsds-image-prop-aspect-ratio": (aspectRatio === "square" ? "1 / 1" : (aspectRatio === "video" ? "16 / 9" : (aspectRatio === "photo" ? "4 / 3" : (aspectRatio === "wide" ? "21 / 9" : (aspectRatio === "portrait" ? "2 / 3" : "auto"))))), "--fsds-image-prop-object-fit": objectFit, "--fsds-image-prop-object-position": objectPosition, ...rest.style } as CSSProperties} />
   );
 }
 // @generated:end
