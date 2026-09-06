@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";
+import { NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -24,35 +24,38 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
 @Component({
   selector: "fsds-text",
   standalone: true,
-  imports: [NgClass, NgSwitch, NgSwitchCase],
+  imports: [NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet],
   host: { "data-fsds-component": "text" },
-  template: `<ng-container [ngSwitch]="this.as || 'p'">
+  template: `<ng-template #fsdsPolymorphicBody>
+  <ng-content />
+</ng-template>
+<ng-container [ngSwitch]="this.as || 'p'">
   <p [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'p'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </p>
   <span [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'span'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </span>
   <div [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'div'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </div>
   <h1 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h1'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </h1>
   <h2 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h2'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </h2>
   <h3 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h3'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </h3>
   <h4 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h4'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </h4>
   <h5 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h5'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </h5>
   <h6 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h6'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </h6>
 </ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

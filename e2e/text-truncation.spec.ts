@@ -5,7 +5,13 @@ for (const framework of ['react','vue','svelte','angular','lit']) {
     await page.goto(`/preview/${framework}/Text`);
     await page.locator('body[data-fsds-ready]').waitFor();
     const text=page.locator('.text').first();
-    await expect(text).toHaveText('Text');
+    for(const as of ['p','span','h2']) {
+      await page.evaluate(as=>window.postMessage({type:'fsds:config',props:{as}},'*'),as);
+      await expect(text).toHaveJSProperty('tagName',as.toUpperCase());
+      await expect.poll(async()=>framework==='lit'
+        ? text.locator('slot').evaluate(el=>(el as HTMLSlotElement).assignedNodes().map(node=>node.textContent).join('').trim())
+        : (await text.textContent())?.trim()).toBe('Text');
+    }
     const content='A long editorial caption that must fit the available width.';
     const configure=async(truncate?:boolean)=>{
       await page.evaluate(({truncate})=>window.postMessage({

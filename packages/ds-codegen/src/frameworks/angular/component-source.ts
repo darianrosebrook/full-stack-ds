@@ -1456,6 +1456,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (usesNgIf) commonNames.push("NgIf");
   if (usesNgFor) commonNames.push("NgFor");
   if (usesNgSwitch) commonNames.push("NgSwitch", "NgSwitchCase");
+  if (usesNgSwitch && ir.dom && (ir.dom.children.length > 0 || ir.dom.content)) commonNames.push("NgTemplateOutlet");
   // FEAT-MARKDOWN-CONTENT-TRANSFORM-01: the content ngFor + the companion
   // renderers' template directives ride the same import line.
   if (ir.dom && collectContentTransforms(ir.dom).some(isMarkdownTransform)) {
@@ -1751,6 +1752,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   if (usesNgFor) decoratorImports.push("NgFor");
   if (ir.root.polymorphicTagProp) {
     decoratorImports.push("NgSwitch", "NgSwitchCase");
+    if (ir.dom.children.length > 0 || ir.dom.content) decoratorImports.push("NgTemplateOutlet");
   }
   // componentRef: each referenced standalone component class must be in the
   // @Component imports[] so Angular resolves its selector in this template.
@@ -2845,18 +2847,18 @@ function renderAngularDomNode(
     ? `fsds-${toKebab(node.componentRef)}`
     : node.tag;
 
-  const renderElementBody = (tagName: string, extraAttrs: string[] = []): string => {
+  const renderElementBody = (tagName: string, extraAttrs: string[] = [], childLines = allChildren): string => {
     const branchAttrs = [...attrs, ...extraAttrs];
     const branchSelfCloses = VOID_HTML_ELEMENTS_ANGULAR.has(tagName);
-    if (allChildren.length === 0 && branchSelfCloses) {
+    if (childLines.length === 0 && branchSelfCloses) {
       return `${pad}<${tagName}${formatAngularAttrs(branchAttrs)} />`;
     }
-    if (allChildren.length === 0) {
+    if (childLines.length === 0) {
       return `${pad}<${tagName}${formatAngularAttrs(branchAttrs)}></${tagName}>`;
     }
     return [
       `${pad}<${tagName}${formatAngularAttrs(branchAttrs)}>`,
-      ...allChildren,
+      ...childLines,
       `${pad}</${tagName}>`,
     ].join("\n");
   };
@@ -2864,10 +2866,21 @@ function renderAngularDomNode(
   let body: string;
   if (ctx.isRoot && ctx.rootPolymorphicTag && !node.componentRef) {
     const switchExpr = safePropertyExpr(ctx.rootPolymorphicTag.propName);
+    // Angular assigns projected nodes to a single ng-content outlet. Repeating
+    // it in switch branches strands the content in the last projection slot.
+    // Declare the body once and instantiate it in the selected host instead.
+    const projectedBody = allChildren.length > 0;
+    const sharedContent = projectedBody
+      ? [`${pad}<ng-template #fsdsPolymorphicBody>`, ...allChildren, `${pad}</ng-template>`]
+      : [];
+    const branchContent = projectedBody
+      ? [`${pad}  <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />`]
+      : allChildren;
     body = [
+      ...sharedContent,
       `${pad}<ng-container [ngSwitch]="${switchExpr} || '${ctx.rootPolymorphicTag.defaultTag}'">`,
       ...ctx.rootPolymorphicTag.allowedTags.map((tagName) =>
-        renderElementBody(tagName, [`*ngSwitchCase="'${tagName}'"`]).replace(/^/gm, "  "),
+        renderElementBody(tagName, [`*ngSwitchCase="'${tagName}'"`], branchContent).replace(/^/gm, "  "),
       ),
       `${pad}</ng-container>`,
     ].join("\n");

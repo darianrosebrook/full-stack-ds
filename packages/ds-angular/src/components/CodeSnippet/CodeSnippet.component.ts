@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";
+import { NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,17 +19,20 @@ export type CodeSnippetElement = "code" | "kbd" | "samp";
 @Component({
   selector: "fsds-code-snippet",
   standalone: true,
-  imports: [NgClass, NgSwitch, NgSwitchCase],
+  imports: [NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet],
   host: { "data-fsds-component": "code-snippet" },
-  template: `<ng-container [ngSwitch]="this.as || 'code'">
+  template: `<ng-template #fsdsPolymorphicBody>
+  {{ text }}
+</ng-template>
+<ng-container [ngSwitch]="this.as || 'code'">
   <code [ngClass]="classes()" spellcheck="false" data-fsds-box="" *ngSwitchCase="'code'">
-    {{ text }}
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </code>
   <kbd [ngClass]="classes()" spellcheck="false" data-fsds-box="" *ngSwitchCase="'kbd'">
-    {{ text }}
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </kbd>
   <samp [ngClass]="classes()" spellcheck="false" data-fsds-box="" *ngSwitchCase="'samp'">
-    {{ text }}
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </samp>
 </ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
