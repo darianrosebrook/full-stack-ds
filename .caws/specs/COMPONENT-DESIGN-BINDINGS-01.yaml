@@ -1,0 +1,53 @@
+id: COMPONENT-DESIGN-BINDINGS-01
+title: 'Bind shared component design properties with fallback and override contracts'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-06T04:33:27.240Z'
+updated_at: '2026-09-06T04:33:27.240Z'
+created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
+blast_radius:
+  modules:
+    - 'Component property sets, token emission, editor bindings and visual verification'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts'
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-tokens'
+    - 'packages/ds-*/src/**/*.css'
+    - 'packages/ds-figma'
+    - 'src/components/properties-panel'
+    - 'src/types'
+    - 'vite-plugin-fsds-data.ts'
+    - 'e2e'
+    - 'scripts'
+    - 'docs/architecture'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'Semantic tokens may be unset or unconsumed; exposed component properties must remain settable with typed bindings and conservative fallbacks.'
+  - 'Component semantics remain contract-owned; shared defaults are namespaced and layered; consumers can override without specificity escalation.'
+acceptance:
+  - id: A1
+    given: 'component design decisions'
+    when: 'property bindings are normalized'
+    then: 'a closed shared vocabulary identifies anatomy, state, value source and consumers without requiring unused semantic tokens to be consumed'
+  - id: A2
+    given: 'token references and unset overrides'
+    when: 'components render'
+    then: 'compatible fallbacks preserve defaults and component scoped overrides affect their intended properties'
+  - id: A3
+    given: 'nested and adjacent components and shared box defaults'
+    when: 'consumers override named properties'
+    then: 'layered namespaced overrides work without leaking component values across instances'
+  - id: A4
+    given: 'the migrated corpus'
+    when: 'generation, tests and browser verification run'
+    then: 'binding controls are exercised and visual or behavioral regressions are fixed with explicit target proof limits'
+non_functional: {}
+contracts:
+  - name: 'design-properties'
+    type: schema
+    path: 'packages/ds-contracts/component.tokens.schema.json'
