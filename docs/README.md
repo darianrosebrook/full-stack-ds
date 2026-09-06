@@ -1,6 +1,6 @@
 # docs/
 
-Project documentation for **Full Stack Design System**.
+Project documentation for **Full Stack DS** — a falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof.
 
 ## What goes here
 
@@ -37,6 +37,7 @@ docs/
   current-implementation-snapshot.md     # Claim ledger — the freshness authority
   codegen-authority.md                   # Codegen layer authority doctrine
   normal-form.md                         # The seven properties of compositional systems
+  research-program.md                    # The domain table + what counts as a result
   document_governance.md                 # Frontmatter + location rules (enforced advisory)
   specifications/
     admission-rail.md                    # Generated artifact admission rail (concept)

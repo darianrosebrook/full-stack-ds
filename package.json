@@ -2,7 +2,7 @@
   "name": "full-stack-design-system",
   "version": "1.0.0",
   "private": true,
-  "description": "Full Stack Design System \u2014 contracts + multi-package codegen",
+  "description": "Full Stack DS \u2014 a falsifiable claim about contract-governed compositional systems",
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "scripts": {
