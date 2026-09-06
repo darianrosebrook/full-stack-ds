@@ -2,9 +2,11 @@ id: FIX-NATIVE-TOKEN-CONSUMPTION-01
 title: 'Repair native token projection and consumption parity gate'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Merged scoped Compose bindings and padding, refreshed Swift defaults, registered existing lifecycle coverage, and passed forced full pre-push with four Vitest workers and unchanged assertions/timeouts.'
 created_at: '2026-09-06T09:13:04.656Z'
-updated_at: '2026-09-06T09:31:52.219Z'
+updated_at: '2026-09-06T09:42:10.132Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
@@ -64,3 +66,11 @@ evidence:
     command: "pnpm run parity:compose-tokens"
     exit_code: 0
     artifact_path: tmp/native-token-consumption/fsds-native-parity-final.log
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "tmp/prepush-full-20260906T093850Z/metadata.json: forced full pre-push exited 0 in 171 seconds, HEAD unchanged and clean; Vitest capped at 4 workers after a default-load analytical timeout; no test assertions or timeouts changed"
+    recorded_at: "2026-09-06T09:42:07.776Z"
+    command: PREPUSH_FULL=1 VITEST_MAX_THREADS=4 VITEST_MAX_FORKS=4 VITEST_MIN_THREADS=1 VITEST_MIN_FORKS=1 .githooks/pre-push origin
+    exit_code: 0
+    artifact_path: tmp/prepush-full-20260906T093850Z/prepush.log
+    commit_sha: "294ede0b1a88deae24d96c61c9e7bca97b77b3e0"
