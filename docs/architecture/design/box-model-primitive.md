@@ -5,7 +5,7 @@ status: implemented
 title: Box-Model Primitive Slot Pool
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 70fc1b82922f984597d966661b4abd76a8292baf
+verified_at_commit: 0f79972563d046ae6f219f62219d7ce9c3be5e13
 governs:
   - packages/ds-contracts/box-model.primitive.schema.json
   - packages/ds-contracts/primitives/BoxModel.primitive.json
@@ -20,6 +20,13 @@ governs:
 The schema owns the closed `box-model.*` vocabulary. The primitive owns conservative defaults for padding, gap, and intrinsic sizing. Component sidecars may override those defaults; morphology profiles supply an intermediate layer. The merge order remains primitive < morphology profile < authored sidecar. The material editor and native token facts retain that normalized surface.
 
 ## Web realization
+
+Replaced elements need to preserve HTML sizing hints. Image's authored root
+width/height defaults use `revert-layer`, because a literal `auto` overrides its
+width/height attributes and selects intrinsic dimensions instead. Shared box
+overrides still win in the later box layer, and explicit size variants still
+win over root defaults. `e2e/image-media.spec.ts` checks 48px attribute sizing,
+box overrides and clearing, and responsive/preset sizing on each web target.
 
 The shared `primitives/box-model.css` stylesheet is emitted once per Web framework package and imported by each generated component stylesheet. Lit embeds the equivalent rules inside its shadow context, where a document stylesheet cannot reach. The preview loader explicitly inlines this dependency when constructing an iframe stylesheet.
 

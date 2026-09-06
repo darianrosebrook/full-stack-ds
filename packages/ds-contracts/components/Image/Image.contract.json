@@ -41,6 +41,16 @@
         "height": "prop:height",
         "loading": "prop:loading",
         "sizes": "prop:sizes"
+      },
+      "cssVariableBindings": {
+        "--fsds-image-prop-aspect-ratio": {
+          "kind": "map",
+          "source": "prop:aspectRatio",
+          "values": { "square": "1 / 1", "video": "16 / 9", "photo": "4 / 3", "wide": "21 / 9", "portrait": "2 / 3" },
+          "fallback": "auto"
+        },
+        "--fsds-image-prop-object-fit": "prop:objectFit",
+        "--fsds-image-prop-object-position": "prop:objectPosition"
       }
     }
   },
@@ -71,7 +81,7 @@
         {
           "name": "aspectRatio",
           "propType": { "kind": "ref", "to": "ImageAspectRatio" },
-          "description": "Aspect ratio preset or numeric ratio."
+          "description": "Aspect ratio preset: square 1:1, video 16:9, photo 4:3, wide 21:9, portrait 2:3. Applied when an axis is automatic."
         },
         {
           "name": "objectFit",

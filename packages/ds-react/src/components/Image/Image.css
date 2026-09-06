@@ -10,12 +10,15 @@
   padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
   padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
   gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
-  width: var(--fsds-box-model-width, auto);
+  width: revert-layer;
   min-width: var(--fsds-box-model-min-width, 0);
   max-width: 100%;
-  height: var(--fsds-box-model-height, auto);
+  height: revert-layer;
   min-height: var(--fsds-box-model-min-height, 0);
   max-height: var(--fsds-box-model-max-height, none);
+  aspect-ratio: var(--fsds-image-design-root-sizing-aspect-ratio, var(--fsds-image-prop-aspect-ratio, auto));
+  object-fit: var(--fsds-image-design-root-media-fit, var(--fsds-image-prop-object-fit, fill));
+  object-position: var(--fsds-image-design-root-media-position, var(--fsds-image-prop-object-position, 50% 50%));
   background-color: var(--fsds-image-design-root-background-fill, var(--fsds-image-color-background-default, #f7f7f7));
   color: var(--fsds-image-design-root-foreground-color, var(--fsds-image-color-foreground-primary, #141414));
 }

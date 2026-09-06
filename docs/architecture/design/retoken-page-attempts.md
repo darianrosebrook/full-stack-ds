@@ -62,3 +62,35 @@ DOM realization mechanisms. They do not justify changing semantic dependency
 direction or inventing a second styling runtime. Follow-up acceptance must assert
 actual image dimensions, cropping, preset ratios, override precedence and clearing
 across Web DOM targets, then re-render these same pages.
+
+## Upstream repair and result
+
+`IMAGE-MEDIA-CONTROLS-01` repairs the three Image gaps in the table above. Root
+defaults preserve the width/height attributes. Existing ratio/fit/position props
+now lower through the contract, with independently settable design overrides and
+literal fallbacks. Finite CSS-variable maps reuse the existing attribute-map
+schema and IR validation. No Image-name branch was added to any emitter.
+
+The cross-framework attempt caught two additional lowering defects. Angular's
+IDL dimension setters converted an unset height into zero; removable attribute
+bindings now preserve the automatic axis. React's rest spread replaced generated
+inline bindings when a consumer supplied `style`; merging now preserves those
+bindings while allowing individual consumer values to win. Native runtime-use
+collection no longer treats a web CSS binding as evidence of native consumption.
+
+[Image browser checks](../../../e2e/image-media.spec.ts) assert fixed dimensions,
+every ratio preset, fit and focal position, scoped overrides, clearing back to
+props/defaults, and box precedence across React, Vue, Svelte, Lit and Angular.
+The React inline-style test failed before its repair. The original dimension
+assertion failed at 600px instead of 48px; the Angular automatic-axis assertion
+failed at 0px instead of 240px. These are regression witnesses, not merely green
+render smoke tests. The page suite now asserts square album art, mixed-ratio Pins,
+thumbnail dimensions and a bounded player height in addition to interactions.
+
+Visual review confirms the intended dark multi-panel composition and white
+variable-height image feed at desktop and narrow widths. The final assessment is
+that the current Web controls support these two bounded visual compositions after
+the media repairs. Exact product fidelity, custom fonts/photos, full playback,
+shortest-column layout/virtualization, image-error recovery, and arbitrary motion
+remain outside this evidence. The remaining work is named by those product or
+component capabilities, not by an undifferentiated token-coverage percentage.

@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 70fc1b82922f984597d966661b4abd76a8292baf
+verified_at_commit: 0f79972563d046ae6f219f62219d7ce9c3be5e13
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -205,6 +205,15 @@ The claim is broad. It is also narrow enough to be falsified. The clean falsific
 The seven properties are stated at the level of generality where they are meant to compare against other compositional systems. Whether they do is left to the reader to test against systems they know.
 
 ## What this codebase demonstrates, and does not
+
+The Image media probe exercises a further bounded use of the existing normal
+form: finite value maps are accepted in `cssVariableBindings` as well as
+attribute bindings, with the same source/domain validation. Image maps semantic
+ratio presets to Web CSS ratios in its contract; emitters consume the normalized
+map without knowing the component's name. This is a DOM realization, not evidence
+that a native backend supports arbitrary CSS-variable bindings. React Native's
+runtime-use collection now follows only the CSS bindings its existing native
+lowerings actually consume. See [the page attempts](architecture/design/retoken-page-attempts.md).
 
 It demonstrates that, for the <!-- component-count -->51 components built so far, a single typed contract corpus drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive — with React Native admitted to the same rail, the full-corpus SwiftUI emitter carrying bounded compile/test/paint/host-interaction facts outside it, and the partial-corpus Jetpack Compose emitter carrying compile and resolver-test facts outside it — with fail-closed boundary checks and preserved custom regions across regenerations. The IR centralizes semantic interpretation in the codegen layer, with focused builders beside its main assembly module; that relocation is an observable complexity cost, not evidence that the IR is small. A reader can clone the repo, regenerate, and inspect the IR and representative contracts directly.
 

@@ -812,8 +812,10 @@ function collectNodeRuntimeUsage(
       usage,
     );
   }
-  for (const binding of node.cssVarBindings) {
-    collectBindingRuntimeUsage(binding.value, ir, usage);
+  // DOM CSS bindings do not themselves establish native consumption. Collect
+  // only the bindings used by the native fill-width and text-lines lowerings.
+  for (const binding of [nativeFillWidthBinding(node), nativeMaxLinesBinding(node)]) {
+    if (binding) collectBindingRuntimeUsage(binding.value, ir, usage);
   }
   for (const [name, binding] of Object.entries(node.bindings)) {
     if (!isSupportedBindingForComponent(name, component)) continue;
@@ -1695,9 +1697,7 @@ function emitNodeProps(
   const dynamicStyle = dynamicStyleEntries.length > 0
     ? `, { ${dynamicStyleEntries.join(", ")} }`
     : "";
-  const fillWidthBinding = node.cssVarBindings.find((binding) =>
-    binding.varName.includes("fill-width"),
-  );
+  const fillWidthBinding = nativeFillWidthBinding(node);
   if (fillWidthBinding) {
     const fillExpr = bindingExpr(fillWidthBinding.value, ir);
     props.push(`${pad}style={[styles.${styleKey}, { width: \`\${Math.max(0, Math.min(100, Number(${fillExpr} ?? 0)))}%\` }]}`);
@@ -3393,10 +3393,18 @@ function declaredTokenSlotName(
   return undefined;
 }
 
-function maxLinesExpressionForNode(node: DomNodeIR, ir: ComponentIR): string | undefined {
-  const binding = node.cssVarBindings.find((item) =>
+function nativeFillWidthBinding(node: DomNodeIR) {
+  return node.cssVarBindings.find((binding) => binding.varName.includes('fill-width'));
+}
+
+function nativeMaxLinesBinding(node: DomNodeIR) {
+  return node.cssVarBindings.find((item) =>
     item.varName.includes("max-lines") || item.varName.includes("content-lines"),
   );
+}
+
+function maxLinesExpressionForNode(node: DomNodeIR, ir: ComponentIR): string | undefined {
+  const binding = nativeMaxLinesBinding(node);
   if (!binding) return undefined;
   const maxLines = bindingExpr(binding.value, ir);
   const expandedChannel = ir.behavior.normalizedChannels.find(

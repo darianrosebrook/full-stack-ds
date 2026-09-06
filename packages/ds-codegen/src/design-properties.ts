@@ -2,7 +2,7 @@
 import type { ComponentContract } from './contract.js';
 import { tokenSlug } from './token-path.js';
 
-export type DesignValueType = 'color' | 'dimension' | 'number' | 'fontFamily' | 'shadow' | 'duration' | 'easing' | 'enum';
+export type DesignValueType = 'color' | 'dimension' | 'number' | 'fontFamily' | 'shadow' | 'duration' | 'easing' | 'enum' | 'ratio' | 'position';
 export interface DesignPropertyDefinition {
   property: string;
   group: string;
@@ -33,6 +33,11 @@ define('focus', 'dimension', { 'outline-width': 'width', 'outline-offset': 'offs
 define('focus', 'enum', { 'outline-style': 'style' });
 define('spacing', 'dimension', Object.fromEntries(['padding','padding-block','padding-inline','padding-block-start','padding-block-end','padding-inline-start','padding-inline-end','gap','row-gap','column-gap'].map(p=>[p,p])));
 define('sizing', 'dimension', Object.fromEntries(['width','height','min-width','max-width','min-height','max-height'].map(p=>[p,p])));
+// Replaced-media decisions exposed by the page-attempt witnesses. These remain
+// Web DOM realization controls; native media semantics are not inferred here.
+define('sizing', 'ratio', { 'aspect-ratio': 'aspect-ratio' });
+define('media', 'enum', { 'object-fit': 'fit' });
+define('media', 'position', { 'object-position': 'position' });
 // Layout is opt-in. Migration must not turn structural invariants into theme controls.
 define('layout', 'enum', { 'flex-direction': 'direction', 'align-items': 'alignment', 'justify-content': 'distribution', 'flex-wrap': 'wrap', overflow: 'overflow' });
 export const DESIGN_PROPERTIES: Readonly<Record<string, DesignPropertyDefinition>> = Object.freeze(definitions);

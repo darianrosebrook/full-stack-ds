@@ -24,7 +24,7 @@ export type ImageRadius = "none" | "sm" | "md" | "lg" | "full";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "image" },
-  template: `<img [ngClass]="classes()" [src]="src" [alt]="alt" [width]="width" [height]="height" [loading]="loading" [sizes]="sizes" data-fsds-box="" />`,
+  template: `<img [ngClass]="classes()" [src]="src" [alt]="alt" [attr.width]="width" [attr.height]="height" [loading]="loading" [sizes]="sizes" [style.--fsds-image-prop-aspect-ratio]="(aspectRatio === 'square' ? '1 / 1' : (aspectRatio === 'video' ? '16 / 9' : (aspectRatio === 'photo' ? '4 / 3' : (aspectRatio === 'wide' ? '21 / 9' : (aspectRatio === 'portrait' ? '2 / 3' : 'auto')))))" [style.--fsds-image-prop-object-fit]="objectFit" [style.--fsds-image-prop-object-position]="objectPosition" data-fsds-box="" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageComponent {

@@ -2704,6 +2704,7 @@ function renderReactDomNode(
   // `REACT_TYPE_IDENTIFIERS`. A literal `style` attr coexisting with
   // cssVarBindings is rejected by the IR builder, so we can build the
   // object fresh here.
+  let rootCssVarStyle: string | undefined;
   if (node.cssVarBindings.length > 0) {
     const entries: string[] = [];
     for (const { varName, value } of node.cssVarBindings) {
@@ -2712,7 +2713,13 @@ function renderReactDomNode(
       entries.push(`"${varName}": ${valueExpr}`);
     }
     if (entries.length > 0) {
-      attrs.push(`style={{ ${entries.join(", ")} } as CSSProperties}`);
+      if (ctx.isRoot) {
+        // Preserve generated bindings when the consumer supplies style; its
+        // individual values win. Emit after the rest spread to avoid erasure.
+        rootCssVarStyle = `style={{ ${entries.join(", ")}, ...rest.style } as CSSProperties}`;
+      } else {
+        attrs.push(`style={{ ${entries.join(", ")} } as CSSProperties}`);
+      }
     }
   }
 
@@ -2782,6 +2789,7 @@ function renderReactDomNode(
       );
     }
     attrs.push(`{...rest}`);
+    if (rootCssVarStyle) attrs.push(rootCssVarStyle);
   } else if (classParts.length > 0) {
     attrs.unshift(`className=${classPartsExpr(classParts)}`);
   }

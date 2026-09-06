@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { styleMap } from 'lit/directives/style-map.js';
 // @generated:end
 
 // @custom:start imports
@@ -94,12 +95,15 @@ export class ImageElement extends LitElement {
       padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
       padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
       gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
-      width: var(--fsds-box-model-width, auto);
+      width: revert-layer;
       min-width: var(--fsds-box-model-min-width, 0);
       max-width: 100%;
-      height: var(--fsds-box-model-height, auto);
+      height: revert-layer;
       min-height: var(--fsds-box-model-min-height, 0);
       max-height: var(--fsds-box-model-max-height, none);
+      aspect-ratio: var(--fsds-image-design-root-sizing-aspect-ratio, var(--fsds-image-prop-aspect-ratio, auto));
+      object-fit: var(--fsds-image-design-root-media-fit, var(--fsds-image-prop-object-fit, fill));
+      object-position: var(--fsds-image-design-root-media-position, var(--fsds-image-prop-object-position, 50% 50%));
       background-color: var(--fsds-image-design-root-background-fill, var(--fsds-image-color-background-default, #f7f7f7));
       color: var(--fsds-image-design-root-foreground-color, var(--fsds-image-color-foreground-primary, #141414));
     }
@@ -184,7 +188,7 @@ export class ImageElement extends LitElement {
   }
 
   override render() {
-    return html`<img class="${this.computeClasses()}" role="img" src=${ifDefined(this.src)} alt=${ifDefined(this.alt)} width=${ifDefined(this.width)} height=${ifDefined(this.height)} loading=${ifDefined(this.loading)} sizes=${ifDefined(this.sizes)} data-fsds-box="" />`;
+    return html`<img class="${this.computeClasses()}" role="img" src=${ifDefined(this.src)} alt=${ifDefined(this.alt)} width=${ifDefined(this.width)} height=${ifDefined(this.height)} loading=${ifDefined(this.loading)} sizes=${ifDefined(this.sizes)} style=${styleMap({ '--fsds-image-prop-aspect-ratio': (this.aspectRatio === "square" ? "1 / 1" : (this.aspectRatio === "video" ? "16 / 9" : (this.aspectRatio === "photo" ? "4 / 3" : (this.aspectRatio === "wide" ? "21 / 9" : (this.aspectRatio === "portrait" ? "2 / 3" : "auto"))))) === undefined ? undefined : String((this.aspectRatio === "square" ? "1 / 1" : (this.aspectRatio === "video" ? "16 / 9" : (this.aspectRatio === "photo" ? "4 / 3" : (this.aspectRatio === "wide" ? "21 / 9" : (this.aspectRatio === "portrait" ? "2 / 3" : "auto")))))), '--fsds-image-prop-object-fit': this.objectFit === undefined ? undefined : String(this.objectFit), '--fsds-image-prop-object-position': this.objectPosition === undefined ? undefined : String(this.objectPosition) })} data-fsds-box="" />`;
   }
 }
 

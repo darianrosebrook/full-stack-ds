@@ -774,8 +774,8 @@
           "type": "object",
           "patternProperties": {
             "^--fsds-[a-z][a-z0-9-]+$": {
-              "type": "string",
-              "description": "Binding expression (same prop:/channel:/literal: grammar as `bindings`)."
+              "$ref": "#/$defs/domNode/properties/bindings/additionalProperties",
+              "description": "Binding expression or finite value map, with the same source/domain validation as attribute bindings."
             }
           },
           "additionalProperties": false,
