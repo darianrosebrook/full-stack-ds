@@ -6,6 +6,7 @@ import { generateVueComponentSource } from "./vue/component-source.js";
 import { generateSvelteComponentSource } from "./svelte/component-source.js";
 import { generateLitComponentSource } from "./lit/component-source.js";
 import { generateAngularComponentSource } from "./angular/component-source.js";
+import { generateReactNativeComponentSource } from './react-native/component-source.js';
 
 // IR-DOM-CSS-VAR-BINDING-01 — fixture harness.
 //
@@ -68,6 +69,11 @@ function mappedSurface(): ComponentContract & { anatomy: { parts: string[]; dom:
 }
 
 describe('finite CSS-variable projections', () => {
+  it('does not invent native runtime consumption for a web-only CSS binding', () => {
+    const source=generateReactNativeComponentSource(buildComponentIR(mappedSurface())).componentFile;
+    expect(source.slice(source.indexOf('export function MediaSurface'))).not.toContain('presentation');
+    expect(source).toContain('presentation?: Presentation');
+  });
   it('normalizes a component-independent map and lowers it through every web emitter', () => {
     const mapped = buildComponentIR(mappedSurface());
     expect(mapped.dom?.cssVarBindings).toEqual([{
@@ -79,6 +85,17 @@ describe('finite CSS-variable projections', () => {
       expect(source).toContain('--fsds-media-surface-fit');
       expect(source).toMatch(/presentation[^\n]*bleed[^\n]*cover[^\n]*complete[^\n]*contain[^\n]*fill/);
     }
+    const react=generateReactComponentSource(mapped, '../../primitives');
+    expect(react).toMatch(/\{\.\.\.rest\} style=\{\{[^\n]*\.\.\.rest\.style/);
+  });
+  it('lowers optional img dimensions as removable attributes, independently of component name', () => {
+    const contract=mappedSurface();
+    contract.anatomy.dom.tag='img';
+    contract.anatomy.dom.bindings={width:'prop:width',height:'prop:height'};
+    contract.props!.designed!.members!.push({name:'width',propType:{kind:'number'}},{name:'height',propType:{kind:'number'}});
+    const source=generateAngularComponentSource(buildComponentIR(contract));
+    expect(source).toContain('[attr.width]="width"');
+    expect(source).toContain('[attr.height]="height"');
   });
   it('rejects incomplete maps without a fallback', () => {
     const contract=mappedSurface();

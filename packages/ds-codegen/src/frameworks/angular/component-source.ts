@@ -3011,6 +3011,10 @@ function renderAngularDomNode(
 // facts, not from "tests are failing".
 const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>> = {
   label: new Set(["form"]),
+  // HTMLImageElement's unsigned-long setters turn undefined into zero.
+  // Attribute binding removes an unset dimension so intrinsic sizing survives.
+  // https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-width
+  img: new Set(["width", "height"]),
   svg: new Set(["height", "width"]),
   time: new Set(["datetime"]),
 };
