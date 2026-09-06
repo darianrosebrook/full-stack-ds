@@ -84,3 +84,12 @@ evidence:
     exit_code: 0
     artifact_path: e2e/showcase-visual-cohesion.spec.ts
     commit_sha: "79d65055"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: Playwright measured the nutrition table at full parent width and verified semantic dark-theme colors.
+    recorded_at: "2026-09-06T04:24:08.970Z"
+    test_nodeid: "Showcase visual cohesion > nutrition tables fill their evidence column and resolve dark-theme semantic colors"
+    command: FSDS_E2E_PORT=5181 pnpm exec playwright test e2e/showcase-visual-cohesion.spec.ts --project=chromium
+    exit_code: 0
+    artifact_path: e2e/showcase-visual-cohesion.spec.ts
+    commit_sha: "79d65055"
