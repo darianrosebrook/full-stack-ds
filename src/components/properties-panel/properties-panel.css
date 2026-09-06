@@ -242,8 +242,10 @@
 .fsds-pp__input,
 .fsds-pp__token-value {
   width: 100%;
+  min-height: var(--fsds-semantic-input-size-small-height, 24px);
   box-sizing: border-box;
-  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  padding-block: var(--fsds-semantic-input-size-small-padding-block, 2px);
+  padding-inline: var(--fsds-semantic-input-size-small-padding-inline, 4px);
   font: inherit;
   color: var(--fsds-semantic-color-foreground-primary);
   background: var(--fsds-semantic-color-background-subtle);
