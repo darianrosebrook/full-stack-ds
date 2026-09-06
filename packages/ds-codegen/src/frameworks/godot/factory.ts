@@ -23,7 +23,7 @@ export function themeColor(ir: ComponentIR): string {
   // Project an authored foreground fallback through normalized CSS/token facts.
   // No component-name dispatch and no interpretation of raw contract fields.
   for (const block of ir.cssBlocks) {
-    if (/[\[:]/.test(block.selector)) continue;
+    if (/[[:]/.test(block.selector)) continue;
     const color = block.declarations.color;
     if (!color) continue;
     if (/^#[0-9a-f]{6}$/i.test(color)) return color;
