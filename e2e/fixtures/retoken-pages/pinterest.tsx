@@ -84,7 +84,7 @@ export function Pinterest() {
       <Button ariaPressed={onlySaved} className={onlySaved?'selected':'quiet'} onClick={()=>{navigate(null);setOnlySaved(true);}}>Saved ({saved.length})</Button>
       <Stack variant="horizontal" className="search-region"><Icon name="search"/><Input ariaLabel="Search collection" placeholder="Search for ideas" value={query} onChange={value=>{setQuery(value);if(selected!==null)navigate(null);}}/></Stack>
       <Button className="quiet icon-button switch-page" ariaLabel="Switch to music page" onClick={()=>{location.search='?page=spotify';}}><Icon name="panel-left"/></Button>
-      <Avatar name="Your collection" initials="Y" size="lg" className="pin-profile"/>
+      <Avatar name="Your collection" initials="Y" size="large" className="pin-profile"/>
     </header>
     {pin&&selected!==null ? <div className="pin-detail-layout">
       <Card className="pin-detail-card">
@@ -100,7 +100,7 @@ export function Pinterest() {
               <div className="pin-board"><Popover open={boardOpen} onOpenChange={setBoardOpen} placement="bottom"><Popover.Trigger asChild><Button className="quiet" ariaLabel="Choose board">{board}<Icon name="chevron-down"/></Button></Popover.Trigger><Popover.Content className="pin-menu">{['Design inspiration','Read later','Studio references'].map(name=><Button key={name} className="quiet" ariaPressed={board===name} onClick={()=>{setBoards(current=>({...current,[selected]:name}));setBoardOpen(false);}}>{name}</Button>)}</Popover.Content></Popover></div>
               <Button className="save-button" ariaLabel={(saved.includes(selected)?'Unsave ':'Save ')+pin.title} ariaPressed={saved.includes(selected)} onClick={()=>toggleSave(selected)}>{saved.includes(selected)?'Saved':'Save'}</Button>
             </div>
-            <Stack className="pin-author" variant="horizontal"><Avatar size="md" name={pin.maker} initials={pin.maker.split(' ').map(word=>word[0]).slice(0,2).join('')}/><Text>{pin.maker}</Text></Stack>
+            <Stack className="pin-author" variant="horizontal"><Avatar size="medium" name={pin.maker} initials={pin.maker.split(' ').map(word=>word[0]).slice(0,2).join('')}/><Text>{pin.maker}</Text></Stack>
             <h1 ref={detailHeading} tabIndex={-1} className="pin-detail-heading"><Text as="span" weight="bold" className="section-title">{pin.title}</Text></h1>
             <Card className="pin-context"><CardContent><Text weight="semibold">From the studio</Text><Text className="muted">An original study in typography, composition and visual systems. Saved as a reference for your next project.</Text></CardContent></Card>
             <Text weight="bold">Description</Text><Text className="muted">A closer look at {pin.maker}'s approach to form, rhythm and hierarchy. Part of our independent design collection.</Text>

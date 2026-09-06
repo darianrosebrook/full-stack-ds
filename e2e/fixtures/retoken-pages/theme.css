@@ -107,7 +107,7 @@ body { margin: 0; font-family: Arial, sans-serif; }
 .pin-board { flex: 1; min-width: 0; }
 .pin-board .button { --fsds-box-model-padding-inline: 6px; }
 .pin-author { align-items: center; gap: 8px; margin-top: 12px; }
-.pin-detail-heading { margin: 0; line-height: 1.25; outline: none; }
+.pin-detail-heading { margin: 0; font-size: inherit; line-height: 1.25; outline: none; }
 .pin-detail-heading .text { --fsds-text-design-root-typography-size: 22px; --fsds-text-design-root-typography-line-height: 1.25; }
 .pin-context { --fsds-card-design-root-background-fill: #eeeee8; --fsds-card-design-root-shape-radius: 14px; --fsds-card-design-root-spacing-padding: 16px; }
 .pin-comments { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }

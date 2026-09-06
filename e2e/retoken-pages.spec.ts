@@ -46,6 +46,7 @@ for (const kind of ['spotify','pinterest']) {
           const box=(await page.locator(`[data-testid="pin-${id}"] img`).boundingBox())!;
           expect(box.width/box.height).toBeCloseTo(ratio,2);
         }
+        await expect(page.locator('.pin-profile')).toHaveCSS('width','32px');
         await expect(page.locator('.pin .card__media').first()).toHaveCSS('border-radius','16px');
         await expect(page.locator('.pin-caption-copy .text').first()).toHaveCSS('text-overflow','ellipsis');
         const save=page.getByRole('button',{name:'Save Fieldwork — an independent design studio portfolio',exact:true});
@@ -82,6 +83,7 @@ for (const width of [1440,390]) {
     const detail=page.getByRole('region',{name:'Pin details'});
     await expect(detail.getByRole('heading',{name:title})).toBeFocused();
     await expect(page.locator('.pin-detail-art img')).toHaveAttribute('alt',title);
+    await expect(detail.locator('.avatar')).toHaveCSS('width','24px');
     await expect(page.getByRole('complementary',{name:'Related Pins'}).locator('.pin')).toHaveCount(17);
     await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     await page.screenshot({path:info.outputPath(`pin-detail-${width}.png`),fullPage:true});
