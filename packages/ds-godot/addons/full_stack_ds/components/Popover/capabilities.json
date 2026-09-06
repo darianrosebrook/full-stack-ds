@@ -1,0 +1,20 @@
+{
+  "operation": "surface",
+  "excluded": [
+    "defaultOpen",
+    "placement",
+    "closeOnEscape",
+    "closeOnOutsideClick",
+    "closeOnBlur"
+  ],
+  "theme": "unconditional foreground fallback only",
+  "otherStyling": "unsupported",
+  "excludedProps": [
+    "defaultOpen",
+    "placement",
+    "closeOnEscape",
+    "closeOnOutsideClick",
+    "closeOnBlur"
+  ],
+  "proof": "requires-runtime-witness"
+}

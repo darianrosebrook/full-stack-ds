@@ -2,9 +2,10 @@ id: TEXT-TRUNCATE-BINDING-01
 title: 'Realize the declared single-line Text truncation control on Web DOM'
 risk_tier: 2
 mode: fix
-lifecycle_state: draft
+lifecycle_state: active
+worktree: text-truncate
 created_at: '2026-09-06T08:26:47.717Z'
-updated_at: '2026-09-06T08:26:47.717Z'
+updated_at: '2026-09-06T08:46:43.243Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
@@ -20,9 +21,16 @@ scope:
     - 'packages/ds-angular/src/components/Text'
     - 'packages/ds-lit/src/components/Text'
     - 'packages/ds-react-native/src/components/Text'
-    - 'packages/ds-figma/generated'
     - 'e2e/text-truncation.spec.ts'
     - 'docs/architecture/design/component-design-bindings.md'
+    - packages/ds-figma-plugin/src/generated/components/Text
+    - packages/ds-swiftui/Sources/DsSwiftUI/Components/Text
+    - packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/Text
+    - packages/ds-codegen/src/frameworks/angular/component-source.ts
+    - packages/ds-codegen/src/frameworks/angular/binding-defaults.test.ts
+    - packages/ds-angular/src/components/List
+    - packages/ds-angular/src/components/CodeSnippet
+    - docs/normal-form.md
   out: []
 invariants:
   - 'Bind the existing prop through contract anatomy and styles; add no component-name emitter branch or compatibility alias.'

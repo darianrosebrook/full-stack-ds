@@ -1,0 +1,14 @@
+{
+  "operation": "toggle-item",
+  "excluded": [
+    "type",
+    "defaultValue"
+  ],
+  "theme": "unconditional foreground fallback only",
+  "otherStyling": "unsupported",
+  "excludedProps": [
+    "type",
+    "defaultValue"
+  ],
+  "proof": "requires-runtime-witness"
+}
