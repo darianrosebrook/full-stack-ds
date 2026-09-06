@@ -102,3 +102,10 @@ evidence:
     exit_code: 0
     artifact_path: e2e/showcase-visual-cohesion.spec.ts
     commit_sha: "79d65055"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "PREPUSH_FULL=1 .githooks/pre-push completed all selected checks in 242s; governed rail, root 3687 tests, framework suites, and 4 Playwright geometry tests also passed."
+    recorded_at: "2026-09-06T04:24:12.643Z"
+    command: PREPUSH_FULL=1 .githooks/pre-push
+    exit_code: 0
+    commit_sha: "79d65055"
