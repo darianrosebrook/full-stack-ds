@@ -2,9 +2,10 @@ id: PINTEREST-FEED-DETAIL-01
 title: 'Refine the Pinterest feed and add a linked Pin detail view'
 risk_tier: 3
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: pinterest-feed-detail
 created_at: '2026-09-06T08:21:27.695Z'
-updated_at: '2026-09-06T08:21:27.695Z'
+updated_at: '2026-09-06T08:21:30.449Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
